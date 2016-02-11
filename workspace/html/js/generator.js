@@ -1,5 +1,12 @@
  /*global utils*/
+ /*global resources*/
 
+ /**
+  * generator.js
+  * 
+  * Generuje mapu světa a objekty na ní
+  * 
+  */
  var generator = (function() {
 
    var pub = {};
@@ -7,80 +14,6 @@
    // musí být sudé
    var MAP_WIDTH = 400;
    var MAP_HEIGHT = 100;
-
-   var VOID = 0;
-   pub.VOID = VOID;
-   var DIRT = {
-     M1: 1,
-     M2: 2,
-     M3: 3,
-     M4: 10,
-     M5: 11,
-     M6: 12,
-     M7: 19,
-     M8: 20,
-     M9: 21,
-     TL: 4,
-     TR: 5,
-     T: 6,
-     I_TR: 7,
-     I_TL: 8,
-     BL: 13,
-     BR: 14,
-     R: 15,
-     I_BR: 16,
-     I_BL: 17,
-     B: 22,
-     L: 23
-   };
-   pub.DIRT = DIRT;
-
-   pub.PLANT_KEY = "PLANT_KEY";
-   pub.TREE_KEY = "TREE_KEY";
-   pub.TREE2_KEY = "TREE2_KEY";
-   pub.MOUND_KEY = "MOUND_KEY";
-   pub.GRASS_KEY = "GRASS_KEY";
-   pub.GRASS2_KEY = "GRASS2_KEY";
-   pub.GRASS3_KEY = "GRASS3_KEY";
-   pub.GRASS4_KEY = "GRASS4_KEY";
-
-   pub.dirtObjects = [{
-     key: pub.TREE_KEY,
-     width: 4,
-     height: 9,
-     freq: 4,
-   },
-   {
-     key: pub.TREE2_KEY,
-     width: 9,
-     height: 15,
-     freq: 3,
-   }, {
-     key: pub.PLANT_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-   }, {
-     key: pub.GRASS_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-   }, {
-     key: pub.GRASS2_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-   }, {
-     key: pub.GRASS3_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-   }, {
-     key: pub.GRASS4_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-   }];
 
    pub.generate = function() {
 
@@ -114,7 +47,7 @@
          if (index >= 0) {
            return this.map[index];
          }
-         return VOID;
+         return resources.VOID;
        }
      };
 
@@ -124,7 +57,7 @@
      for (var y = 0; y < tilesMap.height; y++) {
        for (var x = 0; x < tilesMap.width; x++) {
          var m = x % 3 + 1 + ((y % 3) * 3);
-         tilesMap.map.push(DIRT["M" + m]);
+         tilesMap.map.push(resources.DIRT["M" + m]);
        }
      }
 
@@ -147,7 +80,7 @@
                  for (var __y = _y; __y <= _y + 1; __y++) {
                    var index = tilesMap.indexAt(__x, __y);
                    if (index >= 0) {
-                     tilesMap.map[index] = VOID;
+                     tilesMap.map[index] = resources.VOID;
                    }
                  }
                }
@@ -179,7 +112,7 @@
      // tráva boky
      (function() {
        for (var i = 0; i < mass; i++) {
-         if (tilesMap.map[i] == VOID) continue;
+         if (tilesMap.map[i] == resources.VOID) continue;
          var coord = tilesMap.coordAt(i);
          pub.generateEdge(tilesMap, coord.x, coord.y);
        }
@@ -189,7 +122,7 @@
      (function() {
        for (var i = 0; i < mass; i++) {
          var val = tilesMap.map[i];
-         if (val == VOID) continue;
+         if (val == resources.VOID) continue;
          var coord = tilesMap.coordAt(i);
          pub.generateCorner(tilesMap, coord.x, coord.y);
        }
@@ -197,8 +130,8 @@
 
      // frekvenční "pool" objektů
      var pool = [];
-     for (var it = 0; it < pub.dirtObjects.length; it++) {
-       var item = pub.dirtObjects[it];
+     for (var it = 0; it < resources.dirtObjects.length; it++) {
+       var item = resources.dirtObjects[it];
        // vlož index objektu tolikrát, kolik je jeho frekvenc
        for (var i = 0; i < item.freq; i++) {
          pool.push(it);
@@ -215,8 +148,8 @@
              // objekt nemůže "překlenovat" díru nebo viset z okraje
              // nelze kolidovat s jiným objektem
              var col = tilesMap.objectsMapCache[x];
-             if ((y == y0 && tilesMap.valueAt(x, y) != DIRT.T) ||
-               (y != y0 && tilesMap.valueAt(x, y) != VOID) ||
+             if ((y == y0 && tilesMap.valueAt(x, y) != resources.DIRT.T) ||
+               (y != y0 && tilesMap.valueAt(x, y) != resources.VOID) ||
                (typeof col !== "undefined" && col[y] == 0))
                return false;
            }
@@ -227,13 +160,13 @@
        for (var i = 0; i < mass; i += 2) {
          var val = tilesMap.map[i];
          // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-         if (val == DIRT.T) {
+         if (val == resources.DIRT.T) {
            // bude tam nějaký objekt? (100% ano)
            if (Math.random() > 0) {
              var tries = 0;
              var index = pool[Math.floor((pool.length - 1) * Math.random())];
-             while (tries < pub.dirtObjects.length) {
-               var object = pub.dirtObjects[index];
+             while (tries < resources.dirtObjects.length) {
+               var object = resources.dirtObjects[index];
                var coord = tilesMap.coordAt(i);
                if (isFree(coord.x, coord.y, object.width, object.height)) {
                  // je tam volno, umísti ho
@@ -258,7 +191,7 @@
                else {
                  // další pokus na dalším objektu
                  tries++;
-                 index = (index + 1) % pub.dirtObjects.length;
+                 index = (index + 1) % resources.dirtObjects.length;
                }
              }
            }
@@ -278,20 +211,20 @@
      var valB = tilesMap.valueAt(x, y + 1);
      var valL = tilesMap.valueAt(x - 1, y);
 
-     if (valT == VOID) {
-       tilesMap.map[i] = DIRT.T;
+     if (valT == resources.VOID) {
+       tilesMap.map[i] = resources.DIRT.T;
      }
 
-     if (valR == VOID) {
-       tilesMap.map[i] = DIRT.R;
+     if (valR == resources.VOID) {
+       tilesMap.map[i] = resources.DIRT.R;
      }
 
-     if (valB == VOID) {
-       tilesMap.map[i] = DIRT.B;
+     if (valB == resources.VOID) {
+       tilesMap.map[i] = resources.DIRT.B;
      }
 
-     if (valL == VOID) {
-       tilesMap.map[i] = DIRT.L;
+     if (valL == resources.VOID) {
+       tilesMap.map[i] = resources.DIRT.L;
      }
 
      return tilesMap.map[i];
@@ -308,7 +241,7 @@
 
      var isMiddle = false;
      for (var m = 1; m <= 9; m++) {
-       if (val == DIRT["M" + m]) {
+       if (val == resources.DIRT["M" + m]) {
          isMiddle = true;
          break;
        }
@@ -317,39 +250,39 @@
      // změny prostředních kusů
      if (isMiddle) {
        // jsem pravý horní roh díry
-       if (valB == DIRT.R && valR == DIRT.B) {
-         tilesMap.map[i] = DIRT.I_TL;
+       if (valB == resources.DIRT.R && valR == resources.DIRT.B) {
+         tilesMap.map[i] = resources.DIRT.I_TL;
        }
        // jsem levý horní roh díry
-       if (valL == DIRT.B && valB == DIRT.L) {
-         tilesMap.map[i] = DIRT.I_TR;
+       if (valL == resources.DIRT.B && valB == resources.DIRT.L) {
+         tilesMap.map[i] = resources.DIRT.I_TR;
        }
        // levý spodní roh díry
-       if (valT == DIRT.R && valR == DIRT.T) {
-         tilesMap.map[i] = DIRT.I_BL;
+       if (valT == resources.DIRT.R && valR == resources.DIRT.T) {
+         tilesMap.map[i] = resources.DIRT.I_BL;
        }
        // pravý spodní roh díry
-       if (valT == DIRT.L && valL == DIRT.T) {
-         tilesMap.map[i] = DIRT.I_BR;
+       if (valT == resources.DIRT.L && valL == resources.DIRT.T) {
+         tilesMap.map[i] = resources.DIRT.I_BR;
        }
 
      }
 
      // jsem levý horní roh
-     if (val == DIRT.L && (valR == DIRT.T || valT == VOID)) {
-       tilesMap.map[i] = DIRT.TL;
+     if (val == resources.DIRT.L && (valR == resources.DIRT.T || valT == resources.VOID)) {
+       tilesMap.map[i] = resources.DIRT.TL;
      }
      // jsem levý dolní roh
-     if (val == DIRT.L && (valR == DIRT.B || valR == DIRT.BR)) {
-       tilesMap.map[i] = DIRT.BL;
+     if (val == resources.DIRT.L && (valR == resources.DIRT.B || valR == resources.DIRT.BR)) {
+       tilesMap.map[i] = resources.DIRT.BL;
      }
      // jsem pravý dolní roh
-     if (val == DIRT.B && (valT == DIRT.R || valT == DIRT.TR)) {
-       tilesMap.map[i] = DIRT.BR;
+     if (val == resources.DIRT.B && (valT == resources.DIRT.R || valT == resources.DIRT.TR)) {
+       tilesMap.map[i] = resources.DIRT.BR;
      }
      // jsem pravý horní roh
-     if (val == DIRT.R && (valL == DIRT.T || valT == VOID)) {
-       tilesMap.map[i] = DIRT.TR;
+     if (val == resources.DIRT.R && (valL == resources.DIRT.T || valT == resources.VOID)) {
+       tilesMap.map[i] = resources.DIRT.TR;
      }
 
      return tilesMap.map[i];
@@ -359,10 +292,10 @@
    pub.modify = function(tilesMap, x, y) {
      var rx = utils.even(x);
      var ry = utils.even(y);
-     tilesMap.map[tilesMap.indexAt(rx, ry)] = VOID;
-     tilesMap.map[tilesMap.indexAt(rx + 1, ry)] = VOID;
-     tilesMap.map[tilesMap.indexAt(rx, ry + 1)] = VOID;
-     tilesMap.map[tilesMap.indexAt(rx + 1, ry + 1)] = VOID;
+     tilesMap.map[tilesMap.indexAt(rx, ry)] = resources.VOID;
+     tilesMap.map[tilesMap.indexAt(rx + 1, ry)] = resources.VOID;
+     tilesMap.map[tilesMap.indexAt(rx, ry + 1)] = resources.VOID;
+     tilesMap.map[tilesMap.indexAt(rx + 1, ry + 1)] = resources.VOID;
    };
 
    return pub;
