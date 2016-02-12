@@ -79,7 +79,7 @@
      if (clsn.hit) {
        var pixels = render.tilesToPixel(utils.even(clsn.result.x), utils.even(clsn.result.y));
        pointer.x = pixels.x;
-       pointer.y = pixels.y - resources.TILE_SIZE; // počátek je vlevo dole
+       pointer.y = pixels.y;
        pointer.visible = true;
      }
      else {
@@ -217,7 +217,7 @@
          var gravitySpeed = heroJumpTime * WORLD_GRAVITY;
          var distanceY = utils.floor(heroJumpTime * (heroSpeed.y - gravitySpeed));
 
-         console.log("distanceY:" + distanceY + " heroSpeed.y:" + heroSpeed.y + " gravitySpeed:" + gravitySpeed);
+         //console.log("distanceY:" + distanceY + " heroSpeed.y:" + heroSpeed.y + " gravitySpeed:" + gravitySpeed);
 
          var makeShiftY = function(dst) {
            var rndDst = utils.floor(dst);
@@ -228,7 +228,6 @@
          };
 
          // Nenarazím na překážku?
-         // TODO iterativně kontrolovat pro skoky > TILE_SIZE
          clsnTest = isBoundsInCollision(heroSprite.x + hero.collXOffset, heroSprite.y + hero.collYOffset, hero.width - hero.collXOffset * 2, hero.height - hero.collYOffset * 2, 0, distanceY);
          if (clsnTest.hit == false) {
            makeShiftY(distanceY);
@@ -255,7 +254,7 @@
              // "doskoč" až na zem
              // získej pozici kolizního bloku
              clsnPosition = render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
-             makeShiftY(-1 * (clsnPosition.y - resources.TILE_SIZE - (heroSprite.y + hero.height - hero.collYOffset)));
+             makeShiftY(-1 * (clsnPosition.y - (heroSprite.y + hero.height - hero.collYOffset)));
 
              heroJumpTime = 0;
              heroSpeed.y = 0;
@@ -286,7 +285,6 @@
          };
 
          // Nenarazím na překážku?
-         // TODO iterativně kontrolovat pro skoky > TILE_SIZE
          clsnTest = isBoundsInCollision(heroSprite.x + hero.collXOffset, heroSprite.y + hero.collYOffset, hero.width - hero.collXOffset * 2, hero.height - hero.collYOffset * 2, distanceX, 0);
          if (clsnTest.hit == false) {
            makeShiftX(distanceX);

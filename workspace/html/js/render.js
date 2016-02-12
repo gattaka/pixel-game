@@ -46,20 +46,28 @@
 
     var screenOffsetX = 0;
     var screenOffsetY = 0;
+    var currentStartSecX = null;
+    var currentStartSecY = null;
 
-    var sceneObjects;
+    // Velikost sektoru v dílcích
+    var SECTOR_SIZE = 10;
+    // Počet okrajových sektorů, které nejsou zobrazeny,
+    // ale jsou alokovány (pro plynulé posuny)
+    var BUFFER_SECTORS_X = 1;
+    var BUFFER_SECTORS_Y = 2;
+
+    // Kontejner na sektory
+    var sectorsCont;
+    // Sektorová mapa
+    var sectorsMap = [];
+    // Globální mapa
     var sceneObjectsMap = [];
-
-    var startX = 0;
-    var startY = 550;
 
     var tilesMap;
 
     pub.pixelsToTiles = function(x, y) {
-      // floor, aby zahrnul rozpůlenou buňku, ale přitom pole mapy začíná indexu 0
-      var tileX = Math.ceil((x - screenOffsetX - startX) / resources.TILE_SIZE) - 1;
-      // ceil protože počítám pozici od spodního okraje
-      var tileY = Math.ceil((y - screenOffsetY - startY) / resources.TILE_SIZE);
+      var tileX = Math.ceil((x - screenOffsetX) / resources.TILE_SIZE) - 1;
+      var tileY = Math.ceil((y - screenOffsetY) / resources.TILE_SIZE) - 1;
       return {
         x: tileX,
         y: tileY
@@ -67,8 +75,8 @@
     };
 
     pub.tilesToPixel = function(x, y) {
-      var screenX = x * resources.TILE_SIZE + screenOffsetX + startX;
-      var screenY = y * resources.TILE_SIZE + screenOffsetY + startY;
+      var screenX = x * resources.TILE_SIZE + screenOffsetX;
+      var screenY = y * resources.TILE_SIZE + screenOffsetY;
       return {
         x: screenX,
         y: screenY
@@ -91,52 +99,184 @@
       loader.loadManifest(manifest, true, "images/");
     };
 
-    var construct = function() {
-      sceneObjects = new createjs.Container();
-      game.stage.addChild(sceneObjects);
-      sceneObjects.x = 0;
-      sceneObjects.y = 0;
-      sceneObjects.width = game.canvas.width * 1.5;
-      sceneObjects.height = game.canvas.height * 1.5;
-
-      /*-----------*/
-      /* Map tiles */
-      /*-----------*/
-      var placeTile = function(v, row, col) {
-        if (v > 0) {
-          var tile;
-          tile = new createjs.Bitmap(loader.getResult(resources.TILES_KEY));
-          var tileCols = tile.image.width / resources.TILE_SIZE;
-          // Otestováno: tohle je rychlejší než extract ze Spritesheet
-          tile.sourceRect = {
-            x: ((v - 1) % tileCols) * resources.TILE_SIZE,
-            y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
-            height: resources.TILE_SIZE,
-            width: resources.TILE_SIZE
-          };
-
-          sceneObjects.addChild(tile);
-          var mapCol = sceneObjectsMap[col];
-          if (typeof mapCol === "undefined") {
-            mapCol = [];
-            sceneObjectsMap[col] = mapCol;
-          }
-          mapCol[row] = tile;
-          var pos = pub.tilesToPixel(col, row);
-          tile.x = pos.x;
-          tile.y = pos.y - resources.TILE_SIZE;
-        }
-      };
-
-      for (var i = 0; i < tilesMap.map.length; i++) {
-        var col = i % tilesMap.width;
-        var row = Math.floor(i / tilesMap.width);
-        placeTile(tilesMap.map[i], row, col);
+    // dle souřadnic tiles spočítá souřadnici sektoru
+    var getSectorByTiles = function(x, y) {
+      var sx = Math.floor(x / SECTOR_SIZE);
+      var sy = Math.floor(y / SECTOR_SIZE);
+      var secCol = sectorsMap[sx];
+      if (typeof secCol === "undefined") {
+        secCol = [];
+        sectorsMap[sx] = secCol;
       }
+      return secCol[sy];
+    };
+
+    var createTile = function(v) {
+      var tile = new createjs.Bitmap(loader.getResult(resources.TILES_KEY));
+      var tileCols = tile.image.width / resources.TILE_SIZE;
+      // Otestováno: tohle je rychlejší než extract ze Spritesheet
+      tile.sourceRect = {
+        x: ((v - 1) % tileCols) * resources.TILE_SIZE,
+        y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
+        height: resources.TILE_SIZE,
+        width: resources.TILE_SIZE
+      };
+      return tile;
+    };
+
+    var shiftSectors = function(dstX, dstY) {
+      screenOffsetX += dstX;
+      screenOffsetY += dstY;
+      sectorsCont.children.forEach(function(sector) {
+        sector.x += dstX;
+        sector.y += dstY;
+      });
+      updateSectors();
+    };
+
+    // zkoumá, zda je potřeba přealokovat sektory 
+    var updateSectors = function() {
+
+      var maxSecCountX = Math.ceil(tilesMap.width / SECTOR_SIZE);
+      var maxSecCountY = Math.ceil(tilesMap.height / SECTOR_SIZE);
+
+      var startSecX = 0;
+      if (screenOffsetX < 0) {
+        startSecX = Math.floor(-1 * screenOffsetX / (SECTOR_SIZE * resources.TILE_SIZE));
+        startSecX = startSecX > 0 ? startSecX - BUFFER_SECTORS_X : startSecX;
+      }
+      var countSectX = Math.floor(sectorsCont.width / (SECTOR_SIZE * resources.TILE_SIZE)) + BUFFER_SECTORS_X;
+
+      var startSecY = 0;
+      if (screenOffsetY < 0) {
+        startSecY = Math.floor(-1 * screenOffsetY / (SECTOR_SIZE * resources.TILE_SIZE));
+        startSecY = startSecY > 0 ? startSecY - BUFFER_SECTORS_Y : startSecY;
+      }
+      var countSectY = Math.floor(sectorsCont.height / (SECTOR_SIZE * resources.TILE_SIZE)) + BUFFER_SECTORS_Y;
+
+      // změnilo se něco? Pokud není potřeba pře-alokovávat sektory, ukonči fci
+      if (currentStartSecX == startSecX && currentStartSecY == startSecY)
+        return;
+
+      // změnit stavy
+      currentStartSecX = startSecX;
+      currentStartSecY = startSecY;
+
+      // projdi sektory, nepoužité dealokuj, nové naplň
+      for (var x = 0; x < maxSecCountX; x++) {
+        for (var y = 0; y < maxSecCountY; y++) {
+
+          var secCol = sectorsMap[x];
+          if (typeof secCol === "undefined") {
+            secCol = [];
+            sectorsMap[x] = secCol;
+          }
+
+          var mapCol;
+
+          if (x >= startSecX && x <= startSecX + countSectX && y >= startSecY && y <= startSecY + countSectY) {
+            // jde o platný sektor 
+            // pokud ještě není alokován tak alokuj
+            if (typeof secCol[y] === "undefined" || secCol[y] == null) {
+
+              var sector = new createjs.Container();
+              sectorsCont.addChild(sector);
+              sector.x = x * SECTOR_SIZE * resources.TILE_SIZE + screenOffsetX;
+              sector.y = y * SECTOR_SIZE * resources.TILE_SIZE + screenOffsetY;
+              sector.width = SECTOR_SIZE * resources.TILE_SIZE;
+              sector.height = SECTOR_SIZE * resources.TILE_SIZE;
+              secCol[y] = sector;
+
+              // vytvoř jednotlivé dílky
+              for (var mx = x * SECTOR_SIZE; mx < (x + 1) * SECTOR_SIZE; mx++) {
+                for (var my = y * SECTOR_SIZE; my < (y + 1) * SECTOR_SIZE; my++) {
+                  var tileElement = tilesMap.valueAt(mx, my);
+                  if (tileElement > 0) {
+                    // vytvoř dílek
+                    var tile = createTile(tileElement);
+
+                    // přidej dílek do sektoru
+                    sector.addChild(tile);
+                    tile.x = (mx % SECTOR_SIZE) * resources.TILE_SIZE;
+                    tile.y = (my % SECTOR_SIZE) * resources.TILE_SIZE;
+
+                    // přidej dílek do globální mapy
+                    mapCol = sceneObjectsMap[mx];
+                    if (typeof mapCol === "undefined") {
+                      mapCol = [];
+                      sceneObjectsMap[mx] = mapCol;
+                    }
+                    mapCol[my] = tile;
+                  }
+                }
+              }
+
+              // debug
+              var testShape = new createjs.Shape();
+              testShape.graphics.setStrokeStyle(1);
+              testShape.graphics.beginStroke("#f00");
+              testShape.graphics.drawRect(0, 0, sector.width, sector.height);
+              sector.addChild(testShape);
+
+              // proveď cache na sektoru
+              sector.cache(0, 0, sector.width, sector.height);
+
+              console.log("Alokován sektor: " + x + ":" + y);
+            }
+
+          }
+          else {
+            // neplatný sektor
+            // pokud je obsazeno dealokuj
+            if (typeof secCol[y] !== "undefined" && secCol[y] != null) {
+
+              // vymaž jednotlivé dílky
+              for (var mx = x * SECTOR_SIZE; mx < (x + 1) * SECTOR_SIZE; mx++) {
+                for (var my = y * SECTOR_SIZE; my < (y + 1) * SECTOR_SIZE; my++) {
+                  // stavěním mohl přibýt dílek někam, kde předtím nebyl, proto
+                  // je potřeba i při mazání kontrolovat existenci sloupce
+                  mapCol = sceneObjectsMap[mx];
+                  if (typeof mapCol === "undefined") {
+                    mapCol = [];
+                    sceneObjectsMap[mx] = mapCol;
+                  }
+                  mapCol[my] = null;
+                }
+              }
+
+              // vymaž sektor
+              secCol[y].removeAllChildren();
+              sectorsCont.removeChild(secCol[y]);
+              secCol[y] = null;
+
+              console.log("Dealokován sektor: " + x + ":" + y);
+
+            }
+          }
+
+        }
+      }
+
+    };
+
+    var construct = function() {
+
+      // vytvoř kontejner pro sektory
+      sectorsCont = new createjs.Container();
+      game.stage.addChild(sectorsCont);
+      sectorsCont.x = 0;
+      sectorsCont.y = 0;
+      sectorsCont.width = game.canvas.width;
+      sectorsCont.height = game.canvas.height;
+
+      // vytvoř sektory dle aktuálního záběru obrazovky
+      updateSectors();
 
       /*-------------*/
       /* Map objects */
       /*-------------*/
+      // TODO
+      /*
       tilesMap.objects.forEach(function(item) {
         var objType = resources.dirtObjects[item.obj];
         var object = new createjs.Bitmap(loader.getResult(objType.key));
@@ -145,18 +285,17 @@
         object.y = pos.y - objType.height * resources.TILE_SIZE - resources.TILE_SIZE * 0.5;
         sceneObjects.addChild(object);
       });
+      */
 
-      // vygenerováno ... nacachuj
-      // cachuje se od y= -TILE_SIZE protože tiles mají počátek vlevo DOLE
-      // http://www.createjs.com/docs/easeljs/classes/Container.html#method_cache
-      sceneObjects.cache(0, -resources.TILE_SIZE, sceneObjects.width, sceneObjects.height);
+      // Poskoč do půl obrazovky, aby byl hráč na povrchu
+      shiftSectors(0, Math.floor(game.canvas.height / 2));
 
     };
 
     pub.dig = function(x, y) {
 
       var coord = render.pixelsToTiles(x, y);
-
+      var sectorsToUpdate = [];
       var tilesToReset = [];
 
       var rx = utils.even(coord.x);
@@ -172,23 +311,15 @@
                 if (tilesMap.map[index] != resources.VOID) {
                   tilesMap.map[index] = resources.DIRT.M1;
                   tilesToReset.push([x, y]);
-
-                  var tile = sceneObjectsMap[x][y];
-                  var v = tilesMap.map[index];
-                  var tileCols = tile.image.width / resources.TILE_SIZE;
-                  tile.sourceRect = {
-                    x: ((v - 1) % tileCols) * resources.TILE_SIZE,
-                    y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
-                    height: resources.TILE_SIZE,
-                    width: resources.TILE_SIZE
-                  };
-
                 }
 
               }
               else {
                 tilesMap.map[index] = resources.VOID;
-                sceneObjects.removeChild(sceneObjectsMap[x][y]);
+                var targetSector = getSectorByTiles(x, y);
+                if (typeof targetSector !== "undefined" && targetSector != null) {
+                  targetSector.removeChild(sceneObjectsMap[x][y]);
+                }
               }
             }
           }
@@ -201,15 +332,15 @@
         tilesToReset.forEach(function(item) {
           var x = item[0];
           var y = item[1];
-          var tile = sceneObjectsMap[x][y];
-          var v = generator.generateEdge(tilesMap, x, y);
-          var tileCols = tile.image.width / resources.TILE_SIZE;
-          tile.sourceRect = {
-            x: ((v - 1) % tileCols) * resources.TILE_SIZE,
-            y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
-            height: resources.TILE_SIZE,
-            width: resources.TILE_SIZE
-          };
+          generator.generateEdge(tilesMap, x, y);
+
+          // zjisti sektor dílku, aby byl přidán do fronty 
+          // ke cache update (postačí to udělat dle tilesToReset,
+          // protože to jsou okrajové dílky z oblasti změn)
+          var sector = getSectorByTiles(x, y);
+          if (typeof sector !== "undefined" && sector != null) {
+            sectorsToUpdate.push(sector);
+          }
         });
       })();
 
@@ -218,30 +349,46 @@
         tilesToReset.forEach(function(item) {
           var x = item[0];
           var y = item[1];
-          var tile = sceneObjectsMap[x][y];
-          var v = generator.generateCorner(tilesMap, x, y);
-          var tileCols = tile.image.width / resources.TILE_SIZE;
-          tile.sourceRect = {
-            x: ((v - 1) % tileCols) * resources.TILE_SIZE,
-            y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
-            height: resources.TILE_SIZE,
-            width: resources.TILE_SIZE
-          };
+          generator.generateCorner(tilesMap, x, y);
         });
       })();
 
-      sceneObjects.updateCache();
+      // Překresli dílky
+      (function() {
+        tilesToReset.forEach(function(item) {
+          var x = item[0];
+          var y = item[1];
+          // pokud už je alokován dílek na obrazovce, rovnou ho uprav
+          var sceneObjectsMapCol = sceneObjectsMap[x];
+          if (typeof sceneObjectsMapCol !== "undefined" && sceneObjectsMapCol != null) {
+            var tile = sceneObjectsMapCol[y];
+            if (typeof tile !== "undefined" && tile != null) {
+              var v = tilesMap.valueAt(x, y);
+              var tileCols = tile.image.width / resources.TILE_SIZE;
+              tile.sourceRect = {
+                x: ((v - 1) % tileCols) * resources.TILE_SIZE,
+                y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
+                height: resources.TILE_SIZE,
+                width: resources.TILE_SIZE
+              };
+            }
+          }
+        });
+      })();
+
+      // Aktualizuj cache
+      sectorsToUpdate.forEach(function(sector) {
+        sector.updateCache();
+      });
 
     };
 
     pub.shiftX = function(dst) {
-      screenOffsetX += dst;
-      sceneObjects.x += dst;
+      shiftSectors(dst, 0);
     };
 
     pub.shiftY = function(dst) {
-      screenOffsetY += dst;
-      sceneObjects.y += dst;
+      shiftSectors(0, dst);
     };
 
     return pub;

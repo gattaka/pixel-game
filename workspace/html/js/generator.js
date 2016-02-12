@@ -12,8 +12,8 @@
    var pub = {};
 
    // musí být sudé
-   var MAP_WIDTH = 400;
-   var MAP_HEIGHT = 100;
+   var MAP_WIDTH = 800;
+   var MAP_HEIGHT = 800;
 
    pub.generate = function() {
 
