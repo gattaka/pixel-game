@@ -14,7 +14,10 @@
    // musí být sudé
    var MAP_WIDTH = 800;
    var MAP_HEIGHT = 800;
+<<<<<<< HEAD
    var MAP_GROUND_LEVEL = 60;
+=======
+>>>>>>> 5ee680407ca742248d2fc771041378761922a30a
 
    pub.generate = function() {
 
