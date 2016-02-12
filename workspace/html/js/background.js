@@ -106,7 +106,7 @@
      far_hill_sec.y = far_hill.y;
      far_hill_sec.x = -far_hill_sec.image.width;
 
-     hill.y = 570;
+     hill.y = 650;
      hill_sec.y = hill.y;
      hill_sec.x = -hill_sec.image.width;
 

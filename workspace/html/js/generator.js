@@ -12,15 +12,16 @@
    var pub = {};
 
    // musí být sudé
-   var MAP_WIDTH = 400;
-   var MAP_HEIGHT = 100;
+   var MAP_WIDTH = 800;
+   var MAP_HEIGHT = 800;
+   var MAP_GROUND_LEVEL = 60;
 
    pub.generate = function() {
 
      var tilesMap = {
        map: [],
        objects: [],
-       objectsMapCache: [],
+       objectsMap: [],
        width: MAP_WIDTH,
        height: MAP_HEIGHT,
        indexAt: function(x, y) {
@@ -56,8 +57,13 @@
      // base generation
      for (var y = 0; y < tilesMap.height; y++) {
        for (var x = 0; x < tilesMap.width; x++) {
-         var m = x % 3 + 1 + ((y % 3) * 3);
-         tilesMap.map.push(resources.DIRT["M" + m]);
+         if (y < MAP_GROUND_LEVEL) {
+           tilesMap.map.push(resources.VOID);
+         }
+         else {
+           var m = x % 3 + 1 + ((y % 3) * 3);
+           tilesMap.map.push(resources.DIRT["M" + m]);
+         }
        }
      }
 
@@ -147,10 +153,10 @@
              // spodní buňky musí být všechny tvořený plochou DIRT.T
              // objekt nemůže "překlenovat" díru nebo viset z okraje
              // nelze kolidovat s jiným objektem
-             var col = tilesMap.objectsMapCache[x];
+             var col = tilesMap.objectsMap[x];
              if ((y == y0 && tilesMap.valueAt(x, y) != resources.DIRT.T) ||
                (y != y0 && tilesMap.valueAt(x, y) != resources.VOID) ||
-               (typeof col !== "undefined" && col[y] == 0))
+               (typeof col !== "undefined" && typeof col[y] !== "undefined"))
                return false;
            }
          }
@@ -164,7 +170,7 @@
            // bude tam nějaký objekt? (100% ano)
            if (Math.random() > 0) {
              var tries = 0;
-             var index = pool[Math.floor((pool.length - 1) * Math.random())];
+             var index = pool[Math.floor(pool.length * Math.random())];
              while (tries < resources.dirtObjects.length) {
                var object = resources.dirtObjects[index];
                var coord = tilesMap.coordAt(i);
@@ -175,15 +181,16 @@
                    y: coord.y,
                    obj: index
                  });
-                 // zapiš obsazení
-                 for (var x = coord.x; x <= coord.x + object.width - 1; x++) {
-                   for (var y = coord.y - object.height; y <= coord.y; y++) {
-                     var col = tilesMap.objectsMapCache[x];
+                 // zapiš obsazení jednotlivými dílky objektu
+                 for (var x = 0; x < object.width; x++) {
+                   for (var y = 0; y < object.height; y++) {
+                     var col = tilesMap.objectsMap[x + coord.x];
                      if (typeof col === "undefined") {
                        col = [];
-                       tilesMap.objectsMapCache[x] = col;
+                       tilesMap.objectsMap[x + coord.x] = col;
                      }
-                     col[y] = 0; // obsazeno
+                     var partsSheetIndex = object.posx + x + (object.posy + y) * resources.PARTS_SHEET_WIDTH;
+                     col[y + coord.y - object.height] = partsSheetIndex;
                    }
                  }
                  break;
