@@ -8,28 +8,46 @@
    /*-----------*/
    /* CONSTANTS */
    /*-----------*/
+   var SKY_KEY = "SKY_KEY";
+   var FAR_MOUNTAIN_KEY = "FAR_MOUNTAIN_KEY";
+   var MOUNTAIN_KEY = "MOUNTAIN_KEY";
+   var FAR_HILL_KEY = "FAR_HILL_KEY";
+   var HILL_KEY = "HILL_IMAGE";
+   var CLOUD_KEY = "CLOUD_KEY";
+   var CLOUDS_NUMBER = 5;
 
-   var SKY_IMAGE = "images/background/sky.png";
-   var FAR_MOUNTAIN_IMAGE = "images/background/far_mountain.png";
-   var MOUNTAIN_IMAGE = "images/background/mountain.png";
-   var FAR_HILL_IMAGE = "images/background/far_woodland.png";
-   var HILL_IMAGE = "images/background/woodland.png";
-   var CLOUD_IMAGES = [
-     "images/background/cloud1.png",
-     "images/background/cloud2.png",
-     "images/background/cloud3.png",
-     "images/background/cloud4.png",
-     "images/background/cloud5.png"
-   ];
    var CLOUDS_SPACE = 150;
 
    /*-----------*/
    /* VARIABLES */
    /*-----------*/
 
-   var itemsLoadedCount = 0;
-   var images = [];
-   var imageNames = [SKY_IMAGE, FAR_MOUNTAIN_IMAGE, MOUNTAIN_IMAGE, FAR_HILL_IMAGE, HILL_IMAGE].concat(CLOUD_IMAGES);
+   var loader;
+   var manifest = [{
+     src: "background/sky.png",
+     id: SKY_KEY
+   }, {
+     src: "background/far_mountain.png",
+     id: FAR_MOUNTAIN_KEY
+   }, {
+     src: "background/mountain.png",
+     id: MOUNTAIN_KEY
+   }, {
+     src: "background/far_woodland.png",
+     id: FAR_HILL_KEY
+   }, {
+     src: "background/woodland.png",
+     id: HILL_KEY
+   }];
+
+   (function() {
+     for (var i = 1; i <= CLOUDS_NUMBER; i++) {
+       manifest.push({
+         src: "background/cloud5.png",
+         id: CLOUD_KEY + i
+       });
+     }
+   })();
 
    var sky, far_mountain, far_mountain_sec, mountain, mountain_sec, hill, hill_sec, far_hill, far_hill_sec;
    var clouds = [];
@@ -38,49 +56,39 @@
 
    pub.init = function(callback) {
 
-     var preload = new createjs.LoadQueue();
-     preload.addEventListener("fileload", function(event) {
+     loader = new createjs.LoadQueue(false);
+     loader.addEventListener("fileload", function(event) {
        console.log(event.item.id + " loaded");
-       images[event.item.id] = event.result;
-       checkAndRun(function() {
-         if (typeof callback !== "undefined") {
-           callback();
-         }
-       });
      });
-     imageNames.forEach(function(item) {
-       console.log(item + " loading");
-       preload.loadFile(item);
+     loader.addEventListener("complete", function() {
+       construct();
+       if (typeof callback !== "undefined") {
+         callback();
+       }
      });
+     loader.loadManifest(manifest, true, "images/");
+
    };
 
-   function checkAndRun(callback) {
-     itemsLoadedCount++;
-     if (itemsLoadedCount == imageNames.length) {
-       run();
-       callback();
+   function construct() {
+
+     far_mountain = new createjs.Bitmap(loader.getResult(FAR_MOUNTAIN_KEY));
+     far_mountain_sec = new createjs.Bitmap(loader.getResult(FAR_MOUNTAIN_KEY));
+     mountain = new createjs.Bitmap(loader.getResult(MOUNTAIN_KEY));
+     mountain_sec = new createjs.Bitmap(loader.getResult(MOUNTAIN_KEY));
+     hill = new createjs.Bitmap(loader.getResult(HILL_KEY));
+     hill_sec = new createjs.Bitmap(loader.getResult(HILL_KEY));
+     far_hill = new createjs.Bitmap(loader.getResult(FAR_HILL_KEY));
+     far_hill_sec = new createjs.Bitmap(loader.getResult(FAR_HILL_KEY));
+     for (var i = 1; i <= CLOUDS_NUMBER; i++) {
+       clouds.push(new createjs.Bitmap(loader.getResult(CLOUD_KEY + i)));
      }
-   }
-
-   function run() {
-
-     far_mountain = new createjs.Bitmap(images[FAR_MOUNTAIN_IMAGE]);
-     far_mountain_sec = new createjs.Bitmap(images[FAR_MOUNTAIN_IMAGE]);
-     mountain = new createjs.Bitmap(images[MOUNTAIN_IMAGE]);
-     mountain_sec = new createjs.Bitmap(images[MOUNTAIN_IMAGE]);
-     hill = new createjs.Bitmap(images[HILL_IMAGE]);
-     hill_sec = new createjs.Bitmap(images[HILL_IMAGE]);
-     far_hill = new createjs.Bitmap(images[FAR_HILL_IMAGE]);
-     far_hill_sec = new createjs.Bitmap(images[FAR_HILL_IMAGE]);
-     CLOUD_IMAGES.forEach(function(item) {
-       clouds.push(new createjs.Bitmap(images[item]));
-     });
 
      sky = new createjs.Shape();
      game.stage.addChild(sky);
      sky.x = 0;
      sky.y = 0;
-     sky.graphics.beginBitmapFill(images[SKY_IMAGE], 'repeat').drawRect(0, 0, game.canvas.width, 250);
+     sky.graphics.beginBitmapFill(loader.getResult(SKY_KEY), 'repeat').drawRect(0, 0, game.canvas.width, 250);
 
      var parallaxItems = [far_mountain, far_mountain_sec].concat(clouds).concat([mountain, mountain_sec, far_hill, far_hill_sec, hill, hill_sec]);
 

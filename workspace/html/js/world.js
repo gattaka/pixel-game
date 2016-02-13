@@ -35,6 +35,7 @@
    var initialized = false;
 
    var heroSprite;
+   pub.heroSprite = heroSprite;
    var heroSpeed = {
      x: 0,
      y: 0
@@ -98,6 +99,7 @@
 
        heroSprite.x = game.canvas.width / 2;
        heroSprite.y = game.canvas.height / 2;
+       render.updatePlayerIcon(heroSprite.x, heroSprite.y);
 
        /*---------------------*/
        /* Measurements, debug */

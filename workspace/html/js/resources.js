@@ -12,6 +12,8 @@ var resources = (function() {
 
   pub.TILE_SIZE = 16;
 
+  pub.DIRT_BACK_KEY = "DIRT_BACK_KEY";
+
   pub.VOID = 0;
   pub.DIRT = {
     M1: 1,
@@ -39,6 +41,8 @@ var resources = (function() {
 
   pub.TILES_KEY = "TILES_KEY";
   pub.PARTS_KEY = "PARTS_KEY";
+
+  pub.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
 
   pub.PLANT_KEY = "PLANT_KEY";
   pub.TREE_KEY = "TREE_KEY";
