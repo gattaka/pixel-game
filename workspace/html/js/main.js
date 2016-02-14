@@ -1,6 +1,7 @@
  /*global createjs*/
  /*global background*/
  /*global world*/
+ /*global ui*/
 
  var game = (function() {
 
@@ -50,6 +51,7 @@
  		document.onkeydown = keydown;
  		document.onkeyup = keyup;
 
+
  		/*-----------------*/
  		/* Background init */
  		/*-----------------*/
@@ -64,7 +66,7 @@
  				/* Measurements, debug */
  				/*---------------------*/
  				console.log("Measurements init");
- 				
+
  				fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#00f");
  				stage.addChild(fpsLabel);
  				fpsLabel.x = 10;
@@ -81,6 +83,13 @@
  						mouseLabel.text = "x: " + event.stageX + " y: " + event.stageY;
  					}
  				}
+
+ 				/*---------*/
+ 				/* UI init */
+ 				/*---------*/
+ 				ui.init(function() {
+
+ 				});
 
  			});
 
@@ -116,6 +125,12 @@
  			if (keys[38] || keys[87]) directions.up = true;
  			if (keys[39] || keys[68]) directions.right = true;
  			if (keys[40] || keys[83]) directions.down = true;
+ 			if (keys[73]) {
+ 				ui.toggleInv();
+ 			}
+ 			else {
+ 				ui.prepareForToggleInv();
+ 			}
 
  			world.shift(delta, directions);
 

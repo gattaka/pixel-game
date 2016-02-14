@@ -44,9 +44,11 @@
 
     // Kontejner na sektory
     var sectorsCont;
-    // Sektorová mapa
+    // Mapa sektorů
     var sectorsMap = [];
-    // Globální mapa
+    // Globální mapa dílků
+    var sceneTilesMap = [];
+    // Globální mapa objektů
     var sceneObjectsMap = [];
 
     var MAP_SIDE = 200;
@@ -93,12 +95,7 @@
     var getSectorByTiles = function(x, y) {
       var sx = Math.floor(x / SECTOR_SIZE);
       var sy = Math.floor(y / SECTOR_SIZE);
-      var secCol = sectorsMap[sx];
-      if (typeof secCol === "undefined") {
-        secCol = [];
-        sectorsMap[sx] = secCol;
-      }
-      return secCol[sy];
+      return utils.get2D(sectorsMap, sx, sy);
     };
 
     var createTile = function(v) {
@@ -183,6 +180,8 @@
 
               var sector = new createjs.Container();
               sectorsCont.addChild(sector);
+              sector.map_x = x;
+              sector.map_y = y;
               sector.x = x * SECTOR_SIZE * resources.TILE_SIZE + screenOffsetX;
               sector.y = y * SECTOR_SIZE * resources.TILE_SIZE + screenOffsetY;
               sector.width = SECTOR_SIZE * resources.TILE_SIZE;
@@ -205,26 +204,22 @@
                     tile.y = (my % SECTOR_SIZE) * resources.TILE_SIZE;
 
                     // přidej dílek do globální mapy
-                    mapCol = sceneObjectsMap[mx];
-                    if (typeof mapCol === "undefined") {
-                      mapCol = [];
-                      sceneObjectsMap[mx] = mapCol;
-                    }
-                    mapCol[my] = tile;
+                    utils.set2D(sceneTilesMap, mx, my, tile);
                   }
 
                   // vytvoř na dané souřadnici dílky objektů
-                  var objectElementCol = tilesMap.objectsMap[mx];
-                  if (typeof objectElementCol !== "undefined") {
-                    var objectElement = objectElementCol[my];
-                    if (typeof objectElement !== "undefined" && objectElement != null) {
-                      var object = createObject(objectElement);
+                  var objectElement = utils.get2D(tilesMap.objectsMap, mx, my);
+                  if (objectElement != null) {
+                    // Sheet index dílku objektu
+                    var object = createObject(objectElement.sheetIndex);
 
-                      // přidej dílek do sektoru
-                      sector.addChild(object);
-                      object.x = (mx % SECTOR_SIZE) * resources.TILE_SIZE;
-                      object.y = (my % SECTOR_SIZE) * resources.TILE_SIZE; //+ resources.TILE_SIZE * 0.5;
-                    }
+                    // přidej dílek do sektoru
+                    sector.addChild(object);
+                    object.x = (mx % SECTOR_SIZE) * resources.TILE_SIZE;
+                    object.y = (my % SECTOR_SIZE) * resources.TILE_SIZE;
+
+                    // Přidej objekt do globální mapy objektů
+                    utils.set2D(sceneObjectsMap, mx, my, object);
                   }
                 }
               }
@@ -263,6 +258,8 @@
                   mapCol[my] = null;
                 }
               }
+
+              // TODO vymaž objekty
 
               // vymaž sektor
               secCol[y].removeAllChildren();
@@ -404,18 +401,16 @@
 
     };
 
-    pub.dig = function(x, y) {
-
-      var coord = render.pixelsToTiles(x, y);
+    var digGround = function(rx, ry) {
       var tilesToReset = [];
 
-      var rx = utils.even(coord.x);
-      var ry = utils.even(coord.y);
       (function() {
         for (var x = rx - 1; x <= rx + 2; x++) {
           for (var y = ry - 1; y <= ry + 2; y++) {
             var index = tilesMap.indexAt(x, y);
             if (index >= 0) {
+
+              // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
               if (x == rx - 1 || x == rx + 2 || y == ry - 1 || y == ry + 2) {
 
                 // okraje vyresetuj
@@ -425,11 +420,20 @@
                 }
 
               }
+              // pokud jsem vnitřní část výběru, zkontroluj, 
+              // že jsem neustřelil povrch pod usazeným objektem
+              // a vytvoř díru po kopání
               else {
+
+                // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
+                if (y == ry && tilesMap.map[index] == resources.DIRT.T) {
+                  tryDigObject(x, y - 1);
+                }
+
                 tilesMap.map[index] = resources.VOID;
                 var targetSector = getSectorByTiles(x, y);
                 if (typeof targetSector !== "undefined" && targetSector != null) {
-                  targetSector.removeChild(sceneObjectsMap[x][y]);
+                  targetSector.removeChild(utils.get2D(sceneTilesMap, x, y));
                 }
               }
             }
@@ -450,7 +454,7 @@
           // protože to jsou okrajové dílky z oblasti změn)
           var sector = getSectorByTiles(x, y);
           if (typeof sector !== "undefined" && sector != null) {
-            sectorsToUpdate.push(sector);
+            utils.set2D(sectorsToUpdate, sector.map_x, sector.map_y, sector);
           }
         });
       })();
@@ -470,25 +474,69 @@
           var x = item[0];
           var y = item[1];
           // pokud už je alokován dílek na obrazovce, rovnou ho uprav
-          var sceneObjectsMapCol = sceneObjectsMap[x];
-          if (typeof sceneObjectsMapCol !== "undefined" && sceneObjectsMapCol != null) {
-            var tile = sceneObjectsMapCol[y];
-            if (typeof tile !== "undefined" && tile != null) {
-              var v = tilesMap.valueAt(x, y);
-              var tileCols = tile.image.width / resources.TILE_SIZE;
-              tile.sourceRect = {
-                x: ((v - 1) % tileCols) * resources.TILE_SIZE,
-                y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
-                height: resources.TILE_SIZE,
-                width: resources.TILE_SIZE
-              };
-            }
+          var tile = utils.get2D(sceneTilesMap, x, y);
+          if (tile != null) {
+            var v = tilesMap.valueAt(x, y);
+            var tileCols = tile.image.width / resources.TILE_SIZE;
+            tile.sourceRect = {
+              x: ((v - 1) % tileCols) * resources.TILE_SIZE,
+              y: Math.floor((v - 1) / tileCols) * resources.TILE_SIZE,
+              height: resources.TILE_SIZE,
+              width: resources.TILE_SIZE
+            };
           }
         });
       })();
 
       // Proveď update minimapy
       //updateMinimap();
+    };
+
+    var tryDigObject = function(rx, ry) {
+      var objectElement = utils.get2D(tilesMap.objectsMap, rx, ry);
+      if (objectElement !== null) {
+        var objType = resources.dirtObjects[objectElement.objIndex];
+        var objWidth = objType.width;
+        var objHeight = objType.height;
+        // relativní pozice dílku v sheetu (od počátku sprite)
+        var posx = objectElement.objTileX;
+        var posy = objectElement.objTileY;
+
+        // projdi všechny okolní dílky, které patří danému objektu
+        for (var x = 0; x < objWidth; x++) {
+          for (var y = 0; y < objHeight; y++) {
+
+            // globální souřadnice dílku v mapě
+            var globalX = rx - posx + x;
+            var globalY = ry - posy + y;
+
+            // odstraň dílek objektu ze sektoru
+            var object = utils.get2D(sceneObjectsMap, globalX, globalY);
+            utils.set2D(sectorsToUpdate, object.parent.map_x, object.parent.map_y, object.parent);
+            object.parent.removeChild(object);
+
+            // odstraň dílke objektu z map
+            utils.set2D(tilesMap.objectsMap, globalX, globalY, null);
+            utils.set2D(sceneObjectsMap, globalX, globalY, null);
+
+          }
+        }
+      }
+    };
+
+    pub.dig = function(x, y) {
+
+      var coord = render.pixelsToTiles(x, y);
+      var rx = utils.even(coord.x);
+      var ry = utils.even(coord.y);
+
+      // kopl jsem do nějakého povrchu?
+      if (tilesMap.valueAt(rx, ry) != resources.VOID) {
+        digGround(rx, ry);
+      }
+
+      // kopl jsem do objektu?
+      tryDigObject(rx, ry);
 
     };
 
@@ -504,9 +552,11 @@
 
     pub.handleTick = function() {
       // Aktualizuj cache
-      while (sectorsToUpdate.length > 0) {
-        sectorsToUpdate.pop().updateCache();
-      }
+      sectorsToUpdate.forEach(function(x) {
+        x.forEach(function(y) {
+          y.updateCache();
+        });
+      });
     };
 
     return pub;

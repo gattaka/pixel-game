@@ -8,7 +8,7 @@ var resources = (function() {
 
   var pub = {};
 
-  pub.SHOW_SECTORS = false;
+  pub.SHOW_SECTORS = true;
 
   pub.TILE_SIZE = 16;
 

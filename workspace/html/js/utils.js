@@ -18,6 +18,26 @@ var utils = (function() {
     return pub.isEven(value) ? value : value - 1;
   };
 
+  pub.get2D = function(a, x, y) {
+    // přidej dílek do globální mapy
+    var col = a[x];
+    if (typeof col === "undefined" || col[y] == null) {
+      return null;
+    }
+    else {
+      return col[y];
+    }
+  };
+
+  pub.set2D = function(a, x, y, val) {
+    var col = a[x];
+    if (typeof col === "undefined") {
+      col = [];
+      a[x] = col;
+    }
+    col[y] = val;
+  };
+
   return pub;
 
 })();

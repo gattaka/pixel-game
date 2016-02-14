@@ -190,7 +190,15 @@
                        tilesMap.objectsMap[x + coord.x] = col;
                      }
                      var partsSheetIndex = object.posx + x + (object.posy + y) * resources.PARTS_SHEET_WIDTH;
-                     col[y + coord.y - object.height] = partsSheetIndex;
+                     col[y + coord.y - object.height] = {
+                       // typ objektu
+                       objIndex: index,
+                       // Sheet index dílku objektu
+                       sheetIndex: partsSheetIndex,
+                       // relativní souřadnice dílku objektu v sheetmapě
+                       objTileX: x,
+                       objTileY: y
+                     };
                    }
                  }
                  break;
