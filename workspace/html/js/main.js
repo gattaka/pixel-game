@@ -2,6 +2,7 @@
  /*global background*/
  /*global world*/
  /*global ui*/
+ /*global resources*/
 
  var game = (function() {
 
@@ -57,39 +58,46 @@
  		/*-----------------*/
  		background.init(function() {
 
- 			/*----------*/
- 			/* Map init */
- 			/*----------*/
- 			world.init(function() {
-
- 				/*---------------------*/
- 				/* Measurements, debug */
- 				/*---------------------*/
- 				console.log("Measurements init");
-
- 				fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#00f");
- 				stage.addChild(fpsLabel);
- 				fpsLabel.x = 10;
- 				fpsLabel.y = 10;
-
- 				stage.addEventListener("stagemousemove", handleMouseMove);
- 				mouseLabel = new createjs.Text("x: - y: -", "bold 18px Arial", "#00f");
- 				stage.addChild(mouseLabel);
- 				mouseLabel.x = 10;
- 				mouseLabel.y = 30;
-
- 				function handleMouseMove(event) {
- 					if (typeof mouseLabel !== "undefined") {
- 						mouseLabel.text = "x: " + event.stageX + " y: " + event.stageY;
- 					}
- 				}
+ 			/*----------------*/
+ 			/* Resources init */
+ 			/*----------------*/
+ 			resources.init(function() {
 
  				/*---------*/
  				/* UI init */
  				/*---------*/
- 				ui.init(function() {
+ 				world.init(function() {
 
+ 					/*----------*/
+ 					/* Map init */
+ 					/*----------*/
+ 					ui.init(function() {
+
+ 						/*---------------------*/
+ 						/* Measurements, debug */
+ 						/*---------------------*/
+ 						console.log("Measurements init");
+
+ 						fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#00f");
+ 						stage.addChild(fpsLabel);
+ 						fpsLabel.x = 10;
+ 						fpsLabel.y = 10;
+
+ 						stage.addEventListener("stagemousemove", handleMouseMove);
+ 						mouseLabel = new createjs.Text("x: - y: -", "bold 18px Arial", "#00f");
+ 						stage.addChild(mouseLabel);
+ 						mouseLabel.x = 10;
+ 						mouseLabel.y = 30;
+
+ 						function handleMouseMove(event) {
+ 							if (typeof mouseLabel !== "undefined") {
+ 								mouseLabel.text = "x: " + event.stageX + " y: " + event.stageY;
+ 							}
+ 						}
+
+ 					});
  				});
+
 
  			});
 

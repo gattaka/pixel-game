@@ -2,6 +2,7 @@
  /*global game*/
  /*global hero*/
  /*global utils*/
+ /*global ui*/
  /*global background*/
  /*global generator*/
  /*global resources*/
@@ -42,11 +43,16 @@
    };
    var heroJumpTime = 0;
 
-   var pointer;
-
    var collisionLabel;
 
-   var isMouseDown = false;
+   // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
+   var MOUSE_COOLDOWN = 100;
+   var mouse = {
+     down: false,
+     time: MOUSE_COOLDOWN,
+     x: 0,
+     y: 0
+   };
 
    var tilesMap;
 
@@ -67,25 +73,6 @@
        }
      }, tilesMap);
 
-   };
-
-   var movePointer = function(x, y) {
-     var coord = render.pixelsToTiles(x, y);
-     var clsn = isCollisionByTiles(coord.x, coord.y);
-     if (typeof collisionLabel !== "undefined") {
-       var index = tilesMap.indexAt(coord.x, coord.y);
-       var type = tilesMap.map[index];
-       collisionLabel.text = "tile x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
-     }
-     if (clsn.hit) {
-       var pixels = render.tilesToPixel(utils.even(clsn.result.x), utils.even(clsn.result.y));
-       pointer.x = pixels.x;
-       pointer.y = pixels.y;
-       pointer.visible = true;
-     }
-     else {
-       //pointer.visible = false;
-     }
    };
 
    var construct = function() {
@@ -109,47 +96,55 @@
        collisionLabel.x = 10;
        collisionLabel.y = 50;
 
-       /*---------*/
-       /* Pointer */
-       /*---------*/
-       (function() {
-         pointer = new createjs.Shape();
-         var g = pointer.graphics;
-         g.setStrokeStyle(1);
-         g.beginFill("rgba(255,255,0,0.5)");
-         g.beginStroke("#000");
-         g.rect(0, 0, resources.TILE_SIZE * 2, resources.TILE_SIZE * 2);
-         game.stage.addChild(pointer);
-         pointer.visible = false;
-         game.stage.addEventListener("stagemousemove", function(event) {
-           movePointer(event.stageX, event.stageY);
-         });
-       })();
-
-       /*-------------*/
-       /* Click event */
-       /*-------------*/
+       /*--------------*/
+       /* Mouse events */
+       /*--------------*/
 
        (function() {
+         //game.stage.enableMouseOver(10);
          game.stage.addEventListener("mousedown", function(event) {
-           console.log("mousedown " + event.stageX + ":" + event.stageY);
+           console.log("mouse.down = true");
+           mouse.down = true;
+         });
+         game.stage.addEventListener("stagemousemove", function(event) {
+           if (mouse.down) {
+             mouse.x = event.stageX;
+             mouse.y = event.stageY;
+           }
+           /*
+                      var coord = render.pixelsToTiles(mouse.x, mouse.y);
+                      var clsn = isCollisionByTiles(coord.x, coord.y);
+                      if (typeof collisionLabel !== "undefined") {
+                        var index = tilesMap.indexAt(coord.x, coord.y);
+                        var type = tilesMap.map[index];
+                        collisionLabel.text = "tile x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
+                      }
+           */
+         });
+         game.canvas.addEventListener("mouseup", function(event) {
+           //game.stage.addEventListener("pressup", function(event) {
+           console.log("mouse.down = false");
+           mouse.down = false;
          });
        })();
 
-       (function() {
-         game.stage.addEventListener("mouserelease", function(event) {
-           console.log("mouseup " + event.stageX + ":" + event.stageY);
-         });
-       })();
+       /*
+              (function() {
+                game.stage.addEventListener("click", function(event) {
+                  //console.log("click " + event.stageX + ":" + event.stageY);
 
-       //isMouseDown
+                });
+              })();
+       */
 
-       (function() {
-         game.stage.addEventListener("click", function(event) {
-           console.log("click " + event.stageX + ":" + event.stageY);
-           render.dig(event.stageX, event.stageY);
-         });
-       })();
+       /*------------*/
+       /* Dig events */
+       /*------------*/
+       render.addOnDigObjectListener(function(objType) {
+         if (typeof objType.item !== "undefined") {
+           ui.invInsert(objType.item.index, objType.item.quant);
+         }
+       });
 
        console.log("earth ready");
        initialized = true;
@@ -425,6 +420,12 @@
 
    pub.handleTick = function(delta) {
      render.handleTick();
+     mouse.time -= delta;
+     if (mouse.time <= 0 && mouse.down) {
+       render.dig(mouse.x, mouse.y);
+       //console.log("click");
+       mouse.time = MOUSE_COOLDOWN;
+     }
    };
 
    return pub;

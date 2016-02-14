@@ -26,6 +26,8 @@
       id: resources.PLAYER_ICON_KEY
     }];
 
+    var onDigObjectListeners = [];
+
     var screenOffsetX = 0;
     var screenOffsetY = 0;
 
@@ -41,6 +43,7 @@
     var BUFFER_SECTORS_Y = 1;
 
     var sectorsToUpdate = [];
+    var sectorsToUpdateSet = [];
 
     // Kontejner na sektory
     var sectorsCont;
@@ -236,7 +239,9 @@
               // proveď cache na sektoru
               sector.cache(0, 0, sector.width, sector.height);
 
-              console.log("Alokován sektor: " + x + ":" + y);
+              if (resources.PRINT_SECTOR_ALLOC) {
+                console.log("Alokován sektor: " + x + ":" + y);
+              }
             }
 
           }
@@ -266,7 +271,9 @@
               sectorsCont.removeChild(secCol[y]);
               secCol[y] = null;
 
-              console.log("Dealokován sektor: " + x + ":" + y);
+              if (resources.PRINT_SECTOR_ALLOC) {
+                console.log("Dealokován sektor: " + x + ":" + y);
+              }
 
             }
           }
@@ -454,7 +461,7 @@
           // protože to jsou okrajové dílky z oblasti změn)
           var sector = getSectorByTiles(x, y);
           if (typeof sector !== "undefined" && sector != null) {
-            utils.set2D(sectorsToUpdate, sector.map_x, sector.map_y, sector);
+            utils.set2D(sectorsToUpdateSet, sector.map_x, sector.map_y, sector);
           }
         });
       })();
@@ -502,6 +509,10 @@
         var posx = objectElement.objTileX;
         var posy = objectElement.objTileY;
 
+        onDigObjectListeners.forEach(function(fce) {
+          fce(objType);
+        });
+
         // projdi všechny okolní dílky, které patří danému objektu
         for (var x = 0; x < objWidth; x++) {
           for (var y = 0; y < objHeight; y++) {
@@ -512,7 +523,7 @@
 
             // odstraň dílek objektu ze sektoru
             var object = utils.get2D(sceneObjectsMap, globalX, globalY);
-            utils.set2D(sectorsToUpdate, object.parent.map_x, object.parent.map_y, object.parent);
+            utils.set2D(sectorsToUpdateSet, object.parent.map_x, object.parent.map_y, object.parent);
             object.parent.removeChild(object);
 
             // odstraň dílke objektu z map
@@ -538,6 +549,14 @@
       // kopl jsem do objektu?
       tryDigObject(rx, ry);
 
+      // množina sektorů ke cache-update
+      sectorsToUpdateSet.forEach(function(x) {
+        x.forEach(function(y) {
+          sectorsToUpdate.push(y);
+        });
+      });
+      sectorsToUpdateSet = [];
+
     };
 
     pub.shiftX = function(dst) {
@@ -552,11 +571,14 @@
 
     pub.handleTick = function() {
       // Aktualizuj cache
-      sectorsToUpdate.forEach(function(x) {
-        x.forEach(function(y) {
-          y.updateCache();
-        });
-      });
+      while (sectorsToUpdate.length > 0) {
+        sectorsToUpdate.pop().updateCache();
+        console.log("updateCache...");
+      }
+    };
+
+    pub.addOnDigObjectListener = function(f) {
+      onDigObjectListeners.push(f);
     };
 
     return pub;
