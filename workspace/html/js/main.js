@@ -84,7 +84,7 @@
  						fpsLabel.y = 10;
 
  						stage.addEventListener("stagemousemove", handleMouseMove);
- 						mouseLabel = new createjs.Text("x: - y: -", "bold 18px Arial", "#00f");
+ 						mouseLabel = new createjs.Text("PIXELS x: - y: -", "bold 18px Arial", "#00f");
  						stage.addChild(mouseLabel);
  						mouseLabel.x = 10;
  						mouseLabel.y = 30;

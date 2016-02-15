@@ -37,13 +37,15 @@
 
     // Velikost sektoru v dílcích
     var SECTOR_SIZE = 10;
+    // kolik překreslení se po změně nebude cachovat, protože 
+    // je dost pravděpodobné, že se bude ještě měnit?
+    var SECTOR_CACHE_COOLDOWN = 5;
     // Počet okrajových sektorů, které nejsou zobrazeny,
     // ale jsou alokovány (pro plynulé posuny)
     var BUFFER_SECTORS_X = 1;
     var BUFFER_SECTORS_Y = 1;
 
     var sectorsToUpdate = [];
-    var sectorsToUpdateSet = [];
 
     // Kontejner na sektory
     var sectorsCont;
@@ -95,7 +97,7 @@
     };
 
     // dle souřadnic tiles spočítá souřadnici sektoru
-    var getSectorByTiles = function(x, y) {
+    pub.getSectorByTiles = function(x, y) {
       var sx = Math.floor(x / SECTOR_SIZE);
       var sy = Math.floor(y / SECTOR_SIZE);
       return utils.get2D(sectorsMap, sx, sy);
@@ -182,6 +184,7 @@
             if (typeof secCol[y] === "undefined" || secCol[y] == null) {
 
               var sector = new createjs.Container();
+              sector.secId = y * maxSecCountX + x;
               sectorsCont.addChild(sector);
               sector.map_x = x;
               sector.map_y = y;
@@ -408,6 +411,15 @@
 
     };
 
+    var markSector = function(sector) {
+      if (typeof sectorsToUpdate[sector.secId] === "undefined") {
+        sectorsToUpdate[sector.secId] = {
+          sector: sector,
+          cooldown: SECTOR_CACHE_COOLDOWN
+        };
+      }
+    };
+
     var digGround = function(rx, ry) {
       var tilesToReset = [];
 
@@ -416,6 +428,7 @@
           for (var y = ry - 1; y <= ry + 2; y++) {
             var index = tilesMap.indexAt(x, y);
             if (index >= 0) {
+              var sector = pub.getSectorByTiles(x, y);
 
               // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
               if (x == rx - 1 || x == rx + 2 || y == ry - 1 || y == ry + 2) {
@@ -424,6 +437,13 @@
                 if (tilesMap.map[index] != resources.VOID) {
                   tilesMap.map[index] = resources.DIRT.M1;
                   tilesToReset.push([x, y]);
+
+                  // zjisti sektor dílku, aby byl přidán do fronty 
+                  // ke cache update (postačí to udělat dle tilesToReset,
+                  // protože to jsou okrajové dílky z oblasti změn)
+                  if (typeof sector !== "undefined" && sector != null) {
+                    markSector(sector);
+                  }
                 }
 
               }
@@ -433,14 +453,24 @@
               else {
 
                 // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
-                if (y == ry && tilesMap.map[index] == resources.DIRT.T) {
+                if (y == ry &&
+                  (tilesMap.map[index] == resources.DIRT.T ||
+                    tilesMap.map[index] == resources.DIRT.TL ||
+                    tilesMap.map[index] == resources.DIRT.TR)) {
                   tryDigObject(x, y - 1);
                 }
 
                 tilesMap.map[index] = resources.VOID;
-                var targetSector = getSectorByTiles(x, y);
+                var targetSector = pub.getSectorByTiles(x, y);
                 if (typeof targetSector !== "undefined" && targetSector != null) {
                   targetSector.removeChild(utils.get2D(sceneTilesMap, x, y));
+                }
+
+                // zjisti sektor dílku, aby byl přidán do fronty 
+                // ke cache update (postačí to udělat dle tilesToReset,
+                // protože to jsou okrajové dílky z oblasti změn)
+                if (typeof sector !== "undefined" && sector != null) {
+                  markSector(sector);
                 }
               }
             }
@@ -455,14 +485,6 @@
           var x = item[0];
           var y = item[1];
           generator.generateEdge(tilesMap, x, y);
-
-          // zjisti sektor dílku, aby byl přidán do fronty 
-          // ke cache update (postačí to udělat dle tilesToReset,
-          // protože to jsou okrajové dílky z oblasti změn)
-          var sector = getSectorByTiles(x, y);
-          if (typeof sector !== "undefined" && sector != null) {
-            utils.set2D(sectorsToUpdateSet, sector.map_x, sector.map_y, sector);
-          }
         });
       })();
 
@@ -523,7 +545,7 @@
 
             // odstraň dílek objektu ze sektoru
             var object = utils.get2D(sceneObjectsMap, globalX, globalY);
-            utils.set2D(sectorsToUpdateSet, object.parent.map_x, object.parent.map_y, object.parent);
+            markSector(object.parent);
             object.parent.removeChild(object);
 
             // odstraň dílke objektu z map
@@ -549,14 +571,6 @@
       // kopl jsem do objektu?
       tryDigObject(rx, ry);
 
-      // množina sektorů ke cache-update
-      sectorsToUpdateSet.forEach(function(x) {
-        x.forEach(function(y) {
-          sectorsToUpdate.push(y);
-        });
-      });
-      sectorsToUpdateSet = [];
-
     };
 
     pub.shiftX = function(dst) {
@@ -570,10 +584,11 @@
     };
 
     pub.handleTick = function() {
-      // Aktualizuj cache
-      while (sectorsToUpdate.length > 0) {
-        sectorsToUpdate.pop().updateCache();
-        console.log("updateCache...");
+      for (var i = 0; i < sectorsToUpdate.length; i++) {
+        var item = sectorsToUpdate.pop();
+        if (typeof item !== "undefined") {
+          item.sector.updateCache();
+        }
       }
     };
 

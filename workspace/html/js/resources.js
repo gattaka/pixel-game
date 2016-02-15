@@ -10,7 +10,7 @@
 
    var pub = {};
 
-   pub.SHOW_SECTORS = false;
+   pub.SHOW_SECTORS = true;
    pub.PRINT_SECTOR_ALLOC = false;
 
    pub.TILE_SIZE = 16;

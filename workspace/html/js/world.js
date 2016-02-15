@@ -43,12 +43,14 @@
    };
    var heroJumpTime = 0;
 
-   var collisionLabel;
+   var tilesLabel;
+   var sectorLabel;
 
    // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
    var MOUSE_COOLDOWN = 100;
    var mouse = {
      down: false,
+     click: false,
      time: MOUSE_COOLDOWN,
      x: 0,
      y: 0
@@ -91,51 +93,49 @@
        /*---------------------*/
        /* Measurements, debug */
        /*---------------------*/
-       collisionLabel = new createjs.Text("x: - y: -", "bold 18px Arial", "#00f");
-       game.stage.addChild(collisionLabel);
-       collisionLabel.x = 10;
-       collisionLabel.y = 50;
+       tilesLabel = new createjs.Text("TILES x: - y: -", "bold 18px Arial", "#00f");
+       game.stage.addChild(tilesLabel);
+       tilesLabel.x = 10;
+       tilesLabel.y = 50;
+
+       sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
+       game.stage.addChild(sectorLabel);
+       sectorLabel.x = 10;
+       sectorLabel.y = 70;
 
        /*--------------*/
        /* Mouse events */
        /*--------------*/
 
        (function() {
-         //game.stage.enableMouseOver(10);
-         game.stage.addEventListener("mousedown", function(event) {
-           console.log("mouse.down = true");
+         // Všechno musí být s prefixem 'stage' jinak se bude snažit chytat 
+         // eventy s ohledem na konkrétní objekty a to se drasticky projevuje 
+         // na FPS -- takhle se zjišťuje event obecně a je to bez ztrát 
+         game.stage.addEventListener("stagemousedown", function(event) {
            mouse.down = true;
+           mouse.x = event.stageX;
+           mouse.y = event.stageY;
          });
          game.stage.addEventListener("stagemousemove", function(event) {
            if (mouse.down) {
              mouse.x = event.stageX;
              mouse.y = event.stageY;
            }
-           /*
-                      var coord = render.pixelsToTiles(mouse.x, mouse.y);
-                      var clsn = isCollisionByTiles(coord.x, coord.y);
-                      if (typeof collisionLabel !== "undefined") {
-                        var index = tilesMap.indexAt(coord.x, coord.y);
-                        var type = tilesMap.map[index];
-                        collisionLabel.text = "tile x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
-                      }
-           */
+
+           var coord = render.pixelsToTiles(event.stageX, event.stageY);
+           var clsn = isCollisionByTiles(coord.x, coord.y);
+           var index = tilesMap.indexAt(coord.x, coord.y);
+           var type = tilesMap.map[index];
+           tilesLabel.text = "TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
+
+           var sector = render.getSectorByTiles(coord.x, coord.y);
+           sectorLabel.text = "SECTOR: x: " + sector.map_x + " y: " + sector.map_y;
+
          });
-         game.canvas.addEventListener("mouseup", function(event) {
-           //game.stage.addEventListener("pressup", function(event) {
-           console.log("mouse.down = false");
+         game.stage.addEventListener("stagemouseup", function(event) {
            mouse.down = false;
          });
        })();
-
-       /*
-              (function() {
-                game.stage.addEventListener("click", function(event) {
-                  //console.log("click " + event.stageX + ":" + event.stageY);
-
-                });
-              })();
-       */
 
        /*------------*/
        /* Dig events */
@@ -421,7 +421,8 @@
    pub.handleTick = function(delta) {
      render.handleTick();
      mouse.time -= delta;
-     if (mouse.time <= 0 && mouse.down) {
+     if (mouse.time <= 0 && (mouse.down || mouse.click)) {
+       mouse.click = false;
        render.dig(mouse.x, mouse.y);
        //console.log("click");
        mouse.time = MOUSE_COOLDOWN;
