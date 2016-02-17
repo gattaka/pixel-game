@@ -1,5 +1,4 @@
  /*global createjs*/
- /*global game*/
 
  var hero = (function() {
 
@@ -27,8 +26,11 @@
    /* VARIABLES */
    /*-----------*/
 
+   pub.sprite;
    pub.width = WIDTH;
    pub.height = HEIGHT;
+   pub.speedx = 0;
+   pub.speedy = 0;
 
    // Collision offset
    pub.collXOffset = 10;
@@ -45,7 +47,6 @@
      FALL_STATE: "fall"
    };
 
-   var sprite;
    var state = IDLE_STATE;
 
    var loader;
@@ -85,7 +86,7 @@
            "jumpL": [27, 27, "jumpL", 0.2],
          }
        });
-       sprite = new createjs.Sprite(spriteSheet, "idle");
+       pub.sprite = new createjs.Sprite(spriteSheet, "idle");
 
        if (typeof callback !== "undefined") {
          callback();
@@ -102,7 +103,7 @@
 
    var performState = function(desiredState) {
      if (state != desiredState) {
-       sprite.gotoAndPlay(stateAnimation[desiredState]);
+       pub.sprite.gotoAndPlay(stateAnimation[desiredState]);
        state = desiredState;
      }
    };
@@ -139,8 +140,29 @@
      performState(FALL_STATE);
    };
 
-   pub.sprite = function() {
-     return sprite;
+   pub.updateAnimations = function() {
+     if (pub.speedx == 0 && pub.speedy == 0) {
+       pub.idle();
+     }
+     else if (pub.speedy != 0) {
+       if (pub.speedx == 0) {
+         pub.jump();
+       }
+       else if (pub.speedx > 0) {
+         pub.jumpL();
+       }
+       else {
+         pub.jumpR();
+       }
+     }
+     else {
+       if (pub.speedx > 0) {
+         pub.walkL();
+       }
+       if (pub.speedx < 0) {
+         pub.walkR();
+       }
+     }
    };
 
    return pub;

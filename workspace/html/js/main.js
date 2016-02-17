@@ -122,6 +122,10 @@
  			background.handleTick(delta);
  			world.handleTick(delta);
 
+ 			// Při delším prodlení (nízké FPS) bude akcelerace působit 
+ 			// fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
+ 			// už nedrží např. šipku -- holt "LAG" :)
+
  			// Controls
  			var directions = {
  				up: false,
@@ -140,7 +144,7 @@
  				ui.prepareForToggleInv();
  			}
 
- 			world.shift(delta, directions);
+ 			world.update(delta, directions);
 
  			stage.update();
  		}

@@ -22,26 +22,26 @@
    /* CONSTANTS */
    /*-----------*/
 
+   var OBJECT_NOTIFY_TIME = 500;
+   var OBJECT_NOTIFY_BOUNCE_SPEED = 120;
+   var OBJECT_PICKUP_DISTANCE = 10;
+   var OBJECT_PICKUP_FORCE_DISTANCE = 100;
+   var OBJECT_PICKUP_FORCE_TIME = 200;
+
    // Pixel/s
    var HERO_HORIZONTAL_SPEED = 300;
-   var HERO_VERTICAL_SPEED = 32;
+   var HERO_VERTICAL_SPEED = 500;
 
    // Pixel/s2
-   var WORLD_GRAVITY = 60;
+   var WORLD_GRAVITY = -1200;
 
    /*-----------*/
    /* VARIABLES */
    /*-----------*/
 
-   var initialized = false;
+   var freeObjects = [];
 
-   var heroSprite;
-   pub.heroSprite = heroSprite;
-   var heroSpeed = {
-     x: 0,
-     y: 0
-   };
-   var heroJumpTime = 0;
+   var initialized = false;
 
    var tilesLabel;
    var sectorLabel;
@@ -83,12 +83,10 @@
      /* Characters */
      /*------------*/
      hero.init(function() {
-       heroSprite = hero.sprite();
-       game.stage.addChild(heroSprite);
-
-       heroSprite.x = game.canvas.width / 2;
-       heroSprite.y = game.canvas.height / 2;
-       render.updatePlayerIcon(heroSprite.x, heroSprite.y);
+       game.stage.addChild(hero.sprite);
+       hero.sprite.x = game.canvas.width / 2;
+       hero.sprite.y = game.canvas.height / 2;
+       render.updatePlayerIcon(hero.sprite.x, hero.sprite.y);
 
        /*---------------------*/
        /* Measurements, debug */
@@ -140,9 +138,26 @@
        /*------------*/
        /* Dig events */
        /*------------*/
-       render.addOnDigObjectListener(function(objType) {
+       render.addOnDigObjectListener(function(objType, x, y) {
          if (typeof objType.item !== "undefined") {
-           ui.invInsert(objType.item.index, objType.item.quant);
+           for (var i = 0; i < objType.item.quant; i++) {
+             var objectSprite = resources.getItemBitmap(objType.item.index);
+             var coord = render.tilesToPixel(x, y);
+             objectSprite.x = coord.x + 10 - Math.random() * 20;
+             objectSprite.y = coord.y;
+             game.stage.addChild(objectSprite);
+             var object = {};
+             object.item = objType.item;
+             object.sprite = objectSprite;
+             object.width = objectSprite.sourceRect.width;
+             object.height = objectSprite.sourceRect.height;
+             object.speedx = 0;
+             object.speedy = (Math.random() * 2 + 1) * OBJECT_NOTIFY_BOUNCE_SPEED;
+             object.collXOffset = 2;
+             object.collYOffset = 0;
+             object.notificationTimer = OBJECT_NOTIFY_TIME;
+             freeObjects.push(object);
+           }
          }
        });
 
@@ -152,23 +167,94 @@
 
    };
 
-   pub.shift = function(delta, directions) {
+   var updateObject = function(sDelta, object, makeShiftX, makeShiftY) {
+
+     var clsnTest;
+     var clsnPosition;
+
+     if (object.speedy != 0) {
+
+       // dráha, kterou objekt urazil za daný časový úsek, 
+       // kdy je známa jeho poslední rychlost a zrychlení, 
+       // které na něj za daný časový úsek působilo:
+       // s_t = vt + 1/2.at^2
+       var distanceY = utils.floor(object.speedy * sDelta + WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
+       // uprav rychlost objektu, která se dá spočítat jako: 
+       // v = v_0 + at
+       object.speedy = object.speedy + WORLD_GRAVITY * sDelta;
+
+       // Nenarazím na překážku?
+       clsnTest = isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
+       if (clsnTest.hit == false) {
+         makeShiftY(distanceY);
+       }
+       else {
+         // zastavil jsem se při stoupání? Začni hned padat
+         if (distanceY > 0) {
+           object.speedy = 0;
+         }
+         // zastavil jsem se při pádu? Konec skoku
+         else {
+
+           // "doskoč" až na zem
+           // získej pozici kolizního bloku
+           clsnPosition = render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
+           makeShiftY(-1 * (clsnPosition.y - (object.sprite.y + object.height - object.collYOffset)));
+
+           object.speedy = 0;
+         }
+       }
+
+     }
+
+     if (object.speedx != 0) {
+       var distanceX = utils.floor(sDelta * object.speedx);
+
+       // Nenarazím na překážku?
+       clsnTest = isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
+       if (clsnTest.hit == false) {
+         makeShiftX(distanceX);
+       }
+       // zkus zmenšit posun, aby nebyla kolize
+       else {
+         // získej pozici kolizního bloku
+         clsnPosition = render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
+         if (distanceX > 0) {
+           // narazil jsem do něj zprava
+           makeShiftX(object.sprite.x + object.collXOffset - (clsnPosition.x + resources.TILE_SIZE) - 1);
+         }
+         else {
+           // narazil jsem do něj zleva
+           makeShiftX(-1 * (clsnPosition.x - (object.sprite.x + object.width - object.collXOffset) - 1));
+         }
+       }
+     }
+
+     // pokud nejsem zrovna uprostřed skoku...
+     if (object.speedy == 0) {
+       // ...a mám kam padat
+       clsnTest = isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1);
+       if (clsnTest.hit == false) {
+         object.speedy = -1;
+       }
+     }
+
+     if (typeof object.updateAnimations !== "undefined") {
+       object.updateAnimations();
+     }
+
+   };
+
+   pub.update = function(delta, directions) {
      if (initialized) {
 
-       var clsnTest;
-       var clsnPosition;
-
-       // Při delším prodlení (nízké FPS) bude akcelerace působit 
-       // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
-       // už nedrží např. šipku -- holt "LAG" :)
        var sDelta = delta / 1000; // ms -> s
 
        // Dle kláves nastav rychlosti
        // Nelze akcelerovat nahoru, když už 
        // rychlost mám (nemůžu skákat ve vzduchu)
-       if (directions.up && heroSpeed.y == 0) {
-         heroSpeed.y = HERO_VERTICAL_SPEED;
-         heroJumpTime = 0;
+       if (directions.up && hero.speedy == 0) {
+         hero.speedy = HERO_VERTICAL_SPEED;
        }
        else if (directions.down) {
          // TODO
@@ -176,139 +262,70 @@
 
        // Horizontální akcelerace
        if (directions.left) {
-         heroSpeed.x = HERO_HORIZONTAL_SPEED;
+         hero.speedx = HERO_HORIZONTAL_SPEED;
        }
        else if (directions.right) {
-         heroSpeed.x = -HERO_HORIZONTAL_SPEED;
+         hero.speedx = -HERO_HORIZONTAL_SPEED;
        }
        else {
-         heroSpeed.x = 0;
+         hero.speedx = 0;
        }
 
-       // Spočítej projevy rychlosti na animace
 
-       if (heroSpeed.x > 0) {
-         hero.walkL();
-       }
-       if (heroSpeed.x < 0) {
-         hero.walkR();
-       }
-       if (heroSpeed.x == 0 && heroSpeed.y == 0) {
-         hero.idle();
-       }
+       var makeShiftX = function(dst) {
+         var rndDst = utils.floor(dst);
+         render.shiftX(rndDst);
+         // Horizontální pohyb se projevuje na pozadí
+         //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
+         background.shift(rndDst, 0);
+         freeObjects.forEach(function(item) {
+           item.sprite.x += rndDst;
+         });
+       };
 
-       if (heroSpeed.y != 0) {
+       var makeShiftY = function(dst) {
+         var rndDst = utils.floor(dst);
+         render.shiftY(rndDst);
+         // Horizontální pohyb se projevuje na pozadí
+         //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
+         background.shift(0, rndDst);
+         freeObjects.forEach(function(item) {
+           item.sprite.y += rndDst;
+         });
+       };
 
-         if (heroSpeed.x == 0) {
-           hero.jump();
+       // update objektů
+       updateObject(sDelta, hero, makeShiftX, makeShiftY);
+       for (var i = 0; i < freeObjects.length; i++) {
+         //freeObjects.forEach(function(object) {
+         var object = freeObjects[i];
+         // pohni objekty
+         updateObject(sDelta, object, function(x) {
+           object.sprite.x -= x;
+         }, function(y) {
+           object.sprite.y -= y;
+         });
+         var heroCenterX = hero.sprite.x + hero.width / 2;
+         var heroCenterY = hero.sprite.y + hero.height / 2;
+         var itemCenterX = object.sprite.x + object.width / 2;
+         var itemCenterY = object.sprite.y + object.height / 2;
+
+         // zjisti, zda hráč objekt nesebral
+         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_DISTANCE) {
+           ui.invInsert(object.item.index, 1);
+           freeObjects.splice(i, 1);
+           game.stage.removeChild(object.sprite);
+           object = null;
          }
-         else if (heroSpeed.x > 0) {
-           hero.jumpL();
-         }
-         else {
-           hero.jumpR();
-         }
-
-         // s_tx = tx * (v0 - g*tx)
-         heroJumpTime += sDelta;
-         var gravitySpeed = heroJumpTime * WORLD_GRAVITY;
-         var distanceY = utils.floor(heroJumpTime * (heroSpeed.y - gravitySpeed));
-
-         //console.log("distanceY:" + distanceY + " heroSpeed.y:" + heroSpeed.y + " gravitySpeed:" + gravitySpeed);
-
-         var makeShiftY = function(dst) {
-           var rndDst = utils.floor(dst);
-           render.shiftY(rndDst);
-           // Horizontální pohyb se projevuje na pozadí
-           //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
-           background.shift(0, rndDst);
-         };
-
-         // Nenarazím na překážku?
-         clsnTest = isBoundsInCollision(heroSprite.x + hero.collXOffset, heroSprite.y + hero.collYOffset, hero.width - hero.collXOffset * 2, hero.height - hero.collYOffset * 2, 0, distanceY);
-         if (clsnTest.hit == false) {
-           makeShiftY(distanceY);
-         }
-         else {
-           // zastavil jsem se při stoupání? Začni hned padat
-           if (distanceY > 0) {
-             // nastav okamžik skoku, jako kdyby se vyrovnaly rychlosti
-             heroJumpTime = heroSpeed.y / WORLD_GRAVITY;
-             // animace pádu
-             if (heroSpeed.x == 0) {
-               hero.jump();
-             }
-             else if (heroSpeed.x > 0) {
-               hero.jumpL();
-             }
-             else {
-               hero.jumpR();
-             }
-           }
-           // zastavil jsem se při pádu? Konec skoku
-           else {
-
-             // "doskoč" až na zem
-             // získej pozici kolizního bloku
-             clsnPosition = render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
-             makeShiftY(-1 * (clsnPosition.y - (heroSprite.y + hero.height - hero.collYOffset)));
-
-             heroJumpTime = 0;
-             heroSpeed.y = 0;
-             // animace dopadu
-             if (heroSpeed.x == 0) {
-               hero.fall();
-             }
-             else if (heroSpeed.x > 0) {
-               hero.walkL();
-             }
-             else {
-               hero.walkR();
-             }
-           }
-         }
-
-       }
-
-       if (heroSpeed.x != 0) {
-         var distanceX = utils.floor(sDelta * heroSpeed.x);
-
-         var makeShiftX = function(dst) {
-           var rndDst = utils.floor(dst);
-           render.shiftX(rndDst);
-           // Horizontální pohyb se projevuje na pozadí
-           //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
-           background.shift(rndDst, 0);
-         };
-
-         // Nenarazím na překážku?
-         clsnTest = isBoundsInCollision(heroSprite.x + hero.collXOffset, heroSprite.y + hero.collYOffset, hero.width - hero.collXOffset * 2, hero.height - hero.collYOffset * 2, distanceX, 0);
-         if (clsnTest.hit == false) {
-           makeShiftX(distanceX);
-         }
-         // zkus zmenšit posun, aby nebyla kolize
-         else {
-           // získej pozici kolizního bloku
-           clsnPosition = render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
-           if (distanceX > 0) {
-             // narazil jsem do něj zprava
-             makeShiftX(heroSprite.x + hero.collXOffset - (clsnPosition.x + resources.TILE_SIZE) - 1);
-           }
-           else {
-             // narazil jsem do něj zleva
-             makeShiftX(-1 * (clsnPosition.x - (heroSprite.x + hero.width - hero.collXOffset) - 1));
-           }
+         if (object != null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_FORCE_DISTANCE) {
+           createjs.Tween.get(object.sprite)
+             .to({
+               x: heroCenterX - object.width / 2,
+               y: heroCenterY - object.height / 2
+             }, OBJECT_PICKUP_FORCE_TIME);
          }
        }
-
-       // pokud nejsem zrovna uprostřed skoku...
-       if (heroSpeed.y == 0) {
-         // ...a mám kam padat
-         clsnTest = isBoundsInCollision(heroSprite.x + hero.collXOffset, heroSprite.y + hero.collYOffset, hero.width - hero.collXOffset * 2, hero.height - hero.collYOffset * 2, 0, -1);
-         if (clsnTest.hit == false) {
-           heroSpeed.y = -WORLD_GRAVITY;
-         }
-       }
+       //});
 
      }
    };
@@ -427,6 +444,17 @@
        //console.log("click");
        mouse.time = MOUSE_COOLDOWN;
      }
+
+     // projdi všechny objekty a pokud uběhl čas na jejich periodickou 
+     // notifikaci, dej jim něco, čím upozorníš hráče
+     /*freeObjects.forEach(function(item) {
+       item.notificationTimer -= delta;
+       if (item.notificationTimer <= 0) {
+         item.notificationTimer = OBJECT_NOTIFY_TIME;
+         item.speedy = OBJECT_NOTIFY_BOUNCE_SPEED;
+       }
+     });*/
+
    };
 
    return pub;

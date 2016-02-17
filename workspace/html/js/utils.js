@@ -9,6 +9,10 @@ var utils = (function() {
   pub.floor = function(value) {
     return value < 0 ? Math.ceil(value) : Math.floor(value);
   };
+  
+  pub.ceil = function(value) {
+    return value < 0 ? Math.floor(value) : Math.ceil(value);
+  };
 
   pub.isEven = function(value) {
     return value % 2 == 0;

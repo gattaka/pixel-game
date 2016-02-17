@@ -532,7 +532,7 @@
         var posy = objectElement.objTileY;
 
         onDigObjectListeners.forEach(function(fce) {
-          fce(objType);
+          fce(objType, rx, ry);
         });
 
         // projdi všechny okolní dílky, které patří danému objektu
