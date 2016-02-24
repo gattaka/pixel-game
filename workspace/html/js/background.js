@@ -1,5 +1,6 @@
  /*global createjs*/
  /*global game*/
+ /*global resources*/
 
  var background = (function() {
 
@@ -8,87 +9,38 @@
    /*-----------*/
    /* CONSTANTS */
    /*-----------*/
-   var SKY_KEY = "SKY_KEY";
-   var FAR_MOUNTAIN_KEY = "FAR_MOUNTAIN_KEY";
-   var MOUNTAIN_KEY = "MOUNTAIN_KEY";
-   var FAR_HILL_KEY = "FAR_HILL_KEY";
-   var HILL_KEY = "HILL_IMAGE";
-   var CLOUD_KEY = "CLOUD_KEY";
-   var CLOUDS_NUMBER = 5;
-
    var CLOUDS_SPACE = 150;
 
    /*-----------*/
    /* VARIABLES */
    /*-----------*/
 
-   var loader;
-   var manifest = [{
-     src: "background/sky.png",
-     id: SKY_KEY
-   }, {
-     src: "background/far_mountain.png",
-     id: FAR_MOUNTAIN_KEY
-   }, {
-     src: "background/mountain.png",
-     id: MOUNTAIN_KEY
-   }, {
-     src: "background/far_woodland.png",
-     id: FAR_HILL_KEY
-   }, {
-     src: "background/woodland.png",
-     id: HILL_KEY
-   }];
-
-   (function() {
-     for (var i = 1; i <= CLOUDS_NUMBER; i++) {
-       manifest.push({
-         src: "background/cloud5.png",
-         id: CLOUD_KEY + i
-       });
-     }
-   })();
-
-   var sky, far_mountain, far_mountain_sec, mountain, mountain_sec, hill, hill_sec, far_hill, far_hill_sec;
+   var sky, far_mountain, far_mountain_sec, mountain, mountain_sec, hill, hill_sec, far_hill, far_hill_sec, dirt_back;
    var clouds = [];
+
+   var dirt_backImg;
 
    var initialized = false;
 
    pub.init = function(callback) {
 
-     loader = new createjs.LoadQueue(false);
-     loader.addEventListener("fileload", function(event) {
-       console.log(event.item.id + " loaded");
-     });
-     loader.addEventListener("complete", function() {
-       construct();
-       if (typeof callback !== "undefined") {
-         callback();
-       }
-     });
-     loader.loadManifest(manifest, true, "images/");
-
-   };
-
-   function construct() {
-
-     far_mountain = new createjs.Bitmap(loader.getResult(FAR_MOUNTAIN_KEY));
-     far_mountain_sec = new createjs.Bitmap(loader.getResult(FAR_MOUNTAIN_KEY));
-     mountain = new createjs.Bitmap(loader.getResult(MOUNTAIN_KEY));
-     mountain_sec = new createjs.Bitmap(loader.getResult(MOUNTAIN_KEY));
-     hill = new createjs.Bitmap(loader.getResult(HILL_KEY));
-     hill_sec = new createjs.Bitmap(loader.getResult(HILL_KEY));
-     far_hill = new createjs.Bitmap(loader.getResult(FAR_HILL_KEY));
-     far_hill_sec = new createjs.Bitmap(loader.getResult(FAR_HILL_KEY));
-     for (var i = 1; i <= CLOUDS_NUMBER; i++) {
-       clouds.push(new createjs.Bitmap(loader.getResult(CLOUD_KEY + i)));
+     far_mountain = resources.getBitmap(resources.FAR_MOUNTAIN_KEY);
+     far_mountain_sec = resources.getBitmap(resources.FAR_MOUNTAIN_KEY);
+     mountain = resources.getBitmap(resources.MOUNTAIN_KEY);
+     mountain_sec = resources.getBitmap(resources.MOUNTAIN_KEY);
+     hill = resources.getBitmap(resources.HILL_KEY);
+     hill_sec = resources.getBitmap(resources.HILL_KEY);
+     far_hill = resources.getBitmap(resources.FAR_HILL_KEY);
+     far_hill_sec = resources.getBitmap(resources.FAR_HILL_KEY);
+     for (var i = 1; i <= resources.CLOUDS_NUMBER; i++) {
+       clouds.push(resources.getBitmap(resources.CLOUD_KEY + i));
      }
 
      sky = new createjs.Shape();
      game.stage.addChild(sky);
      sky.x = 0;
      sky.y = 0;
-     sky.graphics.beginBitmapFill(loader.getResult(SKY_KEY), 'repeat').drawRect(0, 0, game.canvas.width, 250);
+     sky.graphics.beginBitmapFill(resources.getImage(resources.SKY_KEY), 'repeat').drawRect(0, 0, game.canvas.width, 250);
 
      var parallaxItems = [far_mountain, far_mountain_sec].concat(clouds).concat([mountain, mountain_sec, far_hill, far_hill_sec, hill, hill_sec]);
 
@@ -118,9 +70,20 @@
      hill_sec.y = hill.y;
      hill_sec.x = -hill_sec.image.width;
 
+     dirt_backImg = resources.getImage(resources.DIRTBACK_KEY);
+     dirt_back = new createjs.Shape();
+     dirt_back.graphics.beginBitmapFill(dirt_backImg, "repeat").drawRect(0, 0, game.canvas.width + dirt_backImg.width * 2, game.canvas.height + dirt_backImg.height);
+     dirt_back.x = 0;
+     dirt_back.y = 900;
+     game.stage.addChild(dirt_back);
+
      console.log("background ready");
      initialized = true;
-   }
+
+     if (typeof callback !== "undefined") {
+       callback();
+     }
+   };
 
    pub.shift = function(distanceX, distanceY) {
      if (initialized) {
@@ -152,6 +115,12 @@
 
        // Hills 
        align(hill, hill_sec, 2, 3);
+
+       // Dirt back
+       dirt_back.x = ((dirt_back.x + distanceX / 2) % dirt_backImg.width) - dirt_backImg.width;
+       dirt_back.y = (dirt_back.y + distanceY / 3);
+       if (dirt_back.y < 0)
+         dirt_back.y = dirt_back.y % dirt_backImg.height;
 
        // Clouds
        for (var i = 0; i < clouds.length; i++) {

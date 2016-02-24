@@ -22,11 +22,19 @@
 
  		console.log("running");
 
+
  		var canvas = document.getElementById(CANVAS_ID);
- 		pub.canvas = canvas;
- 		canvas.width = document.body.clientWidth;
- 		canvas.height = window.innerHeight - 50;
  		canvas.style.backgroundColor = "#b1ecff";
+ 		pub.canvas = canvas;
+
+ 		// resize the canvas to fill browser window dynamically
+ 		window.addEventListener('resize', resizeCanvas, false);
+
+ 		function resizeCanvas() {
+ 			canvas.width = window.innerWidth;
+ 			canvas.height = window.innerHeight;
+ 		}
+ 		resizeCanvas();
 
  		var fpsLabel;
  		var mouseLabel;
@@ -53,15 +61,15 @@
  		document.onkeyup = keyup;
 
 
- 		/*-----------------*/
- 		/* Background init */
- 		/*-----------------*/
- 		background.init(function() {
+ 		/*----------------*/
+ 		/* Resources init */
+ 		/*----------------*/
+ 		resources.init(function() {
 
- 			/*----------------*/
- 			/* Resources init */
- 			/*----------------*/
- 			resources.init(function() {
+ 			/*-----------------*/
+ 			/* Background init */
+ 			/*-----------------*/
+ 			background.init(function() {
 
  				/*---------*/
  				/* UI init */
@@ -97,8 +105,6 @@
 
  					});
  				});
-
-
  			});
 
  		});

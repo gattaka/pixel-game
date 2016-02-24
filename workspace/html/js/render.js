@@ -14,18 +14,6 @@
 
     var pub = {};
 
-    var loader;
-    var manifest = [{
-      src: "tiles/tiles.png",
-      id: resources.TILES_KEY
-    }, {
-      src: "parts/parts.png",
-      id: resources.PARTS_KEY
-    }, {
-      src: "characters/player_icon.png",
-      id: resources.PLAYER_ICON_KEY
-    }];
-
     var onDigObjectListeners = [];
 
     var screenOffsetX = 0;
@@ -80,22 +68,6 @@
       };
     };
 
-    pub.init = function(callback, map) {
-      tilesMap = map;
-
-      loader = new createjs.LoadQueue(false);
-      loader.addEventListener("fileload", function(event) {
-        console.log(event.item.id + " loaded");
-      });
-      loader.addEventListener("complete", function() {
-        construct();
-        if (typeof callback !== "undefined") {
-          callback();
-        }
-      });
-      loader.loadManifest(manifest, true, "images/");
-    };
-
     // dle souřadnic tiles spočítá souřadnici sektoru
     pub.getSectorByTiles = function(x, y) {
       var sx = Math.floor(x / SECTOR_SIZE);
@@ -104,7 +76,7 @@
     };
 
     var createTile = function(v) {
-      var tile = new createjs.Bitmap(loader.getResult(resources.TILES_KEY));
+      var tile = resources.getBitmap(resources.TILES_KEY);
       var tileCols = tile.image.width / resources.TILE_SIZE;
       // Otestováno: tohle je rychlejší než extract ze Spritesheet
       tile.sourceRect = {
@@ -117,7 +89,7 @@
     };
 
     var createObject = function(v) {
-      var object = new createjs.Bitmap(loader.getResult(resources.PARTS_KEY));
+      var object = resources.getBitmap(resources.PARTS_KEY);
       // Otestováno: tohle je rychlejší než extract ze Spritesheet
       object.sourceRect = {
         x: (v % resources.PARTS_SHEET_WIDTH) * resources.TILE_SIZE,
@@ -371,7 +343,7 @@
       minimapCont.height = MAP_SIDE + 2;
       minimapCont.x = sectorsCont.width - MAP_SIDE - 20;
       minimapCont.y = 20;
-      game.stage.addChild(minimapCont);
+      game.worldCont.addChild(minimapCont);
 
       var border = new createjs.Shape();
       border.graphics.setStrokeStyle(1);
@@ -382,7 +354,7 @@
 
       updateMinimap();
 
-      playerIcon = new createjs.Bitmap(loader.getResult(resources.PLAYER_ICON_KEY));
+      playerIcon = resources.getBitmap(resources.PLAYER_ICON_KEY);
       playerIcon.alpha = 0.7;
       minimap.cont.addChild(playerIcon);
 
@@ -393,11 +365,12 @@
       playerIcon.y = Math.floor(y / resources.TILE_SIZE) - (playerIcon.image.height / 2);
     };
 
-    var construct = function() {
-
+    pub.init = function(callback, map) {
+      tilesMap = map;
+      
       // vytvoř kontejner pro sektory
       sectorsCont = new createjs.Container();
-      game.stage.addChild(sectorsCont);
+      game.worldCont.addChild(sectorsCont);
       sectorsCont.x = 0;
       sectorsCont.y = 0;
       sectorsCont.width = game.canvas.width;
@@ -408,6 +381,9 @@
 
       // Mapa
       createMinimap();
+
+      if (typeof callback !== "undefined")
+        callback();
 
     };
 

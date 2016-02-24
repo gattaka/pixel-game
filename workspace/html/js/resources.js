@@ -1,4 +1,5 @@
  /*global createjs*/
+ /*global game*/
 
  /**
   * resources.js 
@@ -10,13 +11,24 @@
 
    var pub = {};
 
+   /*
+    * Přepínače
+    */
    pub.SHOW_SECTORS = false;
    pub.PRINT_SECTOR_ALLOC = false;
 
+   /*
+    * Velikosti
+    */
    pub.TILE_SIZE = 16;
+   pub.PARTS_SIZE = 2 * pub.TILE_SIZE;
+   pub.PARTS_SHEET_WIDTH = 20;
 
-   pub.DIRT_BACK_KEY = "DIRT_BACK_KEY";
+   pub.CLOUDS_NUMBER = 5;
 
+   /*
+    * Sprite indexy
+    */
    pub.VOID = 0;
    pub.DIRT = {
      M1: 1,
@@ -53,22 +65,34 @@
    pub.PLANT4_INDEX = 28;
    pub.PLANT5_INDEX = 29;
 
-   var PARTS_KEY = "PARTS_KEY";
+   /*
+    * Resource klíče
+    */
 
-   var loader;
-   var manifest = [{
-     src: "ui/inv_parts.png",
-     id: PARTS_KEY
-   }];
+   // background
+   pub.DIRT_BACK_KEY = "DIRT_BACK_KEY";
+   pub.SKY_KEY = "SKY_KEY";
+   pub.FAR_MOUNTAIN_KEY = "FAR_MOUNTAIN_KEY";
+   pub.MOUNTAIN_KEY = "MOUNTAIN_KEY";
+   pub.FAR_HILL_KEY = "FAR_HILL_KEY";
+   pub.HILL_KEY = "HILL_KEY";
+   pub.DIRTBACK_KEY = "DIRTBACK_KEY";
+   pub.CLOUD_KEY = "CLOUD_KEY";
 
+   // animations
+   pub.BLAST_ANIMATION_KEY = "BLAST_ANIMATION_KEY";
+
+   // tiles
    pub.TILES_KEY = "TILES_KEY";
-   pub.PARTS_KEY = "PARTS_KEY";
 
-   var PARTS_SIZE = 2 * pub.TILE_SIZE;
-   pub.PARTS_SIZE = PARTS_SIZE;
+   // inv items
+   pub.INV_PARTS_KEY = "INV_PARTS_KEY";
 
+   // characters
    pub.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
 
+   // map objects
+   pub.PARTS_KEY = "PARTS_KEY";
    pub.PLANT_KEY = "PLANT_KEY";
    pub.TREE_KEY = "TREE_KEY";
    pub.TREE2_KEY = "TREE2_KEY";
@@ -84,180 +108,129 @@
    pub.PLANT3_KEY = "PLANT3_KEY";
    pub.PLANT4_KEY = "PLANT4_KEY";
    pub.PLANT5_KEY = "PLANT5_KEY";
-
    pub.BUSH_KEY = "BUSH_KEY";
 
-   pub.PARTS_SHEET_WIDTH = 20;
-   pub.dirtObjects = [{
-     key: pub.TREE_KEY,
-     width: 4,
-     height: 9,
-     freq: 4,
-     posx: 8,
-     posy: 0,
-     item: {
-       index: pub.WOOD_INDEX,
-       quant: 5
-     }
+   // ui
+   pub.INV_KEY = "INV_KEY";
+   pub.SKULL_KEY = "SKULL_KEY";
+   pub.HELMET_KEY = "HELMET_KEY";
+   pub.TORSO_KEY = "TORSO_KEY";
+   pub.GAUNTLET_KEY = "GAUNTLET_KEY";
+
+   /*
+    * Definice mapových objektů
+    */
+   pub.dirtObjects = [
+     new game.MapObj(pub.TREE_KEY, 4, 9, 4, 8, 0, pub.WOOD_INDEX, 5),
+     new game.MapObj(pub.TREE2_KEY, 8, 15, 3, 0, 0, pub.WOOD_INDEX, 10),
+     new game.MapObj(pub.PLANT_KEY, 2, 2, 1, 12, 6, pub.PLANT_INDEX, 1),
+     new game.MapObj(pub.GRASS_KEY, 2, 2, 5, 12, 0, pub.STRAW_INDEX, 2),
+     new game.MapObj(pub.GRASS2_KEY, 2, 2, 5, 14, 0, pub.STRAW_INDEX, 2),
+     new game.MapObj(pub.GRASS3_KEY, 2, 2, 5, 16, 0, pub.STRAW_INDEX, 2),
+     new game.MapObj(pub.GRASS4_KEY, 2, 2, 5, 12, 4, pub.STRAW_INDEX, 2),
+     new game.MapObj(pub.SHROOM1_KEY, 2, 2, 1, 12, 2, pub.SHROOM1_INDEX, 1),
+     new game.MapObj(pub.SHROOM2_KEY, 2, 2, 1, 14, 2, pub.SHROOM2_INDEX, 1),
+     new game.MapObj(pub.SHROOM3_KEY, 2, 2, 1, 16, 2, pub.SHROOM3_INDEX, 1),
+     new game.MapObj(pub.PLANT2_KEY, 2, 2, 1, 18, 2, pub.PLANT2_INDEX, 1),
+     new game.MapObj(pub.PLANT3_KEY, 2, 2, 1, 14, 4, pub.PLANT3_INDEX, 1),
+     new game.MapObj(pub.PLANT4_KEY, 2, 2, 1, 16, 4, pub.PLANT4_INDEX, 1),
+     new game.MapObj(pub.PLANT5_KEY, 2, 2, 1, 18, 4, pub.PLANT5_INDEX, 1),
+     new game.MapObj(pub.BUSH_KEY, 2, 2, 1, 18, 0),
+   ];
+
+   /*
+    * Resource definice a loader
+    */
+   var loader;
+   var manifest = [{
+     src: "ui/inv_parts.png",
+     id: pub.INV_PARTS_KEY
    }, {
-     key: pub.TREE2_KEY,
-     width: 8,
-     height: 15,
-     freq: 3,
-     posx: 0,
-     posy: 0,
-     item: {
-       index: pub.WOOD_INDEX,
-       quant: 10
-     }
+     src: "effects/blast_animation.png",
+     id: pub.BLAST_ANIMATION_KEY
    }, {
-     key: pub.PLANT_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 12,
-     posy: 6,
-     item: {
-       index: pub.PLANT_INDEX,
-       quant: 1
-     }
+     src: "tiles/tiles.png",
+     id: pub.TILES_KEY
    }, {
-     key: pub.GRASS_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-     posx: 12,
-     posy: 0,
-     item: {
-       index: pub.STRAW_INDEX,
-       quant: 2
-     }
+     src: "parts/parts.png",
+     id: pub.PARTS_KEY
    }, {
-     key: pub.GRASS2_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-     posx: 14,
-     posy: 0,
-     item: {
-       index: pub.STRAW_INDEX,
-       quant: 2
-     }
+     src: "characters/player_icon.png",
+     id: pub.PLAYER_ICON_KEY
    }, {
-     key: pub.GRASS3_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-     posx: 16,
-     posy: 0,
-     item: {
-       index: pub.STRAW_INDEX,
-       quant: 2
-     }
+     src: "ui/inventory.png",
+     id: pub.INV_KEY
    }, {
-     key: pub.GRASS4_KEY,
-     width: 2,
-     height: 2,
-     freq: 5,
-     posx: 12,
-     posy: 4,
-     item: {
-       index: pub.STRAW_INDEX,
-       quant: 2
-     }
+     src: "ui/skull.png",
+     id: pub.SKULL_KEY
    }, {
-     key: pub.SHROOM1_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 12,
-     posy: 2,
-     item: {
-       index: pub.SHROOM1_INDEX,
-       quant: 1
-     }
+     src: "armour/helmet.png",
+     id: pub.HELMET_KEY
    }, {
-     key: pub.SHROOM2_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 14,
-     posy: 2,
-     item: {
-       index: pub.SHROOM2_INDEX,
-       quant: 1
-     }
+     src: "armour/torso.png",
+     id: pub.TORSO_KEY
    }, {
-     key: pub.SHROOM3_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 16,
-     posy: 2,
-     item: {
-       index: pub.SHROOM3_INDEX,
-       quant: 1
-     }
+     src: "armour/gauntlet.png",
+     id: pub.GAUNTLET_KEY
    }, {
-     key: pub.PLANT2_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 18,
-     posy: 2,
-     item: {
-       index: pub.PLANT2_INDEX,
-       quant: 1
-     }
+     src: "background/sky.png",
+     id: pub.SKY_KEY
    }, {
-     key: pub.PLANT3_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 14,
-     posy: 4,
-     item: {
-       index: pub.PLANT3_INDEX,
-       quant: 1
-     }
+     src: "background/far_mountain.png",
+     id: pub.FAR_MOUNTAIN_KEY
    }, {
-     key: pub.PLANT4_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 16,
-     posy: 4,
-     item: {
-       index: pub.PLANT4_INDEX,
-       quant: 1
-     }
+     src: "background/mountain.png",
+     id: pub.MOUNTAIN_KEY
    }, {
-     key: pub.PLANT5_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 18,
-     posy: 4,
-     item: {
-       index: pub.PLANT5_INDEX,
-       quant: 1
-     }
+     src: "background/far_woodland.png",
+     id: pub.FAR_HILL_KEY
    }, {
-     key: pub.BUSH_KEY,
-     width: 2,
-     height: 2,
-     freq: 1,
-     posx: 18,
-     posy: 0
+     src: "background/woodland.png",
+     id: pub.HILL_KEY
+   }, {
+     src: "background/dirt_back.png",
+     id: pub.DIRTBACK_KEY
    }];
 
-   pub.init = function(callback) {
+   (function() {
+     for (var i = 1; i <= pub.CLOUDS_NUMBER; i++) {
+       manifest.push({
+         src: "background/cloud5.png",
+         id: pub.CLOUD_KEY + i
+       });
+     }
+   })();
+
+   pub.init = function(callback, onprogress) {
+
+     var loadScreenCont = new createjs.Container();
+     loadScreenCont.width = game.canvas.width;
+     loadScreenCont.height = game.canvas.height;
+     loadScreenCont.x = 0;
+     loadScreenCont.y = 0;
+     game.stage.addChild(loadScreenCont);
+
+     var loadScreen = new createjs.Shape();
+     loadScreen.graphics.beginFill("black");
+     loadScreen.graphics.drawRect(0, 0, game.canvas.width, game.canvas.height);
+     loadScreenCont.addChild(loadScreen);
+
+     var loadLabel = new createjs.Text("Loading...", "bold 28px Arial", "#ff0");
+     loadLabel.x = 50;
+     loadLabel.y = 50;
+     loadScreenCont.addChild(loadLabel);
 
      loader = new createjs.LoadQueue(false);
-     loader.addEventListener("fileload", function(event) {
-       console.log(event.item.id + " loaded");
+     loader.addEventListener("progress", function(event) {
+       loadLabel.text = Math.floor(event.loaded * 100) + "% Loading... ";
      });
      loader.addEventListener("complete", function() {
+       createjs.Tween.get(loadScreenCont)
+         .to({
+           alpha: 0
+         }, 2000).call(function() {
+           game.stage.removeChild(loadScreenCont);
+         });
        if (typeof callback !== "undefined") {
          callback();
        }
@@ -266,15 +239,23 @@
 
    };
 
+   pub.getImage = function(key) {
+     return loader.getResult(key);
+   };
+
+   pub.getBitmap = function(key) {
+     return new createjs.Bitmap(loader.getResult(key));
+   };
+
    pub.getItemBitmap = function(v) {
-     var item = new createjs.Bitmap(loader.getResult(pub.PARTS_KEY));
-     var itemCols = item.image.width / PARTS_SIZE;
+     var item = pub.getBitmap(pub.INV_PARTS_KEY);
+     var itemCols = item.image.width / pub.PARTS_SIZE;
      // Otestováno: tohle je rychlejší než extract ze Spritesheet
      item.sourceRect = {
-       x: (v % itemCols) * PARTS_SIZE,
-       y: Math.floor(v / itemCols) * PARTS_SIZE,
-       height: PARTS_SIZE,
-       width: PARTS_SIZE
+       x: (v % itemCols) * pub.PARTS_SIZE,
+       y: Math.floor(v / itemCols) * pub.PARTS_SIZE,
+       height: pub.PARTS_SIZE,
+       width: pub.PARTS_SIZE
      };
      return item;
    };
