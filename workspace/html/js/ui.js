@@ -16,13 +16,28 @@
    var invContent = [];
 
    var invCont;
-   var itemsCont;
-
+   var stateCont;
    var charCont;
 
-   var skillCont;
+   var itemsCont;
 
    var toggleFlag = true;
+
+   pub.isMouseInUI = function(x, y) {
+
+     var uiConts = [invCont, charCont, stateCont];
+
+     var uiHit = false;
+     uiConts.forEach(function(item) {
+       if (item.hitTest(x - item.x, y - item.y) == true) {
+         uiHit = true;
+         return;
+       }
+     });
+
+     return uiHit;
+
+   };
 
    pub.init = function(callback) {
 
@@ -135,7 +150,7 @@
 
      // zdraví a mana
      (function() {
-       var stateCont = new createjs.Container();
+       stateCont = new createjs.Container();
        stateCont.width = 350;
        stateCont.height = 160;
        stateCont.x = game.canvas.width - stateCont.width - 20;

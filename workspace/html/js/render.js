@@ -47,8 +47,32 @@
     var MAP_SIDE = 200;
     var minimap;
     var playerIcon;
+    var mapUpdateRegion = {
+      reset: function() {
+        this.prepared = false;
+        this.fromX = -1;
+        this.toX = -1;
+        this.fromY = -1;
+        this.toY = -1;
+      }
+    };
+    mapUpdateRegion.reset();
 
     var tilesMap;
+
+    var prepareMapUpdate = function(x, y) {
+      mapUpdateRegion.prepared = true;
+
+      if (x < mapUpdateRegion.fromX || mapUpdateRegion.fromX == -1)
+        mapUpdateRegion.fromX = x;
+      if (x > mapUpdateRegion.toX || mapUpdateRegion.toX == -1)
+        mapUpdateRegion.toX = x;
+      if (y < mapUpdateRegion.fromY || mapUpdateRegion.fromY == -1)
+        mapUpdateRegion.fromY = y;
+      if (y > mapUpdateRegion.toY || mapUpdateRegion.toY == -1)
+        mapUpdateRegion.toY = y;
+
+    };
 
     pub.pixelsToTiles = function(x, y) {
       var tileX = Math.ceil((x - screenOffsetX) / resources.TILE_SIZE) - 1;
@@ -270,55 +294,91 @@
       };
     };
 
-    var updateMinimap = function() {
+    var drawMinimapTile = function(imgData, x, y) {
+      var item = tilesMap.valueAt(x, y);
+      var counter = (y * tilesMap.width + x) * 4;
+      if (item == resources.VOID) {
+        imgData.data[counter++] = 209; // R
+        imgData.data[counter++] = 251; // G
+        imgData.data[counter++] = 255; // B
+        imgData.data[counter++] = 200; // A
+      }
+      for (var i = 1; i <= 9; i++) {
+        if (item == resources.DIRT["M" + i]) {
+          imgData.data[counter++] = 156; // R
+          imgData.data[counter++] = 108; // G
+          imgData.data[counter++] = 36; // B
+          imgData.data[counter++] = 200; // A
+        }
+      }
+      if (item == resources.DIRT.B ||
+        item == resources.DIRT.L ||
+        item == resources.DIRT.R ||
+        item == resources.DIRT.T ||
+        item == resources.DIRT.BL ||
+        item == resources.DIRT.BR ||
+        item == resources.DIRT.TL ||
+        item == resources.DIRT.TR ||
+        item == resources.DIRT.I_BL ||
+        item == resources.DIRT.I_BR ||
+        item == resources.DIRT.I_TL ||
+        item == resources.DIRT.I_TR
+      ) {
+        imgData.data[counter++] = 102; // R
+        imgData.data[counter++] = 174; // G
+        imgData.data[counter++] = 0; // B
+        imgData.data[counter++] = 200; // A
+      }
+    };
+
+    var updateMinimap = function(mapUpdateRegion) {
+
+      if (mapUpdateRegion.prepared == false)
+        return;
+
+      mapUpdateRegion.fromX = mapUpdateRegion.fromX == 0 ? 0 : mapUpdateRegion.fromX - 1;
+      mapUpdateRegion.fromY = mapUpdateRegion.fromY == 0 ? 0 : mapUpdateRegion.fromY - 1;
+      mapUpdateRegion.toX = mapUpdateRegion.toX == tilesMap.width ? 0 : mapUpdateRegion.toX + 1;
+      mapUpdateRegion.toY = mapUpdateRegion.toY == tilesMap.height ? 0 : mapUpdateRegion.toY + 1;
+
+      var x0 = mapUpdateRegion.fromX;
+      var y0 = mapUpdateRegion.fromY;
+      var w = mapUpdateRegion.toX - mapUpdateRegion.fromX;
+      var h = mapUpdateRegion.toY - mapUpdateRegion.fromY;
+
+      var ctx = minimap.canvas.getContext("2d");
+      //var imgData = ctx.getImageData(x0, y0, w, h);
+      var imgData = ctx.createImageData(w, h); // width x height
+
+      (function() {
+        for (var y = y0; y <= mapUpdateRegion.toY; y++) {
+          for (var x = x0; x <= mapUpdateRegion.toX; x++) {
+            drawMinimapTile(imgData, x, y);
+          }
+        }
+        ctx.putImageData(imgData, x0, y0);
+      })();
+
+      //minimap.cont.removeChild(minimap.bitmap);
+      var dataURL = minimap.canvas.toDataURL();
+      minimap.bitmap.image = new createjs.Bitmap(dataURL).image;
+      //minimap.cont.addChild(minimap.bitmap);
+
+      updateMinimapPosition();
+    };
+
+    var initMinimap = function() {
       var ctx = minimap.canvas.getContext("2d");
       var imgData = ctx.createImageData(tilesMap.width, tilesMap.height); // width x height
-      var counter = 0;
 
       (function() {
         for (var y = 0; y < tilesMap.height; y++) {
           for (var x = 0; x < tilesMap.width; x++) {
-            var item = tilesMap.valueAt(x, y);
-            if (item == resources.VOID) {
-              imgData.data[counter++] = 209; // R
-              imgData.data[counter++] = 251; // G
-              imgData.data[counter++] = 255; // B
-              imgData.data[counter++] = 200; // A
-            }
-            for (var i = 1; i <= 9; i++) {
-              if (item == resources.DIRT["M" + i]) {
-                imgData.data[counter++] = 156; // R
-                imgData.data[counter++] = 108; // G
-                imgData.data[counter++] = 36; // B
-                imgData.data[counter++] = 200; // A
-              }
-            }
-            if (item == resources.DIRT.B ||
-              item == resources.DIRT.L ||
-              item == resources.DIRT.R ||
-              item == resources.DIRT.T ||
-              item == resources.DIRT.BL ||
-              item == resources.DIRT.BR ||
-              item == resources.DIRT.TL ||
-              item == resources.DIRT.TR ||
-              item == resources.DIRT.I_BL ||
-              item == resources.DIRT.I_BR ||
-              item == resources.DIRT.I_TL ||
-              item == resources.DIRT.I_TR
-            ) {
-              imgData.data[counter++] = 102; // R
-              imgData.data[counter++] = 174; // G
-              imgData.data[counter++] = 0; // B
-              imgData.data[counter++] = 200; // A
-            }
+            drawMinimapTile(imgData, x, y);
           }
         }
         ctx.putImageData(imgData, 0, 0);
       })();
-
-      if (typeof minimap.bitmap !== "undefined") {
-        minimap.cont.removeChild(minimap.bitmap);
-      }
 
       var dataURL = minimap.canvas.toDataURL();
       minimap.bitmap = new createjs.Bitmap(dataURL);
@@ -352,7 +412,7 @@
       border.graphics.drawRect(-1, -1, MAP_SIDE + 2, MAP_SIDE + 2);
       minimapCont.addChild(border);
 
-      updateMinimap();
+      initMinimap();
 
       playerIcon = resources.getBitmap(resources.PLAYER_ICON_KEY);
       playerIcon.alpha = 0.7;
@@ -367,7 +427,7 @@
 
     pub.init = function(callback, map) {
       tilesMap = map;
-      
+
       // vytvoř kontejner pro sektory
       sectorsCont = new createjs.Container();
       game.worldCont.addChild(sectorsCont);
@@ -403,6 +463,7 @@
         for (var x = rx - 1; x <= rx + 2; x++) {
           for (var y = ry - 1; y <= ry + 2; y++) {
             var index = tilesMap.indexAt(x, y);
+            prepareMapUpdate(x, y);
             if (index >= 0) {
               var sector = pub.getSectorByTiles(x, y);
 
@@ -493,8 +554,6 @@
         });
       })();
 
-      // Proveď update minimapy
-      //updateMinimap();
     };
 
     var tryDigObject = function(rx, ry) {
@@ -566,6 +625,9 @@
           item.sector.updateCache();
         }
       }
+
+      updateMinimap(mapUpdateRegion);
+      mapUpdateRegion.reset();
     };
 
     pub.addOnDigObjectListener = function(f) {

@@ -7,6 +7,7 @@
  /*global generator*/
  /*global resources*/
  /*global render*/
+ /*global mixer*/
 
  /**
   * world.js
@@ -86,6 +87,8 @@
 
    var construct = function() {
 
+     mixer.play(resources.DIRT_THEME_KEY, true);
+
      /*------------*/
      /* Characters */
      /*------------*/
@@ -120,14 +123,18 @@
          // eventy s ohledem na konkrétní objekty a to se drasticky projevuje 
          // na FPS -- takhle se zjišťuje event obecně a je to bez ztrát 
          game.stage.addEventListener("stagemousedown", function(event) {
-           mouse.down = true;
-           mouse.x = event.stageX;
-           mouse.y = event.stageY;
+           if (ui.isMouseInUI(event.stageX, event.stageY) == false) {
+             mouse.x = event.stageX;
+             mouse.y = event.stageY;
+             mouse.down = true;
+           }
          });
          game.stage.addEventListener("stagemousemove", function(event) {
            if (mouse.down) {
-             mouse.x = event.stageX;
-             mouse.y = event.stageY;
+             if (ui.isMouseInUI(event.stageX, event.stageY) == false) {
+               mouse.x = event.stageX;
+               mouse.y = event.stageY;
+             }
            }
 
            var coord = render.pixelsToTiles(event.stageX, event.stageY);
@@ -374,6 +381,7 @@
                deleteBullet(object);
            }, function(clsn) {
              if (object.done == false) {
+               mixer.play(resources.BURN_KEY);
                object.done = true;
                object.sprite.gotoAndPlay("hit");
                var centX = object.sprite.x + object.width / 2;
@@ -416,6 +424,7 @@
              ui.invInsert(object.item.index, 1);
              freeObjects.splice(i, 1);
              worldCont.removeChild(object.sprite);
+             mixer.play(resources.PICK_KEY);
              object = null;
            }
            if (object != null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_FORCE_DISTANCE) {
@@ -579,6 +588,7 @@
      object.collYOffset = 20;
      object.done = false;
      bulletObjects.push(object);
+     mixer.play(resources.FIREBALL_KEY);
    };
 
 

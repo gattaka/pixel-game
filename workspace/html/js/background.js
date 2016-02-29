@@ -126,6 +126,7 @@
        for (var i = 0; i < clouds.length; i++) {
          var item = clouds[i];
          item.x += distanceX / (8 + (1 / (i + 1)));
+         item.y += distanceY / 7;
          if (item.x + item.image.width <= 0) {
            // Musí být -1, aby ho hnedka "nesežrala"
            // kontrola druhého směru a nepřesunula mrak

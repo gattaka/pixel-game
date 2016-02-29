@@ -117,6 +117,13 @@
    pub.TORSO_KEY = "TORSO_KEY";
    pub.GAUNTLET_KEY = "GAUNTLET_KEY";
 
+   // sound
+
+   pub.FIREBALL_KEY = "FIREBALL_KEY";
+   pub.BURN_KEY = "BURN_KEY";
+   pub.PICK_KEY = "PICK_KEY";
+   pub.DIRT_THEME_KEY = "DIRT_THEME_KEY";
+
    /*
     * Definice mapových objektů
     */
@@ -142,60 +149,72 @@
     * Resource definice a loader
     */
    var loader;
-   var manifest = [{
-     src: "ui/inv_parts.png",
+   var imgManifest = [{
+     src: "images/ui/inv_parts.png",
      id: pub.INV_PARTS_KEY
    }, {
-     src: "effects/blast_animation.png",
+     src: "images/effects/blast_animation.png",
      id: pub.BLAST_ANIMATION_KEY
    }, {
-     src: "tiles/tiles.png",
+     src: "images/tiles/tiles.png",
      id: pub.TILES_KEY
    }, {
-     src: "parts/parts.png",
+     src: "images/parts/parts.png",
      id: pub.PARTS_KEY
    }, {
-     src: "characters/player_icon.png",
+     src: "images/characters/player_icon.png",
      id: pub.PLAYER_ICON_KEY
    }, {
-     src: "ui/inventory.png",
+     src: "images/ui/inventory.png",
      id: pub.INV_KEY
    }, {
-     src: "ui/skull.png",
+     src: "images/ui/skull.png",
      id: pub.SKULL_KEY
    }, {
-     src: "armour/helmet.png",
+     src: "images/armour/helmet.png",
      id: pub.HELMET_KEY
    }, {
-     src: "armour/torso.png",
+     src: "images/armour/torso.png",
      id: pub.TORSO_KEY
    }, {
-     src: "armour/gauntlet.png",
+     src: "images/armour/gauntlet.png",
      id: pub.GAUNTLET_KEY
    }, {
-     src: "background/sky.png",
+     src: "images/background/sky.png",
      id: pub.SKY_KEY
    }, {
-     src: "background/far_mountain.png",
+     src: "images/background/far_mountain.png",
      id: pub.FAR_MOUNTAIN_KEY
    }, {
-     src: "background/mountain.png",
+     src: "images/background/mountain.png",
      id: pub.MOUNTAIN_KEY
    }, {
-     src: "background/far_woodland.png",
+     src: "images/background/far_woodland.png",
      id: pub.FAR_HILL_KEY
    }, {
-     src: "background/woodland.png",
+     src: "images/background/woodland.png",
      id: pub.HILL_KEY
    }, {
-     src: "background/dirt_back.png",
+     src: "images/background/dirt_back.png",
      id: pub.DIRTBACK_KEY
+   }, {
+     src: "sound/334234__liamg-sfx__fireball-cast-1.ogg",
+     id: pub.FIREBALL_KEY
+   }, {
+     src: "sound/113111__satrebor__pick.ogg",
+     id: pub.PICK_KEY
+   }, {
+     src: "sound/248116__robinhood76__05224-fireball-whoosh.ogg",
+     id: pub.BURN_KEY
+   }, {
+     src: "sound/Dirt 2.ogg",
+     id: pub.DIRT_THEME_KEY
    }];
-
+   
    (function() {
      for (var i = 1; i <= pub.CLOUDS_NUMBER; i++) {
-       manifest.push({
-         src: "background/cloud5.png",
+       imgManifest.push({
+         src: "images/background/cloud" + i + ".png",
          id: pub.CLOUD_KEY + i
        });
      }
@@ -221,6 +240,8 @@
      loadScreenCont.addChild(loadLabel);
 
      loader = new createjs.LoadQueue(false);
+     createjs.Sound.alternateExtensions = ["mp3"];
+     loader.installPlugin(createjs.Sound);
      loader.addEventListener("progress", function(event) {
        loadLabel.text = Math.floor(event.loaded * 100) + "% Loading... ";
      });
@@ -235,7 +256,7 @@
          callback();
        }
      });
-     loader.loadManifest(manifest, true, "images/");
+     loader.loadManifest(imgManifest, true);
 
    };
 

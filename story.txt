@@ -7,3 +7,5 @@
 - hráè má tedy jasného nepøítele 
 - navíc musí hráè vyøešit, zda využije svého "znovuzrození", aby oèistil své jméno a znièil legie svého soka (good ending)
 - ... nebo po sesazení svého soka tyto síly použije k dokonèení toho, co pøipravoval za svého života a podmaní si svìt (bad ending)
+
+- biologický exoskelet, který se vymkl kontrole a pohltil svého uživatele
