@@ -4,7 +4,7 @@
  /*global ui*/
  /*global resources*/
 
- var game = (function() {
+  game = (function() {
 
  	/*-----------*/
  	/* CONSTANTS */
@@ -180,10 +180,10 @@
  			if (keys[39] || keys[68]) directions.right = true;
  			if (keys[40] || keys[83]) directions.down = true;
  			if (keys[73]) {
- 				ui.toggleInv();
+ 				ui.inventoryUI.toggleInv();
  			}
  			else {
- 				ui.prepareForToggleInv();
+ 				ui.inventoryUI.prepareForToggleInv();
  			}
 
  			world.update(delta, directions);
