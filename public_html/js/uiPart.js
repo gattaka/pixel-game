@@ -5,7 +5,7 @@ var lich = lich || {};
 
 lich.UIPart = function (width, height) {
     createjs.Container.call(this);
-    
+
     this.width = width;
     this.height = height;
 
@@ -13,7 +13,7 @@ lich.UIPart = function (width, height) {
     outerShape.graphics.setStrokeStyle(2);
     outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
     outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
-    outerShape.graphics.drawRect(0, 0, width, height);
+    outerShape.graphics.drawRoundRect(0, 0, width, height, 3);
     this.addChild(outerShape);
 
     this.handleMouse = {};
@@ -28,20 +28,24 @@ lich.InventoryUI = function () {
     var toggleFlag = true;
 
     var INV_BORDER = 10;
+    var INV_SELECT_BORDER = 5;
     var INV_SPACING = 12;
     var INV_LINE = 10;
     var INV_SIZE = 20;
     var TEXT_SIZE = 10;
+    var choosenItem = {};
+    var draggedItem = {};
 
     this.invContent = [];
 
     // zvýraznění vybrané položky
     var itemHighlightShape = new createjs.Shape();
+    itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
     itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
-    itemHighlightShape.graphics.drawRoundRect(0, 0, resources.PARTS_SIZE + INV_SPACING, resources.PARTS_SIZE
-            + INV_SPACING, 5);
-    itemHighlightShape.x = INV_SPACING / 2;
-    itemHighlightShape.y = INV_SPACING / 2;
+    itemHighlightShape.graphics.setStrokeStyle(2);
+    itemHighlightShape.graphics.drawRoundRect(0, 0, resources.PARTS_SIZE + INV_SELECT_BORDER * 2, resources.PARTS_SIZE
+            + INV_SELECT_BORDER * 2, 3);
+    itemHighlightShape.visible = false;
     this.addChild(itemHighlightShape);
 
     // kontejner položek
@@ -52,25 +56,21 @@ lich.InventoryUI = function () {
 
     this.handleMouse = function (mouse) {
         if (mouse.down) {
-            var step = INV_SPACING + resources.PARTS_SIZE;
-            var x = Math.floor((mouse.x - self.x - INV_SPACING / 2) / step);
-            var y = Math.floor((mouse.y - self.y - INV_SPACING / 2) / step);
-            itemHighlightShape.x = x * step + INV_SPACING / 2;
-            itemHighlightShape.y = y * step + INV_SPACING / 2;
+            // TODO
         }
     };
 
     this.showInv = function () {
-        visible = true;
+        this.visible = true;
     };
 
     this.hideInv = function () {
-        visible = false;
+        this.visible = false;
     };
 
     this.toggleInv = function () {
         if (toggleFlag) {
-            visible = !(visible);
+            this.visible = !(this.visible);
             toggleFlag = false;
         }
     };
@@ -91,10 +91,8 @@ lich.InventoryUI = function () {
         // zkus založit novou
         for (var i = 0; i < INV_SIZE; i++) {
             if (typeof this.invContent[i] === "undefined") {
-                var bitmapCont = new createjs.Container();
                 var bitmap = resources.getItemBitmap(item);
-                bitmapCont.addChild(bitmap);
-                itemsCont.addChild(bitmapCont);
+                itemsCont.addChild(bitmap);
                 bitmap.x = (i % INV_LINE) * (resources.PARTS_SIZE + INV_SPACING);
                 bitmap.y = Math.floor(i / INV_LINE) * (resources.PARTS_SIZE + INV_SPACING);
                 var text = new createjs.Text(quant, "bold " + TEXT_SIZE + "px Arial", "#ff0");
@@ -108,8 +106,22 @@ lich.InventoryUI = function () {
                     count: text
                 };
 
-                bitmap.on("click", function (evt) {
-                    console.log("click");
+                var hitArea = new createjs.Shape();
+                hitArea.graphics.beginFill("#000").drawRect(0, 0, resources.PARTS_SIZE, resources.PARTS_SIZE);
+                bitmap.hitArea = hitArea;
+
+                bitmap.on("mousedown", function (evt) {
+                    if (choosenItem === bitmap) {
+                        choosenItem = {};
+                        draggedItem = {};
+                        itemHighlightShape.visible = false;
+                    } else {
+                        itemHighlightShape.visible = true;
+                        itemHighlightShape.x = bitmap.x - INV_SELECT_BORDER + INV_BORDER;
+                        itemHighlightShape.y = bitmap.y - INV_SELECT_BORDER + INV_BORDER;
+                        choosenItem = bitmap;
+                        draggedItem = bitmap;
+                    }
                 }, null, false);
 
                 return true; // usazeno

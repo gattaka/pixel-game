@@ -1,5 +1,5 @@
 var static = require('node-static');
-var file = new static.Server('../client');
+var file = new static.Server('../public_html');
 
 require('http').createServer(function(request, response) {
 	request.addListener('end', function() {

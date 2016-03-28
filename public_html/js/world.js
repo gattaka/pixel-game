@@ -4,7 +4,7 @@
 /*global utils*/
 /*global ui*/
 /*global background*/
-/*global generator*/
+/*global map*/
 /*global resources*/
 /*global render*/
 /*global mixer*/
@@ -15,9 +15,12 @@
  * Stará se o interakce ve světě
  * 
  */
-var world = (function () {
+var lich = lich || {};
+lich.World = function (ui) {
 
-    var pub = {};
+    createjs.Container.call(this);
+
+    var self = this;
 
     /*-----------*/
     /* CONSTANTS */
@@ -36,106 +39,78 @@ var world = (function () {
     // Pixel/s2
     var WORLD_GRAVITY = -1200;
 
+    var MOUSE_COOLDOWN = 100;
+
     /*-----------*/
     /* VARIABLES */
     /*-----------*/
 
-    var worldCont;
-
     var freeObjects = [];
     var bulletObjects = [];
-
-    var initialized = false;
 
     var tilesLabel;
     var sectorLabel;
 
     // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
-    var MOUSE_COOLDOWN = 100;
     var spellTime = MOUSE_COOLDOWN;
 
-    var tilesMap;
+    var map = new lich.Map();
+    var tilesMap = map.tilesMap;
+    var render = new lich.Render(map, this);
+    var background = new lich.Background();
+    var hero = new lich.Hero();
 
-    /*---------*/
-    /* METHODS */
-    /*---------*/
+    // hudba
+    mixer.play(resources.DIRT_THEME_KEY, true);
 
-    pub.init = function (callback) {
+    /*------------*/
+    /* Characters */
+    /*------------*/
+    this.addChild(hero.sprite);
+    hero.sprite.x = game.canvas.width / 2;
+    hero.sprite.y = game.canvas.height / 2;
+    render.updatePlayerIcon(hero.sprite.x, hero.sprite.y);
 
-        // Generování nové mapy
-        tilesMap = generator.generate();
+    /*---------------------*/
+    /* Measurements, debug */
+    /*---------------------*/
+    tilesLabel = new createjs.Text("TILES x: - y: -", "bold 18px Arial", "#00f");
+    this.addChild(tilesLabel);
+    tilesLabel.x = 10;
+    tilesLabel.y = 50;
 
-        worldCont = new createjs.Container();
-        game.stage.addChild(worldCont);
-        game.worldCont = worldCont;
+    sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
+    this.addChild(sectorLabel);
+    sectorLabel.x = 10;
+    sectorLabel.y = 70;
 
-        // Předání mapy renderu
-        render.init(function () {
-            construct();
-            if (typeof callback !== "undefined") {
-                callback();
+    /*------------*/
+    /* Dig events */
+    /*------------*/
+    render.addOnDigObjectListener(function (objType, x, y) {
+        if (typeof objType.item !== "undefined") {
+            for (var i = 0; i < objType.item.quant; i++) {
+                var objectSprite = resources.getItemBitmap(objType.item.index);
+                var coord = render.tilesToPixel(x, y);
+                objectSprite.x = coord.x + 10 - Math.random() * 20;
+                objectSprite.y = coord.y;
+                self.addChild(objectSprite);
+                var object = {};
+                object.item = objType.item;
+                object.sprite = objectSprite;
+                object.width = objectSprite.sourceRect.width;
+                object.height = objectSprite.sourceRect.height;
+                object.speedx = 0;
+                object.speedy = (Math.random() * 2 + 1) * OBJECT_NOTIFY_BOUNCE_SPEED;
+                object.collXOffset = 2;
+                object.collYOffset = 0;
+                object.notificationTimer = OBJECT_NOTIFY_TIME;
+                freeObjects.push(object);
             }
-        }, tilesMap);
+        }
+    });
 
-    };
-
-    var construct = function () {
-
-        mixer.play(resources.DIRT_THEME_KEY, true);
-
-        /*------------*/
-        /* Characters */
-        /*------------*/
-        hero.init(function () {
-            worldCont.addChild(hero.sprite);
-            hero.sprite.x = game.canvas.width / 2;
-            hero.sprite.y = game.canvas.height / 2;
-            render.updatePlayerIcon(hero.sprite.x, hero.sprite.y);
-
-            /*---------------------*/
-            /* Measurements, debug */
-            /*---------------------*/
-            tilesLabel = new createjs.Text("TILES x: - y: -", "bold 18px Arial", "#00f");
-            worldCont.addChild(tilesLabel);
-            tilesLabel.x = 10;
-            tilesLabel.y = 50;
-
-            sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
-            worldCont.addChild(sectorLabel);
-            sectorLabel.x = 10;
-            sectorLabel.y = 70;
-
-            /*------------*/
-            /* Dig events */
-            /*------------*/
-            render.addOnDigObjectListener(function (objType, x, y) {
-                if (typeof objType.item !== "undefined") {
-                    for (var i = 0; i < objType.item.quant; i++) {
-                        var objectSprite = resources.getItemBitmap(objType.item.index);
-                        var coord = render.tilesToPixel(x, y);
-                        objectSprite.x = coord.x + 10 - Math.random() * 20;
-                        objectSprite.y = coord.y;
-                        worldCont.addChild(objectSprite);
-                        var object = {};
-                        object.item = objType.item;
-                        object.sprite = objectSprite;
-                        object.width = objectSprite.sourceRect.width;
-                        object.height = objectSprite.sourceRect.height;
-                        object.speedx = 0;
-                        object.speedy = (Math.random() * 2 + 1) * OBJECT_NOTIFY_BOUNCE_SPEED;
-                        object.collXOffset = 2;
-                        object.collYOffset = 0;
-                        object.notificationTimer = OBJECT_NOTIFY_TIME;
-                        freeObjects.push(object);
-                    }
-                }
-            });
-
-            console.log("earth ready");
-            initialized = true;
-        });
-
-    };
+    console.log("earth ready");
 
     var updateBullet = function (sDelta, object, makeShiftX, makeShiftY, onCollision) {
 
@@ -248,137 +223,134 @@ var world = (function () {
 
     };
 
-    pub.update = function (delta, directions) {
-        if (initialized) {
+    this.update = function (delta, directions) {
+        var sDelta = delta / 1000; // ms -> s
 
-            var sDelta = delta / 1000; // ms -> s
+        // Dle kláves nastav rychlosti
+        // Nelze akcelerovat nahoru, když už 
+        // rychlost mám (nemůžu skákat ve vzduchu)
+        if (directions.up && hero.speedy === 0) {
+            hero.speedy = HERO_VERTICAL_SPEED;
+        } else if (directions.down) {
+            // TODO
+        }
 
-            // Dle kláves nastav rychlosti
-            // Nelze akcelerovat nahoru, když už 
-            // rychlost mám (nemůžu skákat ve vzduchu)
-            if (directions.up && hero.speedy === 0) {
-                hero.speedy = HERO_VERTICAL_SPEED;
-            } else if (directions.down) {
-                // TODO
-            }
+        // Horizontální akcelerace
+        if (directions.left) {
+            hero.speedx = HERO_HORIZONTAL_SPEED;
+        } else if (directions.right) {
+            hero.speedx = -HERO_HORIZONTAL_SPEED;
+        } else {
+            hero.speedx = 0;
+        }
 
-            // Horizontální akcelerace
-            if (directions.left) {
-                hero.speedx = HERO_HORIZONTAL_SPEED;
-            } else if (directions.right) {
-                hero.speedx = -HERO_HORIZONTAL_SPEED;
-            } else {
-                hero.speedx = 0;
-            }
+        var makeShiftX = function (dst) {
+            var rndDst = utils.floor(dst);
+            render.shiftX(rndDst);
+            // Horizontální pohyb se projevuje na pozadí
+            //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
+            background.shift(rndDst, 0);
+            freeObjects.forEach(function (item) {
+                item.sprite.x += rndDst;
+            });
+            bulletObjects.forEach(function (item) {
+                item.sprite.x += rndDst;
+            });
+        };
 
-            var makeShiftX = function (dst) {
-                var rndDst = utils.floor(dst);
-                render.shiftX(rndDst);
-                // Horizontální pohyb se projevuje na pozadí
-                //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
-                background.shift(rndDst, 0);
-                freeObjects.forEach(function (item) {
-                    item.sprite.x += rndDst;
-                });
-                bulletObjects.forEach(function (item) {
-                    item.sprite.x += rndDst;
-                });
+        var makeShiftY = function (dst) {
+            var rndDst = utils.floor(dst);
+            render.shiftY(rndDst);
+            // Horizontální pohyb se projevuje na pozadí
+            //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
+            background.shift(0, rndDst);
+            freeObjects.forEach(function (item) {
+                item.sprite.y += rndDst;
+            });
+            bulletObjects.forEach(function (item) {
+                item.sprite.y += rndDst;
+            });
+        };
+
+        // update hráče
+        updateObject(sDelta, hero, makeShiftX, makeShiftY);
+
+        // update projektilů
+        (function () {
+
+            var deleteBullet = function (object) {
+                bulletObjects.splice(i, 1);
+                self.removeChild(object.sprite);
             };
 
-            var makeShiftY = function (dst) {
-                var rndDst = utils.floor(dst);
-                render.shiftY(rndDst);
-                // Horizontální pohyb se projevuje na pozadí
-                //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
-                background.shift(0, rndDst);
-                freeObjects.forEach(function (item) {
-                    item.sprite.y += rndDst;
-                });
-                bulletObjects.forEach(function (item) {
-                    item.sprite.y += rndDst;
-                });
-            };
-
-            // update hráče
-            updateObject(sDelta, hero, makeShiftX, makeShiftY);
-
-            // update projektilů
-            (function () {
-
-                var deleteBullet = function (object) {
-                    bulletObjects.splice(i, 1);
-                    worldCont.removeChild(object.sprite);
-                };
-
-                for (var i = 0; i < bulletObjects.length; i++) {
-                    var object = bulletObjects[i];
-                    updateBullet(sDelta, object, function (x) {
-                        object.sprite.x -= x;
-                        if (object.sprite.x > game.canvas.width * 2 || object.sprite.x < -game.canvas.width)
-                            deleteBullet(object);
-                    }, function (y) {
-                        object.sprite.y -= y;
-                        if (object.sprite.y > game.canvas.height * 2 || object.sprite.y < -game.canvas.height)
-                            deleteBullet(object);
-                    }, function (clsn) {
-                        if (object.done === false) {
-                            mixer.play(resources.BURN_KEY);
-                            object.done = true;
-                            object.sprite.gotoAndPlay("hit");
-                            var centX = object.sprite.x + object.width / 2;
-                            var centY = object.sprite.y + object.height / 2;
-                            var rad = resources.TILE_SIZE * 4;
-                            for (var rx = centX - rad; rx <= centX + rad; rx += resources.TILE_SIZE) {
-                                for (var ry = centY - rad; ry <= centY + rad; ry += resources.TILE_SIZE) {
-                                    var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
-                                    var d2 = Math.pow(rad, 2);
-                                    if (r2 <= d2) {
-                                        render.dig(rx, ry);
-                                    }
+            for (var i = 0; i < bulletObjects.length; i++) {
+                var object = bulletObjects[i];
+                updateBullet(sDelta, object, function (x) {
+                    object.sprite.x -= x;
+                    if (object.sprite.x > game.canvas.width * 2 || object.sprite.x < -game.canvas.width)
+                        deleteBullet(object);
+                }, function (y) {
+                    object.sprite.y -= y;
+                    if (object.sprite.y > game.canvas.height * 2 || object.sprite.y < -game.canvas.height)
+                        deleteBullet(object);
+                }, function (clsn) {
+                    if (object.done === false) {
+                        mixer.play(resources.BURN_KEY);
+                        object.done = true;
+                        object.sprite.gotoAndPlay("hit");
+                        var centX = object.sprite.x + object.width / 2;
+                        var centY = object.sprite.y + object.height / 2;
+                        var rad = resources.TILE_SIZE * 4;
+                        for (var rx = centX - rad; rx <= centX + rad; rx += resources.TILE_SIZE) {
+                            for (var ry = centY - rad; ry <= centY + rad; ry += resources.TILE_SIZE) {
+                                var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
+                                var d2 = Math.pow(rad, 2);
+                                if (r2 <= d2) {
+                                    render.dig(rx, ry);
                                 }
                             }
                         }
-                    });
-                    if (object.sprite.currentAnimation === "done") {
-                        deleteBullet(object);
                     }
+                });
+                if (object.sprite.currentAnimation === "done") {
+                    deleteBullet(object);
                 }
-            })();
+            }
+        })();
 
-            // update sebratelných objektů
-            (function () {
-                for (var i = 0; i < freeObjects.length; i++) {
-                    var object = freeObjects[i];
-                    // pohni objekty
-                    updateObject(sDelta, object, function (x) {
-                        object.sprite.x -= x;
-                    }, function (y) {
-                        object.sprite.y -= y;
-                    });
-                    var heroCenterX = hero.sprite.x + hero.width / 2;
-                    var heroCenterY = hero.sprite.y + hero.height / 2;
-                    var itemCenterX = object.sprite.x + object.width / 2;
-                    var itemCenterY = object.sprite.y + object.height / 2;
+        // update sebratelných objektů
+        (function () {
+            for (var i = 0; i < freeObjects.length; i++) {
+                var object = freeObjects[i];
+                // pohni objekty
+                updateObject(sDelta, object, function (x) {
+                    object.sprite.x -= x;
+                }, function (y) {
+                    object.sprite.y -= y;
+                });
+                var heroCenterX = hero.sprite.x + hero.width / 2;
+                var heroCenterY = hero.sprite.y + hero.height / 2;
+                var itemCenterX = object.sprite.x + object.width / 2;
+                var itemCenterY = object.sprite.y + object.height / 2;
 
-                    // zjisti, zda hráč objekt nesebral
-                    if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_DISTANCE) {
-                        ui.inventoryUI.invInsert(object.item.index, 1);
-                        freeObjects.splice(i, 1);
-                        worldCont.removeChild(object.sprite);
-                        mixer.play(resources.PICK_KEY);
-                        object = null;
-                    }
-                    if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_FORCE_DISTANCE) {
-                        createjs.Tween.get(object.sprite)
-                                .to({
-                                    x: heroCenterX - object.width / 2,
-                                    y: heroCenterY - object.height / 2
-                                }, OBJECT_PICKUP_FORCE_TIME);
-                    }
+                // zjisti, zda hráč objekt nesebral
+                if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_DISTANCE) {
+                    ui.inventoryUI.invInsert(object.item.index, 1);
+                    freeObjects.splice(i, 1);
+                    self.removeChild(object.sprite);
+                    mixer.play(resources.PICK_KEY);
+                    object = null;
                 }
-            })();
+                if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < OBJECT_PICKUP_FORCE_DISTANCE) {
+                    createjs.Tween.get(object.sprite)
+                            .to({
+                                x: heroCenterX - object.width / 2,
+                                y: heroCenterY - object.height / 2
+                            }, OBJECT_PICKUP_FORCE_TIME);
+                }
+            }
+        })();
 
-        }
     };
 
     var isCollision = function (x, y) {
@@ -511,7 +483,7 @@ var world = (function () {
             }
         });
         var blastSprite = new createjs.Sprite(blastSheet, "fly");
-        worldCont.addChild(blastSprite);
+        self.addChild(blastSprite);
 
         var object = {};
         object.sprite = blastSprite;
@@ -532,7 +504,7 @@ var world = (function () {
         mixer.play(resources.FIREBALL_KEY);
     };
 
-    pub.handleMouse = function (mouse, delta) {
+    this.handleMouse = function (mouse, delta) {
         spellTime -= delta;
         if (spellTime <= 0 && (mouse.down || mouse.click)) {
             mouse.click = false;
@@ -562,10 +534,10 @@ var world = (function () {
 
     };
 
-    pub.handleTick = function (delta) {
+    this.handleTick = function (delta) {
         render.handleTick();
+        background.handleTick(delta);
     };
 
-    return pub;
-
-})();
+};
+createjs.extend(lich.World, createjs.Container);
