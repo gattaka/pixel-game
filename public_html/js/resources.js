@@ -118,32 +118,41 @@ var resources = (function () {
     pub.TORSO_KEY = "TORSO_KEY";
     pub.GAUNTLET_KEY = "GAUNTLET_KEY";
 
-    // sound
+    // ui spells
+    pub.PLACE_SPELL_KEY = "PLACE_SPELL_KEY";
+    pub.DIG_SPELL_KEY = "DIG_SPELL_KEY";
+    pub.FIREBALL_SPELL_KEY = "FIREBALL_SPELL_KEY";
 
+    // sound
     pub.FIREBALL_KEY = "FIREBALL_KEY";
     pub.BURN_KEY = "BURN_KEY";
     pub.PICK_KEY = "PICK_KEY";
+    pub.PLACE_SOUND_KEY = "PLACE_SOUND_KEY";
+    pub.PICK_AXE_SOUND_1_KEY = "PICK_AXE_SOUND_1_KEY";
+    pub.PICK_AXE_SOUND_2_KEY = "PICK_AXE_SOUND_2_KEY";
+    pub.PICK_AXE_SOUND_3_KEY = "PICK_AXE_SOUND_3_KEY";
     pub.DIRT_THEME_KEY = "DIRT_THEME_KEY";
+    
 
     /*
      * Definice mapových objektů
      */
     pub.dirtObjects = [
-        new game.MapObj(pub.TREE_KEY, 4, 9, 4, 8, 0, pub.WOOD_INDEX, 5),
-        new game.MapObj(pub.TREE2_KEY, 8, 15, 3, 0, 0, pub.WOOD_INDEX, 10),
-        new game.MapObj(pub.PLANT_KEY, 2, 2, 1, 12, 6, pub.PLANT_INDEX, 1),
-        new game.MapObj(pub.GRASS_KEY, 2, 2, 5, 12, 0, pub.STRAW_INDEX, 2),
-        new game.MapObj(pub.GRASS2_KEY, 2, 2, 5, 14, 0, pub.STRAW_INDEX, 2),
-        new game.MapObj(pub.GRASS3_KEY, 2, 2, 5, 16, 0, pub.STRAW_INDEX, 2),
-        new game.MapObj(pub.GRASS4_KEY, 2, 2, 5, 12, 4, pub.STRAW_INDEX, 2),
-        new game.MapObj(pub.SHROOM1_KEY, 2, 2, 1, 12, 2, pub.SHROOM1_INDEX, 1),
-        new game.MapObj(pub.SHROOM2_KEY, 2, 2, 1, 14, 2, pub.SHROOM2_INDEX, 1),
-        new game.MapObj(pub.SHROOM3_KEY, 2, 2, 1, 16, 2, pub.SHROOM3_INDEX, 1),
-        new game.MapObj(pub.PLANT2_KEY, 2, 2, 1, 18, 2, pub.PLANT2_INDEX, 1),
-        new game.MapObj(pub.PLANT3_KEY, 2, 2, 1, 14, 4, pub.PLANT3_INDEX, 1),
-        new game.MapObj(pub.PLANT4_KEY, 2, 2, 1, 16, 4, pub.PLANT4_INDEX, 1),
-        new game.MapObj(pub.PLANT5_KEY, 2, 2, 1, 18, 4, pub.PLANT5_INDEX, 1),
-        new game.MapObj(pub.BUSH_KEY, 2, 2, 1, 18, 0),
+        new lich.MapObj(pub.TREE_KEY, 4, 9, 4, 8, 0, pub.WOOD_INDEX, 5),
+        new lich.MapObj(pub.TREE2_KEY, 8, 15, 3, 0, 0, pub.WOOD_INDEX, 10),
+        new lich.MapObj(pub.PLANT_KEY, 2, 2, 1, 12, 6, pub.PLANT_INDEX, 1),
+        new lich.MapObj(pub.GRASS_KEY, 2, 2, 5, 12, 0, pub.STRAW_INDEX, 2),
+        new lich.MapObj(pub.GRASS2_KEY, 2, 2, 5, 14, 0, pub.STRAW_INDEX, 2),
+        new lich.MapObj(pub.GRASS3_KEY, 2, 2, 5, 16, 0, pub.STRAW_INDEX, 2),
+        new lich.MapObj(pub.GRASS4_KEY, 2, 2, 5, 12, 4, pub.STRAW_INDEX, 2),
+        new lich.MapObj(pub.SHROOM1_KEY, 2, 2, 1, 12, 2, pub.SHROOM1_INDEX, 1),
+        new lich.MapObj(pub.SHROOM2_KEY, 2, 2, 1, 14, 2, pub.SHROOM2_INDEX, 1),
+        new lich.MapObj(pub.SHROOM3_KEY, 2, 2, 1, 16, 2, pub.SHROOM3_INDEX, 1),
+        new lich.MapObj(pub.PLANT2_KEY, 2, 2, 1, 18, 2, pub.PLANT2_INDEX, 1),
+        new lich.MapObj(pub.PLANT3_KEY, 2, 2, 1, 14, 4, pub.PLANT3_INDEX, 1),
+        new lich.MapObj(pub.PLANT4_KEY, 2, 2, 1, 16, 4, pub.PLANT4_INDEX, 1),
+        new lich.MapObj(pub.PLANT5_KEY, 2, 2, 1, 18, 4, pub.PLANT5_INDEX, 1),
+        new lich.MapObj(pub.BUSH_KEY, 2, 2, 1, 18, 0)
     ];
 
     /*
@@ -151,6 +160,15 @@ var resources = (function () {
      */
     var loader;
     var imgManifest = [{
+            src: "images/ui/dig_spell.png",
+            id: pub.DIG_SPELL_KEY
+        }, {
+            src: "images/ui/fireball_spell.png",
+            id: pub.FIREBALL_SPELL_KEY
+        }, {
+            src: "images/ui/place_spell.png",
+            id: pub.PLACE_SPELL_KEY
+        }, {
             src: "images/ui/inv_parts.png",
             id: pub.INV_PARTS_KEY
         }, {
@@ -210,6 +228,18 @@ var resources = (function () {
         }, {
             src: "sound/248116__robinhood76__05224-fireball-whoosh.ogg",
             id: pub.BURN_KEY
+        }, {
+            src: "sound/place.ogg",
+            id: pub.PLACE_SOUND_KEY
+        }, {
+            src: "sound/pick_axe1.ogg",
+            id: pub.PICK_AXE_SOUND_1_KEY
+        }, {
+            src: "sound/pick_axe2.ogg",
+            id: pub.PICK_AXE_SOUND_2_KEY
+        }, {
+            src: "sound/pick_axe3.ogg",
+            id: pub.PICK_AXE_SOUND_3_KEY
         }, {
             src: "sound/Dirt 2.ogg",
             id: pub.DIRT_THEME_KEY

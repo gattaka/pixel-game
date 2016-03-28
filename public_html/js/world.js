@@ -509,8 +509,17 @@ lich.World = function (ui) {
         if (spellTime <= 0 && (mouse.down || mouse.click)) {
             mouse.click = false;
 
-            //render.dig(mouse.x, mouse.y);
-            spell(mouse.x, mouse.y);
+            if (game.ui.spellsUI.choosenItem === resources.DIG_SPELL_KEY) {
+                if (render.dig(mouse.x, mouse.y)) {
+                    mixer.play(resources["PICK_AXE_SOUND_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
+                }
+            } else if (game.ui.spellsUI.choosenItem === resources.PLACE_SPELL_KEY) {
+                if (render.place(mouse.x, mouse.y, game.ui.inventoryUI.choosenItem)) {
+                    mixer.play(resources["PLACE_SOUND_KEY"]);
+                }
+            } else if (game.ui.spellsUI.choosenItem === resources.FIREBALL_SPELL_KEY) {
+                spell(mouse.x, mouse.y);
+            }
 
             spellTime = MOUSE_COOLDOWN;
         }

@@ -564,6 +564,28 @@ lich.Render = function (map, world) {
     // Mapa
     createMinimap();
 
+    this.place = function (x, y, item) {
+
+        var coord = this.pixelsToTiles(x, y);
+        var rx = utils.even(coord.x);
+        var ry = utils.even(coord.y);
+
+        // pokud je místo prázdné a bez objektu (a je co vkládat
+        if (item !== null && tilesMap.valueAt(rx, ry) === resources.VOID && utils.get2D(tilesMap.objectsMap, rx, ry) === null) {
+            // TODO je potřeba vyřešit jak provázat objekty z mapy na objekty v inventáři a zpět
+            // ukázkový problém je strom, který se stává dřevem, které se zpátky nedá umístit jako 
+            // strom, ale jako dřevěná stěna
+            var object = resources.dirtObjects[2];
+            if (typeof object !== "undefined") {
+                map.placeObject(rx, ry, object);
+                // TODO ... tohle nestačí
+                createObject(object.objIndex);
+                return true;
+            }
+        }
+        return false;
+    };
+
     this.dig = function (x, y) {
 
         var coord = this.pixelsToTiles(x, y);
@@ -573,11 +595,12 @@ lich.Render = function (map, world) {
         // kopl jsem do nějakého povrchu?
         if (tilesMap.valueAt(rx, ry) !== resources.VOID) {
             digGround(rx, ry);
+            return true;
+        } else {
+            // kopl jsem do objektu?
+            tryDigObject(rx, ry);
+            return false;
         }
-
-        // kopl jsem do objektu?
-        tryDigObject(rx, ry);
-
     };
 
     this.shiftX = function (dst) {

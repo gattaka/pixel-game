@@ -97,8 +97,10 @@ game = (function () {
         resources.init(function () {
 
             ui = new lich.UI();
+            pub.ui = ui;
             world = new lich.World(ui);
             stage.addChild(world);
+            stage.addChild(ui);
 
             /*---------------------*/
             /* Measurements, debug */

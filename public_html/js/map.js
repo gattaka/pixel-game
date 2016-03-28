@@ -237,6 +237,36 @@ lich.Map = function () {
         }
     }
 
+    this.placeObject = function (cx, cy, object) {
+        // je tam volno, umísti ho
+        tilesMap.objects.push({
+            x: cx,
+            y: cy,
+            obj: object.objIndex
+        });
+        // zapiš obsazení jednotlivými dílky objektu
+        for (var x = 0; x < object.width; x++) {
+            for (var y = 0; y < object.height; y++) {
+                var col = tilesMap.objectsMap[x + cx];
+                if (typeof col === "undefined") {
+                    col = [];
+                    tilesMap.objectsMap[x + cx] = col;
+                }
+                var partsSheetIndex = object.posx + x + (object.posy + y) * resources.PARTS_SHEET_WIDTH;
+                col[y + cy - object.height] = {
+                    // typ objektu
+                    objIndex: object.objIndex,
+                    // Sheet index dílku objektu
+                    sheetIndex: partsSheetIndex,
+                    // relativní souřadnice dílku objektu v sheetmapě
+                    objTileX: x,
+                    objTileY: y
+                };
+            }
+        }
+
+    };
+
     // objekty 
     (function () {
 
@@ -268,32 +298,7 @@ lich.Map = function () {
                         var object = resources.dirtObjects[index];
                         var coord = tilesMap.coordAt(i);
                         if (isFree(coord.x, coord.y, object.width, object.height)) {
-                            // je tam volno, umísti ho
-                            tilesMap.objects.push({
-                                x: coord.x,
-                                y: coord.y,
-                                obj: index
-                            });
-                            // zapiš obsazení jednotlivými dílky objektu
-                            for (var x = 0; x < object.width; x++) {
-                                for (var y = 0; y < object.height; y++) {
-                                    var col = tilesMap.objectsMap[x + coord.x];
-                                    if (typeof col === "undefined") {
-                                        col = [];
-                                        tilesMap.objectsMap[x + coord.x] = col;
-                                    }
-                                    var partsSheetIndex = object.posx + x + (object.posy + y) * resources.PARTS_SHEET_WIDTH;
-                                    col[y + coord.y - object.height] = {
-                                        // typ objektu
-                                        objIndex: index,
-                                        // Sheet index dílku objektu
-                                        sheetIndex: partsSheetIndex,
-                                        // relativní souřadnice dílku objektu v sheetmapě
-                                        objTileX: x,
-                                        objTileY: y
-                                    };
-                                }
-                            }
+                            self.placeObject(coord.x, coord.y, object);
                             break;
                         } else {
                             // další pokus na dalším objektu
@@ -305,7 +310,6 @@ lich.Map = function () {
             }
         }
     })();
-
 
     this.tilesMap = tilesMap;
 
