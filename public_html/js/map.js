@@ -229,11 +229,11 @@ lich.Map = function () {
 
     // frekvenční "pool" objektů
     var pool = [];
-    for (var it = 0; it < resources.dirtObjects.length; it++) {
-        var item = resources.dirtObjects[it];
+    for (var key in resources.dirtObjects) {
+        var item = resources.dirtObjects[key];
         // vlož index objektu tolikrát, kolik je jeho frekvenc
         for (var i = 0; i < item.freq; i++) {
-            pool.push(it);
+            pool.push(key);
         }
     }
 
@@ -242,20 +242,20 @@ lich.Map = function () {
         tilesMap.objects.push({
             x: cx,
             y: cy,
-            obj: object.objIndex
+            obj: object.mapKey
         });
         // zapiš obsazení jednotlivými dílky objektu
-        for (var x = 0; x < object.width; x++) {
-            for (var y = 0; y < object.height; y++) {
+        for (var x = 0; x < object.mapSpriteWidth; x++) {
+            for (var y = 0; y < object.mapSpriteHeight; y++) {
                 var col = tilesMap.objectsMap[x + cx];
                 if (typeof col === "undefined") {
                     col = [];
                     tilesMap.objectsMap[x + cx] = col;
                 }
-                var partsSheetIndex = object.posx + x + (object.posy + y) * resources.PARTS_SHEET_WIDTH;
-                col[y + cy - object.height] = {
+                var partsSheetIndex = object.mapSpriteX + x + (object.mapSpriteY + y) * resources.PARTS_SHEET_WIDTH;
+                col[y + cy - object.mapSpriteHeight] = {
                     // typ objektu
-                    objIndex: object.objIndex,
+                    mapKey: object.mapKey,
                     // Sheet index dílku objektu
                     sheetIndex: partsSheetIndex,
                     // relativní souřadnice dílku objektu v sheetmapě
@@ -293,17 +293,18 @@ lich.Map = function () {
                 // bude tam nějaký objekt? (100% ano)
                 if (Math.random() > 0) {
                     var tries = 0;
-                    var index = pool[Math.floor(pool.length * Math.random())];
-                    while (tries < resources.dirtObjects.length) {
-                        var object = resources.dirtObjects[index];
+                    var index = Math.floor(pool.length * Math.random());
+                    while (tries < pool.length) {
+                        var key = pool[index];
+                        var object = resources.dirtObjects[key];
                         var coord = tilesMap.coordAt(i);
-                        if (isFree(coord.x, coord.y, object.width, object.height)) {
+                        if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                             self.placeObject(coord.x, coord.y, object);
                             break;
                         } else {
                             // další pokus na dalším objektu
                             tries++;
-                            index = (index + 1) % resources.dirtObjects.length;
+                            index = (index + 1) % pool.length;
                         }
                     }
                 }

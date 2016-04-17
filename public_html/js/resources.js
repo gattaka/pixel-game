@@ -1,4 +1,5 @@
 /*global createjs*/
+/*global lich*/
 /*global game*/
 
 /**
@@ -132,28 +133,27 @@ var resources = (function () {
     pub.PICK_AXE_SOUND_2_KEY = "PICK_AXE_SOUND_2_KEY";
     pub.PICK_AXE_SOUND_3_KEY = "PICK_AXE_SOUND_3_KEY";
     pub.DIRT_THEME_KEY = "DIRT_THEME_KEY";
-    
 
     /*
      * Definice mapových objektů
      */
-    pub.dirtObjects = [
-        new lich.MapObj(pub.TREE_KEY, 4, 9, 4, 8, 0, pub.WOOD_INDEX, 5),
-        new lich.MapObj(pub.TREE2_KEY, 8, 15, 3, 0, 0, pub.WOOD_INDEX, 10),
-        new lich.MapObj(pub.PLANT_KEY, 2, 2, 1, 12, 6, pub.PLANT_INDEX, 1),
-        new lich.MapObj(pub.GRASS_KEY, 2, 2, 5, 12, 0, pub.STRAW_INDEX, 2),
-        new lich.MapObj(pub.GRASS2_KEY, 2, 2, 5, 14, 0, pub.STRAW_INDEX, 2),
-        new lich.MapObj(pub.GRASS3_KEY, 2, 2, 5, 16, 0, pub.STRAW_INDEX, 2),
-        new lich.MapObj(pub.GRASS4_KEY, 2, 2, 5, 12, 4, pub.STRAW_INDEX, 2),
-        new lich.MapObj(pub.SHROOM1_KEY, 2, 2, 1, 12, 2, pub.SHROOM1_INDEX, 1),
-        new lich.MapObj(pub.SHROOM2_KEY, 2, 2, 1, 14, 2, pub.SHROOM2_INDEX, 1),
-        new lich.MapObj(pub.SHROOM3_KEY, 2, 2, 1, 16, 2, pub.SHROOM3_INDEX, 1),
-        new lich.MapObj(pub.PLANT2_KEY, 2, 2, 1, 18, 2, pub.PLANT2_INDEX, 1),
-        new lich.MapObj(pub.PLANT3_KEY, 2, 2, 1, 14, 4, pub.PLANT3_INDEX, 1),
-        new lich.MapObj(pub.PLANT4_KEY, 2, 2, 1, 16, 4, pub.PLANT4_INDEX, 1),
-        new lich.MapObj(pub.PLANT5_KEY, 2, 2, 1, 18, 4, pub.PLANT5_INDEX, 1),
-        new lich.MapObj(pub.BUSH_KEY, 2, 2, 1, 18, 0)
-    ];
+    pub.dirtObjects = {};
+    pub.dirtObjects[pub.GRASS_KEY] = new lich.MapObj(pub.GRASS_KEY, 2, 2, 12, 0, pub.STRAW_INDEX, 2, 1);
+    pub.dirtObjects[pub.TREE_KEY] = new lich.MapObj(pub.TREE_KEY, 4, 9, 8, 0, pub.WOOD_INDEX, 5, 5);
+    pub.dirtObjects[pub.TREE2_KEY] = new lich.MapObj(pub.TREE2_KEY, 8, 15, 0, 0, pub.WOOD_INDEX, 10, 2);
+    pub.dirtObjects[pub.GRASS_KEY] = new lich.MapObj(pub.GRASS_KEY, 2, 2, 12, 0, pub.STRAW_INDEX, 2, 1);
+    pub.dirtObjects[pub.GRASS2_KEY] = new lich.MapObj(pub.GRASS2_KEY, 2, 2, 14, 0, pub.STRAW_INDEX, 2, 1);
+    pub.dirtObjects[pub.GRASS3_KEY] = new lich.MapObj(pub.GRASS3_KEY, 2, 2, 16, 0, pub.STRAW_INDEX, 2, 1);
+    pub.dirtObjects[pub.GRASS4_KEY] = new lich.MapObj(pub.GRASS4_KEY, 2, 2, 12, 4, pub.STRAW_INDEX, 2, 1);
+    pub.dirtObjects[pub.SHROOM1_KEY] = new lich.MapObj(pub.SHROOM1_KEY, 2, 2, 12, 2, pub.SHROOM1_INDEX, 1, 1);
+    pub.dirtObjects[pub.SHROOM2_KEY] = new lich.MapObj(pub.SHROOM2_KEY, 2, 2, 14, 2, pub.SHROOM2_INDEX, 1, 1);
+    pub.dirtObjects[pub.SHROOM3_KEY] = new lich.MapObj(pub.SHROOM3_KEY, 2, 2, 16, 2, pub.SHROOM3_INDEX, 1, 1);
+    pub.dirtObjects[pub.PLANT_KEY] = new lich.MapObj(pub.PLANT_KEY, 2, 2, 12, 6, pub.PLANT_INDEX, 1, 1);
+    pub.dirtObjects[pub.PLANT2_KEY] = new lich.MapObj(pub.PLANT2_KEY, 2, 2, 18, 2, pub.PLANT2_INDEX, 1, 1);
+    pub.dirtObjects[pub.PLANT3_KEY] = new lich.MapObj(pub.PLANT3_KEY, 2, 2, 14, 4, pub.PLANT3_INDEX, 1, 1);
+    pub.dirtObjects[pub.PLANT4_KEY] = new lich.MapObj(pub.PLANT4_KEY, 2, 2, 16, 4, pub.PLANT4_INDEX, 1, 1);
+    pub.dirtObjects[pub.PLANT5_KEY] = new lich.MapObj(pub.PLANT5_KEY, 2, 2, 18, 4, pub.PLANT5_INDEX, 1, 1);
+    pub.dirtObjects[pub.BUSH_KEY] = new lich.MapObj(pub.BUSH_KEY, 2, 2, 18, 0, null, 0, 0);
 
     /*
      * Resource definice a loader

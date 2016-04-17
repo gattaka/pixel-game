@@ -525,9 +525,9 @@ lich.Render = function (map, world) {
     var tryDigObject = function (rx, ry) {
         var objectElement = utils.get2D(tilesMap.objectsMap, rx, ry);
         if (objectElement !== null) {
-            var objType = resources.dirtObjects[objectElement.objIndex];
-            var objWidth = objType.width;
-            var objHeight = objType.height;
+            var objType = resources.dirtObjects[objectElement.mapKey];
+            var objWidth = objType.mapSpriteWidth;
+            var objHeight = objType.mapSpriteHeight;
             // relativní pozice dílku v sheetu (od počátku sprite)
             var posx = objectElement.objTileX;
             var posy = objectElement.objTileY;
