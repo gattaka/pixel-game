@@ -9,9 +9,7 @@ var Lich;
 (function (Lich) {
     var Resources = (function () {
         function Resources(game, callback) {
-            /*
-             * Resource definice a loader
-             */
+            var self = this;
             var imgManifest = [{
                     src: "images/ui/dig_spell.png",
                     id: Resources.DIG_SPELL_KEY
@@ -98,10 +96,10 @@ var Lich;
                     id: Resources.DIRT_THEME_KEY
                 }];
             (function () {
-                for (var i = 1; i <= this.CLOUDS_NUMBER; i++) {
+                for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
                     imgManifest.push({
                         src: "images/background/cloud" + i + ".png",
-                        id: this.CLOUD_KEY + i
+                        id: Resources.CLOUD_KEY + i
                     });
                 }
             })();
@@ -119,13 +117,13 @@ var Lich;
             loadLabel.x = 50;
             loadLabel.y = 50;
             loadScreenCont.addChild(loadLabel);
-            this.loader = new createjs.LoadQueue(false);
+            self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
-            this.loader.installPlugin(createjs.Sound);
-            this.loader.addEventListener("progress", function (event) {
+            self.loader.installPlugin(createjs.Sound);
+            self.loader.addEventListener("progress", function (event) {
                 loadLabel.text = Math.floor(event.loaded * 100) + "% Loading... ";
             });
-            this.loader.addEventListener("complete", function () {
+            self.loader.addEventListener("complete", function () {
                 createjs.Tween.get(loadScreenCont)
                     .to({
                     alpha: 0
@@ -136,7 +134,7 @@ var Lich;
                     callback();
                 }
             });
-            this.loader.loadManifest(imgManifest, true);
+            self.loader.loadManifest(imgManifest, true);
         }
         ;
         Resources.prototype.getImage = function (key) {
@@ -148,7 +146,8 @@ var Lich;
         };
         ;
         Resources.prototype.getItemBitmap = function (v) {
-            var item = this.getBitmap(Resources.INV_PARTS_KEY);
+            var self = this;
+            var item = self.getBitmap(Resources.INV_PARTS_KEY);
             var itemCols = item.image.width / Resources.PARTS_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             item.sourceRect = new createjs.Rectangle((v % itemCols) * Resources.PARTS_SIZE, Math.floor(v / itemCols) * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE);

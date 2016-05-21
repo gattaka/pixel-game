@@ -1,4 +1,5 @@
 namespace Lich {
+    
     export class UIPart extends createjs.Container {
 
         constructor(public width, public height) {
@@ -34,21 +35,23 @@ namespace Lich {
         constructor(public game: Game) {
             super(450, 150);
 
+            var self = this;
+
             // zvýraznění vybrané položky
 
-            this.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
-            this.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
-            this.itemHighlightShape.graphics.setStrokeStyle(2);
-            this.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + InventoryUI.INV_SELECT_BORDER * 2, Resources.PARTS_SIZE
+            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
+            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
+            self.itemHighlightShape.graphics.setStrokeStyle(2);
+            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + InventoryUI.INV_SELECT_BORDER * 2, Resources.PARTS_SIZE
                 + InventoryUI.INV_SELECT_BORDER * 2, 3);
-            this.itemHighlightShape.visible = false;
-            this.addChild(this.itemHighlightShape);
+            self.itemHighlightShape.visible = false;
+            self.addChild(self.itemHighlightShape);
 
             // kontejner položek
 
-            this.itemsCont.x = InventoryUI.INV_BORDER;
-            this.itemsCont.y = InventoryUI.INV_BORDER;
-            this.addChild(this.itemsCont);
+            self.itemsCont.x = InventoryUI.INV_BORDER;
+            self.itemsCont.y = InventoryUI.INV_BORDER;
+            self.addChild(self.itemsCont);
         }
 
         handleMouse(mouse) {
@@ -66,9 +69,10 @@ namespace Lich {
         }
 
         toggleInv() {
-            if (this.toggleFlag) {
-                this.visible = !(this.visible);
-                this.toggleFlag = false;
+            var self = this;
+            if (self.toggleFlag) {
+                self.visible = !(self.visible);
+                self.toggleFlag = false;
             }
         }
 
@@ -77,26 +81,27 @@ namespace Lich {
         }
 
         invInsert(item, quant) {
+            var self = this;
             // zkus zvýšit počet
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
-                if (typeof this.invContent[i] !== "undefined" && this.invContent[i].item === item) {
-                    this.invContent[i].quant += quant;
-                    this.invContent[i].count.text = this.invContent[i].quant;
+                if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
+                    self.invContent[i].quant += quant;
+                    self.invContent[i].count.text = self.invContent[i].quant;
                     return true; // přidáno
                 }
             }
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
-                if (typeof this.invContent[i] === "undefined") {
-                    var bitmap = this.game.resources.getItemBitmap(item);
-                    this.itemsCont.addChild(bitmap);
+                if (typeof self.invContent[i] === "undefined") {
+                    var bitmap = self.game.resources.getItemBitmap(item);
+                    self.itemsCont.addChild(bitmap);
                     bitmap.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     bitmap.y = Math.floor(i / InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     var text = new createjs.Text(quant, "bold " + InventoryUI.TEXT_SIZE + "px Arial", "#ff0");
-                    this.itemsCont.addChild(text);
+                    self.itemsCont.addChild(text);
                     text.x = bitmap.x;
                     text.y = bitmap.y + Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;
-                    this.invContent[i] = {
+                    self.invContent[i] = {
                         item: item,
                         quant: quant,
                         element: bitmap,
@@ -108,16 +113,16 @@ namespace Lich {
                     bitmap.hitArea = hitArea;
 
                     bitmap.on("mousedown", function(evt) {
-                        if (this.choosenItem === item) {
-                            this.choosenItem = null;
-                            this.draggedItem = null;
-                            this.itemHighlightShape.visible = false;
+                        if (self.choosenItem === item) {
+                            self.choosenItem = null;
+                            self.draggedItem = null;
+                            self.itemHighlightShape.visible = false;
                         } else {
-                            this.itemHighlightShape.visible = true;
-                            this.itemHighlightShape.x = bitmap.x - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
-                            this.itemHighlightShape.y = bitmap.y - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
-                            this.choosenItem = item;
-                            this.draggedItem = item;
+                            self.itemHighlightShape.visible = true;
+                            self.itemHighlightShape.x = bitmap.x - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
+                            self.itemHighlightShape.y = bitmap.y - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
+                            self.choosenItem = item;
+                            self.draggedItem = item;
                         }
                     }, null, false);
 
@@ -146,26 +151,28 @@ namespace Lich {
         constructor(public game: Game) {
             super(SpellsUI.n * Resources.PARTS_SIZE + (SpellsUI.n - 1) * (SpellsUI.SPACING) + 2 * SpellsUI.BORDER, Resources.PARTS_SIZE + 2 * SpellsUI.BORDER);
 
-            // zatím rovnou:
-            this.spellInsert(Resources.DIG_SPELL_KEY);
-            this.spellInsert(Resources.PLACE_SPELL_KEY);
-            this.spellInsert(Resources.FIREBALL_SPELL_KEY);
+            var self = this;
 
-            this.selectSpell(Resources.FIREBALL_SPELL_KEY);
+            // zatím rovnou:
+            self.spellInsert(Resources.DIG_SPELL_KEY);
+            self.spellInsert(Resources.PLACE_SPELL_KEY);
+            self.spellInsert(Resources.FIREBALL_SPELL_KEY);
+
+            self.selectSpell(Resources.FIREBALL_SPELL_KEY);
 
             // zvýraznění vybrané položky
-            this.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
-            this.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
-            this.itemHighlightShape.graphics.setStrokeStyle(2);
-            this.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + SpellsUI.SELECT_BORDER * 2, Resources.PARTS_SIZE
+            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
+            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
+            self.itemHighlightShape.graphics.setStrokeStyle(2);
+            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + SpellsUI.SELECT_BORDER * 2, Resources.PARTS_SIZE
                 + SpellsUI.SELECT_BORDER * 2, 3);
-            this.itemHighlightShape.visible = false;
-            this.addChild(this.itemHighlightShape);
+            self.itemHighlightShape.visible = false;
+            self.addChild(self.itemHighlightShape);
 
             // kontejner položek
-            this.itemsCont.x = SpellsUI.BORDER;
-            this.itemsCont.y = SpellsUI.BORDER;
-            this.addChild(this.itemsCont);
+            self.itemsCont.x = SpellsUI.BORDER;
+            self.itemsCont.y = SpellsUI.BORDER;
+            self.addChild(self.itemsCont);
         }
 
         handleMouse(mouse) {
@@ -175,27 +182,29 @@ namespace Lich {
         }
 
         selectSpell(spell) {
-            var bitmap = this.spellContent[this.spellIndex[spell]];
-            this.itemHighlightShape.visible = true;
-            this.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            this.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            this.choosenItem = spell;
+            var self = this;
+            var bitmap = self.spellContent[self.spellIndex[spell]];
+            self.itemHighlightShape.visible = true;
+            self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.choosenItem = spell;
         }
 
         spellInsert(spell) {
-            var bitmap = this.game.resources.getBitmap(spell);
-            this.itemsCont.addChild(bitmap);
-            bitmap.x = this.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
+            var self = this;
+            var bitmap = self.game.resources.getBitmap(spell);
+            self.itemsCont.addChild(bitmap);
+            bitmap.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
             bitmap.y = 0;
-            this.spellIndex[spell] = this.spellContent.length;
-            this.spellContent.push(bitmap);
+            self.spellIndex[spell] = self.spellContent.length;
+            self.spellContent.push(bitmap);
 
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
 
             bitmap.on("mousedown", function() {
-                this.selectSpell(spell);
+                self.selectSpell(spell);
             }, null, false);
         }
 

@@ -16,28 +16,31 @@ var Lich;
         }
         ;
         TilesMap.prototype.indexAt = function (x, y) {
-            if (x >= this.width || x < 0 || y >= this.height || y < 0) {
+            var self = this;
+            if (x >= self.width || x < 0 || y >= self.height || y < 0) {
                 return -1;
             }
             else {
-                return y * this.width + x;
+                return y * self.width + x;
             }
         };
         TilesMap.prototype.coordAt = function (index) {
-            if (index < 0 || index > this.map.length - 1) {
+            var self = this;
+            if (index < 0 || index > self.map.length - 1) {
                 return 0;
             }
             else {
                 return {
-                    x: index % this.width,
-                    y: Math.floor(index / this.width)
+                    x: index % self.width,
+                    y: Math.floor(index / self.width)
                 };
             }
         };
         TilesMap.prototype.valueAt = function (x, y) {
-            var index = this.indexAt(x, y);
+            var self = this;
+            var index = self.indexAt(x, y);
             if (index >= 0) {
-                return this.map[index];
+                return self.map[index];
             }
             return Lich.Resources.VOID;
         };
@@ -46,9 +49,10 @@ var Lich;
     Lich.TilesMap = TilesMap;
     var Map = (function () {
         function Map(game) {
-            this.self = this;
-            this.resources = game.resources;
+            var self = this;
+            self.resources = game.resources;
             var tilesMap = new TilesMap([], [], [], Map.MAP_WIDTH, Map.MAP_HEIGHT);
+            self.tilesMap = tilesMap;
             var mass = tilesMap.height * tilesMap.width;
             // base generation
             for (var y = 0; y < tilesMap.height; y++) {
@@ -116,7 +120,7 @@ var Lich;
                     if (tilesMap.map[i] === Lich.Resources.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
-                    this.generateEdge(tilesMap, coord.x, coord.y);
+                    self.generateEdge(tilesMap, coord.x, coord.y);
                 }
             })();
             // tráva rohy
@@ -126,7 +130,7 @@ var Lich;
                     if (val === Lich.Resources.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
-                    this.generateCorner(tilesMap, coord.x, coord.y);
+                    self.generateCorner(tilesMap, coord.x, coord.y);
                 }
             })();
             // frekvenční "pool" objektů
@@ -168,7 +172,7 @@ var Lich;
                                 var object = Lich.Resources.dirtObjects[key];
                                 var coord = tilesMap.coordAt(i);
                                 if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
-                                    this.placeObject(coord.x, coord.y, object);
+                                    self.placeObject(coord.x, coord.y, object);
                                     break;
                                 }
                                 else {
@@ -181,11 +185,11 @@ var Lich;
                     }
                 }
             })();
-            this.tilesMap = tilesMap;
         }
         Map.prototype.placeObject = function (cx, cy, object) {
+            var self = this;
             // je tam volno, umísti ho
-            this.tilesMap.objects.push({
+            self.tilesMap.objects.push({
                 x: cx,
                 y: cy,
                 obj: object.mapKey
@@ -193,10 +197,10 @@ var Lich;
             // zapiš obsazení jednotlivými dílky objektu
             for (var x = 0; x < object.mapSpriteWidth; x++) {
                 for (var y = 0; y < object.mapSpriteHeight; y++) {
-                    var col = this.tilesMap.objectsMap[x + cx];
+                    var col = self.tilesMap.objectsMap[x + cx];
                     if (typeof col === "undefined") {
                         col = [];
-                        this.tilesMap.objectsMap[x + cx] = col;
+                        self.tilesMap.objectsMap[x + cx] = col;
                     }
                     var partsSheetIndex = object.mapSpriteX + x + (object.mapSpriteY + y) * Lich.Resources.PARTS_SHEET_WIDTH;
                     col[y + cy - object.mapSpriteHeight] = {

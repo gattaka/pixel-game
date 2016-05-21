@@ -1,5 +1,5 @@
 namespace Lich {
-    export class Hero extends Character {
+    export class Hero extends AbstractWorldObject {
 
         /*-----------*/
         /* CONSTANTS */
@@ -16,6 +16,10 @@ namespace Lich {
 
         static WIDTH = 46;
         static HEIGHT = 64;
+
+        // Collision offset
+        static COLLXOFFSET = 10;
+        static COLLYOFFSET = 2;
 
         static stateAnimation = {
             WALKR_STATE: "walkR",
@@ -37,16 +41,12 @@ namespace Lich {
         speedx = 0;
         speedy = 0;
 
-        // Collision offset
-        collXOffset = 10;
-        collYOffset = 2;
-
         state = Hero.IDLE_STATE;
 
         initialized = false;
 
         constructor(public game: Game) {
-            super(Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
+            super(Hero.WIDTH, Hero.HEIGHT, 0, 0, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [game.resources.getImage(Resources.LICH_ANIMATION_KEY)],
                 "frames": {
@@ -67,19 +67,21 @@ namespace Lich {
                     "jumpR": [25, 25, "jumpR", 0.2],
                     "jumpL": [27, 27, "jumpL", 0.2]
                 }
-            }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation);
+            }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
         }
 
         shift(shift) {
-            if (this.initialized) {
+            var self = this;
+            if (self.initialized) {
                 // TODO
             }
         }
 
         performState(desiredState) {
-            if (this.state !== desiredState) {
-                this.gotoAndPlay(Hero.stateAnimation[desiredState]);
-                this.state = desiredState;
+            var self = this;
+            if (self.state !== desiredState) {
+                self.gotoAndPlay(Hero.stateAnimation[desiredState]);
+                self.state = desiredState;
             }
         }
 
@@ -116,22 +118,23 @@ namespace Lich {
         }
 
         updateAnimations() {
-            if (this.speedx === 0 && this.speedy === 0) {
-                this.idle();
-            } else if (this.speedy !== 0) {
-                if (this.speedx === 0) {
-                    this.jump();
-                } else if (this.speedx > 0) {
-                    this.jumpL();
+            var self = this;
+            if (self.speedx === 0 && self.speedy === 0) {
+                self.idle();
+            } else if (self.speedy !== 0) {
+                if (self.speedx === 0) {
+                    self.jump();
+                } else if (self.speedx > 0) {
+                    self.jumpL();
                 } else {
-                    this.jumpR();
+                    self.jumpR();
                 }
             } else {
-                if (this.speedx > 0) {
-                    this.walkL();
+                if (self.speedx > 0) {
+                    self.walkL();
                 }
-                if (this.speedx < 0) {
-                    this.walkR();
+                if (self.speedx < 0) {
+                    self.walkR();
                 }
             }
         }

@@ -8,7 +8,7 @@ var Lich;
     var Hero = (function (_super) {
         __extends(Hero, _super);
         function Hero(game) {
-            _super.call(this, Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
+            _super.call(this, Hero.WIDTH, Hero.HEIGHT, 0, 0, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [game.resources.getImage(Lich.Resources.LICH_ANIMATION_KEY)],
                 "frames": {
@@ -29,7 +29,7 @@ var Lich;
                     "jumpR": [25, 25, "jumpR", 0.2],
                     "jumpL": [27, 27, "jumpL", 0.2]
                 }
-            }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation);
+            }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
             this.game = game;
             /*-----------*/
             /* VARIABLES */
@@ -38,20 +38,19 @@ var Lich;
             this.height = Hero.HEIGHT;
             this.speedx = 0;
             this.speedy = 0;
-            // Collision offset
-            this.collXOffset = 10;
-            this.collYOffset = 2;
             this.state = Hero.IDLE_STATE;
             this.initialized = false;
         }
         Hero.prototype.shift = function (shift) {
-            if (this.initialized) {
+            var self = this;
+            if (self.initialized) {
             }
         };
         Hero.prototype.performState = function (desiredState) {
-            if (this.state !== desiredState) {
-                this.gotoAndPlay(Hero.stateAnimation[desiredState]);
-                this.state = desiredState;
+            var self = this;
+            if (self.state !== desiredState) {
+                self.gotoAndPlay(Hero.stateAnimation[desiredState]);
+                self.state = desiredState;
             }
         };
         Hero.prototype.walkL = function () {
@@ -79,26 +78,27 @@ var Lich;
             this.performState(Hero.FALL_STATE);
         };
         Hero.prototype.updateAnimations = function () {
-            if (this.speedx === 0 && this.speedy === 0) {
-                this.idle();
+            var self = this;
+            if (self.speedx === 0 && self.speedy === 0) {
+                self.idle();
             }
-            else if (this.speedy !== 0) {
-                if (this.speedx === 0) {
-                    this.jump();
+            else if (self.speedy !== 0) {
+                if (self.speedx === 0) {
+                    self.jump();
                 }
-                else if (this.speedx > 0) {
-                    this.jumpL();
+                else if (self.speedx > 0) {
+                    self.jumpL();
                 }
                 else {
-                    this.jumpR();
+                    self.jumpR();
                 }
             }
             else {
-                if (this.speedx > 0) {
-                    this.walkL();
+                if (self.speedx > 0) {
+                    self.walkL();
                 }
-                if (this.speedx < 0) {
-                    this.walkR();
+                if (self.speedx < 0) {
+                    self.walkR();
                 }
             }
         };
@@ -115,6 +115,9 @@ var Lich;
         Hero.FALL_STATE = "FALL_STATE";
         Hero.WIDTH = 46;
         Hero.HEIGHT = 64;
+        // Collision offset
+        Hero.COLLXOFFSET = 10;
+        Hero.COLLYOFFSET = 2;
         Hero.stateAnimation = {
             WALKR_STATE: "walkR",
             WALKL_STATE: "walkL",
@@ -126,6 +129,6 @@ var Lich;
             FALL_STATE: "fall"
         };
         return Hero;
-    }(Lich.Character));
+    }(Lich.AbstractWorldObject));
     Lich.Hero = Hero;
 })(Lich || (Lich = {}));

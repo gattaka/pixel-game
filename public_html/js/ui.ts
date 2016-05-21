@@ -11,19 +11,21 @@ namespace Lich {
         constructor(public game) {
             super();
 
+            var self = this;
+
             // inventář
             var inventoryUI = new InventoryUI(game);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
-            this.addChild(inventoryUI);
-            this.inventoryUI = inventoryUI;
+            self.addChild(inventoryUI);
+            self.inventoryUI = inventoryUI;
 
             // Schopnosti
             var spellsUI = new SpellsUI(game);
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
-            this.addChild(spellsUI);
-            this.spellsUI = spellsUI;
+            self.addChild(spellsUI);
+            self.spellsUI = spellsUI;
 
             /*
              // přehled postavy
@@ -113,11 +115,11 @@ namespace Lich {
 
             // zdraví a mana
             (function() {
-                this.stateCont = new createjs.Container();
-                this.stateCont.width = 350;
-                this.stateCont.height = 160;
-                this.stateCont.x = game.canvas.width - this.stateCont.width - 20;
-                this.stateCont.y = game.canvas.height - this.stateCont.height - 20;
+                self.stateCont = new createjs.Container();
+                self.stateCont.width = 350;
+                self.stateCont.height = 160;
+                self.stateCont.x = game.canvas.width - self.stateCont.width - 20;
+                self.stateCont.y = game.canvas.height - self.stateCont.height - 20;
 
                 var outerShape = new createjs.Shape();
                 outerShape.graphics.setStrokeStyle(2);
@@ -126,19 +128,20 @@ namespace Lich {
                 outerShape.graphics.drawRect(0, 80, 250, 25);
                 outerShape.graphics.beginFill("rgba(70,30,255,0.7)");
                 outerShape.graphics.drawRect(0, 110, 250, 25);
-                this.stateCont.addChild(outerShape);
+                self.stateCont.addChild(outerShape);
 
-                var skull = this.game.resources.getBitmap(Resources.SKULL_KEY);
-                skull.x = this.stateCont.width - skull.image.width;
-                skull.y = this.stateCont.height - skull.image.height;
-                this.stateCont.addChild(skull);
-                this.addChild(this.stateCont);
+                var skull = self.game.resources.getBitmap(Resources.SKULL_KEY);
+                skull.x = self.stateCont.width - skull.image.width;
+                skull.y = self.stateCont.height - skull.image.height;
+                self.stateCont.addChild(skull);
+                self.addChild(self.stateCont);
             })();
         }
 
         isMouseInUI(x, y) {
+            var self = this;
             var uiHit = false;
-            this.children.forEach(function(item) {
+            self.children.forEach(function(item) {
                 if (item.hitTest(x - item.x, y - item.y) === true) {
                     uiHit = true;
                     return;
@@ -148,7 +151,8 @@ namespace Lich {
         }
 
         handleMouse(mouse, delta) {
-            this.children.forEach(function(item) {
+            var self = this;
+            self.children.forEach(function(item) {
                 if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {
                     if (typeof item["handleMouse"] !== "undefined") {
                         item["handleMouse"](mouse);

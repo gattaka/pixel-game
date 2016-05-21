@@ -159,9 +159,8 @@ namespace Lich {
 
         constructor(game, callback?) {
 
-            /*
-             * Resource definice a loader
-             */
+            var self = this;
+
             var imgManifest = [{
                 src: "images/ui/dig_spell.png",
                 id: Resources.DIG_SPELL_KEY
@@ -249,10 +248,10 @@ namespace Lich {
                 }];
 
             (function() {
-                for (var i = 1; i <= this.CLOUDS_NUMBER; i++) {
+                for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
                     imgManifest.push({
                         src: "images/background/cloud" + i + ".png",
-                        id: this.CLOUD_KEY + i
+                        id: Resources.CLOUD_KEY + i
                     });
                 }
             })();
@@ -274,13 +273,13 @@ namespace Lich {
             loadLabel.y = 50;
             loadScreenCont.addChild(loadLabel);
 
-            this.loader = new createjs.LoadQueue(false);
+            self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
-            this.loader.installPlugin(createjs.Sound);
-            this.loader.addEventListener("progress", function(event) {
+            self.loader.installPlugin(createjs.Sound);
+            self.loader.addEventListener("progress", function(event) {
                 loadLabel.text = Math.floor(event.loaded * 100) + "% Loading... ";
             });
-            this.loader.addEventListener("complete", function() {
+            self.loader.addEventListener("complete", function() {
                 createjs.Tween.get(loadScreenCont)
                     .to({
                         alpha: 0
@@ -291,20 +290,21 @@ namespace Lich {
                     callback();
                 }
             });
-            this.loader.loadManifest(imgManifest, true);
+            self.loader.loadManifest(imgManifest, true);
 
         };
 
-        getImage(key) {
+        getImage(key: string): HTMLImageElement {
             return this.loader.getResult(key);
         };
 
-        getBitmap(key) {
+        getBitmap(key: string) {
             return new createjs.Bitmap(this.loader.getResult(key));
         };
 
-        getItemBitmap(v) {
-            var item = this.getBitmap(Resources.INV_PARTS_KEY);
+        getItemBitmap(v: number) {
+            var self = this;
+            var item = self.getBitmap(Resources.INV_PARTS_KEY);
             var itemCols = item.image.width / Resources.PARTS_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             item.sourceRect = new createjs.Rectangle(

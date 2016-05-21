@@ -6,43 +6,65 @@
  */
 namespace Lich {
 
-    abstract class AbstractWorldObject {
+    export abstract class AbstractWorldObject extends createjs.Sprite {
+
+        state: string;
+
         constructor(
-            public sprite,
-            public width,
-            public height,
-            public speedx,
-            public speedy,
-            public collXOffset,
-            public collYOffset) { };
+            public width: number,
+            public height: number,
+            public speedx: number,
+            public speedy: number,
+            public spriteSheet: createjs.SpriteSheet,
+            public initState: string,
+            public stateAnimation: Object,
+            public collXOffset: number,
+            public collYOffset: number) {
+            super(spriteSheet, initState);
+        }
+
+        performState(desiredState: string) {
+            var self = this;
+            if (self.state !== desiredState) {
+                self.gotoAndPlay(self.stateAnimation[desiredState]);
+                self.state = desiredState;
+            }
+        }
+
+        updateAnimations() { };
+
     }
 
     class BulletObject extends AbstractWorldObject {
         constructor(
-            public sprite,
-            public width,
-            public height,
-            public speedx,
-            public speedy,
-            public collXOffset,
-            public collYOffset,
-            public done) {
-            super(sprite, width, height, speedx, speedy, collXOffset, collYOffset);
+            public width: number,
+            public height: number,
+            public speedx: number,
+            public speedy: number,
+            public spriteSheet: createjs.SpriteSheet,
+            public initState: string,
+            public stateAnimation: Object,
+            public collXOffset: number,
+            public collYOffset: number,
+            public done: boolean) {
+            super(width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
         };
     }
 
     class WorldObject extends AbstractWorldObject {
         constructor(
             public item,
-            public sprite,
-            public width,
-            public height,
-            public speedx,
-            public speedy,
-            public collXOffset,
-            public collYOffset,
-            public notificationTimer) {
-            super(sprite, width, height, speedx, speedy, collXOffset, collYOffset);
+            public width: number,
+            public height: number,
+            public speedx: number,
+            public speedy: number,
+            public spriteSheet: createjs.SpriteSheet,
+            public initState: string,
+            public stateAnimation: Object,
+            public collXOffset: number,
+            public collYOffset: number,
+            public notificationTimer: number) {
+            super(width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
         };
     }
 
@@ -71,8 +93,8 @@ namespace Lich {
         /* VARIABLES */
         /*-----------*/
 
-        freeObjects = [];
-        bulletObjects = [];
+        freeObjects = Array<WorldObject>();
+        bulletObjects = Array<BulletObject>();
 
         tilesLabel;
         sectorLabel;
@@ -89,11 +111,13 @@ namespace Lich {
         constructor(public game: Game) {
             super();
 
-            this.map = new Map(game);
-            this.tilesMap = this.map.tilesMap;
-            this.render = new Render(game, this.map, this);
-            this.background = new Background(game);
-            this.hero = new Hero(game);
+            var self = this;
+
+            self.map = new Map(game);
+            self.tilesMap = self.map.tilesMap;
+            self.render = new Render(game, self.map, self);
+            self.background = new Background(game);
+            self.hero = new Hero(game);
 
             // hudba
             Mixer.play(Resources.DIRT_THEME_KEY, true);
@@ -101,46 +125,64 @@ namespace Lich {
             /*------------*/
             /* Characters */
             /*------------*/
-            this.addChild(this.hero);
-            this.hero.x = game.canvas.width / 2;
-            this.hero.y = game.canvas.height / 2;
-            this.render.updatePlayerIcon(this.hero.x, this.hero.y);
+            self.addChild(self.hero);
+            self.hero.x = game.canvas.width / 2;
+            self.hero.y = game.canvas.height / 2;
+            self.render.updatePlayerIcon(self.hero.x, self.hero.y);
 
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/
-            this.tilesLabel = new createjs.Text("TILES x: - y: -", "bold 18px Arial", "#00f");
-            this.addChild(this.tilesLabel);
-            this.tilesLabel.x = 10;
-            this.tilesLabel.y = 50;
+            self.tilesLabel = new createjs.Text("TILES x: - y: -", "bold 18px Arial", "#00f");
+            self.addChild(self.tilesLabel);
+            self.tilesLabel.x = 10;
+            self.tilesLabel.y = 50;
 
-            this.sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
-            this.addChild(this.sectorLabel);
-            this.sectorLabel.x = 10;
-            this.sectorLabel.y = 70;
+            self.sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
+            self.addChild(self.sectorLabel);
+            self.sectorLabel.x = 10;
+            self.sectorLabel.y = 70;
 
             /*------------*/
             /* Dig events */
             /*------------*/
-            this.render.addOnDigObjectListener(function(objType, x, y) {
+            self.render.addOnDigObjectListener(function(objType: MapObj, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var objectSprite = this.game.resources.getItemBitmap(objType.item.index);
-                        var coord = this.render.tilesToPixel(x, y);
-                        objectSprite.x = coord.x + 10 - Math.random() * 20;
-                        objectSprite.y = coord.y;
-                        this.addChild(objectSprite);
+
+                        var image = game.resources.getItemBitmap(objType.item.invObj);
+                        var spriteSheet = new createjs.SpriteSheet({
+                            framerate: 10,
+                            "images": [image],
+                            "frames": {
+                                "regX": 0,
+                                "height": image.height,
+                                "count": 1,
+                                "regY": 0,
+                                "width": image.width
+                            },
+                            "animations": {
+                                "idle": [0, 0, "idle", 0.005],
+                            }
+                        });
+
                         var object = new WorldObject(
                             objType.item,
-                            objectSprite,
-                            objectSprite.sourceRect.width,
-                            objectSprite.sourceRect.height,
+                            image.width,
+                            image.height,
                             0,
                             (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED,
+                            spriteSheet,
+                            "idle",
+                            { "idle": "idle" },
                             2,
                             0,
                             World.OBJECT_NOTIFY_TIME);
-                        this.freeObjects.push(object);
+                        var coord = self.render.tilesToPixel(x, y);
+                        object.x = coord.x + 10 - Math.random() * 20;
+                        object.y = coord.y;
+                        self.freeObjects.push(object);
+                        self.addChild(object);
                     }
                 }
             });
@@ -148,8 +190,8 @@ namespace Lich {
             console.log("earth ready");
         }
 
-        updateBullet(sDelta, object, makeShiftX, makeShiftY, onCollision) {
-
+        updateBullet(sDelta: number, object: BulletObject, makeShiftX, makeShiftY, onCollision) {
+            var self = this;
             if (object === null || object.done)
                 return;
 
@@ -160,7 +202,7 @@ namespace Lich {
                 var distanceY = object.speedy * sDelta;
 
                 // Nenarazím na překážku?
-                clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
                 } else {
@@ -173,7 +215,7 @@ namespace Lich {
                 var distanceX = sDelta * object.speedx;
 
                 // Nenarazím na překážku?
-                clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
                 } else {
@@ -183,8 +225,8 @@ namespace Lich {
             }
         };
 
-        updateObject(sDelta, object, makeShiftX, makeShiftY) {
-
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShiftX, makeShiftY) {
+            var self = this;
             var clsnTest;
             var clsnPosition;
 
@@ -200,7 +242,7 @@ namespace Lich {
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
 
                 // Nenarazím na překážku?
-                clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
                 } else {
@@ -213,8 +255,8 @@ namespace Lich {
 
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
-                        clsnPosition = this.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
-                        makeShiftY(-1 * (clsnPosition.y - (object.sprite.y + object.height - object.collYOffset)));
+                        clsnPosition = self.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
+                        makeShiftY(-1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
 
                         object.speedy = 0;
                     }
@@ -226,20 +268,20 @@ namespace Lich {
                 var distanceX = Utils.floor(sDelta * object.speedx);
 
                 // Nenarazím na překážku?
-                clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
                 }
                 // zkus zmenšit posun, aby nebyla kolize
                 else {
                     // získej pozici kolizního bloku
-                    clsnPosition = this.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
+                    clsnPosition = self.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
                     if (distanceX > 0) {
                         // narazil jsem do něj zprava
-                        makeShiftX(object.sprite.x + object.collXOffset - (clsnPosition.x + Resources.TILE_SIZE) - 1);
+                        makeShiftX(object.x + object.collXOffset - (clsnPosition.x + Resources.TILE_SIZE) - 1);
                     } else {
                         // narazil jsem do něj zleva
-                        makeShiftX(-1 * (clsnPosition.x - (object.sprite.x + object.width - object.collXOffset) - 1));
+                        makeShiftX(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1));
                     }
                 }
             }
@@ -247,7 +289,7 @@ namespace Lich {
             // pokud nejsem zrovna uprostřed skoku...
             if (object.speedy === 0) {
                 // ...a mám kam padat
-                clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1);
                 if (clsnTest.hit === false) {
                     object.speedy = -1;
                 }
@@ -260,95 +302,96 @@ namespace Lich {
         };
 
         update(delta, directions) {
+            var self = this;
             var sDelta = delta / 1000; // ms -> s
 
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
-            if (directions.up && this.hero.speedy === 0) {
-                this.hero.speedy = World.HERO_VERTICAL_SPEED;
+            if (directions.up && self.hero.speedy === 0) {
+                self.hero.speedy = World.HERO_VERTICAL_SPEED;
             } else if (directions.down) {
                 // TODO
             }
 
             // Horizontální akcelerace
             if (directions.left) {
-                this.hero.speedx = World.HERO_HORIZONTAL_SPEED;
+                self.hero.speedx = World.HERO_HORIZONTAL_SPEED;
             } else if (directions.right) {
-                this.hero.speedx = -World.HERO_HORIZONTAL_SPEED;
+                self.hero.speedx = -World.HERO_HORIZONTAL_SPEED;
             } else {
-                this.hero.speedx = 0;
+                self.hero.speedx = 0;
             }
 
             var makeShiftX = function(dst) {
                 var rndDst = Utils.floor(dst);
-                this.render.shiftX(rndDst);
+                self.render.shiftX(rndDst);
                 // Horizontální pohyb se projevuje na pozadí
                 //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
-                this.background.shift(rndDst, 0);
-                this.freeObjects.forEach(function(item) {
-                    item.sprite.x += rndDst;
+                self.background.shift(rndDst, 0);
+                self.freeObjects.forEach(function(item) {
+                    item.x += rndDst;
                 });
-                this.bulletObjects.forEach(function(item) {
-                    item.sprite.x += rndDst;
+                self.bulletObjects.forEach(function(item) {
+                    item.x += rndDst;
                 });
             };
 
             var makeShiftY = function(dst) {
                 var rndDst = Utils.floor(dst);
-                this.render.shiftY(rndDst);
+                self.render.shiftY(rndDst);
                 // Horizontální pohyb se projevuje na pozadí
                 //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
-                this.background.shift(0, rndDst);
-                this.freeObjects.forEach(function(item) {
-                    item.sprite.y += rndDst;
+                self.background.shift(0, rndDst);
+                self.freeObjects.forEach(function(item) {
+                    item.y += rndDst;
                 });
-                this.bulletObjects.forEach(function(item) {
-                    item.sprite.y += rndDst;
+                self.bulletObjects.forEach(function(item) {
+                    item.y += rndDst;
                 });
             };
 
             // update hráče
-            this.updateObject(sDelta, this.hero, makeShiftX, makeShiftY);
+            self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
 
             // update projektilů
             (function() {
 
                 var deleteBullet = function(object) {
-                    this.bulletObjects.splice(i, 1);
-                    this.removeChild(object.sprite);
+                    self.bulletObjects.splice(i, 1);
+                    self.removeChild(object.sprite);
                 };
 
-                for (var i = 0; i < this.bulletObjects.length; i++) {
-                    var object = this.bulletObjects[i];
-                    this.updateBullet(sDelta, object, function(x) {
-                        object.sprite.x -= x;
-                        if (object.sprite.x > this.game.canvas.width * 2 || object.sprite.x < -this.game.canvas.width)
+                for (var i = 0; i < self.bulletObjects.length; i++) {
+                    var object = self.bulletObjects[i];
+                    self.updateBullet(sDelta, object, function(x) {
+                        object.x -= x;
+                        if (object.x > self.game.canvas.width * 2 || object.x < -self.game.canvas.width)
                             deleteBullet(object);
                     }, function(y) {
-                        object.sprite.y -= y;
-                        if (object.sprite.y > this.game.canvas.height * 2 || object.sprite.y < -this.game.canvas.height)
+                        object.y -= y;
+                        if (object.y > self.game.canvas.height * 2 || object.y < -self.game.canvas.height)
                             deleteBullet(object);
                     }, function(clsn) {
                         if (object.done === false) {
                             Mixer.play(Resources.BURN_KEY);
                             object.done = true;
-                            object.sprite.gotoAndPlay("hit");
-                            var centX = object.sprite.x + object.width / 2;
-                            var centY = object.sprite.y + object.height / 2;
+                            object.gotoAndPlay("hit");
+                            var centX = object.x + object.width / 2;
+                            var centY = object.y + object.height / 2;
                             var rad = Resources.TILE_SIZE * 4;
                             for (var rx = centX - rad; rx <= centX + rad; rx += Resources.TILE_SIZE) {
                                 for (var ry = centY - rad; ry <= centY + rad; ry += Resources.TILE_SIZE) {
                                     var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
                                     var d2 = Math.pow(rad, 2);
                                     if (r2 <= d2) {
-                                        this.render.dig(rx, ry);
+                                        self.render.dig(rx, ry);
                                     }
                                 }
                             }
                         }
                     });
-                    if (object.sprite.currentAnimation === "done") {
+                    if (object.currentAnimation === "done") {
                         deleteBullet(object);
                     }
                 }
@@ -356,29 +399,29 @@ namespace Lich {
 
             // update sebratelných objektů
             (function() {
-                for (var i = 0; i < this.freeObjects.length; i++) {
-                    var object = this.freeObjects[i];
+                for (var i = 0; i < self.freeObjects.length; i++) {
+                    var object = self.freeObjects[i];
                     // pohni objekty
-                    this.updateObject(sDelta, object, function(x) {
-                        object.sprite.x -= x;
+                    self.updateObject(sDelta, object, function(x) {
+                        object.x -= x;
                     }, function(y) {
-                        object.sprite.y -= y;
+                        object.y -= y;
                     });
-                    var heroCenterX = this.hero.sprite.x + this.hero.width / 2;
-                    var heroCenterY = this.hero.sprite.y + this.hero.height / 2;
-                    var itemCenterX = object.sprite.x + object.width / 2;
-                    var itemCenterY = object.sprite.y + object.height / 2;
+                    var heroCenterX = self.hero.x + self.hero.width / 2;
+                    var heroCenterY = self.hero.y + self.hero.height / 2;
+                    var itemCenterX = object.x + object.width / 2;
+                    var itemCenterY = object.y + object.height / 2;
 
                     // zjisti, zda hráč objekt nesebral
                     if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                        this.ui.inventoryUI.invInsert(object.item.index, 1);
-                        this.freeObjects.splice(i, 1);
-                        this.removeChild(object.sprite);
+                        self.game.ui.inventoryUI.invInsert(object.item.index, 1);
+                        self.freeObjects.splice(i, 1);
+                        self.removeChild(object);
                         Mixer.play(Resources.PICK_KEY);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
-                        createjs.Tween.get(object.sprite)
+                        createjs.Tween.get(object)
                             .to({
                                 x: heroCenterX - object.width / 2,
                                 y: heroCenterY - object.height / 2
@@ -390,13 +433,15 @@ namespace Lich {
         };
 
         isCollision(x, y) {
-            var result = this.render.pixelsToTiles(x, y);
-            return this.isCollisionByTiles(result.x, result.y);
+            var self = this;
+            var result = self.render.pixelsToTiles(x, y);
+            return self.isCollisionByTiles(result.x, result.y);
         };
 
         isCollisionByTiles(x, y) {
+            var self = this;
             return {
-                hit: this.tilesMap.valueAt(x, y) > 0,
+                hit: self.tilesMap.valueAt(x, y) > 0,
                 "result": {
                     x: x,
                     y: y
@@ -405,6 +450,7 @@ namespace Lich {
         };
 
         isBoundsInCollision(x, y, fullWidth, fullHeight, fullXShift, fullYShift) {
+            var self = this;
             var tx;
             var ty;
 
@@ -449,7 +495,7 @@ namespace Lich {
                         if (xShift > 0 || yShift > 0) {
                             tx = x - xShift;
                             ty = y - yShift;
-                            var LT = this.isCollision(tx, ty);
+                            var LT = self.isCollision(tx, ty);
                             if (LT.hit)
                                 return LT;
                         }
@@ -457,7 +503,7 @@ namespace Lich {
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - xShift;
                             ty = y - yShift;
-                            var RT = this.isCollision(tx, ty);
+                            var RT = self.isCollision(tx, ty);
                             if (RT.hit)
                                 return RT;
                         }
@@ -465,7 +511,7 @@ namespace Lich {
                         if (xShift > 0 || yShift < 0) {
                             tx = x - xShift;
                             ty = y + height - yShift;
-                            var LB = this.isCollision(tx, ty);
+                            var LB = self.isCollision(tx, ty);
                             if (LB.hit)
                                 return LB;
                         }
@@ -473,7 +519,7 @@ namespace Lich {
                         if (xShift < 0 || yShift < 0) {
                             tx = x + width - xShift;
                             ty = y + height - yShift;
-                            var RB = this.isCollision(tx, ty);
+                            var RB = self.isCollision(tx, ty);
                             if (RB.hit)
                                 return RB;
                         }
@@ -495,16 +541,17 @@ namespace Lich {
         };
 
         spell(targetX, targetY) {
+            var self = this;
             var BLAST_SPEED = 1500;
-            var heroCenterX = this.hero.x + this.hero.width / 2;
-            var heroCenterY = this.hero.y + this.hero.height / 2;
+            var heroCenterX = self.hero.x + self.hero.width / 2;
+            var heroCenterY = self.hero.y + self.hero.height / 2;
             var b = targetX - heroCenterX;
             var a = targetY - heroCenterY;
             var c = Math.sqrt(a * a + b * b);
 
             var blastSheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [this.game.resources.getImage(Resources.BLAST_ANIMATION_KEY)],
+                "images": [self.game.resources.getImage(Resources.BLAST_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": 60,
@@ -518,18 +565,19 @@ namespace Lich {
                     "done": [4, 4, "done", 1]
                 }
             });
-            var blastSprite = new createjs.Sprite(blastSheet, "fly");
-            this.addChild(blastSprite);
-
-            blastSprite.x = heroCenterX - object.width / 2;
-            blastSprite.y = heroCenterY - object.height / 2;
 
             var object = new BulletObject(
-                blastSprite,
                 60,
                 60,
                 -BLAST_SPEED * b / c,
                 -BLAST_SPEED * a / c,
+                blastSheet,
+                "fly",
+                {
+                    "fly": "fly",
+                    "hit": "hit",
+                    "done": "done"
+                },
                 20,
                 20,
                 false
@@ -537,52 +585,57 @@ namespace Lich {
 
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
             // přepony dle rychlosti projektilu
-            this.bulletObjects.push(object);
+            self.bulletObjects.push(object);
+            self.addChild(object);
+            object.x = heroCenterX - object.width / 2;
+            object.y = heroCenterY - object.height / 2;
             Mixer.play(Resources.FIREBALL_KEY);
         };
 
         handleMouse(mouse, delta) {
-            this.spellTime -= delta;
-            if (this.spellTime <= 0 && (mouse.down || mouse.click)) {
+            var self = this;
+            self.spellTime -= delta;
+            if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
                 mouse.click = false;
 
-                if (this.game.ui.spellsUI.choosenItem === Resources.DIG_SPELL_KEY) {
-                    if (this.render.dig(mouse.x, mouse.y)) {
+                if (self.game.ui.spellsUI.choosenItem === Resources.DIG_SPELL_KEY) {
+                    if (self.render.dig(mouse.x, mouse.y)) {
                         Mixer.play(Resources["PICK_AXE_SOUND_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
                     }
-                } else if (this.game.ui.spellsUI.choosenItem === Resources.PLACE_SPELL_KEY) {
-                    if (this.render.place(mouse.x, mouse.y, this.game.ui.inventoryUI.choosenItem)) {
+                } else if (self.game.ui.spellsUI.choosenItem === Resources.PLACE_SPELL_KEY) {
+                    if (self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
                         Mixer.play(Resources["PLACE_SOUND_KEY"]);
                     }
-                } else if (this.game.ui.spellsUI.choosenItem === Resources.FIREBALL_SPELL_KEY) {
-                    this.spell(mouse.x, mouse.y);
+                } else if (self.game.ui.spellsUI.choosenItem === Resources.FIREBALL_SPELL_KEY) {
+                    self.spell(mouse.x, mouse.y);
                 }
 
-                this.spellTime = World.MOUSE_COOLDOWN;
+                self.spellTime = World.MOUSE_COOLDOWN;
             }
 
-            var coord = this.render.pixelsToTiles(mouse.x, mouse.y);
-            var clsn = this.isCollisionByTiles(coord.x, coord.y);
-            var index = this.tilesMap.indexAt(coord.x, coord.y);
-            var type = this.tilesMap.map[index];
-            if (typeof this.tilesLabel !== "undefined") {
-                this.tilesLabel.text = "TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
+            var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
+            var clsn = self.isCollisionByTiles(coord.x, coord.y);
+            var index = self.tilesMap.indexAt(coord.x, coord.y);
+            var type = self.tilesMap.map[index];
+            if (typeof self.tilesLabel !== "undefined") {
+                self.tilesLabel.text = "TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
             }
 
-            var sector = this.render.getSectorByTiles(coord.x, coord.y);
-            if (typeof this.sectorLabel !== "undefined") {
+            var sector = self.render.getSectorByTiles(coord.x, coord.y);
+            if (typeof self.sectorLabel !== "undefined") {
                 if (typeof sector !== "undefined" && sector !== null) {
-                    this.sectorLabel.text = "SECTOR: x: " + sector.map_x + " y: " + sector.map_y;
+                    self.sectorLabel.text = "SECTOR: x: " + sector.map_x + " y: " + sector.map_y;
                 } else {
-                    this.sectorLabel.text = "SECTOR: -";
+                    self.sectorLabel.text = "SECTOR: -";
                 }
             }
 
         };
 
         handleTick(delta) {
-            this.render.handleTick();
-            this.background.handleTick(delta);
+            var self = this;
+            self.render.handleTick();
+            self.background.handleTick(delta);
         };
     }
 }
