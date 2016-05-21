@@ -1,27 +1,30 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Lich;
-(function (Lich) {
-    var UI = (function (_super) {
-        __extends(UI, _super);
-        function UI(game) {
-            _super.call(this);
-            this.game = game;
+namespace Lich {
+    export class UI extends createjs.Container {
+
+        static SCREEN_SPACING = 20;
+
+        stateCont;
+        charCont;
+        inventoryUI;
+        spellsUI;
+
+        constructor(public game) {
+            super();
+
             // inventář
-            var inventoryUI = new Lich.InventoryUI(game);
+            var inventoryUI = new InventoryUI(game);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             this.addChild(inventoryUI);
             this.inventoryUI = inventoryUI;
+
             // Schopnosti
-            var spellsUI = new Lich.SpellsUI(game);
+            var spellsUI = new SpellsUI(game);
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             this.addChild(spellsUI);
             this.spellsUI = spellsUI;
+
             /*
              // přehled postavy
              (function () {
@@ -107,13 +110,15 @@ var Lich;
              
              })();
              */
+
             // zdraví a mana
-            (function () {
+            (function() {
                 this.stateCont = new createjs.Container();
                 this.stateCont.width = 350;
                 this.stateCont.height = 160;
                 this.stateCont.x = game.canvas.width - this.stateCont.width - 20;
                 this.stateCont.y = game.canvas.height - this.stateCont.height - 20;
+
                 var outerShape = new createjs.Shape();
                 outerShape.graphics.setStrokeStyle(2);
                 outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
@@ -122,25 +127,28 @@ var Lich;
                 outerShape.graphics.beginFill("rgba(70,30,255,0.7)");
                 outerShape.graphics.drawRect(0, 110, 250, 25);
                 this.stateCont.addChild(outerShape);
-                var skull = this.game.resources.getBitmap(Lich.Resources.SKULL_KEY);
+
+                var skull = this.game.resources.getBitmap(Resources.SKULL_KEY);
                 skull.x = this.stateCont.width - skull.image.width;
                 skull.y = this.stateCont.height - skull.image.height;
                 this.stateCont.addChild(skull);
                 this.addChild(this.stateCont);
             })();
         }
-        UI.prototype.isMouseInUI = function (x, y) {
+
+        isMouseInUI(x, y) {
             var uiHit = false;
-            this.children.forEach(function (item) {
+            this.children.forEach(function(item) {
                 if (item.hitTest(x - item.x, y - item.y) === true) {
                     uiHit = true;
                     return;
                 }
             });
             return uiHit;
-        };
-        UI.prototype.handleMouse = function (mouse, delta) {
-            this.children.forEach(function (item) {
+        }
+
+        handleMouse(mouse, delta) {
+            this.children.forEach(function(item) {
                 if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {
                     if (typeof item["handleMouse"] !== "undefined") {
                         item["handleMouse"](mouse);
@@ -148,9 +156,7 @@ var Lich;
                     }
                 }
             });
-        };
-        UI.SCREEN_SPACING = 20;
-        return UI;
-    }(createjs.Container));
-    Lich.UI = UI;
-})(Lich || (Lich = {}));
+        }
+    }
+
+}

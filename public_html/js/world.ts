@@ -1,81 +1,103 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 /**
  * world.js
- *
+ * 
  * Stará se o interakce ve světě
- *
+ * 
  */
-var Lich;
-(function (Lich) {
-    var AbstractWorldObject = (function () {
-        function AbstractWorldObject(sprite, width, height, speedx, speedy, collXOffset, collYOffset) {
-            this.sprite = sprite;
-            this.width = width;
-            this.height = height;
-            this.speedx = speedx;
-            this.speedy = speedy;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-        }
-        ;
-        return AbstractWorldObject;
-    }());
-    var BulletObject = (function (_super) {
-        __extends(BulletObject, _super);
-        function BulletObject(sprite, width, height, speedx, speedy, collXOffset, collYOffset, done) {
-            _super.call(this, sprite, width, height, speedx, speedy, collXOffset, collYOffset);
-            this.sprite = sprite;
-            this.width = width;
-            this.height = height;
-            this.speedx = speedx;
-            this.speedy = speedy;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.done = done;
-        }
-        ;
-        return BulletObject;
-    }(AbstractWorldObject));
-    var WorldObject = (function (_super) {
-        __extends(WorldObject, _super);
-        function WorldObject(item, sprite, width, height, speedx, speedy, collXOffset, collYOffset, notificationTimer) {
-            _super.call(this, sprite, width, height, speedx, speedy, collXOffset, collYOffset);
-            this.item = item;
-            this.sprite = sprite;
-            this.width = width;
-            this.height = height;
-            this.speedx = speedx;
-            this.speedy = speedy;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.notificationTimer = notificationTimer;
-        }
-        ;
-        return WorldObject;
-    }(AbstractWorldObject));
-    var World = (function (_super) {
-        __extends(World, _super);
-        function World(game) {
-            _super.call(this);
-            this.game = game;
-            /*-----------*/
-            /* VARIABLES */
-            /*-----------*/
-            this.freeObjects = [];
-            this.bulletObjects = [];
-            // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
-            this.spellTime = World.MOUSE_COOLDOWN;
-            this.map = new Lich.Map(game);
+namespace Lich {
+
+    abstract class AbstractWorldObject {
+        constructor(
+            public sprite,
+            public width,
+            public height,
+            public speedx,
+            public speedy,
+            public collXOffset,
+            public collYOffset) { };
+    }
+
+    class BulletObject extends AbstractWorldObject {
+        constructor(
+            public sprite,
+            public width,
+            public height,
+            public speedx,
+            public speedy,
+            public collXOffset,
+            public collYOffset,
+            public done) {
+            super(sprite, width, height, speedx, speedy, collXOffset, collYOffset);
+        };
+    }
+
+    class WorldObject extends AbstractWorldObject {
+        constructor(
+            public item,
+            public sprite,
+            public width,
+            public height,
+            public speedx,
+            public speedy,
+            public collXOffset,
+            public collYOffset,
+            public notificationTimer) {
+            super(sprite, width, height, speedx, speedy, collXOffset, collYOffset);
+        };
+    }
+
+    export class World extends createjs.Container {
+
+        /*-----------*/
+        /* CONSTANTS */
+        /*-----------*/
+
+        static OBJECT_NOTIFY_TIME = 500;
+        static OBJECT_NOTIFY_BOUNCE_SPEED = 120;
+        static OBJECT_PICKUP_DISTANCE = 10;
+        static OBJECT_PICKUP_FORCE_DISTANCE = 100;
+        static OBJECT_PICKUP_FORCE_TIME = 150;
+
+        // Pixel/s
+        static HERO_HORIZONTAL_SPEED = 300;
+        static HERO_VERTICAL_SPEED = 500;
+
+        // Pixel/s2
+        static WORLD_GRAVITY = -1200;
+
+        static MOUSE_COOLDOWN = 100;
+
+        /*-----------*/
+        /* VARIABLES */
+        /*-----------*/
+
+        freeObjects = [];
+        bulletObjects = [];
+
+        tilesLabel;
+        sectorLabel;
+
+        // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
+        spellTime = World.MOUSE_COOLDOWN;
+
+        map: Map;
+        tilesMap;
+        render;
+        background;
+        hero: Hero;
+
+        constructor(public game: Game) {
+            super();
+
+            this.map = new Map(game);
             this.tilesMap = this.map.tilesMap;
-            this.render = new Lich.Render(game, this.map, this);
-            this.background = new Lich.Background(game);
-            this.hero = new Lich.Hero(game);
+            this.render = new Render(game, this.map, this);
+            this.background = new Background(game);
+            this.hero = new Hero(game);
+
             // hudba
-            Lich.Mixer.play(Lich.Resources.DIRT_THEME_KEY, true);
+            Mixer.play(Resources.DIRT_THEME_KEY, true);
+
             /*------------*/
             /* Characters */
             /*------------*/
@@ -83,6 +105,7 @@ var Lich;
             this.hero.x = game.canvas.width / 2;
             this.hero.y = game.canvas.height / 2;
             this.render.updatePlayerIcon(this.hero.x, this.hero.y);
+
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/
@@ -90,14 +113,16 @@ var Lich;
             this.addChild(this.tilesLabel);
             this.tilesLabel.x = 10;
             this.tilesLabel.y = 50;
+
             this.sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
             this.addChild(this.sectorLabel);
             this.sectorLabel.x = 10;
             this.sectorLabel.y = 70;
+
             /*------------*/
             /* Dig events */
             /*------------*/
-            this.render.addOnDigObjectListener(function (objType, x, y) {
+            this.render.addOnDigObjectListener(function(objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
                         var objectSprite = this.game.resources.getItemBitmap(objType.item.index);
@@ -105,94 +130,120 @@ var Lich;
                         objectSprite.x = coord.x + 10 - Math.random() * 20;
                         objectSprite.y = coord.y;
                         this.addChild(objectSprite);
-                        var object = new WorldObject(objType.item, objectSprite, objectSprite.sourceRect.width, objectSprite.sourceRect.height, 0, (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED, 2, 0, World.OBJECT_NOTIFY_TIME);
+                        var object = new WorldObject(
+                            objType.item,
+                            objectSprite,
+                            objectSprite.sourceRect.width,
+                            objectSprite.sourceRect.height,
+                            0,
+                            (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED,
+                            2,
+                            0,
+                            World.OBJECT_NOTIFY_TIME);
                         this.freeObjects.push(object);
                     }
                 }
             });
+
             console.log("earth ready");
         }
-        World.prototype.updateBullet = function (sDelta, object, makeShiftX, makeShiftY, onCollision) {
+
+        updateBullet(sDelta, object, makeShiftX, makeShiftY, onCollision) {
+
             if (object === null || object.done)
                 return;
+
             var clsnTest;
+
             if (object.speedy !== 0) {
+
                 var distanceY = object.speedy * sDelta;
+
                 // Nenarazím na překážku?
                 clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
-                }
-                else {
+                } else {
                     onCollision(clsnTest);
                     return;
                 }
             }
+
             if (object.speedx !== 0) {
                 var distanceX = sDelta * object.speedx;
+
                 // Nenarazím na překážku?
                 clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
-                }
-                else {
+                } else {
                     onCollision(clsnTest);
                     return;
                 }
             }
         };
-        ;
-        World.prototype.updateObject = function (sDelta, object, makeShiftX, makeShiftY) {
+
+        updateObject(sDelta, object, makeShiftX, makeShiftY) {
+
             var clsnTest;
             var clsnPosition;
+
             if (object.speedy !== 0) {
+
                 // dráha, kterou objekt urazil za daný časový úsek, 
                 // kdy je známa jeho poslední rychlost a zrychlení, 
                 // které na něj za daný časový úsek působilo:
                 // s_t = vt + 1/2.at^2
-                var distanceY = Lich.Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
+                var distanceY = Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
                 // uprav rychlost objektu, která se dá spočítat jako: 
                 // v = v_0 + at
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
+
                 // Nenarazím na překážku?
                 clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
-                }
-                else {
+                } else {
                     // zastavil jsem se při stoupání? Začni hned padat
                     if (distanceY > 0) {
                         object.speedy = 0;
                     }
+                    // zastavil jsem se při pádu? Konec skoku
                     else {
+
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
                         clsnPosition = this.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
                         makeShiftY(-1 * (clsnPosition.y - (object.sprite.y + object.height - object.collYOffset)));
+
                         object.speedy = 0;
                     }
                 }
+
             }
+
             if (object.speedx !== 0) {
-                var distanceX = Lich.Utils.floor(sDelta * object.speedx);
+                var distanceX = Utils.floor(sDelta * object.speedx);
+
                 // Nenarazím na překážku?
                 clsnTest = this.isBoundsInCollision(object.sprite.x + object.collXOffset, object.sprite.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
                 }
+                // zkus zmenšit posun, aby nebyla kolize
                 else {
                     // získej pozici kolizního bloku
                     clsnPosition = this.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
                     if (distanceX > 0) {
                         // narazil jsem do něj zprava
-                        makeShiftX(object.sprite.x + object.collXOffset - (clsnPosition.x + Lich.Resources.TILE_SIZE) - 1);
-                    }
-                    else {
+                        makeShiftX(object.sprite.x + object.collXOffset - (clsnPosition.x + Resources.TILE_SIZE) - 1);
+                    } else {
                         // narazil jsem do něj zleva
                         makeShiftX(-1 * (clsnPosition.x - (object.sprite.x + object.width - object.collXOffset) - 1));
                     }
                 }
             }
+
             // pokud nejsem zrovna uprostřed skoku...
             if (object.speedy === 0) {
                 // ...a mám kam padat
@@ -201,85 +252,93 @@ var Lich;
                     object.speedy = -1;
                 }
             }
+
             if (typeof object.updateAnimations !== "undefined") {
                 object.updateAnimations();
             }
+
         };
-        ;
-        World.prototype.update = function (delta, directions) {
+
+        update(delta, directions) {
             var sDelta = delta / 1000; // ms -> s
+
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
             if (directions.up && this.hero.speedy === 0) {
                 this.hero.speedy = World.HERO_VERTICAL_SPEED;
+            } else if (directions.down) {
+                // TODO
             }
-            else if (directions.down) {
-            }
+
             // Horizontální akcelerace
             if (directions.left) {
                 this.hero.speedx = World.HERO_HORIZONTAL_SPEED;
-            }
-            else if (directions.right) {
+            } else if (directions.right) {
                 this.hero.speedx = -World.HERO_HORIZONTAL_SPEED;
-            }
-            else {
+            } else {
                 this.hero.speedx = 0;
             }
-            var makeShiftX = function (dst) {
-                var rndDst = Lich.Utils.floor(dst);
+
+            var makeShiftX = function(dst) {
+                var rndDst = Utils.floor(dst);
                 this.render.shiftX(rndDst);
                 // Horizontální pohyb se projevuje na pozadí
                 //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
                 this.background.shift(rndDst, 0);
-                this.freeObjects.forEach(function (item) {
+                this.freeObjects.forEach(function(item) {
                     item.sprite.x += rndDst;
                 });
-                this.bulletObjects.forEach(function (item) {
+                this.bulletObjects.forEach(function(item) {
                     item.sprite.x += rndDst;
                 });
             };
-            var makeShiftY = function (dst) {
-                var rndDst = Lich.Utils.floor(dst);
+
+            var makeShiftY = function(dst) {
+                var rndDst = Utils.floor(dst);
                 this.render.shiftY(rndDst);
                 // Horizontální pohyb se projevuje na pozadí
                 //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
                 this.background.shift(0, rndDst);
-                this.freeObjects.forEach(function (item) {
+                this.freeObjects.forEach(function(item) {
                     item.sprite.y += rndDst;
                 });
-                this.bulletObjects.forEach(function (item) {
+                this.bulletObjects.forEach(function(item) {
                     item.sprite.y += rndDst;
                 });
             };
+
             // update hráče
             this.updateObject(sDelta, this.hero, makeShiftX, makeShiftY);
+
             // update projektilů
-            (function () {
-                var deleteBullet = function (object) {
+            (function() {
+
+                var deleteBullet = function(object) {
                     this.bulletObjects.splice(i, 1);
                     this.removeChild(object.sprite);
                 };
+
                 for (var i = 0; i < this.bulletObjects.length; i++) {
                     var object = this.bulletObjects[i];
-                    this.updateBullet(sDelta, object, function (x) {
+                    this.updateBullet(sDelta, object, function(x) {
                         object.sprite.x -= x;
                         if (object.sprite.x > this.game.canvas.width * 2 || object.sprite.x < -this.game.canvas.width)
                             deleteBullet(object);
-                    }, function (y) {
+                    }, function(y) {
                         object.sprite.y -= y;
                         if (object.sprite.y > this.game.canvas.height * 2 || object.sprite.y < -this.game.canvas.height)
                             deleteBullet(object);
-                    }, function (clsn) {
+                    }, function(clsn) {
                         if (object.done === false) {
-                            Lich.Mixer.play(Lich.Resources.BURN_KEY);
+                            Mixer.play(Resources.BURN_KEY);
                             object.done = true;
                             object.sprite.gotoAndPlay("hit");
                             var centX = object.sprite.x + object.width / 2;
                             var centY = object.sprite.y + object.height / 2;
-                            var rad = Lich.Resources.TILE_SIZE * 4;
-                            for (var rx = centX - rad; rx <= centX + rad; rx += Lich.Resources.TILE_SIZE) {
-                                for (var ry = centY - rad; ry <= centY + rad; ry += Lich.Resources.TILE_SIZE) {
+                            var rad = Resources.TILE_SIZE * 4;
+                            for (var rx = centX - rad; rx <= centX + rad; rx += Resources.TILE_SIZE) {
+                                for (var ry = centY - rad; ry <= centY + rad; ry += Resources.TILE_SIZE) {
                                     var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
                                     var d2 = Math.pow(rad, 2);
                                     if (r2 <= d2) {
@@ -294,45 +353,48 @@ var Lich;
                     }
                 }
             })();
+
             // update sebratelných objektů
-            (function () {
+            (function() {
                 for (var i = 0; i < this.freeObjects.length; i++) {
                     var object = this.freeObjects[i];
                     // pohni objekty
-                    this.updateObject(sDelta, object, function (x) {
+                    this.updateObject(sDelta, object, function(x) {
                         object.sprite.x -= x;
-                    }, function (y) {
+                    }, function(y) {
                         object.sprite.y -= y;
                     });
                     var heroCenterX = this.hero.sprite.x + this.hero.width / 2;
                     var heroCenterY = this.hero.sprite.y + this.hero.height / 2;
                     var itemCenterX = object.sprite.x + object.width / 2;
                     var itemCenterY = object.sprite.y + object.height / 2;
+
                     // zjisti, zda hráč objekt nesebral
                     if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
                         this.ui.inventoryUI.invInsert(object.item.index, 1);
                         this.freeObjects.splice(i, 1);
                         this.removeChild(object.sprite);
-                        Lich.Mixer.play(Lich.Resources.PICK_KEY);
+                        Mixer.play(Resources.PICK_KEY);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
                         createjs.Tween.get(object.sprite)
                             .to({
-                            x: heroCenterX - object.width / 2,
-                            y: heroCenterY - object.height / 2
-                        }, World.OBJECT_PICKUP_FORCE_TIME);
+                                x: heroCenterX - object.width / 2,
+                                y: heroCenterY - object.height / 2
+                            }, World.OBJECT_PICKUP_FORCE_TIME);
                     }
                 }
             })();
+
         };
-        ;
-        World.prototype.isCollision = function (x, y) {
+
+        isCollision(x, y) {
             var result = this.render.pixelsToTiles(x, y);
             return this.isCollisionByTiles(result.x, result.y);
         };
-        ;
-        World.prototype.isCollisionByTiles = function (x, y) {
+
+        isCollisionByTiles(x, y) {
             return {
                 hit: this.tilesMap.valueAt(x, y) > 0,
                 "result": {
@@ -341,47 +403,49 @@ var Lich;
                 }
             };
         };
-        ;
-        World.prototype.isBoundsInCollision = function (x, y, fullWidth, fullHeight, fullXShift, fullYShift) {
+
+        isBoundsInCollision(x, y, fullWidth, fullHeight, fullXShift, fullYShift) {
             var tx;
             var ty;
+
             // kolize se musí dělat iterativně pro každý bod v TILE_SIZE podél hran objektu
             var xShift = 0;
             var yShift = 0;
             var width = 0;
             var height = 0;
-            var xSign = Lich.Utils.sign(fullXShift);
-            var ySign = Lich.Utils.sign(fullYShift);
+            var xSign = Utils.sign(fullXShift);
+            var ySign = Utils.sign(fullYShift);
+
             // pokud bude zadán fullXShift i fullYShift, udělá to diagonální posuv
             while (xShift !== fullXShift || yShift !== fullYShift) {
-                if (xSign * (xShift + xSign * Lich.Resources.TILE_SIZE) > xSign * fullXShift) {
+                if (xSign * (xShift + xSign * Resources.TILE_SIZE) > xSign * fullXShift) {
                     xShift = fullXShift;
+                } else {
+                    xShift += xSign * Resources.TILE_SIZE;
                 }
-                else {
-                    xShift += xSign * Lich.Resources.TILE_SIZE;
-                }
-                if (ySign * (yShift + ySign * Lich.Resources.TILE_SIZE) > ySign * fullYShift) {
+
+                if (ySign * (yShift + ySign * Resources.TILE_SIZE) > ySign * fullYShift) {
                     yShift = fullYShift;
+                } else {
+                    yShift += ySign * Resources.TILE_SIZE;
                 }
-                else {
-                    yShift += ySign * Lich.Resources.TILE_SIZE;
-                }
+
                 width = 0;
                 while (width !== fullWidth) {
-                    if (width + Lich.Resources.TILE_SIZE > fullWidth) {
+                    if (width + Resources.TILE_SIZE > fullWidth) {
                         width = fullWidth;
+                    } else {
+                        width += Resources.TILE_SIZE;
                     }
-                    else {
-                        width += Lich.Resources.TILE_SIZE;
-                    }
+
                     height = 0;
                     while (height !== fullHeight) {
-                        if (height + Lich.Resources.TILE_SIZE > fullHeight) {
+                        if (height + Resources.TILE_SIZE > fullHeight) {
                             height = fullHeight;
+                        } else {
+                            height += Resources.TILE_SIZE;
                         }
-                        else {
-                            height += Lich.Resources.TILE_SIZE;
-                        }
+
                         if (xShift > 0 || yShift > 0) {
                             tx = x - xShift;
                             ty = y - yShift;
@@ -389,6 +453,7 @@ var Lich;
                             if (LT.hit)
                                 return LT;
                         }
+
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - xShift;
                             ty = y - yShift;
@@ -396,6 +461,7 @@ var Lich;
                             if (RT.hit)
                                 return RT;
                         }
+
                         if (xShift > 0 || yShift < 0) {
                             tx = x - xShift;
                             ty = y + height - yShift;
@@ -403,6 +469,7 @@ var Lich;
                             if (LB.hit)
                                 return LB;
                         }
+
                         if (xShift < 0 || yShift < 0) {
                             tx = x + width - xShift;
                             ty = y + height - yShift;
@@ -410,29 +477,34 @@ var Lich;
                             if (RB.hit)
                                 return RB;
                         }
+
                         if (xShift === fullXShift && yShift === fullYShift && width === fullWidth && height === fullHeight) {
                             return {
                                 hit: false
                             };
                         }
+
                     }
                 }
             }
+
             return {
                 hit: false
             };
+
         };
-        ;
-        World.prototype.spell = function (targetX, targetY) {
+
+        spell(targetX, targetY) {
             var BLAST_SPEED = 1500;
             var heroCenterX = this.hero.x + this.hero.width / 2;
             var heroCenterY = this.hero.y + this.hero.height / 2;
             var b = targetX - heroCenterX;
             var a = targetY - heroCenterY;
             var c = Math.sqrt(a * a + b * b);
+
             var blastSheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [this.game.resources.getImage(Lich.Resources.BLAST_ANIMATION_KEY)],
+                "images": [this.game.resources.getImage(Resources.BLAST_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": 60,
@@ -448,34 +520,47 @@ var Lich;
             });
             var blastSprite = new createjs.Sprite(blastSheet, "fly");
             this.addChild(blastSprite);
+
             blastSprite.x = heroCenterX - object.width / 2;
             blastSprite.y = heroCenterY - object.height / 2;
-            var object = new BulletObject(blastSprite, 60, 60, -BLAST_SPEED * b / c, -BLAST_SPEED * a / c, 20, 20, false);
+
+            var object = new BulletObject(
+                blastSprite,
+                60,
+                60,
+                -BLAST_SPEED * b / c,
+                -BLAST_SPEED * a / c,
+                20,
+                20,
+                false
+            );
+
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
             // přepony dle rychlosti projektilu
             this.bulletObjects.push(object);
-            Lich.Mixer.play(Lich.Resources.FIREBALL_KEY);
+            Mixer.play(Resources.FIREBALL_KEY);
         };
-        ;
-        World.prototype.handleMouse = function (mouse, delta) {
+
+        handleMouse(mouse, delta) {
             this.spellTime -= delta;
             if (this.spellTime <= 0 && (mouse.down || mouse.click)) {
                 mouse.click = false;
-                if (this.game.ui.spellsUI.choosenItem === Lich.Resources.DIG_SPELL_KEY) {
+
+                if (this.game.ui.spellsUI.choosenItem === Resources.DIG_SPELL_KEY) {
                     if (this.render.dig(mouse.x, mouse.y)) {
-                        Lich.Mixer.play(Lich.Resources["PICK_AXE_SOUND_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
+                        Mixer.play(Resources["PICK_AXE_SOUND_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
                     }
-                }
-                else if (this.game.ui.spellsUI.choosenItem === Lich.Resources.PLACE_SPELL_KEY) {
+                } else if (this.game.ui.spellsUI.choosenItem === Resources.PLACE_SPELL_KEY) {
                     if (this.render.place(mouse.x, mouse.y, this.game.ui.inventoryUI.choosenItem)) {
-                        Lich.Mixer.play(Lich.Resources["PLACE_SOUND_KEY"]);
+                        Mixer.play(Resources["PLACE_SOUND_KEY"]);
                     }
-                }
-                else if (this.game.ui.spellsUI.choosenItem === Lich.Resources.FIREBALL_SPELL_KEY) {
+                } else if (this.game.ui.spellsUI.choosenItem === Resources.FIREBALL_SPELL_KEY) {
                     this.spell(mouse.x, mouse.y);
                 }
+
                 this.spellTime = World.MOUSE_COOLDOWN;
             }
+
             var coord = this.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = this.isCollisionByTiles(coord.x, coord.y);
             var index = this.tilesMap.indexAt(coord.x, coord.y);
@@ -483,37 +568,21 @@ var Lich;
             if (typeof this.tilesLabel !== "undefined") {
                 this.tilesLabel.text = "TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
             }
+
             var sector = this.render.getSectorByTiles(coord.x, coord.y);
             if (typeof this.sectorLabel !== "undefined") {
                 if (typeof sector !== "undefined" && sector !== null) {
                     this.sectorLabel.text = "SECTOR: x: " + sector.map_x + " y: " + sector.map_y;
-                }
-                else {
+                } else {
                     this.sectorLabel.text = "SECTOR: -";
                 }
             }
+
         };
-        ;
-        World.prototype.handleTick = function (delta) {
+
+        handleTick(delta) {
             this.render.handleTick();
             this.background.handleTick(delta);
         };
-        ;
-        /*-----------*/
-        /* CONSTANTS */
-        /*-----------*/
-        World.OBJECT_NOTIFY_TIME = 500;
-        World.OBJECT_NOTIFY_BOUNCE_SPEED = 120;
-        World.OBJECT_PICKUP_DISTANCE = 10;
-        World.OBJECT_PICKUP_FORCE_DISTANCE = 100;
-        World.OBJECT_PICKUP_FORCE_TIME = 150;
-        // Pixel/s
-        World.HERO_HORIZONTAL_SPEED = 300;
-        World.HERO_VERTICAL_SPEED = 500;
-        // Pixel/s2
-        World.WORLD_GRAVITY = -1200;
-        World.MOUSE_COOLDOWN = 100;
-        return World;
-    }(createjs.Container));
-    Lich.World = World;
-})(Lich || (Lich = {}));
+    }
+}

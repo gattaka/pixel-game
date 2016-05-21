@@ -1,24 +1,27 @@
-var Lich;
-(function (Lich) {
-    var Utils = (function () {
-        function Utils() {
-        }
-        Utils.sign = function (value) {
+namespace Lich {
+    export class Utils {
+
+        static sign(value) {
             return value < 0 ? -1 : 1;
-        };
-        Utils.floor = function (value) {
+        }
+
+        static floor(value) {
             return value < 0 ? Math.ceil(value) : Math.floor(value);
-        };
-        Utils.ceil = function (value) {
+        }
+
+        static ceil(value) {
             return value < 0 ? Math.floor(value) : Math.ceil(value);
-        };
-        Utils.isEven = function (value) {
+        }
+
+        static isEven(value) {
             return value % 2 == 0;
-        };
-        Utils.even = function (value) {
+        }
+
+        static even(value) {
             return Utils.isEven(value) ? value : value - 1;
-        };
-        Utils.get2D = function (a, x, y) {
+        }
+
+        static get2D(a, x, y) {
             // přidej dílek do globální mapy
             var col = a[x];
             if (typeof col === "undefined" || col[y] == null) {
@@ -27,24 +30,25 @@ var Lich;
             else {
                 return col[y];
             }
-        };
-        Utils.set2D = function (a, x, y, val) {
+        }
+
+        static set2D(a, x, y, val) {
             var col = a[x];
             if (typeof col === "undefined") {
                 col = [];
                 a[x] = col;
             }
             col[y] = val;
-        };
-        Utils.contains = function (a, obj) {
+        }
+
+        static contains(a, obj) {
             for (var i = 0; i < a.length; i++) {
                 if (a[i] === obj) {
                     return true;
                 }
             }
             return false;
-        };
-        return Utils;
-    }());
-    Lich.Utils = Utils;
-})(Lich || (Lich = {}));
+        }
+
+    }
+}
