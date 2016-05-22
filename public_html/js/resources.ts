@@ -7,6 +7,11 @@
  * 
  */
 namespace Lich {
+
+    class Load {
+        constructor(public src: string, public id: string) { };
+    }
+
     export class Resources {
 
         /*
@@ -52,17 +57,6 @@ namespace Lich {
             L: 23
         };
 
-        static WOOD_INDEX = 0;
-        static STRAW_INDEX = 6;
-        static PLANT_INDEX = 36;
-        static SHROOM1_INDEX = 16;
-        static SHROOM2_INDEX = 17;
-        static SHROOM3_INDEX = 18;
-        static PLANT2_INDEX = 19;
-        static PLANT3_INDEX = 27;
-        static PLANT4_INDEX = 28;
-        static PLANT5_INDEX = 29;
-
         /*
          * Resource klíče
          */
@@ -85,51 +79,59 @@ namespace Lich {
         static TILES_KEY = "TILES_KEY";
 
         // inv items
-        static INV_PARTS_KEY = "INV_PARTS_KEY";
+        static INV_WOOD_KEY = "INV_WOOD_KEY";
+        static INV_STRAW_KEY = "INV_STRAW_KEY";
+        static INV_PLANT_KEY = "INV_PLANT_KEY";
+        static INV_SHROOM1_KEY = "INV_SHROOM1_KEY";
+        static INV_SHROOM2_KEY = "INV_SHROOM2_KEY";
+        static INV_SHROOM3_KEY = "INV_SHROOM3_KEY";
+        static INV_PLANT2_KEY = "INV_PLANT2_KEY";
+        static INV_PLANT3_KEY = "INV_PLANT3_KEY";
+        static INV_PLANT4_KEY = "INV_PLANT4_KEY";
+        static INV_PLANT5_KEY = "INV_PLANT5_KEY";
 
         // characters
         static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
 
         // map objects
-        static PARTS_KEY = "PARTS_KEY";
-        static PLANT_KEY = "PLANT_KEY";
-        static TREE_KEY = "TREE_KEY";
-        static TREE2_KEY = "TREE2_KEY";
-        static MOUND_KEY = "MOUND_KEY";
-        static GRASS_KEY = "GRASS_KEY";
-        static GRASS2_KEY = "GRASS2_KEY";
-        static GRASS3_KEY = "GRASS3_KEY";
-        static GRASS4_KEY = "GRASS4_KEY";
-        static SHROOM1_KEY = "SHROOM1_KEY";
-        static SHROOM2_KEY = "SHROOM2_KEY";
-        static SHROOM3_KEY = "SHROOM3_KEY";
-        static PLANT2_KEY = "PLANT2_KEY";
-        static PLANT3_KEY = "PLANT3_KEY";
-        static PLANT4_KEY = "PLANT4_KEY";
-        static PLANT5_KEY = "PLANT5_KEY";
-        static BUSH_KEY = "BUSH_KEY";
+        static MAP_PARTS_KEY = "MAP_PARTS_KEY";
+        static MAP_PLANT_KEY = "MAP_PLANT_KEY";
+        static MAP_TREE_KEY = "MAP_TREE_KEY";
+        static MAP_TREE2_KEY = "MAP_TREE2_KEY";
+        static MAP_MOUND_KEY = "MAP_MOUND_KEY";
+        static MAP_GRASS_KEY = "MAP_GRASS_KEY";
+        static MAP_GRASS2_KEY = "MAP_GRASS2_KEY";
+        static MAP_GRASS3_KEY = "MAP_GRASS3_KEY";
+        static MAP_GRASS4_KEY = "MAP_GRASS4_KEY";
+        static MAP_SHROOM1_KEY = "MAP_SHROOM1_KEY";
+        static MAP_SHROOM2_KEY = "MAP_SHROOM2_KEY";
+        static MAP_SHROOM3_KEY = "MAP_SHROOM3_KEY";
+        static MAP_PLANT2_KEY = "MAP_PLANT2_KEY";
+        static MAP_PLANT3_KEY = "MAP_PLANT3_KEY";
+        static MAP_PLANT4_KEY = "MAP_PLANT4_KEY";
+        static MAP_PLANT5_KEY = "MAP_PLANT5_KEY";
+        static MAP_BUSH_KEY = "MAP_BUSH_KEY";
 
         // ui
-        static INV_KEY = "INV_KEY";
         static SKULL_KEY = "SKULL_KEY";
         static HELMET_KEY = "HELMET_KEY";
         static TORSO_KEY = "TORSO_KEY";
         static GAUNTLET_KEY = "GAUNTLET_KEY";
 
         // ui spells
-        static PLACE_SPELL_KEY = "PLACE_SPELL_KEY";
-        static DIG_SPELL_KEY = "DIG_SPELL_KEY";
-        static FIREBALL_SPELL_KEY = "FIREBALL_SPELL_KEY";
+        static SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
+        static SPELL_DIG_KEY = "SPELL_DIG_KEY";
+        static SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
 
         // sound
-        static FIREBALL_KEY = "FIREBALL_KEY";
-        static BURN_KEY = "BURN_KEY";
-        static PICK_KEY = "PICK_KEY";
-        static PLACE_SOUND_KEY = "PLACE_SOUND_KEY";
-        static PICK_AXE_SOUND_1_KEY = "PICK_AXE_SOUND_1_KEY";
-        static PICK_AXE_SOUND_2_KEY = "PICK_AXE_SOUND_2_KEY";
-        static PICK_AXE_SOUND_3_KEY = "PICK_AXE_SOUND_3_KEY";
-        static DIRT_THEME_KEY = "DIRT_THEME_KEY";
+        static SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
+        static SND_BURN_KEY = "SND_BURN_KEY";
+        static SND_PICK_KEY = "SND_PICK_KEY";
+        static SND_PLACE_KEY = "SND_PLACE_KEY";
+        static SND_PICK_AXE_1_KEY = "SND_PICK_AXE_1_KEY";
+        static SND_PICK_AXE_2_KEY = "SND_PICK_AXE_2_KEY";
+        static SND_PICK_AXE_3_KEY = "SND_PICK_AXE_3_KEY";
+        static SND_DIRT_THEME_KEY = "SND_DIRT_THEME_KEY";
 
         /*
          * Definice mapových objektů
@@ -139,113 +141,71 @@ namespace Lich {
 
         private static _constructor = (() => {
             console.log('Static constructor');
-            Resources.dirtObjects[Resources.GRASS_KEY] = new MapObj(Resources.GRASS_KEY, 2, 2, 12, 0, Resources.STRAW_INDEX, 2, 1);
-            Resources.dirtObjects[Resources.TREE_KEY] = new MapObj(Resources.TREE_KEY, 4, 9, 8, 0, Resources.WOOD_INDEX, 5, 5);
-            Resources.dirtObjects[Resources.TREE2_KEY] = new MapObj(Resources.TREE2_KEY, 8, 15, 0, 0, Resources.WOOD_INDEX, 10, 2);
-            Resources.dirtObjects[Resources.GRASS_KEY] = new MapObj(Resources.GRASS_KEY, 2, 2, 12, 0, Resources.STRAW_INDEX, 2, 1);
-            Resources.dirtObjects[Resources.GRASS2_KEY] = new MapObj(Resources.GRASS2_KEY, 2, 2, 14, 0, Resources.STRAW_INDEX, 2, 1);
-            Resources.dirtObjects[Resources.GRASS3_KEY] = new MapObj(Resources.GRASS3_KEY, 2, 2, 16, 0, Resources.STRAW_INDEX, 2, 1);
-            Resources.dirtObjects[Resources.GRASS4_KEY] = new MapObj(Resources.GRASS4_KEY, 2, 2, 12, 4, Resources.STRAW_INDEX, 2, 1);
-            Resources.dirtObjects[Resources.SHROOM1_KEY] = new MapObj(Resources.SHROOM1_KEY, 2, 2, 12, 2, Resources.SHROOM1_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.SHROOM2_KEY] = new MapObj(Resources.SHROOM2_KEY, 2, 2, 14, 2, Resources.SHROOM2_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.SHROOM3_KEY] = new MapObj(Resources.SHROOM3_KEY, 2, 2, 16, 2, Resources.SHROOM3_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.PLANT_KEY] = new MapObj(Resources.PLANT_KEY, 2, 2, 12, 6, Resources.PLANT_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.PLANT2_KEY] = new MapObj(Resources.PLANT2_KEY, 2, 2, 18, 2, Resources.PLANT2_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.PLANT3_KEY] = new MapObj(Resources.PLANT3_KEY, 2, 2, 14, 4, Resources.PLANT3_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.PLANT4_KEY] = new MapObj(Resources.PLANT4_KEY, 2, 2, 16, 4, Resources.PLANT4_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.PLANT5_KEY] = new MapObj(Resources.PLANT5_KEY, 2, 2, 18, 4, Resources.PLANT5_INDEX, 1, 1);
-            Resources.dirtObjects[Resources.BUSH_KEY] = new MapObj(Resources.BUSH_KEY, 2, 2, 18, 0, null, 0, 0);
+
+            var putIntoDirtObjects = function(mapObj: MapObj) {
+                Resources.dirtObjects[mapObj.mapKey] = mapObj;
+            };
+
+            putIntoDirtObjects(new MapObj(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_TREE_KEY, 4, 9, 8, 0, Resources.INV_WOOD_KEY, 5, 5));
+            putIntoDirtObjects(new MapObj(Resources.MAP_TREE2_KEY, 8, 15, 0, 0, Resources.INV_WOOD_KEY, 10, 2));
+            putIntoDirtObjects(new MapObj(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_GRASS2_KEY, 2, 2, 14, 0, Resources.INV_STRAW_KEY, 2, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_GRASS3_KEY, 2, 2, 16, 0, Resources.INV_STRAW_KEY, 2, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_GRASS4_KEY, 2, 2, 12, 4, Resources.INV_STRAW_KEY, 2, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_SHROOM1_KEY, 2, 2, 12, 2, Resources.INV_SHROOM1_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_SHROOM2_KEY, 2, 2, 14, 2, Resources.INV_SHROOM2_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_SHROOM3_KEY, 2, 2, 16, 2, Resources.INV_SHROOM3_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_PLANT_KEY, 2, 2, 12, 6, Resources.INV_PLANT_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_PLANT2_KEY, 2, 2, 18, 2, Resources.INV_PLANT2_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_PLANT3_KEY, 2, 2, 14, 4, Resources.INV_PLANT3_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_PLANT4_KEY, 2, 2, 16, 4, Resources.INV_PLANT4_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_PLANT5_KEY, 2, 2, 18, 4, Resources.INV_PLANT5_KEY, 1, 1));
+            putIntoDirtObjects(new MapObj(Resources.MAP_BUSH_KEY, 2, 2, 18, 0, null, 0, 0));
+
         })();
 
         constructor(game, callback?) {
 
             var self = this;
-
-            var imgManifest = [{
-                src: "images/ui/dig_spell.png",
-                id: Resources.DIG_SPELL_KEY
-            }, {
-                    src: "images/ui/fireball_spell.png",
-                    id: Resources.FIREBALL_SPELL_KEY
-                }, {
-                    src: "images/ui/place_spell.png",
-                    id: Resources.PLACE_SPELL_KEY
-                }, {
-                    src: "images/ui/inv_parts.png",
-                    id: Resources.INV_PARTS_KEY
-                }, {
-                    src: "images/characters/lich_animation.png",
-                    id: Resources.LICH_ANIMATION_KEY
-                }, {
-                    src: "images/effects/blast_animation.png",
-                    id: Resources.BLAST_ANIMATION_KEY
-                }, {
-                    src: "images/tiles/tiles.png",
-                    id: Resources.TILES_KEY
-                }, {
-                    src: "images/parts/parts.png",
-                    id: Resources.PARTS_KEY
-                }, {
-                    src: "images/characters/player_icon.png",
-                    id: Resources.PLAYER_ICON_KEY
-                }, {
-                    src: "images/ui/inventory.png",
-                    id: Resources.INV_KEY
-                }, {
-                    src: "images/ui/skull.png",
-                    id: Resources.SKULL_KEY
-                }, {
-                    src: "images/armour/helmet.png",
-                    id: Resources.HELMET_KEY
-                }, {
-                    src: "images/armour/torso.png",
-                    id: Resources.TORSO_KEY
-                }, {
-                    src: "images/armour/gauntlet.png",
-                    id: Resources.GAUNTLET_KEY
-                }, {
-                    src: "images/background/sky.png",
-                    id: Resources.SKY_KEY
-                }, {
-                    src: "images/background/far_mountain.png",
-                    id: Resources.FAR_MOUNTAIN_KEY
-                }, {
-                    src: "images/background/mountain.png",
-                    id: Resources.MOUNTAIN_KEY
-                }, {
-                    src: "images/background/far_woodland.png",
-                    id: Resources.FAR_HILL_KEY
-                }, {
-                    src: "images/background/woodland.png",
-                    id: Resources.HILL_KEY
-                }, {
-                    src: "images/background/dirt_back.png",
-                    id: Resources.DIRTBACK_KEY
-                }, {
-                    src: "sound/334234__liamg-sfx__fireball-cast-1.ogg",
-                    id: Resources.FIREBALL_KEY
-                }, {
-                    src: "sound/113111__satrebor__pick.ogg",
-                    id: Resources.PICK_KEY
-                }, {
-                    src: "sound/248116__robinhood76__05224-fireball-whoosh.ogg",
-                    id: Resources.BURN_KEY
-                }, {
-                    src: "sound/place.ogg",
-                    id: Resources.PLACE_SOUND_KEY
-                }, {
-                    src: "sound/pick_axe1.ogg",
-                    id: Resources.PICK_AXE_SOUND_1_KEY
-                }, {
-                    src: "sound/pick_axe2.ogg",
-                    id: Resources.PICK_AXE_SOUND_2_KEY
-                }, {
-                    src: "sound/pick_axe3.ogg",
-                    id: Resources.PICK_AXE_SOUND_3_KEY
-                }, {
-                    src: "sound/Dirt 2.ogg",
-                    id: Resources.DIRT_THEME_KEY
-                }];
+            var imgManifest = [
+                new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
+                new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
+                new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
+                new Load("images/ui/inventory/inv_berry.png", Resources.INV_PLANT_KEY),
+                new Load("images/ui/inventory/inv_brown_shroom.png", Resources.INV_SHROOM1_KEY),
+                new Load("images/ui/inventory/inv_cyan_flower.png", Resources.INV_PLANT3_KEY),
+                new Load("images/ui/inventory/inv_fire_shroom.png", Resources.INV_SHROOM2_KEY),
+                new Load("images/ui/inventory/inv_purple_flower.png", Resources.INV_PLANT2_KEY),
+                new Load("images/ui/inventory/inv_purple_shroom.png", Resources.INV_SHROOM3_KEY),
+                new Load("images/ui/inventory/inv_red_flower.png", Resources.INV_PLANT4_KEY),
+                new Load("images/ui/inventory/inv_straw.png", Resources.INV_STRAW_KEY),
+                new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
+                new Load("images/ui/inventory/inv_yellow_flower.png", Resources.INV_PLANT5_KEY),
+                new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
+                new Load("images/effects/blast_animation.png", Resources.BLAST_ANIMATION_KEY),
+                new Load("images/tiles/tiles.png", Resources.TILES_KEY),
+                new Load("images/parts/parts.png", Resources.MAP_PARTS_KEY),
+                new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
+                new Load("images/ui/skull.png", Resources.SKULL_KEY),
+                new Load("images/armour/helmet.png", Resources.HELMET_KEY),
+                new Load("images/armour/torso.png", Resources.TORSO_KEY),
+                new Load("images/armour/gauntlet.png", Resources.GAUNTLET_KEY),
+                new Load("images/background/sky.png", Resources.SKY_KEY),
+                new Load("images/background/far_mountain.png", Resources.FAR_MOUNTAIN_KEY),
+                new Load("images/background/mountain.png", Resources.MOUNTAIN_KEY),
+                new Load("images/background/far_woodland.png", Resources.FAR_HILL_KEY),
+                new Load("images/background/woodland.png", Resources.HILL_KEY),
+                new Load("images/background/dirt_back.png", Resources.DIRTBACK_KEY),
+                new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", Resources.SND_FIREBALL_KEY),
+                new Load("sound/113111__satrebor__pick.ogg", Resources.SND_PICK_KEY),
+                new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", Resources.SND_BURN_KEY),
+                new Load("sound/place.ogg", Resources.SND_PLACE_KEY),
+                new Load("sound/pick_axe1.ogg", Resources.SND_PICK_AXE_1_KEY),
+                new Load("sound/pick_axe2.ogg", Resources.SND_PICK_AXE_2_KEY),
+                new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
+                new Load("sound/Dirt 2.ogg", Resources.SND_DIRT_THEME_KEY),
+            ];
 
             (function() {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
@@ -298,22 +258,30 @@ namespace Lich {
             return this.loader.getResult(key);
         };
 
-        getBitmap(key: string) {
+        getBitmap(key: string): createjs.Bitmap {
             return new createjs.Bitmap(this.loader.getResult(key));
         };
 
-        getItemBitmap(v: number) {
+        getSprite(key: string): createjs.Sprite {
             var self = this;
-            var item = self.getBitmap(Resources.INV_PARTS_KEY);
-            var itemCols = item.image.width / Resources.PARTS_SIZE;
-            // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            item.sourceRect = new createjs.Rectangle(
-                (v % itemCols) * Resources.PARTS_SIZE,
-                Math.floor(v / itemCols) * Resources.PARTS_SIZE,
-                Resources.PARTS_SIZE,
-                Resources.PARTS_SIZE
-            );
-            return item;
+
+            var sheet = new createjs.SpriteSheet({
+                framerate: 10,
+                "images": [self.getImage(key)],
+                "frames": {
+                    "regX": 0,
+                    "height": Resources.PARTS_SIZE,
+                    "count": 1,
+                    "regY": 0,
+                    "width": Resources.PARTS_SIZE
+                },
+                "animations": {
+                    "idle": [0, 0, "idle", 0.005],
+                }
+            })
+            var sprite = new createjs.Sprite(sheet, "idle");
+            sprite.gotoAndStop("idle");
+            return sprite;
         };
 
     }

@@ -210,7 +210,7 @@ var Lich;
         };
         Render.prototype.createObject = function (v) {
             var self = this;
-            var object = self.game.resources.getBitmap(Lich.Resources.PARTS_KEY);
+            var object = self.game.resources.getBitmap(Lich.Resources.MAP_PARTS_KEY);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             object.sourceRect = {
                 x: (v % Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE,

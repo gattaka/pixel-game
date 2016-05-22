@@ -93,7 +93,7 @@ var Lich;
             self.background = new Lich.Background(game);
             self.hero = new Lich.Hero(game);
             // hudba
-            Lich.Mixer.play(Lich.Resources.DIRT_THEME_KEY, true);
+            Lich.Mixer.play(Lich.Resources.SND_DIRT_THEME_KEY, true);
             /*------------*/
             /* Characters */
             /*------------*/
@@ -118,7 +118,7 @@ var Lich;
             self.render.addOnDigObjectListener(function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var image = game.resources.getItemBitmap(objType.item.invObj);
+                        var image = game.resources.getImage(objType.item.invObj);
                         var spriteSheet = new createjs.SpriteSheet({
                             framerate: 10,
                             "images": [image],
@@ -307,7 +307,7 @@ var Lich;
                             deleteBullet(object);
                     }, function (clsn) {
                         if (object.done === false) {
-                            Lich.Mixer.play(Lich.Resources.BURN_KEY);
+                            Lich.Mixer.play(Lich.Resources.SND_BURN_KEY);
                             object.done = true;
                             object.gotoAndPlay("hit");
                             var centX = object.x + object.width / 2;
@@ -345,10 +345,10 @@ var Lich;
                     var itemCenterY = object.y + object.height / 2;
                     // zjisti, zda hráč objekt nesebral
                     if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                        self.game.ui.inventoryUI.invInsert(object.item.index, 1);
+                        self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
-                        Lich.Mixer.play(Lich.Resources.PICK_KEY);
+                        Lich.Mixer.play(Lich.Resources.SND_PICK_KEY);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
@@ -496,7 +496,7 @@ var Lich;
             self.addChild(object);
             object.x = heroCenterX - object.width / 2;
             object.y = heroCenterY - object.height / 2;
-            Lich.Mixer.play(Lich.Resources.FIREBALL_KEY);
+            Lich.Mixer.play(Lich.Resources.SND_FIREBALL_KEY);
         };
         ;
         World.prototype.handleMouse = function (mouse, delta) {
@@ -504,17 +504,17 @@ var Lich;
             self.spellTime -= delta;
             if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
                 mouse.click = false;
-                if (self.game.ui.spellsUI.choosenItem === Lich.Resources.DIG_SPELL_KEY) {
+                if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_DIG_KEY) {
                     if (self.render.dig(mouse.x, mouse.y)) {
-                        Lich.Mixer.play(Lich.Resources["PICK_AXE_SOUND_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
+                        Lich.Mixer.play(Lich.Resources["SND_PICK_AXE_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
                     }
                 }
-                else if (self.game.ui.spellsUI.choosenItem === Lich.Resources.PLACE_SPELL_KEY) {
+                else if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_PLACE_KEY) {
                     if (self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
-                        Lich.Mixer.play(Lich.Resources["PLACE_SOUND_KEY"]);
+                        Lich.Mixer.play(Lich.Resources.SND_PLACE_KEY);
                     }
                 }
-                else if (self.game.ui.spellsUI.choosenItem === Lich.Resources.FIREBALL_SPELL_KEY) {
+                else if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_FIREBALL_KEY) {
                     self.spell(mouse.x, mouse.y);
                 }
                 self.spellTime = World.MOUSE_COOLDOWN;

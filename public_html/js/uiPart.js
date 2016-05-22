@@ -79,24 +79,24 @@ var Lich;
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (typeof self.invContent[i] === "undefined") {
-                    var bitmap = self.game.resources.getItemBitmap(item);
-                    self.itemsCont.addChild(bitmap);
-                    bitmap.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    bitmap.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
+                    var sprite = self.game.resources.getSprite(item);
+                    self.itemsCont.addChild(sprite);
+                    sprite.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
+                    sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     var text = new createjs.Text(quant, "bold " + InventoryUI.TEXT_SIZE + "px Arial", "#ff0");
                     self.itemsCont.addChild(text);
-                    text.x = bitmap.x;
-                    text.y = bitmap.y + Lich.Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;
+                    text.x = sprite.x;
+                    text.y = sprite.y + Lich.Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;
                     self.invContent[i] = {
                         item: item,
                         quant: quant,
-                        element: bitmap,
+                        element: sprite,
                         count: text
                     };
                     var hitArea = new createjs.Shape();
                     hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-                    bitmap.hitArea = hitArea;
-                    bitmap.on("mousedown", function (evt) {
+                    sprite.hitArea = hitArea;
+                    sprite.on("mousedown", function (evt) {
                         if (self.choosenItem === item) {
                             self.choosenItem = null;
                             self.draggedItem = null;
@@ -104,8 +104,8 @@ var Lich;
                         }
                         else {
                             self.itemHighlightShape.visible = true;
-                            self.itemHighlightShape.x = bitmap.x - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
-                            self.itemHighlightShape.y = bitmap.y - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
+                            self.itemHighlightShape.x = sprite.x - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
+                            self.itemHighlightShape.y = sprite.y - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
                             self.choosenItem = item;
                             self.draggedItem = item;
                         }
@@ -136,10 +136,10 @@ var Lich;
             this.itemHighlightShape = new createjs.Shape();
             var self = this;
             // zatím rovnou:
-            self.spellInsert(Lich.Resources.DIG_SPELL_KEY);
-            self.spellInsert(Lich.Resources.PLACE_SPELL_KEY);
-            self.spellInsert(Lich.Resources.FIREBALL_SPELL_KEY);
-            self.selectSpell(Lich.Resources.FIREBALL_SPELL_KEY);
+            self.spellInsert(Lich.Resources.SPELL_DIG_KEY);
+            self.spellInsert(Lich.Resources.SPELL_PLACE_KEY);
+            self.spellInsert(Lich.Resources.SPELL_FIREBALL_KEY);
+            self.selectSpell(Lich.Resources.SPELL_FIREBALL_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
             self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");

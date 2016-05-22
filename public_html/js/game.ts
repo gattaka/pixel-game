@@ -5,13 +5,13 @@ namespace Lich {
         stage: createjs.Stage;
         fpsLabel: createjs.Text;
         mouseLabel: createjs.Text;
-        world;
-        ui;
+        world: World;
+        ui: UI;
         initialized = false;
         keys = {};
 
         mouse = new Mouse();
-        resources : Resources; 
+        resources: Resources;
 
         constructor(canvasId: string) {
 

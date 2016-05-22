@@ -3,10 +3,10 @@ namespace Lich {
 
         static SCREEN_SPACING = 20;
 
-        stateCont;
-        charCont;
-        inventoryUI;
-        spellsUI;
+        stateCont: createjs.Container;
+        charCont: createjs.Container;
+        inventoryUI: InventoryUI;
+        spellsUI: SpellsUI;
 
         constructor(public game) {
             super();

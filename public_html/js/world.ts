@@ -53,7 +53,7 @@ namespace Lich {
 
     class WorldObject extends AbstractWorldObject {
         constructor(
-            public item,
+            public item: MapObjItem,
             public width: number,
             public height: number,
             public speedx: number,
@@ -120,7 +120,7 @@ namespace Lich {
             self.hero = new Hero(game);
 
             // hudba
-            Mixer.play(Resources.DIRT_THEME_KEY, true);
+            Mixer.play(Resources.SND_DIRT_THEME_KEY, true);
 
             /*------------*/
             /* Characters */
@@ -150,7 +150,7 @@ namespace Lich {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
 
-                        var image = game.resources.getItemBitmap(objType.item.invObj);
+                        var image = game.resources.getImage(objType.item.invObj);
                         var spriteSheet = new createjs.SpriteSheet({
                             framerate: 10,
                             "images": [image],
@@ -374,7 +374,7 @@ namespace Lich {
                             deleteBullet(object);
                     }, function(clsn) {
                         if (object.done === false) {
-                            Mixer.play(Resources.BURN_KEY);
+                            Mixer.play(Resources.SND_BURN_KEY);
                             object.done = true;
                             object.gotoAndPlay("hit");
                             var centX = object.x + object.width / 2;
@@ -414,10 +414,10 @@ namespace Lich {
 
                     // zjisti, zda hráč objekt nesebral
                     if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                        self.game.ui.inventoryUI.invInsert(object.item.index, 1);
+                        self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
-                        Mixer.play(Resources.PICK_KEY);
+                        Mixer.play(Resources.SND_PICK_KEY);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
@@ -589,7 +589,7 @@ namespace Lich {
             self.addChild(object);
             object.x = heroCenterX - object.width / 2;
             object.y = heroCenterY - object.height / 2;
-            Mixer.play(Resources.FIREBALL_KEY);
+            Mixer.play(Resources.SND_FIREBALL_KEY);
         };
 
         handleMouse(mouse, delta) {
@@ -598,15 +598,15 @@ namespace Lich {
             if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
                 mouse.click = false;
 
-                if (self.game.ui.spellsUI.choosenItem === Resources.DIG_SPELL_KEY) {
+                if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_DIG_KEY) {
                     if (self.render.dig(mouse.x, mouse.y)) {
-                        Mixer.play(Resources["PICK_AXE_SOUND_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
+                        Mixer.play(Resources["SND_PICK_AXE_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
                     }
-                } else if (self.game.ui.spellsUI.choosenItem === Resources.PLACE_SPELL_KEY) {
+                } else if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_PLACE_KEY) {
                     if (self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
-                        Mixer.play(Resources["PLACE_SOUND_KEY"]);
+                        Mixer.play(Resources.SND_PLACE_KEY);
                     }
-                } else if (self.game.ui.spellsUI.choosenItem === Resources.FIREBALL_SPELL_KEY) {
+                } else if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_FIREBALL_KEY) {
                     self.spell(mouse.x, mouse.y);
                 }
 

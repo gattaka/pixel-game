@@ -278,7 +278,7 @@ namespace Lich {
 
         createObject(v) {
             var self = this;
-            var object = self.game.resources.getBitmap(Resources.PARTS_KEY);
+            var object = self.game.resources.getBitmap(Resources.MAP_PARTS_KEY);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             object.sourceRect = {
                 x: (v % Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
