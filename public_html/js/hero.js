@@ -46,12 +46,8 @@ var Lich;
             if (self.initialized) {
             }
         };
-        Hero.prototype.performState = function (desiredState) {
-            var self = this;
-            if (self.state !== desiredState) {
-                self.gotoAndPlay(Hero.stateAnimation[desiredState]);
-                self.state = desiredState;
-            }
+        Hero.prototype.getStateAnimation = function (desiredState) {
+            return Hero.stateAnimation[desiredState];
         };
         Hero.prototype.walkL = function () {
             this.performState(Hero.WALKL_STATE);
@@ -76,31 +72,6 @@ var Lich;
         };
         Hero.prototype.fall = function () {
             this.performState(Hero.FALL_STATE);
-        };
-        Hero.prototype.updateAnimations = function () {
-            var self = this;
-            if (self.speedx === 0 && self.speedy === 0) {
-                self.idle();
-            }
-            else if (self.speedy !== 0) {
-                if (self.speedx === 0) {
-                    self.jump();
-                }
-                else if (self.speedx > 0) {
-                    self.jumpL();
-                }
-                else {
-                    self.jumpR();
-                }
-            }
-            else {
-                if (self.speedx > 0) {
-                    self.walkL();
-                }
-                if (self.speedx < 0) {
-                    self.walkR();
-                }
-            }
         };
         /*-----------*/
         /* CONSTANTS */
@@ -129,6 +100,6 @@ var Lich;
             FALL_STATE: "fall"
         };
         return Hero;
-    }(Lich.AbstractWorldObject));
+    }(Lich.Character));
     Lich.Hero = Hero;
 })(Lich || (Lich = {}));

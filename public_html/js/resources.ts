@@ -74,6 +74,7 @@ namespace Lich {
         // animations
         static BLAST_ANIMATION_KEY = "BLAST_ANIMATION_KEY";
         static LICH_ANIMATION_KEY = "LICH_ANIMATION_KEY";
+        static CORPSE_ANIMATION_KEY = "CORPSE_ANIMATION_KEY";
 
         // tiles
         static TILES_KEY = "TILES_KEY";
@@ -183,6 +184,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
                 new Load("images/ui/inventory/inv_yellow_flower.png", Resources.INV_PLANT5_KEY),
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
+                new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
                 new Load("images/effects/blast_animation.png", Resources.BLAST_ANIMATION_KEY),
                 new Load("images/tiles/tiles.png", Resources.TILES_KEY),
                 new Load("images/parts/parts.png", Resources.MAP_PARTS_KEY),
