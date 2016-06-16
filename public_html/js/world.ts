@@ -357,9 +357,9 @@ namespace Lich {
             // update projektilů
             (function() {
 
-                var deleteBullet = function(object) {
+                var deleteBullet = function(object : BulletObject) {
                     self.bulletObjects.splice(i, 1);
-                    self.removeChild(object.sprite);
+                    self.removeChild(object);
                 };
 
                 for (var i = 0; i < self.bulletObjects.length; i++) {

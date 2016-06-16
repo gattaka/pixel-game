@@ -293,7 +293,7 @@ var Lich;
             (function () {
                 var deleteBullet = function (object) {
                     self.bulletObjects.splice(i, 1);
-                    self.removeChild(object.sprite);
+                    self.removeChild(object);
                 };
                 for (var i = 0; i < self.bulletObjects.length; i++) {
                     var object = self.bulletObjects[i];
