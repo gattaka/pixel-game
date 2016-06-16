@@ -110,15 +110,27 @@ var Lich;
                         up: false,
                         down: false,
                         left: false,
-                        right: false
+                        right: false,
+                        up2: false,
+                        down2: false,
+                        left2: false,
+                        right2: false
                     };
-                    if (self.keys[37] || self.keys[65])
+                    if (self.keys[37])
+                        directions.left2 = true;
+                    if (self.keys[38])
+                        directions.up2 = true;
+                    if (self.keys[39])
+                        directions.right2 = true;
+                    if (self.keys[40])
+                        directions.down2 = true;
+                    if (self.keys[65])
                         directions.left = true;
-                    if (self.keys[38] || self.keys[87])
+                    if (self.keys[87])
                         directions.up = true;
-                    if (self.keys[39] || self.keys[68])
+                    if (self.keys[68])
                         directions.right = true;
-                    if (self.keys[40] || self.keys[83])
+                    if (self.keys[83])
                         directions.down = true;
                     if (self.keys[73]) {
                         self.ui.inventoryUI.toggleInv();

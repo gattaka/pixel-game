@@ -92,6 +92,7 @@ var Lich;
             self.render = new Lich.Render(game, self.map, self);
             self.background = new Lich.Background(game);
             self.hero = new Lich.Hero(game);
+            self.enemy = new Lich.Enemy(game);
             // hudba
             Lich.Mixer.play(Lich.Resources.SND_DIRT_THEME_KEY, true);
             /*------------*/
@@ -101,6 +102,12 @@ var Lich;
             self.hero.x = game.canvas.width / 2;
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
+            /*---------*/
+            /* Enemies */
+            /*---------*/
+            self.addChild(self.enemy);
+            self.enemy.x = 200;
+            self.enemy.y = 200;
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/
@@ -243,6 +250,27 @@ var Lich;
         World.prototype.update = function (delta, directions) {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
+            // Enemy (zatím ručně)
+            (function () {
+                // Dle kláves nastav rychlosti
+                // Nelze akcelerovat nahoru, když už 
+                // rychlost mám (nemůžu skákat ve vzduchu)
+                if (directions.up2 && self.enemy.speedy === 0) {
+                    self.enemy.speedy = World.HERO_VERTICAL_SPEED;
+                }
+                else if (directions.down2) {
+                }
+                // Horizontální akcelerace
+                if (directions.left2) {
+                    self.enemy.speedx = World.HERO_HORIZONTAL_SPEED;
+                }
+                else if (directions.right2) {
+                    self.enemy.speedx = -World.HERO_HORIZONTAL_SPEED;
+                }
+                else {
+                    self.enemy.speedx = 0;
+                }
+            })();
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
@@ -273,6 +301,7 @@ var Lich;
                 self.bulletObjects.forEach(function (item) {
                     item.x += rndDst;
                 });
+                self.enemy.x += rndDst;
             };
             var makeShiftY = function (dst) {
                 var rndDst = Lich.Utils.floor(dst);
@@ -286,9 +315,18 @@ var Lich;
                 self.bulletObjects.forEach(function (item) {
                     item.y += rndDst;
                 });
+                self.enemy.y += rndDst;
             };
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
+            // update nepřátel
+            self.updateObject(sDelta, self.enemy, function (dst) {
+                var rndDst = Lich.Utils.floor(dst);
+                self.enemy.x -= rndDst;
+            }, function (dst) {
+                var rndDst = Lich.Utils.floor(dst);
+                self.enemy.y -= rndDst;
+            });
             // update projektilů
             (function () {
                 var deleteBullet = function (object) {

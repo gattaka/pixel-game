@@ -103,10 +103,12 @@ namespace Lich {
         spellTime = World.MOUSE_COOLDOWN;
 
         map: Map;
-        tilesMap;
-        render;
-        background;
+        tilesMap: TilesMap;
+        render: Render;
+        background: Background;
         hero: Hero;
+
+        enemy: Enemy;
 
         constructor(public game: Game) {
             super();
@@ -119,6 +121,8 @@ namespace Lich {
             self.background = new Background(game);
             self.hero = new Hero(game);
 
+            self.enemy = new Enemy(game);
+
             // hudba
             Mixer.play(Resources.SND_DIRT_THEME_KEY, true);
 
@@ -129,6 +133,13 @@ namespace Lich {
             self.hero.x = game.canvas.width / 2;
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
+
+            /*---------*/
+            /* Enemies */
+            /*---------*/
+            self.addChild(self.enemy);
+            self.enemy.x = 200;
+            self.enemy.y = 200;
 
             /*---------------------*/
             /* Measurements, debug */
@@ -305,6 +316,29 @@ namespace Lich {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
 
+            // Enemy (zatím ručně)
+            (function() {
+
+                // Dle kláves nastav rychlosti
+                // Nelze akcelerovat nahoru, když už 
+                // rychlost mám (nemůžu skákat ve vzduchu)
+                if (directions.up2 && self.enemy.speedy === 0) {
+                    self.enemy.speedy = World.HERO_VERTICAL_SPEED;
+                } else if (directions.down2) {
+                    // TODO
+                }
+
+                // Horizontální akcelerace
+                if (directions.left2) {
+                    self.enemy.speedx = World.HERO_HORIZONTAL_SPEED;
+                } else if (directions.right2) {
+                    self.enemy.speedx = -World.HERO_HORIZONTAL_SPEED;
+                } else {
+                    self.enemy.speedx = 0;
+                }
+
+            })();
+
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
@@ -335,6 +369,7 @@ namespace Lich {
                 self.bulletObjects.forEach(function(item) {
                     item.x += rndDst;
                 });
+                self.enemy.x += rndDst;
             };
 
             var makeShiftY = function(dst) {
@@ -349,15 +384,27 @@ namespace Lich {
                 self.bulletObjects.forEach(function(item) {
                     item.y += rndDst;
                 });
+                self.enemy.y += rndDst;
             };
 
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
 
+            // update nepřátel
+            self.updateObject(sDelta, self.enemy,
+                function(dst) {
+                    var rndDst = Utils.floor(dst);
+                    self.enemy.x -= rndDst;
+                },
+                function(dst) {
+                    var rndDst = Utils.floor(dst);
+                    self.enemy.y -= rndDst;
+                });
+
             // update projektilů
             (function() {
 
-                var deleteBullet = function(object : BulletObject) {
+                var deleteBullet = function(object: BulletObject) {
                     self.bulletObjects.splice(i, 1);
                     self.removeChild(object);
                 };
