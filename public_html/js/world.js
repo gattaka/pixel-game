@@ -92,7 +92,6 @@ var Lich;
             self.render = new Lich.Render(game, self.map, self);
             self.background = new Lich.Background(game);
             self.hero = new Lich.Hero(game);
-            self.enemy = new Lich.Enemy(game);
             // hudba
             Lich.Mixer.play(Lich.Resources.SND_DIRT_THEME_KEY, true);
             /*------------*/
@@ -105,9 +104,14 @@ var Lich;
             /*---------*/
             /* Enemies */
             /*---------*/
-            self.addChild(self.enemy);
-            self.enemy.x = 200;
-            self.enemy.y = 200;
+            self.enemies = new Array();
+            for (var i = 0; i < 50; i++) {
+                var enemy = new Lich.Enemy(game);
+                self.enemies.push(enemy);
+                self.addChild(enemy);
+                enemy.x = game.canvas.width * Math.random();
+                enemy.y = 0;
+            }
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/
@@ -251,26 +255,25 @@ var Lich;
             var self = this;
             var sDelta = delta / 1000; // ms -> s
             // Enemy (zatím ručně)
-            (function () {
-                // Dle kláves nastav rychlosti
-                // Nelze akcelerovat nahoru, když už 
-                // rychlost mám (nemůžu skákat ve vzduchu)
-                if (directions.up2 && self.enemy.speedy === 0) {
-                    self.enemy.speedy = World.HERO_VERTICAL_SPEED;
-                }
-                else if (directions.down2) {
-                }
-                // Horizontální akcelerace
-                if (directions.left2) {
-                    self.enemy.speedx = World.HERO_HORIZONTAL_SPEED;
-                }
-                else if (directions.right2) {
-                    self.enemy.speedx = -World.HERO_HORIZONTAL_SPEED;
+            self.enemies.forEach(function (enemy) {
+                if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
+                    enemy.speedx = 0;
                 }
                 else {
-                    self.enemy.speedx = 0;
+                    if (self.hero.x > enemy.x) {
+                        enemy.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
+                        if (self.isCollision(enemy.x + enemy.width - enemy.collXOffset, enemy.y).hit == false && enemy.speedy == 0) {
+                            enemy.speedy = World.HERO_VERTICAL_SPEED;
+                        }
+                    }
+                    else {
+                        enemy.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
+                        if (self.isCollision(enemy.x, enemy.y).hit == false && enemy.speedy == 0) {
+                            enemy.speedy = World.HERO_VERTICAL_SPEED;
+                        }
+                    }
                 }
-            })();
+            });
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
@@ -301,7 +304,9 @@ var Lich;
                 self.bulletObjects.forEach(function (item) {
                     item.x += rndDst;
                 });
-                self.enemy.x += rndDst;
+                self.enemies.forEach(function (enemy) {
+                    enemy.x += rndDst;
+                });
             };
             var makeShiftY = function (dst) {
                 var rndDst = Lich.Utils.floor(dst);
@@ -315,17 +320,21 @@ var Lich;
                 self.bulletObjects.forEach(function (item) {
                     item.y += rndDst;
                 });
-                self.enemy.y += rndDst;
+                self.enemies.forEach(function (enemy) {
+                    enemy.y += rndDst;
+                });
             };
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
-            // update nepřátel
-            self.updateObject(sDelta, self.enemy, function (dst) {
-                var rndDst = Lich.Utils.floor(dst);
-                self.enemy.x -= rndDst;
-            }, function (dst) {
-                var rndDst = Lich.Utils.floor(dst);
-                self.enemy.y -= rndDst;
+            self.enemies.forEach(function (enemy) {
+                // update nepřátel
+                self.updateObject(sDelta, enemy, function (dst) {
+                    var rndDst = Lich.Utils.floor(dst);
+                    enemy.x -= rndDst;
+                }, function (dst) {
+                    var rndDst = Lich.Utils.floor(dst);
+                    enemy.y -= rndDst;
+                });
             });
             // update projektilů
             (function () {
