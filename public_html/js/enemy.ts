@@ -13,6 +13,8 @@ namespace Lich {
         static JUMPL_STATE = "JUMPL_STATE";
         static MIDAIR_STATE = "MIDAIR_STATE";
         static FALL_STATE = "FALL_STATE";
+        static DIE_STATE = "DIE_STATE";
+        static DEAD_STATE = "DEAD_STATE";
 
         static WIDTH = 46;
         static HEIGHT = 64;
@@ -29,7 +31,9 @@ namespace Lich {
             JUMPR_STATE: "jumpR",
             JUMPL_STATE: "jumpL",
             MIDAIR_STATE: "midair",
-            FALL_STATE: "fall"
+            FALL_STATE: "fall",
+            DIE_STATE: "die",
+            DEAD_STATE: "dead"
         };
 
         /*-----------*/
@@ -46,13 +50,13 @@ namespace Lich {
         initialized = false;
 
         constructor(public game: Game) {
-            super(Enemy.WIDTH, Enemy.HEIGHT, 0, 0, new createjs.SpriteSheet({
+            super(Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [game.resources.getImage(Resources.CORPSE_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,
-                    "count": 28,
+                    "count": 30,
                     "regY": 0,
                     "width": Enemy.WIDTH
                 },
@@ -65,7 +69,9 @@ namespace Lich {
                     "midair": [19, 19, "midair", 0.2],
                     "fall": [19, 23, "idle", 0.2],
                     "jumpR": [25, 25, "jumpR", 0.2],
-                    "jumpL": [27, 27, "jumpL", 0.2]
+                    "jumpL": [27, 27, "jumpL", 0.2],
+                    "die": [28, 28, "dead", 0.2],
+                    "dead": [29, 29, "dead", 0.2]
                 }
             }), Enemy.stateAnimation[Enemy.IDLE_STATE], Enemy.stateAnimation, Enemy.COLLXOFFSET, Enemy.COLLYOFFSET);
         }
@@ -78,7 +84,11 @@ namespace Lich {
         }
 
         getStateAnimation(desiredState: string) {
-            return Enemy.stateAnimation[desiredState];
+            if (this.life == 0 && desiredState != Enemy.DIE_STATE) {
+                return Enemy.stateAnimation[Enemy.DEAD_STATE];
+            } else {
+                return Enemy.stateAnimation[desiredState];
+            }
         }
 
         walkL() {
@@ -111,6 +121,22 @@ namespace Lich {
 
         fall() {
             this.performState(Enemy.FALL_STATE);
+        }
+
+        die(game: Game) {
+            this.performState(Enemy.DIE_STATE);
+            // TODO loot
+        }
+
+        hit(damage: number, game: Game) {
+            if (this.life > 0) {
+                this.life -= damage;
+                if (this.life <= 0) {
+                    this.life = 0;
+                    this.speedx = 0;
+                    this.die(game);
+                }
+            }
         }
 
 

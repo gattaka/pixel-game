@@ -13,17 +13,17 @@ var Lich;
 (function (Lich) {
     var AbstractWorldObject = (function (_super) {
         __extends(AbstractWorldObject, _super);
-        function AbstractWorldObject(width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset) {
+        function AbstractWorldObject(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset) {
             _super.call(this, spriteSheet, initState);
             this.width = width;
             this.height = height;
-            this.speedx = speedx;
-            this.speedy = speedy;
             this.spriteSheet = spriteSheet;
             this.initState = initState;
             this.stateAnimation = stateAnimation;
             this.collXOffset = collXOffset;
             this.collYOffset = collYOffset;
+            this.speedx = 0;
+            this.speedy = 0;
         }
         AbstractWorldObject.prototype.performState = function (desiredState) {
             var self = this;
@@ -39,12 +39,10 @@ var Lich;
     Lich.AbstractWorldObject = AbstractWorldObject;
     var BulletObject = (function (_super) {
         __extends(BulletObject, _super);
-        function BulletObject(width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, done) {
-            _super.call(this, width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+        function BulletObject(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, done) {
+            _super.call(this, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
             this.width = width;
             this.height = height;
-            this.speedx = speedx;
-            this.speedy = speedy;
             this.spriteSheet = spriteSheet;
             this.initState = initState;
             this.stateAnimation = stateAnimation;
@@ -57,13 +55,11 @@ var Lich;
     }(AbstractWorldObject));
     var WorldObject = (function (_super) {
         __extends(WorldObject, _super);
-        function WorldObject(item, width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, notificationTimer) {
-            _super.call(this, width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+        function WorldObject(item, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, notificationTimer) {
+            _super.call(this, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
             this.item = item;
             this.width = width;
             this.height = height;
-            this.speedx = speedx;
-            this.speedy = speedy;
             this.spriteSheet = spriteSheet;
             this.initState = initState;
             this.stateAnimation = stateAnimation;
@@ -140,7 +136,9 @@ var Lich;
                                 "idle": [0, 0, "idle", 0.005]
                             }
                         });
-                        var object = new WorldObject(objType.item, image.width, image.height, 0, (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED, spriteSheet, "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+                        var object = new WorldObject(objType.item, image.width, image.height, spriteSheet, "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+                        object.speedx = 0;
+                        object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
                         var coord = self.render.tilesToPixel(x, y);
                         object.x = coord.x + 10 - Math.random() * 20;
                         object.y = coord.y;
@@ -250,23 +248,28 @@ var Lich;
         World.prototype.update = function (delta, directions) {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
-            // Enemy (zatím ručně)
+            // AI Enemies
             self.enemies.forEach(function (enemy) {
-                if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
-                    enemy.speedx = 0;
-                }
-                else {
-                    if (self.hero.x > enemy.x) {
-                        enemy.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
-                        if (self.isCollision(enemy.x + enemy.width - enemy.collXOffset, enemy.y).hit == false && enemy.speedy == 0) {
-                            enemy.speedy = World.HERO_VERTICAL_SPEED;
-                        }
+                if (enemy.life > 0) {
+                    if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
+                        enemy.speedx = 0;
                     }
                     else {
-                        enemy.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
-                        if (self.isCollision(enemy.x, enemy.y).hit == false && enemy.speedy == 0) {
-                            enemy.speedy = World.HERO_VERTICAL_SPEED;
+                        if (self.hero.x > enemy.x) {
+                            enemy.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
+                            if (self.isCollision(enemy.x + enemy.width - enemy.collXOffset, enemy.y).hit == false && enemy.speedy == 0) {
+                                enemy.speedy = World.HERO_VERTICAL_SPEED;
+                            }
                         }
+                        else {
+                            enemy.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
+                            if (self.isCollision(enemy.x, enemy.y).hit == false && enemy.speedy == 0) {
+                                enemy.speedy = World.HERO_VERTICAL_SPEED;
+                            }
+                        }
+                    }
+                    if (directions.up2) {
+                        enemy.hit(5, self.game);
                     }
                 }
             });
@@ -528,11 +531,13 @@ var Lich;
                     "done": [4, 4, "done", 1]
                 }
             });
-            var object = new BulletObject(60, 60, -BLAST_SPEED * b / c, -BLAST_SPEED * a / c, blastSheet, "fly", {
+            var object = new BulletObject(60, 60, blastSheet, "fly", {
                 "fly": "fly",
                 "hit": "hit",
                 "done": "done"
             }, 20, 20, false);
+            object.speedx = -BLAST_SPEED * b / c;
+            object.speedy = -BLAST_SPEED * a / c;
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
             // přepony dle rychlosti projektilu
             self.bulletObjects.push(object);

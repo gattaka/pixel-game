@@ -13,6 +13,8 @@ namespace Lich {
         static JUMPL_STATE = "JUMPL_STATE";
         static MIDAIR_STATE = "MIDAIR_STATE";
         static FALL_STATE = "FALL_STATE";
+        static DIE_STATE = "DIE_STATE";
+        static DEAD_STATE = "DEAD_STATE";
 
         static WIDTH = 46;
         static HEIGHT = 64;
@@ -29,7 +31,9 @@ namespace Lich {
             JUMPR_STATE: "jumpR",
             JUMPL_STATE: "jumpL",
             MIDAIR_STATE: "midair",
-            FALL_STATE: "fall"
+            FALL_STATE: "fall",
+            DIE_STATE: "die",
+            DEAD_STATE: "dead"
         };
 
         /*-----------*/
@@ -46,13 +50,13 @@ namespace Lich {
         initialized = false;
 
         constructor(public game: Game) {
-            super(Hero.WIDTH, Hero.HEIGHT, 0, 0, new createjs.SpriteSheet({
+            super(Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [game.resources.getImage(Resources.LICH_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,
-                    "count": 28,
+                    "count": 30,
                     "regY": 0,
                     "width": Hero.WIDTH
                 },
@@ -65,7 +69,9 @@ namespace Lich {
                     "midair": [19, 19, "midair", 0.2],
                     "fall": [19, 23, "idle", 0.2],
                     "jumpR": [25, 25, "jumpR", 0.2],
-                    "jumpL": [27, 27, "jumpL", 0.2]
+                    "jumpL": [27, 27, "jumpL", 0.2],
+                    "die": [28, 28, "dead", 0.2],
+                    "dead": [29, 29, "dead", 0.2]
                 }
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
         }
@@ -77,7 +83,7 @@ namespace Lich {
             }
         }
 
-        getStateAnimation(desiredState:string) {
+        getStateAnimation(desiredState: string) {
             return Hero.stateAnimation[desiredState];
         }
 
@@ -112,7 +118,20 @@ namespace Lich {
         fall() {
             this.performState(Hero.FALL_STATE);
         }
-        
+
+        die(game: Game) {
+            this.performState(Hero.DIE_STATE);
+        }
+
+        hit(damage: number, game: Game) {
+            if (this.life > 0) {
+                this.life -= damage;
+                if (this.life <= 0) {
+                    this.life = 0;
+                    this.die(game);
+                }
+            }
+        }
 
     }
 }

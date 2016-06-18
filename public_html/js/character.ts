@@ -5,12 +5,7 @@ namespace Lich {
         /* VARIABLES */
         /*-----------*/
 
-        width = 0;
-        height = 0;
-        speedx = 0;
-        speedy = 0;
-
-        state = null;
+        public life = 100;
 
         initialized = false;
 
@@ -20,7 +15,6 @@ namespace Lich {
                 // TODO
             }
         }
-
 
         performState(desiredState) {
             var self = this;
@@ -40,6 +34,9 @@ namespace Lich {
         abstract jumpL();
         abstract midair();
         abstract fall();
+        abstract die(game: Game);
+
+        abstract hit(damage: number, game: Game);
 
         updateAnimations() {
             var self = this;

@@ -8,13 +8,13 @@ var Lich;
     var Hero = (function (_super) {
         __extends(Hero, _super);
         function Hero(game) {
-            _super.call(this, Hero.WIDTH, Hero.HEIGHT, 0, 0, new createjs.SpriteSheet({
+            _super.call(this, Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [game.resources.getImage(Lich.Resources.LICH_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,
-                    "count": 28,
+                    "count": 30,
                     "regY": 0,
                     "width": Hero.WIDTH
                 },
@@ -27,7 +27,9 @@ var Lich;
                     "midair": [19, 19, "midair", 0.2],
                     "fall": [19, 23, "idle", 0.2],
                     "jumpR": [25, 25, "jumpR", 0.2],
-                    "jumpL": [27, 27, "jumpL", 0.2]
+                    "jumpL": [27, 27, "jumpL", 0.2],
+                    "die": [28, 28, "dead", 0.2],
+                    "dead": [29, 29, "dead", 0.2]
                 }
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
             this.game = game;
@@ -73,6 +75,18 @@ var Lich;
         Hero.prototype.fall = function () {
             this.performState(Hero.FALL_STATE);
         };
+        Hero.prototype.die = function (game) {
+            this.performState(Hero.DIE_STATE);
+        };
+        Hero.prototype.hit = function (damage, game) {
+            if (this.life > 0) {
+                this.life -= damage;
+                if (this.life <= 0) {
+                    this.life = 0;
+                    this.die(game);
+                }
+            }
+        };
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/
@@ -84,6 +98,8 @@ var Lich;
         Hero.JUMPL_STATE = "JUMPL_STATE";
         Hero.MIDAIR_STATE = "MIDAIR_STATE";
         Hero.FALL_STATE = "FALL_STATE";
+        Hero.DIE_STATE = "DIE_STATE";
+        Hero.DEAD_STATE = "DEAD_STATE";
         Hero.WIDTH = 46;
         Hero.HEIGHT = 64;
         // Collision offset
@@ -97,7 +113,9 @@ var Lich;
             JUMPR_STATE: "jumpR",
             JUMPL_STATE: "jumpL",
             MIDAIR_STATE: "midair",
-            FALL_STATE: "fall"
+            FALL_STATE: "fall",
+            DIE_STATE: "die",
+            DEAD_STATE: "dead"
         };
         return Hero;
     }(Lich.Character));

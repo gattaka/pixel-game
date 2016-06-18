@@ -8,13 +8,13 @@ var Lich;
     var Enemy = (function (_super) {
         __extends(Enemy, _super);
         function Enemy(game) {
-            _super.call(this, Enemy.WIDTH, Enemy.HEIGHT, 0, 0, new createjs.SpriteSheet({
+            _super.call(this, Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [game.resources.getImage(Lich.Resources.CORPSE_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,
-                    "count": 28,
+                    "count": 30,
                     "regY": 0,
                     "width": Enemy.WIDTH
                 },
@@ -27,7 +27,9 @@ var Lich;
                     "midair": [19, 19, "midair", 0.2],
                     "fall": [19, 23, "idle", 0.2],
                     "jumpR": [25, 25, "jumpR", 0.2],
-                    "jumpL": [27, 27, "jumpL", 0.2]
+                    "jumpL": [27, 27, "jumpL", 0.2],
+                    "die": [28, 28, "dead", 0.2],
+                    "dead": [29, 29, "dead", 0.2]
                 }
             }), Enemy.stateAnimation[Enemy.IDLE_STATE], Enemy.stateAnimation, Enemy.COLLXOFFSET, Enemy.COLLYOFFSET);
             this.game = game;
@@ -47,7 +49,12 @@ var Lich;
             }
         };
         Enemy.prototype.getStateAnimation = function (desiredState) {
-            return Enemy.stateAnimation[desiredState];
+            if (this.life == 0 && desiredState != Enemy.DIE_STATE) {
+                return Enemy.stateAnimation[Enemy.DEAD_STATE];
+            }
+            else {
+                return Enemy.stateAnimation[desiredState];
+            }
         };
         Enemy.prototype.walkL = function () {
             this.performState(Enemy.WALKL_STATE);
@@ -73,6 +80,20 @@ var Lich;
         Enemy.prototype.fall = function () {
             this.performState(Enemy.FALL_STATE);
         };
+        Enemy.prototype.die = function (game) {
+            this.performState(Enemy.DIE_STATE);
+            // TODO loot
+        };
+        Enemy.prototype.hit = function (damage, game) {
+            if (this.life > 0) {
+                this.life -= damage;
+                if (this.life <= 0) {
+                    this.life = 0;
+                    this.speedx = 0;
+                    this.die(game);
+                }
+            }
+        };
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/
@@ -84,6 +105,8 @@ var Lich;
         Enemy.JUMPL_STATE = "JUMPL_STATE";
         Enemy.MIDAIR_STATE = "MIDAIR_STATE";
         Enemy.FALL_STATE = "FALL_STATE";
+        Enemy.DIE_STATE = "DIE_STATE";
+        Enemy.DEAD_STATE = "DEAD_STATE";
         Enemy.WIDTH = 46;
         Enemy.HEIGHT = 64;
         // Collision offset
@@ -97,7 +120,9 @@ var Lich;
             JUMPR_STATE: "jumpR",
             JUMPL_STATE: "jumpL",
             MIDAIR_STATE: "midair",
-            FALL_STATE: "fall"
+            FALL_STATE: "fall",
+            DIE_STATE: "die",
+            DEAD_STATE: "dead"
         };
         return Enemy;
     }(Lich.Character));

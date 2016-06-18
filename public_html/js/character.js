@@ -12,11 +12,7 @@ var Lich;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
-            this.width = 0;
-            this.height = 0;
-            this.speedx = 0;
-            this.speedy = 0;
-            this.state = null;
+            this.life = 100;
             this.initialized = false;
         }
         Character.prototype.shift = function (shift) {

@@ -9,12 +9,12 @@ namespace Lich {
     export abstract class AbstractWorldObject extends createjs.Sprite {
 
         state: string;
+        public speedx: number = 0;
+        public speedy: number = 0;
 
         constructor(
             public width: number,
             public height: number,
-            public speedx: number,
-            public speedy: number,
             public spriteSheet: createjs.SpriteSheet,
             public initState: string,
             public stateAnimation: Object,
@@ -39,15 +39,13 @@ namespace Lich {
         constructor(
             public width: number,
             public height: number,
-            public speedx: number,
-            public speedy: number,
             public spriteSheet: createjs.SpriteSheet,
             public initState: string,
             public stateAnimation: Object,
             public collXOffset: number,
             public collYOffset: number,
             public done: boolean) {
-            super(width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+            super(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
         };
     }
 
@@ -56,15 +54,13 @@ namespace Lich {
             public item: MapObjItem,
             public width: number,
             public height: number,
-            public speedx: number,
-            public speedy: number,
             public spriteSheet: createjs.SpriteSheet,
             public initState: string,
             public stateAnimation: Object,
             public collXOffset: number,
             public collYOffset: number,
             public notificationTimer: number) {
-            super(width, height, speedx, speedy, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+            super(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
         };
     }
 
@@ -180,14 +176,14 @@ namespace Lich {
                             objType.item,
                             image.width,
                             image.height,
-                            0,
-                            (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED,
                             spriteSheet,
                             "idle",
                             { "idle": "idle" },
                             2,
                             0,
                             World.OBJECT_NOTIFY_TIME);
+                        object.speedx = 0;
+                        object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
                         var coord = self.render.tilesToPixel(x, y);
                         object.x = coord.x + 10 - Math.random() * 20;
                         object.y = coord.y;
@@ -315,24 +311,29 @@ namespace Lich {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
 
-            // Enemy (zatím ručně)
+            // AI Enemies
             self.enemies.forEach(function(enemy) {
-                if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
-                    enemy.speedx = 0;
-                } else {
-                    if (self.hero.x > enemy.x) {
-                        enemy.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
-                        if (self.isCollision(enemy.x + enemy.width - enemy.collXOffset, enemy.y).hit == false && enemy.speedy == 0) {
-                            enemy.speedy = World.HERO_VERTICAL_SPEED;
-                        }
+                if (enemy.life > 0) {
+                    if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
+                        enemy.speedx = 0;
                     } else {
-                        enemy.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
-                        if (self.isCollision(enemy.x, enemy.y).hit == false && enemy.speedy == 0) {
-                            enemy.speedy = World.HERO_VERTICAL_SPEED;
+                        if (self.hero.x > enemy.x) {
+                            enemy.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
+                            if (self.isCollision(enemy.x + enemy.width - enemy.collXOffset, enemy.y).hit == false && enemy.speedy == 0) {
+                                enemy.speedy = World.HERO_VERTICAL_SPEED;
+                            }
+                        } else {
+                            enemy.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
+                            if (self.isCollision(enemy.x, enemy.y).hit == false && enemy.speedy == 0) {
+                                enemy.speedy = World.HERO_VERTICAL_SPEED;
+                            }
                         }
                     }
-                }
 
+                    if (directions.up2) {
+                        enemy.hit(5, self.game);
+                    }
+                }
             });
 
             // Dle kláves nastav rychlosti
@@ -618,8 +619,6 @@ namespace Lich {
             var object = new BulletObject(
                 60,
                 60,
-                -BLAST_SPEED * b / c,
-                -BLAST_SPEED * a / c,
                 blastSheet,
                 "fly",
                 {
@@ -631,6 +630,8 @@ namespace Lich {
                 20,
                 false
             );
+            object.speedx = -BLAST_SPEED * b / c;
+            object.speedy = -BLAST_SPEED * a / c;
 
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
             // přepony dle rychlosti projektilu
