@@ -148,14 +148,10 @@ namespace Lich {
             /* Measurements, debug */
             /*---------------------*/
             self.tilesLabel = new Label("TILES x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
-            game.debugUI.addChild(self.tilesLabel);
-            self.tilesLabel.x = 10;
-            self.tilesLabel.y = 50;
+            game.debugUI.addNextChild(self.tilesLabel);
 
             self.sectorLabel = new Label("SECTOR: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
-            game.debugUI.addChild(self.sectorLabel);
-            self.sectorLabel.x = 10;
-            self.sectorLabel.y = 70;
+            game.debugUI.addNextChild(self.sectorLabel);
 
             /*------------*/
             /* Dig events */

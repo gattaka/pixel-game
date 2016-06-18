@@ -4,6 +4,9 @@ namespace Lich {
         label: createjs.Text;
         outlineLabel: createjs.Text;
 
+        public height: number;
+        public width: number;
+
         constructor(text?: string, font?: string, color?: string, outline?: boolean, outlineColor?: string, outlineWidth?: number) {
             super();
 
@@ -16,6 +19,9 @@ namespace Lich {
                     outlineWidth = 1;
                 this.outlineLabel.outline = outlineWidth;
             }
+            
+            this.height = this.label.getBounds().height;
+            this.width = this.label.getBounds().width;
         }
 
         setText(value) {

@@ -18,6 +18,8 @@ var Lich;
                     outlineWidth = 1;
                 this.outlineLabel.outline = outlineWidth;
             }
+            this.height = this.label.getBounds().height;
+            this.width = this.label.getBounds().width;
         }
         Label.prototype.setText = function (value) {
             this.label.text = value;

@@ -116,13 +116,9 @@ var Lich;
             /* Measurements, debug */
             /*---------------------*/
             self.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
-            game.debugUI.addChild(self.tilesLabel);
-            self.tilesLabel.x = 10;
-            self.tilesLabel.y = 50;
+            game.debugUI.addNextChild(self.tilesLabel);
             self.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
-            game.debugUI.addChild(self.sectorLabel);
-            self.sectorLabel.x = 10;
-            self.sectorLabel.y = 70;
+            game.debugUI.addNextChild(self.sectorLabel);
             /*------------*/
             /* Dig events */
             /*------------*/

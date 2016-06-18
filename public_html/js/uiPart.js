@@ -11,16 +11,42 @@ var Lich;
             _super.call(this);
             this.width = width;
             this.height = height;
-            var outerShape = new createjs.Shape();
-            outerShape.graphics.setStrokeStyle(2);
-            outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-            outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
-            outerShape.graphics.drawRoundRect(0, 0, width, height, 3);
-            this.addChild(outerShape);
+            this.outerShape = new createjs.Shape();
+            this.drawBackground();
+            this.addChild(this.outerShape);
         }
+        UIPart.prototype.drawBackground = function () {
+            this.outerShape.graphics.clear();
+            this.outerShape.graphics.setStrokeStyle(2);
+            this.outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
+            this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
+        };
         return UIPart;
     }(createjs.Container));
     Lich.UIPart = UIPart;
+    var DebugLogUI = (function (_super) {
+        __extends(DebugLogUI, _super);
+        function DebugLogUI(x, y) {
+            _super.call(this, x, y);
+        }
+        DebugLogUI.prototype.addNextChild = function (child) {
+            if (this.height == 0) {
+                this.height = DebugLogUI.PADDING * 2;
+            }
+            child.x = DebugLogUI.PADDING;
+            child.y = this.height - DebugLogUI.PADDING;
+            this.height += child.height + DebugLogUI.PADDING;
+            if (child.width + 2 * DebugLogUI.PADDING > this.width) {
+                this.width = child.width + 2 * DebugLogUI.PADDING;
+            }
+            _super.prototype.addChild.call(this, child);
+            this.drawBackground();
+        };
+        DebugLogUI.PADDING = 5;
+        return DebugLogUI;
+    }(UIPart));
+    Lich.DebugLogUI = DebugLogUI;
     var InventoryUI = (function (_super) {
         __extends(InventoryUI, _super);
         function InventoryUI(game) {

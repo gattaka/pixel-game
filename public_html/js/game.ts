@@ -1,13 +1,15 @@
 namespace Lich {
     export class Game {
 
+        public static VERSION = "0.001";
+
         canvas: HTMLCanvasElement;
         stage: createjs.Stage;
         fpsLabel: Label;
         mouseLabel: Label;
         world: World;
         ui: UI;
-        debugUI: UIPart;
+        debugUI: DebugLogUI;
         initialized = false;
         keys = {};
 
@@ -82,16 +84,14 @@ namespace Lich {
             /*----------------*/
             self.resources = new Resources(self, function() {
 
+                /*-------------------------*/
+                /* UI - HUD, Inventory etc.*/
+                /*-------------------------*/
                 self.ui = new UI(self);
-
-                self.debugUI = new UIPart(400, 100);
+                self.debugUI = new DebugLogUI(400, 0);
                 self.debugUI.x = 10;
                 self.debugUI.y = 10;
                 self.ui.addChild(self.debugUI);
-
-                self.world = new World(self);
-                self.stage.addChild(self.world);
-                self.stage.addChild(self.ui);
 
                 /*---------------------*/
                 /* Measurements, debug */
@@ -99,15 +99,17 @@ namespace Lich {
                 console.log("Measurements init");
 
                 self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
-                self.debugUI.addChild(self.fpsLabel);
-                self.fpsLabel.x = 10;
-                self.fpsLabel.y = 10;
+                self.debugUI.addNextChild(self.fpsLabel);
 
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
                 self.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
-                self.debugUI.addChild(self.mouseLabel);
-                self.mouseLabel.x = 10;
-                self.mouseLabel.y = 30;
+                self.debugUI.addNextChild(self.mouseLabel);
+
+
+                self.world = new World(self);
+                self.stage.addChild(self.world);
+                self.stage.addChild(self.ui);
+
 
                 function handleMouseMove(event) {
                     if (typeof self.mouseLabel !== "undefined") {

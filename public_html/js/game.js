@@ -56,27 +56,26 @@ var Lich;
             /* Resources init */
             /*----------------*/
             self.resources = new Lich.Resources(self, function () {
+                /*-------------------------*/
+                /* UI - HUD, Inventory etc.*/
+                /*-------------------------*/
                 self.ui = new Lich.UI(self);
-                self.debugUI = new Lich.UIPart(400, 100);
+                self.debugUI = new Lich.DebugLogUI(400, 0);
                 self.debugUI.x = 10;
                 self.debugUI.y = 10;
                 self.ui.addChild(self.debugUI);
-                self.world = new Lich.World(self);
-                self.stage.addChild(self.world);
-                self.stage.addChild(self.ui);
                 /*---------------------*/
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
                 self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
-                self.debugUI.addChild(self.fpsLabel);
-                self.fpsLabel.x = 10;
-                self.fpsLabel.y = 10;
+                self.debugUI.addNextChild(self.fpsLabel);
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
                 self.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
-                self.debugUI.addChild(self.mouseLabel);
-                self.mouseLabel.x = 10;
-                self.mouseLabel.y = 30;
+                self.debugUI.addNextChild(self.mouseLabel);
+                self.world = new Lich.World(self);
+                self.stage.addChild(self.world);
+                self.stage.addChild(self.ui);
                 function handleMouseMove(event) {
                     if (typeof self.mouseLabel !== "undefined") {
                         self.mouseLabel.setText("x: " + event.stageX + " y: " + event.stageY);
@@ -148,6 +147,7 @@ var Lich;
             }
         }
         ;
+        Game.VERSION = "0.001";
         return Game;
     }());
     Lich.Game = Game;

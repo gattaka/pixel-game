@@ -2,15 +2,49 @@ namespace Lich {
 
     export class UIPart extends createjs.Container {
 
+        outerShape: createjs.Shape;
+
         constructor(public width: number, public height: number) {
             super();
 
-            var outerShape = new createjs.Shape();
-            outerShape.graphics.setStrokeStyle(2);
-            outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-            outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
-            outerShape.graphics.drawRoundRect(0, 0, width, height, 3);
-            this.addChild(outerShape);
+            this.outerShape = new createjs.Shape();
+            this.drawBackground();
+            this.addChild(this.outerShape);
+        }
+
+        protected drawBackground() {
+            this.outerShape.graphics.clear();
+            this.outerShape.graphics.setStrokeStyle(2);
+            this.outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
+            this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
+        }
+    }
+
+    export class DebugLogUI extends UIPart {
+
+        static PADDING = 5;
+
+        constructor(x: number, y: number) {
+            super(x, y);
+        }
+
+        public addNextChild(child: createjs.DisplayObject) {
+            if (this.height == 0) {
+                this.height = DebugLogUI.PADDING * 2;
+            }
+
+            child.x = DebugLogUI.PADDING;
+            child.y = this.height - DebugLogUI.PADDING;
+            this.height += child.height + DebugLogUI.PADDING;
+
+            if (child.width + 2 * DebugLogUI.PADDING > this.width) {
+                this.width = child.width + 2 * DebugLogUI.PADDING;
+            }
+
+            super.addChild(child);
+
+            this.drawBackground();
         }
     }
 
