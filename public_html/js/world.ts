@@ -96,8 +96,8 @@ namespace Lich {
         freeObjects = Array<WorldObject>();
         bulletObjects = Array<BulletObject>();
 
-        tilesLabel;
-        sectorLabel;
+        tilesLabel: Label;
+        sectorLabel: Label;
 
         // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
         spellTime = World.MOUSE_COOLDOWN;
@@ -141,19 +141,19 @@ namespace Lich {
                 self.enemies.push(enemy);
                 self.addChild(enemy);
                 enemy.x = game.canvas.width * Math.random();
-                enemy.y = 0;
+                enemy.y = game.canvas.height / 2 * Math.random();
             }
 
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/
-            self.tilesLabel = new createjs.Text("TILES x: - y: -", "bold 18px Arial", "#00f");
-            self.addChild(self.tilesLabel);
+            self.tilesLabel = new Label("TILES x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
+            game.debugUI.addChild(self.tilesLabel);
             self.tilesLabel.x = 10;
             self.tilesLabel.y = 50;
 
-            self.sectorLabel = new createjs.Text("SECTOR: -", "bold 18px Arial", "#00f");
-            self.addChild(self.sectorLabel);
+            self.sectorLabel = new Label("SECTOR: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
+            game.debugUI.addChild(self.sectorLabel);
             self.sectorLabel.x = 10;
             self.sectorLabel.y = 70;
 
@@ -669,17 +669,17 @@ namespace Lich {
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y);
             var index = self.tilesMap.indexAt(coord.x, coord.y);
-            var type = self.tilesMap.map[index];
+            var typ = self.tilesMap.map[index];
             if (typeof self.tilesLabel !== "undefined") {
-                self.tilesLabel.text = "TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + type;
+                self.tilesLabel.setText("TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + typ);
             }
 
             var sector = self.render.getSectorByTiles(coord.x, coord.y);
             if (typeof self.sectorLabel !== "undefined") {
                 if (typeof sector !== "undefined" && sector !== null) {
-                    self.sectorLabel.text = "SECTOR: x: " + sector.map_x + " y: " + sector.map_y;
+                    self.sectorLabel.setText("SECTOR: x: " + sector.map_x + " y: " + sector.map_y);
                 } else {
-                    self.sectorLabel.text = "SECTOR: -";
+                    self.sectorLabel.setText("SECTOR: -");
                 }
             }
 

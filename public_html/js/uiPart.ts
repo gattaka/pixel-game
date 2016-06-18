@@ -2,7 +2,7 @@ namespace Lich {
 
     export class UIPart extends createjs.Container {
 
-        constructor(public width, public height) {
+        constructor(public width: number, public height: number) {
             super();
 
             var outerShape = new createjs.Shape();
@@ -97,7 +97,7 @@ namespace Lich {
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new createjs.Text(quant, "bold " + InventoryUI.TEXT_SIZE + "px Arial", "#ff0");
+                    var text = new createjs.Text(quant, InventoryUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;

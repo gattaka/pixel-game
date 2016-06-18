@@ -83,7 +83,7 @@ var Lich;
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new createjs.Text(quant, "bold " + InventoryUI.TEXT_SIZE + "px Arial", "#ff0");
+                    var text = new createjs.Text(quant, InventoryUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Lich.Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;

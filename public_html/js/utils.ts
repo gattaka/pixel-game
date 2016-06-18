@@ -1,4 +1,31 @@
 namespace Lich {
+    export class Label extends createjs.Container {
+
+        label: createjs.Text;
+        outlineLabel: createjs.Text;
+
+        constructor(text?: string, font?: string, color?: string, outline?: boolean, outlineColor?: string, outlineWidth?: number) {
+            super();
+
+            this.label = new createjs.Text(text, font, color);
+            this.addChild(this.label);
+            if (outline) {
+                this.outlineLabel = new createjs.Text(text, font, outlineColor);
+                this.addChild(this.outlineLabel);
+                if (typeof outlineWidth !== "undefined")
+                    outlineWidth = 1;
+                this.outlineLabel.outline = outlineWidth;
+            }
+        }
+
+        setText(value) {
+            this.label.text = value;
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.text = value;
+        }
+
+    }
+
     export class Utils {
 
         static sign(value) {

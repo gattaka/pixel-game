@@ -75,15 +75,15 @@ var Lich;
             loadScreen.graphics.beginFill("black");
             loadScreen.graphics.drawRect(0, 0, game.canvas.width, game.canvas.height);
             loadScreenCont.addChild(loadScreen);
-            var loadLabel = new createjs.Text("Loading...", "bold 28px Arial", "#ff0");
-            loadLabel.x = 50;
-            loadLabel.y = 50;
+            var loadLabel = new Lich.Label("Loading...", "30px " + Resources.FONT, Resources.TEXT_COLOR);
+            loadLabel.x = game.canvas.width / 2 - 50;
+            loadLabel.y = game.canvas.height / 2 - 50;
             loadScreenCont.addChild(loadLabel);
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
             self.loader.installPlugin(createjs.Sound);
             self.loader.addEventListener("progress", function (event) {
-                loadLabel.text = Math.floor(event.loaded * 100) + "% Loading... ";
+                loadLabel.setText(Math.floor(event.loaded * 100) + "% Loading... ");
             });
             self.loader.addEventListener("complete", function () {
                 createjs.Tween.get(loadScreenCont)
@@ -128,6 +128,10 @@ var Lich;
             return sprite;
         };
         ;
+        Resources.FONT = "expressway";
+        Resources.OUTLINE_COLOR = "#000";
+        Resources.TEXT_COLOR = "#FF0";
+        Resources.DEBUG_TEXT_COLOR = "#FF0";
         /*
          * Přepínače
          */

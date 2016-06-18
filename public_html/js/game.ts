@@ -3,10 +3,11 @@ namespace Lich {
 
         canvas: HTMLCanvasElement;
         stage: createjs.Stage;
-        fpsLabel: createjs.Text;
-        mouseLabel: createjs.Text;
+        fpsLabel: Label;
+        mouseLabel: Label;
         world: World;
         ui: UI;
+        debugUI: UIPart;
         initialized = false;
         keys = {};
 
@@ -82,6 +83,12 @@ namespace Lich {
             self.resources = new Resources(self, function() {
 
                 self.ui = new UI(self);
+
+                self.debugUI = new UIPart(400, 100);
+                self.debugUI.x = 10;
+                self.debugUI.y = 10;
+                self.ui.addChild(self.debugUI);
+
                 self.world = new World(self);
                 self.stage.addChild(self.world);
                 self.stage.addChild(self.ui);
@@ -91,20 +98,20 @@ namespace Lich {
                 /*---------------------*/
                 console.log("Measurements init");
 
-                self.fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#00f");
-                self.stage.addChild(self.fpsLabel);
+                self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
+                self.debugUI.addChild(self.fpsLabel);
                 self.fpsLabel.x = 10;
                 self.fpsLabel.y = 10;
 
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
-                self.mouseLabel = new createjs.Text("PIXELS x: - y: -", "bold 18px Arial", "#00f");
-                self.stage.addChild(self.mouseLabel);
+                self.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
+                self.debugUI.addChild(self.mouseLabel);
                 self.mouseLabel.x = 10;
                 self.mouseLabel.y = 30;
 
                 function handleMouseMove(event) {
                     if (typeof self.mouseLabel !== "undefined") {
-                        self.mouseLabel.text = "x: " + event.stageX + " y: " + event.stageY;
+                        self.mouseLabel.setText("x: " + event.stageX + " y: " + event.stageY);
                     }
                 }
 
@@ -125,7 +132,7 @@ namespace Lich {
 
                     // Measurements
                     if (typeof self.fpsLabel !== "undefined") {
-                        self.fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
+                        self.fpsLabel.setText(Math.round(createjs.Ticker.getMeasuredFPS()) + " fps");
                     }
 
                     // Idle

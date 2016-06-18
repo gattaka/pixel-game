@@ -57,6 +57,10 @@ var Lich;
             /*----------------*/
             self.resources = new Lich.Resources(self, function () {
                 self.ui = new Lich.UI(self);
+                self.debugUI = new Lich.UIPart(400, 100);
+                self.debugUI.x = 10;
+                self.debugUI.y = 10;
+                self.ui.addChild(self.debugUI);
                 self.world = new Lich.World(self);
                 self.stage.addChild(self.world);
                 self.stage.addChild(self.ui);
@@ -64,18 +68,18 @@ var Lich;
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
-                self.fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#00f");
-                self.stage.addChild(self.fpsLabel);
+                self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+                self.debugUI.addChild(self.fpsLabel);
                 self.fpsLabel.x = 10;
                 self.fpsLabel.y = 10;
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
-                self.mouseLabel = new createjs.Text("PIXELS x: - y: -", "bold 18px Arial", "#00f");
-                self.stage.addChild(self.mouseLabel);
+                self.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+                self.debugUI.addChild(self.mouseLabel);
                 self.mouseLabel.x = 10;
                 self.mouseLabel.y = 30;
                 function handleMouseMove(event) {
                     if (typeof self.mouseLabel !== "undefined") {
-                        self.mouseLabel.text = "x: " + event.stageX + " y: " + event.stageY;
+                        self.mouseLabel.setText("x: " + event.stageX + " y: " + event.stageY);
                     }
                 }
                 self.initialized = true;
@@ -91,7 +95,7 @@ var Lich;
                 if (self.initialized) {
                     // Measurements
                     if (typeof self.fpsLabel !== "undefined") {
-                        self.fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
+                        self.fpsLabel.setText(Math.round(createjs.Ticker.getMeasuredFPS()) + " fps");
                     }
                     // Idle
                     self.world.handleTick(delta);
