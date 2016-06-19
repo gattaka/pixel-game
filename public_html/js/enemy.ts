@@ -125,11 +125,13 @@ namespace Lich {
 
         die(game: Game) {
             this.performState(Enemy.DIE_STATE);
+            Mixer.play(Resources.SND_GHOST_KEY);
             // TODO loot
         }
 
         hit(damage: number, game: Game) {
             if (this.life > 0) {
+                Mixer.play(Resources.SND_BONECRACK_KEY);
                 this.life -= damage;
                 if (this.life <= 0) {
                     this.life = 0;

@@ -94,6 +94,7 @@ namespace Lich {
 
         tilesLabel: Label;
         sectorLabel: Label;
+        playerLabel: Label;
 
         // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
         spellTime = World.MOUSE_COOLDOWN;
@@ -148,6 +149,9 @@ namespace Lich {
 
             self.sectorLabel = new Label("SECTOR: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
             game.debugUI.addNextChild(self.sectorLabel);
+
+            self.playerLabel = new Label("PLAYER x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
+            game.debugUI.addNextChild(self.playerLabel);
 
             /*------------*/
             /* Dig events */
@@ -356,36 +360,60 @@ namespace Lich {
 
             var makeShiftX = function(dst) {
                 var rndDst = Utils.floor(dst);
-                self.render.shiftX(rndDst);
-                // Horizontální pohyb se projevuje na pozadí
-                //movePointer(pointer.x + startX + screenOffsetX - rndDst, pointer.y + startY + screenOffsetY);
-                self.background.shift(rndDst, 0);
-                self.freeObjects.forEach(function(item) {
-                    item.x += rndDst;
-                });
-                self.bulletObjects.forEach(function(item) {
-                    item.x += rndDst;
-                });
-                self.enemies.forEach(function(enemy) {
-                    enemy.x += rndDst;
-                });
+                var canvasCenterX = self.game.canvas.width / 2;
+                if (self.render.canShiftX(rndDst) && self.hero.x == canvasCenterX) {
+                    // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
+                    // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
+                    self.render.shiftX(rndDst);
+                    self.background.shift(rndDst, 0);
+                    self.freeObjects.forEach(function(item) {
+                        item.x += rndDst;
+                    });
+                    self.bulletObjects.forEach(function(item) {
+                        item.x += rndDst;
+                    });
+                    self.enemies.forEach(function(enemy) {
+                        enemy.x += rndDst;
+                    });
+                } else {
+                    // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
+                    // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
+                    if (self.hero.x > canvasCenterX && self.hero.x - rndDst < canvasCenterX
+                        || self.hero.x < canvasCenterX && self.hero.x - rndDst > canvasCenterX) {
+                        self.hero.x = canvasCenterX;
+                    } else {
+                        self.hero.x -= rndDst;
+                    }
+                }
             };
 
             var makeShiftY = function(dst) {
                 var rndDst = Utils.floor(dst);
-                self.render.shiftY(rndDst);
-                // Horizontální pohyb se projevuje na pozadí
-                //movePointer(pointer.x + startX + screenOffsetX, pointer.y + startY + screenOffsetY - rndDst);
-                self.background.shift(0, rndDst);
-                self.freeObjects.forEach(function(item) {
-                    item.y += rndDst;
-                });
-                self.bulletObjects.forEach(function(item) {
-                    item.y += rndDst;
-                });
-                self.enemies.forEach(function(enemy) {
-                    enemy.y += rndDst;
-                });
+                var canvasCenterY = self.game.canvas.height / 2;
+                if (self.render.canShiftY(rndDst) && self.hero.y == canvasCenterY) {
+                    // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
+                    // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
+                    self.render.shiftY(rndDst);
+                    self.background.shift(0, rndDst);
+                    self.freeObjects.forEach(function(item) {
+                        item.y += rndDst;
+                    });
+                    self.bulletObjects.forEach(function(item) {
+                        item.y += rndDst;
+                    });
+                    self.enemies.forEach(function(enemy) {
+                        enemy.y += rndDst;
+                    });
+                } else {
+                    // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
+                    // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
+                    if (self.hero.y > canvasCenterY && self.hero.y - rndDst < canvasCenterY
+                        || self.hero.y < canvasCenterY && self.hero.y - rndDst > canvasCenterY) {
+                        self.hero.y = canvasCenterY;
+                    } else {
+                        self.hero.y -= rndDst;
+                    }
+                }
             };
 
             // update hráče

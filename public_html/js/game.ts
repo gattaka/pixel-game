@@ -98,6 +98,9 @@ namespace Lich {
                 /*---------------------*/
                 console.log("Measurements init");
 
+                var versionLabel = new Label("Version: " + Game.VERSION, "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
+                self.debugUI.addNextChild(versionLabel);
+                
                 self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
                 self.debugUI.addNextChild(self.fpsLabel);
 
@@ -105,11 +108,9 @@ namespace Lich {
                 self.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
                 self.debugUI.addNextChild(self.mouseLabel);
 
-
                 self.world = new World(self);
                 self.stage.addChild(self.world);
                 self.stage.addChild(self.ui);
-
 
                 function handleMouseMove(event) {
                     if (typeof self.mouseLabel !== "undefined") {

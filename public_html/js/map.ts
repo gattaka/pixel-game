@@ -47,8 +47,8 @@ namespace Lich {
         static MAP_HEIGHT = 500;
         static MAP_GROUND_LEVEL = 60;
 
-        tilesMap;
-        resources;
+        tilesMap: TilesMap;
+        resources: Resources;
 
         constructor(game: Lich.Game) {
             var self = this;

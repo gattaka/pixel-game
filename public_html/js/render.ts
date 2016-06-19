@@ -79,7 +79,7 @@ namespace Lich {
 
         mapUpdateRegion = new MapUpdateRegion();
 
-        constructor(public game, public map, public world) {
+        constructor(public game: Game, public map: Map, public world: World) {
             var self = this;
             self.tilesMap = map.tilesMap;
 
@@ -267,12 +267,12 @@ namespace Lich {
             var tile = self.game.resources.getBitmap(Resources.TILES_KEY);
             var tileCols = tile.image.width / Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            tile.sourceRect = {
-                x: ((v - 1) % tileCols) * Resources.TILE_SIZE,
-                y: Math.floor((v - 1) / tileCols) * Resources.TILE_SIZE,
-                height: Resources.TILE_SIZE,
-                width: Resources.TILE_SIZE
-            };
+            tile.sourceRect = new createjs.Rectangle(
+                ((v - 1) % tileCols) * Resources.TILE_SIZE,
+                Math.floor((v - 1) / tileCols) * Resources.TILE_SIZE,
+                Resources.TILE_SIZE,
+                Resources.TILE_SIZE
+            );
             return tile;
         }
 
@@ -280,22 +280,45 @@ namespace Lich {
             var self = this;
             var object = self.game.resources.getBitmap(Resources.MAP_PARTS_KEY);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            object.sourceRect = {
-                x: (v % Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
-                y: Math.floor(v / Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
-                height: Resources.TILE_SIZE,
-                width: Resources.TILE_SIZE
-            };
+            object.sourceRect = new createjs.Rectangle(
+                (v % Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
+                Math.floor(v / Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
+                Resources.TILE_SIZE,
+                Resources.TILE_SIZE
+            );
             return object;
         }
 
-        shiftSectors(dstX, dstY) {
+        /**
+         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         */
+        canShiftX(dst): boolean {
             var self = this;
-            self.screenOffsetX += dstX;
-            self.screenOffsetY += dstY;
+            return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.map.tilesMap.width * Resources.TILE_SIZE + self.game.canvas.width;
+        }
+
+        shiftSectorsX(dst) {
+            var self = this;
+            self.screenOffsetX += dst;
             self.sectorsCont.children.forEach(function(sector) {
-                sector.x += dstX;
-                sector.y += dstY;
+                sector.x += dst;
+            });
+            self.updateSectors();
+        }
+
+        /**
+         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         */
+        canShiftY(dst): boolean {
+            var self = this;
+            return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.map.tilesMap.height * Resources.TILE_SIZE + self.game.canvas.height;
+        }
+
+        shiftSectorsY(dst) {
+            var self = this;
+            self.screenOffsetY += dst;
+            self.sectorsCont.children.forEach(function(sector) {
+                sector.y += dst;
             });
             self.updateSectors();
         }
@@ -635,13 +658,13 @@ namespace Lich {
 
         shiftX(dst) {
             var self = this;
-            self.shiftSectors(dst, 0);
+            self.shiftSectorsX(dst);
             self.updateMinimapPosition();
         }
 
         shiftY(dst) {
             var self = this;
-            self.shiftSectors(0, dst);
+            self.shiftSectorsY(dst);
             self.updateMinimapPosition();
         }
 

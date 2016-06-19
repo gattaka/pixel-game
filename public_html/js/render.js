@@ -200,33 +200,43 @@ var Lich;
             var tile = self.game.resources.getBitmap(Lich.Resources.TILES_KEY);
             var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            tile.sourceRect = {
-                x: ((v - 1) % tileCols) * Lich.Resources.TILE_SIZE,
-                y: Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE,
-                height: Lich.Resources.TILE_SIZE,
-                width: Lich.Resources.TILE_SIZE
-            };
+            tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
             return tile;
         };
         Render.prototype.createObject = function (v) {
             var self = this;
             var object = self.game.resources.getBitmap(Lich.Resources.MAP_PARTS_KEY);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            object.sourceRect = {
-                x: (v % Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE,
-                y: Math.floor(v / Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE,
-                height: Lich.Resources.TILE_SIZE,
-                width: Lich.Resources.TILE_SIZE
-            };
+            object.sourceRect = new createjs.Rectangle((v % Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Math.floor(v / Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
             return object;
         };
-        Render.prototype.shiftSectors = function (dstX, dstY) {
+        /**
+         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         */
+        Render.prototype.canShiftX = function (dst) {
             var self = this;
-            self.screenOffsetX += dstX;
-            self.screenOffsetY += dstY;
+            return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.map.tilesMap.width * Lich.Resources.TILE_SIZE + self.game.canvas.width;
+        };
+        Render.prototype.shiftSectorsX = function (dst) {
+            var self = this;
+            self.screenOffsetX += dst;
             self.sectorsCont.children.forEach(function (sector) {
-                sector.x += dstX;
-                sector.y += dstY;
+                sector.x += dst;
+            });
+            self.updateSectors();
+        };
+        /**
+         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         */
+        Render.prototype.canShiftY = function (dst) {
+            var self = this;
+            return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.map.tilesMap.height * Lich.Resources.TILE_SIZE + self.game.canvas.height;
+        };
+        Render.prototype.shiftSectorsY = function (dst) {
+            var self = this;
+            self.screenOffsetY += dst;
+            self.sectorsCont.children.forEach(function (sector) {
+                sector.y += dst;
             });
             self.updateSectors();
         };
@@ -515,12 +525,12 @@ var Lich;
         };
         Render.prototype.shiftX = function (dst) {
             var self = this;
-            self.shiftSectors(dst, 0);
+            self.shiftSectorsX(dst);
             self.updateMinimapPosition();
         };
         Render.prototype.shiftY = function (dst) {
             var self = this;
-            self.shiftSectors(0, dst);
+            self.shiftSectorsY(dst);
             self.updateMinimapPosition();
         };
         Render.prototype.handleTick = function () {

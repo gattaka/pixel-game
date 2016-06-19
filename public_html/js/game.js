@@ -68,6 +68,8 @@ var Lich;
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
+                var versionLabel = new Lich.Label("Version: " + Game.VERSION, "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+                self.debugUI.addNextChild(versionLabel);
                 self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
                 self.debugUI.addNextChild(self.fpsLabel);
                 self.stage.addEventListener("stagemousemove", handleMouseMove);

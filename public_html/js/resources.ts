@@ -138,6 +138,8 @@ namespace Lich {
         static SND_PICK_AXE_2_KEY = "SND_PICK_AXE_2_KEY";
         static SND_PICK_AXE_3_KEY = "SND_PICK_AXE_3_KEY";
         static SND_DIRT_THEME_KEY = "SND_DIRT_THEME_KEY";
+        static SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
+        static SND_GHOST_KEY = "SND_GHOST_KEY";
 
         /*
          * Definice mapových objektů
@@ -212,6 +214,8 @@ namespace Lich {
                 new Load("sound/pick_axe2.ogg", Resources.SND_PICK_AXE_2_KEY),
                 new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
                 new Load("sound/Dirt 2.ogg", Resources.SND_DIRT_THEME_KEY),
+                new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
+                new Load("sound/ghost.ogg", Resources.SND_GHOST_KEY),
             ];
 
             (function() {

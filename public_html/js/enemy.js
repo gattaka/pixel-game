@@ -82,10 +82,12 @@ var Lich;
         };
         Enemy.prototype.die = function (game) {
             this.performState(Enemy.DIE_STATE);
+            Lich.Mixer.play(Lich.Resources.SND_GHOST_KEY);
             // TODO loot
         };
         Enemy.prototype.hit = function (damage, game) {
             if (this.life > 0) {
+                Lich.Mixer.play(Lich.Resources.SND_BONECRACK_KEY);
                 this.life -= damage;
                 if (this.life <= 0) {
                     this.life = 0;
