@@ -57,7 +57,7 @@ var Lich;
                 new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
                 new Load("sound/Dirt 2.ogg", Resources.SND_DIRT_THEME_KEY),
                 new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
-                new Load("sound/ghost.ogg", Resources.SND_GHOST_KEY),
+                new Load("sound/skeleton_die.ogg", Resources.SND_SKELETON_DIE_KEY),
             ];
             (function () {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
@@ -241,7 +241,7 @@ var Lich;
         Resources.SND_PICK_AXE_3_KEY = "SND_PICK_AXE_3_KEY";
         Resources.SND_DIRT_THEME_KEY = "SND_DIRT_THEME_KEY";
         Resources.SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
-        Resources.SND_GHOST_KEY = "SND_GHOST_KEY";
+        Resources.SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
         /*
          * Definice mapových objektů
          */

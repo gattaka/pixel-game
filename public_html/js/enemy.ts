@@ -125,7 +125,7 @@ namespace Lich {
 
         die(game: Game) {
             this.performState(Enemy.DIE_STATE);
-            Mixer.play(Resources.SND_GHOST_KEY);
+            Mixer.play(Resources.SND_SKELETON_DIE_KEY);
             // TODO loot
         }
 
