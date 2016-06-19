@@ -64,6 +64,11 @@ namespace Lich {
         };
     }
 
+    class CollisionTestResult {
+        constructor(public hit: boolean, public x?: number, public y?: number) { }
+    }
+
+
     export class World extends createjs.Container {
 
         /*-----------*/
@@ -212,7 +217,15 @@ namespace Lich {
                 var distanceY = object.speedy * sDelta;
 
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
+                clsnTest = self.isBoundsInCollision(
+                    object.x + object.collXOffset,
+                    object.y + object.collYOffset,
+                    object.width - object.collXOffset * 2,
+                    object.height - object.collYOffset * 2,
+                    0,
+                    distanceY,
+                    function(x: number, y: number) { return self.isEnemyHitOrCollision(x, y); }
+                );
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
                 } else {
@@ -225,7 +238,15 @@ namespace Lich {
                 var distanceX = sDelta * object.speedx;
 
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
+                clsnTest = self.isBoundsInCollision(
+                    object.x + object.collXOffset,
+                    object.y + object.collYOffset,
+                    object.width - object.collXOffset * 2,
+                    object.height - object.collYOffset * 2,
+                    distanceX,
+                    0,
+                    function(x: number, y: number) { return self.isEnemyHitOrCollision(x, y); }
+                );
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
                 } else {
@@ -235,9 +256,9 @@ namespace Lich {
             }
         };
 
-        updateObject(sDelta: number, object: AbstractWorldObject, makeShiftX, makeShiftY) {
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShiftX: (number) => any, makeShiftY: (number) => any) {
             var self = this;
-            var clsnTest;
+            var clsnTest: CollisionTestResult;
             var clsnPosition;
 
             if (object.speedy !== 0) {
@@ -252,7 +273,15 @@ namespace Lich {
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
 
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY);
+                clsnTest = self.isBoundsInCollision(
+                    object.x + object.collXOffset,
+                    object.y + object.collYOffset,
+                    object.width - object.collXOffset * 2,
+                    object.height - object.collYOffset * 2,
+                    0,
+                    distanceY,
+                    function(x: number, y: number) { return self.isCollision(x, y); }
+                );
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
                 } else {
@@ -265,7 +294,7 @@ namespace Lich {
 
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
-                        clsnPosition = self.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
+                        clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
                         makeShiftY(-1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
 
                         object.speedy = 0;
@@ -278,14 +307,21 @@ namespace Lich {
                 var distanceX = Utils.floor(sDelta * object.speedx);
 
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset,
+                    object.y + object.collYOffset,
+                    object.width - object.collXOffset * 2,
+                    object.height - object.collYOffset * 2,
+                    distanceX,
+                    0,
+                    function(x: number, y: number) { return self.isCollision(x, y); }
+                );
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
                 }
                 // zkus zmenšit posun, aby nebyla kolize
                 else {
                     // získej pozici kolizního bloku
-                    clsnPosition = self.render.tilesToPixel(clsnTest.result.x, clsnTest.result.y);
+                    clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
                     if (distanceX > 0) {
                         // narazil jsem do něj zprava
                         makeShiftX(object.x + object.collXOffset - (clsnPosition.x + Resources.TILE_SIZE) - 1);
@@ -299,7 +335,15 @@ namespace Lich {
             // pokud nejsem zrovna uprostřed skoku...
             if (object.speedy === 0) {
                 // ...a mám kam padat
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1);
+                clsnTest = self.isBoundsInCollision(
+                    object.x + object.collXOffset,
+                    object.y + object.collYOffset,
+                    object.width - object.collXOffset * 2,
+                    object.height - object.collYOffset * 2,
+                    0,
+                    -1,
+                    function(x: number, y: number) { return self.isCollision(x, y); }
+                );
                 if (clsnTest.hit === false) {
                     object.speedy = -1;
                 }
@@ -511,9 +555,31 @@ namespace Lich {
         };
 
         /**
+         * Zjistí zda na daných pixel-souřadnicích dochází k zásahu nepřítele 
+         */
+        isEnemyHitOrCollision(x: number, y: number): CollisionTestResult {
+            var self = this;
+            var enemyRet = null;
+            self.enemies.forEach(function(enemy) {
+                if (enemy.life > 0
+                    && x > enemy.x && x < enemy.x + enemy.width
+                    && y > enemy.y && y < enemy.y + enemy.height) {
+                    enemyRet = new CollisionTestResult(true, x, y);
+                    // TODO damage dle bullet
+                    enemy.hit(20, self.game);
+                }
+            });
+            if (enemyRet == null) {
+                return self.isCollision(x, y);
+            } else {
+                return enemyRet;
+            }
+        };
+
+        /**
          * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi 
          */
-        isCollision(x, y) {
+        isCollision(x: number, y: number): CollisionTestResult {
             var self = this;
             var result = self.render.pixelsToTiles(x, y);
             return self.isCollisionByTiles(result.x, result.y);
@@ -522,15 +588,9 @@ namespace Lich {
         /**
          * Zjistí zda na daných tile-souřadnicích dochází ke kolizi 
          */
-        isCollisionByTiles(x, y) {
+        isCollisionByTiles(x: number, y: number): CollisionTestResult {
             var self = this;
-            return {
-                hit: self.tilesMap.valueAt(x, y) > 0,
-                "result": {
-                    x: x,
-                    y: y
-                }
-            };
+            return new CollisionTestResult(self.tilesMap.valueAt(x, y) > 0, x, y);
         };
 
         /**
@@ -539,7 +599,7 @@ namespace Lich {
          * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje, 
          * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem. 
          */
-        isBoundsInCollision(x, y, fullWidth, fullHeight, fullXShift, fullYShift) {
+        isBoundsInCollision(x: number, y: number, fullWidth: number, fullHeight: number, fullXShift: number, fullYShift: number, collisionTester: (x: number, y: number) => CollisionTestResult): CollisionTestResult {
             var self = this;
             var tx;
             var ty;
@@ -585,7 +645,7 @@ namespace Lich {
                         if (xShift > 0 || yShift > 0) {
                             tx = x - xShift;
                             ty = y - yShift;
-                            var LT = self.isCollision(tx, ty);
+                            var LT = collisionTester(tx, ty);
                             if (LT.hit)
                                 return LT;
                         }
@@ -593,7 +653,7 @@ namespace Lich {
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - xShift;
                             ty = y - yShift;
-                            var RT = self.isCollision(tx, ty);
+                            var RT = collisionTester(tx, ty);
                             if (RT.hit)
                                 return RT;
                         }
@@ -601,7 +661,7 @@ namespace Lich {
                         if (xShift > 0 || yShift < 0) {
                             tx = x - xShift;
                             ty = y + height - yShift;
-                            var LB = self.isCollision(tx, ty);
+                            var LB = collisionTester(tx, ty);
                             if (LB.hit)
                                 return LB;
                         }
@@ -609,24 +669,20 @@ namespace Lich {
                         if (xShift < 0 || yShift < 0) {
                             tx = x + width - xShift;
                             ty = y + height - yShift;
-                            var RB = self.isCollision(tx, ty);
+                            var RB = collisionTester(tx, ty);
                             if (RB.hit)
                                 return RB;
                         }
 
                         if (xShift === fullXShift && yShift === fullYShift && width === fullWidth && height === fullHeight) {
-                            return {
-                                hit: false
-                            };
+                            return new CollisionTestResult(false);
                         }
 
                     }
                 }
             }
 
-            return {
-                hit: false
-            };
+            return new CollisionTestResult(false);
 
         };
 
@@ -708,7 +764,7 @@ namespace Lich {
             var index = self.tilesMap.indexAt(coord.x, coord.y);
             var typ = self.tilesMap.mapRecord[index];
             if (typeof self.tilesLabel !== "undefined") {
-                self.tilesLabel.setText("TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + typ);
+                self.tilesLabel.setText("TILES x: " + clsn.x + " y: " + clsn.y + " clsn: " + clsn.hit + " index: " + index + " type: " + typ);
             }
 
             var sector = self.render.getSectorByTiles(coord.x, coord.y);

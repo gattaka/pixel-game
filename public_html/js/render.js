@@ -26,6 +26,13 @@ var Lich;
         };
         return MapUpdateRegion;
     }());
+    var SectorUpdateRequest = (function () {
+        function SectorUpdateRequest(sector, cooldown) {
+            this.sector = sector;
+            this.cooldown = cooldown;
+        }
+        return SectorUpdateRequest;
+    }());
     var Render = (function () {
         function Render(game, map, world) {
             this.game = game;
@@ -366,10 +373,7 @@ var Lich;
         Render.prototype.markSector = function (sector) {
             var self = this;
             if (typeof self.sectorsToUpdate[sector.secId] === "undefined") {
-                self.sectorsToUpdate[sector.secId] = {
-                    sector: sector,
-                    cooldown: Render.SECTOR_CACHE_COOLDOWN
-                };
+                self.sectorsToUpdate[sector.secId] = new SectorUpdateRequest(sector, Render.SECTOR_CACHE_COOLDOWN);
             }
         };
         ;
@@ -473,11 +477,16 @@ var Lich;
                         var globalY = ry - posy + y;
                         // odstraň dílek objektu ze sektoru
                         var object = Lich.Utils.get2D(self.sceneObjectsMap, globalX, globalY);
-                        self.markSector(object.parent);
-                        object.parent.removeChild(object);
-                        // odstraň dílke objektu z map
-                        Lich.Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
-                        Lich.Utils.set2D(self.sceneObjectsMap, globalX, globalY, null);
+                        if (object != null) {
+                            if ((object.parent instanceof Lich.Sector) == false) {
+                                console.log("Assert error: Sector instance expected; instead " + (typeof object.parent) + " found!");
+                            }
+                            self.markSector(object.parent);
+                            object.parent.removeChild(object);
+                            // odstraň dílke objektu z map
+                            Lich.Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
+                            Lich.Utils.set2D(self.sceneObjectsMap, globalX, globalY, null);
+                        }
                     }
                 }
             }

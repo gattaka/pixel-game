@@ -30,6 +30,10 @@ namespace Lich {
         }
     }
 
+    class SectorUpdateRequest {
+        constructor(public sector: Sector, public cooldown: number) { }
+    }
+
     export class Render {
 
         /**
@@ -469,13 +473,10 @@ namespace Lich {
 
         }
 
-        markSector(sector) {
+        markSector(sector: Sector) {
             var self = this;
             if (typeof self.sectorsToUpdate[sector.secId] === "undefined") {
-                self.sectorsToUpdate[sector.secId] = {
-                    sector: sector,
-                    cooldown: Render.SECTOR_CACHE_COOLDOWN
-                };
+                self.sectorsToUpdate[sector.secId] = new SectorUpdateRequest(sector, Render.SECTOR_CACHE_COOLDOWN);
             }
         };
 
@@ -605,13 +606,17 @@ namespace Lich {
 
                         // odstraň dílek objektu ze sektoru
                         var object = Utils.get2D(self.sceneObjectsMap, globalX, globalY);
-                        self.markSector(object.parent);
-                        object.parent.removeChild(object);
+                        if (object != null) {
+                            if ((object.parent instanceof Sector) == false) {
+                                console.log("Assert error: Sector instance expected; instead " + (typeof object.parent) + " found!");
+                            }
+                            self.markSector(<Sector>object.parent);
+                            object.parent.removeChild(object);
 
-                        // odstraň dílke objektu z map
-                        Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
-                        Utils.set2D(self.sceneObjectsMap, globalX, globalY, null);
-
+                            // odstraň dílke objektu z map
+                            Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
+                            Utils.set2D(self.sceneObjectsMap, globalX, globalY, null);
+                        }
                     }
                 }
             }
