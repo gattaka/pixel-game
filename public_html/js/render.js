@@ -42,11 +42,11 @@ var Lich;
             this.currentStartSecY = null;
             this.sectorsToUpdate = [];
             // Mapa sektorů
-            this.sectorsMap = [];
+            this.sectorsMap = new Array();
             // Globální mapa dílků
-            this.sceneTilesMap = [];
+            this.sceneTilesMap = new Array();
             // Globální mapa objektů
-            this.sceneObjectsMap = [];
+            this.sceneObjectsMap = new Array();
             this.mapUpdateRegion = new MapUpdateRegion();
             var self = this;
             self.tilesMap = map.tilesMap;
@@ -125,7 +125,7 @@ var Lich;
                                         Lich.Utils.set2D(self.sceneTilesMap, mx, my, tile);
                                     }
                                     // vytvoř na dané souřadnici dílky objektů
-                                    var objectElement = Lich.Utils.get2D(self.tilesMap.objectsMap, mx, my);
+                                    var objectElement = Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, mx, my);
                                     if (objectElement !== null) {
                                         // Sheet index dílku objektu
                                         var object = self.createObject(objectElement.sheetIndex);
@@ -386,8 +386,8 @@ var Lich;
                             // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                             if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
                                 // okraje vyresetuj
-                                if (self.tilesMap.map[index] !== Lich.Resources.VOID) {
-                                    self.tilesMap.map[index] = Lich.Resources.DIRT.M1;
+                                if (self.tilesMap.mapRecord[index] !== Lich.Resources.VOID) {
+                                    self.tilesMap.mapRecord[index] = Lich.Resources.DIRT.M1;
                                     tilesToReset.push([x, y]);
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -400,12 +400,12 @@ var Lich;
                             else {
                                 // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
                                 if (y === ry &&
-                                    (self.tilesMap.map[index] === Lich.Resources.DIRT.T ||
-                                        self.tilesMap.map[index] === Lich.Resources.DIRT.TL ||
-                                        self.tilesMap.map[index] === Lich.Resources.DIRT.TR)) {
+                                    (self.tilesMap.mapRecord[index] === Lich.Resources.DIRT.T ||
+                                        self.tilesMap.mapRecord[index] === Lich.Resources.DIRT.TL ||
+                                        self.tilesMap.mapRecord[index] === Lich.Resources.DIRT.TR)) {
                                     self.tryDigObject(x, y - 1);
                                 }
-                                self.tilesMap.map[index] = Lich.Resources.VOID;
+                                self.tilesMap.mapRecord[index] = Lich.Resources.VOID;
                                 var targetSector = self.getSectorByTiles(x, y);
                                 if (typeof targetSector !== "undefined" && targetSector !== null) {
                                     targetSector.removeChild(Lich.Utils.get2D(self.sceneTilesMap, x, y));
@@ -426,7 +426,7 @@ var Lich;
                 tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
-                    self.map.generateEdge(self.tilesMap, x, y);
+                    Lich.MapTools.generateEdge(self.tilesMap, x, y);
                 });
             })();
             // Přegeneruj rohy
@@ -434,7 +434,7 @@ var Lich;
                 tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
-                    self.map.generateCorner(self.tilesMap, x, y);
+                    Lich.MapTools.generateCorner(self.tilesMap, x, y);
                 });
             })();
             // Překresli dílky
@@ -447,19 +447,14 @@ var Lich;
                     if (tile !== null) {
                         var v = self.tilesMap.valueAt(x, y);
                         var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
-                        tile.sourceRect = {
-                            x: ((v - 1) % tileCols) * Lich.Resources.TILE_SIZE,
-                            y: Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE,
-                            height: Lich.Resources.TILE_SIZE,
-                            width: Lich.Resources.TILE_SIZE
-                        };
+                        tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
                     }
                 });
             })();
         };
         Render.prototype.tryDigObject = function (rx, ry) {
             var self = this;
-            var objectElement = Lich.Utils.get2D(self.tilesMap.objectsMap, rx, ry);
+            var objectElement = Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry);
             if (objectElement !== null) {
                 var objType = Lich.Resources.dirtObjects[objectElement.mapKey];
                 var objWidth = objType.mapSpriteWidth;
@@ -481,27 +476,28 @@ var Lich;
                         self.markSector(object.parent);
                         object.parent.removeChild(object);
                         // odstraň dílke objektu z map
-                        Lich.Utils.set2D(self.tilesMap.objectsMap, globalX, globalY, null);
+                        Lich.Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
                         Lich.Utils.set2D(self.sceneObjectsMap, globalX, globalY, null);
                     }
                 }
             }
         };
+        // TODO IN DEV
         Render.prototype.place = function (x, y, item) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Lich.Utils.even(coord.x);
             var ry = Lich.Utils.even(coord.y);
             // pokud je místo prázdné a bez objektu (a je co vkládat
-            if (item !== null && self.tilesMap.valueAt(rx, ry) === Lich.Resources.VOID && Lich.Utils.get2D(self.tilesMap.objectsMap, rx, ry) === null) {
+            if (item !== null && self.tilesMap.valueAt(rx, ry) === Lich.Resources.VOID && Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
                 // TODO je potřeba vyřešit jak provázat objekty z mapy na objekty v inventáři a zpět
                 // ukázkový problém je strom, který se stává dřevem, které se zpátky nedá umístit jako 
                 // strom, ale jako dřevěná stěna
                 var object = Lich.Resources.dirtObjects[2];
                 if (typeof object !== "undefined") {
-                    self.map.placeObject(rx, ry, object);
+                    Lich.MapTools.writeObjectRecord(self.tilesMap, rx, ry, object);
                     // TODO ... tohle nestačí
-                    self.createObject(object.objIndex);
+                    // self.createObject(object.objIndex);
                     return true;
                 }
             }

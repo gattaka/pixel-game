@@ -1,60 +1,27 @@
 namespace Lich {
-    export class Label extends createjs.Container {
-
-        label: createjs.Text;
-        outlineLabel: createjs.Text;
-
-        public height: number;
-        public width: number;
-
-        constructor(text?: string, font?: string, color?: string, outline?: boolean, outlineColor?: string, outlineWidth?: number) {
-            super();
-
-            this.label = new createjs.Text(text, font, color);
-            this.addChild(this.label);
-            if (outline) {
-                this.outlineLabel = new createjs.Text(text, font, outlineColor);
-                this.addChild(this.outlineLabel);
-                if (typeof outlineWidth !== "undefined")
-                    outlineWidth = 1;
-                this.outlineLabel.outline = outlineWidth;
-            }
-            
-            this.height = this.label.getBounds().height;
-            this.width = this.label.getBounds().width;
-        }
-
-        setText(value) {
-            this.label.text = value;
-            if (typeof this.outlineLabel !== "undefined")
-                this.outlineLabel.text = value;
-        }
-
-    }
-
     export class Utils {
 
-        static sign(value) {
+        static sign(value: number) {
             return value < 0 ? -1 : 1;
         }
 
-        static floor(value) {
+        static floor(value: number) {
             return value < 0 ? Math.ceil(value) : Math.floor(value);
         }
 
-        static ceil(value) {
+        static ceil(value: number) {
             return value < 0 ? Math.floor(value) : Math.ceil(value);
         }
 
-        static isEven(value) {
+        static isEven(value: number) {
             return value % 2 == 0;
         }
 
-        static even(value) {
+        static even(value: number) {
             return Utils.isEven(value) ? value : value - 1;
         }
 
-        static get2D(a, x, y) {
+        static get2D<T>(a: Array<Array<T>>, x: number, y: number): T {
             // přidej dílek do globální mapy
             var col = a[x];
             if (typeof col === "undefined" || col[y] == null) {
@@ -65,7 +32,7 @@ namespace Lich {
             }
         }
 
-        static set2D(a, x, y, val) {
+        static set2D<T>(a: Array<Array<T>>, x: number, y: number, val: T) {
             var col = a[x];
             if (typeof col === "undefined") {
                 col = [];
@@ -74,7 +41,7 @@ namespace Lich {
             col[y] = val;
         }
 
-        static contains(a, obj) {
+        static contains<T>(a: Array<T>, obj: T) {
             for (var i = 0; i < a.length; i++) {
                 if (a[i] === obj) {
                     return true;

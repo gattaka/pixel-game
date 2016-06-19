@@ -18,7 +18,7 @@ namespace Lich {
     /**
      * 1. Objekty, které jsou na mapě
      */
-    export class MapObj {
+    export class MapObjDefinition {
         item: MapObjItem;
         constructor(
             // údaje o objektu na mapě (skládá se z vícero částí -- třeba stom)
@@ -49,9 +49,12 @@ namespace Lich {
             public invSpriteY: number,
             // je možné tento INV objekt znovu umístit (dřevo -> dřevěná zeď) 
             // pokud ano, jaký objekt mapy se má vytvořit  
-            public mapObj: MapObj = null) { };
+            public mapObj: MapObjDefinition = null) { };
     }
 
+    /**
+     * Provazovací registr -- utilita
+     */
     export class MapObjRegister {
         byIndex = [];
         byKey = {};

@@ -112,7 +112,7 @@ namespace Lich {
 
             var self = this;
 
-            self.map = new Map(game);
+            self.map = new Map(game.resources);
             self.tilesMap = self.map.tilesMap;
             self.render = new Render(game, self.map, self);
             self.background = new Background(game);
@@ -156,7 +156,7 @@ namespace Lich {
             /*------------*/
             /* Dig events */
             /*------------*/
-            self.render.addOnDigObjectListener(function(objType: MapObj, x, y) {
+            self.render.addOnDigObjectListener(function(objType: MapObjDefinition, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
 
@@ -510,12 +510,18 @@ namespace Lich {
 
         };
 
+        /**
+         * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi 
+         */
         isCollision(x, y) {
             var self = this;
             var result = self.render.pixelsToTiles(x, y);
             return self.isCollisionByTiles(result.x, result.y);
         };
 
+        /**
+         * Zjistí zda na daných tile-souřadnicích dochází ke kolizi 
+         */
         isCollisionByTiles(x, y) {
             var self = this;
             return {
@@ -527,6 +533,12 @@ namespace Lich {
             };
         };
 
+        /**
+         * Zjistí zda dojde ke kolizi, když se z aktuálních pixel-souřadnic posunu o nějakou 
+         * vzdálenost. Započítává velikost celého objektu tak, aby nebyla v kolizi ani jedna 
+         * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje, 
+         * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem. 
+         */
         isBoundsInCollision(x, y, fullWidth, fullHeight, fullXShift, fullYShift) {
             var self = this;
             var tx;
@@ -694,7 +706,7 @@ namespace Lich {
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y);
             var index = self.tilesMap.indexAt(coord.x, coord.y);
-            var typ = self.tilesMap.map[index];
+            var typ = self.tilesMap.mapRecord[index];
             if (typeof self.tilesLabel !== "undefined") {
                 self.tilesLabel.setText("TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + typ);
             }

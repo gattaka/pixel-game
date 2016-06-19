@@ -83,7 +83,7 @@ var Lich;
             // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
             this.spellTime = World.MOUSE_COOLDOWN;
             var self = this;
-            self.map = new Lich.Map(game);
+            self.map = new Lich.Map(game.resources);
             self.tilesMap = self.map.tilesMap;
             self.render = new Lich.Render(game, self.map, self);
             self.background = new Lich.Background(game);
@@ -438,12 +438,18 @@ var Lich;
             })();
         };
         ;
+        /**
+         * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi
+         */
         World.prototype.isCollision = function (x, y) {
             var self = this;
             var result = self.render.pixelsToTiles(x, y);
             return self.isCollisionByTiles(result.x, result.y);
         };
         ;
+        /**
+         * Zjistí zda na daných tile-souřadnicích dochází ke kolizi
+         */
         World.prototype.isCollisionByTiles = function (x, y) {
             var self = this;
             return {
@@ -455,6 +461,12 @@ var Lich;
             };
         };
         ;
+        /**
+         * Zjistí zda dojde ke kolizi, když se z aktuálních pixel-souřadnic posunu o nějakou
+         * vzdálenost. Započítává velikost celého objektu tak, aby nebyla v kolizi ani jedna
+         * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje,
+         * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem.
+         */
         World.prototype.isBoundsInCollision = function (x, y, fullWidth, fullHeight, fullXShift, fullYShift) {
             var self = this;
             var tx;
@@ -600,7 +612,7 @@ var Lich;
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y);
             var index = self.tilesMap.indexAt(coord.x, coord.y);
-            var typ = self.tilesMap.map[index];
+            var typ = self.tilesMap.mapRecord[index];
             if (typeof self.tilesLabel !== "undefined") {
                 self.tilesLabel.setText("TILES x: " + clsn.result.x + " y: " + clsn.result.y + " clsn: " + clsn.hit + " index: " + index + " type: " + typ);
             }

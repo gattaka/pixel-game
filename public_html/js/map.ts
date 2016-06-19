@@ -5,41 +5,6 @@
  * 
  */
 namespace Lich {
-
-    export class TilesMap {
-        constructor(public map, public objects, public objectsMap, public width, public height) { };
-
-        indexAt(x, y) {
-            var self = this;
-            if (x >= self.width || x < 0 || y >= self.height || y < 0) {
-                return -1;
-            } else {
-                return y * self.width + x;
-            }
-        }
-
-        coordAt(index): any {
-            var self = this;
-            if (index < 0 || index > self.map.length - 1) {
-                return 0;
-            } else {
-                return {
-                    x: index % self.width,
-                    y: Math.floor(index / self.width)
-                };
-            }
-        }
-
-        valueAt(x, y) {
-            var self = this;
-            var index = self.indexAt(x, y);
-            if (index >= 0) {
-                return self.map[index];
-            }
-            return Resources.VOID;
-        }
-    }
-
     export class Map {
 
         // musí být sudé
@@ -48,11 +13,9 @@ namespace Lich {
         static MAP_GROUND_LEVEL = 60;
 
         tilesMap: TilesMap;
-        resources: Resources;
 
-        constructor(game: Lich.Game) {
+        constructor(resources: Resources) {
             var self = this;
-            self.resources = game.resources;
 
             var tilesMap = new TilesMap(
                 [],
@@ -69,10 +32,10 @@ namespace Lich {
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     if (y < Map.MAP_GROUND_LEVEL) {
-                        tilesMap.map.push(Resources.VOID);
+                        tilesMap.mapRecord.push(Resources.VOID);
                     } else {
                         var m = x % 3 + 1 + ((y % 3) * 3);
-                        tilesMap.map.push(Resources.DIRT["M" + m]);
+                        tilesMap.mapRecord.push(Resources.DIRT["M" + m]);
                     }
                 }
             }
@@ -96,7 +59,7 @@ namespace Lich {
                                     for (var __y = _y; __y <= _y + 1; __y++) {
                                         var index = tilesMap.indexAt(__x, __y);
                                         if (index >= 0) {
-                                            tilesMap.map[index] = Resources.VOID;
+                                            tilesMap.mapRecord[index] = Resources.VOID;
                                         }
                                     }
                                 }
@@ -130,21 +93,21 @@ namespace Lich {
             // tráva boky
             (function() {
                 for (var i = 0; i < mass; i++) {
-                    if (tilesMap.map[i] === Resources.VOID)
+                    if (tilesMap.mapRecord[i] === Resources.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
-                    self.generateEdge(tilesMap, coord.x, coord.y);
+                    MapTools.generateEdge(tilesMap, coord.x, coord.y);
                 }
             })();
 
             // tráva rohy
             (function() {
                 for (var i = 0; i < mass; i++) {
-                    var val = tilesMap.map[i];
+                    var val = tilesMap.mapRecord[i];
                     if (val === Resources.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
-                    self.generateCorner(tilesMap, coord.x, coord.y);
+                    MapTools.generateCorner(tilesMap, coord.x, coord.y);
                 }
             })();
 
@@ -167,7 +130,7 @@ namespace Lich {
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            var col = tilesMap.objectsMap[x];
+                            var col = tilesMap.mapObjectsTiles[x];
                             if ((y === y0 && tilesMap.valueAt(x, y) !== Resources.DIRT.T) ||
                                 (y !== y0 && tilesMap.valueAt(x, y) !== Resources.VOID) ||
                                 (typeof col !== "undefined" && typeof col[y] !== "undefined"))
@@ -178,7 +141,7 @@ namespace Lich {
                 };
 
                 for (var i = 0; i < mass; i += 2) {
-                    var val = tilesMap.map[i];
+                    var val = tilesMap.mapRecord[i];
                     // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
                     if (val === Resources.DIRT.T) {
                         // bude tam nějaký objekt? (100% ano)
@@ -190,7 +153,7 @@ namespace Lich {
                                 var object = Resources.dirtObjects[key];
                                 var coord = tilesMap.coordAt(i);
                                 if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
-                                    self.placeObject(coord.x, coord.y, object);
+                                    MapTools.writeObjectRecord(tilesMap, coord.x, coord.y, object);
                                     break;
                                 } else {
                                     // další pokus na dalším objektu
@@ -204,129 +167,6 @@ namespace Lich {
             })();
 
         }
-
-        placeObject(cx, cy, object) {
-            var self = this;
-            // je tam volno, umísti ho
-            self.tilesMap.objects.push({
-                x: cx,
-                y: cy,
-                obj: object.mapKey
-            });
-            // zapiš obsazení jednotlivými dílky objektu
-            for (var x = 0; x < object.mapSpriteWidth; x++) {
-                for (var y = 0; y < object.mapSpriteHeight; y++) {
-                    var col = self.tilesMap.objectsMap[x + cx];
-                    if (typeof col === "undefined") {
-                        col = [];
-                        self.tilesMap.objectsMap[x + cx] = col;
-                    }
-                    var partsSheetIndex = object.mapSpriteX + x + (object.mapSpriteY + y) * Resources.PARTS_SHEET_WIDTH;
-                    col[y + cy - object.mapSpriteHeight] = {
-                        // typ objektu
-                        mapKey: object.mapKey,
-                        // Sheet index dílku objektu
-                        sheetIndex: partsSheetIndex,
-                        // relativní souřadnice dílku objektu v sheetmapě
-                        objTileX: x,
-                        objTileY: y
-                    };
-                }
-            }
-
-        };
-
-        generateEdge(tilesMap, x, y) {
-            var i = tilesMap.indexAt(x, y);
-            var valT = tilesMap.valueAt(x, y - 1);
-            var valR = tilesMap.valueAt(x + 1, y);
-            var valB = tilesMap.valueAt(x, y + 1);
-            var valL = tilesMap.valueAt(x - 1, y);
-
-            if (valT === Resources.VOID) {
-                tilesMap.map[i] = Resources.DIRT.T;
-            }
-
-            if (valR === Resources.VOID) {
-                tilesMap.map[i] = Resources.DIRT.R;
-            }
-
-            if (valB === Resources.VOID) {
-                tilesMap.map[i] = Resources.DIRT.B;
-            }
-
-            if (valL === Resources.VOID) {
-                tilesMap.map[i] = Resources.DIRT.L;
-            }
-
-            return tilesMap.map[i];
-        };
-
-        generateCorner(tilesMap, x, y) {
-            var i = tilesMap.indexAt(x, y);
-            var val = tilesMap.map[i];
-            var valT = tilesMap.valueAt(x, y - 1);
-            var valR = tilesMap.valueAt(x + 1, y);
-            var valB = tilesMap.valueAt(x, y + 1);
-            var valL = tilesMap.valueAt(x - 1, y);
-
-            var isMiddle = false;
-            for (var m = 1; m <= 9; m++) {
-                if (val === Resources.DIRT["M" + m]) {
-                    isMiddle = true;
-                    break;
-                }
-            }
-
-            // změny prostředních kusů
-            if (isMiddle) {
-                // jsem pravý horní roh díry
-                if (valB === Resources.DIRT.R && valR === Resources.DIRT.B) {
-                    tilesMap.map[i] = Resources.DIRT.I_TL;
-                }
-                // jsem levý horní roh díry
-                if (valL === Resources.DIRT.B && valB === Resources.DIRT.L) {
-                    tilesMap.map[i] = Resources.DIRT.I_TR;
-                }
-                // levý spodní roh díry
-                if (valT === Resources.DIRT.R && valR === Resources.DIRT.T) {
-                    tilesMap.map[i] = Resources.DIRT.I_BL;
-                }
-                // pravý spodní roh díry
-                if (valT === Resources.DIRT.L && valL === Resources.DIRT.T) {
-                    tilesMap.map[i] = Resources.DIRT.I_BR;
-                }
-
-            }
-
-            // jsem levý horní roh
-            if (val === Resources.DIRT.L && (valR === Resources.DIRT.T || valT === Resources.VOID)) {
-                tilesMap.map[i] = Resources.DIRT.TL;
-            }
-            // jsem levý dolní roh
-            if (val === Resources.DIRT.L && (valR === Resources.DIRT.B || valR === Resources.DIRT.BR)) {
-                tilesMap.map[i] = Resources.DIRT.BL;
-            }
-            // jsem pravý dolní roh
-            if (val === Resources.DIRT.B && (valT === Resources.DIRT.R || valT === Resources.DIRT.TR)) {
-                tilesMap.map[i] = Resources.DIRT.BR;
-            }
-            // jsem pravý horní roh
-            if (val === Resources.DIRT.R && (valL === Resources.DIRT.T || valT === Resources.VOID)) {
-                tilesMap.map[i] = Resources.DIRT.TR;
-            }
-
-            return tilesMap.map[i];
-        };
-
-        modify(tilesMap, x, y) {
-            var rx = Utils.even(x);
-            var ry = Utils.even(y);
-            tilesMap.map[tilesMap.indexAt(rx, ry)] = Resources.VOID;
-            tilesMap.map[tilesMap.indexAt(rx + 1, ry)] = Resources.VOID;
-            tilesMap.map[tilesMap.indexAt(rx, ry + 1)] = Resources.VOID;
-            tilesMap.map[tilesMap.indexAt(rx + 1, ry + 1)] = Resources.VOID;
-        };
 
     }
 

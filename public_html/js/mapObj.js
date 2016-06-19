@@ -23,8 +23,8 @@ var Lich;
     /**
      * 1. Objekty, které jsou na mapě
      */
-    var MapObj = (function () {
-        function MapObj(
+    var MapObjDefinition = (function () {
+        function MapObjDefinition(
             // údaje o objektu na mapě (skládá se z vícero částí -- třeba stom)
             mapKey, mapSpriteWidth, mapSpriteHeight, mapSpriteX, mapSpriteY, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
@@ -43,9 +43,9 @@ var Lich;
             this.freq = freq;
             this.item = new MapObjItem(invObj, quant);
         }
-        return MapObj;
+        return MapObjDefinition;
     }());
-    Lich.MapObj = MapObj;
+    Lich.MapObjDefinition = MapObjDefinition;
     /**
      * 2. Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
@@ -66,6 +66,9 @@ var Lich;
         return InvObj;
     }());
     Lich.InvObj = InvObj;
+    /**
+     * Provazovací registr -- utilita
+     */
     var MapObjRegister = (function () {
         function MapObjRegister() {
             this.byIndex = [];
