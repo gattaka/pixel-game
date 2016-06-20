@@ -110,7 +110,7 @@ var Lich;
         Enemy.DIE_STATE = "DIE_STATE";
         Enemy.DEAD_STATE = "DEAD_STATE";
         Enemy.WIDTH = 46;
-        Enemy.HEIGHT = 64;
+        Enemy.HEIGHT = 68;
         // Collision offset
         Enemy.COLLXOFFSET = 10;
         Enemy.COLLYOFFSET = 2;

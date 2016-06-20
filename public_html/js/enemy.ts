@@ -17,7 +17,7 @@ namespace Lich {
         static DEAD_STATE = "DEAD_STATE";
 
         static WIDTH = 46;
-        static HEIGHT = 64;
+        static HEIGHT = 68;
 
         // Collision offset
         static COLLXOFFSET = 10;
@@ -58,7 +58,7 @@ namespace Lich {
                     "height": Enemy.HEIGHT,
                     "count": 30,
                     "regY": 0,
-                    "width": Enemy.WIDTH
+                    "width": Enemy.WIDTH,
                 },
                 "animations": {
                     "idle": [0, 0, "breath", 0.005],
