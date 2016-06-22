@@ -590,7 +590,7 @@ namespace Lich {
          */
         isCollisionByTiles(x: number, y: number): CollisionTestResult {
             var self = this;
-            return new CollisionTestResult(self.tilesMap.valueAt(x, y) > 0, x, y);
+            return new CollisionTestResult(self.tilesMap.valueAt(x, y) != 0, x, y);
         };
 
         /**

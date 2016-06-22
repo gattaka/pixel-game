@@ -82,6 +82,9 @@ var Lich;
             if (index >= 0) {
                 return self.mapRecord[index];
             }
+            if (index == -1) {
+                return -1;
+            }
             return Lich.Resources.VOID;
         };
         return TilesMap;

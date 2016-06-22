@@ -73,6 +73,9 @@ namespace Lich {
             if (index >= 0) {
                 return self.mapRecord[index];
             }
+            if (index == -1) {
+                return -1;
+            }
             return Resources.VOID;
         }
     }
