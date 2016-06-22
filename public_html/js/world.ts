@@ -158,6 +158,14 @@ namespace Lich {
             self.playerLabel = new Label("PLAYER x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
             game.debugUI.addNextChild(self.playerLabel);
 
+            // light test
+            /*
+            var bitmap = self.game.resources.getBitmap(Resources.DARKNESS_KEY);
+            bitmap.x = game.canvas.width / 2 - bitmap.image.width / 2;
+            bitmap.y = game.canvas.height / 2 - bitmap.image.height / 2;
+            self.addChild(bitmap);
+            */
+
             /*------------*/
             /* Dig events */
             /*------------*/

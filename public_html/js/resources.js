@@ -48,6 +48,7 @@ var Lich;
                 new Load("images/background/far_woodland.png", Resources.FAR_HILL_KEY),
                 new Load("images/background/woodland.png", Resources.HILL_KEY),
                 new Load("images/background/dirt_back.png", Resources.DIRTBACK_KEY),
+                new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
                 new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", Resources.SND_FIREBALL_KEY),
                 new Load("sound/113111__satrebor__pick.ogg", Resources.SND_PICK_KEY),
                 new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", Resources.SND_BURN_KEY),
@@ -184,6 +185,7 @@ var Lich;
         Resources.FAR_HILL_KEY = "FAR_HILL_KEY";
         Resources.HILL_KEY = "HILL_KEY";
         Resources.DIRTBACK_KEY = "DIRTBACK_KEY";
+        Resources.DARKNESS_KEY = "DARKNESS_KEY";
         Resources.CLOUD_KEY = "CLOUD_KEY";
         // animations
         Resources.BLAST_ANIMATION_KEY = "BLAST_ANIMATION_KEY";

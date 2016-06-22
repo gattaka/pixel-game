@@ -74,6 +74,7 @@ namespace Lich {
         static FAR_HILL_KEY = "FAR_HILL_KEY";
         static HILL_KEY = "HILL_KEY";
         static DIRTBACK_KEY = "DIRTBACK_KEY";
+        static DARKNESS_KEY = "DARKNESS_KEY";
         static CLOUD_KEY = "CLOUD_KEY";
 
         // animations
@@ -206,6 +207,7 @@ namespace Lich {
                 new Load("images/background/far_woodland.png", Resources.FAR_HILL_KEY),
                 new Load("images/background/woodland.png", Resources.HILL_KEY),
                 new Load("images/background/dirt_back.png", Resources.DIRTBACK_KEY),
+                new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
                 new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", Resources.SND_FIREBALL_KEY),
                 new Load("sound/113111__satrebor__pick.ogg", Resources.SND_PICK_KEY),
                 new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", Resources.SND_BURN_KEY),
