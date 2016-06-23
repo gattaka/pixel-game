@@ -32,7 +32,9 @@ namespace Lich {
             // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
             public quant: number,
             // jak často takový objekt v mapě je 
-            public freq: number) {
+            public freq: number,
+            // jde o kolizní objekt?
+            public collide: boolean) {
             this.item = new MapObjItem(invObj, quant);
         }
     }

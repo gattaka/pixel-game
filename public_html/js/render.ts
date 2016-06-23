@@ -622,7 +622,11 @@ namespace Lich {
             }
         }
 
-        place(x: number, y: number, item: string) {
+        /**
+         * Pokusí se umístit objekt na pixel souřadnice a vrátí true, 
+         * pokud se to podařilo 
+         */
+        place(x: number, y: number, item: string) : boolean {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Utils.even(coord.x);

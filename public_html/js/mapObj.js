@@ -32,7 +32,9 @@ var Lich;
             // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
             quant, 
             // jak často takový objekt v mapě je 
-            freq) {
+            freq, 
+            // jde o kolizní objekt?
+            collide) {
             this.mapKey = mapKey;
             this.mapSpriteWidth = mapSpriteWidth;
             this.mapSpriteHeight = mapSpriteHeight;
@@ -41,6 +43,7 @@ var Lich;
             this.invObj = invObj;
             this.quant = quant;
             this.freq = freq;
+            this.collide = collide;
             this.item = new MapObjItem(invObj, quant);
         }
         return MapObjDefinition;

@@ -97,7 +97,7 @@ var Lich;
             self.background = new Lich.Background(game);
             self.hero = new Lich.Hero(game);
             // hudba
-            Lich.Mixer.play(Lich.Resources.SND_DIRT_THEME_KEY, true);
+            Lich.Mixer.play(Lich.Resources.MSC_BUILD_THEME_KEY, true);
             /*------------*/
             /* Characters */
             /*------------*/
@@ -491,7 +491,19 @@ var Lich;
          */
         World.prototype.isCollisionByTiles = function (x, y) {
             var self = this;
-            return new CollisionTestResult(self.tilesMap.valueAt(x, y) != 0, x, y);
+            // kolize s povrchem/hranicí mapy
+            if (self.tilesMap.valueAt(x, y) != 0) {
+                return new CollisionTestResult(true, x, y);
+            }
+            // kolize s kolizními objekty
+            var objectElement = Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, x, y);
+            if (objectElement !== null) {
+                var objType = Lich.Resources.dirtObjects[objectElement.mapKey];
+                if (objType.collide)
+                    return new CollisionTestResult(true, x, y);
+            }
+            // bez kolize
+            return new CollisionTestResult(false, x, y);
         };
         ;
         /**

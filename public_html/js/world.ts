@@ -124,7 +124,7 @@ namespace Lich {
             self.hero = new Hero(game);
 
             // hudba
-            Mixer.play(Resources.SND_DIRT_THEME_KEY, true);
+            Mixer.play(Resources.MSC_BUILD_THEME_KEY, true);
 
             /*------------*/
             /* Characters */
@@ -599,7 +599,19 @@ namespace Lich {
          */
         isCollisionByTiles(x: number, y: number): CollisionTestResult {
             var self = this;
-            return new CollisionTestResult(self.tilesMap.valueAt(x, y) != 0, x, y);
+            // kolize s povrchem/hranicí mapy
+            if (self.tilesMap.valueAt(x, y) != 0) {
+                return new CollisionTestResult(true, x, y);
+            }
+            // kolize s kolizními objekty
+            var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, x, y);
+            if (objectElement !== null) {
+                var objType: MapObjDefinition = Resources.dirtObjects[objectElement.mapKey];
+                if (objType.collide)
+                    return new CollisionTestResult(true, x, y);
+            }
+            // bez kolize
+            return new CollisionTestResult(false, x, y);
         };
 
         /**

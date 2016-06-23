@@ -491,6 +491,10 @@ var Lich;
                 }
             }
         };
+        /**
+         * Pokusí se umístit objekt na pixel souřadnice a vrátí true,
+         * pokud se to podařilo
+         */
         Render.prototype.place = function (x, y, item) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);

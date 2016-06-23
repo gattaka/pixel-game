@@ -131,7 +131,7 @@ namespace Lich {
         static SPELL_DIG_KEY = "SPELL_DIG_KEY";
         static SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
 
-        // sound
+        // sounds
         static SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
         static SND_BURN_KEY = "SND_BURN_KEY";
         static SND_PICK_KEY = "SND_PICK_KEY";
@@ -139,9 +139,12 @@ namespace Lich {
         static SND_PICK_AXE_1_KEY = "SND_PICK_AXE_1_KEY";
         static SND_PICK_AXE_2_KEY = "SND_PICK_AXE_2_KEY";
         static SND_PICK_AXE_3_KEY = "SND_PICK_AXE_3_KEY";
-        static SND_DIRT_THEME_KEY = "SND_DIRT_THEME_KEY";
         static SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
         static SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
+
+        // music
+        static MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
+        static MSC_BUILD_THEME_KEY = "MSC_BUILD_THEME_KEY";
 
         static dirtObjects = new Array<MapObjDefinition>();
         static invObjects = new Array<InvObjDefinition>();
@@ -155,23 +158,23 @@ namespace Lich {
                 Resources.dirtObjects[mapObj.mapKey] = mapObj;
             };
 
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, 8, 0, Resources.INV_WOOD_KEY, 5, 5));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, 0, 0, Resources.INV_WOOD_KEY, 10, 2));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, 14, 0, Resources.INV_STRAW_KEY, 2, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, 16, 0, Resources.INV_STRAW_KEY, 2, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS4_KEY, 2, 2, 12, 4, Resources.INV_STRAW_KEY, 2, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_SHROOM1_KEY, 2, 2, 12, 2, Resources.INV_SHROOM1_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_SHROOM2_KEY, 2, 2, 14, 2, Resources.INV_SHROOM2_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_SHROOM3_KEY, 2, 2, 16, 2, Resources.INV_SHROOM3_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT_KEY, 2, 2, 12, 6, Resources.INV_PLANT_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, 18, 2, Resources.INV_PLANT2_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, 14, 4, Resources.INV_PLANT3_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, 16, 4, Resources.INV_PLANT4_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT5_KEY, 2, 2, 18, 4, Resources.INV_PLANT5_KEY, 1, 1));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, 18, 0, null, 0, 0));
-            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_WOODWALL_KEY, 2, 2, 14, 6, Resources.INV_WOOD_KEY, 1, 0));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, 8, 0, Resources.INV_WOOD_KEY, 5, 5, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, 0, 0, Resources.INV_WOOD_KEY, 10, 2, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, 14, 0, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, 16, 0, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_GRASS4_KEY, 2, 2, 12, 4, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_SHROOM1_KEY, 2, 2, 12, 2, Resources.INV_SHROOM1_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_SHROOM2_KEY, 2, 2, 14, 2, Resources.INV_SHROOM2_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_SHROOM3_KEY, 2, 2, 16, 2, Resources.INV_SHROOM3_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT_KEY, 2, 2, 12, 6, Resources.INV_PLANT_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, 18, 2, Resources.INV_PLANT2_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, 14, 4, Resources.INV_PLANT3_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, 16, 4, Resources.INV_PLANT4_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT5_KEY, 2, 2, 18, 4, Resources.INV_PLANT5_KEY, 1, 1, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, 18, 0, null, 0, 0, false));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_WOODWALL_KEY, 2, 2, 14, 6, Resources.INV_WOOD_KEY, 1, 0, true));
 
             // Definice inventárních objektů
             var putIntoInvObjects = function(invObj: InvObjDefinition) {
@@ -223,9 +226,10 @@ namespace Lich {
                 new Load("sound/pick_axe1.ogg", Resources.SND_PICK_AXE_1_KEY),
                 new Load("sound/pick_axe2.ogg", Resources.SND_PICK_AXE_2_KEY),
                 new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
-                new Load("sound/Dirt 2.ogg", Resources.SND_DIRT_THEME_KEY),
                 new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
                 new Load("sound/skeleton_die.ogg", Resources.SND_SKELETON_DIE_KEY),
+                new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
+                new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
             ];
 
             (function() {
