@@ -43,14 +43,11 @@ var Lich;
         function TilesMap(
             // linearizovaný předpis rozmístění povrchu světa
             mapRecord, 
-            // linearizovaný předpis rozmístění objektů na mapě
-            mapObjectsRecords, 
             // 2D pole dílků objektů na mapě
             mapObjectsTiles, 
             // Šířka a výška mapy
             width, height) {
             this.mapRecord = mapRecord;
-            this.mapObjectsRecords = mapObjectsRecords;
             this.mapObjectsTiles = mapObjectsTiles;
             this.width = width;
             this.height = height;

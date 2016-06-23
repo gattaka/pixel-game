@@ -224,6 +224,7 @@ var Lich;
         Resources.MAP_PLANT4_KEY = "MAP_PLANT4_KEY";
         Resources.MAP_PLANT5_KEY = "MAP_PLANT5_KEY";
         Resources.MAP_BUSH_KEY = "MAP_BUSH_KEY";
+        Resources.MAP_WOODWALL_KEY = "MAP_WOODWALL_KEY";
         // ui
         Resources.SKULL_KEY = "SKULL_KEY";
         Resources.HELMET_KEY = "HELMET_KEY";
@@ -244,12 +245,11 @@ var Lich;
         Resources.SND_DIRT_THEME_KEY = "SND_DIRT_THEME_KEY";
         Resources.SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
         Resources.SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
-        /*
-         * Definice mapových objektů
-         */
         Resources.dirtObjects = new Array();
+        Resources.invObjects = new Array();
         Resources._constructor = (function () {
             console.log('Static constructor');
+            // Definice mapových objektů
             var putIntoDirtObjects = function (mapObj) {
                 Resources.dirtObjects[mapObj.mapKey] = mapObj;
             };
@@ -269,6 +269,12 @@ var Lich;
             putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, 16, 4, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT5_KEY, 2, 2, 18, 4, Resources.INV_PLANT5_KEY, 1, 1));
             putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, 18, 0, null, 0, 0));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_WOODWALL_KEY, 2, 2, 14, 6, Resources.INV_WOOD_KEY, 1, 0));
+            // Definice inventárních objektů
+            var putIntoInvObjects = function (invObj) {
+                Resources.invObjects[invObj.invKey] = invObj;
+            };
+            putIntoInvObjects(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.dirtObjects[Resources.MAP_WOODWALL_KEY]));
         })();
         return Resources;
     }());

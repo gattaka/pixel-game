@@ -118,6 +118,7 @@ namespace Lich {
         static MAP_PLANT4_KEY = "MAP_PLANT4_KEY";
         static MAP_PLANT5_KEY = "MAP_PLANT5_KEY";
         static MAP_BUSH_KEY = "MAP_BUSH_KEY";
+        static MAP_WOODWALL_KEY = "MAP_WOODWALL_KEY";
 
         // ui
         static SKULL_KEY = "SKULL_KEY";
@@ -142,15 +143,14 @@ namespace Lich {
         static SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
         static SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
 
-        /*
-         * Definice mapových objektů
-         */
         static dirtObjects = new Array<MapObjDefinition>();
+        static invObjects = new Array<InvObjDefinition>();
         loader;
 
         private static _constructor = (() => {
             console.log('Static constructor');
 
+            // Definice mapových objektů
             var putIntoDirtObjects = function(mapObj: MapObjDefinition) {
                 Resources.dirtObjects[mapObj.mapKey] = mapObj;
             };
@@ -171,6 +171,14 @@ namespace Lich {
             putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, 16, 4, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoDirtObjects(new MapObjDefinition(Resources.MAP_PLANT5_KEY, 2, 2, 18, 4, Resources.INV_PLANT5_KEY, 1, 1));
             putIntoDirtObjects(new MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, 18, 0, null, 0, 0));
+            putIntoDirtObjects(new MapObjDefinition(Resources.MAP_WOODWALL_KEY, 2, 2, 14, 6, Resources.INV_WOOD_KEY, 1, 0));
+
+            // Definice inventárních objektů
+            var putIntoInvObjects = function(invObj: InvObjDefinition) {
+                Resources.invObjects[invObj.invKey] = invObj;
+            };
+
+            putIntoInvObjects(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.dirtObjects[Resources.MAP_WOODWALL_KEY]));
 
         })();
 

@@ -138,7 +138,7 @@ namespace Lich {
             })();
         }
 
-        isMouseInUI(x, y) {
+        isMouseInUI(x: number, y: number): boolean {
             var self = this;
             var uiHit = false;
             self.children.forEach(function(item) {
@@ -150,7 +150,7 @@ namespace Lich {
             return uiHit;
         }
 
-        handleMouse(mouse, delta) {
+        handleMouse(mouse: Mouse, delta: number) {
             var self = this;
             self.children.forEach(function(item) {
                 if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {

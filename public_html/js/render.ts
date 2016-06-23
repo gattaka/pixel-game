@@ -66,9 +66,9 @@ namespace Lich {
         // souřadnice aktuálního sektorového "okna"
         currentStartSecX = null;
         currentStartSecY = null;
-        sectorsToUpdate = [];
+        sectorsToUpdate = new Array<SectorUpdateRequest>();
         // Kontejner na sektory
-        sectorsCont;
+        sectorsCont: createjs.Container;
         // Mapa sektorů
         sectorsMap = new Array<Array<Sector>>();
         // Mapa dílků
@@ -280,7 +280,7 @@ namespace Lich {
             return tile;
         }
 
-        createObject(v: number) {
+        createObject(v: number): createjs.Bitmap {
             var self = this;
             var object = self.game.resources.getBitmap(Resources.MAP_PARTS_KEY);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
@@ -622,8 +622,7 @@ namespace Lich {
             }
         }
 
-        // TODO IN DEV
-        place(x, y, item) {
+        place(x: number, y: number, item: string) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Utils.even(coord.x);
@@ -631,14 +630,29 @@ namespace Lich {
 
             // pokud je místo prázdné a bez objektu (a je co vkládat
             if (item !== null && self.tilesMap.valueAt(rx, ry) === Resources.VOID && Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
-                // TODO je potřeba vyřešit jak provázat objekty z mapy na objekty v inventáři a zpět
-                // ukázkový problém je strom, který se stává dřevem, které se zpátky nedá umístit jako 
-                // strom, ale jako dřevěná stěna
-                var object = Resources.dirtObjects[2];
-                if (typeof object !== "undefined") {
-                    MapTools.writeObjectRecord(self.tilesMap, rx, ry, object);
-                    // TODO ... tohle nestačí
-                    // self.createObject(object.objIndex);
+                var object: InvObjDefinition = Resources.invObjects[item];
+                var sector = self.getSectorByTiles(rx, ry);
+                if (typeof object !== "undefined" && object.mapObj != null) {
+                    // musí se posunout dolů o object.mapObj.mapSpriteHeight,
+                    // protože objekty se počítají počátkem levého SPODNÍHO rohu 
+                    MapTools.writeObjectRecord(self.tilesMap, rx, ry + object.mapObj.mapSpriteHeight, object.mapObj);
+                    // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
+                    for (var tx = 0; tx < 2; tx++) {
+                        for (var ty = 0; ty < 2; ty++) {
+                            var partsSheetIndex = MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
+                            var tile = self.createObject(partsSheetIndex);
+
+                            // přidej dílek do sektoru
+                            sector.addChild(tile);
+                            tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                            tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+
+                            // Přidej objekt do globální mapy objektů
+                            Utils.set2D(self.sceneObjectsMap, rx + tx, ry + ty, tile);
+                        }
+                    }
+
+                    self.markSector(sector);
                     return true;
                 }
             }

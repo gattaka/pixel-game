@@ -93,8 +93,6 @@ var Lich;
         ;
         MapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {
             var self = this;
-            // je tam volno, umísti ho
-            tilesMap.mapObjectsRecords.push(new Lich.MapObjectRecord(cx, cy, object.mapKey));
             // zapiš obsazení jednotlivými dílky objektu
             for (var x = 0; x < object.mapSpriteWidth; x++) {
                 for (var y = 0; y < object.mapSpriteHeight; y++) {
@@ -103,12 +101,15 @@ var Lich;
                         col = [];
                         tilesMap.mapObjectsTiles[x + cx] = col;
                     }
-                    var partsSheetIndex = object.mapSpriteX + x + (object.mapSpriteY + y) * Lich.Resources.PARTS_SHEET_WIDTH;
+                    var partsSheetIndex = MapTools.createPartsSheetIndex(object, x, y);
                     col[y + cy - object.mapSpriteHeight] = new Lich.MapObjectTile(object.mapKey, partsSheetIndex, x, y);
                 }
             }
         };
         ;
+        MapTools.createPartsSheetIndex = function (object, x, y) {
+            return object.mapSpriteX + x + (object.mapSpriteY + y) * Lich.Resources.PARTS_SHEET_WIDTH;
+        };
         return MapTools;
     }());
     Lich.MapTools = MapTools;

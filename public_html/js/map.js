@@ -9,7 +9,7 @@ var Lich;
     var Map = (function () {
         function Map(resources) {
             var self = this;
-            var tilesMap = new Lich.TilesMap([], [], [], Map.MAP_WIDTH, Map.MAP_HEIGHT);
+            var tilesMap = new Lich.TilesMap([], [], Map.MAP_WIDTH, Map.MAP_HEIGHT);
             self.tilesMap = tilesMap;
             var mass = tilesMap.height * tilesMap.width;
             // base generation

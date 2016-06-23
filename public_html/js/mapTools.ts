@@ -101,8 +101,6 @@ namespace Lich {
 
         static writeObjectRecord(tilesMap: TilesMap, cx: number, cy: number, object: MapObjDefinition) {
             var self = this;
-            // je tam volno, umísti ho
-            tilesMap.mapObjectsRecords.push(new MapObjectRecord(cx, cy, object.mapKey));
             // zapiš obsazení jednotlivými dílky objektu
             for (var x = 0; x < object.mapSpriteWidth; x++) {
                 for (var y = 0; y < object.mapSpriteHeight; y++) {
@@ -111,11 +109,15 @@ namespace Lich {
                         col = [];
                         tilesMap.mapObjectsTiles[x + cx] = col;
                     }
-                    var partsSheetIndex = object.mapSpriteX + x + (object.mapSpriteY + y) * Resources.PARTS_SHEET_WIDTH;
+                    var partsSheetIndex = MapTools.createPartsSheetIndex(object, x, y);
                     col[y + cy - object.mapSpriteHeight] = new MapObjectTile(object.mapKey, partsSheetIndex, x, y);
                 }
             }
         };
+
+        static createPartsSheetIndex(object: MapObjDefinition, x: number, y: number): number {
+            return object.mapSpriteX + x + (object.mapSpriteY + y) * Resources.PARTS_SHEET_WIDTH;
+        }
 
     }
 

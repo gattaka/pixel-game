@@ -59,8 +59,8 @@ namespace Lich {
 
         toggleFlag = true;
 
-        choosenItem = null;
-        draggedItem = null;
+        choosenItem: string = null;
+        draggedItem: string = null;
 
         invContent = [];
         itemHighlightShape = new createjs.Shape();

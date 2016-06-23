@@ -20,7 +20,6 @@ namespace Lich {
             var tilesMap = new TilesMap(
                 [],
                 [],
-                [],
                 Map.MAP_WIDTH,
                 Map.MAP_HEIGHT
             );

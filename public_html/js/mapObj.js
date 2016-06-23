@@ -49,49 +49,17 @@ var Lich;
     /**
      * 2. Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
-    var InvObj = (function () {
-        function InvObj(invKey, invSpriteWidth, invSpriteHeight, invSpriteX, invSpriteY, 
+    var InvObjDefinition = (function () {
+        function InvObjDefinition(invKey, 
             // je možné tento INV objekt znovu umístit (dřevo -> dřevěná zeď) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             mapObj) {
             if (mapObj === void 0) { mapObj = null; }
             this.invKey = invKey;
-            this.invSpriteWidth = invSpriteWidth;
-            this.invSpriteHeight = invSpriteHeight;
-            this.invSpriteX = invSpriteX;
-            this.invSpriteY = invSpriteY;
             this.mapObj = mapObj;
         }
         ;
-        return InvObj;
+        return InvObjDefinition;
     }());
-    Lich.InvObj = InvObj;
-    /**
-     * Provazovací registr -- utilita
-     */
-    var MapObjRegister = (function () {
-        function MapObjRegister() {
-            this.byIndex = [];
-            this.byKey = {};
-        }
-        ;
-        MapObjRegister.prototype.register = function (key, item) {
-            var index = this.byIndex.length;
-            this.byKey[key] = index;
-            this.byIndex.push(item);
-            return index;
-        };
-        ;
-        MapObjRegister.prototype.getByIndex = function (index) {
-            return this.byIndex[index];
-        };
-        ;
-        MapObjRegister.prototype.getByKey = function (key) {
-            return this.byIndex[this.byKey[key]];
-        };
-        ;
-        return MapObjRegister;
-    }());
-    Lich.MapObjRegister = MapObjRegister;
-    ;
+    Lich.InvObjDefinition = InvObjDefinition;
 })(Lich || (Lich = {}));

@@ -47,7 +47,7 @@ var Lich;
             // souřadnice aktuálního sektorového "okna"
             this.currentStartSecX = null;
             this.currentStartSecY = null;
-            this.sectorsToUpdate = [];
+            this.sectorsToUpdate = new Array();
             // Mapa sektorů
             this.sectorsMap = new Array();
             // Globální mapa dílků
@@ -491,7 +491,6 @@ var Lich;
                 }
             }
         };
-        // TODO IN DEV
         Render.prototype.place = function (x, y, item) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
@@ -499,14 +498,26 @@ var Lich;
             var ry = Lich.Utils.even(coord.y);
             // pokud je místo prázdné a bez objektu (a je co vkládat
             if (item !== null && self.tilesMap.valueAt(rx, ry) === Lich.Resources.VOID && Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
-                // TODO je potřeba vyřešit jak provázat objekty z mapy na objekty v inventáři a zpět
-                // ukázkový problém je strom, který se stává dřevem, které se zpátky nedá umístit jako 
-                // strom, ale jako dřevěná stěna
-                var object = Lich.Resources.dirtObjects[2];
-                if (typeof object !== "undefined") {
-                    Lich.MapTools.writeObjectRecord(self.tilesMap, rx, ry, object);
-                    // TODO ... tohle nestačí
-                    // self.createObject(object.objIndex);
+                var object = Lich.Resources.invObjects[item];
+                var sector = self.getSectorByTiles(rx, ry);
+                if (typeof object !== "undefined" && object.mapObj != null) {
+                    // musí se posunout dolů o object.mapObj.mapSpriteHeight,
+                    // protože objekty se počítají počátkem levého SPODNÍHO rohu 
+                    Lich.MapTools.writeObjectRecord(self.tilesMap, rx, ry + object.mapObj.mapSpriteHeight, object.mapObj);
+                    // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
+                    for (var tx = 0; tx < 2; tx++) {
+                        for (var ty = 0; ty < 2; ty++) {
+                            var partsSheetIndex = Lich.MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
+                            var tile = self.createObject(partsSheetIndex);
+                            // přidej dílek do sektoru
+                            sector.addChild(tile);
+                            tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
+                            tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
+                            // Přidej objekt do globální mapy objektů
+                            Lich.Utils.set2D(self.sceneObjectsMap, rx + tx, ry + ty, tile);
+                        }
+                    }
+                    self.markSector(sector);
                     return true;
                 }
             }

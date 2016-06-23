@@ -138,7 +138,8 @@ namespace Lich {
             /* Enemies */
             /*---------*/
             self.enemies = new Array<Enemy>();
-            for (var i = 0; i < 50; i++) {
+            var numberOfEnemies = 1;
+            for (var i = 0; i < numberOfEnemies; i++) {
                 var enemy = new Enemy(game);
                 self.enemies.push(enemy);
                 self.addChild(enemy);
@@ -746,7 +747,7 @@ namespace Lich {
             Mixer.play(Resources.SND_FIREBALL_KEY);
         };
 
-        handleMouse(mouse, delta) {
+        handleMouse(mouse: Mouse, delta: number) {
             var self = this;
             self.spellTime -= delta;
             if (self.spellTime <= 0 && (mouse.down || mouse.click)) {

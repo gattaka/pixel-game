@@ -40,41 +40,12 @@ namespace Lich {
     /**
      * 2. Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
-    export class InvObj {
+    export class InvObjDefinition {
         constructor(
             public invKey: string,
-            public invSpriteWidth: number,
-            public invSpriteHeight: number,
-            public invSpriteX: number,
-            public invSpriteY: number,
             // je možné tento INV objekt znovu umístit (dřevo -> dřevěná zeď) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             public mapObj: MapObjDefinition = null) { };
     }
-
-    /**
-     * Provazovací registr -- utilita
-     */
-    export class MapObjRegister {
-        byIndex = [];
-        byKey = {};
-
-        constructor() { };
-
-        register(key, item) {
-            var index = this.byIndex.length;
-            this.byKey[key] = index;
-            this.byIndex.push(item);
-            return index;
-        };
-
-        getByIndex(index) {
-            return this.byIndex[index];
-        };
-
-        getByKey(key) {
-            return this.byIndex[this.byKey[key]];
-        };
-    };
 
 }

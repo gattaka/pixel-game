@@ -109,7 +109,8 @@ var Lich;
             /* Enemies */
             /*---------*/
             self.enemies = new Array();
-            for (var i = 0; i < 50; i++) {
+            var numberOfEnemies = 1;
+            for (var i = 0; i < numberOfEnemies; i++) {
                 var enemy = new Lich.Enemy(game);
                 self.enemies.push(enemy);
                 self.addChild(enemy);

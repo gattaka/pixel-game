@@ -37,8 +37,6 @@ namespace Lich {
         constructor(
             // linearizovaný předpis rozmístění povrchu světa
             public mapRecord: Array<number>,
-            // linearizovaný předpis rozmístění objektů na mapě
-            public mapObjectsRecords: Array<MapObjectRecord>,
             // 2D pole dílků objektů na mapě
             public mapObjectsTiles: Array<Array<MapObjectTile>>,
             // Šířka a výška mapy
