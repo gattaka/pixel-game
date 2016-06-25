@@ -36,6 +36,7 @@ var Lich;
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
                 new Load("images/effects/blast_animation.png", Resources.BLAST_ANIMATION_KEY),
                 new Load("images/tiles/tiles.png", Resources.TILES_KEY),
+                new Load("images/tiles/woodwall.png", Resources.TILES_WOODWALL_KEY),
                 new Load("images/parts/parts.png", Resources.MAP_PARTS_KEY),
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
@@ -136,6 +137,7 @@ var Lich;
         Resources.OUTLINE_COLOR = "#000";
         Resources.TEXT_COLOR = "#FF0";
         Resources.DEBUG_TEXT_COLOR = "#FF0";
+        Resources.REACH_TILES_RADIUS = 6;
         /*
          * Přepínače
          */
@@ -194,6 +196,7 @@ var Lich;
         Resources.CORPSE_ANIMATION_KEY = "CORPSE_ANIMATION_KEY";
         // tiles
         Resources.TILES_KEY = "TILES_KEY";
+        Resources.TILES_WOODWALL_KEY = "TILES_WOODWALL_KEY";
         // inv items
         Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
         Resources.INV_STRAW_KEY = "INV_STRAW_KEY";

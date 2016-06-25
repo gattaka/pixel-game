@@ -583,6 +583,15 @@ var Lich;
                 y: tileY
             };
         };
+        Render.prototype.pixelsToEvenTiles = function (x, y) {
+            var self = this;
+            var tileX = Lich.Utils.even(Math.ceil((x - self.screenOffsetX) / Lich.Resources.TILE_SIZE) - 1);
+            var tileY = Lich.Utils.even(Math.ceil((y - self.screenOffsetY) / Lich.Resources.TILE_SIZE) - 1);
+            return {
+                x: tileX,
+                y: tileY
+            };
+        };
         Render.prototype.tilesToPixel = function (x, y) {
             var self = this;
             var screenX = x * Lich.Resources.TILE_SIZE + self.screenOffsetX;

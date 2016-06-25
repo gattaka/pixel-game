@@ -1,23 +1,27 @@
 namespace Lich {
     export class Utils {
 
-        static sign(value: number) {
+        static distance(x1: number, y1: number, x2: number, y2: number): number {
+            return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+        }
+
+        static sign(value: number): number {
             return value < 0 ? -1 : 1;
         }
 
-        static floor(value: number) {
+        static floor(value: number): number {
             return value < 0 ? Math.ceil(value) : Math.floor(value);
         }
 
-        static ceil(value: number) {
+        static ceil(value: number): number {
             return value < 0 ? Math.floor(value) : Math.ceil(value);
         }
 
-        static isEven(value: number) {
+        static isEven(value: number): boolean {
             return value % 2 == 0;
         }
 
-        static even(value: number) {
+        static even(value: number): number {
             return Utils.isEven(value) ? value : value - 1;
         }
 

@@ -726,6 +726,16 @@ namespace Lich {
                 y: tileY
             };
         }
+        
+        pixelsToEvenTiles(x: number, y: number) {
+            var self = this;
+            var tileX = Utils.even(Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1);
+            var tileY = Utils.even(Math.ceil((y - self.screenOffsetY) / Resources.TILE_SIZE) - 1);
+            return {
+                x: tileX,
+                y: tileY
+            };
+        }
 
         tilesToPixel(x: number, y: number) {
             var self = this;

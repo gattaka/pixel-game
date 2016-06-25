@@ -124,7 +124,7 @@ namespace Lich {
             self.hero = new Hero(game);
 
             // hudba
-            Mixer.play(Resources.MSC_BUILD_THEME_KEY, true);
+            Mixer.play(Resources.MSC_DIRT_THEME_KEY, true);
 
             /*------------*/
             /* Characters */
@@ -765,15 +765,35 @@ namespace Lich {
             if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
                 mouse.click = false;
 
-                if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_DIG_KEY) {
-                    if (self.render.dig(mouse.x, mouse.y)) {
-                        Mixer.play(Resources["SND_PICK_AXE_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
+                // dosahem omezené akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
+                // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
+                // změna projeví i na pixel místech, kde už je například kolize
+                var hero = self.hero;
+                var heroCoordTL = self.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.collYOffset);
+                var heroCoordTR = self.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.collYOffset);
+                var heroCoordBR = self.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.height - hero.collYOffset);
+                var heroCoordBL = self.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.height - hero.collYOffset);
+                var mouseCoord = self.render.pixelsToEvenTiles(mouse.x, mouse.y);
+                // kontroluj rádius od každého rohu
+                if (Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTL.x, heroCoordTL.y) < Resources.REACH_TILES_RADIUS
+                    || Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTR.x, heroCoordTR.y) < Resources.REACH_TILES_RADIUS
+                    || Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBR.x, heroCoordBR.y) < Resources.REACH_TILES_RADIUS
+                    || Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBL.x, heroCoordBL.y) < Resources.REACH_TILES_RADIUS) {
+                    if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_DIG_KEY) {
+                        if (self.render.dig(mouse.x, mouse.y)) {
+                            Mixer.play(Resources["SND_PICK_AXE_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
+                        }
+                    } else if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_PLACE_KEY) {
+                        // nemůžu pokládat do prostoru, kde stojím
+                        if ((mouseCoord.x > heroCoordBR.x || mouseCoord.x < heroCoordTL.x ||
+                            mouseCoord.y > heroCoordBR.y || mouseCoord.y < heroCoordTL.y) &&
+                            self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
+                            Mixer.play(Resources.SND_PLACE_KEY);
+                        }
                     }
-                } else if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_PLACE_KEY) {
-                    if (self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
-                        Mixer.play(Resources.SND_PLACE_KEY);
-                    }
-                } else if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_FIREBALL_KEY) {
+                }
+                // dosahem neomezené akce
+                if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_FIREBALL_KEY) {
                     self.spell(mouse.x, mouse.y);
                 }
 
