@@ -84,7 +84,7 @@ namespace Lich {
         static CORPSE_ANIMATION_KEY = "CORPSE_ANIMATION_KEY";
 
         // tiles
-        static TILES_KEY = "TILES_KEY";
+        static TILES_DIRT_KEY = "TILES_KEY";
         static TILES_WOODWALL_KEY = "TILES_WOODWALL_KEY";
 
         // inv items
@@ -188,10 +188,15 @@ namespace Lich {
         constructor(game, callback?) {
 
             var self = this;
-            var imgManifest = [
+            var manifest = [
+                /**
+                 * IMAGES  
+                 */
+                // spells
                 new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
+                // inventory
                 new Load("images/ui/inventory/inv_berry.png", Resources.INV_BERRY_KEY),
                 new Load("images/ui/inventory/inv_mushroom.png", Resources.INV_MUSHROOM_KEY),
                 new Load("images/ui/inventory/inv_mushroom2.png", Resources.INV_MUSHROOM2_KEY),
@@ -202,11 +207,15 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_plant4.png", Resources.INV_PLANT4_KEY),
                 new Load("images/ui/inventory/inv_straw.png", Resources.INV_STRAW_KEY),
                 new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
+                // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
+                // gfx animations
                 new Load("images/effects/blast_animation.png", Resources.BLAST_ANIMATION_KEY),
-                new Load("images/tiles/tiles.png", Resources.TILES_KEY),
+                // tiles
+                new Load("images/tiles/dirt.png", Resources.TILES_DIRT_KEY),
                 new Load("images/tiles/woodwall.png", Resources.TILES_WOODWALL_KEY),
+                // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
                 new Load("images/parts/bush2.png", Resources.MAP_BUSH2_KEY),
@@ -223,11 +232,14 @@ namespace Lich {
                 new Load("images/parts/plant4.png", Resources.MAP_PLANT4_KEY),
                 new Load("images/parts/tree.png", Resources.MAP_TREE_KEY),
                 new Load("images/parts/tree2.png", Resources.MAP_TREE2_KEY),
+                // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
-                new Load("images/armour/helmet.png", Resources.HELMET_KEY),
-                new Load("images/armour/torso.png", Resources.TORSO_KEY),
-                new Load("images/armour/gauntlet.png", Resources.GAUNTLET_KEY),
+                // armor
+                new Load("images/armor/helmet.png", Resources.HELMET_KEY),
+                new Load("images/armor/torso.png", Resources.TORSO_KEY),
+                new Load("images/armor/gauntlet.png", Resources.GAUNTLET_KEY),
+                // background
                 new Load("images/background/sky.png", Resources.SKY_KEY),
                 new Load("images/background/far_mountain.png", Resources.FAR_MOUNTAIN_KEY),
                 new Load("images/background/mountain.png", Resources.MOUNTAIN_KEY),
@@ -235,6 +247,11 @@ namespace Lich {
                 new Load("images/background/woodland.png", Resources.HILL_KEY),
                 new Load("images/background/dirt_back.png", Resources.DIRTBACK_KEY),
                 new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
+                new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
+                /**
+                 * SOUNDS AND MUSIC
+                 */
+                // sounds
                 new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", Resources.SND_FIREBALL_KEY),
                 new Load("sound/113111__satrebor__pick.ogg", Resources.SND_PICK_KEY),
                 new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", Resources.SND_BURN_KEY),
@@ -244,13 +261,14 @@ namespace Lich {
                 new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
                 new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
                 new Load("sound/skeleton_die.ogg", Resources.SND_SKELETON_DIE_KEY),
+                // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
             ];
 
             (function() {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                    imgManifest.push({
+                    manifest.push({
                         src: "images/background/cloud" + i + ".png",
                         id: Resources.CLOUD_KEY + i
                     });
@@ -291,7 +309,7 @@ namespace Lich {
                     callback();
                 }
             });
-            self.loader.loadManifest(imgManifest, true);
+            self.loader.loadManifest(manifest, true);
 
         };
 

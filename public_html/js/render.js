@@ -204,7 +204,7 @@ var Lich;
         };
         Render.prototype.createTile = function (v) {
             var self = this;
-            var tile = self.game.resources.getBitmap(Lich.Resources.TILES_KEY);
+            var tile = self.game.resources.getBitmap(Lich.Resources.TILES_DIRT_KEY);
             var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);

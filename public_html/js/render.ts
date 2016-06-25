@@ -268,7 +268,7 @@ namespace Lich {
 
         createTile(v: number) {
             var self = this;
-            var tile = self.game.resources.getBitmap(Resources.TILES_KEY);
+            var tile = self.game.resources.getBitmap(Resources.TILES_DIRT_KEY);
             var tileCols = tile.image.width / Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(
