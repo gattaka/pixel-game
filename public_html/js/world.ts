@@ -170,7 +170,7 @@ namespace Lich {
             /*------------*/
             /* Dig events */
             /*------------*/
-            var digListener = function(objType: Diggable, x:number, y:number) {
+            var digListener = function(objType: Diggable, x: number, y: number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
 
@@ -780,10 +780,12 @@ namespace Lich {
                         }
                     } else if (self.game.ui.spellsUI.choosenItem === Resources.SPELL_PLACE_KEY) {
                         // nemůžu pokládat do prostoru, kde stojím
+                        var uiItem = self.game.ui.inventoryUI.choosenItem;
                         if ((mouseCoord.x > heroCoordBR.x || mouseCoord.x < heroCoordTL.x ||
                             mouseCoord.y > heroCoordBR.y || mouseCoord.y < heroCoordTL.y) &&
-                            self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
+                            self.render.place(mouse.x, mouse.y, uiItem)) {
                             Mixer.play(Resources.SND_PLACE_KEY);
+                            self.game.ui.inventoryUI.decrease(uiItem, 1);
                         }
                     }
                 }

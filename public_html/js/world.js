@@ -651,10 +651,12 @@ var Lich;
                     }
                     else if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_PLACE_KEY) {
                         // nemůžu pokládat do prostoru, kde stojím
+                        var uiItem = self.game.ui.inventoryUI.choosenItem;
                         if ((mouseCoord.x > heroCoordBR.x || mouseCoord.x < heroCoordTL.x ||
                             mouseCoord.y > heroCoordBR.y || mouseCoord.y < heroCoordTL.y) &&
-                            self.render.place(mouse.x, mouse.y, self.game.ui.inventoryUI.choosenItem)) {
+                            self.render.place(mouse.x, mouse.y, uiItem)) {
                             Lich.Mixer.play(Lich.Resources.SND_PLACE_KEY);
+                            self.game.ui.inventoryUI.decrease(uiItem, 1);
                         }
                     }
                 }

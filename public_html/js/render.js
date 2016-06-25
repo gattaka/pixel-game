@@ -593,6 +593,7 @@ var Lich;
                         // jde o povrch 
                         var surtIndx = Lich.Resources.surfaceIndex;
                         this.placeGround(rx, ry, object.mapSurface.mapKey);
+                        return true;
                     }
                 }
             }

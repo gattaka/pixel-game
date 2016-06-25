@@ -92,6 +92,17 @@ var Lich;
         InventoryUI.prototype.prepareForToggleInv = function () {
             this.toggleFlag = true;
         };
+        InventoryUI.prototype.decrease = function (item, quant) {
+            var self = this;
+            // zkus zvýšit počet
+            for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
+                if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
+                    self.invContent[i].quant -= quant;
+                    self.invContent[i].count.text = self.invContent[i].quant;
+                    return; // hotovo
+                }
+            }
+        };
         InventoryUI.prototype.invInsert = function (item, quant) {
             var self = this;
             // zkus zvýšit počet
@@ -109,7 +120,7 @@ var Lich;
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new createjs.Text(quant, InventoryUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
+                    var text = new createjs.Text("" + quant, InventoryUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Lich.Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;

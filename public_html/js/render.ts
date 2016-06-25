@@ -736,6 +736,7 @@ namespace Lich {
                         // jde o povrch 
                         var surtIndx = Resources.surfaceIndex;
                         this.placeGround(rx, ry, object.mapSurface.mapKey);
+                        return true;
                     }
                 }
             }

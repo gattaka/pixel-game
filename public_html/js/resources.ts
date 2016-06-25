@@ -167,7 +167,10 @@ namespace Lich {
                 Resources.invObjectsDefs[invObj.invKey] = invObj;
             };
 
+            // do povrchů
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
+            // do objektů
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
 
             // Definice indexových počátků pro typy povrchu

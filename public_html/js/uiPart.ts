@@ -114,7 +114,19 @@ namespace Lich {
             this.toggleFlag = true;
         }
 
-        invInsert(item: string, quant) {
+        decrease(item: string, quant: number) {
+            var self = this;
+            // TODO v případě 0 odebrat
+            for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
+                if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
+                    self.invContent[i].quant -= quant;
+                    self.invContent[i].count.text = self.invContent[i].quant;
+                    return; // hotovo
+                }
+            }
+        }
+
+        invInsert(item: string, quant: number) {
             var self = this;
             // zkus zvýšit počet
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
@@ -131,7 +143,7 @@ namespace Lich {
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new createjs.Text(quant, InventoryUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR);
+                    var text = new createjs.Text("" + quant, InventoryUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;

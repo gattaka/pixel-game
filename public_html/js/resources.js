@@ -295,7 +295,10 @@ var Lich;
             var putIntoInvObjectsDefs = function (invObj) {
                 Resources.invObjectsDefs[invObj.invKey] = invObj;
             };
+            // do povrchů
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
+            // do objektů
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
             // Definice indexových počátků pro typy povrchu
             Resources.surfaceIndex.insert(Resources.SRFC_DIRT_KEY);
