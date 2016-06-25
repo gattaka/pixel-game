@@ -267,9 +267,8 @@ namespace Lich {
 
         }
 
-        createTile(v: number) {
-            var self = this;
-            var tile = self.game.resources.getBitmap(Resources.SRFC_DIRT_KEY);
+        setSourceRect(tile: createjs.Bitmap, positionIndex: number) {
+            var v = Resources.surfaceIndex.getPosition(positionIndex);
             var tileCols = tile.image.width / Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(
@@ -278,6 +277,13 @@ namespace Lich {
                 Resources.TILE_SIZE,
                 Resources.TILE_SIZE
             );
+        }
+
+        createTile(positionIndex: number) {
+            var self = this;
+            var surfaceType = Resources.surfaceIndex.getSurfaceType(positionIndex);
+            var tile = self.game.resources.getBitmap(surfaceType);
+            this.setSourceRect(tile, positionIndex);
             return tile;
         }
 
@@ -535,6 +541,12 @@ namespace Lich {
                 }
             })();
 
+            this.mapReshape(tilesToReset);
+
+        }
+
+        mapReshape(tilesToReset: Array<[number, number]>) {
+            var self = this;
 
             // Přegeneruj hrany
             (function() {
@@ -563,17 +575,10 @@ namespace Lich {
                     var tile = Utils.get2D(self.sceneTilesMap, x, y);
                     if (tile !== null) {
                         var v = self.tilesMap.valueAt(x, y);
-                        var tileCols = tile.image.width / Resources.TILE_SIZE;
-                        tile.sourceRect = new createjs.Rectangle(
-                            ((v - 1) % tileCols) * Resources.TILE_SIZE,
-                            Math.floor((v - 1) / tileCols) * Resources.TILE_SIZE,
-                            Resources.TILE_SIZE,
-                            Resources.TILE_SIZE
-                        );
+                        self.setSourceRect(tile, v);
                     }
                 });
             })();
-
         }
 
         tryDigObject(rx, ry) {
@@ -653,7 +658,7 @@ namespace Lich {
                             // pokud jsem vnitřní část výběru, vytvoř nové dílky
                             else {
                                 var pos = MapTools.getPositionByCoord(x, y);
-                                var posIndex = Resources.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos);
+                                var posIndex = Resources.surfaceIndex.getPositionIndex(surfaceType, pos);
                                 self.tilesMap.mapRecord[index] = posIndex;
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);
@@ -681,44 +686,7 @@ namespace Lich {
                 }
             })();
 
-
-            // Přegeneruj hrany
-            (function() {
-                tilesToReset.forEach(function(item) {
-                    var x = item[0];
-                    var y = item[1];
-                    MapTools.generateEdge(self.tilesMap, x, y);
-                });
-            })();
-
-            // Přegeneruj rohy
-            (function() {
-                tilesToReset.forEach(function(item) {
-                    var x = item[0];
-                    var y = item[1];
-                    MapTools.generateCorner(self.tilesMap, x, y);
-                });
-            })();
-
-            // Překresli dílky
-            (function() {
-                tilesToReset.forEach(function(item) {
-                    var x = item[0];
-                    var y = item[1];
-                    // pokud už je alokován dílek na obrazovce, rovnou ho uprav
-                    var tile = Utils.get2D(self.sceneTilesMap, x, y);
-                    if (tile !== null) {
-                        var v = self.tilesMap.valueAt(x, y);
-                        var tileCols = tile.image.width / Resources.TILE_SIZE;
-                        tile.sourceRect = new createjs.Rectangle(
-                            ((v - 1) % tileCols) * Resources.TILE_SIZE,
-                            Math.floor((v - 1) / tileCols) * Resources.TILE_SIZE,
-                            Resources.TILE_SIZE,
-                            Resources.TILE_SIZE
-                        );
-                    }
-                });
-            })();
+            this.mapReshape(tilesToReset);
 
         }
 

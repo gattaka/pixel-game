@@ -30,9 +30,9 @@ var Lich;
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu
          */
         SurfaceIndex.prototype.isPosition = function (index, positionKey) {
-            return this.reduceIndex(index) == SurfaceIndex.positions[positionKey];
+            return this.getPosition(index) == SurfaceIndex.positions[positionKey];
         };
-        SurfaceIndex.prototype.reduceIndex = function (index) {
+        SurfaceIndex.prototype.getPosition = function (index) {
             // Kvůli tomu, že VOID zabírá 0. pozici, je potřeba tady pro modulo dočasně posunout škálu
             // 1  ->  0 % 23 ->  0 + 1 ->  1
             // 23 -> 22 % 23 -> 22 + 1 -> 23
@@ -43,7 +43,7 @@ var Lich;
          * Zjistí, zda index je nekrajovou instancí nějakého typu povrchu
          */
         SurfaceIndex.prototype.isMiddlePosition = function (index) {
-            var reducedIndex = this.reduceIndex(index);
+            var reducedIndex = this.getPosition(index);
             return reducedIndex == SurfaceIndex.positions[SurfaceIndex.M1]
                 || reducedIndex == SurfaceIndex.positions[SurfaceIndex.M2]
                 || reducedIndex == SurfaceIndex.positions[SurfaceIndex.M3]

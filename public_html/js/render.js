@@ -203,12 +203,17 @@ var Lich;
             if (y > self.mapUpdateRegion.toY || self.mapUpdateRegion.toY === -1)
                 self.mapUpdateRegion.toY = y;
         };
-        Render.prototype.createTile = function (v) {
-            var self = this;
-            var tile = self.game.resources.getBitmap(Lich.Resources.SRFC_DIRT_KEY);
+        Render.prototype.setSourceRect = function (tile, positionIndex) {
+            var v = Lich.Resources.surfaceIndex.getPosition(positionIndex);
             var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
+        };
+        Render.prototype.createTile = function (positionIndex) {
+            var self = this;
+            var surfaceType = Lich.Resources.surfaceIndex.getSurfaceType(positionIndex);
+            var tile = self.game.resources.getBitmap(surfaceType);
+            this.setSourceRect(tile, positionIndex);
             return tile;
         };
         Render.prototype.createObject = function (objectKey, index) {
@@ -422,6 +427,10 @@ var Lich;
                     }
                 }
             })();
+            this.mapReshape(tilesToReset);
+        };
+        Render.prototype.mapReshape = function (tilesToReset) {
+            var self = this;
             // Přegeneruj hrany
             (function () {
                 tilesToReset.forEach(function (item) {
@@ -447,8 +456,7 @@ var Lich;
                     var tile = Lich.Utils.get2D(self.sceneTilesMap, x, y);
                     if (tile !== null) {
                         var v = self.tilesMap.valueAt(x, y);
-                        var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
-                        tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
+                        self.setSourceRect(tile, v);
                     }
                 });
             })();
@@ -517,7 +525,7 @@ var Lich;
                             }
                             else {
                                 var pos = Lich.MapTools.getPositionByCoord(x, y);
-                                var posIndex = Lich.Resources.surfaceIndex.getPositionIndex(Lich.Resources.SRFC_DIRT_KEY, pos);
+                                var posIndex = Lich.Resources.surfaceIndex.getPositionIndex(surfaceType, pos);
                                 self.tilesMap.mapRecord[index] = posIndex;
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);
@@ -540,36 +548,7 @@ var Lich;
                     }
                 }
             })();
-            // Přegeneruj hrany
-            (function () {
-                tilesToReset.forEach(function (item) {
-                    var x = item[0];
-                    var y = item[1];
-                    Lich.MapTools.generateEdge(self.tilesMap, x, y);
-                });
-            })();
-            // Přegeneruj rohy
-            (function () {
-                tilesToReset.forEach(function (item) {
-                    var x = item[0];
-                    var y = item[1];
-                    Lich.MapTools.generateCorner(self.tilesMap, x, y);
-                });
-            })();
-            // Překresli dílky
-            (function () {
-                tilesToReset.forEach(function (item) {
-                    var x = item[0];
-                    var y = item[1];
-                    // pokud už je alokován dílek na obrazovce, rovnou ho uprav
-                    var tile = Lich.Utils.get2D(self.sceneTilesMap, x, y);
-                    if (tile !== null) {
-                        var v = self.tilesMap.valueAt(x, y);
-                        var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
-                        tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
-                    }
-                });
-            })();
+            this.mapReshape(tilesToReset);
         };
         /**
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true,

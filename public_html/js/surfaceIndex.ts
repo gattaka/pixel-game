@@ -92,15 +92,15 @@ namespace Lich {
         getPositionIndex(key: string, positionKey: string): number {
             return this.surfaceTypes[key] * SurfaceIndex.OPTIONS_COUNT + SurfaceIndex.positions[positionKey];
         }
-
+        
         /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu 
          */
         isPosition(index: number, positionKey: string) {
-            return this.reduceIndex(index) == SurfaceIndex.positions[positionKey];
+            return this.getPosition(index) == SurfaceIndex.positions[positionKey];
         }
 
-        private reduceIndex(index: number): number {
+        getPosition(index: number): number {
             // Kvůli tomu, že VOID zabírá 0. pozici, je potřeba tady pro modulo dočasně posunout škálu
             // 1  ->  0 % 23 ->  0 + 1 ->  1
             // 23 -> 22 % 23 -> 22 + 1 -> 23
@@ -112,7 +112,7 @@ namespace Lich {
          * Zjistí, zda index je nekrajovou instancí nějakého typu povrchu 
          */
         isMiddlePosition(index: number) {
-            var reducedIndex = this.reduceIndex(index);
+            var reducedIndex = this.getPosition(index);
             return reducedIndex == SurfaceIndex.positions[SurfaceIndex.M1]
                 || reducedIndex == SurfaceIndex.positions[SurfaceIndex.M2]
                 || reducedIndex == SurfaceIndex.positions[SurfaceIndex.M3]
