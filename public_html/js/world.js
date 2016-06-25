@@ -136,7 +136,7 @@ var Lich;
             /*------------*/
             /* Dig events */
             /*------------*/
-            self.render.addOnDigObjectListener(function (objType, x, y) {
+            var digListener = function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
                         var image = game.resources.getImage(objType.item.invObj);
@@ -164,7 +164,9 @@ var Lich;
                         self.addChild(object);
                     }
                 }
-            });
+            };
+            self.render.addOnDigSurfaceListener(digListener);
+            self.render.addOnDigObjectListener(digListener);
             console.log("earth ready");
         }
         World.prototype.updateBullet = function (sDelta, object, makeShiftX, makeShiftY, onCollision) {

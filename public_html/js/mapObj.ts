@@ -7,6 +7,22 @@
 namespace Lich {
 
     /**
+     * Společný předek pro "dolovatelné" věci
+     */
+    export abstract class Diggable {
+        public item: MapObjItem;
+        constructor(
+            // klíč
+            public mapKey: string,
+            // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
+            public invObj: string,
+            // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
+            public quant: number) {
+            this.item = new MapObjItem(invObj, quant);
+        }
+    }
+
+    /**
      * Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
     export class InvObjDefinition {
@@ -16,7 +32,7 @@ namespace Lich {
         // je možné tento INV objekt znovu umístit (kameny -> zeď) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapSurface: MapSurfaceDefinition = null;
-        constructor(public invKey: string, target: MapObjDefinition | MapSurfaceDefinition) {
+        constructor(public invKey: string, target: Diggable) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
             }
@@ -47,8 +63,7 @@ namespace Lich {
     /**
      * 1. Objekty, které jsou na mapě
      */
-    export class MapObjDefinition {
-        item: MapObjItem;
+    export class MapObjDefinition extends Diggable {
         constructor(
             // údaje o objektu na mapě
             public mapKey: string,
@@ -60,7 +75,7 @@ namespace Lich {
             public quant: number,
             // jak často takový objekt v mapě je 
             public freq: number) {
-            this.item = new MapObjItem(invObj, quant);
+            super(mapKey, invObj, quant);
         }
     }
 
@@ -84,8 +99,7 @@ namespace Lich {
     /**
      * 1. Povrchy, které jsou na mapě
      */
-    export class MapSurfaceDefinition {
-        item: MapSurfaceItem;
+    export class MapSurfaceDefinition extends Diggable {
         constructor(
             // údaje o povrchu na mapě
             public mapKey: string,
@@ -93,7 +107,7 @@ namespace Lich {
             public invObj: string,
             // kolik INV objektů vznikne po vytěření
             public quant: number) {
-            this.item = new MapSurfaceItem(invObj, quant);
+            super(mapKey, invObj, quant);
         }
     }
 

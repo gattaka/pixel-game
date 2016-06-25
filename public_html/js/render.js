@@ -41,8 +41,8 @@ var Lich;
             /**
              * VAR
              */
-            this.onDigObjectListeners = [];
-            this.onDigSurfaceListeners = [];
+            this.onDigObjectListeners = new Array();
+            this.onDigSurfaceListeners = new Array();
             this.screenOffsetX = 0;
             this.screenOffsetY = 0;
             // souřadnice aktuálního sektorového "okna"
@@ -375,9 +375,11 @@ var Lich;
         Render.prototype.digGround = function (rx, ry) {
             var self = this;
             var tilesToReset = [];
-            var dugIndex = self.tilesMap.indexAt(rx, ry);
+            var dugIndex = self.tilesMap.valueAt(rx, ry);
+            var surfaceType = Lich.Resources.surfaceIndex.getSurfaceType(dugIndex);
+            var objType = Lich.Resources.mapSurfacesDefs[surfaceType];
             self.onDigSurfaceListeners.forEach(function (fce) {
-                fce(dugIndex, rx, ry);
+                fce(objType, rx, ry);
             });
             (function () {
                 for (var x = rx - 1; x <= rx + 2; x++) {

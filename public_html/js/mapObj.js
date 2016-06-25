@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /**
  * Povrchy a objekty.
  *
@@ -6,6 +11,25 @@
  */
 var Lich;
 (function (Lich) {
+    /**
+     * Společný předek pro "dolovatelné" věci
+     */
+    var Diggable = (function () {
+        function Diggable(
+            // klíč
+            mapKey, 
+            // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
+            invObj, 
+            // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
+            quant) {
+            this.mapKey = mapKey;
+            this.invObj = invObj;
+            this.quant = quant;
+            this.item = new MapObjItem(invObj, quant);
+        }
+        return Diggable;
+    }());
+    Lich.Diggable = Diggable;
     /**
      * Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
@@ -53,7 +77,8 @@ var Lich;
     /**
      * 1. Objekty, které jsou na mapě
      */
-    var MapObjDefinition = (function () {
+    var MapObjDefinition = (function (_super) {
+        __extends(MapObjDefinition, _super);
         function MapObjDefinition(
             // údaje o objektu na mapě
             mapKey, mapSpriteWidth, mapSpriteHeight, 
@@ -63,16 +88,16 @@ var Lich;
             quant, 
             // jak často takový objekt v mapě je 
             freq) {
+            _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.mapSpriteWidth = mapSpriteWidth;
             this.mapSpriteHeight = mapSpriteHeight;
             this.invObj = invObj;
             this.quant = quant;
             this.freq = freq;
-            this.item = new MapObjItem(invObj, quant);
         }
         return MapObjDefinition;
-    }());
+    }(Diggable));
     Lich.MapObjDefinition = MapObjDefinition;
     /**
      * Povrchy jsou ve 4 formách:
@@ -98,7 +123,8 @@ var Lich;
     /**
      * 1. Povrchy, které jsou na mapě
      */
-    var MapSurfaceDefinition = (function () {
+    var MapSurfaceDefinition = (function (_super) {
+        __extends(MapSurfaceDefinition, _super);
         function MapSurfaceDefinition(
             // údaje o povrchu na mapě
             mapKey, 
@@ -106,12 +132,12 @@ var Lich;
             invObj, 
             // kolik INV objektů vznikne po vytěření
             quant) {
+            _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.invObj = invObj;
             this.quant = quant;
-            this.item = new MapSurfaceItem(invObj, quant);
         }
         return MapSurfaceDefinition;
-    }());
+    }(Diggable));
     Lich.MapSurfaceDefinition = MapSurfaceDefinition;
 })(Lich || (Lich = {}));

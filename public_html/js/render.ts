@@ -58,8 +58,8 @@ namespace Lich {
          * VAR
          */
 
-        onDigObjectListeners = [];
-        onDigSurfaceListeners = [];
+        onDigObjectListeners = new Array<(objType: Diggable, x: number, y: number) => any>();
+        onDigSurfaceListeners = new Array<(objType: Diggable, x: number, y: number) => any>();
 
         screenOffsetX = 0;
         screenOffsetY = 0;
@@ -476,10 +476,12 @@ namespace Lich {
             var self = this;
             var tilesToReset = [];
 
-            var dugIndex = self.tilesMap.indexAt(rx, ry);
+            var dugIndex = self.tilesMap.valueAt(rx, ry);
+            var surfaceType = Resources.surfaceIndex.getSurfaceType(dugIndex);
+            var objType: Diggable = Resources.mapSurfacesDefs[surfaceType];
 
             self.onDigSurfaceListeners.forEach(function(fce) {
-                fce(dugIndex, rx, ry);
+                fce(objType, rx, ry);
             });
 
             (function() {
@@ -585,7 +587,7 @@ namespace Lich {
             var self = this;
             var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry);
             if (objectElement !== null) {
-                var objType = Resources.mapObjectsDefs[objectElement.mapKey];
+                var objType: MapObjDefinition = Resources.mapObjectsDefs[objectElement.mapKey];
                 var objWidth = objType.mapSpriteWidth;
                 var objHeight = objType.mapSpriteHeight;
                 // relativní pozice dílku v sheetu (od počátku sprite)
@@ -781,12 +783,12 @@ namespace Lich {
             self.updateMinimap(self.mapUpdateRegion);
         }
 
-        addOnDigObjectListener(f) {
+        addOnDigObjectListener(f: (objType: Diggable, x: number, y: number) => any) {
             var self = this;
             self.onDigObjectListeners.push(f);
         }
 
-        addOnDigSurfaceListener(f) {
+        addOnDigSurfaceListener(f: (objType: Diggable, x: number, y: number) => any) {
             var self = this;
             self.onDigSurfaceListeners.push(f);
         }

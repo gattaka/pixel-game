@@ -170,7 +170,7 @@ namespace Lich {
             /*------------*/
             /* Dig events */
             /*------------*/
-            self.render.addOnDigObjectListener(function(objType: MapObjDefinition, x, y) {
+            var digListener = function(objType: Diggable, x:number, y:number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
 
@@ -209,7 +209,9 @@ namespace Lich {
                         self.addChild(object);
                     }
                 }
-            });
+            };
+            self.render.addOnDigSurfaceListener(digListener);
+            self.render.addOnDigObjectListener(digListener);
 
             console.log("earth ready");
         }
