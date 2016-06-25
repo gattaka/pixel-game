@@ -16,11 +16,43 @@ var Lich;
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     if (y < Map.MAP_GROUND_LEVEL) {
-                        tilesMap.mapRecord.push(Lich.Resources.VOID);
+                        tilesMap.mapRecord.push(Lich.SurfaceIndex.VOID);
                     }
                     else {
                         var m = x % 3 + 1 + ((y % 3) * 3);
-                        tilesMap.mapRecord.push(Lich.Resources.DIRT["M" + m]);
+                        var pos;
+                        switch (m) {
+                            // je to schválně switchem, aby byla zachována
+                            // compile-time kontrola
+                            case 1:
+                                pos = Lich.SurfaceIndex.M1;
+                                break;
+                            case 2:
+                                pos = Lich.SurfaceIndex.M2;
+                                break;
+                            case 3:
+                                pos = Lich.SurfaceIndex.M3;
+                                break;
+                            case 4:
+                                pos = Lich.SurfaceIndex.M4;
+                                break;
+                            case 5:
+                                pos = Lich.SurfaceIndex.M5;
+                                break;
+                            case 6:
+                                pos = Lich.SurfaceIndex.M6;
+                                break;
+                            case 7:
+                                pos = Lich.SurfaceIndex.M7;
+                                break;
+                            case 8:
+                                pos = Lich.SurfaceIndex.M8;
+                                break;
+                            case 9:
+                                pos = Lich.SurfaceIndex.M9;
+                                break;
+                        }
+                        tilesMap.mapRecord.push(Lich.Resources.surfaceIndex.getPositionIndex(Lich.Resources.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
@@ -43,7 +75,7 @@ var Lich;
                                     for (var __y = _y; __y <= _y + 1; __y++) {
                                         var index = tilesMap.indexAt(__x, __y);
                                         if (index >= 0) {
-                                            tilesMap.mapRecord[index] = Lich.Resources.VOID;
+                                            tilesMap.mapRecord[index] = Lich.SurfaceIndex.VOID;
                                         }
                                     }
                                 }
@@ -75,7 +107,7 @@ var Lich;
             // tráva boky
             (function () {
                 for (var i = 0; i < mass; i++) {
-                    if (tilesMap.mapRecord[i] === Lich.Resources.VOID)
+                    if (tilesMap.mapRecord[i] === Lich.SurfaceIndex.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
                     Lich.MapTools.generateEdge(tilesMap, coord.x, coord.y);
@@ -85,7 +117,7 @@ var Lich;
             (function () {
                 for (var i = 0; i < mass; i++) {
                     var val = tilesMap.mapRecord[i];
-                    if (val === Lich.Resources.VOID)
+                    if (val === Lich.SurfaceIndex.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
                     Lich.MapTools.generateCorner(tilesMap, coord.x, coord.y);
@@ -93,8 +125,8 @@ var Lich;
             })();
             // frekvenční "pool" objektů
             var pool = [];
-            for (var key in Lich.Resources.dirtObjects) {
-                var item = Lich.Resources.dirtObjects[key];
+            for (var key in Lich.Resources.mapObjectsDefs) {
+                var item = Lich.Resources.mapObjectsDefs[key];
                 // vlož index objektu tolikrát, kolik je jeho frekvenc
                 for (var i = 0; i < item.freq; i++) {
                     pool.push(key);
@@ -109,8 +141,8 @@ var Lich;
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
                             var col = tilesMap.mapObjectsTiles[x];
-                            if ((y === y0 && tilesMap.valueAt(x, y) !== Lich.Resources.DIRT.T) ||
-                                (y !== y0 && tilesMap.valueAt(x, y) !== Lich.Resources.VOID) ||
+                            if ((y === y0 && Lich.Resources.surfaceIndex.isPosition(tilesMap.valueAt(x, y), Lich.SurfaceIndex.T) == false) ||
+                                (y !== y0 && tilesMap.valueAt(x, y) !== Lich.SurfaceIndex.VOID) ||
                                 (typeof col !== "undefined" && typeof col[y] !== "undefined"))
                                 return false;
                         }
@@ -120,14 +152,14 @@ var Lich;
                 for (var i = 0; i < mass; i += 2) {
                     var val = tilesMap.mapRecord[i];
                     // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                    if (val === Lich.Resources.DIRT.T) {
+                    if (Lich.Resources.surfaceIndex.isPosition(val, Lich.SurfaceIndex.T)) {
                         // bude tam nějaký objekt? (100% ano)
                         if (Math.random() > 0) {
                             var tries = 0;
                             var index = Math.floor(pool.length * Math.random());
                             while (tries < pool.length) {
                                 var key = pool[index];
-                                var object = Lich.Resources.dirtObjects[key];
+                                var object = Lich.Resources.mapObjectsDefs[key];
                                 var coord = tilesMap.coordAt(i);
                                 if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                     Lich.MapTools.writeObjectRecord(tilesMap, coord.x, coord.y, object);

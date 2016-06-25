@@ -74,7 +74,7 @@ namespace Lich {
             if (index == -1) {
                 return -1;
             }
-            return Resources.VOID;
+            return SurfaceIndex.VOID;
         }
     }
 };

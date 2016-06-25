@@ -9,29 +9,32 @@ namespace Lich {
 
         static generateEdge(tilesMap: TilesMap, x: number, y: number) {
             var i = tilesMap.indexAt(x, y);
+            var val = tilesMap.mapRecord[i];
             var valT = tilesMap.valueAt(x, y - 1);
             var valR = tilesMap.valueAt(x + 1, y);
             var valB = tilesMap.valueAt(x, y + 1);
             var valL = tilesMap.valueAt(x - 1, y);
 
-            if (valT === Resources.VOID) {
-                tilesMap.mapRecord[i] = Resources.DIRT.T;
+            var srfcType = Resources.surfaceIndex.getSurfaceType(val);
+
+            if (valT === SurfaceIndex.VOID) {
+                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.T);
             }
 
-            if (valR === Resources.VOID) {
-                tilesMap.mapRecord[i] = Resources.DIRT.R;
+            if (valR === SurfaceIndex.VOID) {
+                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.R);
             }
 
-            if (valB === Resources.VOID) {
-                tilesMap.mapRecord[i] = Resources.DIRT.B;
+            if (valB === SurfaceIndex.VOID) {
+                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.B);
             }
 
-            if (valL === Resources.VOID) {
-                tilesMap.mapRecord[i] = Resources.DIRT.L;
+            if (valL === SurfaceIndex.VOID) {
+                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.L);
             }
 
             return tilesMap.mapRecord[i];
-        };
+        }
 
         static generateCorner(tilesMap: TilesMap, x: number, y: number) {
             var i = tilesMap.indexAt(x, y);
@@ -41,63 +44,59 @@ namespace Lich {
             var valB = tilesMap.valueAt(x, y + 1);
             var valL = tilesMap.valueAt(x - 1, y);
 
-            var isMiddle = false;
-            for (var m = 1; m <= 9; m++) {
-                if (val === Resources.DIRT["M" + m]) {
-                    isMiddle = true;
-                    break;
-                }
-            }
+            var srfcType = Resources.surfaceIndex.getSurfaceType(val);
+            var isMiddle = Resources.surfaceIndex.isMiddlePosition(val);
+            var indx = Resources.surfaceIndex;
 
             // změny prostředních kusů
             if (isMiddle) {
                 // jsem pravý horní roh díry
-                if (valB === Resources.DIRT.R && valR === Resources.DIRT.B) {
-                    tilesMap.mapRecord[i] = Resources.DIRT.I_TL;
+                if (indx.isPosition(valB, SurfaceIndex.R) && indx.isPosition(valR, SurfaceIndex.B)) {
+                    tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.I_TL);
                 }
                 // jsem levý horní roh díry
-                if (valL === Resources.DIRT.B && valB === Resources.DIRT.L) {
-                    tilesMap.mapRecord[i] = Resources.DIRT.I_TR;
+                if (indx.isPosition(valL, SurfaceIndex.B) && indx.isPosition(valB, SurfaceIndex.L)) {
+                    tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.I_TR);
                 }
                 // levý spodní roh díry
-                if (valT === Resources.DIRT.R && valR === Resources.DIRT.T) {
-                    tilesMap.mapRecord[i] = Resources.DIRT.I_BL;
+                if (indx.isPosition(valT, SurfaceIndex.R) && indx.isPosition(valR, SurfaceIndex.T)) {
+                    tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.I_BL);
                 }
                 // pravý spodní roh díry
-                if (valT === Resources.DIRT.L && valL === Resources.DIRT.T) {
-                    tilesMap.mapRecord[i] = Resources.DIRT.I_BR;
+                if (indx.isPosition(valT, SurfaceIndex.L) && indx.isPosition(valL, SurfaceIndex.T)) {
+                    tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.I_BR);
                 }
 
             }
 
             // jsem levý horní roh
-            if (val === Resources.DIRT.L && (valR === Resources.DIRT.T || valT === Resources.VOID)) {
-                tilesMap.mapRecord[i] = Resources.DIRT.TL;
+            if (indx.isPosition(val, SurfaceIndex.L) && (indx.isPosition(val, SurfaceIndex.T) || valT === SurfaceIndex.VOID)) {
+                tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.TL);
             }
             // jsem levý dolní roh
-            if (val === Resources.DIRT.L && (valR === Resources.DIRT.B || valR === Resources.DIRT.BR)) {
-                tilesMap.mapRecord[i] = Resources.DIRT.BL;
+            if (indx.isPosition(val, SurfaceIndex.L) && (indx.isPosition(valR, SurfaceIndex.B) || indx.isPosition(valR, SurfaceIndex.BR))) {
+                tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.BL);
             }
             // jsem pravý dolní roh
-            if (val === Resources.DIRT.B && (valT === Resources.DIRT.R || valT === Resources.DIRT.TR)) {
-                tilesMap.mapRecord[i] = Resources.DIRT.BR;
+            if (indx.isPosition(val, SurfaceIndex.B) && (indx.isPosition(valT, SurfaceIndex.R) || indx.isPosition(valT, SurfaceIndex.TR))) {
+                tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.BR);
             }
             // jsem pravý horní roh
-            if (val === Resources.DIRT.R && (valL === Resources.DIRT.T || valT === Resources.VOID)) {
-                tilesMap.mapRecord[i] = Resources.DIRT.TR;
+            if (indx.isPosition(val, SurfaceIndex.R) && (indx.isPosition(valL, SurfaceIndex.T) || valT === SurfaceIndex.VOID)) {
+                tilesMap.mapRecord[i] = indx.getPositionIndex(srfcType, SurfaceIndex.TR);
             }
 
             return tilesMap.mapRecord[i];
-        };
+        }
 
         static modify(tilesMap: TilesMap, x: number, y: number) {
             var rx = Utils.even(x);
             var ry = Utils.even(y);
-            tilesMap.mapRecord[tilesMap.indexAt(rx, ry)] = Resources.VOID;
-            tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry)] = Resources.VOID;
-            tilesMap.mapRecord[tilesMap.indexAt(rx, ry + 1)] = Resources.VOID;
-            tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry + 1)] = Resources.VOID;
-        };
+            tilesMap.mapRecord[tilesMap.indexAt(rx, ry)] = SurfaceIndex.VOID;
+            tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry)] = SurfaceIndex.VOID;
+            tilesMap.mapRecord[tilesMap.indexAt(rx, ry + 1)] = SurfaceIndex.VOID;
+            tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry + 1)] = SurfaceIndex.VOID;
+        }
 
         static writeObjectRecord(tilesMap: TilesMap, cx: number, cy: number, object: MapObjDefinition) {
             var self = this;
@@ -115,7 +114,7 @@ namespace Lich {
                     col[y + cy - object.mapSpriteHeight] = new MapObjectTile(object.mapKey, partsSheetIndex, x, y);
                 }
             }
-        };
+        }
 
         static createPartsSheetIndex(object: MapObjDefinition, x: number, y: number): number {
             return x + y * Resources.PARTS_SHEET_WIDTH;

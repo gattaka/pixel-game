@@ -603,13 +603,6 @@ namespace Lich {
             if (self.tilesMap.valueAt(x, y) != 0) {
                 return new CollisionTestResult(true, x, y);
             }
-            // kolize s kolizními objekty
-            var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, x, y);
-            if (objectElement !== null) {
-                var objType: MapObjDefinition = Resources.dirtObjects[objectElement.mapKey];
-                if (objType.collide)
-                    return new CollisionTestResult(true, x, y);
-            }
             // bez kolize
             return new CollisionTestResult(false, x, y);
         };

@@ -31,10 +31,24 @@ namespace Lich {
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     if (y < Map.MAP_GROUND_LEVEL) {
-                        tilesMap.mapRecord.push(Resources.VOID);
+                        tilesMap.mapRecord.push(SurfaceIndex.VOID);
                     } else {
                         var m = x % 3 + 1 + ((y % 3) * 3);
-                        tilesMap.mapRecord.push(Resources.DIRT["M" + m]);
+                        var pos: string;
+                        switch (m) {
+                            // je to schválně switchem, aby byla zachována
+                            // compile-time kontrola
+                            case 1: pos = SurfaceIndex.M1; break;
+                            case 2: pos = SurfaceIndex.M2; break;
+                            case 3: pos = SurfaceIndex.M3; break;
+                            case 4: pos = SurfaceIndex.M4; break;
+                            case 5: pos = SurfaceIndex.M5; break;
+                            case 6: pos = SurfaceIndex.M6; break;
+                            case 7: pos = SurfaceIndex.M7; break;
+                            case 8: pos = SurfaceIndex.M8; break;
+                            case 9: pos = SurfaceIndex.M9; break;
+                        }
+                        tilesMap.mapRecord.push(Resources.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
@@ -58,7 +72,7 @@ namespace Lich {
                                     for (var __y = _y; __y <= _y + 1; __y++) {
                                         var index = tilesMap.indexAt(__x, __y);
                                         if (index >= 0) {
-                                            tilesMap.mapRecord[index] = Resources.VOID;
+                                            tilesMap.mapRecord[index] = SurfaceIndex.VOID;
                                         }
                                     }
                                 }
@@ -92,7 +106,7 @@ namespace Lich {
             // tráva boky
             (function() {
                 for (var i = 0; i < mass; i++) {
-                    if (tilesMap.mapRecord[i] === Resources.VOID)
+                    if (tilesMap.mapRecord[i] === SurfaceIndex.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
                     MapTools.generateEdge(tilesMap, coord.x, coord.y);
@@ -103,7 +117,7 @@ namespace Lich {
             (function() {
                 for (var i = 0; i < mass; i++) {
                     var val = tilesMap.mapRecord[i];
-                    if (val === Resources.VOID)
+                    if (val === SurfaceIndex.VOID)
                         continue;
                     var coord = tilesMap.coordAt(i);
                     MapTools.generateCorner(tilesMap, coord.x, coord.y);
@@ -112,8 +126,8 @@ namespace Lich {
 
             // frekvenční "pool" objektů
             var pool = [];
-            for (var key in Resources.dirtObjects) {
-                var item = Resources.dirtObjects[key];
+            for (var key in Resources.mapObjectsDefs) {
+                var item = Resources.mapObjectsDefs[key];
                 // vlož index objektu tolikrát, kolik je jeho frekvenc
                 for (var i = 0; i < item.freq; i++) {
                     pool.push(key);
@@ -130,8 +144,8 @@ namespace Lich {
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
                             var col = tilesMap.mapObjectsTiles[x];
-                            if ((y === y0 && tilesMap.valueAt(x, y) !== Resources.DIRT.T) ||
-                                (y !== y0 && tilesMap.valueAt(x, y) !== Resources.VOID) ||
+                            if ((y === y0 && Resources.surfaceIndex.isPosition(tilesMap.valueAt(x, y), SurfaceIndex.T) == false) ||
+                                (y !== y0 && tilesMap.valueAt(x, y) !== SurfaceIndex.VOID) ||
                                 (typeof col !== "undefined" && typeof col[y] !== "undefined"))
                                 return false;
                         }
@@ -142,14 +156,14 @@ namespace Lich {
                 for (var i = 0; i < mass; i += 2) {
                     var val = tilesMap.mapRecord[i];
                     // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                    if (val === Resources.DIRT.T) {
+                    if (Resources.surfaceIndex.isPosition(val, SurfaceIndex.T)) {
                         // bude tam nějaký objekt? (100% ano)
                         if (Math.random() > 0) {
                             var tries = 0;
                             var index = Math.floor(pool.length * Math.random());
                             while (tries < pool.length) {
                                 var key = pool[index];
-                                var object = Resources.dirtObjects[key];
+                                var object = Resources.mapObjectsDefs[key];
                                 var coord = tilesMap.coordAt(i);
                                 if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                     MapTools.writeObjectRecord(tilesMap, coord.x, coord.y, object);

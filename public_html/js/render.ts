@@ -59,6 +59,7 @@ namespace Lich {
          */
 
         onDigObjectListeners = [];
+        onDigSurfaceListeners = [];
 
         screenOffsetX = 0;
         screenOffsetY = 0;
@@ -268,7 +269,7 @@ namespace Lich {
 
         createTile(v: number) {
             var self = this;
-            var tile = self.game.resources.getBitmap(Resources.TILES_DIRT_KEY);
+            var tile = self.game.resources.getBitmap(Resources.SRFC_DIRT_KEY);
             var tileCols = tile.image.width / Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(
@@ -344,39 +345,24 @@ namespace Lich {
             var self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
-
             var item = self.tilesMap.valueAt(x, y);
-            if (item === Resources.VOID) {
+            if (item === SurfaceIndex.VOID) {
                 imgData.data[imgData.counter++] = 209; // R
                 imgData.data[imgData.counter++] = 251; // G
                 imgData.data[imgData.counter++] = 255; // B
                 imgData.data[imgData.counter++] = 200; // A
-            }
-            for (var i = 1; i <= 9; i++) {
-                if (item === Resources.DIRT["M" + i]) {
+            } else {
+                if (Resources.surfaceIndex.isMiddlePosition(item)) {
                     imgData.data[imgData.counter++] = 156; // R
                     imgData.data[imgData.counter++] = 108; // G
                     imgData.data[imgData.counter++] = 36; // B
                     imgData.data[imgData.counter++] = 200; // A
+                } else {
+                    imgData.data[imgData.counter++] = 102; // R
+                    imgData.data[imgData.counter++] = 174; // G 
+                    imgData.data[imgData.counter++] = 0; // B
+                    imgData.data[imgData.counter++] = 200; // A
                 }
-            }
-            if (item === Resources.DIRT.B ||
-                item === Resources.DIRT.L ||
-                item === Resources.DIRT.R ||
-                item === Resources.DIRT.T ||
-                item === Resources.DIRT.BL ||
-                item === Resources.DIRT.BR ||
-                item === Resources.DIRT.TL ||
-                item === Resources.DIRT.TR ||
-                item === Resources.DIRT.I_BL ||
-                item === Resources.DIRT.I_BR ||
-                item === Resources.DIRT.I_TL ||
-                item === Resources.DIRT.I_TR
-            ) {
-                imgData.data[imgData.counter++] = 102; // R
-                imgData.data[imgData.counter++] = 174; // G 
-                imgData.data[imgData.counter++] = 0; // B
-                imgData.data[imgData.counter++] = 200; // A
             }
         };
 
@@ -484,10 +470,19 @@ namespace Lich {
             var self = this;
             var tilesToReset = [];
 
+            var dugIndex = self.tilesMap.indexAt(rx, ry);
+
+            self.onDigSurfaceListeners.forEach(function(fce) {
+                fce(dugIndex, rx, ry);
+            });
+
             (function() {
                 for (var x = rx - 1; x <= rx + 2; x++) {
                     for (var y = ry - 1; y <= ry + 2; y++) {
                         var index = self.tilesMap.indexAt(x, y);
+                        var val = self.tilesMap.valueAt(x, y);
+                        var srfcType = Resources.surfaceIndex.getSurfaceType(val);
+                        var indx = Resources.surfaceIndex;
                         self.prepareMapUpdate(x, y);
                         if (index >= 0) {
                             var sector = self.getSectorByTiles(x, y);
@@ -496,8 +491,8 @@ namespace Lich {
                             if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
 
                                 // okraje vyresetuj
-                                if (self.tilesMap.mapRecord[index] !== Resources.VOID) {
-                                    self.tilesMap.mapRecord[index] = Resources.DIRT.M1;
+                                if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
+                                    self.tilesMap.mapRecord[index] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.M1);
                                     tilesToReset.push([x, y]);
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -516,13 +511,13 @@ namespace Lich {
 
                                 // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
                                 if (y === ry &&
-                                    (self.tilesMap.mapRecord[index] === Resources.DIRT.T ||
-                                        self.tilesMap.mapRecord[index] === Resources.DIRT.TL ||
-                                        self.tilesMap.mapRecord[index] === Resources.DIRT.TR)) {
+                                    (indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.T) ||
+                                        indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TL) ||
+                                        indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TR))) {
                                     self.tryDigObject(x, y - 1);
                                 }
 
-                                self.tilesMap.mapRecord[index] = Resources.VOID;
+                                self.tilesMap.mapRecord[index] = SurfaceIndex.VOID;
                                 var targetSector = self.getSectorByTiles(x, y);
                                 if (typeof targetSector !== "undefined" && targetSector !== null) {
                                     targetSector.removeChild(Utils.get2D(self.sceneTilesMap, x, y));
@@ -585,7 +580,7 @@ namespace Lich {
             var self = this;
             var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry);
             if (objectElement !== null) {
-                var objType = Resources.dirtObjects[objectElement.mapKey];
+                var objType = Resources.mapObjectsDefs[objectElement.mapKey];
                 var objWidth = objType.mapSpriteWidth;
                 var objHeight = objType.mapSpriteHeight;
                 // relativní pozice dílku v sheetu (od počátku sprite)
@@ -626,15 +621,15 @@ namespace Lich {
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true, 
          * pokud se to podařilo 
          */
-        place(x: number, y: number, item: string) : boolean {
+        place(x: number, y: number, item: string): boolean {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Utils.even(coord.x);
             var ry = Utils.even(coord.y);
 
             // pokud je místo prázdné a bez objektu (a je co vkládat
-            if (item !== null && self.tilesMap.valueAt(rx, ry) === Resources.VOID && Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
-                var object: InvObjDefinition = Resources.invObjects[item];
+            if (item !== null && self.tilesMap.valueAt(rx, ry) === SurfaceIndex.VOID && Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
+                var object: InvObjDefinition = Resources.invObjectsDefs[item];
                 var sector = self.getSectorByTiles(rx, ry);
                 if (typeof object !== "undefined" && object.mapObj != null) {
                     // musí se posunout dolů o object.mapObj.mapSpriteHeight,
@@ -670,7 +665,7 @@ namespace Lich {
             var ry = Utils.even(coord.y);
 
             // kopl jsem do nějakého povrchu?
-            if (self.tilesMap.valueAt(rx, ry) !== Resources.VOID) {
+            if (self.tilesMap.valueAt(rx, ry) !== SurfaceIndex.VOID) {
                 self.digGround(rx, ry);
                 return true;
             } else {
@@ -709,6 +704,11 @@ namespace Lich {
             self.onDigObjectListeners.push(f);
         }
 
+        addOnDigSurfaceListener(f) {
+            var self = this;
+            self.onDigSurfaceListeners.push(f);
+        }
+
         updatePlayerIcon(x: number, y: number) {
             var self = this;
             if (typeof self.playerIcon !== "undefined") {
@@ -726,7 +726,7 @@ namespace Lich {
                 y: tileY
             };
         }
-        
+
         pixelsToEvenTiles(x: number, y: number) {
             var self = this;
             var tileX = Utils.even(Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1);

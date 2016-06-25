@@ -82,7 +82,7 @@ var Lich;
             if (index == -1) {
                 return -1;
             }
-            return Lich.Resources.VOID;
+            return Lich.SurfaceIndex.VOID;
         };
         return TilesMap;
     }());
