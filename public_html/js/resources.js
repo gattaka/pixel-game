@@ -171,7 +171,7 @@ var Lich;
         Resources.OUTLINE_COLOR = "#000";
         Resources.TEXT_COLOR = "#FF0";
         Resources.DEBUG_TEXT_COLOR = "#FF0";
-        Resources.REACH_TILES_RADIUS = 6;
+        Resources.REACH_TILES_RADIUS = 10;
         /*
          * Přepínače
          */
@@ -235,7 +235,6 @@ var Lich;
         Resources.MAP_PLANT4_KEY = "MAP_PLANT4_KEY";
         Resources.MAP_TREE_KEY = "MAP_TREE_KEY";
         Resources.MAP_TREE2_KEY = "MAP_TREE2_KEY";
-        Resources.MAP_WOODWALL_KEY = "MAP_WOODWALL_KEY";
         // ui
         Resources.SKULL_KEY = "SKULL_KEY";
         Resources.HELMET_KEY = "HELMET_KEY";
@@ -296,7 +295,8 @@ var Lich;
             var putIntoInvObjectsDefs = function (invObj) {
                 Resources.invObjectsDefs[invObj.invKey] = invObj;
             };
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapObjectsDefs[Resources.MAP_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
             // Definice indexových počátků pro typy povrchu
             Resources.surfaceIndex.insert(Resources.SRFC_DIRT_KEY);
             Resources.surfaceIndex.insert(Resources.SRFC_WOODWALL_KEY);

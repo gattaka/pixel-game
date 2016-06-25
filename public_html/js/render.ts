@@ -617,6 +617,111 @@ namespace Lich {
             }
         }
 
+        placeGround(rx, ry, surfaceType: string) {
+            var self = this;
+            var tilesToReset = [];
+
+            (function() {
+                for (var x = rx - 1; x <= rx + 2; x++) {
+                    for (var y = ry - 1; y <= ry + 2; y++) {
+                        var index = self.tilesMap.indexAt(x, y);
+                        self.prepareMapUpdate(x, y);
+                        if (index >= 0) {
+                            var sector = self.getSectorByTiles(x, y);
+
+                            // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
+                            if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
+
+                                var val = self.tilesMap.valueAt(x, y);
+                                var indx = Resources.surfaceIndex;
+                                var srfcType = Resources.surfaceIndex.getSurfaceType(val);
+
+                                // okraje vyresetuj (pokud nejsou středy
+                                if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
+                                    self.tilesMap.mapRecord[index] = Resources.surfaceIndex.getPositionIndex(srfcType, MapTools.getPositionByCoord(x, y));
+                                    tilesToReset.push([x, y]);
+
+                                    // zjisti sektor dílku, aby byl přidán do fronty 
+                                    // ke cache update (postačí to udělat dle tilesToReset,
+                                    // protože to jsou okrajové dílky z oblasti změn)
+                                    if (typeof sector !== "undefined" && sector !== null) {
+                                        self.markSector(sector);
+                                    }
+                                }
+
+                            }
+                            // pokud jsem vnitřní část výběru, vytvoř nové dílky
+                            else {
+                                var pos = MapTools.getPositionByCoord(x, y);
+                                var posIndex = Resources.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos);
+                                self.tilesMap.mapRecord[index] = posIndex;
+                                var targetSector = self.getSectorByTiles(x, y);
+                                tilesToReset.push([x, y]);
+
+                                // vytvoř dílek
+                                var tile = self.createTile(posIndex);
+
+                                // přidej dílek do sektoru
+                                sector.addChild(tile);
+                                tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+
+                                // přidej dílek do globální mapy
+                                Utils.set2D(self.sceneTilesMap, x, y, tile);
+
+                                // zjisti sektor dílku, aby byl přidán do fronty 
+                                // ke cache update (postačí to udělat dle tilesToReset,
+                                // protože to jsou okrajové dílky z oblasti změn)
+                                if (typeof sector !== "undefined" && sector !== null) {
+                                    self.markSector(sector);
+                                }
+                            }
+                        }
+                    }
+                }
+            })();
+
+
+            // Přegeneruj hrany
+            (function() {
+                tilesToReset.forEach(function(item) {
+                    var x = item[0];
+                    var y = item[1];
+                    MapTools.generateEdge(self.tilesMap, x, y);
+                });
+            })();
+
+            // Přegeneruj rohy
+            (function() {
+                tilesToReset.forEach(function(item) {
+                    var x = item[0];
+                    var y = item[1];
+                    MapTools.generateCorner(self.tilesMap, x, y);
+                });
+            })();
+
+            // Překresli dílky
+            (function() {
+                tilesToReset.forEach(function(item) {
+                    var x = item[0];
+                    var y = item[1];
+                    // pokud už je alokován dílek na obrazovce, rovnou ho uprav
+                    var tile = Utils.get2D(self.sceneTilesMap, x, y);
+                    if (tile !== null) {
+                        var v = self.tilesMap.valueAt(x, y);
+                        var tileCols = tile.image.width / Resources.TILE_SIZE;
+                        tile.sourceRect = new createjs.Rectangle(
+                            ((v - 1) % tileCols) * Resources.TILE_SIZE,
+                            Math.floor((v - 1) / tileCols) * Resources.TILE_SIZE,
+                            Resources.TILE_SIZE,
+                            Resources.TILE_SIZE
+                        );
+                    }
+                });
+            })();
+
+        }
+
         /**
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true, 
          * pokud se to podařilo 
@@ -631,28 +736,37 @@ namespace Lich {
             if (item !== null && self.tilesMap.valueAt(rx, ry) === SurfaceIndex.VOID && Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
                 var object: InvObjDefinition = Resources.invObjectsDefs[item];
                 var sector = self.getSectorByTiles(rx, ry);
-                if (typeof object !== "undefined" && object.mapObj != null) {
-                    // musí se posunout dolů o object.mapObj.mapSpriteHeight,
-                    // protože objekty se počítají počátkem levého SPODNÍHO rohu 
-                    MapTools.writeObjectRecord(self.tilesMap, rx, ry + object.mapObj.mapSpriteHeight, object.mapObj);
-                    // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
-                    for (var tx = 0; tx < 2; tx++) {
-                        for (var ty = 0; ty < 2; ty++) {
-                            var partsSheetIndex = MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
-                            var tile = self.createObject(object.mapObj.mapKey, partsSheetIndex);
+                if (typeof object !== "undefined") {
+                    if (object.mapObj != null) {
+                        // jde o objekt
+                        // musí se posunout dolů o object.mapObj.mapSpriteHeight,
+                        // protože objekty se počítají počátkem levého SPODNÍHO rohu 
+                        MapTools.writeObjectRecord(self.tilesMap, rx, ry + object.mapObj.mapSpriteHeight, object.mapObj);
+                        // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
+                        // TODO změnit -- tohle je blbost -- může být i větší objekt a pak se musí klasicky 
+                        // počítat záběr a volný prostor
+                        for (var tx = 0; tx < 2; tx++) {
+                            for (var ty = 0; ty < 2; ty++) {
+                                var partsSheetIndex = MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
+                                var tile = self.createObject(object.mapObj.mapKey, partsSheetIndex);
 
-                            // přidej dílek do sektoru
-                            sector.addChild(tile);
-                            tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                            tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                // přidej dílek do sektoru
+                                sector.addChild(tile);
+                                tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
-                            // Přidej objekt do globální mapy objektů
-                            Utils.set2D(self.sceneObjectsMap, rx + tx, ry + ty, tile);
+                                // Přidej objekt do globální mapy objektů
+                                Utils.set2D(self.sceneObjectsMap, rx + tx, ry + ty, tile);
+                            }
                         }
-                    }
 
-                    self.markSector(sector);
-                    return true;
+                        self.markSector(sector);
+                        return true;
+                    } else if (object.mapSurface != null) {
+                        // jde o povrch 
+                        var surtIndx = Resources.surfaceIndex;
+                        this.placeGround(rx, ry, object.mapSurface.mapKey);
+                    }
                 }
             }
             return false;

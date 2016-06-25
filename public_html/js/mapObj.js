@@ -10,18 +10,20 @@ var Lich;
      * Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
     var InvObjDefinition = (function () {
-        function InvObjDefinition(invKey, 
+        function InvObjDefinition(invKey, target) {
+            this.invKey = invKey;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  
-            mapObj, 
+            this.mapObj = null;
             // je možné tento INV objekt znovu umístit (kameny -> zeď) 
             // pokud ano, jaký objekt mapy se má vytvořit  
-            mapSurface) {
-            if (mapObj === void 0) { mapObj = null; }
-            if (mapSurface === void 0) { mapSurface = null; }
-            this.invKey = invKey;
-            this.mapObj = mapObj;
-            this.mapSurface = mapSurface;
+            this.mapSurface = null;
+            if ((target instanceof MapObjDefinition)) {
+                this.mapObj = target;
+            }
+            if ((target instanceof MapSurfaceDefinition)) {
+                this.mapSurface = target;
+            }
         }
         ;
         return InvObjDefinition;

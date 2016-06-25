@@ -10,14 +10,21 @@ namespace Lich {
      * Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
     export class InvObjDefinition {
-        constructor(
-            public invKey: string,
-            // je možné tento INV objekt znovu umístit (váza) 
-            // pokud ano, jaký objekt mapy se má vytvořit  
-            public mapObj: MapObjDefinition = null,
-            // je možné tento INV objekt znovu umístit (kameny -> zeď) 
-            // pokud ano, jaký objekt mapy se má vytvořit  
-            public mapSurface: MapSurfaceDefinition = null) { };
+        // je možné tento INV objekt znovu umístit (váza) 
+        // pokud ano, jaký objekt mapy se má vytvořit  
+        public mapObj: MapObjDefinition = null;
+        // je možné tento INV objekt znovu umístit (kameny -> zeď) 
+        // pokud ano, jaký objekt mapy se má vytvořit  
+        public mapSurface: MapSurfaceDefinition = null;
+        constructor(public invKey: string, target: MapObjDefinition | MapSurfaceDefinition) {
+            if ((target instanceof MapObjDefinition)) {
+                this.mapObj = <MapObjDefinition>target;
+            }
+            if ((target instanceof MapSurfaceDefinition)) {
+                this.mapSurface = <MapSurfaceDefinition>target;
+            }
+
+        };
     }
 
     /**
@@ -65,8 +72,8 @@ namespace Lich {
      * 3. V inventáři 
      * 4a. Znovu umístěn na mapu
      * 4b. Znovu vhozen do světa
-     */    
-    
+     */
+
     /**
      * Tuple pro INV objekt a množství z map objektu
      */

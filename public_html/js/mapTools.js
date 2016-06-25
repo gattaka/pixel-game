@@ -86,6 +86,42 @@ var Lich;
             tilesMap.mapRecord[tilesMap.indexAt(rx, ry + 1)] = Lich.SurfaceIndex.VOID;
             tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry + 1)] = Lich.SurfaceIndex.VOID;
         };
+        MapTools.getPositionByCoord = function (x, y) {
+            var m = x % 3 + 1 + ((y % 3) * 3);
+            var pos;
+            switch (m) {
+                // je to schválně switchem, aby byla zachována
+                // compile-time kontrola
+                case 1:
+                    pos = Lich.SurfaceIndex.M1;
+                    break;
+                case 2:
+                    pos = Lich.SurfaceIndex.M2;
+                    break;
+                case 3:
+                    pos = Lich.SurfaceIndex.M3;
+                    break;
+                case 4:
+                    pos = Lich.SurfaceIndex.M4;
+                    break;
+                case 5:
+                    pos = Lich.SurfaceIndex.M5;
+                    break;
+                case 6:
+                    pos = Lich.SurfaceIndex.M6;
+                    break;
+                case 7:
+                    pos = Lich.SurfaceIndex.M7;
+                    break;
+                case 8:
+                    pos = Lich.SurfaceIndex.M8;
+                    break;
+                case 9:
+                    pos = Lich.SurfaceIndex.M9;
+                    break;
+            }
+            return pos;
+        };
         MapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {
             var self = this;
             // zapiš obsazení jednotlivými dílky objektu

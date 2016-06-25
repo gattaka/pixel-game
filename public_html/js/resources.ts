@@ -18,7 +18,7 @@ namespace Lich {
         static OUTLINE_COLOR = "#000";
         static TEXT_COLOR = "#FF0";
         static DEBUG_TEXT_COLOR = "#FF0";
-        static REACH_TILES_RADIUS = 6;
+        static REACH_TILES_RADIUS = 10;
 
         /*
          * Přepínače
@@ -92,7 +92,6 @@ namespace Lich {
         static MAP_PLANT4_KEY = "MAP_PLANT4_KEY";
         static MAP_TREE_KEY = "MAP_TREE_KEY";
         static MAP_TREE2_KEY = "MAP_TREE2_KEY";
-        static MAP_WOODWALL_KEY = "MAP_WOODWALL_KEY";
 
         // ui
         static SKULL_KEY = "SKULL_KEY";
@@ -123,12 +122,12 @@ namespace Lich {
         static mapSurfacesDefs = new Array<MapSurfaceDefinition>();
         static mapObjectsDefs = new Array<MapObjDefinition>();
         static invObjectsDefs = new Array<InvObjDefinition>();
-        
+
         /*
          * Sprite indexy
          */
         static surfaceIndex = new SurfaceIndex();
-        
+
         loader;
 
         private static _constructor = (() => {
@@ -168,12 +167,13 @@ namespace Lich {
                 Resources.invObjectsDefs[invObj.invKey] = invObj;
             };
 
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapObjectsDefs[Resources.MAP_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
 
             // Definice indexových počátků pro typy povrchu
             Resources.surfaceIndex.insert(Resources.SRFC_DIRT_KEY);
             Resources.surfaceIndex.insert(Resources.SRFC_WOODWALL_KEY);
-            
+
         })();
 
         constructor(game, callback?) {

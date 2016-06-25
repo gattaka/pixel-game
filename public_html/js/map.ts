@@ -33,21 +33,7 @@ namespace Lich {
                     if (y < Map.MAP_GROUND_LEVEL) {
                         tilesMap.mapRecord.push(SurfaceIndex.VOID);
                     } else {
-                        var m = x % 3 + 1 + ((y % 3) * 3);
-                        var pos: string;
-                        switch (m) {
-                            // je to schválně switchem, aby byla zachována
-                            // compile-time kontrola
-                            case 1: pos = SurfaceIndex.M1; break;
-                            case 2: pos = SurfaceIndex.M2; break;
-                            case 3: pos = SurfaceIndex.M3; break;
-                            case 4: pos = SurfaceIndex.M4; break;
-                            case 5: pos = SurfaceIndex.M5; break;
-                            case 6: pos = SurfaceIndex.M6; break;
-                            case 7: pos = SurfaceIndex.M7; break;
-                            case 8: pos = SurfaceIndex.M8; break;
-                            case 9: pos = SurfaceIndex.M9; break;
-                        }
+                        var pos = MapTools.getPositionByCoord(x, y);
                         tilesMap.mapRecord.push(Resources.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos));
                     }
                 }
