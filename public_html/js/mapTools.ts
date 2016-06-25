@@ -118,7 +118,7 @@ namespace Lich {
         };
 
         static createPartsSheetIndex(object: MapObjDefinition, x: number, y: number): number {
-            return object.mapSpriteX + x + (object.mapSpriteY + y) * Resources.PARTS_SHEET_WIDTH;
+            return x + y * Resources.PARTS_SHEET_WIDTH;
         }
 
     }

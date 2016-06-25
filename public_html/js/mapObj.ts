@@ -25,8 +25,6 @@ namespace Lich {
             public mapKey: string,
             public mapSpriteWidth: number,
             public mapSpriteHeight: number,
-            public mapSpriteX: number,
-            public mapSpriteY: number,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             public invObj: string,
             // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)

@@ -22,22 +22,37 @@ var Lich;
                 new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
-                new Load("images/ui/inventory/inv_berry.png", Resources.INV_PLANT_KEY),
-                new Load("images/ui/inventory/inv_brown_shroom.png", Resources.INV_SHROOM1_KEY),
-                new Load("images/ui/inventory/inv_cyan_flower.png", Resources.INV_PLANT3_KEY),
-                new Load("images/ui/inventory/inv_fire_shroom.png", Resources.INV_SHROOM2_KEY),
-                new Load("images/ui/inventory/inv_purple_flower.png", Resources.INV_PLANT2_KEY),
-                new Load("images/ui/inventory/inv_purple_shroom.png", Resources.INV_SHROOM3_KEY),
-                new Load("images/ui/inventory/inv_red_flower.png", Resources.INV_PLANT4_KEY),
+                new Load("images/ui/inventory/inv_berry.png", Resources.INV_BERRY_KEY),
+                new Load("images/ui/inventory/inv_mushroom.png", Resources.INV_MUSHROOM_KEY),
+                new Load("images/ui/inventory/inv_mushroom2.png", Resources.INV_MUSHROOM2_KEY),
+                new Load("images/ui/inventory/inv_mushroom3.png", Resources.INV_MUSHROOM3_KEY),
+                new Load("images/ui/inventory/inv_plant.png", Resources.INV_PLANT_KEY),
+                new Load("images/ui/inventory/inv_plant2.png", Resources.INV_PLANT2_KEY),
+                new Load("images/ui/inventory/inv_plant3.png", Resources.INV_PLANT3_KEY),
+                new Load("images/ui/inventory/inv_plant4.png", Resources.INV_PLANT4_KEY),
                 new Load("images/ui/inventory/inv_straw.png", Resources.INV_STRAW_KEY),
                 new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
-                new Load("images/ui/inventory/inv_yellow_flower.png", Resources.INV_PLANT5_KEY),
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
                 new Load("images/effects/blast_animation.png", Resources.BLAST_ANIMATION_KEY),
                 new Load("images/tiles/tiles.png", Resources.TILES_KEY),
                 new Load("images/tiles/woodwall.png", Resources.TILES_WOODWALL_KEY),
-                new Load("images/parts/parts.png", Resources.MAP_PARTS_KEY),
+                new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
+                new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
+                new Load("images/parts/bush2.png", Resources.MAP_BUSH2_KEY),
+                new Load("images/parts/grass.png", Resources.MAP_GRASS_KEY),
+                new Load("images/parts/grass2.png", Resources.MAP_GRASS2_KEY),
+                new Load("images/parts/grass3.png", Resources.MAP_GRASS3_KEY),
+                new Load("images/parts/grave.png", Resources.MAP_GRAVE_KEY),
+                new Load("images/parts/mushroom.png", Resources.MAP_MUSHROOM_KEY),
+                new Load("images/parts/mushroom2.png", Resources.MAP_MUSHROOM2_KEY),
+                new Load("images/parts/mushroom3.png", Resources.MAP_MUSHROOM3_KEY),
+                new Load("images/parts/plant.png", Resources.MAP_PLANT_KEY),
+                new Load("images/parts/plant2.png", Resources.MAP_PLANT2_KEY),
+                new Load("images/parts/plant3.png", Resources.MAP_PLANT3_KEY),
+                new Load("images/parts/plant4.png", Resources.MAP_PLANT4_KEY),
+                new Load("images/parts/tree.png", Resources.MAP_TREE_KEY),
+                new Load("images/parts/tree2.png", Resources.MAP_TREE2_KEY),
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
                 new Load("images/armour/helmet.png", Resources.HELMET_KEY),
@@ -198,36 +213,35 @@ var Lich;
         Resources.TILES_KEY = "TILES_KEY";
         Resources.TILES_WOODWALL_KEY = "TILES_WOODWALL_KEY";
         // inv items
+        Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
         Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
         Resources.INV_STRAW_KEY = "INV_STRAW_KEY";
+        Resources.INV_MUSHROOM_KEY = "INV_MUSHROOM_KEY";
+        Resources.INV_MUSHROOM2_KEY = "INV_MUSHROOM2_KEY";
+        Resources.INV_MUSHROOM3_KEY = "INV_MUSHROOM3_KEY";
         Resources.INV_PLANT_KEY = "INV_PLANT_KEY";
-        Resources.INV_SHROOM1_KEY = "INV_SHROOM1_KEY";
-        Resources.INV_SHROOM2_KEY = "INV_SHROOM2_KEY";
-        Resources.INV_SHROOM3_KEY = "INV_SHROOM3_KEY";
         Resources.INV_PLANT2_KEY = "INV_PLANT2_KEY";
         Resources.INV_PLANT3_KEY = "INV_PLANT3_KEY";
         Resources.INV_PLANT4_KEY = "INV_PLANT4_KEY";
-        Resources.INV_PLANT5_KEY = "INV_PLANT5_KEY";
         // characters
         Resources.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
         // map objects
-        Resources.MAP_PARTS_KEY = "MAP_PARTS_KEY";
-        Resources.MAP_PLANT_KEY = "MAP_PLANT_KEY";
-        Resources.MAP_TREE_KEY = "MAP_TREE_KEY";
-        Resources.MAP_TREE2_KEY = "MAP_TREE2_KEY";
-        Resources.MAP_MOUND_KEY = "MAP_MOUND_KEY";
+        Resources.MAP_BERRY_KEY = "MAP_BERRY_KEY";
+        Resources.MAP_BUSH_KEY = "MAP_BUSH_KEY";
+        Resources.MAP_BUSH2_KEY = "MAP_BUSH2_KEY";
         Resources.MAP_GRASS_KEY = "MAP_GRASS_KEY";
         Resources.MAP_GRASS2_KEY = "MAP_GRASS2_KEY";
         Resources.MAP_GRASS3_KEY = "MAP_GRASS3_KEY";
-        Resources.MAP_GRASS4_KEY = "MAP_GRASS4_KEY";
-        Resources.MAP_SHROOM1_KEY = "MAP_SHROOM1_KEY";
-        Resources.MAP_SHROOM2_KEY = "MAP_SHROOM2_KEY";
-        Resources.MAP_SHROOM3_KEY = "MAP_SHROOM3_KEY";
+        Resources.MAP_GRAVE_KEY = "MAP_GRAVE_KEY";
+        Resources.MAP_MUSHROOM_KEY = "MAP_MUSHROOM_KEY";
+        Resources.MAP_MUSHROOM2_KEY = "MAP_MUSHROOM2_KEY";
+        Resources.MAP_MUSHROOM3_KEY = "MAP_MUSHROOM3_KEY";
+        Resources.MAP_PLANT_KEY = "MAP_PLANT_KEY";
         Resources.MAP_PLANT2_KEY = "MAP_PLANT2_KEY";
         Resources.MAP_PLANT3_KEY = "MAP_PLANT3_KEY";
         Resources.MAP_PLANT4_KEY = "MAP_PLANT4_KEY";
-        Resources.MAP_PLANT5_KEY = "MAP_PLANT5_KEY";
-        Resources.MAP_BUSH_KEY = "MAP_BUSH_KEY";
+        Resources.MAP_TREE_KEY = "MAP_TREE_KEY";
+        Resources.MAP_TREE2_KEY = "MAP_TREE2_KEY";
         Resources.MAP_WOODWALL_KEY = "MAP_WOODWALL_KEY";
         // ui
         Resources.SKULL_KEY = "SKULL_KEY";
@@ -259,23 +273,22 @@ var Lich;
             var putIntoDirtObjects = function (mapObj) {
                 Resources.dirtObjects[mapObj.mapKey] = mapObj;
             };
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, 8, 0, Resources.INV_WOOD_KEY, 5, 5, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, 0, 0, Resources.INV_WOOD_KEY, 10, 2, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, 12, 0, Resources.INV_STRAW_KEY, 2, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, 14, 0, Resources.INV_STRAW_KEY, 2, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, 16, 0, Resources.INV_STRAW_KEY, 2, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS4_KEY, 2, 2, 12, 4, Resources.INV_STRAW_KEY, 2, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_SHROOM1_KEY, 2, 2, 12, 2, Resources.INV_SHROOM1_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_SHROOM2_KEY, 2, 2, 14, 2, Resources.INV_SHROOM2_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_SHROOM3_KEY, 2, 2, 16, 2, Resources.INV_SHROOM3_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT_KEY, 2, 2, 12, 6, Resources.INV_PLANT_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, 18, 2, Resources.INV_PLANT2_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, 14, 4, Resources.INV_PLANT3_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, 16, 4, Resources.INV_PLANT4_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT5_KEY, 2, 2, 18, 4, Resources.INV_PLANT5_KEY, 1, 1, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, 18, 0, null, 0, 0, false));
-            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_WOODWALL_KEY, 2, 2, 14, 6, Resources.INV_WOOD_KEY, 1, 0, true));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_BERRY_KEY, 2, 2, Resources.INV_BERRY_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, null, 0, 0, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_BUSH2_KEY, 2, 2, null, 0, 0, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, Resources.INV_STRAW_KEY, 2, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 5, 5, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 10, 2, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM_KEY, 2, 2, Resources.INV_MUSHROOM_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM2_KEY, 2, 2, Resources.INV_MUSHROOM2_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM3_KEY, 2, 2, Resources.INV_MUSHROOM3_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT_KEY, 2, 2, Resources.INV_PLANT_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, Resources.INV_PLANT2_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1, false));
+            putIntoDirtObjects(new Lich.MapObjDefinition(Resources.MAP_WOODWALL_KEY, 2, 2, Resources.INV_WOOD_KEY, 1, 0, true));
             // Definice inventárních objektů
             var putIntoInvObjects = function (invObj) {
                 Resources.invObjects[invObj.invKey] = invObj;

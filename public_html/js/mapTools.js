@@ -110,7 +110,7 @@ var Lich;
         };
         ;
         MapTools.createPartsSheetIndex = function (object, x, y) {
-            return object.mapSpriteX + x + (object.mapSpriteY + y) * Lich.Resources.PARTS_SHEET_WIDTH;
+            return x + y * Lich.Resources.PARTS_SHEET_WIDTH;
         };
         return MapTools;
     }());

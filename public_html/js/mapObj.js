@@ -26,7 +26,7 @@ var Lich;
     var MapObjDefinition = (function () {
         function MapObjDefinition(
             // údaje o objektu na mapě (skládá se z vícero částí -- třeba stom)
-            mapKey, mapSpriteWidth, mapSpriteHeight, mapSpriteX, mapSpriteY, 
+            mapKey, mapSpriteWidth, mapSpriteHeight, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             invObj, 
             // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
@@ -38,8 +38,6 @@ var Lich;
             this.mapKey = mapKey;
             this.mapSpriteWidth = mapSpriteWidth;
             this.mapSpriteHeight = mapSpriteHeight;
-            this.mapSpriteX = mapSpriteX;
-            this.mapSpriteY = mapSpriteY;
             this.invObj = invObj;
             this.quant = quant;
             this.freq = freq;

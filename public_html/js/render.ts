@@ -183,7 +183,7 @@ namespace Lich {
                                     var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, mx, my);
                                     if (objectElement !== null) {
                                         // Sheet index dílku objektu
-                                        var object = self.createObject(objectElement.sheetIndex);
+                                        var object = self.createObject(objectElement.mapKey, objectElement.sheetIndex);
 
                                         // přidej dílek do sektoru
                                         sector.addChild(object);
@@ -280,13 +280,13 @@ namespace Lich {
             return tile;
         }
 
-        createObject(v: number): createjs.Bitmap {
+        createObject(objectKey: string, index: number): createjs.Bitmap {
             var self = this;
-            var object = self.game.resources.getBitmap(Resources.MAP_PARTS_KEY);
+            var object = self.game.resources.getBitmap(objectKey);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             object.sourceRect = new createjs.Rectangle(
-                (v % Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
-                Math.floor(v / Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
+                (index % Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
+                Math.floor(index / Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
                 Resources.TILE_SIZE,
                 Resources.TILE_SIZE
             );
@@ -644,7 +644,7 @@ namespace Lich {
                     for (var tx = 0; tx < 2; tx++) {
                         for (var ty = 0; ty < 2; ty++) {
                             var partsSheetIndex = MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
-                            var tile = self.createObject(partsSheetIndex);
+                            var tile = self.createObject(object.mapObj.mapKey, partsSheetIndex);
 
                             // přidej dílek do sektoru
                             sector.addChild(tile);

@@ -135,7 +135,7 @@ var Lich;
                                     var objectElement = Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, mx, my);
                                     if (objectElement !== null) {
                                         // Sheet index dílku objektu
-                                        var object = self.createObject(objectElement.sheetIndex);
+                                        var object = self.createObject(objectElement.mapKey, objectElement.sheetIndex);
                                         // přidej dílek do sektoru
                                         sector.addChild(object);
                                         object.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
@@ -210,11 +210,11 @@ var Lich;
             tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
             return tile;
         };
-        Render.prototype.createObject = function (v) {
+        Render.prototype.createObject = function (objectKey, index) {
             var self = this;
-            var object = self.game.resources.getBitmap(Lich.Resources.MAP_PARTS_KEY);
+            var object = self.game.resources.getBitmap(objectKey);
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            object.sourceRect = new createjs.Rectangle((v % Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Math.floor(v / Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
+            object.sourceRect = new createjs.Rectangle((index % Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Math.floor(index / Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
             return object;
         };
         /**
@@ -512,7 +512,7 @@ var Lich;
                     for (var tx = 0; tx < 2; tx++) {
                         for (var ty = 0; ty < 2; ty++) {
                             var partsSheetIndex = Lich.MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
-                            var tile = self.createObject(partsSheetIndex);
+                            var tile = self.createObject(object.mapObj.mapKey, partsSheetIndex);
                             // přidej dílek do sektoru
                             sector.addChild(tile);
                             tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
