@@ -59,6 +59,7 @@ namespace Lich {
         static SRFC_DIRT_KEY = "SRFC_DIRT_KEY";
         static SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
         static SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY"
+        static SRFC_FLORITE_KEY = "SRFC_FLORITE_KEY"
 
         // inv items
         static INV_BERRY_KEY = "INV_BERRY_KEY";
@@ -73,6 +74,7 @@ namespace Lich {
         static INV_PLANT4_KEY = "INV_PLANT4_KEY";
         static INV_DIRT_KEY = "INV_DIRT_KEY";
         static INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
+        static INV_FLORITE_KEY = "INV_FLORITE_KEY";
 
         // characters
         static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
@@ -153,6 +155,7 @@ namespace Lich {
             registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1, 0));
             registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
             registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
+            registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
 
             (function() {
                 // vytvoř frekvenční pool pro povrchy
@@ -214,6 +217,7 @@ namespace Lich {
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
 
             // usaditelných jako objekt
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
@@ -244,6 +248,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
                 new Load("images/ui/inventory/inv_dirt.png", Resources.INV_DIRT_KEY),
                 new Load("images/ui/inventory/inv_krystals.png", Resources.INV_KRYSTAL_KEY),
+                new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -253,6 +258,7 @@ namespace Lich {
                 new Load("images/surfaces/dirt.png", Resources.SRFC_DIRT_KEY),
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
                 new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
+                new Load("images/surfaces/florite.png", Resources.SRFC_FLORITE_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),

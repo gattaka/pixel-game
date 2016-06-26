@@ -140,7 +140,7 @@ var Lich;
                 // random deposit
                 var holesP = mass * 0.001;
                 for (var i = 0; i < holesP; i++) {
-                    var dia = Math.floor(Math.random() * 2) + 2;
+                    var dia = Math.floor(Math.random() * 4) + 2;
                     var depositIndex = Math.floor(Math.random() * mass);
                     var depositCoord = tilesMap.coordAt(depositIndex);
                     // z čeho bude ložisko?

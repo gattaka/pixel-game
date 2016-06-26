@@ -39,6 +39,7 @@ var Lich;
                 new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
                 new Load("images/ui/inventory/inv_dirt.png", Resources.INV_DIRT_KEY),
                 new Load("images/ui/inventory/inv_krystals.png", Resources.INV_KRYSTAL_KEY),
+                new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -48,6 +49,7 @@ var Lich;
                 new Load("images/surfaces/dirt.png", Resources.SRFC_DIRT_KEY),
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
                 new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
+                new Load("images/surfaces/florite.png", Resources.SRFC_FLORITE_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
@@ -207,6 +209,7 @@ var Lich;
         Resources.SRFC_DIRT_KEY = "SRFC_DIRT_KEY";
         Resources.SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
         Resources.SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY";
+        Resources.SRFC_FLORITE_KEY = "SRFC_FLORITE_KEY";
         // inv items
         Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
         Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
@@ -220,6 +223,7 @@ var Lich;
         Resources.INV_PLANT4_KEY = "INV_PLANT4_KEY";
         Resources.INV_DIRT_KEY = "INV_DIRT_KEY";
         Resources.INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
+        Resources.INV_FLORITE_KEY = "INV_FLORITE_KEY";
         // characters
         Resources.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
         // map objects
@@ -286,6 +290,7 @@ var Lich;
             registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1, 0));
             registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
             registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
             (function () {
                 // vytvoř frekvenční pool pro povrchy
                 for (var key in Resources.mapSurfacesDefs) {
@@ -339,6 +344,7 @@ var Lich;
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
             // usaditelných jako objekt
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
         })();
