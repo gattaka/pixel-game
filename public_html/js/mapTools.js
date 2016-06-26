@@ -86,7 +86,11 @@ var Lich;
             tilesMap.mapRecord[tilesMap.indexAt(rx, ry + 1)] = Lich.SurfaceIndex.VOID;
             tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry + 1)] = Lich.SurfaceIndex.VOID;
         };
-        MapTools.getPositionByCoord = function (x, y) {
+        /**
+         * Získá výchozí prostřední dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        MapTools.getPositionByCoordPattern = function (x, y) {
             var m = x % 3 + 1 + ((y % 3) * 3);
             var pos;
             switch (m) {

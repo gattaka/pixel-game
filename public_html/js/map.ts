@@ -33,7 +33,9 @@ namespace Lich {
                     if (y < Map.MAP_GROUND_LEVEL) {
                         tilesMap.mapRecord.push(SurfaceIndex.VOID);
                     } else {
-                        var pos = MapTools.getPositionByCoord(x, y);
+                        // získá výchozí prostřední dílek dle vzoru, 
+                        // který se opakuje, aby mapa byla pestřejší
+                        var pos = MapTools.getPositionByCoordPattern(x, y);
                         tilesMap.mapRecord.push(Resources.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos));
                     }
                 }
@@ -110,15 +112,62 @@ namespace Lich {
                 }
             })();
 
-            // frekvenční "pool" objektů
-            var pool = [];
-            for (var key in Resources.mapObjectsDefs) {
-                var item = Resources.mapObjectsDefs[key];
-                // vlož index objektu tolikrát, kolik je jeho frekvenc
-                for (var i = 0; i < item.freq; i++) {
-                    pool.push(key);
+            // Minerály 
+            (function() {
+                var createDeposit = function(x0: number, y0: number, d0: number, oreKey: string) {
+                    var d = Utils.even(d0);
+                    var x = Utils.even(x0);
+                    var y = Utils.even(y0);
+                    // musí skákat po dvou, aby se zabránilo zubatosti
+                    for (var _x = x - d; _x <= x + d; _x += 2) {
+                        for (var _y = y - d; _y <= y + d; _y += 2) {
+                            // osazuj v kruzích
+                            var r2 = Math.pow(x - _x, 2) + Math.pow(y - _y, 2);
+                            var d2 = Math.pow(d, 2);
+                            if (r2 <= d2) {
+                                // protože skáču po dvou, musím udělat vždy v každé
+                                // ose dva zápisy, jinak by vznikla mřížka
+                                for (var __x = _x; __x <= _x + 1; __x++) {
+                                    for (var __y = _y; __y <= _y + 1; __y++) {
+                                        var index = tilesMap.indexAt(__x, __y);
+                                        if (index >= 0) {
+                                            var posIndex = tilesMap.mapRecord[index];
+                                            if (posIndex > 0) {
+                                                // nahradí aktuální dílek dílkem daného minerálu
+                                                // přičemž zachová pozici dílku
+                                                tilesMap.mapRecord[index] = Resources.surfaceIndex.changeSurface(posIndex, oreKey);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // občas udělej na okraji ložiska... ložisko
+                            if (_x === x + d || _x === x - d || _y === y + d || _y === y - d) {
+                                if (Math.random() > 0.5) {
+                                    var auxX = _x;
+                                    var auxY = _y;
+                                    if (_x === x + d)
+                                        auxX -= 2;
+                                    if (_y === y + d)
+                                        auxY -= 2;
+                                    createDeposit(auxX, auxY, d - 2, oreKey);
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // random deposit
+                var holesP = mass * 0.001;
+                for (var i = 0; i < holesP; i++) {
+                    var dia = Math.floor(Math.random() * 2) + 2;
+                    var depositIndex = Math.floor(Math.random() * mass);
+                    var depositCoord = tilesMap.coordAt(depositIndex);
+                    // z čeho bude ložisko?
+                    var index = Math.floor(Resources.mapSurfacesFreqPool.length * Math.random());
+                    createDeposit(depositCoord.x, depositCoord.y, dia, Resources.mapSurfacesFreqPool[index]);
                 }
-            }
+            })();
 
             // objekty 
             (function() {
@@ -146,9 +195,9 @@ namespace Lich {
                         // bude tam nějaký objekt? (100% ano)
                         if (Math.random() > 0) {
                             var tries = 0;
-                            var index = Math.floor(pool.length * Math.random());
-                            while (tries < pool.length) {
-                                var key = pool[index];
+                            var index = Math.floor(Resources.mapObjectsFreqPool.length * Math.random());
+                            while (tries < Resources.mapObjectsFreqPool.length) {
+                                var key = Resources.mapObjectsFreqPool[index];
                                 var object = Resources.mapObjectsDefs[key];
                                 var coord = tilesMap.coordAt(i);
                                 if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
@@ -157,7 +206,7 @@ namespace Lich {
                                 } else {
                                     // další pokus na dalším objektu
                                     tries++;
-                                    index = (index + 1) % pool.length;
+                                    index = (index + 1) % Resources.mapObjectsFreqPool.length;
                                 }
                             }
                         }

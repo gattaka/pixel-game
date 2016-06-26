@@ -131,11 +131,14 @@ var Lich;
             // id objektu, který má vypadnout do světa po vytěžení
             invObj, 
             // kolik INV objektů vznikne po vytěření
-            quant) {
+            quant, 
+            // jak často takový povrch v mapě je 
+            freq) {
             _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.invObj = invObj;
             this.quant = quant;
+            this.freq = freq;
         }
         return MapSurfaceDefinition;
     }(Diggable));

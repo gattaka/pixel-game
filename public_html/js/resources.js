@@ -38,6 +38,7 @@ var Lich;
                 new Load("images/ui/inventory/inv_straw.png", Resources.INV_STRAW_KEY),
                 new Load("images/ui/inventory/inv_wood.png", Resources.INV_WOOD_KEY),
                 new Load("images/ui/inventory/inv_dirt.png", Resources.INV_DIRT_KEY),
+                new Load("images/ui/inventory/inv_krystals.png", Resources.INV_KRYSTAL_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -46,6 +47,7 @@ var Lich;
                 // surfaces
                 new Load("images/surfaces/dirt.png", Resources.SRFC_DIRT_KEY),
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
+                new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
@@ -204,6 +206,7 @@ var Lich;
         // surfaces
         Resources.SRFC_DIRT_KEY = "SRFC_DIRT_KEY";
         Resources.SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
+        Resources.SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY";
         // inv items
         Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
         Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
@@ -216,6 +219,7 @@ var Lich;
         Resources.INV_PLANT3_KEY = "INV_PLANT3_KEY";
         Resources.INV_PLANT4_KEY = "INV_PLANT4_KEY";
         Resources.INV_DIRT_KEY = "INV_DIRT_KEY";
+        Resources.INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
         // characters
         Resources.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
         // map objects
@@ -259,6 +263,8 @@ var Lich;
         Resources.MSC_BUILD_THEME_KEY = "MSC_BUILD_THEME_KEY";
         Resources.mapSurfacesDefs = new Array();
         Resources.mapObjectsDefs = new Array();
+        Resources.mapSurfacesFreqPool = new Array();
+        Resources.mapObjectsFreqPool = new Array();
         Resources.invObjectsDefs = new Array();
         /*
          * Sprite indexy
@@ -266,12 +272,33 @@ var Lich;
         Resources.surfaceIndex = new Lich.SurfaceIndex();
         Resources._constructor = (function () {
             console.log('Static constructor');
+            /**
+             * POVRCHY
+             */
             // Definice mapových povrchů
-            var putIntoSurfacesDefs = function (mapSurface) {
+            var registerSurfacesDefs = function (mapSurface) {
                 Resources.mapSurfacesDefs[mapSurface.mapKey] = mapSurface;
+                // Definice indexových počátků pro typy povrchu
+                Resources.surfaceIndex.insert(mapSurface.mapKey);
             };
-            putIntoSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1));
-            putIntoSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1));
+            // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
+            // jsou dle frekvence usazovány jiné povrchy
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1, 0));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
+            (function () {
+                // vytvoř frekvenční pool pro povrchy
+                for (var key in Resources.mapSurfacesDefs) {
+                    var item = Resources.mapSurfacesDefs[key];
+                    // vlož index objektu tolikrát, kolik je jeho frekvenc
+                    for (var i = 0; i < item.freq; i++) {
+                        Resources.mapSurfacesFreqPool.push(key);
+                    }
+                }
+            })();
+            /**
+             * OBJEKTY
+             */
             // Definice mapových objektů
             var putIntoObjectsDefs = function (mapObj) {
                 Resources.mapObjectsDefs[mapObj.mapKey] = mapObj;
@@ -291,18 +318,29 @@ var Lich;
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, Resources.INV_PLANT2_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
+            (function () {
+                // vytvoř frekvenční pool pro objekty 
+                for (var key in Resources.mapObjectsDefs) {
+                    var item = Resources.mapObjectsDefs[key];
+                    // vlož index objektu tolikrát, kolik je jeho frekvenc
+                    for (var i = 0; i < item.freq; i++) {
+                        Resources.mapObjectsFreqPool.push(key);
+                    }
+                }
+            })();
+            /**
+             * INVENTÁŘ
+             */
             // Definice inventárních objektů
             var putIntoInvObjectsDefs = function (invObj) {
                 Resources.invObjectsDefs[invObj.invKey] = invObj;
             };
-            // do povrchů
+            // usaditelných jako povrch
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
-            // do objektů
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
+            // usaditelných jako objekt
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
-            // Definice indexových počátků pro typy povrchu
-            Resources.surfaceIndex.insert(Resources.SRFC_DIRT_KEY);
-            Resources.surfaceIndex.insert(Resources.SRFC_WOODWALL_KEY);
         })();
         return Resources;
     }());

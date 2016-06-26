@@ -98,7 +98,11 @@ namespace Lich {
             tilesMap.mapRecord[tilesMap.indexAt(rx + 1, ry + 1)] = SurfaceIndex.VOID;
         }
         
-        static getPositionByCoord(x: number, y: number) {
+        /**
+         * Získá výchozí prostřední dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        static getPositionByCoordPattern(x: number, y: number) {
             var m = x % 3 + 1 + ((y % 3) * 3);
             var pos: string;
             switch (m) {

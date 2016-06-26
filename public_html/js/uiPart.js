@@ -94,7 +94,7 @@ var Lich;
         };
         InventoryUI.prototype.decrease = function (item, quant) {
             var self = this;
-            // zkus zvýšit počet
+            // TODO v případě 0 odebrat
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
                     self.invContent[i].quant -= quant;

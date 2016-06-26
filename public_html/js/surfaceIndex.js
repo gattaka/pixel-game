@@ -27,6 +27,13 @@ var Lich;
             return this.surfaceTypes[key] * SurfaceIndex.OPTIONS_COUNT + SurfaceIndex.positions[positionKey];
         };
         /**
+         * Změní na povrch, ale zachová pozici
+         */
+        SurfaceIndex.prototype.changeSurface = function (index, key) {
+            var pos = this.getPosition(index);
+            return this.surfaceTypes[key] * SurfaceIndex.OPTIONS_COUNT + pos;
+        };
+        /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu
          */
         SurfaceIndex.prototype.isPosition = function (index, positionKey) {

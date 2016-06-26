@@ -106,7 +106,9 @@ namespace Lich {
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: string,
             // kolik INV objektů vznikne po vytěření
-            public quant: number) {
+            public quant: number,
+            // jak často takový povrch v mapě je 
+            public freq: number) {
             super(mapKey, invObj, quant);
         }
     }

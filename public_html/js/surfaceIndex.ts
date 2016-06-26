@@ -92,7 +92,15 @@ namespace Lich {
         getPositionIndex(key: string, positionKey: string): number {
             return this.surfaceTypes[key] * SurfaceIndex.OPTIONS_COUNT + SurfaceIndex.positions[positionKey];
         }
-        
+
+        /**
+         * Změní na povrch, ale zachová pozici 
+         */
+        changeSurface(index: number, key: string): number {
+            var pos = this.getPosition(index);
+            return this.surfaceTypes[key] * SurfaceIndex.OPTIONS_COUNT + pos;
+        }
+
         /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu 
          */

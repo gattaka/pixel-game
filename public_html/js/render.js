@@ -515,7 +515,7 @@ var Lich;
                                 var srfcType = Lich.Resources.surfaceIndex.getSurfaceType(val);
                                 // okraje vyresetuj (pokud nejsou středy
                                 if (self.tilesMap.mapRecord[index] !== Lich.SurfaceIndex.VOID) {
-                                    self.tilesMap.mapRecord[index] = Lich.Resources.surfaceIndex.getPositionIndex(srfcType, Lich.MapTools.getPositionByCoord(x, y));
+                                    self.tilesMap.mapRecord[index] = Lich.Resources.surfaceIndex.getPositionIndex(srfcType, Lich.MapTools.getPositionByCoordPattern(x, y));
                                     tilesToReset.push([x, y]);
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -526,7 +526,7 @@ var Lich;
                                 }
                             }
                             else {
-                                var pos = Lich.MapTools.getPositionByCoord(x, y);
+                                var pos = Lich.MapTools.getPositionByCoordPattern(x, y);
                                 var posIndex = Lich.Resources.surfaceIndex.getPositionIndex(surfaceType, pos);
                                 self.tilesMap.mapRecord[index] = posIndex;
                                 var targetSector = self.getSectorByTiles(x, y);

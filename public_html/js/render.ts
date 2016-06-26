@@ -645,7 +645,7 @@ namespace Lich {
 
                                 // okraje vyresetuj (pokud nejsou středy
                                 if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
-                                    self.tilesMap.mapRecord[index] = Resources.surfaceIndex.getPositionIndex(srfcType, MapTools.getPositionByCoord(x, y));
+                                    self.tilesMap.mapRecord[index] = Resources.surfaceIndex.getPositionIndex(srfcType, MapTools.getPositionByCoordPattern(x, y));
                                     tilesToReset.push([x, y]);
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -659,7 +659,7 @@ namespace Lich {
                             }
                             // pokud jsem vnitřní část výběru, vytvoř nové dílky
                             else {
-                                var pos = MapTools.getPositionByCoord(x, y);
+                                var pos = MapTools.getPositionByCoordPattern(x, y);
                                 var posIndex = Resources.surfaceIndex.getPositionIndex(surfaceType, pos);
                                 self.tilesMap.mapRecord[index] = posIndex;
                                 var targetSector = self.getSectorByTiles(x, y);
