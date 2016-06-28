@@ -477,31 +477,60 @@ namespace Lich {
             var tilesToReset = [];
 
             var dugIndex = self.tilesMap.valueAt(rx, ry);
-            var surfaceType = Resources.surfaceIndex.getSurfaceType(dugIndex);
-            var objType: Diggable = Resources.mapSurfacesDefs[surfaceType];
+            if (dugIndex > -1) {
+                var surfaceType = Resources.surfaceIndex.getSurfaceType(dugIndex);
+                var objType: Diggable = Resources.mapSurfacesDefs[surfaceType];
 
-            self.onDigSurfaceListeners.forEach(function(fce) {
-                fce(objType, rx, ry);
-            });
+                self.onDigSurfaceListeners.forEach(function(fce) {
+                    fce(objType, rx, ry);
+                });
 
-            (function() {
-                for (var x = rx - 1; x <= rx + 2; x++) {
-                    for (var y = ry - 1; y <= ry + 2; y++) {
-                        var index = self.tilesMap.indexAt(x, y);
-                        var val = self.tilesMap.valueAt(x, y);
-                        var srfcType = Resources.surfaceIndex.getSurfaceType(val);
-                        var indx = Resources.surfaceIndex;
-                        self.prepareMapUpdate(x, y);
-                        if (index >= 0) {
-                            var sector = self.getSectorByTiles(x, y);
+                (function() {
+                    for (var x = rx - 1; x <= rx + 2; x++) {
+                        for (var y = ry - 1; y <= ry + 2; y++) {
+                            var index = self.tilesMap.indexAt(x, y);
+                            var val = self.tilesMap.valueAt(x, y);
+                            var srfcType = Resources.surfaceIndex.getSurfaceType(val);
+                            var indx = Resources.surfaceIndex;
+                            self.prepareMapUpdate(x, y);
+                            if (index >= 0) {
+                                var sector = self.getSectorByTiles(x, y);
 
-                            // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
-                            if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
+                                // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
+                                if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
 
-                                // okraje vyresetuj
-                                if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
-                                    self.tilesMap.mapRecord[index] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.M1);
-                                    tilesToReset.push([x, y]);
+                                    // okraje vyresetuj
+                                    if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
+                                        self.tilesMap.mapRecord[index] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.M1);
+                                        tilesToReset.push([x, y]);
+
+                                        // zjisti sektor dílku, aby byl přidán do fronty 
+                                        // ke cache update (postačí to udělat dle tilesToReset,
+                                        // protože to jsou okrajové dílky z oblasti změn)
+                                        if (typeof sector !== "undefined" && sector !== null) {
+                                            self.markSector(sector);
+                                        }
+                                    }
+
+                                }
+                                // pokud jsem vnitřní část výběru, zkontroluj, 
+                                // že jsem neustřelil povrch pod usazeným objektem
+                                // a vytvoř díru po kopání
+                                else {
+
+                                    // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
+                                    if (y === ry &&
+                                        (indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.T) ||
+                                            indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TL) ||
+                                            indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TR))) {
+                                        self.tryDigObject(x, y - 1);
+                                    }
+
+                                    self.tilesMap.mapRecord[index] = SurfaceIndex.VOID;
+                                    var targetSector = self.getSectorByTiles(x, y);
+                                    if (typeof targetSector !== "undefined" && targetSector !== null) {
+                                        targetSector.removeChild(Utils.get2D(self.sceneTilesMap, x, y));
+                                    }
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -510,40 +539,13 @@ namespace Lich {
                                         self.markSector(sector);
                                     }
                                 }
-
-                            }
-                            // pokud jsem vnitřní část výběru, zkontroluj, 
-                            // že jsem neustřelil povrch pod usazeným objektem
-                            // a vytvoř díru po kopání
-                            else {
-
-                                // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
-                                if (y === ry &&
-                                    (indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.T) ||
-                                        indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TL) ||
-                                        indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TR))) {
-                                    self.tryDigObject(x, y - 1);
-                                }
-
-                                self.tilesMap.mapRecord[index] = SurfaceIndex.VOID;
-                                var targetSector = self.getSectorByTiles(x, y);
-                                if (typeof targetSector !== "undefined" && targetSector !== null) {
-                                    targetSector.removeChild(Utils.get2D(self.sceneTilesMap, x, y));
-                                }
-
-                                // zjisti sektor dílku, aby byl přidán do fronty 
-                                // ke cache update (postačí to udělat dle tilesToReset,
-                                // protože to jsou okrajové dílky z oblasti změn)
-                                if (typeof sector !== "undefined" && sector !== null) {
-                                    self.markSector(sector);
-                                }
                             }
                         }
                     }
-                }
-            })();
+                })();
 
-            this.mapReshape(tilesToReset);
+                this.mapReshape(tilesToReset);
+            }
 
         }
 
