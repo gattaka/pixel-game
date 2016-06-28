@@ -48,7 +48,15 @@ namespace Lich {
         }
     }
 
+    class InvItem {
+        constructor(public item: string,
+            public quant: number,
+            public element: createjs.Sprite,
+            public count: Label) { }
+    }
+
     export class InventoryUI extends UIPart {
+
 
         static INV_BORDER = 10;
         static INV_SELECT_BORDER = 5;
@@ -62,7 +70,7 @@ namespace Lich {
         choosenItem: string = null;
         draggedItem: string = null;
 
-        invContent = [];
+        invContent = new Array<InvItem>();
         itemHighlightShape = new createjs.Shape();
         itemsCont = new createjs.Container();
 
@@ -118,9 +126,18 @@ namespace Lich {
             var self = this;
             // TODO v případě 0 odebrat
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
-                if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
-                    self.invContent[i].quant -= quant;
-                    self.invContent[i].count.setText(self.invContent[i].quant);
+                var invItem = self.invContent[i];
+                if (invItem != null && invItem.item === item) {
+                    invItem.quant -= quant;
+                    invItem.count.setText(invItem.quant);
+                    if (invItem.quant == 0) {
+                        self.itemsCont.removeChild(invItem.element);
+                        self.itemsCont.removeChild(invItem.count);
+                        self.choosenItem = null;
+                        self.draggedItem = null;
+                        self.itemHighlightShape.visible = false;
+                        self.invContent[i] = null;
+                    }
                     return; // hotovo
                 }
             }
@@ -130,15 +147,16 @@ namespace Lich {
             var self = this;
             // zkus zvýšit počet
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
-                if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
-                    self.invContent[i].quant += quant;
-                    self.invContent[i].count.setText(self.invContent[i].quant);
+                var invItem = self.invContent[i];
+                if (invItem != null && invItem.item === item) {
+                    invItem.quant += quant;
+                    invItem.count.setText(invItem.quant);
                     return true; // přidáno
                 }
             }
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
-                if (typeof self.invContent[i] === "undefined") {
+                if (self.invContent[i] == null) {
                     var sprite = self.game.resources.getSprite(item);
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
@@ -147,12 +165,7 @@ namespace Lich {
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;
-                    self.invContent[i] = {
-                        item: item,
-                        quant: quant,
-                        element: sprite,
-                        count: text
-                    };
+                    self.invContent[i] = new InvItem(item, quant, sprite, text);
 
                     var hitArea = new createjs.Shape();
                     hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
