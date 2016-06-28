@@ -11,15 +11,15 @@ namespace Lich {
             super();
 
             this.label = new createjs.Text(text, font, color);
-            this.addChild(this.label);
             if (outline) {
                 this.outlineLabel = new createjs.Text(text, font, outlineColor);
                 this.addChild(this.outlineLabel);
                 if (typeof outlineWidth !== "undefined")
                     outlineWidth = 1;
-                this.outlineLabel.outline = outlineWidth;
+                this.outlineLabel.outline = outlineWidth + 2;
             }
-            
+            this.addChild(this.label);
+
             this.height = this.label.getBounds().height;
             this.width = this.label.getBounds().width;
         }

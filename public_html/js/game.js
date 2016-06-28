@@ -143,6 +143,21 @@ var Lich;
                     else {
                         self.ui.inventoryUI.prepareForToggleInv();
                     }
+                    for (var i = 0; i < 3; i++) {
+                        if (self.keys[49 + i]) {
+                            switch (i) {
+                                case 0:
+                                    self.ui.spellsUI.selectSpell(Lich.Resources.SPELL_DIG_KEY);
+                                    break;
+                                case 1:
+                                    self.ui.spellsUI.selectSpell(Lich.Resources.SPELL_PLACE_KEY);
+                                    break;
+                                case 2:
+                                    self.ui.spellsUI.selectSpell(Lich.Resources.SPELL_FIREBALL_KEY);
+                                    break;
+                            }
+                        }
+                    }
                     self.world.update(delta, directions);
                 }
                 self.stage.update();

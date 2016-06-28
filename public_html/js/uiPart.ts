@@ -55,7 +55,7 @@ namespace Lich {
         static INV_SPACING = 12;
         static INV_LINE = 10;
         static INV_SIZE = 20;
-        static TEXT_SIZE = 10;
+        static TEXT_SIZE = 15;
 
         toggleFlag = true;
 
@@ -120,7 +120,7 @@ namespace Lich {
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
                     self.invContent[i].quant -= quant;
-                    self.invContent[i].count.text = self.invContent[i].quant;
+                    self.invContent[i].count.setText(self.invContent[i].quant);
                     return; // hotovo
                 }
             }
@@ -132,7 +132,7 @@ namespace Lich {
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
                     self.invContent[i].quant += quant;
-                    self.invContent[i].count.text = self.invContent[i].quant;
+                    self.invContent[i].count.setText(self.invContent[i].quant);
                     return true; // přidáno
                 }
             }
@@ -143,7 +143,7 @@ namespace Lich {
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new createjs.Text("" + quant, InventoryUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR);
+                    var text = new Label("" + quant, InventoryUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;

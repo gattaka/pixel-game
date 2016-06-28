@@ -98,7 +98,7 @@ var Lich;
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
                     self.invContent[i].quant -= quant;
-                    self.invContent[i].count.text = self.invContent[i].quant;
+                    self.invContent[i].count.setText(self.invContent[i].quant);
                     return; // hotovo
                 }
             }
@@ -109,7 +109,7 @@ var Lich;
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (typeof self.invContent[i] !== "undefined" && self.invContent[i].item === item) {
                     self.invContent[i].quant += quant;
-                    self.invContent[i].count.text = self.invContent[i].quant;
+                    self.invContent[i].count.setText(self.invContent[i].quant);
                     return true; // přidáno
                 }
             }
@@ -120,7 +120,7 @@ var Lich;
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
                     sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new createjs.Text("" + quant, InventoryUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
+                    var text = new Lich.Label("" + quant, InventoryUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
                     text.y = sprite.y + Lich.Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;
@@ -157,7 +157,7 @@ var Lich;
         InventoryUI.INV_SPACING = 12;
         InventoryUI.INV_LINE = 10;
         InventoryUI.INV_SIZE = 20;
-        InventoryUI.TEXT_SIZE = 10;
+        InventoryUI.TEXT_SIZE = 15;
         return InventoryUI;
     }(UIPart));
     Lich.InventoryUI = InventoryUI;
