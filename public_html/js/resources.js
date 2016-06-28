@@ -50,6 +50,7 @@ var Lich;
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
                 new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
                 new Load("images/surfaces/florite.png", Resources.SRFC_FLORITE_KEY),
+                new Load("images/surfaces/brick.png", Resources.SRFC_BRICK_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
@@ -210,6 +211,7 @@ var Lich;
         Resources.SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
         Resources.SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY";
         Resources.SRFC_FLORITE_KEY = "SRFC_FLORITE_KEY";
+        Resources.SRFC_BRICK_KEY = "SRFC_BRICK_KEY";
         // inv items
         Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
         Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
@@ -291,6 +293,7 @@ var Lich;
             registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
             registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
             registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_DIRT_KEY, 1, 0));
             (function () {
                 // vytvoř frekvenční pool pro povrchy
                 for (var key in Resources.mapSurfacesDefs) {
@@ -342,7 +345,7 @@ var Lich;
             };
             // usaditelných jako povrch
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_BRICK_KEY]));
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
             // usaditelných jako objekt

@@ -60,6 +60,7 @@ namespace Lich {
         static SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
         static SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY"
         static SRFC_FLORITE_KEY = "SRFC_FLORITE_KEY"
+        static SRFC_BRICK_KEY = "SRFC_BRICK_KEY"
 
         // inv items
         static INV_BERRY_KEY = "INV_BERRY_KEY";
@@ -156,6 +157,7 @@ namespace Lich {
             registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
             registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
             registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
+            registerSurfacesDefs(new MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_DIRT_KEY, 1, 0));
 
             (function() {
                 // vytvoř frekvenční pool pro povrchy
@@ -215,7 +217,7 @@ namespace Lich {
 
             // usaditelných jako povrch
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_DIRT_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_BRICK_KEY]));
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
 
@@ -259,6 +261,7 @@ namespace Lich {
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
                 new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
                 new Load("images/surfaces/florite.png", Resources.SRFC_FLORITE_KEY),
+                new Load("images/surfaces/brick.png", Resources.SRFC_BRICK_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
