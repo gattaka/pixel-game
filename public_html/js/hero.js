@@ -100,11 +100,11 @@ var Lich;
         Hero.FALL_STATE = "FALL_STATE";
         Hero.DIE_STATE = "DIE_STATE";
         Hero.DEAD_STATE = "DEAD_STATE";
-        Hero.WIDTH = 46;
-        Hero.HEIGHT = 64;
+        Hero.WIDTH = 56;
+        Hero.HEIGHT = 80;
         // Collision offset
         Hero.COLLXOFFSET = 10;
-        Hero.COLLYOFFSET = 2;
+        Hero.COLLYOFFSET = 10;
         Hero.stateAnimation = {
             WALKR_STATE: "walkR",
             WALKL_STATE: "walkL",

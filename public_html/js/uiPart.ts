@@ -2,6 +2,12 @@ namespace Lich {
 
     export class UIPart extends createjs.Container {
 
+        static BORDER = 10;
+        static SELECT_BORDER = 5;
+        static SPACING = 12;
+
+        static TEXT_SIZE = 15;
+
         outerShape: createjs.Shape;
 
         constructor(public width: number, public height: number) {
@@ -57,13 +63,8 @@ namespace Lich {
 
     export class InventoryUI extends UIPart {
 
-
-        static INV_BORDER = 10;
-        static INV_SELECT_BORDER = 5;
-        static INV_SPACING = 12;
         static INV_LINE = 10;
         static INV_SIZE = 20;
-        static TEXT_SIZE = 15;
 
         toggleFlag = true;
 
@@ -84,15 +85,15 @@ namespace Lich {
             self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
             self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
             self.itemHighlightShape.graphics.setStrokeStyle(2);
-            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + InventoryUI.INV_SELECT_BORDER * 2, Resources.PARTS_SIZE
-                + InventoryUI.INV_SELECT_BORDER * 2, 3);
+            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + UIPart.SELECT_BORDER * 2, Resources.PARTS_SIZE
+                + UIPart.SELECT_BORDER * 2, 3);
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
 
             // kontejner položek
 
-            self.itemsCont.x = InventoryUI.INV_BORDER;
-            self.itemsCont.y = InventoryUI.INV_BORDER;
+            self.itemsCont.x = UIPart.BORDER;
+            self.itemsCont.y = UIPart.BORDER;
             self.addChild(self.itemsCont);
         }
 
@@ -159,12 +160,12 @@ namespace Lich {
                 if (self.invContent[i] == null) {
                     var sprite = self.game.resources.getSprite(item);
                     self.itemsCont.addChild(sprite);
-                    sprite.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    var text = new Label("" + quant, InventoryUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+                    sprite.x = (i % InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + UIPart.SPACING);
+                    sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Resources.PARTS_SIZE + UIPart.SPACING);
+                    var text = new Label("" + quant, UIPart.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
-                    text.y = sprite.y + Resources.PARTS_SIZE - InventoryUI.TEXT_SIZE;
+                    text.y = sprite.y + Resources.PARTS_SIZE - UIPart.TEXT_SIZE;
                     self.invContent[i] = new InvItem(item, quant, sprite, text);
 
                     var hitArea = new createjs.Shape();
@@ -178,8 +179,8 @@ namespace Lich {
                             self.itemHighlightShape.visible = false;
                         } else {
                             self.itemHighlightShape.visible = true;
-                            self.itemHighlightShape.x = sprite.x - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
-                            self.itemHighlightShape.y = sprite.y - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
+                            self.itemHighlightShape.x = sprite.x - UIPart.SELECT_BORDER + UIPart.BORDER;
+                            self.itemHighlightShape.y = sprite.y - UIPart.SELECT_BORDER + UIPart.BORDER;
                             self.choosenItem = item;
                             self.draggedItem = item;
                         }
@@ -193,10 +194,6 @@ namespace Lich {
     }
 
     export class SpellsUI extends UIPart {
-
-        static BORDER = 10;
-        static SELECT_BORDER = 5;
-        static SPACING = 12;
 
         static n = 3;
 
@@ -258,6 +255,11 @@ namespace Lich {
             self.spellIndex[spell] = self.spellContent.length;
             self.spellContent.push(bitmap);
 
+            var text = new Label("" + self.spellContent.length, UIPart.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            self.itemsCont.addChild(text);
+            text.x = bitmap.x;
+            text.y = bitmap.y + Resources.PARTS_SIZE - UIPart.TEXT_SIZE;
+
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
@@ -268,4 +270,73 @@ namespace Lich {
         }
 
     }
+
+    export class MusicUI extends UIPart {
+
+        static n = 3;
+
+        choosenItem = {};
+        spellContent = [];
+        spellIndex = {};
+
+        itemsCont = new createjs.Container();
+        itemHighlightShape = new createjs.Shape();
+
+        constructor(public game: Game) {
+            super(MusicUI.n * Resources.PARTS_SIZE + (MusicUI.n - 1) * (UIPart.SPACING) + 2 * UIPart.BORDER, Resources.PARTS_SIZE + 2 * UIPart.BORDER);
+
+            var self = this;
+
+            // zatím rovnou:
+            self.spellInsert(Resources.SPELL_DIG_KEY);
+            self.spellInsert(Resources.SPELL_PLACE_KEY);
+            self.spellInsert(Resources.SPELL_FIREBALL_KEY);
+
+            self.selectSpell(Resources.SPELL_FIREBALL_KEY);
+
+            // zvýraznění vybrané položky
+            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
+            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
+            self.itemHighlightShape.graphics.setStrokeStyle(2);
+            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + UIPart.SELECT_BORDER * 2, Resources.PARTS_SIZE
+                + UIPart.SELECT_BORDER * 2, 3);
+            self.itemHighlightShape.visible = false;
+            self.addChild(self.itemHighlightShape);
+
+            // kontejner položek
+            self.itemsCont.x = UIPart.BORDER;
+            self.itemsCont.y = UIPart.BORDER;
+            self.addChild(self.itemsCont);
+        }
+
+
+        selectSpell(spell) {
+            var self = this;
+            var bitmap = self.spellContent[self.spellIndex[spell]];
+            self.itemHighlightShape.visible = true;
+            self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.choosenItem = spell;
+        }
+
+        spellInsert(spell) {
+            var self = this;
+            var bitmap = self.game.resources.getBitmap(spell);
+            self.itemsCont.addChild(bitmap);
+            bitmap.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
+            bitmap.y = 0;
+            self.spellIndex[spell] = self.spellContent.length;
+            self.spellContent.push(bitmap);
+
+            var hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
+            bitmap.hitArea = hitArea;
+
+            bitmap.on("mousedown", function() {
+                self.selectSpell(spell);
+            }, null, false);
+        }
+
+    }
+
 }

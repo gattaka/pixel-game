@@ -16,12 +16,12 @@ namespace Lich {
         static DIE_STATE = "DIE_STATE";
         static DEAD_STATE = "DEAD_STATE";
 
-        static WIDTH = 46;
-        static HEIGHT = 64;
+        static WIDTH = 56;
+        static HEIGHT = 80;
 
         // Collision offset
         static COLLXOFFSET = 10;
-        static COLLYOFFSET = 2;
+        static COLLYOFFSET = 10;
 
         static stateAnimation = {
             WALKR_STATE: "walkR",

@@ -18,6 +18,7 @@ namespace Lich {
         static OUTLINE_COLOR = "#000";
         static TEXT_COLOR = "#FF0";
         static DEBUG_TEXT_COLOR = "#FF0";
+        
         static REACH_TILES_RADIUS = 10;
 
         /*

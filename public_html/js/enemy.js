@@ -109,11 +109,11 @@ var Lich;
         Enemy.FALL_STATE = "FALL_STATE";
         Enemy.DIE_STATE = "DIE_STATE";
         Enemy.DEAD_STATE = "DEAD_STATE";
-        Enemy.WIDTH = 46;
-        Enemy.HEIGHT = 68;
+        Enemy.WIDTH = 56;
+        Enemy.HEIGHT = 80;
         // Collision offset
         Enemy.COLLXOFFSET = 10;
-        Enemy.COLLYOFFSET = 2;
+        Enemy.COLLYOFFSET = 10;
         Enemy.stateAnimation = {
             WALKR_STATE: "walkR",
             WALKL_STATE: "walkL",

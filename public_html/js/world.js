@@ -120,11 +120,11 @@ var Lich;
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/
-            self.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+            self.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             game.debugUI.addNextChild(self.tilesLabel);
-            self.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+            self.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             game.debugUI.addNextChild(self.sectorLabel);
-            self.playerLabel = new Lich.Label("PLAYER x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+            self.playerLabel = new Lich.Label("PLAYER x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             game.debugUI.addNextChild(self.playerLabel);
             // light test
             /*
@@ -401,7 +401,7 @@ var Lich;
                             deleteBullet(object);
                     }, function (clsn) {
                         if (object.done === false) {
-                            Lich.Mixer.play(Lich.Resources.SND_BURN_KEY);
+                            Lich.Mixer.play(Lich.Resources.SND_BURN_KEY, false, 0.1);
                             object.done = true;
                             object.gotoAndPlay("hit");
                             var centX = object.x + object.width / 2;
@@ -442,7 +442,7 @@ var Lich;
                         self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
-                        Lich.Mixer.play(Lich.Resources.SND_PICK_KEY);
+                        Lich.Mixer.play(Lich.Resources.SND_PICK_KEY, false, 0.2);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
@@ -622,7 +622,7 @@ var Lich;
             self.addChild(object);
             object.x = heroCenterX - object.width / 2;
             object.y = heroCenterY - object.height / 2;
-            Lich.Mixer.play(Lich.Resources.SND_FIREBALL_KEY);
+            Lich.Mixer.play(Lich.Resources.SND_FIREBALL_KEY, false, 0.2);
         };
         ;
         World.prototype.handleMouse = function (mouse, delta) {

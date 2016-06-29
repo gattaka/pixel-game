@@ -68,12 +68,12 @@ var Lich;
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
-                var versionLabel = new Lich.Label("Version: " + Game.VERSION, "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+                var versionLabel = new Lich.Label("Version: " + Game.VERSION, "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(versionLabel);
-                self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+                self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.fpsLabel);
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
-                self.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
+                self.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.mouseLabel);
                 self.world = new Lich.World(self);
                 self.stage.addChild(self.world);
