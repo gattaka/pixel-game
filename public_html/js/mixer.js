@@ -10,7 +10,16 @@ var Lich;
                 loop: loop ? -1 : 0
             });
             instance.volume = volume;
+            this.instances[id] = instance;
         };
+        Mixer.stop = function (id) {
+            var instance = this.instances[id];
+            if (typeof instance !== "undefined" && instance != null) {
+                instance.stop();
+                this.instances[id] == null;
+            }
+        };
+        Mixer.instances = new Array();
         return Mixer;
     }());
     Lich.Mixer = Mixer;

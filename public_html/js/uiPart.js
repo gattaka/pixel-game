@@ -22,6 +22,9 @@ var Lich;
             this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
             this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
         };
+        UIPart.BORDER = 10;
+        UIPart.SELECT_BORDER = 5;
+        UIPart.SPACING = 12;
         UIPart.TEXT_SIZE = 15;
         return UIPart;
     }(createjs.Container));
@@ -73,13 +76,13 @@ var Lich;
             self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
             self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
             self.itemHighlightShape.graphics.setStrokeStyle(2);
-            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Lich.Resources.PARTS_SIZE + InventoryUI.INV_SELECT_BORDER * 2, Lich.Resources.PARTS_SIZE
-                + InventoryUI.INV_SELECT_BORDER * 2, 3);
+            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Lich.Resources.PARTS_SIZE + UIPart.SELECT_BORDER * 2, Lich.Resources.PARTS_SIZE
+                + UIPart.SELECT_BORDER * 2, 3);
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
             // kontejner položek
-            self.itemsCont.x = InventoryUI.INV_BORDER;
-            self.itemsCont.y = InventoryUI.INV_BORDER;
+            self.itemsCont.x = UIPart.BORDER;
+            self.itemsCont.y = UIPart.BORDER;
             self.addChild(self.itemsCont);
         }
         InventoryUI.prototype.handleMouse = function (mouse) {
@@ -138,8 +141,8 @@ var Lich;
                 if (self.invContent[i] == null) {
                     var sprite = self.game.resources.getSprite(item);
                     self.itemsCont.addChild(sprite);
-                    sprite.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
-                    sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + InventoryUI.INV_SPACING);
+                    sprite.x = (i % InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + UIPart.SPACING);
+                    sprite.y = Math.floor(i / InventoryUI.INV_LINE) * (Lich.Resources.PARTS_SIZE + UIPart.SPACING);
                     var text = new Lich.Label("" + quant, UIPart.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                     self.itemsCont.addChild(text);
                     text.x = sprite.x;
@@ -156,8 +159,8 @@ var Lich;
                         }
                         else {
                             self.itemHighlightShape.visible = true;
-                            self.itemHighlightShape.x = sprite.x - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
-                            self.itemHighlightShape.y = sprite.y - InventoryUI.INV_SELECT_BORDER + InventoryUI.INV_BORDER;
+                            self.itemHighlightShape.x = sprite.x - UIPart.SELECT_BORDER + UIPart.BORDER;
+                            self.itemHighlightShape.y = sprite.y - UIPart.SELECT_BORDER + UIPart.BORDER;
                             self.choosenItem = item;
                             self.draggedItem = item;
                         }
@@ -167,9 +170,6 @@ var Lich;
             }
             return false; // nevešel se
         };
-        InventoryUI.INV_BORDER = 10;
-        InventoryUI.INV_SELECT_BORDER = 5;
-        InventoryUI.INV_SPACING = 12;
         InventoryUI.INV_LINE = 10;
         InventoryUI.INV_SIZE = 20;
         return InventoryUI;
@@ -235,11 +235,75 @@ var Lich;
                 self.selectSpell(spell);
             }, null, false);
         };
-        SpellsUI.BORDER = 10;
-        SpellsUI.SELECT_BORDER = 5;
-        SpellsUI.SPACING = 12;
         SpellsUI.n = 3;
         return SpellsUI;
     }(UIPart));
     Lich.SpellsUI = SpellsUI;
+    var MusicUI = (function (_super) {
+        __extends(MusicUI, _super);
+        function MusicUI(game) {
+            _super.call(this, MusicUI.n * Lich.Resources.PARTS_SIZE + (MusicUI.n - 1) * (UIPart.SPACING) + 2 * UIPart.BORDER, Lich.Resources.PARTS_SIZE + 2 * UIPart.BORDER);
+            this.game = game;
+            this.choosenItem = {};
+            this.trackContent = [];
+            this.trackIndex = {};
+            this.reversedTrackIndex = [];
+            this.itemsCont = new createjs.Container();
+            this.itemHighlightShape = new createjs.Shape();
+            var self = this;
+            // zatím rovnou:
+            self.trackInsert(Lich.Resources.MSC_DIRT_THEME_KEY);
+            self.trackInsert(Lich.Resources.MSC_BUILD_THEME_KEY);
+            self.trackInsert(Lich.Resources.MSC_BOSS_THEME_KEY);
+            self.trackInsert(Lich.Resources.MSC_KRYSTAL_THEME_KEY);
+            self.trackInsert(Lich.Resources.MSC_FLOOD_THEME_KEY);
+            self.trackInsert(Lich.Resources.MSC_LAVA_THEME_KEY);
+            self.selectTrack(Lich.Resources.MSC_DIRT_THEME_KEY);
+            // zvýraznění vybrané položky
+            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
+            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
+            self.itemHighlightShape.graphics.setStrokeStyle(2);
+            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Lich.Resources.PARTS_SIZE + UIPart.SELECT_BORDER * 2, Lich.Resources.PARTS_SIZE
+                + UIPart.SELECT_BORDER * 2, 3);
+            self.itemHighlightShape.visible = false;
+            self.addChild(self.itemHighlightShape);
+            // kontejner položek
+            self.itemsCont.x = UIPart.BORDER;
+            self.itemsCont.y = UIPart.BORDER;
+            self.addChild(self.itemsCont);
+        }
+        MusicUI.prototype.selectTrack = function (track) {
+            var self = this;
+            var bitmap = self.trackContent[self.trackIndex[track]];
+            self.itemHighlightShape.visible = true;
+            self.itemHighlightShape.x = bitmap.x - UIPart.SELECT_BORDER + UIPart.BORDER;
+            self.itemHighlightShape.y = bitmap.y - UIPart.SELECT_BORDER + UIPart.BORDER;
+            self.choosenItem = track;
+            for (var i = 0; i < self.reversedTrackIndex.length; i++) {
+                if (self.reversedTrackIndex[i] != track) {
+                    Lich.Mixer.stop(self.reversedTrackIndex[i]);
+                }
+            }
+            Lich.Mixer.play(track, true);
+        };
+        MusicUI.prototype.trackInsert = function (track) {
+            var self = this;
+            var bitmap = self.game.resources.getBitmap(Lich.Resources.UI_SOUND_KEY);
+            self.itemsCont.addChild(bitmap);
+            bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + UIPart.SPACING);
+            bitmap.y = 0;
+            self.trackIndex[track] = self.trackContent.length;
+            self.reversedTrackIndex[self.trackContent.length] = track;
+            self.trackContent.push(bitmap);
+            var hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
+            bitmap.hitArea = hitArea;
+            bitmap.on("mousedown", function () {
+                self.selectTrack(track);
+            }, null, false);
+        };
+        MusicUI.n = 6;
+        return MusicUI;
+    }(UIPart));
+    Lich.MusicUI = MusicUI;
 })(Lich || (Lich = {}));

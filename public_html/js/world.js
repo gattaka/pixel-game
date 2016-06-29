@@ -96,8 +96,6 @@ var Lich;
             self.render = new Lich.Render(game, self.map, self);
             self.background = new Lich.Background(game);
             self.hero = new Lich.Hero(game);
-            // hudba
-            Lich.Mixer.play(Lich.Resources.MSC_DIRT_THEME_KEY, true);
             /*------------*/
             /* Characters */
             /*------------*/

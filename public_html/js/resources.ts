@@ -18,7 +18,7 @@ namespace Lich {
         static OUTLINE_COLOR = "#000";
         static TEXT_COLOR = "#FF0";
         static DEBUG_TEXT_COLOR = "#FF0";
-        
+
         static REACH_TILES_RADIUS = 10;
 
         /*
@@ -104,6 +104,7 @@ namespace Lich {
         static HELMET_KEY = "HELMET_KEY";
         static TORSO_KEY = "TORSO_KEY";
         static GAUNTLET_KEY = "GAUNTLET_KEY";
+        static UI_SOUND_KEY = "UI_SOUND_KEY";
 
         // ui spells
         static SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
@@ -124,6 +125,10 @@ namespace Lich {
         // music
         static MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
         static MSC_BUILD_THEME_KEY = "MSC_BUILD_THEME_KEY";
+        static MSC_BOSS_THEME_KEY = "MSC_BOSS_THEME_KEY";
+        static MSC_KRYSTAL_THEME_KEY = "MSC_KRYSTAL_THEME_KEY";
+        static MSC_FLOOD_THEME_KEY = "MSC_FLOOD_THEME_KEY";
+        static MSC_LAVA_THEME_KEY = "MSC_LAVA_THEME_KEY";
 
         static mapSurfacesDefs = new Array<MapSurfaceDefinition>();
         static mapObjectsDefs = new Array<MapObjDefinition>();
@@ -283,6 +288,7 @@ namespace Lich {
                 // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
+                new Load("images/ui/sound.png", Resources.UI_SOUND_KEY),
                 // armor
                 new Load("images/armor/helmet.png", Resources.HELMET_KEY),
                 new Load("images/armor/torso.png", Resources.TORSO_KEY),
@@ -294,7 +300,6 @@ namespace Lich {
                 new Load("images/background/far_woodland.png", Resources.FAR_HILL_KEY),
                 new Load("images/background/woodland.png", Resources.HILL_KEY),
                 new Load("images/background/dirt_back.png", Resources.DIRTBACK_KEY),
-                new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
                 new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
                 /**
                  * SOUNDS AND MUSIC
@@ -312,6 +317,10 @@ namespace Lich {
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
+                new Load("music/Boss 1.ogg", Resources.MSC_BOSS_THEME_KEY),
+                new Load("music/Fight In Crystals.ogg", Resources.MSC_KRYSTAL_THEME_KEY),
+                new Load("music/Flood.ogg", Resources.MSC_FLOOD_THEME_KEY),
+                new Load("music/Lava.ogg", Resources.MSC_LAVA_THEME_KEY),
             ];
 
             (function() {

@@ -71,6 +71,7 @@ var Lich;
                 // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
+                new Load("images/ui/sound.png", Resources.UI_SOUND_KEY),
                 // armor
                 new Load("images/armor/helmet.png", Resources.HELMET_KEY),
                 new Load("images/armor/torso.png", Resources.TORSO_KEY),
@@ -82,7 +83,6 @@ var Lich;
                 new Load("images/background/far_woodland.png", Resources.FAR_HILL_KEY),
                 new Load("images/background/woodland.png", Resources.HILL_KEY),
                 new Load("images/background/dirt_back.png", Resources.DIRTBACK_KEY),
-                new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
                 new Load("images/background/darkness.png", Resources.DARKNESS_KEY),
                 /**
                  * SOUNDS AND MUSIC
@@ -100,6 +100,10 @@ var Lich;
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
+                new Load("music/Boss 1.ogg", Resources.MSC_BOSS_THEME_KEY),
+                new Load("music/Fight In Crystals.ogg", Resources.MSC_KRYSTAL_THEME_KEY),
+                new Load("music/Flood.ogg", Resources.MSC_FLOOD_THEME_KEY),
+                new Load("music/Lava.ogg", Resources.MSC_LAVA_THEME_KEY),
             ];
             (function () {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
@@ -250,6 +254,7 @@ var Lich;
         Resources.HELMET_KEY = "HELMET_KEY";
         Resources.TORSO_KEY = "TORSO_KEY";
         Resources.GAUNTLET_KEY = "GAUNTLET_KEY";
+        Resources.UI_SOUND_KEY = "UI_SOUND_KEY";
         // ui spells
         Resources.SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
         Resources.SPELL_DIG_KEY = "SPELL_DIG_KEY";
@@ -267,6 +272,10 @@ var Lich;
         // music
         Resources.MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
         Resources.MSC_BUILD_THEME_KEY = "MSC_BUILD_THEME_KEY";
+        Resources.MSC_BOSS_THEME_KEY = "MSC_BOSS_THEME_KEY";
+        Resources.MSC_KRYSTAL_THEME_KEY = "MSC_KRYSTAL_THEME_KEY";
+        Resources.MSC_FLOOD_THEME_KEY = "MSC_FLOOD_THEME_KEY";
+        Resources.MSC_LAVA_THEME_KEY = "MSC_LAVA_THEME_KEY";
         Resources.mapSurfacesDefs = new Array();
         Resources.mapObjectsDefs = new Array();
         Resources.mapSurfacesFreqPool = new Array();

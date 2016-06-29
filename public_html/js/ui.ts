@@ -7,6 +7,7 @@ namespace Lich {
         charCont: createjs.Container;
         inventoryUI: InventoryUI;
         spellsUI: SpellsUI;
+        musicUI: MusicUI;
 
         constructor(public game) {
             super();
@@ -26,6 +27,13 @@ namespace Lich {
             spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
+
+            // Hudba
+            var musicUI = new MusicUI(game);
+            musicUI.x = game.canvas.width / 2 - musicUI.width / 2;
+            musicUI.y = UI.SCREEN_SPACING
+            self.addChild(musicUI);
+            self.musicUI = musicUI;
 
             /*
              // přehled postavy

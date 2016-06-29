@@ -123,9 +123,6 @@ namespace Lich {
             self.background = new Background(game);
             self.hero = new Hero(game);
 
-            // hudba
-            Mixer.play(Resources.MSC_DIRT_THEME_KEY, true);
-
             /*------------*/
             /* Characters */
             /*------------*/

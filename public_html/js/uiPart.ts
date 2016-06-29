@@ -273,11 +273,12 @@ namespace Lich {
 
     export class MusicUI extends UIPart {
 
-        static n = 3;
+        static n = 6;
 
         choosenItem = {};
-        spellContent = [];
-        spellIndex = {};
+        trackContent = [];
+        trackIndex = {};
+        reversedTrackIndex = [];
 
         itemsCont = new createjs.Container();
         itemHighlightShape = new createjs.Shape();
@@ -288,11 +289,14 @@ namespace Lich {
             var self = this;
 
             // zatím rovnou:
-            self.spellInsert(Resources.SPELL_DIG_KEY);
-            self.spellInsert(Resources.SPELL_PLACE_KEY);
-            self.spellInsert(Resources.SPELL_FIREBALL_KEY);
+            self.trackInsert(Resources.MSC_DIRT_THEME_KEY);
+            self.trackInsert(Resources.MSC_BUILD_THEME_KEY);
+            self.trackInsert(Resources.MSC_BOSS_THEME_KEY);
+            self.trackInsert(Resources.MSC_KRYSTAL_THEME_KEY);
+            self.trackInsert(Resources.MSC_FLOOD_THEME_KEY);
+            self.trackInsert(Resources.MSC_LAVA_THEME_KEY);
 
-            self.selectSpell(Resources.SPELL_FIREBALL_KEY);
+            self.selectTrack(Resources.MSC_DIRT_THEME_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
@@ -310,30 +314,38 @@ namespace Lich {
         }
 
 
-        selectSpell(spell) {
+        selectTrack(track) {
             var self = this;
-            var bitmap = self.spellContent[self.spellIndex[spell]];
+            var bitmap = self.trackContent[self.trackIndex[track]];
             self.itemHighlightShape.visible = true;
-            self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.choosenItem = spell;
+            self.itemHighlightShape.x = bitmap.x - UIPart.SELECT_BORDER + UIPart.BORDER;
+            self.itemHighlightShape.y = bitmap.y - UIPart.SELECT_BORDER + UIPart.BORDER;
+            self.choosenItem = track;
+
+            for (var i = 0; i < self.reversedTrackIndex.length; i++) {
+                if (self.reversedTrackIndex[i] != track) {
+                    Mixer.stop(self.reversedTrackIndex[i]);
+                }
+            }
+            Mixer.play(track, true);
         }
 
-        spellInsert(spell) {
+        trackInsert(track) {
             var self = this;
-            var bitmap = self.game.resources.getBitmap(spell);
+            var bitmap = self.game.resources.getBitmap(Resources.UI_SOUND_KEY);
             self.itemsCont.addChild(bitmap);
-            bitmap.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
+            bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + UIPart.SPACING);
             bitmap.y = 0;
-            self.spellIndex[spell] = self.spellContent.length;
-            self.spellContent.push(bitmap);
+            self.trackIndex[track] = self.trackContent.length;
+            self.reversedTrackIndex[self.trackContent.length] = track;
+            self.trackContent.push(bitmap);
 
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
 
             bitmap.on("mousedown", function() {
-                self.selectSpell(spell);
+                self.selectTrack(track);
             }, null, false);
         }
 

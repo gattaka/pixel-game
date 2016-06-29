@@ -23,6 +23,12 @@ var Lich;
             spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
+            // Hudba
+            var musicUI = new Lich.MusicUI(game);
+            musicUI.x = game.canvas.width / 2 - musicUI.width / 2;
+            musicUI.y = UI.SCREEN_SPACING;
+            self.addChild(musicUI);
+            self.musicUI = musicUI;
             /*
              // přehled postavy
              (function () {
