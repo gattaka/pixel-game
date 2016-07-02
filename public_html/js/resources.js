@@ -40,6 +40,7 @@ var Lich;
                 new Load("images/ui/inventory/inv_dirt.png", Resources.INV_DIRT_KEY),
                 new Load("images/ui/inventory/inv_krystals.png", Resources.INV_KRYSTAL_KEY),
                 new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
+                new Load("images/ui/inventory/inv_campfire.png", Resources.INV_CAMPFIRE_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -173,13 +174,13 @@ var Lich;
                 framerate: 10,
                 "images": [this.getImage(Resources.MAP_CAMPFIRE_KEY)],
                 "frames": frames,
-                "animations": { "idle": [0, count - 1, "idle", 0.2] }
+                "animations": { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
             });
             var sprite = new createjs.Sprite(sheet, "idle");
             sprite.gotoAndPlay("idle");
             return sprite;
         };
-        Resources.prototype.getSprite = function (key) {
+        Resources.prototype.getSpriteSheet = function (key, framesCount) {
             var self = this;
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
@@ -187,16 +188,20 @@ var Lich;
                 "frames": {
                     "regX": 0,
                     "height": Resources.PARTS_SIZE,
-                    "count": 1,
+                    "count": framesCount,
                     "regY": 0,
                     "width": Resources.PARTS_SIZE
                 },
                 "animations": {
-                    "idle": [0, 0, "idle", 0.005]
+                    "idle": [0, framesCount - 1, "idle", Resources.SPRITE_FRAMERATE]
                 }
             });
-            var sprite = new createjs.Sprite(sheet, "idle");
-            sprite.gotoAndStop("idle");
+            return sheet;
+        };
+        Resources.prototype.getSprite = function (key, framesCount) {
+            var self = this;
+            var sprite = new createjs.Sprite(self.getSpriteSheet(key, framesCount), "idle");
+            sprite.gotoAndPlay("idle");
             return sprite;
         };
         ;
@@ -205,6 +210,7 @@ var Lich;
         Resources.TEXT_COLOR = "#FF0";
         Resources.DEBUG_TEXT_COLOR = "#FF0";
         Resources.REACH_TILES_RADIUS = 10;
+        Resources.SPRITE_FRAMERATE = 0.2;
         /*
          * Přepínače
          */
@@ -256,6 +262,7 @@ var Lich;
         Resources.INV_DIRT_KEY = "INV_DIRT_KEY";
         Resources.INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
         Resources.INV_FLORITE_KEY = "INV_FLORITE_KEY";
+        Resources.INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
         // characters
         Resources.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
         // map objects
@@ -365,7 +372,7 @@ var Lich;
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, null, 1, 1).setFrames(4));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
                 for (var key in Resources.mapObjectsDefs) {
@@ -391,6 +398,7 @@ var Lich;
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
             // usaditelných jako objekt
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.mapObjectsDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
         })();
         return Resources;
     }());

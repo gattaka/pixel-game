@@ -26,6 +26,9 @@ namespace Lich {
      * Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
     export class InvObjDefinition {
+
+        public frames: number = 1;
+
         // je možné tento INV objekt znovu umístit (váza) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapObj: MapObjDefinition = null;
@@ -41,6 +44,11 @@ namespace Lich {
             }
 
         };
+
+        public setFrames(frames: number): InvObjDefinition {
+            this.frames = frames;
+            return this;
+        }
     }
 
     /**

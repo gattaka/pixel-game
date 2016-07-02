@@ -36,6 +36,7 @@ var Lich;
     var InvObjDefinition = (function () {
         function InvObjDefinition(invKey, target) {
             this.invKey = invKey;
+            this.frames = 1;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             this.mapObj = null;
@@ -50,6 +51,10 @@ var Lich;
             }
         }
         ;
+        InvObjDefinition.prototype.setFrames = function (frames) {
+            this.frames = frames;
+            return this;
+        };
         return InvObjDefinition;
     }());
     Lich.InvObjDefinition = InvObjDefinition;

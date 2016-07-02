@@ -596,11 +596,11 @@ var Lich;
                                 var objectTile = new Lich.MapObjectTile(object.mapObj.mapKey, tx, ty);
                                 var tile = self.createObject(objectTile);
                                 // přidej dílek do sektoru
-                                if (object instanceof createjs.Sprite) {
-                                    sector.addAnimatedChild(object);
+                                if (tile instanceof createjs.Sprite) {
+                                    sector.addAnimatedChild(tile);
                                 }
                                 else {
-                                    sector.addCachableChild(object);
+                                    sector.addCachableChild(tile);
                                 }
                                 tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;

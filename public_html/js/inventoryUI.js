@@ -125,7 +125,15 @@ var Lich;
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (self.invContent[i] == null) {
-                    var sprite = self.game.resources.getSprite(item);
+                    var invDef = Lich.Resources.invObjectsDefs[item];
+                    var frames = 1;
+                    if (typeof invDef === "undefined" || invDef == null) {
+                        frames = 1;
+                    }
+                    else {
+                        frames = invDef.frames;
+                    }
+                    var sprite = self.game.resources.getSprite(item, frames);
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
                     sprite.y = Math.floor(i / InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
@@ -148,7 +156,7 @@ var Lich;
                             self.collapsedCont.removeChild(self.collapsedSprite);
                             self.collapsedCont.removeChild(self.collapsedCount);
                             self.collapsedHighlight.visible = true;
-                            self.collapsedSprite = self.game.resources.getSprite(item);
+                            self.collapsedSprite = self.game.resources.getSprite(item, frames);
                             self.collapsedCount = new Lich.Label("" + currentItem.quant, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                             self.collapsedCont.addChild(self.collapsedSprite);
                             self.collapsedCont.addChild(self.collapsedCount);

@@ -21,6 +21,8 @@ namespace Lich {
 
         static REACH_TILES_RADIUS = 10;
 
+        static SPRITE_FRAMERATE = 0.2;
+
         /*
          * Přepínače
          */
@@ -79,6 +81,7 @@ namespace Lich {
         static INV_DIRT_KEY = "INV_DIRT_KEY";
         static INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
         static INV_FLORITE_KEY = "INV_FLORITE_KEY";
+        static INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
 
         // characters
         static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
@@ -206,7 +209,7 @@ namespace Lich {
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
-            putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, null, 1, 1).setFrames(4));
+            putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
 
             (function() {
                 // vytvoř frekvenční pool pro objekty 
@@ -220,7 +223,7 @@ namespace Lich {
             })();
 
             /**
-             * INVENTÁŘ
+             * INVENTÁŘ 
              */
 
             // Definice inventárních objektů
@@ -237,6 +240,7 @@ namespace Lich {
 
             // usaditelných jako objekt
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.mapObjectsDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
 
         })();
 
@@ -265,6 +269,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_dirt.png", Resources.INV_DIRT_KEY),
                 new Load("images/ui/inventory/inv_krystals.png", Resources.INV_KRYSTAL_KEY),
                 new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
+                new Load("images/ui/inventory/inv_campfire.png", Resources.INV_CAMPFIRE_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -404,32 +409,36 @@ namespace Lich {
                 framerate: 10,
                 "images": [this.getImage(Resources.MAP_CAMPFIRE_KEY)],
                 "frames": frames,
-                "animations": { "idle": [0, count - 1, "idle", 0.2] }
+                "animations": { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
             });
             var sprite = new createjs.Sprite(sheet, "idle");
             sprite.gotoAndPlay("idle");
             return sprite;
         }
 
-        getSprite(key: string): createjs.Sprite {
+        getSpriteSheet(key: string, framesCount: number): createjs.SpriteSheet {
             var self = this;
-
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [self.getImage(key)],
                 "frames": {
                     "regX": 0,
                     "height": Resources.PARTS_SIZE,
-                    "count": 1,
+                    "count": framesCount,
                     "regY": 0,
                     "width": Resources.PARTS_SIZE
                 },
                 "animations": {
-                    "idle": [0, 0, "idle", 0.005],
+                    "idle": [0, framesCount - 1, "idle", Resources.SPRITE_FRAMERATE],
                 }
-            })
-            var sprite = new createjs.Sprite(sheet, "idle");
-            sprite.gotoAndStop("idle");
+            });
+            return sheet;
+        }
+
+        getSprite(key: string, framesCount: number): createjs.Sprite {
+            var self = this;
+            var sprite = new createjs.Sprite(self.getSpriteSheet(key, framesCount), "idle");
+            sprite.gotoAndPlay("idle");
             return sprite;
         };
 

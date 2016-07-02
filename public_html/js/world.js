@@ -137,22 +137,17 @@ var Lich;
             var digListener = function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
+                        var invDef = Lich.Resources.invObjectsDefs[objType.invObj];
+                        var frames = 1;
+                        if (typeof invDef === "undefined" || invDef == null) {
+                            frames = 1;
+                        }
+                        else {
+                            frames = invDef.frames;
+                        }
                         var image = game.resources.getImage(objType.item.invObj);
-                        var spriteSheet = new createjs.SpriteSheet({
-                            framerate: 10,
-                            "images": [image],
-                            "frames": {
-                                "regX": 0,
-                                "height": image.height,
-                                "count": 1,
-                                "regY": 0,
-                                "width": image.width
-                            },
-                            "animations": {
-                                "idle": [0, 0, "idle", 0.005]
-                            }
-                        });
-                        var object = new WorldObject(objType.item, image.width, image.height, spriteSheet, "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+                        var object = new WorldObject(objType.item, image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
+                        image.height, self.game.resources.getSpriteSheet(objType.invObj, frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
                         object.speedx = 0;
                         object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
                         var coord = self.render.tilesToPixel(x, y);
