@@ -8,7 +8,7 @@ var Lich;
     var SpellsUI = (function (_super) {
         __extends(SpellsUI, _super);
         function SpellsUI(game) {
-            _super.call(this, SpellsUI.n * Lich.Resources.PARTS_SIZE + (SpellsUI.n - 1) * (SpellsUI.SPACING) + 2 * SpellsUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * SpellsUI.BORDER);
+            _super.call(this, SpellsUI.N, SpellsUI.M);
             this.game = game;
             this.choosenItem = {};
             this.spellContent = [];
@@ -20,19 +20,15 @@ var Lich;
             self.spellInsert(Lich.Resources.SPELL_DIG_KEY);
             self.spellInsert(Lich.Resources.SPELL_PLACE_KEY);
             self.spellInsert(Lich.Resources.SPELL_FIREBALL_KEY);
-            self.selectSpell(Lich.Resources.SPELL_FIREBALL_KEY);
             // zvýraznění vybrané položky
-            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
-            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
-            self.itemHighlightShape.graphics.setStrokeStyle(2);
-            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Lich.Resources.PARTS_SIZE + SpellsUI.SELECT_BORDER * 2, Lich.Resources.PARTS_SIZE
-                + SpellsUI.SELECT_BORDER * 2, 3);
+            self.itemHighlightShape = self.createHighlightShape();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
             // kontejner položek
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
+            self.selectSpell(Lich.Resources.SPELL_FIREBALL_KEY);
         }
         SpellsUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
@@ -54,10 +50,10 @@ var Lich;
             bitmap.y = 0;
             self.spellIndex[spell] = self.spellContent.length;
             self.spellContent.push(bitmap);
-            var text = new Lich.Label("" + self.spellContent.length, Lich.UIPart.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            var text = new Lich.Label("" + self.spellContent.length, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             self.itemsCont.addChild(text);
             text.x = bitmap.x;
-            text.y = bitmap.y + Lich.Resources.PARTS_SIZE - Lich.UIPart.TEXT_SIZE;
+            text.y = bitmap.y + Lich.Resources.PARTS_SIZE - Lich.PartsUI.TEXT_SIZE;
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
@@ -65,8 +61,9 @@ var Lich;
                 self.selectSpell(spell);
             }, null, false);
         };
-        SpellsUI.n = 3;
+        SpellsUI.N = 3;
+        SpellsUI.M = 1;
         return SpellsUI;
-    }(Lich.UIPart));
+    }(Lich.PartsUI));
     Lich.SpellsUI = SpellsUI;
 })(Lich || (Lich = {}));

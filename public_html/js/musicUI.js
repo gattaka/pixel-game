@@ -8,7 +8,7 @@ var Lich;
     var MusicUI = (function (_super) {
         __extends(MusicUI, _super);
         function MusicUI(game) {
-            _super.call(this, MusicUI.n * Lich.Resources.PARTS_SIZE + (MusicUI.n - 1) * (Lich.UIPart.SPACING) + 2 * Lich.UIPart.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.UIPart.BORDER);
+            _super.call(this, MusicUI.N, MusicUI.M);
             this.game = game;
             this.choosenItem = {};
             this.trackContent = [];
@@ -24,26 +24,22 @@ var Lich;
             self.trackInsert(Lich.Resources.MSC_KRYSTAL_THEME_KEY);
             self.trackInsert(Lich.Resources.MSC_FLOOD_THEME_KEY);
             self.trackInsert(Lich.Resources.MSC_LAVA_THEME_KEY);
-            self.selectTrack(Lich.Resources.MSC_DIRT_THEME_KEY);
             // zvýraznění vybrané položky
-            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
-            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
-            self.itemHighlightShape.graphics.setStrokeStyle(2);
-            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Lich.Resources.PARTS_SIZE + Lich.UIPart.SELECT_BORDER * 2, Lich.Resources.PARTS_SIZE
-                + Lich.UIPart.SELECT_BORDER * 2, 3);
+            self.itemHighlightShape = self.createHighlightShape();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
             // kontejner položek
-            self.itemsCont.x = Lich.UIPart.BORDER;
-            self.itemsCont.y = Lich.UIPart.BORDER;
+            self.itemsCont.x = Lich.AbstractUI.BORDER;
+            self.itemsCont.y = Lich.AbstractUI.BORDER;
             self.addChild(self.itemsCont);
+            self.selectTrack(Lich.Resources.MSC_DIRT_THEME_KEY);
         }
         MusicUI.prototype.selectTrack = function (track) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
             self.itemHighlightShape.visible = true;
-            self.itemHighlightShape.x = bitmap.x - Lich.UIPart.SELECT_BORDER + Lich.UIPart.BORDER;
-            self.itemHighlightShape.y = bitmap.y - Lich.UIPart.SELECT_BORDER + Lich.UIPart.BORDER;
+            self.itemHighlightShape.x = bitmap.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+            self.itemHighlightShape.y = bitmap.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
             self.choosenItem = track;
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
                 if (self.reversedTrackIndex[i] != track) {
@@ -56,7 +52,7 @@ var Lich;
             var self = this;
             var bitmap = self.game.resources.getBitmap(Lich.Resources.UI_SOUND_KEY);
             self.itemsCont.addChild(bitmap);
-            bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.UIPart.SPACING);
+            bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             bitmap.y = 0;
             self.trackIndex[track] = self.trackContent.length;
             self.reversedTrackIndex[self.trackContent.length] = track;
@@ -68,8 +64,9 @@ var Lich;
                 self.selectTrack(track);
             }, null, false);
         };
-        MusicUI.n = 6;
+        MusicUI.N = 6;
+        MusicUI.M = 1;
         return MusicUI;
-    }(Lich.UIPart));
+    }(Lich.PartsUI));
     Lich.MusicUI = MusicUI;
 })(Lich || (Lich = {}));

@@ -1,6 +1,6 @@
 namespace Lich {
 
-    export class DebugLogUI extends UIPart {
+    export class DebugLogUI extends AbstractUI {
 
         static PADDING = 5;
 

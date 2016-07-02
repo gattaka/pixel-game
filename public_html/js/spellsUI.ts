@@ -1,8 +1,9 @@
 namespace Lich {
 
-    export class SpellsUI extends UIPart {
+    export class SpellsUI extends PartsUI {
 
-        static n = 3;
+        static N = 3;
+        static M = 1;
 
         choosenItem = {};
         spellContent = [];
@@ -12,7 +13,7 @@ namespace Lich {
         itemHighlightShape = new createjs.Shape();
 
         constructor(public game: Game) {
-            super(SpellsUI.n * Resources.PARTS_SIZE + (SpellsUI.n - 1) * (SpellsUI.SPACING) + 2 * SpellsUI.BORDER, Resources.PARTS_SIZE + 2 * SpellsUI.BORDER);
+            super(SpellsUI.N, SpellsUI.M);
 
             var self = this;
 
@@ -21,14 +22,8 @@ namespace Lich {
             self.spellInsert(Resources.SPELL_PLACE_KEY);
             self.spellInsert(Resources.SPELL_FIREBALL_KEY);
 
-            self.selectSpell(Resources.SPELL_FIREBALL_KEY);
-
             // zvýraznění vybrané položky
-            self.itemHighlightShape.graphics.beginStroke("rgba(250,250,10,0.5)");
-            self.itemHighlightShape.graphics.beginFill("rgba(250,250,10,0.2)");
-            self.itemHighlightShape.graphics.setStrokeStyle(2);
-            self.itemHighlightShape.graphics.drawRoundRect(0, 0, Resources.PARTS_SIZE + SpellsUI.SELECT_BORDER * 2, Resources.PARTS_SIZE
-                + SpellsUI.SELECT_BORDER * 2, 3);
+            self.itemHighlightShape = self.createHighlightShape();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
 
@@ -36,6 +31,8 @@ namespace Lich {
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
+
+            self.selectSpell(Resources.SPELL_FIREBALL_KEY);
         }
 
         handleMouse(mouse) {
@@ -62,10 +59,10 @@ namespace Lich {
             self.spellIndex[spell] = self.spellContent.length;
             self.spellContent.push(bitmap);
 
-            var text = new Label("" + self.spellContent.length, UIPart.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            var text = new Label("" + self.spellContent.length, PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
             self.itemsCont.addChild(text);
             text.x = bitmap.x;
-            text.y = bitmap.y + Resources.PARTS_SIZE - UIPart.TEXT_SIZE;
+            text.y = bitmap.y + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
 
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);

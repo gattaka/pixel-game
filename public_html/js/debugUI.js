@@ -25,6 +25,6 @@ var Lich;
         };
         DebugLogUI.PADDING = 5;
         return DebugLogUI;
-    }(Lich.UIPart));
+    }(Lich.AbstractUI));
     Lich.DebugLogUI = DebugLogUI;
 })(Lich || (Lich = {}));
