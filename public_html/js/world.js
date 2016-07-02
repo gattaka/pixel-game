@@ -294,10 +294,12 @@ var Lich;
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
-            if (directions.up && self.hero.speedy === 0) {
+            //if (directions.up && self.hero.speedy === 0) {
+            if (directions.up) {
                 self.hero.speedy = World.HERO_VERTICAL_SPEED;
             }
             else if (directions.down) {
+                self.hero.speedy = -World.HERO_VERTICAL_SPEED;
             }
             // Horizontální akcelerace
             if (directions.left) {
