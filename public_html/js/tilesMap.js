@@ -23,12 +23,9 @@ var Lich;
         function MapObjectTile(
             // typ objektu
             mapKey, 
-            // Sheet index dílku objektu
-            sheetIndex, 
             // relativní souřadnice dílku objektu v sheetmapě
             objTileX, objTileY) {
             this.mapKey = mapKey;
-            this.sheetIndex = sheetIndex;
             this.objTileX = objTileX;
             this.objTileY = objTileY;
         }

@@ -136,7 +136,7 @@ var Lich;
                                     var objectElement = Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, mx, my);
                                     if (objectElement !== null) {
                                         // Sheet index dílku objektu
-                                        var object = self.createObject(objectElement.mapKey, objectElement.sheetIndex);
+                                        var object = self.createObject(objectElement);
                                         // přidej dílek do sektoru
                                         sector.addChild(object);
                                         object.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
@@ -216,12 +216,20 @@ var Lich;
             this.setSourceRect(tile, positionIndex);
             return tile;
         };
-        Render.prototype.createObject = function (objectKey, index) {
+        Render.prototype.createObject = function (objectTile) {
             var self = this;
-            var object = self.game.resources.getBitmap(objectKey);
-            // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            object.sourceRect = new createjs.Rectangle((index % Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Math.floor(index / Lich.Resources.PARTS_SHEET_WIDTH) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
-            return object;
+            var objDef = Lich.Resources.mapObjectsDefs[objectTile.mapKey];
+            var object;
+            if (objDef.frames > 1) {
+                object = self.game.resources.getSpritePart(objDef.mapKey, objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                return object;
+            }
+            else {
+                object = self.game.resources.getBitmap(objectTile.mapKey);
+                // Otestováno: tohle je rychlejší než extract ze Spritesheet
+                object.sourceRect = new createjs.Rectangle(objectTile.objTileX * Lich.Resources.TILE_SIZE, objectTile.objTileY * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
+                return object;
+            }
         };
         /**
          * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
@@ -578,8 +586,8 @@ var Lich;
                         // počítat záběr a volný prostor
                         for (var tx = 0; tx < 2; tx++) {
                             for (var ty = 0; ty < 2; ty++) {
-                                var partsSheetIndex = Lich.MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
-                                var tile = self.createObject(object.mapObj.mapKey, partsSheetIndex);
+                                var objectTile = new Lich.MapObjectTile(object.mapObj.mapKey, tx, ty);
+                                var tile = self.createObject(objectTile);
                                 // přidej dílek do sektoru
                                 sector.addChild(tile);
                                 tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;

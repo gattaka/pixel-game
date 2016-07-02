@@ -20,8 +20,6 @@ namespace Lich {
         constructor(
             // typ objektu
             public mapKey: string,
-            // Sheet index dílku objektu
-            public sheetIndex: number,
             // relativní souřadnice dílku objektu v sheetmapě
             public objTileX: number,
             public objTileY: number

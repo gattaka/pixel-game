@@ -70,6 +70,7 @@ var Lich;
                 new Load("images/parts/tree.png", Resources.MAP_TREE_KEY),
                 new Load("images/parts/tree2.png", Resources.MAP_TREE2_KEY),
                 new Load("images/parts/florite.png", Resources.MAP_FLORITE_KEY),
+                new Load("images/parts/campfire.png", Resources.MAP_CAMPFIRE_KEY),
                 // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
@@ -158,6 +159,26 @@ var Lich;
             return new createjs.Bitmap(this.getImage(key));
         };
         ;
+        Resources.prototype.getSpritePart = function (key, tileX, tileY, count, height, width) {
+            var frames = [];
+            for (var i = 0; i < count; i++) {
+                frames.push([
+                    tileX * Resources.TILE_SIZE + i * width * Resources.TILE_SIZE,
+                    tileY * Resources.TILE_SIZE,
+                    Resources.TILE_SIZE,
+                    Resources.TILE_SIZE
+                ]);
+            }
+            var sheet = new createjs.SpriteSheet({
+                framerate: 10,
+                "images": [this.getImage(Resources.MAP_CAMPFIRE_KEY)],
+                "frames": frames,
+                "animations": { "idle": [0, count - 1, "idle", 0.2] }
+            });
+            var sprite = new createjs.Sprite(sheet, "idle");
+            sprite.gotoAndPlay("idle");
+            return sprite;
+        };
         Resources.prototype.getSprite = function (key) {
             var self = this;
             var sheet = new createjs.SpriteSheet({
@@ -255,6 +276,7 @@ var Lich;
         Resources.MAP_TREE_KEY = "MAP_TREE_KEY";
         Resources.MAP_TREE2_KEY = "MAP_TREE2_KEY";
         Resources.MAP_FLORITE_KEY = "MAP_FLORITE_KEY";
+        Resources.MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
         // ui
         Resources.SKULL_KEY = "SKULL_KEY";
         Resources.HELMET_KEY = "HELMET_KEY";
@@ -343,6 +365,7 @@ var Lich;
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, null, 10, 1).setFrames(4));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
                 for (var key in Resources.mapObjectsDefs) {

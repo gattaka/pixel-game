@@ -64,6 +64,9 @@ namespace Lich {
      * 1. Objekty, které jsou na mapě
      */
     export class MapObjDefinition extends Diggable {
+
+        public frames: number = 1;
+
         constructor(
             // údaje o objektu na mapě
             public mapKey: string,
@@ -76,6 +79,11 @@ namespace Lich {
             // jak často takový objekt v mapě je 
             public freq: number) {
             super(mapKey, invObj, quant);
+        }
+
+        public setFrames(frames: number): MapObjDefinition {
+            this.frames = frames;
+            return this;
         }
     }
 

@@ -95,7 +95,12 @@ var Lich;
             this.invObj = invObj;
             this.quant = quant;
             this.freq = freq;
+            this.frames = 1;
         }
+        MapObjDefinition.prototype.setFrames = function (frames) {
+            this.frames = frames;
+            return this;
+        };
         return MapObjDefinition;
     }(Diggable));
     Lich.MapObjDefinition = MapObjDefinition;

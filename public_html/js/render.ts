@@ -184,7 +184,7 @@ namespace Lich {
                                     var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, mx, my);
                                     if (objectElement !== null) {
                                         // Sheet index dílku objektu
-                                        var object = self.createObject(objectElement.mapKey, objectElement.sheetIndex);
+                                        var object = self.createObject(objectElement);
 
                                         // přidej dílek do sektoru
                                         sector.addChild(object);
@@ -287,17 +287,24 @@ namespace Lich {
             return tile;
         }
 
-        createObject(objectKey: string, index: number): createjs.Bitmap {
+        createObject(objectTile: MapObjectTile) {
             var self = this;
-            var object = self.game.resources.getBitmap(objectKey);
-            // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            object.sourceRect = new createjs.Rectangle(
-                (index % Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
-                Math.floor(index / Resources.PARTS_SHEET_WIDTH) * Resources.TILE_SIZE,
-                Resources.TILE_SIZE,
-                Resources.TILE_SIZE
-            );
-            return object;
+            var objDef: MapObjDefinition = Resources.mapObjectsDefs[objectTile.mapKey];
+            var object: any;
+            if (objDef.frames > 1) {
+                object = self.game.resources.getSpritePart(objDef.mapKey, objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                return object;
+            } else {
+                object = self.game.resources.getBitmap(objectTile.mapKey);
+                // Otestováno: tohle je rychlejší než extract ze Spritesheet
+                object.sourceRect = new createjs.Rectangle(
+                    objectTile.objTileX * Resources.TILE_SIZE,
+                    objectTile.objTileY * Resources.TILE_SIZE,
+                    Resources.TILE_SIZE,
+                    Resources.TILE_SIZE
+                );
+                return object;
+            }
         }
 
         /**
@@ -719,8 +726,8 @@ namespace Lich {
                         // počítat záběr a volný prostor
                         for (var tx = 0; tx < 2; tx++) {
                             for (var ty = 0; ty < 2; ty++) {
-                                var partsSheetIndex = MapTools.createPartsSheetIndex(object.mapObj, tx, ty);
-                                var tile = self.createObject(object.mapObj.mapKey, partsSheetIndex);
+                                var objectTile = new MapObjectTile(object.mapObj.mapKey, tx, ty);
+                                var tile = self.createObject(objectTile);
 
                                 // přidej dílek do sektoru
                                 sector.addChild(tile);

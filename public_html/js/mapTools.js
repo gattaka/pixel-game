@@ -136,15 +136,11 @@ var Lich;
                         col = [];
                         tilesMap.mapObjectsTiles[x + cx] = col;
                     }
-                    var partsSheetIndex = MapTools.createPartsSheetIndex(object, x, y);
                     // musí se posunout o object.mapSpriteHeight, protože 
                     // objekty se počítají počátkem levého SPODNÍHO rohu 
-                    col[y + cy - object.mapSpriteHeight] = new Lich.MapObjectTile(object.mapKey, partsSheetIndex, x, y);
+                    col[y + cy - object.mapSpriteHeight] = new Lich.MapObjectTile(object.mapKey, x, y);
                 }
             }
-        };
-        MapTools.createPartsSheetIndex = function (object, x, y) {
-            return x + y * Lich.Resources.PARTS_SHEET_WIDTH;
         };
         return MapTools;
     }());

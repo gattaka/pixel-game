@@ -131,16 +131,11 @@ namespace Lich {
                         col = [];
                         tilesMap.mapObjectsTiles[x + cx] = col;
                     }
-                    var partsSheetIndex = MapTools.createPartsSheetIndex(object, x, y);
                     // musí se posunout o object.mapSpriteHeight, protože 
                     // objekty se počítají počátkem levého SPODNÍHO rohu 
-                    col[y + cy - object.mapSpriteHeight] = new MapObjectTile(object.mapKey, partsSheetIndex, x, y);
+                    col[y + cy - object.mapSpriteHeight] = new MapObjectTile(object.mapKey, x, y);
                 }
             }
-        }
-
-        static createPartsSheetIndex(object: MapObjDefinition, x: number, y: number): number {
-            return x + y * Resources.PARTS_SHEET_WIDTH;
         }
 
     }
