@@ -1,7 +1,9 @@
+///<reference path='lib/createjs/createjs.d.ts'/>
+
 namespace Lich {
     export class Game {
 
-        public static VERSION = "0.001";
+        public static VERSION = "0.2";
 
         canvas: HTMLCanvasElement;
         stage: createjs.Stage;
@@ -77,6 +79,13 @@ namespace Lich {
                 self.stage.addEventListener("stagemouseup", function(event) {
                     self.mouse.down = false;
                 });
+                // wheel createjs ještě neumí
+                // https://github.com/CreateJS/EaselJS/issues/97
+                self.canvas.addEventListener('mousewheel', function(event) {
+                    self.mouse.wheelDeltaY = event.wheelDeltaY;
+                    return false;
+                }, false);
+
             })();
 
             /*----------------*/
@@ -98,14 +107,14 @@ namespace Lich {
                 /*---------------------*/
                 console.log("Measurements init");
 
-                var versionLabel = new Label("Version: " + Game.VERSION, "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR,true, Resources.OUTLINE_COLOR, 1);
+                var versionLabel = new Label("LichEngine version: " + Game.VERSION, "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(versionLabel);
 
-                self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR,true, Resources.OUTLINE_COLOR, 1);
+                self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.fpsLabel);
 
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
-                self.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR,true, Resources.OUTLINE_COLOR, 1);
+                self.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.mouseLabel);
 
                 self.world = new World(self);

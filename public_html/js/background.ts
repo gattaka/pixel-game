@@ -1,5 +1,3 @@
-///<reference path='lib/createjs/createjs.d.ts'/>
-
 namespace Lich {
     export class Background {
 
@@ -22,16 +20,18 @@ namespace Lich {
         far_hill;
         far_hill_sec;
         dirt_back;
+        dirt_back_start;
         clouds = [];
 
         dirt_backImg;
+        dirt_back_startImg;
 
         initialized = false;
 
         constructor(public game: Game) {
 
             var self = this;
-            
+
             var resources = game.resources;
 
             self.far_mountain = resources.getBitmap(Resources.FAR_MOUNTAIN_KEY);
@@ -80,11 +80,18 @@ namespace Lich {
             self.hill_sec.y = self.hill.y;
             self.hill_sec.x = -self.hill_sec.image.width;
 
+            self.dirt_back_startImg = resources.getImage(Resources.DIRT_BACK_START_KEY);
+            self.dirt_back_start = new createjs.Shape();
+            self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, game.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
+            self.dirt_back_start.x = 0;
+            self.dirt_back_start.y = 900;
+            game.stage.addChild(self.dirt_back_start);
+
             self.dirt_backImg = resources.getImage(Resources.DIRTBACK_KEY);
             self.dirt_back = new createjs.Shape();
-            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, game.canvas.width + self.dirt_backImg.width * 2, game.canvas.height + self.dirt_backImg.height);
+            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, game.canvas.width + self.dirt_backImg.width * 2, game.canvas.height + self.dirt_backImg.height * 2);
             self.dirt_back.x = 0;
-            self.dirt_back.y = 900;
+            self.dirt_back.y = self.dirt_back_start.y + self.dirt_back_startImg.height - 4;
             game.stage.addChild(self.dirt_back);
 
             console.log("background ready");
@@ -129,10 +136,10 @@ namespace Lich {
                 align(self.hill, self.hill_sec, 2, 3);
 
                 // Dirt back
-                self.dirt_back.x = ((self.dirt_back.x + distanceX / 2) % self.dirt_backImg.width) - self.dirt_backImg.width;
-                self.dirt_back.y = (self.dirt_back.y + distanceY / 3);
-                if (self.dirt_back.y < 0)
-                    self.dirt_back.y = self.dirt_back.y % self.dirt_backImg.height;
+                self.dirt_back.x = ((self.dirt_back.x + distanceX / 1.1) % self.dirt_backImg.width) - self.dirt_backImg.width;
+                self.dirt_back.y = self.dirt_back.y + distanceY / 1.1;
+                self.dirt_back_start.x = self.dirt_back.x;
+                self.dirt_back_start.y = self.dirt_back.y - self.dirt_back_startImg.height + 4;
 
                 // Clouds
                 for (var i = 0; i < self.clouds.length; i++) {

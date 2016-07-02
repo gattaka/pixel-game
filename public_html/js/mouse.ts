@@ -4,5 +4,6 @@ namespace Lich {
         click: boolean;
         x: number;
         y: number;
+        wheelDeltaY: number;
     }
 }
