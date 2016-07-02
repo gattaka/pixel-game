@@ -112,7 +112,7 @@ var Lich;
         Enemy.WIDTH = 56;
         Enemy.HEIGHT = 80;
         // Collision offset
-        Enemy.COLLXOFFSET = 10;
+        Enemy.COLLXOFFSET = 12;
         Enemy.COLLYOFFSET = 10;
         Enemy.stateAnimation = {
             WALKR_STATE: "walkR",

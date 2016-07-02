@@ -20,7 +20,7 @@ namespace Lich {
         static HEIGHT = 80;
 
         // Collision offset
-        static COLLXOFFSET = 10;
+        static COLLXOFFSET = 14;
         static COLLYOFFSET = 10;
 
         static stateAnimation = {
