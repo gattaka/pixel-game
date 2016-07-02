@@ -131,61 +131,6 @@ namespace Lich {
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
 
-            //Animation test
-
-            var getFrames = function(tileX: number, tileY: number, count: number, height: number, width: number) {
-                var frames = [];
-                for (var i = 0; i < count; i++) {
-                    frames.push([
-                        tileX * Resources.TILE_SIZE + i * width * Resources.TILE_SIZE, // x
-                        tileY * Resources.TILE_SIZE, // y
-                        Resources.TILE_SIZE,
-                        Resources.TILE_SIZE
-                    ]);
-                }
-                return frames;
-            }
-
-            var count = 4;
-            var width = 2;
-            var height = 2;
-            for (var x = 0; x < width; x++) {
-                for (var y = 0; y < height; y++) {
-                    var frames = getFrames(x, y, count, width, height);
-                    var sheet = new createjs.SpriteSheet({
-                        framerate: 10,
-                        "images": [self.game.resources.getImage(Resources.MAP_CAMPFIRE_KEY)],
-                        "frames": frames,
-                        "animations": { "idle": [0, 3, "idle", 0.2] }
-                    });
-                    var sprite = new createjs.Sprite(sheet, "idle");
-                    sprite.gotoAndPlay("idle");
-                    self.addChild(sprite);
-                    sprite.x = 200 + x * (Resources.TILE_SIZE + 2);
-                    sprite.y = 200 + y * (Resources.TILE_SIZE + 2);
-                }
-            }
-
-            var con = new createjs.Container();
-            var sheet2 = new createjs.SpriteSheet({
-                framerate: 10,
-                "images": [self.game.resources.getImage(Resources.MAP_CAMPFIRE_KEY)],
-                "frames": [
-                    [0, 0, 32, 32],
-                    [32, 0, 32, 32],
-                    [64, 0, 32, 32],
-                    [96, 0, 32, 32]
-                ],
-                "animations": { "idle": [0, 3, "idle", 0.2] }
-            });
-            var sprite2 = new createjs.Sprite(sheet2, "idle");
-            sprite2.gotoAndPlay("idle");
-            con.addChild(sprite2);
-            con.cache(0, 0, 32, 32);
-            self.addChild(con);
-            con.x = 400 + x * (Resources.TILE_SIZE + 2);
-            con.y = 200 + y * (Resources.TILE_SIZE + 2);
-
             /*---------*/
             /* Enemies */
             /*---------*/

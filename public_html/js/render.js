@@ -107,15 +107,10 @@ var Lich;
                         // jde o platný sektor 
                         // pokud ještě není alokován tak alokuj
                         if (typeof secCol[y] === "undefined" || secCol[y] === null) {
-                            var sector = new Lich.Sector();
-                            sector.secId = y * maxSecCountX + x;
-                            self.sectorsCont.addChild(sector);
-                            sector.map_x = x;
-                            sector.map_y = y;
+                            var sector = new Lich.Sector(y * maxSecCountX + x, x, y, Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE, Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE);
                             sector.x = x * Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE + self.screenOffsetX;
                             sector.y = y * Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE + self.screenOffsetY;
-                            sector.width = Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE;
-                            sector.height = Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE;
+                            self.sectorsCont.addChild(sector);
                             secCol[y] = sector;
                             // vytvoř jednotlivé dílky
                             for (var mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
@@ -126,7 +121,7 @@ var Lich;
                                         // vytvoř dílek
                                         var tile = self.createTile(tileElement);
                                         // přidej dílek do sektoru
-                                        sector.addChild(tile);
+                                        sector.addCachableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         // přidej dílek do globální mapy
@@ -138,7 +133,12 @@ var Lich;
                                         // Sheet index dílku objektu
                                         var object = self.createObject(objectElement);
                                         // přidej dílek do sektoru
-                                        sector.addChild(object);
+                                        if (object instanceof createjs.Sprite) {
+                                            sector.addAnimatedChild(object);
+                                        }
+                                        else {
+                                            sector.addCachableChild(object);
+                                        }
                                         object.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         object.y = (my % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         // Přidej objekt do globální mapy objektů
@@ -425,7 +425,13 @@ var Lich;
                                     self.tilesMap.mapRecord[index] = Lich.SurfaceIndex.VOID;
                                     var targetSector = self.getSectorByTiles(x, y);
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
-                                        targetSector.removeChild(Lich.Utils.get2D(self.sceneTilesMap, x, y));
+                                        var child = Lich.Utils.get2D(self.sceneTilesMap, x, y);
+                                        if (child instanceof createjs.Sprite) {
+                                            targetSector.removeAnimatedChild(child);
+                                        }
+                                        else {
+                                            targetSector.removeCachableChild(child);
+                                        }
                                     }
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -495,10 +501,11 @@ var Lich;
                         // odstraň dílek objektu ze sektoru
                         var object = Lich.Utils.get2D(self.sceneObjectsMap, globalX, globalY);
                         if (object != null) {
-                            if ((object.parent instanceof Lich.Sector) == false) {
-                                console.log("Assert error: Sector instance expected; instead " + (typeof object.parent) + " found!");
+                            if ((object.parent.parent instanceof Lich.Sector) == false) {
+                                console.log("Assert error: Sector instance expected; instead " + (typeof object.parent.parent) + " found!");
                             }
-                            self.markSector(object.parent);
+                            var sectorParent = object.parent.parent;
+                            self.markSector(sectorParent);
                             object.parent.removeChild(object);
                             // odstraň dílke objektu z map
                             Lich.Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
@@ -544,7 +551,7 @@ var Lich;
                                 // vytvoř dílek
                                 var tile = self.createTile(posIndex);
                                 // přidej dílek do sektoru
-                                sector.addChild(tile);
+                                sector.addCachableChild(tile);
                                 tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 // přidej dílek do globální mapy
@@ -589,7 +596,12 @@ var Lich;
                                 var objectTile = new Lich.MapObjectTile(object.mapObj.mapKey, tx, ty);
                                 var tile = self.createObject(objectTile);
                                 // přidej dílek do sektoru
-                                sector.addChild(tile);
+                                if (object instanceof createjs.Sprite) {
+                                    sector.addAnimatedChild(object);
+                                }
+                                else {
+                                    sector.addCachableChild(object);
+                                }
                                 tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 // Přidej objekt do globální mapy objektů
