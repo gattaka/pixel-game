@@ -2,17 +2,17 @@ namespace Lich {
 
     export class SpellsUI extends PartsUI {
 
-        static N = 3;
+        static N = 4;
         static M = 1;
 
-        choosenItem = {};
+        choosenItem: string;
         spellContent = [];
         spellIndex = {};
 
         itemsCont = new createjs.Container();
         itemHighlightShape = new createjs.Shape();
 
-        constructor(public game: Game) {
+        constructor() {
             super(SpellsUI.N, SpellsUI.M);
 
             var self = this;
@@ -21,6 +21,7 @@ namespace Lich {
             self.spellInsert(Resources.SPELL_DIG_KEY);
             self.spellInsert(Resources.SPELL_PLACE_KEY);
             self.spellInsert(Resources.SPELL_FIREBALL_KEY);
+            self.spellInsert(Resources.SPELL_BOLT_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = self.createHighlightShape();
@@ -32,7 +33,7 @@ namespace Lich {
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
 
-            self.selectSpell(Resources.SPELL_FIREBALL_KEY);
+            self.selectSpell(Resources.SPELL_BOLT_KEY);
         }
 
         handleMouse(mouse) {
@@ -41,7 +42,7 @@ namespace Lich {
             }
         }
 
-        selectSpell(spell) {
+        selectSpell(spell: string) {
             var self = this;
             var bitmap = self.spellContent[self.spellIndex[spell]];
             self.itemHighlightShape.visible = true;
@@ -52,7 +53,7 @@ namespace Lich {
 
         spellInsert(spell) {
             var self = this;
-            var bitmap = self.game.resources.getBitmap(spell);
+            var bitmap = Resources.INSTANCE.getBitmap(spell);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
             bitmap.y = 0;

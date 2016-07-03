@@ -11,48 +11,6 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var Lich;
 (function (Lich) {
-    var AbstractWorldObject = (function (_super) {
-        __extends(AbstractWorldObject, _super);
-        function AbstractWorldObject(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset) {
-            _super.call(this, spriteSheet, initState);
-            this.width = width;
-            this.height = height;
-            this.spriteSheet = spriteSheet;
-            this.initState = initState;
-            this.stateAnimation = stateAnimation;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.speedx = 0;
-            this.speedy = 0;
-        }
-        AbstractWorldObject.prototype.performState = function (desiredState) {
-            var self = this;
-            if (self.state !== desiredState) {
-                self.gotoAndPlay(self.stateAnimation[desiredState]);
-                self.state = desiredState;
-            }
-        };
-        AbstractWorldObject.prototype.updateAnimations = function () { };
-        ;
-        return AbstractWorldObject;
-    }(createjs.Sprite));
-    Lich.AbstractWorldObject = AbstractWorldObject;
-    var BulletObject = (function (_super) {
-        __extends(BulletObject, _super);
-        function BulletObject(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, done) {
-            _super.call(this, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
-            this.width = width;
-            this.height = height;
-            this.spriteSheet = spriteSheet;
-            this.initState = initState;
-            this.stateAnimation = stateAnimation;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.done = done;
-        }
-        ;
-        return BulletObject;
-    }(AbstractWorldObject));
     var WorldObject = (function (_super) {
         __extends(WorldObject, _super);
         function WorldObject(item, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, notificationTimer) {
@@ -69,7 +27,7 @@ var Lich;
         }
         ;
         return WorldObject;
-    }(AbstractWorldObject));
+    }(Lich.AbstractWorldObject));
     var CollisionTestResult = (function () {
         function CollisionTestResult(hit, x, y) {
             this.hit = hit;
@@ -91,11 +49,11 @@ var Lich;
             // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
             this.spellTime = World.MOUSE_COOLDOWN;
             var self = this;
-            self.map = new Lich.Map(game.resources);
+            self.map = new Lich.Map();
             self.tilesMap = self.map.tilesMap;
             self.render = new Lich.Render(game, self.map, self);
             self.background = new Lich.Background(game);
-            self.hero = new Lich.Hero(game);
+            self.hero = new Lich.Hero();
             /*------------*/
             /* Characters */
             /*------------*/
@@ -109,7 +67,7 @@ var Lich;
             self.enemies = new Array();
             var numberOfEnemies = 1;
             for (var i = 0; i < numberOfEnemies; i++) {
-                var enemy = new Lich.Enemy(game);
+                var enemy = new Lich.Enemy();
                 self.enemies.push(enemy);
                 self.addChild(enemy);
                 enemy.x = game.canvas.width * Math.random();
@@ -137,7 +95,7 @@ var Lich;
             var digListener = function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var invDef = Lich.Resources.invObjectsDefs[objType.invObj];
+                        var invDef = Lich.Resources.INSTANCE.invObjectsDefs[objType.invObj];
                         var frames = 1;
                         if (typeof invDef === "undefined" || invDef == null) {
                             frames = 1;
@@ -145,9 +103,9 @@ var Lich;
                         else {
                             frames = invDef.frames;
                         }
-                        var image = game.resources.getImage(objType.item.invObj);
+                        var image = Lich.Resources.INSTANCE.getImage(objType.item.invObj);
                         var object = new WorldObject(objType.item, image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-                        image.height, self.game.resources.getSpriteSheet(objType.invObj, frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+                        image.height, Lich.Resources.INSTANCE.getSpriteSheet(objType.invObj, frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
                         object.speedx = 0;
                         object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
                         var coord = self.render.tilesToPixel(x, y);
@@ -579,84 +537,17 @@ var Lich;
             return new CollisionTestResult(false);
         };
         ;
-        World.prototype.spell = function (targetX, targetY) {
-            var self = this;
-            var BLAST_SPEED = 1500;
-            var heroCenterX = self.hero.x + self.hero.width / 2;
-            var heroCenterY = self.hero.y + self.hero.height / 2;
-            var b = targetX - heroCenterX;
-            var a = targetY - heroCenterY;
-            var c = Math.sqrt(a * a + b * b);
-            var blastSheet = new createjs.SpriteSheet({
-                framerate: 10,
-                "images": [self.game.resources.getImage(Lich.Resources.BLAST_ANIMATION_KEY)],
-                "frames": {
-                    "regX": 0,
-                    "height": 60,
-                    "count": 5,
-                    "regY": 0,
-                    "width": 60
-                },
-                "animations": {
-                    "fly": [0, 0, "fly", 1],
-                    "hit": [1, 4, "done", 0.3],
-                    "done": [4, 4, "done", 1]
-                }
-            });
-            var object = new BulletObject(60, 60, blastSheet, "fly", {
-                "fly": "fly",
-                "hit": "hit",
-                "done": "done"
-            }, 20, 20, false);
-            object.speedx = -BLAST_SPEED * b / c;
-            object.speedy = -BLAST_SPEED * a / c;
-            // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
-            // přepony dle rychlosti projektilu
-            self.bulletObjects.push(object);
-            self.addChild(object);
-            object.x = heroCenterX - object.width / 2;
-            object.y = heroCenterY - object.height / 2;
-            Lich.Mixer.play(Lich.Resources.SND_FIREBALL_KEY, false, 0.2);
-        };
-        ;
         World.prototype.handleMouse = function (mouse, delta) {
             var self = this;
             self.spellTime -= delta;
             if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
                 mouse.click = false;
-                // dosahem omezené akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
-                // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
-                // změna projeví i na pixel místech, kde už je například kolize
-                var hero = self.hero;
-                var heroCoordTL = self.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.collYOffset);
-                var heroCoordTR = self.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.collYOffset);
-                var heroCoordBR = self.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.height - hero.collYOffset);
-                var heroCoordBL = self.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.height - hero.collYOffset);
-                var mouseCoord = self.render.pixelsToEvenTiles(mouse.x, mouse.y);
-                // kontroluj rádius od každého rohu
-                if (Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTL.x, heroCoordTL.y) < Lich.Resources.REACH_TILES_RADIUS
-                    || Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTR.x, heroCoordTR.y) < Lich.Resources.REACH_TILES_RADIUS
-                    || Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBR.x, heroCoordBR.y) < Lich.Resources.REACH_TILES_RADIUS
-                    || Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBL.x, heroCoordBL.y) < Lich.Resources.REACH_TILES_RADIUS) {
-                    if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_DIG_KEY) {
-                        if (self.render.dig(mouse.x, mouse.y)) {
-                            Lich.Mixer.play(Lich.Resources["SND_PICK_AXE_" + (Math.floor(Math.random() * 3) + 1) + "_KEY"]);
-                        }
-                    }
-                    else if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_PLACE_KEY) {
-                        // nemůžu pokládat do prostoru, kde stojím
-                        var uiItem = self.game.ui.inventoryUI.choosenItem;
-                        if ((mouseCoord.x > heroCoordBR.x || mouseCoord.x < heroCoordTL.x ||
-                            mouseCoord.y > heroCoordBR.y || mouseCoord.y < heroCoordTL.y) &&
-                            self.render.place(mouse.x, mouse.y, uiItem)) {
-                            Lich.Mixer.play(Lich.Resources.SND_PLACE_KEY);
-                            self.game.ui.inventoryUI.decrease(uiItem, 1);
-                        }
-                    }
-                }
-                // dosahem neomezené akce
-                if (self.game.ui.spellsUI.choosenItem === Lich.Resources.SPELL_FIREBALL_KEY) {
-                    self.spell(mouse.x, mouse.y);
+                var choosenSpell = self.game.ui.spellsUI.choosenItem;
+                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                    var spellDef = Lich.Resources.INSTANCE.spellsDefs[choosenSpell];
+                    var heroCenterX = self.hero.x + self.hero.width / 2;
+                    var heroCenterY = self.hero.y + self.hero.height / 2;
+                    spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game);
                 }
                 self.spellTime = World.MOUSE_COOLDOWN;
             }

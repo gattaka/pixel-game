@@ -5,6 +5,8 @@ namespace Lich {
         /* CONSTANTS */
         /*-----------*/
 
+        static OWNER_HERO_TAG = "OWNER_HERO_TAG";
+
         static WALKR_STATE = "WALKR_STATE";
         static WALKL_STATE = "WALKL_STATE";
         static IDLE_STATE = "IDLE_STATE";
@@ -49,10 +51,10 @@ namespace Lich {
 
         initialized = false;
 
-        constructor(public game: Game) {
+        constructor() {
             super(Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [game.resources.getImage(Resources.LICH_ANIMATION_KEY)],
+                "images": [Resources.INSTANCE.getImage(Resources.LICH_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,

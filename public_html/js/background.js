@@ -8,7 +8,7 @@ var Lich;
             this.offsetX = 0;
             this.offsetY = 0;
             var self = this;
-            var resources = game.resources;
+            var resources = Lich.Resources.INSTANCE;
             self.far_mountain = resources.getBitmap(Lich.Resources.FAR_MOUNTAIN_KEY);
             self.far_mountain_sec = resources.getBitmap(Lich.Resources.FAR_MOUNTAIN_KEY);
             self.mountain = resources.getBitmap(Lich.Resources.MOUNTAIN_KEY);

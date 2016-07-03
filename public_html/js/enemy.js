@@ -7,10 +7,10 @@ var Lich;
 (function (Lich) {
     var Enemy = (function (_super) {
         __extends(Enemy, _super);
-        function Enemy(game) {
+        function Enemy() {
             _super.call(this, Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [game.resources.getImage(Lich.Resources.CORPSE_ANIMATION_KEY)],
+                "images": [Lich.Resources.INSTANCE.getImage(Lich.Resources.CORPSE_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,
@@ -32,7 +32,6 @@ var Lich;
                     "dead": [29, 29, "dead", 0.2]
                 }
             }), Enemy.stateAnimation[Enemy.IDLE_STATE], Enemy.stateAnimation, Enemy.COLLXOFFSET, Enemy.COLLYOFFSET);
-            this.game = game;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/

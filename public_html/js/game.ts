@@ -16,7 +16,6 @@ namespace Lich {
         keys = {};
 
         mouse = new Mouse();
-        resources: Resources;
 
         constructor(canvasId: string) {
 
@@ -91,7 +90,7 @@ namespace Lich {
             /*----------------*/
             /* Resources init */
             /*----------------*/
-            self.resources = new Resources(self, function() {
+            new Resources(self, function() {
 
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/

@@ -17,6 +17,22 @@ var Lich;
     }());
     var Resources = (function () {
         function Resources(game, callback) {
+            /**
+             * DEFINICE
+             */
+            // definice povrchů a objektů
+            this.mapSurfacesDefs = new Array();
+            this.mapObjectsDefs = new Array();
+            this.mapSurfacesFreqPool = new Array();
+            this.mapObjectsFreqPool = new Array();
+            // definice inv položek
+            this.invObjectsDefs = new Array();
+            // definice spells
+            this.spellsDefs = new Array();
+            /*
+             * Sprite indexy
+             */
+            this.surfaceIndex = new Lich.SurfaceIndex();
             var self = this;
             var manifest = [
                 /**
@@ -26,6 +42,7 @@ var Lich;
                 new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
+                new Load("images/ui/bolt_spell.png", Resources.SPELL_BOLT_KEY),
                 // inventory
                 new Load("images/ui/inventory/inv_berry.png", Resources.INV_BERRY_KEY),
                 new Load("images/ui/inventory/inv_mushroom.png", Resources.INV_MUSHROOM_KEY),
@@ -45,7 +62,8 @@ var Lich;
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
                 // gfx animations
-                new Load("images/effects/blast_animation.png", Resources.BLAST_ANIMATION_KEY),
+                new Load("images/effects/blast_animation.png", Resources.FIREBALL_ANIMATION_KEY),
+                new Load("images/effects/bolt_animation.png", Resources.BOLT_ANIMATION_KEY),
                 // surfaces
                 new Load("images/surfaces/dirt.png", Resources.SRFC_DIRT_KEY),
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
@@ -150,6 +168,97 @@ var Lich;
                 }
             });
             self.loader.loadManifest(manifest, true);
+            Resources.INSTANCE = this;
+            /**
+             * Definice
+             */
+            /**
+             * POVRCHY
+             */
+            // Definice mapových povrchů
+            var registerSurfacesDefs = function (mapSurface) {
+                Resources.INSTANCE.mapSurfacesDefs[mapSurface.mapKey] = mapSurface;
+                // Definice indexových počátků pro typy povrchu
+                Resources.INSTANCE.surfaceIndex.insert(mapSurface.mapKey);
+            };
+            // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
+            // jsou dle frekvence usazovány jiné povrchy
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1, 0));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_DIRT_KEY, 1, 0));
+            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_STRAW_KEY, Resources.INV_STRAW_KEY, 1, 0));
+            (function () {
+                // vytvoř frekvenční pool pro povrchy
+                for (var key in Resources.INSTANCE.mapSurfacesDefs) {
+                    var item = Resources.INSTANCE.mapSurfacesDefs[key];
+                    // vlož index objektu tolikrát, kolik je jeho frekvenc
+                    for (var i = 0; i < item.freq; i++) {
+                        Resources.INSTANCE.mapSurfacesFreqPool.push(key);
+                    }
+                }
+            })();
+            /**
+             * OBJEKTY
+             */
+            // Definice mapových objektů
+            var putIntoObjectsDefs = function (mapObj) {
+                Resources.INSTANCE.mapObjectsDefs[mapObj.mapKey] = mapObj;
+            };
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BERRY_KEY, 2, 2, Resources.INV_BERRY_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, null, 0, 10));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BUSH2_KEY, 2, 2, null, 0, 10));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 5, 5));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 2, 10));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM_KEY, 2, 2, Resources.INV_MUSHROOM_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM2_KEY, 2, 2, Resources.INV_MUSHROOM2_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM3_KEY, 2, 2, Resources.INV_MUSHROOM3_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT_KEY, 2, 2, Resources.INV_PLANT_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, Resources.INV_PLANT2_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
+            (function () {
+                // vytvoř frekvenční pool pro objekty 
+                for (var key in Resources.INSTANCE.mapObjectsDefs) {
+                    var item = Resources.INSTANCE.mapObjectsDefs[key];
+                    // vlož index objektu tolikrát, kolik je jeho frekvenc
+                    for (var i = 0; i < item.freq; i++) {
+                        Resources.INSTANCE.mapObjectsFreqPool.push(key);
+                    }
+                }
+            })();
+            /**
+             * INVENTÁŘ
+             */
+            // Definice inventárních objektů
+            var putIntoInvObjectsDefs = function (invObj) {
+                Resources.INSTANCE.invObjectsDefs[invObj.invKey] = invObj;
+            };
+            // usaditelných jako povrch
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_BRICK_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_STRAW_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
+            // usaditelných jako objekt
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectsDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
+            /**
+             * SPELLS
+             */
+            // Definice spells
+            var putIntoSpellsDefs = function (spell) {
+                Resources.INSTANCE.spellsDefs[spell.key] = spell;
+            };
+            putIntoSpellsDefs(new Lich.FireballSpellDef());
+            putIntoSpellsDefs(new Lich.DigSpellDef());
+            putIntoSpellsDefs(new Lich.PlaceSpellDef());
         }
         ;
         Resources.prototype.getImage = function (key) {
@@ -238,9 +347,10 @@ var Lich;
         Resources.DARKNESS_KEY = "DARKNESS_KEY";
         Resources.CLOUD_KEY = "CLOUD_KEY";
         // animations
-        Resources.BLAST_ANIMATION_KEY = "BLAST_ANIMATION_KEY";
+        Resources.FIREBALL_ANIMATION_KEY = "BLAST_ANIMATION_KEY";
         Resources.LICH_ANIMATION_KEY = "LICH_ANIMATION_KEY";
         Resources.CORPSE_ANIMATION_KEY = "CORPSE_ANIMATION_KEY";
+        Resources.BOLT_ANIMATION_KEY = "BOLT_ANIMATION_KEY";
         // surfaces
         Resources.SRFC_DIRT_KEY = "SRFC_DIRT_KEY";
         Resources.SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
@@ -294,6 +404,7 @@ var Lich;
         Resources.SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
         Resources.SPELL_DIG_KEY = "SPELL_DIG_KEY";
         Resources.SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
+        Resources.SPELL_BOLT_KEY = "SPELL_BOLT_KEY";
         // sounds
         Resources.SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
         Resources.SND_BURN_KEY = "SND_BURN_KEY";
@@ -311,94 +422,8 @@ var Lich;
         Resources.MSC_KRYSTAL_THEME_KEY = "MSC_KRYSTAL_THEME_KEY";
         Resources.MSC_FLOOD_THEME_KEY = "MSC_FLOOD_THEME_KEY";
         Resources.MSC_LAVA_THEME_KEY = "MSC_LAVA_THEME_KEY";
-        Resources.mapSurfacesDefs = new Array();
-        Resources.mapObjectsDefs = new Array();
-        Resources.mapSurfacesFreqPool = new Array();
-        Resources.mapObjectsFreqPool = new Array();
-        Resources.invObjectsDefs = new Array();
-        /*
-         * Sprite indexy
-         */
-        Resources.surfaceIndex = new Lich.SurfaceIndex();
         Resources._constructor = (function () {
             console.log('Static constructor');
-            /**
-             * POVRCHY
-             */
-            // Definice mapových povrchů
-            var registerSurfacesDefs = function (mapSurface) {
-                Resources.mapSurfacesDefs[mapSurface.mapKey] = mapSurface;
-                // Definice indexových počátků pro typy povrchu
-                Resources.surfaceIndex.insert(mapSurface.mapKey);
-            };
-            // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
-            // jsou dle frekvence usazovány jiné povrchy
-            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1, 0));
-            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
-            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
-            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
-            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_DIRT_KEY, 1, 0));
-            registerSurfacesDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_STRAW_KEY, Resources.INV_STRAW_KEY, 1, 0));
-            (function () {
-                // vytvoř frekvenční pool pro povrchy
-                for (var key in Resources.mapSurfacesDefs) {
-                    var item = Resources.mapSurfacesDefs[key];
-                    // vlož index objektu tolikrát, kolik je jeho frekvenc
-                    for (var i = 0; i < item.freq; i++) {
-                        Resources.mapSurfacesFreqPool.push(key);
-                    }
-                }
-            })();
-            /**
-             * OBJEKTY
-             */
-            // Definice mapových objektů
-            var putIntoObjectsDefs = function (mapObj) {
-                Resources.mapObjectsDefs[mapObj.mapKey] = mapObj;
-            };
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BERRY_KEY, 2, 2, Resources.INV_BERRY_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, null, 0, 10));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BUSH2_KEY, 2, 2, null, 0, 10));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 5, 5));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 2, 10));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM_KEY, 2, 2, Resources.INV_MUSHROOM_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM2_KEY, 2, 2, Resources.INV_MUSHROOM2_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM3_KEY, 2, 2, Resources.INV_MUSHROOM3_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT_KEY, 2, 2, Resources.INV_PLANT_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT2_KEY, 2, 2, Resources.INV_PLANT2_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT3_KEY, 2, 2, Resources.INV_PLANT3_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
-            (function () {
-                // vytvoř frekvenční pool pro objekty 
-                for (var key in Resources.mapObjectsDefs) {
-                    var item = Resources.mapObjectsDefs[key];
-                    // vlož index objektu tolikrát, kolik je jeho frekvenc
-                    for (var i = 0; i < item.freq; i++) {
-                        Resources.mapObjectsFreqPool.push(key);
-                    }
-                }
-            })();
-            /**
-             * INVENTÁŘ
-             */
-            // Definice inventárních objektů
-            var putIntoInvObjectsDefs = function (invObj) {
-                Resources.invObjectsDefs[invObj.invKey] = invObj;
-            };
-            // usaditelných jako povrch
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.mapSurfacesDefs[Resources.SRFC_BRICK_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_STRAW_KEY, Resources.mapSurfacesDefs[Resources.SRFC_STRAW_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
-            // usaditelných jako objekt
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.mapObjectsDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
         })();
         return Resources;
     }());

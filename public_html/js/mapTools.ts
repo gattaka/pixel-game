@@ -15,22 +15,22 @@ namespace Lich {
             var valB = tilesMap.valueAt(x, y + 1);
             var valL = tilesMap.valueAt(x - 1, y);
 
-            var srfcType = Resources.surfaceIndex.getSurfaceType(val);
+            var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
 
             if (valT === SurfaceIndex.VOID) {
-                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.T);
+                tilesMap.mapRecord[i] = Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.T);
             }
 
             if (valR === SurfaceIndex.VOID) {
-                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.R);
+                tilesMap.mapRecord[i] = Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.R);
             }
 
             if (valB === SurfaceIndex.VOID) {
-                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.B);
+                tilesMap.mapRecord[i] = Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.B);
             }
 
             if (valL === SurfaceIndex.VOID) {
-                tilesMap.mapRecord[i] = Resources.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.L);
+                tilesMap.mapRecord[i] = Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.L);
             }
 
             return tilesMap.mapRecord[i];
@@ -44,9 +44,9 @@ namespace Lich {
             var valB = tilesMap.valueAt(x, y + 1);
             var valL = tilesMap.valueAt(x - 1, y);
 
-            var srfcType = Resources.surfaceIndex.getSurfaceType(val);
-            var isMiddle = Resources.surfaceIndex.isMiddlePosition(val);
-            var indx = Resources.surfaceIndex;
+            var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+            var isMiddle = Resources.INSTANCE.surfaceIndex.isMiddlePosition(val);
+            var indx = Resources.INSTANCE.surfaceIndex;
 
             // změny prostředních kusů
             if (isMiddle) {

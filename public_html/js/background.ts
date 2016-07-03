@@ -41,7 +41,7 @@ namespace Lich {
 
             var self = this;
 
-            var resources = game.resources;
+            var resources = Resources.INSTANCE;
 
             self.far_mountain = resources.getBitmap(Resources.FAR_MOUNTAIN_KEY);
             self.far_mountain_sec = resources.getBitmap(Resources.FAR_MOUNTAIN_KEY);

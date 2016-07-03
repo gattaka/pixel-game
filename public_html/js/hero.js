@@ -7,10 +7,10 @@ var Lich;
 (function (Lich) {
     var Hero = (function (_super) {
         __extends(Hero, _super);
-        function Hero(game) {
+        function Hero() {
             _super.call(this, Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [game.resources.getImage(Lich.Resources.LICH_ANIMATION_KEY)],
+                "images": [Lich.Resources.INSTANCE.getImage(Lich.Resources.LICH_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,
@@ -32,7 +32,6 @@ var Lich;
                     "dead": [29, 29, "dead", 0.2]
                 }
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
-            this.game = game;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
@@ -90,6 +89,7 @@ var Lich;
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/
+        Hero.OWNER_HERO_TAG = "OWNER_HERO_TAG";
         Hero.WALKR_STATE = "WALKR_STATE";
         Hero.WALKL_STATE = "WALKL_STATE";
         Hero.IDLE_STATE = "IDLE_STATE";

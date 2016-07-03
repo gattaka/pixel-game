@@ -14,7 +14,7 @@ namespace Lich {
 
         tilesMap: TilesMap;
 
-        constructor(resources: Resources) {
+        constructor() {
             var self = this;
 
             var tilesMap = new TilesMap(
@@ -36,7 +36,7 @@ namespace Lich {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
                         var pos = MapTools.getPositionByCoordPattern(x, y);
-                        tilesMap.mapRecord.push(Resources.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos));
+                        tilesMap.mapRecord.push(Resources.INSTANCE.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
@@ -135,7 +135,7 @@ namespace Lich {
                                             if (posIndex > 0) {
                                                 // nahradí aktuální dílek dílkem daného minerálu
                                                 // přičemž zachová pozici dílku
-                                                tilesMap.mapRecord[index] = Resources.surfaceIndex.changeSurface(posIndex, oreKey);
+                                                tilesMap.mapRecord[index] = Resources.INSTANCE.surfaceIndex.changeSurface(posIndex, oreKey);
                                             }
                                         }
                                     }
@@ -164,8 +164,8 @@ namespace Lich {
                     var depositIndex = Math.floor(Math.random() * mass);
                     var depositCoord = tilesMap.coordAt(depositIndex);
                     // z čeho bude ložisko?
-                    var index = Math.floor(Resources.mapSurfacesFreqPool.length * Math.random());
-                    createDeposit(depositCoord.x, depositCoord.y, dia, Resources.mapSurfacesFreqPool[index]);
+                    var index = Math.floor(Resources.INSTANCE.mapSurfacesFreqPool.length * Math.random());
+                    createDeposit(depositCoord.x, depositCoord.y, dia, Resources.INSTANCE.mapSurfacesFreqPool[index]);
                 }
             })();
 
@@ -179,7 +179,7 @@ namespace Lich {
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
                             var col = tilesMap.mapObjectsTiles[x];
-                            if ((y === y0 && Resources.surfaceIndex.isPosition(tilesMap.valueAt(x, y), SurfaceIndex.T) == false) ||
+                            if ((y === y0 && Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.valueAt(x, y), SurfaceIndex.T) == false) ||
                                 (y !== y0 && tilesMap.valueAt(x, y) !== SurfaceIndex.VOID) ||
                                 (typeof col !== "undefined" && typeof col[y] !== "undefined"))
                                 return false;
@@ -191,14 +191,14 @@ namespace Lich {
                 for (var i = 0; i < mass; i += 2) {
                     var val = tilesMap.mapRecord[i];
                     // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                    if (Resources.surfaceIndex.isPosition(val, SurfaceIndex.T)) {
+                    if (Resources.INSTANCE.surfaceIndex.isPosition(val, SurfaceIndex.T)) {
                         // bude tam nějaký objekt? (100% ano)
                         if (Math.random() > 0) {
                             var tries = 0;
-                            var index = Math.floor(Resources.mapObjectsFreqPool.length * Math.random());
-                            while (tries < Resources.mapObjectsFreqPool.length) {
-                                var key = Resources.mapObjectsFreqPool[index];
-                                var object = Resources.mapObjectsDefs[key];
+                            var index = Math.floor(Resources.INSTANCE.mapObjectsFreqPool.length * Math.random());
+                            while (tries < Resources.INSTANCE.mapObjectsFreqPool.length) {
+                                var key = Resources.INSTANCE.mapObjectsFreqPool[index];
+                                var object = Resources.INSTANCE.mapObjectsDefs[key];
                                 var coord = tilesMap.coordAt(i);
                                 if (object.freq > 0 && isFree(coord.x, coord.y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                     MapTools.writeObjectRecord(tilesMap, coord.x, coord.y, object);
@@ -206,7 +206,7 @@ namespace Lich {
                                 } else {
                                     // další pokus na dalším objektu
                                     tries++;
-                                    index = (index + 1) % Resources.mapObjectsFreqPool.length;
+                                    index = (index + 1) % Resources.INSTANCE.mapObjectsFreqPool.length;
                                 }
                             }
                         }

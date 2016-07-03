@@ -13,7 +13,7 @@ namespace Lich {
         itemsCont = new createjs.Container();
         itemHighlightShape = new createjs.Shape();
 
-        constructor(public game: Game) {
+        constructor() {
             super(MusicUI.N, MusicUI.M);
 
             var self = this;
@@ -58,7 +58,7 @@ namespace Lich {
 
         trackInsert(track) {
             var self = this;
-            var bitmap = self.game.resources.getBitmap(Resources.UI_SOUND_KEY);
+            var bitmap = Resources.INSTANCE.getBitmap(Resources.UI_SOUND_KEY);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
             bitmap.y = 0;

@@ -62,7 +62,7 @@ var Lich;
             /*----------------*/
             /* Resources init */
             /*----------------*/
-            self.resources = new Lich.Resources(self, function () {
+            new Lich.Resources(self, function () {
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/

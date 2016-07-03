@@ -12,19 +12,19 @@ var Lich;
             this.game = game;
             var self = this;
             // inventář
-            var inventoryUI = new Lich.InventoryUI(game);
+            var inventoryUI = new Lich.InventoryUI();
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
             // Schopnosti
-            var spellsUI = new Lich.SpellsUI(game);
+            var spellsUI = new Lich.SpellsUI();
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
             // Hudba
-            var musicUI = new Lich.MusicUI(game);
+            var musicUI = new Lich.MusicUI();
             musicUI.x = game.canvas.width / 2 - musicUI.width / 2;
             musicUI.y = UI.SCREEN_SPACING;
             self.addChild(musicUI);
@@ -129,7 +129,7 @@ var Lich;
                 outerShape.graphics.beginFill("rgba(70,30,255,0.7)");
                 outerShape.graphics.drawRect(0, 110, 250, 25);
                 self.stateCont.addChild(outerShape);
-                var skull = self.game.resources.getBitmap(Lich.Resources.SKULL_KEY);
+                var skull = Lich.Resources.INSTANCE.getBitmap(Lich.Resources.SKULL_KEY);
                 skull.x = self.stateCont.width - skull.image.width;
                 skull.y = self.stateCont.height - skull.image.height;
                 self.stateCont.addChild(skull);

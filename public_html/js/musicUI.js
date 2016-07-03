@@ -7,9 +7,8 @@ var Lich;
 (function (Lich) {
     var MusicUI = (function (_super) {
         __extends(MusicUI, _super);
-        function MusicUI(game) {
+        function MusicUI() {
             _super.call(this, MusicUI.N, MusicUI.M);
-            this.game = game;
             this.choosenItem = {};
             this.trackContent = [];
             this.trackIndex = {};
@@ -50,7 +49,7 @@ var Lich;
         };
         MusicUI.prototype.trackInsert = function (track) {
             var self = this;
-            var bitmap = self.game.resources.getBitmap(Lich.Resources.UI_SOUND_KEY);
+            var bitmap = Lich.Resources.INSTANCE.getBitmap(Lich.Resources.UI_SOUND_KEY);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             bitmap.y = 0;

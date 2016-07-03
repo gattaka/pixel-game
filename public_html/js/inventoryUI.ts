@@ -28,7 +28,7 @@ namespace Lich {
         collapsedCount: Label;
         collapsedHighlight: createjs.Shape;
 
-        constructor(public game: Game) {
+        constructor() {
             super(InventoryUI.N, InventoryUI.M);
 
             var self = this;
@@ -138,14 +138,14 @@ namespace Lich {
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (self.invContent[i] == null) {
-                    var invDef: InvObjDefinition = Resources.invObjectsDefs[item];
+                    var invDef: InvObjDefinition = Resources.INSTANCE.invObjectsDefs[item];
                     var frames = 1;
                     if (typeof invDef === "undefined" || invDef == null) {
                         frames = 1;
                     } else {
                         frames = invDef.frames;
                     }
-                    var sprite = self.game.resources.getSprite(item, frames);
+                    var sprite = Resources.INSTANCE.getSprite(item, frames);
                     self.itemsCont.addChild(sprite);
                     sprite.x = (i % InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
                     sprite.y = Math.floor(i / InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
@@ -171,7 +171,7 @@ namespace Lich {
                             self.collapsedCont.removeChild(self.collapsedSprite);
                             self.collapsedCont.removeChild(self.collapsedCount);
                             self.collapsedHighlight.visible = true;
-                            self.collapsedSprite = self.game.resources.getSprite(item, frames);
+                            self.collapsedSprite = Resources.INSTANCE.getSprite(item, frames);
                             self.collapsedCount = new Label("" + currentItem.quant, PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                             self.collapsedCont.addChild(self.collapsedSprite);
                             self.collapsedCont.addChild(self.collapsedCount);

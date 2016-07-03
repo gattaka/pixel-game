@@ -7,10 +7,8 @@ var Lich;
 (function (Lich) {
     var SpellsUI = (function (_super) {
         __extends(SpellsUI, _super);
-        function SpellsUI(game) {
+        function SpellsUI() {
             _super.call(this, SpellsUI.N, SpellsUI.M);
-            this.game = game;
-            this.choosenItem = {};
             this.spellContent = [];
             this.spellIndex = {};
             this.itemsCont = new createjs.Container();
@@ -20,6 +18,7 @@ var Lich;
             self.spellInsert(Lich.Resources.SPELL_DIG_KEY);
             self.spellInsert(Lich.Resources.SPELL_PLACE_KEY);
             self.spellInsert(Lich.Resources.SPELL_FIREBALL_KEY);
+            self.spellInsert(Lich.Resources.SPELL_BOLT_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = self.createHighlightShape();
             self.itemHighlightShape.visible = false;
@@ -28,7 +27,7 @@ var Lich;
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
-            self.selectSpell(Lich.Resources.SPELL_FIREBALL_KEY);
+            self.selectSpell(Lich.Resources.SPELL_BOLT_KEY);
         }
         SpellsUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
@@ -44,7 +43,7 @@ var Lich;
         };
         SpellsUI.prototype.spellInsert = function (spell) {
             var self = this;
-            var bitmap = self.game.resources.getBitmap(spell);
+            var bitmap = Lich.Resources.INSTANCE.getBitmap(spell);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.spellContent.length * (Lich.Resources.PARTS_SIZE + SpellsUI.SPACING);
             bitmap.y = 0;
@@ -61,7 +60,7 @@ var Lich;
                 self.selectSpell(spell);
             }, null, false);
         };
-        SpellsUI.N = 3;
+        SpellsUI.N = 4;
         SpellsUI.M = 1;
         return SpellsUI;
     }(Lich.PartsUI));

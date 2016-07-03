@@ -9,27 +9,27 @@ namespace Lich {
         spellsUI: SpellsUI;
         musicUI: MusicUI;
 
-        constructor(public game) {
+        constructor(public game: Game) {
             super();
 
             var self = this;
 
             // inventář
-            var inventoryUI = new InventoryUI(game);
+            var inventoryUI = new InventoryUI();
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
 
             // Schopnosti
-            var spellsUI = new SpellsUI(game);
+            var spellsUI = new SpellsUI();
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
 
             // Hudba
-            var musicUI = new MusicUI(game);
+            var musicUI = new MusicUI();
             musicUI.x = game.canvas.width / 2 - musicUI.width / 2;
             musicUI.y = UI.SCREEN_SPACING
             self.addChild(musicUI);
@@ -138,7 +138,7 @@ namespace Lich {
                 outerShape.graphics.drawRect(0, 110, 250, 25);
                 self.stateCont.addChild(outerShape);
 
-                var skull = self.game.resources.getBitmap(Resources.SKULL_KEY);
+                var skull = Resources.INSTANCE.getBitmap(Resources.SKULL_KEY);
                 skull.x = self.stateCont.width - skull.image.width;
                 skull.y = self.stateCont.height - skull.image.height;
                 self.stateCont.addChild(skull);
