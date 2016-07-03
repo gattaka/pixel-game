@@ -72,6 +72,7 @@ namespace Lich {
                 BulletSpellDef.FRAME_WIDTH,
                 sheet,
                 "fly",
+                "done",
                 {
                     "fly": "fly",
                     "hit": "hit",

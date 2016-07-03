@@ -49,7 +49,7 @@ var Lich;
                     "done": [4, 4, "done", 1]
                 }
             });
-            var object = new Lich.BasicBullet(owner, BulletSpellDef.FRAME_HEIGHT, BulletSpellDef.FRAME_WIDTH, sheet, "fly", {
+            var object = new Lich.BasicBullet(owner, BulletSpellDef.FRAME_HEIGHT, BulletSpellDef.FRAME_WIDTH, sheet, "fly", "done", {
                 "fly": "fly",
                 "hit": "hit",
                 "done": "done"

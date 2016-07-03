@@ -161,56 +161,6 @@ namespace Lich {
             console.log("earth ready");
         }
 
-        updateBullet(sDelta: number, object: BulletObject, makeShiftX, makeShiftY, onCollision) {
-            var self = this;
-            if (object === null || object.done)
-                return;
-
-            var clsnTest;
-
-            if (object.speedy !== 0) {
-
-                var distanceY = object.speedy * sDelta;
-
-                // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(
-                    object.x + object.collXOffset,
-                    object.y + object.collYOffset,
-                    object.width - object.collXOffset * 2,
-                    object.height - object.collYOffset * 2,
-                    0,
-                    distanceY,
-                    function(x: number, y: number) { return self.isEnemyHitOrCollision(x, y); }
-                );
-                if (clsnTest.hit === false) {
-                    makeShiftY(distanceY);
-                } else {
-                    onCollision(clsnTest);
-                    return;
-                }
-            }
-
-            if (object.speedx !== 0) {
-                var distanceX = sDelta * object.speedx;
-
-                // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(
-                    object.x + object.collXOffset,
-                    object.y + object.collYOffset,
-                    object.width - object.collXOffset * 2,
-                    object.height - object.collYOffset * 2,
-                    distanceX,
-                    0,
-                    function(x: number, y: number) { return self.isEnemyHitOrCollision(x, y); }
-                );
-                if (clsnTest.hit === false) {
-                    makeShiftX(distanceX);
-                } else {
-                    onCollision(clsnTest);
-                    return;
-                }
-            }
-        };
 
         updateObject(sDelta: number, object: AbstractWorldObject, makeShiftX: (number) => any, makeShiftY: (number) => any) {
             var self = this;
@@ -434,43 +384,12 @@ namespace Lich {
 
             // update projektilů
             (function() {
-
-                var deleteBullet = function(object: BulletObject) {
-                    self.bulletObjects.splice(i, 1);
-                    self.removeChild(object);
-                };
-
                 for (var i = 0; i < self.bulletObjects.length; i++) {
                     var object = self.bulletObjects[i];
-                    self.updateBullet(sDelta, object, function(x) {
-                        object.x -= x;
-                        if (object.x > self.game.canvas.width * 2 || object.x < -self.game.canvas.width)
-                            deleteBullet(object);
-                    }, function(y) {
-                        object.y -= y;
-                        if (object.y > self.game.canvas.height * 2 || object.y < -self.game.canvas.height)
-                            deleteBullet(object);
-                    }, function(clsn) {
-                        if (object.done === false) {
-                            Mixer.play(Resources.SND_BURN_KEY, false, 0.1);
-                            object.done = true;
-                            object.gotoAndPlay("hit");
-                            var centX = object.x + object.width / 2;
-                            var centY = object.y + object.height / 2;
-                            var rad = Resources.TILE_SIZE * 4;
-                            for (var rx = centX - rad; rx <= centX + rad; rx += Resources.TILE_SIZE) {
-                                for (var ry = centY - rad; ry <= centY + rad; ry += Resources.TILE_SIZE) {
-                                    var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
-                                    var d2 = Math.pow(rad, 2);
-                                    if (r2 <= d2) {
-                                        self.render.dig(rx, ry);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    if (object.currentAnimation === "done") {
-                        deleteBullet(object);
+                    object.update(sDelta, self.game);
+                    if (object.isDone() || object.currentAnimation === "done") {
+                        self.bulletObjects.splice(i, 1);
+                        self.removeChild(object);
                     }
                 }
             })();
