@@ -115,7 +115,7 @@ namespace Lich {
         static MAP_DESTROY = true;
         static PIERCING = true;
         static DAMAGE = 20;
-        static COOLDOWN = 1000;
+        static COOLDOWN = 500;
 
         constructor() {
             super(

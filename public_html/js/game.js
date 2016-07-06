@@ -161,7 +161,7 @@ var Lich;
             }
         }
         ;
-        Game.VERSION = "0.2";
+        Game.VERSION = "0.3";
         return Game;
     }());
     Lich.Game = Game;

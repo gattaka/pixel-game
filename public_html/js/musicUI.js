@@ -41,9 +41,7 @@ var Lich;
             self.itemHighlightShape.y = bitmap.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
             self.choosenItem = track;
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
-                if (self.reversedTrackIndex[i] != track) {
-                    Lich.Mixer.stop(self.reversedTrackIndex[i]);
-                }
+                Lich.Mixer.stop(self.reversedTrackIndex[i]);
             }
             Lich.Mixer.play(track, true);
         };

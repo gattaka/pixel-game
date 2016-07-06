@@ -91,7 +91,7 @@ var Lich;
         FireballSpellDef.MAP_DESTROY = true;
         FireballSpellDef.PIERCING = true;
         FireballSpellDef.DAMAGE = 20;
-        FireballSpellDef.COOLDOWN = 1000;
+        FireballSpellDef.COOLDOWN = 500;
         return FireballSpellDef;
     }(BulletSpellDef));
     Lich.FireballSpellDef = FireballSpellDef;

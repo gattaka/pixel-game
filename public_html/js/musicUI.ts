@@ -49,9 +49,7 @@ namespace Lich {
             self.choosenItem = track;
 
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
-                if (self.reversedTrackIndex[i] != track) {
-                    Mixer.stop(self.reversedTrackIndex[i]);
-                }
+                Mixer.stop(self.reversedTrackIndex[i]);
             }
             Mixer.play(track, true);
         }

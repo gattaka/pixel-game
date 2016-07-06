@@ -3,7 +3,7 @@
 namespace Lich {
     export class Game {
 
-        public static VERSION = "0.2";
+        public static VERSION = "0.3";
 
         canvas: HTMLCanvasElement;
         stage: createjs.Stage;
