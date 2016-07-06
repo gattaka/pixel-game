@@ -38,6 +38,7 @@ var Lich;
             /*-----------*/
             this.freeObjects = Array();
             this.bulletObjects = Array();
+            this.enemies = new Array();
             var self = this;
             self.map = new Lich.Map();
             self.tilesMap = self.map.tilesMap;
@@ -51,18 +52,6 @@ var Lich;
             self.hero.x = game.canvas.width / 2;
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
-            /*---------*/
-            /* Enemies */
-            /*---------*/
-            self.enemies = new Array();
-            var numberOfEnemies = 1;
-            for (var i = 0; i < numberOfEnemies; i++) {
-                var enemy = new Lich.Enemy();
-                self.enemies.push(enemy);
-                self.addChild(enemy);
-                enemy.x = game.canvas.width * Math.random();
-                enemy.y = game.canvas.height / 2 * Math.random();
-            }
             /*---------------------*/
             /* Measurements, debug */
             /*---------------------*/

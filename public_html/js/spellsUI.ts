@@ -2,7 +2,7 @@ namespace Lich {
 
     export class SpellsUI extends PartsUI {
 
-        static N = 4;
+        static N = 5;
         static M = 1;
 
         choosenItem: string;
@@ -23,6 +23,7 @@ namespace Lich {
             self.spellInsert(Resources.SPELL_PLACE_KEY);
             self.spellInsert(Resources.SPELL_FIREBALL_KEY);
             self.spellInsert(Resources.SPELL_BOLT_KEY);
+            self.spellInsert(Resources.SPELL_ENEMY_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = self.createHighlightShape();
@@ -34,7 +35,7 @@ namespace Lich {
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
 
-            self.selectSpell(1);
+            self.selectSpell(0);
         }
 
         handleMouse(mouse) {

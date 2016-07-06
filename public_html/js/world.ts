@@ -57,7 +57,7 @@ namespace Lich {
         background: Background;
         hero: Hero;
 
-        enemies: Array<Enemy>;
+        enemies = new Array<Enemy>();
 
         constructor(public game: Game) {
             super();
@@ -77,19 +77,6 @@ namespace Lich {
             self.hero.x = game.canvas.width / 2;
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
-
-            /*---------*/
-            /* Enemies */
-            /*---------*/
-            self.enemies = new Array<Enemy>();
-            var numberOfEnemies = 1;
-            for (var i = 0; i < numberOfEnemies; i++) {
-                var enemy = new Enemy();
-                self.enemies.push(enemy);
-                self.addChild(enemy);
-                enemy.x = game.canvas.width * Math.random();
-                enemy.y = game.canvas.height / 2 * Math.random();
-            }
 
             /*---------------------*/
             /* Measurements, debug */

@@ -150,7 +150,7 @@ var Lich;
                     else {
                         self.ui.inventoryUI.prepareForToggleInv();
                     }
-                    for (var i = 0; i < 4; i++) {
+                    for (var i = 0; i < self.ui.spellsUI.spellIndex.length; i++) {
                         if (self.keys[49 + i]) {
                             self.ui.spellsUI.selectSpell(i);
                         }

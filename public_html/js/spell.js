@@ -90,8 +90,8 @@ var Lich;
         FireballSpellDef.SPEED = 1500;
         FireballSpellDef.MAP_DESTROY = true;
         FireballSpellDef.PIERCING = true;
-        FireballSpellDef.DAMAGE = 20;
-        FireballSpellDef.COOLDOWN = 500;
+        FireballSpellDef.DAMAGE = 50;
+        FireballSpellDef.COOLDOWN = 200;
         return FireballSpellDef;
     }(BulletSpellDef));
     Lich.FireballSpellDef = FireballSpellDef;
@@ -106,8 +106,8 @@ var Lich;
         BoltSpellDef.SPEED = 1500;
         BoltSpellDef.MAP_DESTROY = false;
         BoltSpellDef.PIERCING = false;
-        BoltSpellDef.DAMAGE = 5;
-        BoltSpellDef.COOLDOWN = 200;
+        BoltSpellDef.DAMAGE = 30;
+        BoltSpellDef.COOLDOWN = 100;
         return BoltSpellDef;
     }(BulletSpellDef));
     Lich.BoltSpellDef = BoltSpellDef;
@@ -196,4 +196,33 @@ var Lich;
         return PlaceSpellDef;
     }(HeroReachSpellDef));
     Lich.PlaceSpellDef = PlaceSpellDef;
+    /**
+     * Spawn nepřátel (development spell)
+     */
+    var EnemySpellDef = (function (_super) {
+        __extends(EnemySpellDef, _super);
+        function EnemySpellDef() {
+            _super.call(this, Lich.Resources.SPELL_ENEMY_KEY, 200);
+        }
+        EnemySpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
+            Lich.Mixer.play(Lich.Resources.SND_SPAWN_KEY);
+            // maximálně 4 najednou
+            var batch = Math.random() * 10;
+            for (var e = 0; e < batch; e++) {
+                var enemy = new Lich.Enemy();
+                game.world.enemies.push(enemy);
+                game.world.addChild(enemy);
+                if (Math.random() > 0.5 && game.world.render.canShiftX(-enemy.width * 2) || game.world.render.canShiftX(enemy.width * 2) == false) {
+                    enemy.x = game.canvas.width + enemy.width * (Math.random() + 1);
+                }
+                else {
+                    enemy.x = -enemy.width * (Math.random() + 1);
+                }
+                enemy.y = game.canvas.height / 2;
+            }
+            return true;
+        };
+        return EnemySpellDef;
+    }(SpellDefinition));
+    Lich.EnemySpellDef = EnemySpellDef;
 })(Lich || (Lich = {}));

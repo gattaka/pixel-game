@@ -20,6 +20,7 @@ var Lich;
             self.spellInsert(Lich.Resources.SPELL_PLACE_KEY);
             self.spellInsert(Lich.Resources.SPELL_FIREBALL_KEY);
             self.spellInsert(Lich.Resources.SPELL_BOLT_KEY);
+            self.spellInsert(Lich.Resources.SPELL_ENEMY_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = self.createHighlightShape();
             self.itemHighlightShape.visible = false;
@@ -28,7 +29,7 @@ var Lich;
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
-            self.selectSpell(1);
+            self.selectSpell(0);
         }
         SpellsUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
@@ -63,7 +64,7 @@ var Lich;
                 self.selectSpell(index);
             }, null, false);
         };
-        SpellsUI.N = 4;
+        SpellsUI.N = 5;
         SpellsUI.M = 1;
         return SpellsUI;
     }(Lich.PartsUI));

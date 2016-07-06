@@ -121,6 +121,7 @@ namespace Lich {
         static SPELL_DIG_KEY = "SPELL_DIG_KEY";
         static SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
         static SPELL_BOLT_KEY = "SPELL_BOLT_KEY";
+        static SPELL_ENEMY_KEY = "SPELL_ENEMY_KEY";
 
         // sounds
         static SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
@@ -133,6 +134,7 @@ namespace Lich {
         static SND_PICK_AXE_3_KEY = "SND_PICK_AXE_3_KEY";
         static SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
         static SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
+        static SND_SPAWN_KEY = "SND_SPAWN_KEY";
 
         // music
         static MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
@@ -181,6 +183,7 @@ namespace Lich {
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
                 new Load("images/ui/bolt_spell.png", Resources.SPELL_BOLT_KEY),
+                new Load("images/ui/enemy_spell.png", Resources.SPELL_ENEMY_KEY),
                 // inventory
                 new Load("images/ui/inventory/inv_berry.png", Resources.INV_BERRY_KEY),
                 new Load("images/ui/inventory/inv_mushroom.png", Resources.INV_MUSHROOM_KEY),
@@ -259,6 +262,7 @@ namespace Lich {
                 new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
                 new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
                 new Load("sound/skeleton_die.ogg", Resources.SND_SKELETON_DIE_KEY),
+                new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
@@ -421,6 +425,7 @@ namespace Lich {
             putIntoSpellsDefs(new DigSpellDef());
             putIntoSpellsDefs(new PlaceSpellDef());
             putIntoSpellsDefs(new BoltSpellDef());
+            putIntoSpellsDefs(new EnemySpellDef());
 
         };
 

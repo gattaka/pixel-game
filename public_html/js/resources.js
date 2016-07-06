@@ -43,6 +43,7 @@ var Lich;
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
                 new Load("images/ui/bolt_spell.png", Resources.SPELL_BOLT_KEY),
+                new Load("images/ui/enemy_spell.png", Resources.SPELL_ENEMY_KEY),
                 // inventory
                 new Load("images/ui/inventory/inv_berry.png", Resources.INV_BERRY_KEY),
                 new Load("images/ui/inventory/inv_mushroom.png", Resources.INV_MUSHROOM_KEY),
@@ -121,6 +122,7 @@ var Lich;
                 new Load("sound/pick_axe3.ogg", Resources.SND_PICK_AXE_3_KEY),
                 new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
                 new Load("sound/skeleton_die.ogg", Resources.SND_SKELETON_DIE_KEY),
+                new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
@@ -261,6 +263,7 @@ var Lich;
             putIntoSpellsDefs(new Lich.DigSpellDef());
             putIntoSpellsDefs(new Lich.PlaceSpellDef());
             putIntoSpellsDefs(new Lich.BoltSpellDef());
+            putIntoSpellsDefs(new Lich.EnemySpellDef());
         }
         ;
         Resources.prototype.getImage = function (key) {
@@ -407,6 +410,7 @@ var Lich;
         Resources.SPELL_DIG_KEY = "SPELL_DIG_KEY";
         Resources.SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
         Resources.SPELL_BOLT_KEY = "SPELL_BOLT_KEY";
+        Resources.SPELL_ENEMY_KEY = "SPELL_ENEMY_KEY";
         // sounds
         Resources.SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
         Resources.SND_BURN_KEY = "SND_BURN_KEY";
@@ -418,6 +422,7 @@ var Lich;
         Resources.SND_PICK_AXE_3_KEY = "SND_PICK_AXE_3_KEY";
         Resources.SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
         Resources.SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
+        Resources.SND_SPAWN_KEY = "SND_SPAWN_KEY";
         // music
         Resources.MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
         Resources.MSC_BUILD_THEME_KEY = "MSC_BUILD_THEME_KEY";

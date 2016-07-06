@@ -114,8 +114,8 @@ namespace Lich {
         static SPEED = 1500;
         static MAP_DESTROY = true;
         static PIERCING = true;
-        static DAMAGE = 20;
-        static COOLDOWN = 500;
+        static DAMAGE = 50;
+        static COOLDOWN = 200;
 
         constructor() {
             super(
@@ -140,8 +140,8 @@ namespace Lich {
         static SPEED = 1500;
         static MAP_DESTROY = false;
         static PIERCING = false;
-        static DAMAGE = 5;
-        static COOLDOWN = 200;
+        static DAMAGE = 30;
+        static COOLDOWN = 100;
 
         constructor() {
             super(
@@ -250,6 +250,38 @@ namespace Lich {
                 return true;
             }
             return false;
+        }
+    }
+
+    /**
+     * Spawn nepřátel (development spell)
+     */
+
+    export class EnemySpellDef extends SpellDefinition {
+
+        constructor() {
+            super(Resources.SPELL_ENEMY_KEY, 200);
+        }
+
+        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
+
+            Mixer.play(Resources.SND_SPAWN_KEY);
+
+            // maximálně 4 najednou
+            var batch = Math.random() * 10;
+            for (var e = 0; e < batch; e++) {
+                var enemy = new Enemy();
+                game.world.enemies.push(enemy);
+                game.world.addChild(enemy);
+                if (Math.random() > 0.5 && game.world.render.canShiftX(-enemy.width * 2) || game.world.render.canShiftX(enemy.width * 2) == false) {
+                    enemy.x = game.canvas.width + enemy.width * (Math.random() + 1);
+                } else {
+                    enemy.x = -enemy.width * (Math.random() + 1);
+                }
+                enemy.y = game.canvas.height / 2;
+            }
+
+            return true;
         }
     }
 }
