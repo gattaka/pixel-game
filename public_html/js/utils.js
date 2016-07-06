@@ -1,5 +1,14 @@
 var Lich;
 (function (Lich) {
+    var CollisionTestResult = (function () {
+        function CollisionTestResult(hit, x, y) {
+            this.hit = hit;
+            this.x = x;
+            this.y = y;
+        }
+        return CollisionTestResult;
+    }());
+    Lich.CollisionTestResult = CollisionTestResult;
     var Utils = (function () {
         function Utils() {
         }

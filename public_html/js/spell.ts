@@ -4,7 +4,7 @@ namespace Lich {
      * Předek všech Spell definic
      */
     export abstract class SpellDefinition {
-        constructor(public key: string) { }
+        constructor(public key: string, public cooldown: number) { }
 
         public abstract cast(
             // iniciátor spell akce
@@ -35,12 +35,16 @@ namespace Lich {
 
         constructor(
             key: string,
-            private castSoundKey: string,
+            public cooldown: number,
+            public castSoundKey: string,
             public hitSoundKey: string,
             public speed: number,
-            public spriteKey: string
+            public spriteKey: string,
+            public destroyMap: boolean,
+            public piercing: boolean,
+            public damage: number
         ) {
-            super(key);
+            super(key, cooldown);
         }
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
@@ -79,7 +83,11 @@ namespace Lich {
                     "done": "done"
                 },
                 BulletSpellDef.COLLXOFFSET,
-                BulletSpellDef.COLLYOFFSET
+                BulletSpellDef.COLLYOFFSET,
+                self.hitSoundKey,
+                self.destroyMap,
+                self.piercing,
+                self.damage
             );
 
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
@@ -99,16 +107,53 @@ namespace Lich {
         }
     }
 
+    /**
+     * Spell ohnivé koule, která ničí i povrch
+     */
     export class FireballSpellDef extends BulletSpellDef {
         static SPEED = 1500;
+        static MAP_DESTROY = true;
+        static PIERCING = true;
+        static DAMAGE = 20;
+        static COOLDOWN = 1000;
 
         constructor() {
             super(
                 Resources.SPELL_FIREBALL_KEY,
+                FireballSpellDef.COOLDOWN,
                 Resources.SND_BURN_KEY,
                 Resources.SND_FIREBALL_KEY,
                 FireballSpellDef.SPEED,
-                Resources.FIREBALL_ANIMATION_KEY
+                Resources.FIREBALL_ANIMATION_KEY,
+                FireballSpellDef.MAP_DESTROY,
+                FireballSpellDef.PIERCING,
+                FireballSpellDef.DAMAGE
+            );
+        }
+
+    }
+
+    /**
+     * Spell mana-boltu, který neničí povrch
+     */
+    export class BoltSpellDef extends BulletSpellDef {
+        static SPEED = 1500;
+        static MAP_DESTROY = false;
+        static PIERCING = false;
+        static DAMAGE = 5;
+        static COOLDOWN = 200;
+
+        constructor() {
+            super(
+                Resources.SPELL_BOLT_KEY,
+                BoltSpellDef.COOLDOWN,
+                Resources.SND_BOLT_CAST,
+                Resources.SND_FIREBALL_KEY,
+                BoltSpellDef.SPEED,
+                Resources.BOLT_ANIMATION_KEY,
+                BoltSpellDef.MAP_DESTROY,
+                BoltSpellDef.PIERCING,
+                BoltSpellDef.DAMAGE
             );
         }
 
@@ -119,8 +164,8 @@ namespace Lich {
      */
     export abstract class HeroReachSpellDef extends SpellDefinition {
 
-        constructor(key: string) {
-            super(key);
+        constructor(key: string, cooldown: number) {
+            super(key, cooldown);
         }
 
         public abstract castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean;
@@ -153,10 +198,16 @@ namespace Lich {
         }
     }
 
+
+    /**
+     * Spell pro vykopávání objektů a povrchů z mapy
+     */
     export class DigSpellDef extends HeroReachSpellDef {
 
+        static COOLDOWN = 100;
+
         constructor() {
-            super(Resources.SPELL_DIG_KEY);
+            super(Resources.SPELL_DIG_KEY, DigSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
@@ -178,10 +229,15 @@ namespace Lich {
         }
     }
 
+    /**
+     * Spell pro pokládání objektů a povrchů z inventáře
+     */
     export class PlaceSpellDef extends HeroReachSpellDef {
 
+        static COOLDOWN = 100;
+
         constructor() {
-            super(Resources.SPELL_PLACE_KEY);
+            super(Resources.SPELL_PLACE_KEY, PlaceSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {

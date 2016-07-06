@@ -21,11 +21,6 @@ namespace Lich {
         };
     }
 
-    class CollisionTestResult {
-        constructor(public hit: boolean, public x?: number, public y?: number) { }
-    }
-
-
     export class World extends createjs.Container {
 
         /*-----------*/
@@ -45,8 +40,6 @@ namespace Lich {
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
 
-        static MOUSE_COOLDOWN = 100;
-
         /*-----------*/
         /* VARIABLES */
         /*-----------*/
@@ -57,9 +50,6 @@ namespace Lich {
         tilesLabel: Label;
         sectorLabel: Label;
         playerLabel: Label;
-
-        // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
-        spellTime = World.MOUSE_COOLDOWN;
 
         map: Map;
         tilesMap: TilesMap;
@@ -430,28 +420,6 @@ namespace Lich {
         };
 
         /**
-         * Zjistí zda na daných pixel-souřadnicích dochází k zásahu nepřítele 
-         */
-        isEnemyHitOrCollision(x: number, y: number): CollisionTestResult {
-            var self = this;
-            var enemyRet = null;
-            self.enemies.forEach(function(enemy) {
-                if (enemy.life > 0
-                    && x > enemy.x && x < enemy.x + enemy.width
-                    && y > enemy.y && y < enemy.y + enemy.height) {
-                    enemyRet = new CollisionTestResult(true, x, y);
-                    // TODO damage dle bullet
-                    enemy.hit(20, self.game);
-                }
-            });
-            if (enemyRet == null) {
-                return self.isCollision(x, y);
-            } else {
-                return enemyRet;
-            }
-        };
-
-        /**
          * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi 
          */
         isCollision(x: number, y: number): CollisionTestResult {
@@ -568,21 +536,34 @@ namespace Lich {
 
         handleMouse(mouse: Mouse, delta: number) {
             var self = this;
-            self.spellTime -= delta;
-            if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
-                mouse.click = false;
 
-                var choosenSpell = self.game.ui.spellsUI.choosenItem;
-                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+            // je vybrán spell?
+            var choosenSpell = self.game.ui.spellsUI.choosenItem;
+            if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+
+                // provádím spell za hráče, takže kontroluji jeho cooldown
+                var cooldown = self.hero.spellCooldowns[choosenSpell];
+                // ještě nebyl použit? Takže je v pořádku a může se provést
+                if (typeof cooldown === "undefined") {
+                    cooldown = 0;
+                    self.hero.spellCooldowns[choosenSpell] = 0;
+                }
+                // Sniž dle delay
+                self.hero.spellCooldowns[choosenSpell] -= delta;
+                // Může se provést (cooldown je pryč)?
+                if (cooldown <= 0 && (mouse.down || mouse.click)) {
+                    mouse.click = false;
                     var spellDef: SpellDefinition = Resources.INSTANCE.spellsDefs[choosenSpell];
 
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 2;
 
-                    spellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game);
+                    // zkus cast
+                    if (spellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                        // ok, cast se provedl, nastav nový cooldown
+                        self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                    }
                 }
-
-                self.spellTime = World.MOUSE_COOLDOWN;
             }
 
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);

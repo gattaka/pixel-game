@@ -10,7 +10,8 @@ var Lich;
         function SpellsUI() {
             _super.call(this, SpellsUI.N, SpellsUI.M);
             this.spellContent = [];
-            this.spellIndex = {};
+            this.spellIndex = [];
+            this.spellReversedIndex = {};
             this.itemsCont = new createjs.Container();
             this.itemHighlightShape = new createjs.Shape();
             var self = this;
@@ -27,15 +28,16 @@ var Lich;
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
-            self.selectSpell(Lich.Resources.SPELL_BOLT_KEY);
+            self.selectSpell(1);
         }
         SpellsUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
             }
         };
-        SpellsUI.prototype.selectSpell = function (spell) {
+        SpellsUI.prototype.selectSpell = function (spellNumber) {
             var self = this;
-            var bitmap = self.spellContent[self.spellIndex[spell]];
+            var spell = self.spellIndex[spellNumber];
+            var bitmap = self.spellContent[spellNumber];
             self.itemHighlightShape.visible = true;
             self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
@@ -47,7 +49,8 @@ var Lich;
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.spellContent.length * (Lich.Resources.PARTS_SIZE + SpellsUI.SPACING);
             bitmap.y = 0;
-            self.spellIndex[spell] = self.spellContent.length;
+            var index = self.spellIndex.length;
+            self.spellIndex[index] = spell;
             self.spellContent.push(bitmap);
             var text = new Lich.Label("" + self.spellContent.length, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             self.itemsCont.addChild(text);
@@ -57,7 +60,7 @@ var Lich;
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
             bitmap.on("mousedown", function () {
-                self.selectSpell(spell);
+                self.selectSpell(index);
             }, null, false);
         };
         SpellsUI.N = 4;

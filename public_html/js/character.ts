@@ -6,6 +6,7 @@ namespace Lich {
         /*-----------*/
 
         public life = 100;
+        public spellCooldowns = new Array<number>();
 
         initialized = false;
 

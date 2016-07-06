@@ -114,6 +114,7 @@ var Lich;
                 new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", Resources.SND_FIREBALL_KEY),
                 new Load("sound/113111__satrebor__pick.ogg", Resources.SND_PICK_KEY),
                 new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", Resources.SND_BURN_KEY),
+                new Load("sound/bolt_cast.ogg", Resources.SND_BOLT_CAST),
                 new Load("sound/place.ogg", Resources.SND_PLACE_KEY),
                 new Load("sound/pick_axe1.ogg", Resources.SND_PICK_AXE_1_KEY),
                 new Load("sound/pick_axe2.ogg", Resources.SND_PICK_AXE_2_KEY),
@@ -259,6 +260,7 @@ var Lich;
             putIntoSpellsDefs(new Lich.FireballSpellDef());
             putIntoSpellsDefs(new Lich.DigSpellDef());
             putIntoSpellsDefs(new Lich.PlaceSpellDef());
+            putIntoSpellsDefs(new Lich.BoltSpellDef());
         }
         ;
         Resources.prototype.getImage = function (key) {
@@ -408,6 +410,7 @@ var Lich;
         // sounds
         Resources.SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
         Resources.SND_BURN_KEY = "SND_BURN_KEY";
+        Resources.SND_BOLT_CAST = "SND_BOLT_CAST";
         Resources.SND_PICK_KEY = "SND_PICK_KEY";
         Resources.SND_PLACE_KEY = "SND_PLACE_KEY";
         Resources.SND_PICK_AXE_1_KEY = "SND_PICK_AXE_1_KEY";

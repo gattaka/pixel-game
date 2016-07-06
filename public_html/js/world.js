@@ -28,14 +28,6 @@ var Lich;
         ;
         return WorldObject;
     }(Lich.AbstractWorldObject));
-    var CollisionTestResult = (function () {
-        function CollisionTestResult(hit, x, y) {
-            this.hit = hit;
-            this.x = x;
-            this.y = y;
-        }
-        return CollisionTestResult;
-    }());
     var World = (function (_super) {
         __extends(World, _super);
         function World(game) {
@@ -46,8 +38,6 @@ var Lich;
             /*-----------*/
             this.freeObjects = Array();
             this.bulletObjects = Array();
-            // kolikrát ms se čeká, než se bude počítat další klik při mouse down?
-            this.spellTime = World.MOUSE_COOLDOWN;
             var self = this;
             self.map = new Lich.Map();
             self.tilesMap = self.map.tilesMap;
@@ -349,29 +339,6 @@ var Lich;
         };
         ;
         /**
-         * Zjistí zda na daných pixel-souřadnicích dochází k zásahu nepřítele
-         */
-        World.prototype.isEnemyHitOrCollision = function (x, y) {
-            var self = this;
-            var enemyRet = null;
-            self.enemies.forEach(function (enemy) {
-                if (enemy.life > 0
-                    && x > enemy.x && x < enemy.x + enemy.width
-                    && y > enemy.y && y < enemy.y + enemy.height) {
-                    enemyRet = new CollisionTestResult(true, x, y);
-                    // TODO damage dle bullet
-                    enemy.hit(20, self.game);
-                }
-            });
-            if (enemyRet == null) {
-                return self.isCollision(x, y);
-            }
-            else {
-                return enemyRet;
-            }
-        };
-        ;
-        /**
          * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi
          */
         World.prototype.isCollision = function (x, y) {
@@ -387,10 +354,10 @@ var Lich;
             var self = this;
             // kolize s povrchem/hranicí mapy
             if (self.tilesMap.valueAt(x, y) != 0) {
-                return new CollisionTestResult(true, x, y);
+                return new Lich.CollisionTestResult(true, x, y);
             }
             // bez kolize
-            return new CollisionTestResult(false, x, y);
+            return new Lich.CollisionTestResult(false, x, y);
         };
         ;
         /**
@@ -469,27 +436,40 @@ var Lich;
                                 return RB;
                         }
                         if (xShift === fullXShift && yShift === fullYShift && width === fullWidth && height === fullHeight) {
-                            return new CollisionTestResult(false);
+                            return new Lich.CollisionTestResult(false);
                         }
                     }
                 }
             }
-            return new CollisionTestResult(false);
+            return new Lich.CollisionTestResult(false);
         };
         ;
         World.prototype.handleMouse = function (mouse, delta) {
             var self = this;
-            self.spellTime -= delta;
-            if (self.spellTime <= 0 && (mouse.down || mouse.click)) {
-                mouse.click = false;
-                var choosenSpell = self.game.ui.spellsUI.choosenItem;
-                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+            // je vybrán spell?
+            var choosenSpell = self.game.ui.spellsUI.choosenItem;
+            if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                // provádím spell za hráče, takže kontroluji jeho cooldown
+                var cooldown = self.hero.spellCooldowns[choosenSpell];
+                // ještě nebyl použit? Takže je v pořádku a může se provést
+                if (typeof cooldown === "undefined") {
+                    cooldown = 0;
+                    self.hero.spellCooldowns[choosenSpell] = 0;
+                }
+                // Sniž dle delay
+                self.hero.spellCooldowns[choosenSpell] -= delta;
+                // Může se provést (cooldown je pryč)?
+                if (cooldown <= 0 && (mouse.down || mouse.click)) {
+                    mouse.click = false;
                     var spellDef = Lich.Resources.INSTANCE.spellsDefs[choosenSpell];
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 2;
-                    spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game);
+                    // zkus cast
+                    if (spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                        // ok, cast se provedl, nastav nový cooldown
+                        self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                    }
                 }
-                self.spellTime = World.MOUSE_COOLDOWN;
             }
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y);
@@ -528,7 +508,6 @@ var Lich;
         World.HERO_VERTICAL_SPEED = 500;
         // Pixel/s2
         World.WORLD_GRAVITY = -1200;
-        World.MOUSE_COOLDOWN = 100;
         return World;
     }(createjs.Container));
     Lich.World = World;

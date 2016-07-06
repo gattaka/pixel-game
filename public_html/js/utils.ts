@@ -1,4 +1,9 @@
 namespace Lich {
+
+    export class CollisionTestResult {
+        constructor(public hit: boolean, public x?: number, public y?: number) { }
+    }
+
     export class Utils {
 
         static distance(x1: number, y1: number, x2: number, y2: number): number {

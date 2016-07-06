@@ -13,6 +13,7 @@ var Lich;
             /* VARIABLES */
             /*-----------*/
             this.life = 100;
+            this.spellCooldowns = new Array();
             this.initialized = false;
         }
         Character.prototype.shift = function (shift) {
