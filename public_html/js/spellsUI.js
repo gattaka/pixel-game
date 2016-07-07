@@ -9,15 +9,16 @@ var Lich;
         __extends(SpellsUI, _super);
         function SpellsUI() {
             _super.call(this, SpellsUI.N, SpellsUI.M);
-            this.spellContent = [];
-            this.spellIndex = [];
-            this.spellReversedIndex = {};
+            this.toggleFlag = false;
+            this.spellContent = new Array();
+            this.spellIndex = new Array();
+            this.alternativeSpellIndex = new Array();
             this.itemsCont = new createjs.Container();
             this.itemHighlightShape = new createjs.Shape();
             var self = this;
-            // zatím rovnou:
+            // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(Lich.Resources.SPELL_DIG_KEY);
-            self.spellInsert(Lich.Resources.SPELL_PLACE_KEY);
+            self.spellInsert(Lich.Resources.SPELL_PLACE_KEY, Lich.Resources.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Lich.Resources.SPELL_FIREBALL_KEY);
             self.spellInsert(Lich.Resources.SPELL_BOLT_KEY);
             self.spellInsert(Lich.Resources.SPELL_ENEMY_KEY);
@@ -31,20 +32,47 @@ var Lich;
             self.addChild(self.itemsCont);
             self.selectSpell(0);
         }
+        SpellsUI.prototype.toggleShift = function () {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag == false) {
+                for (var i = 0; i < this.spellIndex.length; i++) {
+                    var alt = this.alternativeSpellIndex[i];
+                    if (typeof alt !== "undefined") {
+                        this.spellContent[i].image = Lich.Resources.INSTANCE.getImage(alt);
+                    }
+                }
+                self.toggleFlag = true;
+            }
+        };
+        SpellsUI.prototype.prepareForToggleShift = function () {
+            for (var i = 0; i < this.spellIndex.length; i++) {
+                this.spellContent[i].image = Lich.Resources.INSTANCE.getImage(this.spellIndex[i]);
+            }
+            this.toggleFlag = false;
+        };
         SpellsUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
             }
         };
         SpellsUI.prototype.selectSpell = function (spellNumber) {
             var self = this;
-            var spell = self.spellIndex[spellNumber];
             var bitmap = self.spellContent[spellNumber];
             self.itemHighlightShape.visible = true;
             self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.choosenItem = spell;
+            self.choosenItemNumber = spellNumber;
         };
-        SpellsUI.prototype.spellInsert = function (spell) {
+        SpellsUI.prototype.getChoosenSpell = function () {
+            var alt = this.alternativeSpellIndex[this.choosenItemNumber];
+            if (this.toggleFlag && typeof alt !== "undefined") {
+                return alt;
+            }
+            else {
+                return this.spellIndex[this.choosenItemNumber];
+            }
+        };
+        SpellsUI.prototype.spellInsert = function (spell, altSpell) {
             var self = this;
             var bitmap = Lich.Resources.INSTANCE.getBitmap(spell);
             self.itemsCont.addChild(bitmap);
@@ -52,6 +80,7 @@ var Lich;
             bitmap.y = 0;
             var index = self.spellIndex.length;
             self.spellIndex[index] = spell;
+            self.alternativeSpellIndex[index] = altSpell;
             self.spellContent.push(bitmap);
             var text = new Lich.Label("" + self.spellContent.length, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             self.itemsCont.addChild(text);

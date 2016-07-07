@@ -232,24 +232,51 @@ namespace Lich {
     /**
      * Spell pro pokládání objektů a povrchů z inventáře
      */
-    export class PlaceSpellDef extends HeroReachSpellDef {
+    export abstract class AbstractPlaceSpellDef extends HeroReachSpellDef {
 
         static COOLDOWN = 100;
 
-        constructor() {
-            super(Resources.SPELL_PLACE_KEY, PlaceSpellDef.COOLDOWN);
+        constructor(
+            key: string,
+            // pokládá se povrch jako podklad
+            private asBackground
+        ) {
+            super(key, AbstractPlaceSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
             var uiItem = game.ui.inventoryUI.choosenItem;
-            if ((mouseCoord.x > heroCoordBR.x || mouseCoord.x < heroCoordTL.x ||
-                mouseCoord.y > heroCoordBR.y || mouseCoord.y < heroCoordTL.y) &&
-                game.world.render.place(xAim, yAim, uiItem)) {
-                Mixer.play(Resources.SND_PLACE_KEY);
-                game.ui.inventoryUI.decrease(uiItem, 1);
-                return true;
+            var object: InvObjDefinition = Resources.INSTANCE.invObjectsDefs[uiItem];
+            // je co pokládat?
+            if (typeof object !== "undefined" && object != null) {
+                // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
+                if (this.asBackground == false && object.mapSurface != null) {
+                    if (mouseCoord.x <= heroCoordBR.x && mouseCoord.x >= heroCoordTL.x &&
+                        mouseCoord.y <= heroCoordBR.y && mouseCoord.y >= heroCoordTL.y) {
+                        // koliduju s hráčem
+                        return false;
+                    }
+                }
+                // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
+                if (game.world.render.place(xAim, yAim, object, this.asBackground)) {
+                    Mixer.play(Resources.SND_PLACE_KEY);
+                    game.ui.inventoryUI.decrease(uiItem, 1);
+                    return true;
+                }
+                return false;
             }
-            return false;
+        }
+    }
+
+    export class PlaceSpellDef extends AbstractPlaceSpellDef {
+        constructor() {
+            super(Resources.SPELL_PLACE_KEY, false);
+        }
+    }
+
+    export class PlaceBgrSpellDef extends AbstractPlaceSpellDef {
+        constructor() {
+            super(Resources.SPELL_PLACE_BGR_KEY, true);
         }
     }
 

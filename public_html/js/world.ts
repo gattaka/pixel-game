@@ -525,7 +525,7 @@ namespace Lich {
             var self = this;
 
             // je vybrán spell?
-            var choosenSpell = self.game.ui.spellsUI.choosenItem;
+            var choosenSpell = self.game.ui.spellsUI.getChoosenSpell();
             if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
 
                 // provádím spell za hráče, takže kontroluji jeho cooldown
@@ -540,10 +540,10 @@ namespace Lich {
                 // Může se provést (cooldown je pryč)?
                 if (cooldown <= 0 && (mouse.down || mouse.click)) {
                     mouse.click = false;
-                    var spellDef: SpellDefinition = Resources.INSTANCE.spellsDefs[choosenSpell];
+                    var spellDef: SpellDefinition = Resources.INSTANCE.spellsDefs.byKey(choosenSpell);
 
                     var heroCenterX = self.hero.x + self.hero.width / 2;
-                    var heroCenterY = self.hero.y + self.hero.height / 2;
+                    var heroCenterY = self.hero.y + self.hero.height / 4;
 
                     // zkus cast
                     if (spellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {

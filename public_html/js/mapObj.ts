@@ -29,12 +29,16 @@ namespace Lich {
 
         public frames: number = 1;
 
+        // pozadí povrchu je reprezentováno jako objekt
+        public background: MapObjDefinition = null;
+
         // je možné tento INV objekt znovu umístit (váza) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapObj: MapObjDefinition = null;
         // je možné tento INV objekt znovu umístit (kameny -> zeď) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapSurface: MapSurfaceDefinition = null;
+        
         constructor(public invKey: string, target: Diggable) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
@@ -42,11 +46,15 @@ namespace Lich {
             if ((target instanceof MapSurfaceDefinition)) {
                 this.mapSurface = <MapSurfaceDefinition>target;
             }
-
         };
 
         public setFrames(frames: number): InvObjDefinition {
             this.frames = frames;
+            return this;
+        }
+
+        public setBackground(background: MapObjDefinition): InvObjDefinition {
+            this.background = background;
             return this;
         }
     }

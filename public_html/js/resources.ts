@@ -65,29 +65,13 @@ namespace Lich {
         // surfaces
         static SRFC_DIRT_KEY = "SRFC_DIRT_KEY";
         static SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
+        static SRFC_WOODWALL_BGR_KEY = "SRFC_WOODWALL_BGR_KEY";
         static SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY";
         static SRFC_FLORITE_KEY = "SRFC_FLORITE_KEY";
         static SRFC_BRICK_KEY = "SRFC_BRICK_KEY";
+        static SRFC_BRICK_BGR_KEY = "SRFC_BRICK_BGR_KEY";
         static SRFC_STRAW_KEY = "SRFC_STRAW_KEY";
-
-        // inv items
-        static INV_BERRY_KEY = "INV_BERRY_KEY";
-        static INV_WOOD_KEY = "INV_WOOD_KEY";
-        static INV_STRAW_KEY = "INV_STRAW_KEY";
-        static INV_MUSHROOM_KEY = "INV_MUSHROOM_KEY";
-        static INV_MUSHROOM2_KEY = "INV_MUSHROOM2_KEY";
-        static INV_MUSHROOM3_KEY = "INV_MUSHROOM3_KEY";
-        static INV_PLANT_KEY = "INV_PLANT_KEY";
-        static INV_PLANT2_KEY = "INV_PLANT2_KEY";
-        static INV_PLANT3_KEY = "INV_PLANT3_KEY";
-        static INV_PLANT4_KEY = "INV_PLANT4_KEY";
-        static INV_DIRT_KEY = "INV_DIRT_KEY";
-        static INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
-        static INV_FLORITE_KEY = "INV_FLORITE_KEY";
-        static INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
-
-        // characters
-        static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
+        static SRFC_STRAW_BGR_KEY = "SRFC_STRAW_BGR_KEY";
 
         // map objects
         static MAP_BERRY_KEY = "MAP_BERRY_KEY";
@@ -109,6 +93,26 @@ namespace Lich {
         static MAP_FLORITE_KEY = "MAP_FLORITE_KEY";
         static MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
 
+        // inv items
+        static INV_BERRY_KEY = "INV_BERRY_KEY";
+        static INV_WOOD_KEY = "INV_WOOD_KEY";
+        static INV_STRAW_KEY = "INV_STRAW_KEY";
+        static INV_MUSHROOM_KEY = "INV_MUSHROOM_KEY";
+        static INV_MUSHROOM2_KEY = "INV_MUSHROOM2_KEY";
+        static INV_MUSHROOM3_KEY = "INV_MUSHROOM3_KEY";
+        static INV_PLANT_KEY = "INV_PLANT_KEY";
+        static INV_PLANT2_KEY = "INV_PLANT2_KEY";
+        static INV_PLANT3_KEY = "INV_PLANT3_KEY";
+        static INV_PLANT4_KEY = "INV_PLANT4_KEY";
+        static INV_DIRT_KEY = "INV_DIRT_KEY";
+        static INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
+        static INV_FLORITE_KEY = "INV_FLORITE_KEY";
+        static INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
+
+        // characters
+        static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
+
+
         // ui
         static SKULL_KEY = "SKULL_KEY";
         static HELMET_KEY = "HELMET_KEY";
@@ -118,6 +122,7 @@ namespace Lich {
 
         // ui spells
         static SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
+        static SPELL_PLACE_BGR_KEY = "SPELL_PLACE_BGR_KEY";
         static SPELL_DIG_KEY = "SPELL_DIG_KEY";
         static SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
         static SPELL_BOLT_KEY = "SPELL_BOLT_KEY";
@@ -158,7 +163,7 @@ namespace Lich {
         public invObjectsDefs = new Array<InvObjDefinition>();
 
         // definice spells
-        public spellsDefs = new Array<SpellDefinition>();
+        public spellsDefs = new Table<SpellDefinition>();
 
         /*
          * Sprite indexy
@@ -182,6 +187,7 @@ namespace Lich {
                 new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
+                new Load("images/ui/place_bgr_spell.png", Resources.SPELL_PLACE_BGR_KEY),
                 new Load("images/ui/bolt_spell.png", Resources.SPELL_BOLT_KEY),
                 new Load("images/ui/enemy_spell.png", Resources.SPELL_ENEMY_KEY),
                 // inventory
@@ -208,10 +214,13 @@ namespace Lich {
                 // surfaces
                 new Load("images/surfaces/dirt.png", Resources.SRFC_DIRT_KEY),
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
+                new Load("images/surfaces/woodwall_bgr.png", Resources.SRFC_WOODWALL_BGR_KEY),
                 new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
                 new Load("images/surfaces/florite.png", Resources.SRFC_FLORITE_KEY),
                 new Load("images/surfaces/brick.png", Resources.SRFC_BRICK_KEY),
+                new Load("images/surfaces/brick_bgr.png", Resources.SRFC_BRICK_BGR_KEY),
                 new Load("images/surfaces/straw.png", Resources.SRFC_STRAW_KEY),
+                new Load("images/surfaces/straw_bgr.png", Resources.SRFC_STRAW_BGR_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
@@ -265,11 +274,14 @@ namespace Lich {
                 new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
+                // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)
+                /*
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
                 new Load("music/Boss 1.ogg", Resources.MSC_BOSS_THEME_KEY),
                 new Load("music/Fight In Crystals.ogg", Resources.MSC_KRYSTAL_THEME_KEY),
                 new Load("music/Flood.ogg", Resources.MSC_FLOOD_THEME_KEY),
                 new Load("music/Lava.ogg", Resources.MSC_LAVA_THEME_KEY),
+                */
             ];
 
             (function() {
@@ -369,8 +381,8 @@ namespace Lich {
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
-            putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 5, 5));
-            putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 2, 10));
+            putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 2, 5));
+            putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 5, 10));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_MUSHROOM_KEY, 2, 2, Resources.INV_MUSHROOM_KEY, 1, 1));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_MUSHROOM2_KEY, 2, 2, Resources.INV_MUSHROOM2_KEY, 1, 1));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_MUSHROOM3_KEY, 2, 2, Resources.INV_MUSHROOM3_KEY, 1, 1));
@@ -380,6 +392,11 @@ namespace Lich {
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
             putIntoObjectsDefs(new MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
+
+            // objekty pozadí povrchu
+            putIntoObjectsDefs(new MapObjDefinition(Resources.SRFC_BRICK_BGR_KEY, 2, 2, Resources.INV_DIRT_KEY, 1, 0));
+            putIntoObjectsDefs(new MapObjDefinition(Resources.SRFC_WOODWALL_BGR_KEY, 2, 2, Resources.INV_WOOD_KEY, 1, 0));
+            putIntoObjectsDefs(new MapObjDefinition(Resources.SRFC_STRAW_BGR_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 0));
 
             (function() {
                 // vytvoř frekvenční pool pro objekty 
@@ -401,16 +418,20 @@ namespace Lich {
                 Resources.INSTANCE.invObjectsDefs[invObj.invKey] = invObj;
             };
 
-            // usaditelných jako povrch
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_BRICK_KEY]));
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_STRAW_KEY]));
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
-            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
-
             // usaditelných jako objekt
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
             putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectsDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
+
+            // usaditelných jako povrch
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY])
+                .setBackground(Resources.INSTANCE.mapObjectsDefs[Resources.SRFC_WOODWALL_BGR_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_BRICK_KEY])
+                .setBackground(Resources.INSTANCE.mapObjectsDefs[Resources.SRFC_BRICK_BGR_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_STRAW_KEY])
+                .setBackground(Resources.INSTANCE.mapObjectsDefs[Resources.SRFC_STRAW_BGR_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
+            putIntoInvObjectsDefs(new InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
+
 
             /**
              * SPELLS
@@ -418,12 +439,13 @@ namespace Lich {
 
             // Definice spells
             var putIntoSpellsDefs = function(spell: SpellDefinition) {
-                Resources.INSTANCE.spellsDefs[spell.key] = spell;
+                Resources.INSTANCE.spellsDefs.insert(spell.key, spell);
             };
 
             putIntoSpellsDefs(new FireballSpellDef());
             putIntoSpellsDefs(new DigSpellDef());
             putIntoSpellsDefs(new PlaceSpellDef());
+            putIntoSpellsDefs(new PlaceBgrSpellDef());
             putIntoSpellsDefs(new BoltSpellDef());
             putIntoSpellsDefs(new EnemySpellDef());
 

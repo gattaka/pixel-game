@@ -37,6 +37,8 @@ var Lich;
         function InvObjDefinition(invKey, target) {
             this.invKey = invKey;
             this.frames = 1;
+            // pozadí povrchu je reprezentováno jako objekt
+            this.background = null;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             this.mapObj = null;
@@ -53,6 +55,10 @@ var Lich;
         ;
         InvObjDefinition.prototype.setFrames = function (frames) {
             this.frames = frames;
+            return this;
+        };
+        InvObjDefinition.prototype.setBackground = function (background) {
+            this.background = background;
             return this;
         };
         return InvObjDefinition;

@@ -28,7 +28,7 @@ var Lich;
             // definice inv položek
             this.invObjectsDefs = new Array();
             // definice spells
-            this.spellsDefs = new Array();
+            this.spellsDefs = new Lich.Table();
             /*
              * Sprite indexy
              */
@@ -42,6 +42,7 @@ var Lich;
                 new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
+                new Load("images/ui/place_bgr_spell.png", Resources.SPELL_PLACE_BGR_KEY),
                 new Load("images/ui/bolt_spell.png", Resources.SPELL_BOLT_KEY),
                 new Load("images/ui/enemy_spell.png", Resources.SPELL_ENEMY_KEY),
                 // inventory
@@ -68,10 +69,13 @@ var Lich;
                 // surfaces
                 new Load("images/surfaces/dirt.png", Resources.SRFC_DIRT_KEY),
                 new Load("images/surfaces/woodwall.png", Resources.SRFC_WOODWALL_KEY),
+                new Load("images/surfaces/woodwall_bgr.png", Resources.SRFC_WOODWALL_BGR_KEY),
                 new Load("images/surfaces/krystals.png", Resources.SRFC_KRYSTAL_KEY),
                 new Load("images/surfaces/florite.png", Resources.SRFC_FLORITE_KEY),
                 new Load("images/surfaces/brick.png", Resources.SRFC_BRICK_KEY),
+                new Load("images/surfaces/brick_bgr.png", Resources.SRFC_BRICK_BGR_KEY),
                 new Load("images/surfaces/straw.png", Resources.SRFC_STRAW_KEY),
+                new Load("images/surfaces/straw_bgr.png", Resources.SRFC_STRAW_BGR_KEY),
                 // objects
                 new Load("images/parts/berry.png", Resources.MAP_BERRY_KEY),
                 new Load("images/parts/bush.png", Resources.MAP_BUSH_KEY),
@@ -125,11 +129,6 @@ var Lich;
                 new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
-                new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
-                new Load("music/Boss 1.ogg", Resources.MSC_BOSS_THEME_KEY),
-                new Load("music/Fight In Crystals.ogg", Resources.MSC_KRYSTAL_THEME_KEY),
-                new Load("music/Flood.ogg", Resources.MSC_FLOOD_THEME_KEY),
-                new Load("music/Lava.ogg", Resources.MSC_LAVA_THEME_KEY),
             ];
             (function () {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
@@ -226,6 +225,10 @@ var Lich;
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
+            // objekty pozadí povrchu
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.SRFC_BRICK_BGR_KEY, 2, 2, Resources.INV_DIRT_KEY, 1, 0));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.SRFC_WOODWALL_BGR_KEY, 2, 2, Resources.INV_WOOD_KEY, 1, 0));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.SRFC_STRAW_BGR_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 0));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
                 for (var key in Resources.INSTANCE.mapObjectsDefs) {
@@ -243,25 +246,29 @@ var Lich;
             var putIntoInvObjectsDefs = function (invObj) {
                 Resources.INSTANCE.invObjectsDefs[invObj.invKey] = invObj;
             };
-            // usaditelných jako povrch
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_BRICK_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_STRAW_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
-            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
             // usaditelných jako objekt
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectsDefs[Resources.MAP_MUSHROOM_KEY]));
             putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectsDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
+            // usaditelných jako povrch
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_WOODWALL_KEY])
+                .setBackground(Resources.INSTANCE.mapObjectsDefs[Resources.SRFC_WOODWALL_BGR_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_BRICK_KEY])
+                .setBackground(Resources.INSTANCE.mapObjectsDefs[Resources.SRFC_BRICK_BGR_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_STRAW_KEY])
+                .setBackground(Resources.INSTANCE.mapObjectsDefs[Resources.SRFC_STRAW_BGR_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_KRYSTAL_KEY]));
+            putIntoInvObjectsDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.INSTANCE.mapSurfacesDefs[Resources.SRFC_FLORITE_KEY]));
             /**
              * SPELLS
              */
             // Definice spells
             var putIntoSpellsDefs = function (spell) {
-                Resources.INSTANCE.spellsDefs[spell.key] = spell;
+                Resources.INSTANCE.spellsDefs.insert(spell.key, spell);
             };
             putIntoSpellsDefs(new Lich.FireballSpellDef());
             putIntoSpellsDefs(new Lich.DigSpellDef());
             putIntoSpellsDefs(new Lich.PlaceSpellDef());
+            putIntoSpellsDefs(new Lich.PlaceBgrSpellDef());
             putIntoSpellsDefs(new Lich.BoltSpellDef());
             putIntoSpellsDefs(new Lich.EnemySpellDef());
         }
@@ -359,27 +366,13 @@ var Lich;
         // surfaces
         Resources.SRFC_DIRT_KEY = "SRFC_DIRT_KEY";
         Resources.SRFC_WOODWALL_KEY = "SRFC_WOODWALL_KEY";
+        Resources.SRFC_WOODWALL_BGR_KEY = "SRFC_WOODWALL_BGR_KEY";
         Resources.SRFC_KRYSTAL_KEY = "SRFC_KRYSTAL_KEY";
         Resources.SRFC_FLORITE_KEY = "SRFC_FLORITE_KEY";
         Resources.SRFC_BRICK_KEY = "SRFC_BRICK_KEY";
+        Resources.SRFC_BRICK_BGR_KEY = "SRFC_BRICK_BGR_KEY";
         Resources.SRFC_STRAW_KEY = "SRFC_STRAW_KEY";
-        // inv items
-        Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
-        Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
-        Resources.INV_STRAW_KEY = "INV_STRAW_KEY";
-        Resources.INV_MUSHROOM_KEY = "INV_MUSHROOM_KEY";
-        Resources.INV_MUSHROOM2_KEY = "INV_MUSHROOM2_KEY";
-        Resources.INV_MUSHROOM3_KEY = "INV_MUSHROOM3_KEY";
-        Resources.INV_PLANT_KEY = "INV_PLANT_KEY";
-        Resources.INV_PLANT2_KEY = "INV_PLANT2_KEY";
-        Resources.INV_PLANT3_KEY = "INV_PLANT3_KEY";
-        Resources.INV_PLANT4_KEY = "INV_PLANT4_KEY";
-        Resources.INV_DIRT_KEY = "INV_DIRT_KEY";
-        Resources.INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
-        Resources.INV_FLORITE_KEY = "INV_FLORITE_KEY";
-        Resources.INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
-        // characters
-        Resources.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
+        Resources.SRFC_STRAW_BGR_KEY = "SRFC_STRAW_BGR_KEY";
         // map objects
         Resources.MAP_BERRY_KEY = "MAP_BERRY_KEY";
         Resources.MAP_BUSH_KEY = "MAP_BUSH_KEY";
@@ -399,6 +392,23 @@ var Lich;
         Resources.MAP_TREE2_KEY = "MAP_TREE2_KEY";
         Resources.MAP_FLORITE_KEY = "MAP_FLORITE_KEY";
         Resources.MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
+        // inv items
+        Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
+        Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
+        Resources.INV_STRAW_KEY = "INV_STRAW_KEY";
+        Resources.INV_MUSHROOM_KEY = "INV_MUSHROOM_KEY";
+        Resources.INV_MUSHROOM2_KEY = "INV_MUSHROOM2_KEY";
+        Resources.INV_MUSHROOM3_KEY = "INV_MUSHROOM3_KEY";
+        Resources.INV_PLANT_KEY = "INV_PLANT_KEY";
+        Resources.INV_PLANT2_KEY = "INV_PLANT2_KEY";
+        Resources.INV_PLANT3_KEY = "INV_PLANT3_KEY";
+        Resources.INV_PLANT4_KEY = "INV_PLANT4_KEY";
+        Resources.INV_DIRT_KEY = "INV_DIRT_KEY";
+        Resources.INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
+        Resources.INV_FLORITE_KEY = "INV_FLORITE_KEY";
+        Resources.INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
+        // characters
+        Resources.PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
         // ui
         Resources.SKULL_KEY = "SKULL_KEY";
         Resources.HELMET_KEY = "HELMET_KEY";
@@ -407,6 +417,7 @@ var Lich;
         Resources.UI_SOUND_KEY = "UI_SOUND_KEY";
         // ui spells
         Resources.SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
+        Resources.SPELL_PLACE_BGR_KEY = "SPELL_PLACE_BGR_KEY";
         Resources.SPELL_DIG_KEY = "SPELL_DIG_KEY";
         Resources.SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
         Resources.SPELL_BOLT_KEY = "SPELL_BOLT_KEY";

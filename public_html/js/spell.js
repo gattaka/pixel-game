@@ -176,26 +176,56 @@ var Lich;
     /**
      * Spell pro pokládání objektů a povrchů z inventáře
      */
+    var AbstractPlaceSpellDef = (function (_super) {
+        __extends(AbstractPlaceSpellDef, _super);
+        function AbstractPlaceSpellDef(key, 
+            // pokládá se povrch jako podklad
+            asBackground) {
+            _super.call(this, key, AbstractPlaceSpellDef.COOLDOWN);
+            this.asBackground = asBackground;
+        }
+        AbstractPlaceSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
+            var uiItem = game.ui.inventoryUI.choosenItem;
+            var object = Lich.Resources.INSTANCE.invObjectsDefs[uiItem];
+            // je co pokládat?
+            if (typeof object !== "undefined" && object != null) {
+                // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
+                if (this.asBackground == false && object.mapSurface != null) {
+                    if (mouseCoord.x <= heroCoordBR.x && mouseCoord.x >= heroCoordTL.x &&
+                        mouseCoord.y <= heroCoordBR.y && mouseCoord.y >= heroCoordTL.y) {
+                        // koliduju s hráčem
+                        return false;
+                    }
+                }
+                // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
+                if (game.world.render.place(xAim, yAim, object, this.asBackground)) {
+                    Lich.Mixer.play(Lich.Resources.SND_PLACE_KEY);
+                    game.ui.inventoryUI.decrease(uiItem, 1);
+                    return true;
+                }
+                return false;
+            }
+        };
+        AbstractPlaceSpellDef.COOLDOWN = 100;
+        return AbstractPlaceSpellDef;
+    }(HeroReachSpellDef));
+    Lich.AbstractPlaceSpellDef = AbstractPlaceSpellDef;
     var PlaceSpellDef = (function (_super) {
         __extends(PlaceSpellDef, _super);
         function PlaceSpellDef() {
-            _super.call(this, Lich.Resources.SPELL_PLACE_KEY, PlaceSpellDef.COOLDOWN);
+            _super.call(this, Lich.Resources.SPELL_PLACE_KEY, false);
         }
-        PlaceSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            var uiItem = game.ui.inventoryUI.choosenItem;
-            if ((mouseCoord.x > heroCoordBR.x || mouseCoord.x < heroCoordTL.x ||
-                mouseCoord.y > heroCoordBR.y || mouseCoord.y < heroCoordTL.y) &&
-                game.world.render.place(xAim, yAim, uiItem)) {
-                Lich.Mixer.play(Lich.Resources.SND_PLACE_KEY);
-                game.ui.inventoryUI.decrease(uiItem, 1);
-                return true;
-            }
-            return false;
-        };
-        PlaceSpellDef.COOLDOWN = 100;
         return PlaceSpellDef;
-    }(HeroReachSpellDef));
+    }(AbstractPlaceSpellDef));
     Lich.PlaceSpellDef = PlaceSpellDef;
+    var PlaceBgrSpellDef = (function (_super) {
+        __extends(PlaceBgrSpellDef, _super);
+        function PlaceBgrSpellDef() {
+            _super.call(this, Lich.Resources.SPELL_PLACE_BGR_KEY, true);
+        }
+        return PlaceBgrSpellDef;
+    }(AbstractPlaceSpellDef));
+    Lich.PlaceBgrSpellDef = PlaceBgrSpellDef;
     /**
      * Spawn nepřátel (development spell)
      */

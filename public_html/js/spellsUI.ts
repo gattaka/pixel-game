@@ -5,10 +5,12 @@ namespace Lich {
         static N = 5;
         static M = 1;
 
-        choosenItem: string;
-        spellContent = [];
-        spellIndex = [];
-        spellReversedIndex = {};
+        toggleFlag = false;
+
+        choosenItemNumber: number;
+        spellContent = new Array<createjs.Bitmap>();
+        spellIndex = new Array<string>();
+        alternativeSpellIndex = new Array<string>();
 
         itemsCont = new createjs.Container();
         itemHighlightShape = new createjs.Shape();
@@ -18,9 +20,9 @@ namespace Lich {
 
             var self = this;
 
-            // zatím rovnou:
+            // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(Resources.SPELL_DIG_KEY);
-            self.spellInsert(Resources.SPELL_PLACE_KEY);
+            self.spellInsert(Resources.SPELL_PLACE_KEY, Resources.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Resources.SPELL_FIREBALL_KEY);
             self.spellInsert(Resources.SPELL_BOLT_KEY);
             self.spellInsert(Resources.SPELL_ENEMY_KEY);
@@ -38,6 +40,27 @@ namespace Lich {
             self.selectSpell(0);
         }
 
+        toggleShift() {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag == false) {
+                for (var i = 0; i < this.spellIndex.length; i++) {
+                    var alt = this.alternativeSpellIndex[i];
+                    if (typeof alt !== "undefined") {
+                        this.spellContent[i].image = Resources.INSTANCE.getImage(alt);
+                    }
+                }
+                self.toggleFlag = true;
+            }
+        }
+
+        prepareForToggleShift() {
+            for (var i = 0; i < this.spellIndex.length; i++) {
+                this.spellContent[i].image = Resources.INSTANCE.getImage(this.spellIndex[i]);
+            }
+            this.toggleFlag = false;
+        }
+
         handleMouse(mouse) {
             if (mouse.down) {
                 // TODO
@@ -46,15 +69,23 @@ namespace Lich {
 
         selectSpell(spellNumber: number) {
             var self = this;
-            var spell = self.spellIndex[spellNumber];
             var bitmap = self.spellContent[spellNumber];
             self.itemHighlightShape.visible = true;
             self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.choosenItem = spell;
+            self.choosenItemNumber = spellNumber;
         }
 
-        spellInsert(spell) {
+        getChoosenSpell(): string {
+            var alt = this.alternativeSpellIndex[this.choosenItemNumber];
+            if (this.toggleFlag && typeof alt !== "undefined") {
+                return alt;
+            } else {
+                return this.spellIndex[this.choosenItemNumber];
+            }
+        }
+
+        spellInsert(spell: string, altSpell?: string) {
             var self = this;
             var bitmap = Resources.INSTANCE.getBitmap(spell);
             self.itemsCont.addChild(bitmap);
@@ -62,6 +93,7 @@ namespace Lich {
             bitmap.y = 0;
             var index = self.spellIndex.length;
             self.spellIndex[index] = spell;
+            self.alternativeSpellIndex[index] = altSpell;
             self.spellContent.push(bitmap);
 
             var text = new Label("" + self.spellContent.length, PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);

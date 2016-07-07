@@ -4,6 +4,31 @@ namespace Lich {
         constructor(public hit: boolean, public x?: number, public y?: number) { }
     }
 
+    export class Table<T> {
+
+        private array = new Array<T>();
+        private table = {};
+
+        public forEach(f: (t: T) => any) {
+            this.array.forEach(f);
+        }
+
+        public insert(key: string, element: T): number {
+            this.array.push(element);
+            this.table[key] = element;
+            return this.array.length - 1;
+        }
+
+        public byKey(key: string): T {
+            return this.table[key];
+        }
+
+        public byIndex(index: number): T {
+            return this.array[index];
+        }
+
+    }
+
     export class Utils {
 
         static distance(x1: number, y1: number, x2: number, y2: number): number {

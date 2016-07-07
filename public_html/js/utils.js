@@ -9,6 +9,28 @@ var Lich;
         return CollisionTestResult;
     }());
     Lich.CollisionTestResult = CollisionTestResult;
+    var Table = (function () {
+        function Table() {
+            this.array = new Array();
+            this.table = {};
+        }
+        Table.prototype.forEach = function (f) {
+            this.array.forEach(f);
+        };
+        Table.prototype.insert = function (key, element) {
+            this.array.push(element);
+            this.table[key] = element;
+            return this.array.length - 1;
+        };
+        Table.prototype.byKey = function (key) {
+            return this.table[key];
+        };
+        Table.prototype.byIndex = function (index) {
+            return this.array[index];
+        };
+        return Table;
+    }());
+    Lich.Table = Table;
     var Utils = (function () {
         function Utils() {
         }

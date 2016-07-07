@@ -573,27 +573,33 @@ var Lich;
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true,
          * pokud se to podařilo
          */
-        Render.prototype.place = function (x, y, item) {
+        Render.prototype.place = function (x, y, object, asBackground) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Lich.Utils.even(coord.x);
             var ry = Lich.Utils.even(coord.y);
             // pokud je místo prázdné a bez objektu (a je co vkládat
-            if (item !== null && self.tilesMap.valueAt(rx, ry) === Lich.SurfaceIndex.VOID && Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
-                var object = Lich.Resources.INSTANCE.invObjectsDefs[item];
+            if (self.tilesMap.valueAt(rx, ry) === Lich.SurfaceIndex.VOID && Lich.Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
                 var sector = self.getSectorByTiles(rx, ry);
                 if (typeof object !== "undefined") {
+                    var obj = null;
                     if (object.mapObj != null) {
-                        // jde o objekt
+                        obj = object.mapObj;
+                    }
+                    if (asBackground && object.background != null) {
+                        obj = object.background;
+                    }
+                    if (obj != null) {
+                        // jde o objekt nebo pozadí povrchu
                         // musí se posunout dolů o object.mapObj.mapSpriteHeight,
                         // protože objekty se počítají počátkem levého SPODNÍHO rohu 
-                        Lich.MapTools.writeObjectRecord(self.tilesMap, rx, ry + object.mapObj.mapSpriteHeight, object.mapObj);
+                        Lich.MapTools.writeObjectRecord(self.tilesMap, rx, ry + obj.mapSpriteHeight, obj);
                         // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
                         // TODO změnit -- tohle je blbost -- může být i větší objekt a pak se musí klasicky 
                         // počítat záběr a volný prostor
                         for (var tx = 0; tx < 2; tx++) {
                             for (var ty = 0; ty < 2; ty++) {
-                                var objectTile = new Lich.MapObjectTile(object.mapObj.mapKey, tx, ty);
+                                var objectTile = new Lich.MapObjectTile(obj.mapKey, tx, ty);
                                 var tile = self.createObject(objectTile);
                                 // přidej dílek do sektoru
                                 if (tile instanceof createjs.Sprite) {

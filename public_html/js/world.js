@@ -436,7 +436,7 @@ var Lich;
         World.prototype.handleMouse = function (mouse, delta) {
             var self = this;
             // je vybrán spell?
-            var choosenSpell = self.game.ui.spellsUI.choosenItem;
+            var choosenSpell = self.game.ui.spellsUI.getChoosenSpell();
             if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
                 // provádím spell za hráče, takže kontroluji jeho cooldown
                 var cooldown = self.hero.spellCooldowns[choosenSpell];
@@ -450,9 +450,9 @@ var Lich;
                 // Může se provést (cooldown je pryč)?
                 if (cooldown <= 0 && (mouse.down || mouse.click)) {
                     mouse.click = false;
-                    var spellDef = Lich.Resources.INSTANCE.spellsDefs[choosenSpell];
+                    var spellDef = Lich.Resources.INSTANCE.spellsDefs.byKey(choosenSpell);
                     var heroCenterX = self.hero.x + self.hero.width / 2;
-                    var heroCenterY = self.hero.y + self.hero.height / 2;
+                    var heroCenterY = self.hero.y + self.hero.height / 4;
                     // zkus cast
                     if (spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
                         // ok, cast se provedl, nastav nový cooldown
