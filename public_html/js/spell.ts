@@ -202,16 +202,18 @@ namespace Lich {
     /**
      * Spell pro vykopávání objektů a povrchů z mapy
      */
-    export class DigSpellDef extends HeroReachSpellDef {
+    export abstract class AbstractDigSpellDef extends HeroReachSpellDef {
 
         static COOLDOWN = 100;
 
-        constructor() {
-            super(Resources.SPELL_DIG_KEY, DigSpellDef.COOLDOWN);
+        constructor(key: string,
+            // pokládá se povrch jako podklad
+            private asBackground) {
+            super(key, AbstractDigSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            if (game.world.render.dig(xAim, yAim)) {
+            if (game.world.render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
                         Mixer.play(Resources.SND_PICK_AXE_1_KEY);
@@ -226,6 +228,18 @@ namespace Lich {
                 return true;
             }
             return false;
+        }
+    }
+
+    export class DigSpellDef extends AbstractDigSpellDef {
+        constructor() {
+            super(Resources.SPELL_DIG_KEY, false);
+        }
+    }
+
+    export class DigBgrSpellDef extends AbstractDigSpellDef {
+        constructor() {
+            super(Resources.SPELL_DIG_BGR_KEY, true);
         }
     }
 

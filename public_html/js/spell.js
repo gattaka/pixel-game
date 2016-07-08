@@ -147,13 +147,16 @@ var Lich;
     /**
      * Spell pro vykopávání objektů a povrchů z mapy
      */
-    var DigSpellDef = (function (_super) {
-        __extends(DigSpellDef, _super);
-        function DigSpellDef() {
-            _super.call(this, Lich.Resources.SPELL_DIG_KEY, DigSpellDef.COOLDOWN);
+    var AbstractDigSpellDef = (function (_super) {
+        __extends(AbstractDigSpellDef, _super);
+        function AbstractDigSpellDef(key, 
+            // pokládá se povrch jako podklad
+            asBackground) {
+            _super.call(this, key, AbstractDigSpellDef.COOLDOWN);
+            this.asBackground = asBackground;
         }
-        DigSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            if (game.world.render.dig(xAim, yAim)) {
+        AbstractDigSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
+            if (game.world.render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
                         Lich.Mixer.play(Lich.Resources.SND_PICK_AXE_1_KEY);
@@ -169,10 +172,26 @@ var Lich;
             }
             return false;
         };
-        DigSpellDef.COOLDOWN = 100;
-        return DigSpellDef;
+        AbstractDigSpellDef.COOLDOWN = 100;
+        return AbstractDigSpellDef;
     }(HeroReachSpellDef));
+    Lich.AbstractDigSpellDef = AbstractDigSpellDef;
+    var DigSpellDef = (function (_super) {
+        __extends(DigSpellDef, _super);
+        function DigSpellDef() {
+            _super.call(this, Lich.Resources.SPELL_DIG_KEY, false);
+        }
+        return DigSpellDef;
+    }(AbstractDigSpellDef));
     Lich.DigSpellDef = DigSpellDef;
+    var DigBgrSpellDef = (function (_super) {
+        __extends(DigBgrSpellDef, _super);
+        function DigBgrSpellDef() {
+            _super.call(this, Lich.Resources.SPELL_DIG_BGR_KEY, true);
+        }
+        return DigBgrSpellDef;
+    }(AbstractDigSpellDef));
+    Lich.DigBgrSpellDef = DigBgrSpellDef;
     /**
      * Spell pro pokládání objektů a povrchů z inventáře
      */

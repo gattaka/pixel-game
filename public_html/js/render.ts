@@ -775,20 +775,24 @@ namespace Lich {
             return false;
         }
 
-        dig(x, y) {
+        dig(x: number, y: number, asBackground: boolean) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Utils.even(coord.x);
             var ry = Utils.even(coord.y);
 
             // kopl jsem do nějakého povrchu?
-            if (self.tilesMap.valueAt(rx, ry) !== SurfaceIndex.VOID) {
-                self.digGround(rx, ry);
-                return true;
+            if (asBackground) {
+                // TODO
             } else {
-                // kopl jsem do objektu?
-                self.tryDigObject(rx, ry);
-                return false;
+                if (self.tilesMap.valueAt(rx, ry) !== SurfaceIndex.VOID) {
+                    self.digGround(rx, ry);
+                    return true;
+                } else {
+                    // kopl jsem do objektu?
+                    self.tryDigObject(rx, ry);
+                    return false;
+                }
             }
         }
 

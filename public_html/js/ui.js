@@ -11,6 +11,11 @@ var Lich;
             _super.call(this);
             this.game = game;
             var self = this;
+            // splashScreen
+            self.splashScreenUI = new Lich.SplashScreenUI();
+            self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
+            self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
+            self.addChild(self.splashScreenUI);
             // inventář
             var inventoryUI = new Lich.InventoryUI();
             inventoryUI.x = UI.SCREEN_SPACING;

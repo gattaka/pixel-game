@@ -7,7 +7,7 @@ namespace Lich {
         public height: number;
         public width: number;
 
-        constructor(text?: string, font?: string, color?: string, outline?: boolean, outlineColor?: string, outlineWidth?: number) {
+        constructor(text: string, font: string, color: string, outline?: boolean, outlineColor?: string, outlineWidth?: number) {
             super();
 
             this.label = new createjs.Text(text, font, color);

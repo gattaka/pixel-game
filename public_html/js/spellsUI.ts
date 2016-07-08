@@ -21,7 +21,7 @@ namespace Lich {
             var self = this;
 
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
-            self.spellInsert(Resources.SPELL_DIG_KEY);
+            self.spellInsert(Resources.SPELL_DIG_KEY,Resources.SPELL_DIG_BGR_KEY);
             self.spellInsert(Resources.SPELL_PLACE_KEY, Resources.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Resources.SPELL_FIREBALL_KEY);
             self.spellInsert(Resources.SPELL_BOLT_KEY);

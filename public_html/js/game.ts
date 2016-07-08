@@ -3,8 +3,6 @@
 namespace Lich {
     export class Game {
 
-        public static VERSION = "0.3";
-
         canvas: HTMLCanvasElement;
         stage: createjs.Stage;
         fpsLabel: Label;
@@ -105,9 +103,6 @@ namespace Lich {
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
-
-                var versionLabel = new Label("LichEngine version: " + Game.VERSION, "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-                self.debugUI.addNextChild(versionLabel);
 
                 self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.fpsLabel);

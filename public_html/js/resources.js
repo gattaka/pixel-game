@@ -40,12 +40,14 @@ var Lich;
                  */
                 // spells
                 new Load("images/ui/dig_spell.png", Resources.SPELL_DIG_KEY),
+                new Load("images/ui/dig_bgr_spell.png", Resources.SPELL_DIG_BGR_KEY),
                 new Load("images/ui/fireball_spell.png", Resources.SPELL_FIREBALL_KEY),
                 new Load("images/ui/place_spell.png", Resources.SPELL_PLACE_KEY),
                 new Load("images/ui/place_bgr_spell.png", Resources.SPELL_PLACE_BGR_KEY),
                 new Load("images/ui/bolt_spell.png", Resources.SPELL_BOLT_KEY),
                 new Load("images/ui/enemy_spell.png", Resources.SPELL_ENEMY_KEY),
                 // inventory
+                new Load("images/ui/inventory/inv_bones.png", Resources.INV_BONES_KEY),
                 new Load("images/ui/inventory/inv_berry.png", Resources.INV_BERRY_KEY),
                 new Load("images/ui/inventory/inv_mushroom.png", Resources.INV_MUSHROOM_KEY),
                 new Load("images/ui/inventory/inv_mushroom2.png", Resources.INV_MUSHROOM2_KEY),
@@ -208,14 +210,15 @@ var Lich;
             var putIntoObjectsDefs = function (mapObj) {
                 Resources.INSTANCE.mapObjectsDefs[mapObj.mapKey] = mapObj;
             };
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRAVE_KEY, 6, 3, Resources.INV_BONES_KEY, 5, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BERRY_KEY, 2, 2, Resources.INV_BERRY_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BUSH_KEY, 2, 2, null, 0, 10));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_BUSH2_KEY, 2, 2, null, 0, 10));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 5, 5));
-            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 2, 10));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 2, 5));
+            putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 5, 10));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM_KEY, 2, 2, Resources.INV_MUSHROOM_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM2_KEY, 2, 2, Resources.INV_MUSHROOM2_KEY, 1, 1));
             putIntoObjectsDefs(new Lich.MapObjDefinition(Resources.MAP_MUSHROOM3_KEY, 2, 2, Resources.INV_MUSHROOM3_KEY, 1, 1));
@@ -267,6 +270,7 @@ var Lich;
             };
             putIntoSpellsDefs(new Lich.FireballSpellDef());
             putIntoSpellsDefs(new Lich.DigSpellDef());
+            putIntoSpellsDefs(new Lich.DigBgrSpellDef());
             putIntoSpellsDefs(new Lich.PlaceSpellDef());
             putIntoSpellsDefs(new Lich.PlaceBgrSpellDef());
             putIntoSpellsDefs(new Lich.BoltSpellDef());
@@ -394,6 +398,7 @@ var Lich;
         Resources.MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
         // inv items
         Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
+        Resources.INV_BONES_KEY = "INV_BONES_KEY";
         Resources.INV_WOOD_KEY = "INV_WOOD_KEY";
         Resources.INV_STRAW_KEY = "INV_STRAW_KEY";
         Resources.INV_MUSHROOM_KEY = "INV_MUSHROOM_KEY";
@@ -419,6 +424,7 @@ var Lich;
         Resources.SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
         Resources.SPELL_PLACE_BGR_KEY = "SPELL_PLACE_BGR_KEY";
         Resources.SPELL_DIG_KEY = "SPELL_DIG_KEY";
+        Resources.SPELL_DIG_BGR_KEY = "SPELL_DIG_BGR_KEY";
         Resources.SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
         Resources.SPELL_BOLT_KEY = "SPELL_BOLT_KEY";
         Resources.SPELL_ENEMY_KEY = "SPELL_ENEMY_KEY";

@@ -9,10 +9,18 @@ namespace Lich {
         spellsUI: SpellsUI;
         musicUI: MusicUI;
 
+        splashScreenUI: SplashScreenUI;
+
         constructor(public game: Game) {
             super();
 
             var self = this;
+
+            // splashScreen
+            self.splashScreenUI = new SplashScreenUI();
+            self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
+            self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
+            self.addChild(self.splashScreenUI);
 
             // inventář
             var inventoryUI = new InventoryUI();

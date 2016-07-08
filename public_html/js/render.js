@@ -627,20 +627,24 @@ var Lich;
             }
             return false;
         };
-        Render.prototype.dig = function (x, y) {
+        Render.prototype.dig = function (x, y, asBackground) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Lich.Utils.even(coord.x);
             var ry = Lich.Utils.even(coord.y);
             // kopl jsem do nějakého povrchu?
-            if (self.tilesMap.valueAt(rx, ry) !== Lich.SurfaceIndex.VOID) {
-                self.digGround(rx, ry);
-                return true;
+            if (asBackground) {
             }
             else {
-                // kopl jsem do objektu?
-                self.tryDigObject(rx, ry);
-                return false;
+                if (self.tilesMap.valueAt(rx, ry) !== Lich.SurfaceIndex.VOID) {
+                    self.digGround(rx, ry);
+                    return true;
+                }
+                else {
+                    // kopl jsem do objektu?
+                    self.tryDigObject(rx, ry);
+                    return false;
+                }
             }
         };
         Render.prototype.shiftX = function (dst) {

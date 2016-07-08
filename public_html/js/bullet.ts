@@ -135,7 +135,7 @@ namespace Lich {
                                 var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
                                 var d2 = Math.pow(rad, 2);
                                 if (r2 <= d2) {
-                                    game.world.render.dig(rx, ry);
+                                    game.world.render.dig(rx, ry, false);
                                 }
                             }
                         }

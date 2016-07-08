@@ -75,8 +75,6 @@ var Lich;
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
-                var versionLabel = new Lich.Label("LichEngine version: " + Game.VERSION, "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-                self.debugUI.addNextChild(versionLabel);
                 self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.fpsLabel);
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
@@ -167,7 +165,6 @@ var Lich;
             }
         }
         ;
-        Game.VERSION = "0.3";
         return Game;
     }());
     Lich.Game = Game;
