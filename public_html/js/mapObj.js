@@ -12,6 +12,18 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Lich;
 (function (Lich) {
     /**
+     * Tuple pro INV objekt a množství z map objektu/povrchu/stěny
+     */
+    var MapObjItem = (function () {
+        function MapObjItem(invObj, quant) {
+            this.invObj = invObj;
+            this.quant = quant;
+        }
+        ;
+        return MapObjItem;
+    }());
+    Lich.MapObjItem = MapObjItem;
+    /**
      * Společný předek pro "dolovatelné" věci
      */
     var Diggable = (function () {
@@ -37,14 +49,13 @@ var Lich;
         function InvObjDefinition(invKey, target) {
             this.invKey = invKey;
             this.frames = 1;
-            // pozadí povrchu je reprezentováno jako objekt
-            this.background = null;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             this.mapObj = null;
             // je možné tento INV objekt znovu umístit (kameny -> zeď) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             this.mapSurface = null;
+            this.mapSurfaceBgr = null;
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = target;
             }
@@ -58,7 +69,7 @@ var Lich;
             return this;
         };
         InvObjDefinition.prototype.setBackground = function (background) {
-            this.background = background;
+            this.mapSurfaceBgr = background;
             return this;
         };
         return InvObjDefinition;
@@ -74,19 +85,7 @@ var Lich;
      * 4b. Znovu vhozen do světa
      */
     /**
-     * Tuple pro INV objekt a množství z map objektu
-     */
-    var MapObjItem = (function () {
-        function MapObjItem(invObj, quant) {
-            this.invObj = invObj;
-            this.quant = quant;
-        }
-        ;
-        return MapObjItem;
-    }());
-    Lich.MapObjItem = MapObjItem;
-    /**
-     * 1. Objekty, které jsou na mapě
+     * Objekty, které jsou na mapě
      */
     var MapObjDefinition = (function (_super) {
         __extends(MapObjDefinition, _super);
@@ -125,19 +124,7 @@ var Lich;
      * 4b. Znovu vhozen do světa
      */
     /**
-     * Tuple pro INV objekt a množství z map objektu
-     */
-    var MapSurfaceItem = (function () {
-        function MapSurfaceItem(invObj, quant) {
-            this.invObj = invObj;
-            this.quant = quant;
-        }
-        ;
-        return MapSurfaceItem;
-    }());
-    Lich.MapSurfaceItem = MapSurfaceItem;
-    /**
-     * 1. Povrchy, které jsou na mapě
+     * Povrchy, které jsou na mapě
      */
     var MapSurfaceDefinition = (function (_super) {
         __extends(MapSurfaceDefinition, _super);
@@ -159,4 +146,33 @@ var Lich;
         return MapSurfaceDefinition;
     }(Diggable));
     Lich.MapSurfaceDefinition = MapSurfaceDefinition;
+    /**
+     * Stěny povrchů (pozadí) jsou ve 4 formách:
+     *
+     * 1. Umístěn na mapě (eviduje se počet v případě vykopnutí)
+     * 2. Vhozen do světa (čeká na sebrání)
+     * 3. V inventáři
+     * 4a. Znovu umístěn na mapu
+     * 4b. Znovu vhozen do světa
+     */
+    /**
+     * Stěny povrchů, které jsou na mapě
+     */
+    var MapSurfaceBgrDefinition = (function (_super) {
+        __extends(MapSurfaceBgrDefinition, _super);
+        function MapSurfaceBgrDefinition(
+            // údaje o povrchu na mapě
+            mapKey, 
+            // id objektu, který má vypadnout do světa po vytěžení
+            invObj, 
+            // kolik INV objektů vznikne po vytěření
+            quant) {
+            _super.call(this, mapKey, invObj, quant);
+            this.mapKey = mapKey;
+            this.invObj = invObj;
+            this.quant = quant;
+        }
+        return MapSurfaceBgrDefinition;
+    }(Diggable));
+    Lich.MapSurfaceBgrDefinition = MapSurfaceBgrDefinition;
 })(Lich || (Lich = {}));

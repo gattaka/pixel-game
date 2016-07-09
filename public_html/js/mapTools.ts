@@ -14,7 +14,7 @@ namespace Lich {
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
 
-            var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+            var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
 
             if (valT === SurfaceIndex.VOID) {
                 tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.T));
@@ -42,7 +42,7 @@ namespace Lich {
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
 
-            var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+            var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
             var isMiddle = Resources.INSTANCE.surfaceIndex.isMiddlePosition(val);
             var indx = Resources.INSTANCE.surfaceIndex;
 

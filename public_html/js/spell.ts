@@ -260,7 +260,7 @@ namespace Lich {
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
             var uiItem = game.ui.inventoryUI.choosenItem;
-            var object: InvObjDefinition = Resources.INSTANCE.invObjectsDefs[uiItem];
+            var object: InvObjDefinition = Resources.INSTANCE.invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem

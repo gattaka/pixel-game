@@ -76,6 +76,7 @@ namespace Lich {
         tilesMap: TilesMap;
         // Globální mapa dílků
         sceneTilesMap = new Array2D<createjs.Bitmap>();
+        sceneBgrTilesMap = new Array2D<createjs.Bitmap>();
         // Globální mapa objektů
         sceneObjectsMap = new Array2D<createjs.Bitmap>();
 
@@ -157,6 +158,21 @@ namespace Lich {
                             // vytvoř jednotlivé dílky
                             for (var mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
                                 for (var my = y * Render.SECTOR_SIZE; my < (y + 1) * Render.SECTOR_SIZE; my++) {
+
+                                    // vytvoř na dané souřadnici dílky pozadí povrchu
+                                    var bgrElement = self.tilesMap.mapBgrRecord.getValue(mx, my);
+                                    if (bgrElement > 0) {
+                                        // vytvoř dílek
+                                        var tile = self.createBgrTile(bgrElement);
+
+                                        // přidej dílek do sektoru
+                                        sector.addCachableChild(tile);
+                                        tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+
+                                        // přidej dílek do globální mapy
+                                        self.sceneBgrTilesMap.setValue(mx, my, tile);
+                                    }
 
                                     // vytvoř na dané souřadnici dílky povrchu
                                     var tileElement = self.tilesMap.mapRecord.getValue(mx, my);
@@ -272,9 +288,17 @@ namespace Lich {
             );
         }
 
+        createBgrTile(positionIndex: number) {
+            var self = this;
+            var typ = Resources.INSTANCE.surfaceBgrIndex.getType(positionIndex);
+            var tile = Resources.INSTANCE.getBitmap(typ);
+            this.setSourceRect(tile, positionIndex);
+            return tile;
+        }
+
         createTile(positionIndex: number) {
             var self = this;
-            var surfaceType = Resources.INSTANCE.surfaceIndex.getSurfaceType(positionIndex);
+            var surfaceType = Resources.INSTANCE.surfaceIndex.getType(positionIndex);
             var tile = Resources.INSTANCE.getBitmap(surfaceType);
             this.setSourceRect(tile, positionIndex);
             return tile;
@@ -282,7 +306,7 @@ namespace Lich {
 
         createObject(objectTile: MapObjectTile) {
             var self = this;
-            var objDef: MapObjDefinition = Resources.INSTANCE.mapObjectsDefs[objectTile.mapKey];
+            var objDef: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectTile.mapKey];
             var object: any;
             if (objDef.frames > 1) {
                 object = Resources.INSTANCE.getSpritePart(objDef.mapKey, objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
@@ -472,14 +496,56 @@ namespace Lich {
             }
         };
 
-        digGround(rx, ry) {
+        digSurfaceBgr(rx, ry) {
+            var self = this;
+
+            var dugIndex = self.tilesMap.mapBgrRecord.getValue(rx, ry);
+            if (dugIndex != null && dugIndex > -1) {
+                var surfaceType = Resources.INSTANCE.surfaceBgrIndex.getType(dugIndex);
+                var objType: Diggable = Resources.INSTANCE.mapSurfacesBgrDefs[surfaceType];
+
+                self.onDigSurfaceListeners.forEach(function(fce) {
+                    fce(objType, rx, ry);
+                });
+
+                (function() {
+                    for (var x = rx; x <= rx + 1; x++) {
+                        for (var y = ry; y <= ry + 1; y++) {
+                            var val = self.tilesMap.mapBgrRecord.getValue(x, y);
+                            self.prepareMapUpdate(x, y);
+                            if (val != null) {
+                                var sector = self.getSectorByTiles(x, y);
+                                var srfcType = Resources.INSTANCE.surfaceBgrIndex.getType(val);
+                                var indx = Resources.INSTANCE.surfaceBgrIndex;
+
+                                self.tilesMap.mapBgrRecord.setValue(x, y, null);
+                                var targetSector = self.getSectorByTiles(x, y);
+                                if (typeof targetSector !== "undefined" && targetSector !== null) {
+                                    var child = self.sceneBgrTilesMap.getValue(x, y);
+                                    targetSector.removeBackgroundChild(child);
+                                }
+
+                                // zjisti sektor dílku, aby byl přidán do fronty 
+                                // ke cache update (postačí to udělat dle tilesToReset,
+                                // protože to jsou okrajové dílky z oblasti změn)
+                                if (typeof sector !== "undefined" && sector !== null) {
+                                    self.markSector(sector);
+                                }
+                            }
+                        }
+                    }
+                })();
+            }
+        }
+
+        digSurface(rx, ry) {
             var self = this;
             var tilesToReset = [];
 
             var dugIndex = self.tilesMap.mapRecord.getValue(rx, ry);
             if (dugIndex != null && dugIndex > -1) {
-                var surfaceType = Resources.INSTANCE.surfaceIndex.getSurfaceType(dugIndex);
-                var objType: Diggable = Resources.INSTANCE.mapSurfacesDefs[surfaceType];
+                var surfaceType = Resources.INSTANCE.surfaceIndex.getType(dugIndex);
+                var objType: Diggable = Resources.INSTANCE.mapSurfaceDefs[surfaceType];
 
                 self.onDigSurfaceListeners.forEach(function(fce) {
                     fce(objType, rx, ry);
@@ -492,7 +558,7 @@ namespace Lich {
                             self.prepareMapUpdate(x, y);
                             if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
-                                var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+                                var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
                                 var indx = Resources.INSTANCE.surfaceIndex;
 
                                 // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
@@ -522,7 +588,7 @@ namespace Lich {
                                         (indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.T) ||
                                             indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.TL) ||
                                             indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.TR))) {
-                                        self.tryDigObject(x, y - 1);
+                                        self.digObject(x, y - 1);
                                     }
 
                                     self.tilesMap.mapRecord.setValue(x, y, SurfaceIndex.VOID);
@@ -589,11 +655,11 @@ namespace Lich {
             })();
         }
 
-        tryDigObject(rx, ry) {
+        digObject(rx, ry) {
             var self = this;
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
             if (objectElement !== null) {
-                var objType: MapObjDefinition = Resources.INSTANCE.mapObjectsDefs[objectElement.mapKey];
+                var objType: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
                 var objWidth = objType.mapSpriteWidth;
                 var objHeight = objType.mapSpriteHeight;
                 // relativní pozice dílku v sheetu (od počátku sprite)
@@ -631,7 +697,70 @@ namespace Lich {
             }
         }
 
-        placeGround(rx, ry, surfaceType: string) {
+        dig(x: number, y: number, asBackground: boolean) {
+            var self = this;
+            var coord = self.pixelsToTiles(x, y);
+            var rx = Utils.even(coord.x);
+            var ry = Utils.even(coord.y);
+
+            // kopl jsem do nějakého povrchu?
+            if (asBackground) {
+                if (self.tilesMap.mapBgrRecord.getValue(rx, ry) != null) {
+                    self.digSurfaceBgr(rx, ry);
+                    return true;
+                }
+            } else {
+                if (self.tilesMap.mapRecord.getValue(rx, ry) !== SurfaceIndex.VOID) {
+                    self.digSurface(rx, ry);
+                    return true;
+                } else {
+                    // kopl jsem do objektu?
+                    self.digObject(rx, ry);
+                    return true;
+                }
+            }
+        }
+
+        placeSurfaceBgr(rx, ry, surfaceType: string) {
+            var self = this;
+
+            (function() {
+                for (var x = rx; x <= rx + 1; x++) {
+                    for (var y = ry; y <= ry + 1; y++) {
+                        var val = self.tilesMap.mapRecord.getValue(x, y);
+                        if (val != null) {
+                            var sector = self.getSectorByTiles(x, y);
+
+                            // vytvoř nové dílky
+                            var pos = MapTools.getPositionByCoordPattern(x, y);
+                            var posIndex = Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceType, pos);
+                            self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
+                            var targetSector = self.getSectorByTiles(x, y);
+
+                            // vytvoř dílek
+                            var tile = self.createBgrTile(posIndex);
+
+                            // přidej dílek do sektoru
+                            sector.addBackgroundChild(tile);
+                            tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                            tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+
+                            // přidej dílek do globální mapy
+                            self.sceneBgrTilesMap.setValue(x, y, tile);
+
+                            // zjisti sektor dílku, aby byl přidán do fronty 
+                            // ke cache update (postačí to udělat dle tilesToReset,
+                            // protože to jsou okrajové dílky z oblasti změn)
+                            if (typeof sector !== "undefined" && sector !== null) {
+                                self.markSector(sector);
+                            }
+                        }
+                    }
+                }
+            })();
+        }
+
+        placeSurface(rx, ry, surfaceType: string) {
             var self = this;
             var tilesToReset = [];
 
@@ -647,7 +776,7 @@ namespace Lich {
                             if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
 
                                 var indx = Resources.INSTANCE.surfaceIndex;
-                                var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+                                var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
 
                                 // okraje vyresetuj (pokud nejsou středy
                                 if (val !== SurfaceIndex.VOID) {
@@ -698,6 +827,37 @@ namespace Lich {
 
         }
 
+        placeObject(rx, ry, mapObj: MapObjDefinition) {
+            var self = this;
+            var sector = self.getSectorByTiles(rx, ry);
+            // musí se posunout dolů o object.mapObj.mapSpriteHeight,
+            // protože objekty se počítají počátkem levého SPODNÍHO rohu 
+            MapTools.writeObjectRecord(self.tilesMap, rx, ry + mapObj.mapSpriteHeight, mapObj);
+            // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
+            // TODO změnit -- tohle je blbost -- může být i větší objekt a pak se musí klasicky 
+            // počítat záběr a volný prostor
+            for (var tx = 0; tx < 2; tx++) {
+                for (var ty = 0; ty < 2; ty++) {
+                    var objectTile = new MapObjectTile(mapObj.mapKey, tx, ty);
+                    var tile = self.createObject(objectTile);
+
+                    // přidej dílek do sektoru
+                    if (tile instanceof createjs.Sprite) {
+                        sector.addAnimatedChild(tile);
+                    } else {
+                        sector.addCachableChild(tile);
+                    }
+                    tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                    tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+
+                    // Přidej objekt do globální mapy objektů
+                    self.sceneObjectsMap.setValue(rx + tx, ry + ty, tile);
+                }
+            }
+
+            self.markSector(sector);
+        }
+
         /**
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true, 
          * pokud se to podařilo 
@@ -708,78 +868,31 @@ namespace Lich {
             var rx = Utils.even(coord.x);
             var ry = Utils.even(coord.y);
 
-            // pokud je místo prázdné a bez objektu (a je co vkládat
-            if (self.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
-                var sector = self.getSectorByTiles(rx, ry);
-                if (typeof object !== "undefined") {
-
-                    var obj = null;
+            // pokud je co vkládat
+            if (typeof object !== "undefined") {
+                // pokud je místo prázdné a bez objektu, lze vkládat objekty a povrchy
+                if (self.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
+                    // jde o objekt
                     if (object.mapObj != null) {
-                        obj = object.mapObj;
-                    }
-                    if (asBackground && object.background != null) {
-                        obj = object.background;
-                    }
-
-                    if (obj != null) {
-                        // jde o objekt nebo pozadí povrchu
-                        // musí se posunout dolů o object.mapObj.mapSpriteHeight,
-                        // protože objekty se počítají počátkem levého SPODNÍHO rohu 
-                        MapTools.writeObjectRecord(self.tilesMap, rx, ry + obj.mapSpriteHeight, obj);
-                        // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
-                        // TODO změnit -- tohle je blbost -- může být i větší objekt a pak se musí klasicky 
-                        // počítat záběr a volný prostor
-                        for (var tx = 0; tx < 2; tx++) {
-                            for (var ty = 0; ty < 2; ty++) {
-                                var objectTile = new MapObjectTile(obj.mapKey, tx, ty);
-                                var tile = self.createObject(objectTile);
-
-                                // přidej dílek do sektoru
-                                if (tile instanceof createjs.Sprite) {
-                                    sector.addAnimatedChild(tile);
-                                } else {
-                                    sector.addCachableChild(tile);
-                                }
-                                tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                                tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-
-                                // Přidej objekt do globální mapy objektů
-                                self.sceneObjectsMap.setValue(rx + tx, ry + ty, tile);
-                            }
-                        }
-
-                        self.markSector(sector);
+                        this.placeObject(rx, ry, object.mapObj);
                         return true;
-                    } else if (object.mapSurface != null) {
-                        // jde o povrch 
-                        var surtIndx = Resources.INSTANCE.surfaceIndex;
-                        this.placeGround(rx, ry, object.mapSurface.mapKey);
+                    }
+                    // jde o povrch 
+                    if (object.mapSurface != null && asBackground == false) {
+                        this.placeSurface(rx, ry, object.mapSurface.mapKey);
+                        return true;
+                    }
+                }
+                // pokud je místo bez pozadí, lze vkládat pozadí povrchu
+                if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
+                    // jde o pozadí povrchu 
+                    if (object.mapSurfaceBgr != null && asBackground) {
+                        this.placeSurfaceBgr(rx, ry, object.mapSurfaceBgr.mapKey);
                         return true;
                     }
                 }
             }
             return false;
-        }
-
-        dig(x: number, y: number, asBackground: boolean) {
-            var self = this;
-            var coord = self.pixelsToTiles(x, y);
-            var rx = Utils.even(coord.x);
-            var ry = Utils.even(coord.y);
-
-            // kopl jsem do nějakého povrchu?
-            if (asBackground) {
-                // TODO
-            } else {
-                if (self.tilesMap.mapRecord.getValue(rx, ry) !== SurfaceIndex.VOID) {
-                    self.digGround(rx, ry);
-                    return true;
-                } else {
-                    // kopl jsem do objektu?
-                    self.tryDigObject(rx, ry);
-                    return false;
-                }
-            }
         }
 
         shiftX(dst) {

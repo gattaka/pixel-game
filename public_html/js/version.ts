@@ -26,6 +26,9 @@ namespace Lich {
             version = new Version("0.4");
             version.addChange("Changelog");
             version.addChange("Grave and bones added");
+            version.addChange("Surface background digging");
+            version.addChange("<SHIFT> toggles surface/surface-background digging");
+            version.addChange("Surface background does not collide with objects anymore");
             this.addVersion(version);
 
             version = new Version("0.3");
@@ -34,7 +37,7 @@ namespace Lich {
             version.addChange("DEV FEATURE: enemies spawn spell");
             version.addChange("Spells cooldown");
             version.addChange("Bullet mechanics improved");
-            version.addChange("<SHIFT> toggles surface/wall placing");
+            version.addChange("<SHIFT> toggles surface/surface-background placing");
             this.addVersion(version);
 
             version = new Version("0.2");

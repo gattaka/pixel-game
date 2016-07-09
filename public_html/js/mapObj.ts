@@ -7,6 +7,13 @@
 namespace Lich {
 
     /**
+     * Tuple pro INV objekt a množství z map objektu/povrchu/stěny
+     */
+    export class MapObjItem {
+        constructor(public invObj: string, public quant: number) { };
+    }
+
+    /**
      * Společný předek pro "dolovatelné" věci
      */
     export abstract class Diggable {
@@ -29,16 +36,14 @@ namespace Lich {
 
         public frames: number = 1;
 
-        // pozadí povrchu je reprezentováno jako objekt
-        public background: MapObjDefinition = null;
-
         // je možné tento INV objekt znovu umístit (váza) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapObj: MapObjDefinition = null;
         // je možné tento INV objekt znovu umístit (kameny -> zeď) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapSurface: MapSurfaceDefinition = null;
-        
+        public mapSurfaceBgr: MapSurfaceBgrDefinition = null;
+
         constructor(public invKey: string, target: Diggable) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
@@ -53,8 +58,8 @@ namespace Lich {
             return this;
         }
 
-        public setBackground(background: MapObjDefinition): InvObjDefinition {
-            this.background = background;
+        public setBackground(background: MapSurfaceBgrDefinition): InvObjDefinition {
+            this.mapSurfaceBgr = background;
             return this;
         }
     }
@@ -70,14 +75,7 @@ namespace Lich {
      */
 
     /**
-     * Tuple pro INV objekt a množství z map objektu
-     */
-    export class MapObjItem {
-        constructor(public invObj: string, public quant: number) { };
-    }
-
-    /**
-     * 1. Objekty, které jsou na mapě
+     * Objekty, které jsou na mapě
      */
     export class MapObjDefinition extends Diggable {
 
@@ -114,14 +112,7 @@ namespace Lich {
      */
 
     /**
-     * Tuple pro INV objekt a množství z map objektu
-     */
-    export class MapSurfaceItem {
-        constructor(public invObj: string, public quant: number) { };
-    }
-
-    /**
-     * 1. Povrchy, které jsou na mapě
+     * Povrchy, které jsou na mapě
      */
     export class MapSurfaceDefinition extends Diggable {
         constructor(
@@ -133,6 +124,31 @@ namespace Lich {
             public quant: number,
             // jak často takový povrch v mapě je 
             public freq: number) {
+            super(mapKey, invObj, quant);
+        }
+    }
+    
+    /**
+     * Stěny povrchů (pozadí) jsou ve 4 formách:
+     * 
+     * 1. Umístěn na mapě (eviduje se počet v případě vykopnutí)
+     * 2. Vhozen do světa (čeká na sebrání)
+     * 3. V inventáři 
+     * 4a. Znovu umístěn na mapu
+     * 4b. Znovu vhozen do světa
+     */
+
+    /**
+     * Stěny povrchů, které jsou na mapě
+     */
+    export class MapSurfaceBgrDefinition extends Diggable {
+        constructor(
+            // údaje o povrchu na mapě
+            public mapKey: string,
+            // id objektu, který má vypadnout do světa po vytěžení
+            public invObj: string,
+            // kolik INV objektů vznikne po vytěření
+            public quant: number) {
             super(mapKey, invObj, quant);
         }
     }

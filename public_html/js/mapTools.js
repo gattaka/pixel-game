@@ -15,7 +15,7 @@ var Lich;
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
-            var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+            var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getType(val);
             if (valT === Lich.SurfaceIndex.VOID) {
                 tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.SurfaceIndex.T));
             }
@@ -36,7 +36,7 @@ var Lich;
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
-            var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+            var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getType(val);
             var isMiddle = Lich.Resources.INSTANCE.surfaceIndex.isMiddlePosition(val);
             var indx = Lich.Resources.INSTANCE.surfaceIndex;
             // změny prostředních kusů

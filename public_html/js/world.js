@@ -74,7 +74,7 @@ var Lich;
             var digListener = function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var invDef = Lich.Resources.INSTANCE.invObjectsDefs[objType.invObj];
+                        var invDef = Lich.Resources.INSTANCE.invObjectDefs[objType.invObj];
                         var frames = 1;
                         if (typeof invDef === "undefined" || invDef == null) {
                             frames = 1;
@@ -451,7 +451,7 @@ var Lich;
                 // Může se provést (cooldown je pryč)?
                 if (cooldown <= 0 && (mouse.down || mouse.click)) {
                     mouse.click = false;
-                    var spellDef = Lich.Resources.INSTANCE.spellsDefs.byKey(choosenSpell);
+                    var spellDef = Lich.Resources.INSTANCE.spellDefs.byKey(choosenSpell);
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 4;
                     // zkus cast

@@ -205,7 +205,7 @@ var Lich;
         }
         AbstractPlaceSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
             var uiItem = game.ui.inventoryUI.choosenItem;
-            var object = Lich.Resources.INSTANCE.invObjectsDefs[uiItem];
+            var object = Lich.Resources.INSTANCE.invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem

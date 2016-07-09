@@ -124,7 +124,7 @@ var Lich;
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (self.invContent[i] == null) {
-                    var invDef = Lich.Resources.INSTANCE.invObjectsDefs[item];
+                    var invDef = Lich.Resources.INSTANCE.invObjectDefs[item];
                     var frames = 1;
                     if (typeof invDef === "undefined" || invDef == null) {
                         frames = 1;

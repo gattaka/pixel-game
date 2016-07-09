@@ -126,7 +126,7 @@ namespace Lich {
                                         if (posIndex != SurfaceIndex.VOID) {
                                             // nahradí aktuální dílek dílkem daného minerálu
                                             // přičemž zachová pozici dílku
-                                            tilesMap.mapRecord.setValue(__x, __y, Resources.INSTANCE.surfaceIndex.changeSurface(posIndex, oreKey));
+                                            tilesMap.mapRecord.setValue(__x, __y, Resources.INSTANCE.surfaceIndex.changeType(posIndex, oreKey));
                                         }
                                     }
                                 }
@@ -185,17 +185,17 @@ namespace Lich {
                             // bude tam nějaký objekt? (100% ano)
                             if (Math.random() > 0) {
                                 var tries = 0;
-                                var index = Math.floor(Resources.INSTANCE.mapObjectsFreqPool.length * Math.random());
-                                while (tries < Resources.INSTANCE.mapObjectsFreqPool.length) {
-                                    var key = Resources.INSTANCE.mapObjectsFreqPool[index];
-                                    var object = Resources.INSTANCE.mapObjectsDefs[key];
+                                var index = Math.floor(Resources.INSTANCE.mapObjectDefsFreqPool.length * Math.random());
+                                while (tries < Resources.INSTANCE.mapObjectDefsFreqPool.length) {
+                                    var key = Resources.INSTANCE.mapObjectDefsFreqPool[index];
+                                    var object = Resources.INSTANCE.mapObjectDefs[key];
                                     if (object.freq > 0 && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                         MapTools.writeObjectRecord(tilesMap, x, y, object);
                                         break;
                                     } else {
                                         // další pokus na dalším objektu
                                         tries++;
-                                        index = (index + 1) % Resources.INSTANCE.mapObjectsFreqPool.length;
+                                        index = (index + 1) % Resources.INSTANCE.mapObjectDefsFreqPool.length;
                                     }
                                 }
                             }
