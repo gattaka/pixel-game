@@ -30,11 +30,11 @@ namespace Lich {
 
             version = new Version("0.3");
             version.addChange("Placing walls (surface background)");
-            version.addChange("DEV FEATURE: multijump on 'S' key");
+            version.addChange("DEV FEATURE: multijump on <S> key");
             version.addChange("DEV FEATURE: enemies spawn spell");
             version.addChange("Spells cooldown");
             version.addChange("Bullet mechanics improved");
-            version.addChange("SHIFT toggles surface/wall placing");
+            version.addChange("<SHIFT> toggles surface/wall placing");
             this.addVersion(version);
 
             version = new Version("0.2");
@@ -48,16 +48,6 @@ namespace Lich {
             version.addChange("Initial version");
             this.addVersion(version);
 
-        }
-    }
-
-    export class Manual {
-
-        public instructions = new Array<string>();
-
-        public addInstruction(instruction: string) {
-            this.instructions.push(instruction);
-            return this;
         }
     }
 
@@ -149,17 +139,31 @@ namespace Lich {
         }
 
         constructor() {
-            super(SplashScreenUI.WIDTH, 20 + SplashScreenUI.LINES * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING + SplashScreenUI.OUTLINE * 2));
+            super(SplashScreenUI.WIDTH, 20 + (SplashScreenUI.LINES + 1) * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING + SplashScreenUI.OUTLINE * 2));
 
-            var label = new Label("LichEngine", "20px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            var self = this;
+
+            var changelog = new Changelog();
+
+            var label = new Label("LichEngine " + changelog.versions.byIndex(0).version, "20px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
             label.x = SplashScreenUI.MARGIN;
             label.y = SplashScreenUI.MARGIN;
             super.addChild(label);
 
             super.addChild(this.cont);
-            var changelog = new Changelog();
 
-            var self = this;
+            // Instrukce
+            self.lines.push("== INSTRUCTIONS ==");
+            self.lines.push(" ");
+            self.lines.push("- Press <W>, <A>, <S>, <D> to move");
+            self.lines.push("- Press <I> to minimize inventory");
+            self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");
+            self.lines.push("- Press <LMB> to dig, place or attack");
+            self.lines.push("- Hold <SHIFT> to toggle between surface and wall digging/placing");
+            self.lines.push(" ");
+            self.lines.push("== CHANGELOG ==");
+            self.lines.push(" ");
+
             changelog.versions.forEach(function(version: Version) {
                 self.lines.push("Version: " + version.version);
                 version.changes.forEach(function(change: string) {
@@ -182,7 +186,7 @@ namespace Lich {
 
             var close = this.createCloseButton();
             super.addChild(close);
-            close.x = self.width - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE - SplashScreenUI.PADDING - 42;
+            close.x = self.width / 2 - 42 / 2;
             close.y = self.height - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
         }
 
