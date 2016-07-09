@@ -421,7 +421,8 @@ namespace Lich {
         isCollisionByTiles(x: number, y: number): CollisionTestResult {
             var self = this;
             // kolize s povrchem/hranicí mapy
-            if (self.tilesMap.valueAt(x, y) != 0) {
+            var val = self.tilesMap.mapRecord.getValue(x, y);
+            if (val == null || val != 0) {
                 return new CollisionTestResult(true, x, y);
             }
             // bez kolize
@@ -555,10 +556,9 @@ namespace Lich {
 
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y);
-            var index = self.tilesMap.indexAt(coord.x, coord.y);
-            var typ = self.tilesMap.mapRecord[index];
+            var typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
             if (typeof self.tilesLabel !== "undefined") {
-                self.tilesLabel.setText("TILES x: " + clsn.x + " y: " + clsn.y + " clsn: " + clsn.hit + " index: " + index + " type: " + typ);
+                self.tilesLabel.setText("TILES x: " + clsn.x + " y: " + clsn.y + " clsn: " + clsn.hit + " type: " + typ);
             }
 
             var sector = self.render.getSectorByTiles(coord.x, coord.y);

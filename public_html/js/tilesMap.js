@@ -37,50 +37,13 @@ var Lich;
      * dílů povrchu a dílů objektů (stromy, kameny apod.)
      */
     var TilesMap = (function () {
-        function TilesMap(
-            // linearizovaný předpis rozmístění povrchu světa
-            mapRecord, 
-            // 2D pole dílků objektů na mapě
-            mapObjectsTiles, 
-            // Šířka a výška mapy
-            width, height) {
-            this.mapRecord = mapRecord;
-            this.mapObjectsTiles = mapObjectsTiles;
+        function TilesMap(width, height) {
             this.width = width;
             this.height = height;
+            this.mapRecord = new Lich.Array2D(width, height);
+            this.mapWallsRecord = new Lich.Array2D(width, height);
+            this.mapObjectsTiles = new Lich.Array2D(width, height);
         }
-        TilesMap.prototype.indexAt = function (x, y) {
-            var self = this;
-            if (x >= self.width || x < 0 || y >= self.height || y < 0) {
-                return -1;
-            }
-            else {
-                return y * self.width + x;
-            }
-        };
-        TilesMap.prototype.coordAt = function (index) {
-            var self = this;
-            if (index < 0 || index > self.mapRecord.length - 1) {
-                return 0;
-            }
-            else {
-                return {
-                    x: index % self.width,
-                    y: Math.floor(index / self.width)
-                };
-            }
-        };
-        TilesMap.prototype.valueAt = function (x, y) {
-            var self = this;
-            var index = self.indexAt(x, y);
-            if (index >= 0) {
-                return self.mapRecord[index];
-            }
-            if (index == -1) {
-                return -1;
-            }
-            return Lich.SurfaceIndex.VOID;
-        };
         return TilesMap;
     }());
     Lich.TilesMap = TilesMap;

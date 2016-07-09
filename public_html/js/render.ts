@@ -71,13 +71,13 @@ namespace Lich {
         // Kontejner na sektory
         sectorsCont: createjs.Container;
         // Mapa sektorů
-        sectorsMap = new Array<Array<Sector>>();
+        sectorsMap = new Array2D<Sector>();
         // Mapa dílků
         tilesMap: TilesMap;
         // Globální mapa dílků
-        sceneTilesMap = new Array<Array<createjs.Bitmap>>();
+        sceneTilesMap = new Array2D<createjs.Bitmap>();
         // Globální mapa objektů
-        sceneObjectsMap = new Array<Array<createjs.Bitmap>>();
+        sceneObjectsMap = new Array2D<createjs.Bitmap>();
 
         minimap;
         playerIcon;
@@ -137,18 +137,10 @@ namespace Lich {
             for (var x = 0; x < maxSecCountX; x++) {
                 for (var y = 0; y < maxSecCountY; y++) {
 
-                    var secCol = self.sectorsMap[x];
-                    if (typeof secCol === "undefined") {
-                        secCol = [];
-                        self.sectorsMap[x] = secCol;
-                    }
-
-                    var mapCol;
-
                     if (x >= startSecX && x <= startSecX + countSectX && y >= startSecY && y <= startSecY + countSectY) {
                         // jde o platný sektor 
                         // pokud ještě není alokován tak alokuj
-                        if (typeof secCol[y] === "undefined" || secCol[y] === null) {
+                        if (self.sectorsMap.getValue(x, y) == null) {
 
                             var sector = new Sector(
                                 y * maxSecCountX + x,
@@ -160,14 +152,14 @@ namespace Lich {
                             sector.x = x * Render.SECTOR_SIZE * Resources.TILE_SIZE + self.screenOffsetX;
                             sector.y = y * Render.SECTOR_SIZE * Resources.TILE_SIZE + self.screenOffsetY;
                             self.sectorsCont.addChild(sector);
-                            secCol[y] = sector;
+                            self.sectorsMap.setValue(x, y, sector);
 
                             // vytvoř jednotlivé dílky
                             for (var mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
                                 for (var my = y * Render.SECTOR_SIZE; my < (y + 1) * Render.SECTOR_SIZE; my++) {
 
                                     // vytvoř na dané souřadnici dílky povrchu
-                                    var tileElement = self.tilesMap.valueAt(mx, my);
+                                    var tileElement = self.tilesMap.mapRecord.getValue(mx, my);
                                     if (tileElement > 0) {
                                         // vytvoř dílek
                                         var tile = self.createTile(tileElement);
@@ -178,11 +170,11 @@ namespace Lich {
                                         tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                         // přidej dílek do globální mapy
-                                        Utils.set2D(self.sceneTilesMap, mx, my, tile);
+                                        self.sceneTilesMap.setValue(mx, my, tile);
                                     }
 
                                     // vytvoř na dané souřadnici dílky objektů
-                                    var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, mx, my);
+                                    var objectElement = self.tilesMap.mapObjectsTiles.getValue(mx, my);
                                     if (objectElement !== null) {
                                         // Sheet index dílku objektu
                                         var object = self.createObject(objectElement);
@@ -197,7 +189,7 @@ namespace Lich {
                                         object.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                         // Přidej objekt do globální mapy objektů
-                                        Utils.set2D(self.sceneObjectsMap, mx, my, object);
+                                        self.sceneObjectsMap.setValue(mx, my, object);
                                     }
                                 }
                             }
@@ -222,28 +214,24 @@ namespace Lich {
                     } else {
                         // neplatný sektor
                         // pokud je obsazeno dealokuj
-                        if (typeof secCol[y] !== "undefined" && secCol[y] !== null) {
+                        if (self.sectorsMap.getValue(x, y) != null) {
 
                             // vymaž jednotlivé dílky
                             for (var mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
                                 for (var my = y * Render.SECTOR_SIZE; my < (y + 1) * Render.SECTOR_SIZE; my++) {
                                     // stavěním mohl přibýt dílek někam, kde předtím nebyl, proto
                                     // je potřeba i při mazání kontrolovat existenci sloupce
-                                    mapCol = self.sceneObjectsMap[mx];
-                                    if (typeof mapCol === "undefined") {
-                                        mapCol = [];
-                                        self.sceneObjectsMap[mx] = mapCol;
-                                    }
-                                    mapCol[my] = null;
+                                    self.sceneObjectsMap.setValue(mx, my, null);
                                 }
                             }
 
                             // TODO vymaž objekty
 
                             // vymaž sektor
-                            secCol[y].removeAllChildren();
-                            self.sectorsCont.removeChild(secCol[y]);
-                            secCol[y] = null;
+                            var ss = self.sectorsMap.getValue(x, y);
+                            ss.removeAllChildren();
+                            self.sectorsCont.removeChild(ss);
+                            self.sectorsMap.setValue(x, y, null);
 
                             if (Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Dealokován sektor: " + x + ":" + y);
@@ -363,7 +351,7 @@ namespace Lich {
             var self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
-            var item = self.tilesMap.valueAt(x, y);
+            var item = self.tilesMap.mapRecord.getValue(x, y);
             if (item === SurfaceIndex.VOID) {
                 imgData.data[imgData.counter++] = 209; // R
                 imgData.data[imgData.counter++] = 251; // G
@@ -488,8 +476,8 @@ namespace Lich {
             var self = this;
             var tilesToReset = [];
 
-            var dugIndex = self.tilesMap.valueAt(rx, ry);
-            if (dugIndex > -1) {
+            var dugIndex = self.tilesMap.mapRecord.getValue(rx, ry);
+            if (dugIndex != null && dugIndex > -1) {
                 var surfaceType = Resources.INSTANCE.surfaceIndex.getSurfaceType(dugIndex);
                 var objType: Diggable = Resources.INSTANCE.mapSurfacesDefs[surfaceType];
 
@@ -500,20 +488,19 @@ namespace Lich {
                 (function() {
                     for (var x = rx - 1; x <= rx + 2; x++) {
                         for (var y = ry - 1; y <= ry + 2; y++) {
-                            var index = self.tilesMap.indexAt(x, y);
-                            var val = self.tilesMap.valueAt(x, y);
-                            var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
-                            var indx = Resources.INSTANCE.surfaceIndex;
+                            var val = self.tilesMap.mapRecord.getValue(x, y);
                             self.prepareMapUpdate(x, y);
-                            if (index >= 0) {
+                            if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
+                                var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
+                                var indx = Resources.INSTANCE.surfaceIndex;
 
                                 // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                                 if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
 
                                     // okraje vyresetuj
-                                    if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
-                                        self.tilesMap.mapRecord[index] = Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.M1);
+                                    if (val !== SurfaceIndex.VOID) {
+                                        self.tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.M1));
                                         tilesToReset.push([x, y]);
 
                                         // zjisti sektor dílku, aby byl přidán do fronty 
@@ -532,16 +519,16 @@ namespace Lich {
 
                                     // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
                                     if (y === ry &&
-                                        (indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.T) ||
-                                            indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TL) ||
-                                            indx.isPosition(self.tilesMap.mapRecord[index], SurfaceIndex.TR))) {
+                                        (indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.T) ||
+                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.TL) ||
+                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.TR))) {
                                         self.tryDigObject(x, y - 1);
                                     }
 
-                                    self.tilesMap.mapRecord[index] = SurfaceIndex.VOID;
+                                    self.tilesMap.mapRecord.setValue(x, y, SurfaceIndex.VOID);
                                     var targetSector = self.getSectorByTiles(x, y);
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
-                                        var child = Utils.get2D(self.sceneTilesMap, x, y);
+                                        var child = self.sceneTilesMap.getValue(x, y);
                                         if (child instanceof createjs.Sprite) {
                                             targetSector.removeAnimatedChild(child);
                                         } else {
@@ -593,9 +580,9 @@ namespace Lich {
                     var x = item[0];
                     var y = item[1];
                     // pokud už je alokován dílek na obrazovce, rovnou ho uprav
-                    var tile = Utils.get2D(self.sceneTilesMap, x, y);
+                    var tile = self.sceneTilesMap.getValue(x, y);
                     if (tile !== null) {
-                        var v = self.tilesMap.valueAt(x, y);
+                        var v = self.tilesMap.mapRecord.getValue(x, y);
                         self.setSourceRect(tile, v);
                     }
                 });
@@ -604,7 +591,7 @@ namespace Lich {
 
         tryDigObject(rx, ry) {
             var self = this;
-            var objectElement = Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry);
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
             if (objectElement !== null) {
                 var objType: MapObjDefinition = Resources.INSTANCE.mapObjectsDefs[objectElement.mapKey];
                 var objWidth = objType.mapSpriteWidth;
@@ -626,7 +613,7 @@ namespace Lich {
                         var globalY = ry - posy + y;
 
                         // odstraň dílek objektu ze sektoru
-                        var object = Utils.get2D(self.sceneObjectsMap, globalX, globalY);
+                        var object = self.sceneObjectsMap.getValue(globalX, globalY);
                         if (object != null) {
                             if ((object.parent.parent instanceof Sector) == false) {
                                 console.log("Assert error: Sector instance expected; instead " + (typeof object.parent.parent) + " found!");
@@ -636,8 +623,8 @@ namespace Lich {
                             object.parent.removeChild(object);
 
                             // odstraň dílke objektu z map
-                            Utils.set2D(self.tilesMap.mapObjectsTiles, globalX, globalY, null);
-                            Utils.set2D(self.sceneObjectsMap, globalX, globalY, null);
+                            self.tilesMap.mapObjectsTiles.setValue(globalX, globalY, null);
+                            self.sceneObjectsMap.setValue(globalX, globalY, null);
                         }
                     }
                 }
@@ -651,21 +638,20 @@ namespace Lich {
             (function() {
                 for (var x = rx - 1; x <= rx + 2; x++) {
                     for (var y = ry - 1; y <= ry + 2; y++) {
-                        var index = self.tilesMap.indexAt(x, y);
+                        var val = self.tilesMap.mapRecord.getValue(x, y);
                         self.prepareMapUpdate(x, y);
-                        if (index >= 0) {
+                        if (val != null) {
                             var sector = self.getSectorByTiles(x, y);
 
                             // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                             if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
 
-                                var val = self.tilesMap.valueAt(x, y);
                                 var indx = Resources.INSTANCE.surfaceIndex;
                                 var srfcType = Resources.INSTANCE.surfaceIndex.getSurfaceType(val);
 
                                 // okraje vyresetuj (pokud nejsou středy
-                                if (self.tilesMap.mapRecord[index] !== SurfaceIndex.VOID) {
-                                    self.tilesMap.mapRecord[index] = Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, MapTools.getPositionByCoordPattern(x, y));
+                                if (val !== SurfaceIndex.VOID) {
+                                    self.tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, MapTools.getPositionByCoordPattern(x, y)));
                                     tilesToReset.push([x, y]);
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -681,7 +667,7 @@ namespace Lich {
                             else {
                                 var pos = MapTools.getPositionByCoordPattern(x, y);
                                 var posIndex = Resources.INSTANCE.surfaceIndex.getPositionIndex(surfaceType, pos);
-                                self.tilesMap.mapRecord[index] = posIndex;
+                                self.tilesMap.mapRecord.setValue(x, y, posIndex);
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);
 
@@ -694,7 +680,7 @@ namespace Lich {
                                 tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                 // přidej dílek do globální mapy
-                                Utils.set2D(self.sceneTilesMap, x, y, tile);
+                                self.sceneTilesMap.setValue(x, y, tile);
 
                                 // zjisti sektor dílku, aby byl přidán do fronty 
                                 // ke cache update (postačí to udělat dle tilesToReset,
@@ -723,7 +709,7 @@ namespace Lich {
             var ry = Utils.even(coord.y);
 
             // pokud je místo prázdné a bez objektu (a je co vkládat
-            if (self.tilesMap.valueAt(rx, ry) === SurfaceIndex.VOID && Utils.get2D(self.tilesMap.mapObjectsTiles, rx, ry) === null) {
+            if (self.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
                 var sector = self.getSectorByTiles(rx, ry);
                 if (typeof object !== "undefined") {
 
@@ -758,7 +744,7 @@ namespace Lich {
                                 tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                 // Přidej objekt do globální mapy objektů
-                                Utils.set2D(self.sceneObjectsMap, rx + tx, ry + ty, tile);
+                                self.sceneObjectsMap.setValue(rx + tx, ry + ty, tile);
                             }
                         }
 
@@ -785,7 +771,7 @@ namespace Lich {
             if (asBackground) {
                 // TODO
             } else {
-                if (self.tilesMap.valueAt(rx, ry) !== SurfaceIndex.VOID) {
+                if (self.tilesMap.mapRecord.getValue(rx, ry) !== SurfaceIndex.VOID) {
                     self.digGround(rx, ry);
                     return true;
                 } else {
@@ -873,7 +859,7 @@ namespace Lich {
             var self = this;
             var sx = Math.floor(x / Render.SECTOR_SIZE);
             var sy = Math.floor(y / Render.SECTOR_SIZE);
-            return Utils.get2D(self.sectorsMap, sx, sy);
+            return self.sectorsMap.getValue(sx, sy);
         }
     }
 }

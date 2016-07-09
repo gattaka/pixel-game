@@ -9,6 +9,47 @@ var Lich;
         return CollisionTestResult;
     }());
     Lich.CollisionTestResult = CollisionTestResult;
+    var Coord2D = (function () {
+        function Coord2D(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        return Coord2D;
+    }());
+    Lich.Coord2D = Coord2D;
+    var Array2D = (function () {
+        function Array2D(width, height) {
+            if (width === void 0) { width = 0; }
+            if (height === void 0) { height = 0; }
+            this.width = width;
+            this.height = height;
+            this.array = new Array();
+        }
+        Array2D.prototype.getValue = function (x, y) {
+            var row = this.array[y];
+            if (typeof row === "undefined" || row[x] == null) {
+                return null;
+            }
+            else {
+                return row[x];
+            }
+        };
+        Array2D.prototype.setValue = function (x, y, val) {
+            if (x < 0 || (x >= this.width && this.width != 0))
+                return false;
+            if (y < 0 || (y >= this.height && this.height != 0))
+                return false;
+            var row = this.array[y];
+            if (typeof row === "undefined") {
+                row = [];
+                this.array[y] = row;
+            }
+            row[x] = val;
+            return true;
+        };
+        return Array2D;
+    }());
+    Lich.Array2D = Array2D;
     var Table = (function () {
         function Table() {
             this.array = new Array();
@@ -51,24 +92,6 @@ var Lich;
         };
         Utils.even = function (value) {
             return Utils.isEven(value) ? value : value - 1;
-        };
-        Utils.get2D = function (a, x, y) {
-            // přidej dílek do globální mapy
-            var col = a[x];
-            if (typeof col === "undefined" || col[y] == null) {
-                return null;
-            }
-            else {
-                return col[y];
-            }
-        };
-        Utils.set2D = function (a, x, y, val) {
-            var col = a[x];
-            if (typeof col === "undefined") {
-                col = [];
-                a[x] = col;
-            }
-            col[y] = val;
         };
         Utils.contains = function (a, obj) {
             for (var i = 0; i < a.length; i++) {

@@ -4,6 +4,77 @@ namespace Lich {
         constructor(public hit: boolean, public x?: number, public y?: number) { }
     }
 
+    export class Coord2D {
+        constructor(public x: number, public y: number) { }
+    }
+
+    export class Array2D<T> {
+
+        private array = new Array<Array<T>>();
+
+        constructor(public width = 0, public height = 0) {
+        }
+
+        getValue(x: number, y: number): T {
+            var row = this.array[y];
+            if (typeof row === "undefined" || row[x] == null) {
+                return null;
+            }
+            else {
+                return row[x];
+            }
+        }
+
+        setValue(x: number, y: number, val: T): boolean {
+            if (x < 0 || (x >= this.width && this.width != 0))
+                return false;
+            if (y < 0 || (y >= this.height && this.height != 0))
+                return false;
+            var row = this.array[y];
+            if (typeof row === "undefined") {
+                row = [];
+                this.array[y] = row;
+            }
+            row[x] = val;
+            return true;
+        }
+
+        /*
+        indexAt(x, y) {
+            var self = this;
+            if (x >= self.width || x < 0 || y >= self.height || y < 0) {
+                return -1;
+            } else {
+                return y * self.width + x;
+            }
+        }
+
+        coordAt(index): Coord2D {
+            var self = this;
+            if (index < 0 || index > self.width * self.height - 1) {
+                return null;
+            } else {
+                return new Coord2D(
+                    index % self.width,
+                    Math.floor(index / self.width)
+                )
+            };
+        }
+
+        valueAt(x, y): number {
+            var self = this;
+            var index = self.indexAt(x, y);
+            if (index >= 0) {
+                return self.mapRecord[index];
+            }
+            if (index == -1) {
+                return -1;
+            }
+            return SurfaceIndex.VOID;
+        }
+        */
+    }
+
     export class Table<T> {
 
         private array = new Array<T>();
@@ -53,26 +124,6 @@ namespace Lich {
 
         static even(value: number): number {
             return Utils.isEven(value) ? value : value - 1;
-        }
-
-        static get2D<T>(a: Array<Array<T>>, x: number, y: number): T {
-            // přidej dílek do globální mapy
-            var col = a[x];
-            if (typeof col === "undefined" || col[y] == null) {
-                return null;
-            }
-            else {
-                return col[y];
-            }
-        }
-
-        static set2D<T>(a: Array<Array<T>>, x: number, y: number, val: T) {
-            var col = a[x];
-            if (typeof col === "undefined") {
-                col = [];
-                a[x] = col;
-            }
-            col[y] = val;
         }
 
         static contains<T>(a: Array<T>, obj: T) {
