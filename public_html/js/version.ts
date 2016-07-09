@@ -69,6 +69,28 @@ namespace Lich {
         private cont = new createjs.Container();
         private currentLine = 0;
 
+        private toggleFlag = true;
+        private parentRef: createjs.Container = null;
+
+        toggleInv() {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag) {
+                if (self.parent == null) {
+                    self.parentRef.addChild(self);
+                } else {
+                    self.parentRef = self.parent;
+                    self.parent.removeChild(self);
+                }
+                self.toggleFlag = false;
+            }
+        }
+
+        prepareForToggleInv() {
+            this.toggleFlag = true;
+        }
+
+
         public print() {
             this.cont.removeAllChildren();
             for (var i = 0; i < SplashScreenUI.LINES; i++) {
@@ -128,7 +150,7 @@ namespace Lich {
 
             var cont = new createjs.Container();
             cont.on("mousedown", function() {
-                self.parent.removeChild(self);
+                self.visible = false;
             }, null, false);
             cont.hitArea = shape.hitArea;
 
@@ -159,6 +181,7 @@ namespace Lich {
             // Instrukce
             self.lines.push("== INSTRUCTIONS ==");
             self.lines.push(" ");
+            self.lines.push("- Press <ESC> to toggle this window");
             self.lines.push("- Press <W>, <A>, <S>, <D> to move");
             self.lines.push("- Press <I> to minimize inventory");
             self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");

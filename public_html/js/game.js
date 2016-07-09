@@ -142,6 +142,12 @@ var Lich;
                         directions.right = true;
                     if (self.keys[83])
                         directions.down = true;
+                    if (self.keys[27]) {
+                        self.ui.splashScreenUI.toggleInv();
+                    }
+                    else {
+                        self.ui.splashScreenUI.prepareForToggleInv();
+                    }
                     if (self.keys[73]) {
                         self.ui.inventoryUI.toggleInv();
                     }

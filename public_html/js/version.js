@@ -60,6 +60,8 @@ var Lich;
             this.lines = new Array();
             this.cont = new createjs.Container();
             this.currentLine = 0;
+            this.toggleFlag = true;
+            this.parentRef = null;
             var self = this;
             var changelog = new Changelog();
             var label = new Lich.Label("LichEngine " + changelog.versions.byIndex(0).version, "20px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
@@ -70,6 +72,7 @@ var Lich;
             // Instrukce
             self.lines.push("== INSTRUCTIONS ==");
             self.lines.push(" ");
+            self.lines.push("- Press <ESC> to toggle this window");
             self.lines.push("- Press <W>, <A>, <S>, <D> to move");
             self.lines.push("- Press <I> to minimize inventory");
             self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");
@@ -99,6 +102,23 @@ var Lich;
             close.x = self.width / 2 - 42 / 2;
             close.y = self.height - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
         }
+        SplashScreenUI.prototype.toggleInv = function () {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag) {
+                if (self.parent == null) {
+                    self.parentRef.addChild(self);
+                }
+                else {
+                    self.parentRef = self.parent;
+                    self.parent.removeChild(self);
+                }
+                self.toggleFlag = false;
+            }
+        };
+        SplashScreenUI.prototype.prepareForToggleInv = function () {
+            this.toggleFlag = true;
+        };
         SplashScreenUI.prototype.print = function () {
             this.cont.removeAllChildren();
             for (var i = 0; i < SplashScreenUI.LINES; i++) {
@@ -153,7 +173,7 @@ var Lich;
             var shape = self.createBaseButtonShape(42, SplashScreenUI.BTN_SIDE);
             var cont = new createjs.Container();
             cont.on("mousedown", function () {
-                self.parent.removeChild(self);
+                self.visible = false;
             }, null, false);
             cont.hitArea = shape.hitArea;
             cont.addChild(shape);
