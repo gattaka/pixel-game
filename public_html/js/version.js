@@ -110,7 +110,8 @@ var Lich;
         SplashScreenUI.prototype.createBaseButtonShape = function (width, height) {
             var self = this;
             var shape = new createjs.Shape();
-            shape.graphics.beginStroke("rgba(250,250,10,0.5)");
+            shape.graphics.beginStroke("rgba(0,0,0,0.5)");
+            shape.graphics.beginFill("rgba(250,250,10,0.4)");
             shape.graphics.setStrokeStyle(2);
             shape.graphics.drawRoundRect(0, 0, width, height, 3);
             var hitArea = new createjs.Shape();
