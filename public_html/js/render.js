@@ -206,8 +206,15 @@ var Lich;
             if (y > self.mapUpdateRegion.toY || self.mapUpdateRegion.toY === -1)
                 self.mapUpdateRegion.toY = y;
         };
-        Render.prototype.setSourceRect = function (tile, positionIndex) {
+        Render.prototype.setSurfaceBgrSourceRect = function (tile, positionIndex) {
+            var v = Lich.Resources.INSTANCE.surfaceBgrIndex.getPosition(positionIndex);
+            this.setSourceRect(tile, v);
+        };
+        Render.prototype.setSurfaceSourceRect = function (tile, positionIndex) {
             var v = Lich.Resources.INSTANCE.surfaceIndex.getPosition(positionIndex);
+            this.setSourceRect(tile, v);
+        };
+        Render.prototype.setSourceRect = function (tile, v) {
             var tileCols = tile.image.width / Lich.Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
@@ -216,14 +223,14 @@ var Lich;
             var self = this;
             var typ = Lich.Resources.INSTANCE.surfaceBgrIndex.getType(positionIndex);
             var tile = Lich.Resources.INSTANCE.getBitmap(typ);
-            this.setSourceRect(tile, positionIndex);
+            this.setSurfaceBgrSourceRect(tile, positionIndex);
             return tile;
         };
         Render.prototype.createTile = function (positionIndex) {
             var self = this;
             var surfaceType = Lich.Resources.INSTANCE.surfaceIndex.getType(positionIndex);
             var tile = Lich.Resources.INSTANCE.getBitmap(surfaceType);
-            this.setSourceRect(tile, positionIndex);
+            this.setSurfaceSourceRect(tile, positionIndex);
             return tile;
         };
         Render.prototype.createObject = function (objectTile) {
@@ -519,7 +526,7 @@ var Lich;
                     var tile = self.sceneTilesMap.getValue(x, y);
                     if (tile !== null) {
                         var v = self.tilesMap.mapRecord.getValue(x, y);
-                        self.setSourceRect(tile, v);
+                        self.setSurfaceSourceRect(tile, v);
                     }
                 });
             })();
@@ -589,28 +596,26 @@ var Lich;
             (function () {
                 for (var x = rx; x <= rx + 1; x++) {
                     for (var y = ry; y <= ry + 1; y++) {
-                        var val = self.tilesMap.mapRecord.getValue(x, y);
-                        if (val != null) {
-                            var sector = self.getSectorByTiles(x, y);
-                            // vytvoř nové dílky
-                            var pos = Lich.MapTools.getPositionByCoordPattern(x, y);
-                            var posIndex = Lich.Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceType, pos);
-                            self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
-                            var targetSector = self.getSectorByTiles(x, y);
-                            // vytvoř dílek
-                            var tile = self.createBgrTile(posIndex);
-                            // přidej dílek do sektoru
-                            sector.addBackgroundChild(tile);
-                            tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
-                            tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
-                            // přidej dílek do globální mapy
-                            self.sceneBgrTilesMap.setValue(x, y, tile);
-                            // zjisti sektor dílku, aby byl přidán do fronty 
-                            // ke cache update (postačí to udělat dle tilesToReset,
-                            // protože to jsou okrajové dílky z oblasti změn)
-                            if (typeof sector !== "undefined" && sector !== null) {
-                                self.markSector(sector);
-                            }
+                        var sector = self.getSectorByTiles(x, y);
+                        // TODO tohle patří k surface, nikoliv bgr, ale zatím je to stejné
+                        var pos = Lich.MapTools.getPositionByCoordPattern(x, y);
+                        // vytvoř nové dílky
+                        var posIndex = Lich.Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceType, pos);
+                        self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
+                        var targetSector = self.getSectorByTiles(x, y);
+                        // vytvoř dílek
+                        var tile = self.createBgrTile(posIndex);
+                        // přidej dílek do sektoru
+                        sector.addBackgroundChild(tile);
+                        tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
+                        tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
+                        // přidej dílek do globální mapy
+                        self.sceneBgrTilesMap.setValue(x, y, tile);
+                        // zjisti sektor dílku, aby byl přidán do fronty 
+                        // ke cache update (postačí to udělat dle tilesToReset,
+                        // protože to jsou okrajové dílky z oblasti změn)
+                        if (typeof sector !== "undefined" && sector !== null) {
+                            self.markSector(sector);
                         }
                     }
                 }

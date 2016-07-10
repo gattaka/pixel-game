@@ -276,8 +276,17 @@ namespace Lich {
 
         }
 
-        setSourceRect(tile: createjs.Bitmap, positionIndex: number) {
+        setSurfaceBgrSourceRect(tile: createjs.Bitmap, positionIndex: number) {
+            var v = Resources.INSTANCE.surfaceBgrIndex.getPosition(positionIndex);
+            this.setSourceRect(tile, v);
+        }
+
+        setSurfaceSourceRect(tile: createjs.Bitmap, positionIndex: number) {
             var v = Resources.INSTANCE.surfaceIndex.getPosition(positionIndex);
+            this.setSourceRect(tile, v);
+        }
+
+        setSourceRect(tile: createjs.Bitmap, v: number) {
             var tileCols = tile.image.width / Resources.TILE_SIZE;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(
@@ -292,7 +301,7 @@ namespace Lich {
             var self = this;
             var typ = Resources.INSTANCE.surfaceBgrIndex.getType(positionIndex);
             var tile = Resources.INSTANCE.getBitmap(typ);
-            this.setSourceRect(tile, positionIndex);
+            this.setSurfaceBgrSourceRect(tile, positionIndex);
             return tile;
         }
 
@@ -300,7 +309,7 @@ namespace Lich {
             var self = this;
             var surfaceType = Resources.INSTANCE.surfaceIndex.getType(positionIndex);
             var tile = Resources.INSTANCE.getBitmap(surfaceType);
-            this.setSourceRect(tile, positionIndex);
+            this.setSurfaceSourceRect(tile, positionIndex);
             return tile;
         }
 
@@ -649,7 +658,7 @@ namespace Lich {
                     var tile = self.sceneTilesMap.getValue(x, y);
                     if (tile !== null) {
                         var v = self.tilesMap.mapRecord.getValue(x, y);
-                        self.setSourceRect(tile, v);
+                        self.setSurfaceSourceRect(tile, v);
                     }
                 });
             })();
@@ -727,33 +736,32 @@ namespace Lich {
             (function() {
                 for (var x = rx; x <= rx + 1; x++) {
                     for (var y = ry; y <= ry + 1; y++) {
-                        var val = self.tilesMap.mapRecord.getValue(x, y);
-                        if (val != null) {
-                            var sector = self.getSectorByTiles(x, y);
+                        var sector = self.getSectorByTiles(x, y);
 
-                            // vytvoř nové dílky
-                            var pos = MapTools.getPositionByCoordPattern(x, y);
-                            var posIndex = Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceType, pos);
-                            self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
-                            var targetSector = self.getSectorByTiles(x, y);
+                        // TODO tohle patří k surface, nikoliv bgr, ale zatím je to stejné
+                        var pos = MapTools.getPositionByCoordPattern(x, y);
 
-                            // vytvoř dílek
-                            var tile = self.createBgrTile(posIndex);
+                        // vytvoř nové dílky
+                        var posIndex = Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceType, pos);
+                        self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
+                        var targetSector = self.getSectorByTiles(x, y);
 
-                            // přidej dílek do sektoru
-                            sector.addBackgroundChild(tile);
-                            tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                            tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                        // vytvoř dílek
+                        var tile = self.createBgrTile(posIndex);
 
-                            // přidej dílek do globální mapy
-                            self.sceneBgrTilesMap.setValue(x, y, tile);
+                        // přidej dílek do sektoru
+                        sector.addBackgroundChild(tile);
+                        tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                        tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
-                            // zjisti sektor dílku, aby byl přidán do fronty 
-                            // ke cache update (postačí to udělat dle tilesToReset,
-                            // protože to jsou okrajové dílky z oblasti změn)
-                            if (typeof sector !== "undefined" && sector !== null) {
-                                self.markSector(sector);
-                            }
+                        // přidej dílek do globální mapy
+                        self.sceneBgrTilesMap.setValue(x, y, tile);
+
+                        // zjisti sektor dílku, aby byl přidán do fronty 
+                        // ke cache update (postačí to udělat dle tilesToReset,
+                        // protože to jsou okrajové dílky z oblasti změn)
+                        if (typeof sector !== "undefined" && sector !== null) {
+                            self.markSector(sector);
                         }
                     }
                 }
