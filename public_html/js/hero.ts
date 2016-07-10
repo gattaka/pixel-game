@@ -76,6 +76,8 @@ namespace Lich {
                     "dead": [29, 29, "dead", 0.2]
                 }
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
+            
+            this.willRegen = 10;
         }
 
         shift(shift) {

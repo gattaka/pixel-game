@@ -6,9 +6,6 @@ var Lich;
             this.initialized = false;
             this.keys = {};
             this.mouse = new Lich.Mouse();
-            // debug
-            this.hh = 200;
-            this.ww = 150;
             var self = this;
             /*------------*/
             /* Stage init */
@@ -74,11 +71,6 @@ var Lich;
                 self.debugUI.x = 10;
                 self.debugUI.y = 10;
                 self.ui.addChild(self.debugUI);
-                // debug
-                self.ui.conditionUI.setMaxHealth(self.hh);
-                self.ui.conditionUI.setHealth(self.hh);
-                self.ui.conditionUI.setMaxWill(self.ww);
-                self.ui.conditionUI.setWill(self.ww);
                 /*---------------------*/
                 /* Measurements, debug */
                 /*---------------------*/
@@ -172,13 +164,6 @@ var Lich;
                         if (self.keys[49 + i]) {
                             self.ui.spellsUI.selectSpell(i);
                         }
-                    }
-                    // H
-                    if (self.keys[72]) {
-                        self.hh -= 10;
-                        self.ww -= 10;
-                        self.ui.conditionUI.setHealth(self.hh);
-                        self.ui.conditionUI.setWill(self.ww);
                     }
                     self.world.update(delta, directions);
                 }

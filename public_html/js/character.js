@@ -12,11 +12,11 @@ var Lich;
             this.HEALTH_REGEN_TIME = 1000;
             this.maxHealth = 100;
             this.currentHealth = this.maxHealth;
-            this.healthRegen = 1;
+            this.healthRegen = 0;
             this.WILL_REGEN_TIME = 1000;
             this.maxWill = 50;
             this.currentWill = this.maxWill;
-            this.willRegen = 5;
+            this.willRegen = 0;
             this.spellCooldowns = new Array();
         }
         /**

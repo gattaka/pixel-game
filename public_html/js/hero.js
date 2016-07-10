@@ -41,6 +41,7 @@ var Lich;
             this.speedy = 0;
             this.state = Hero.IDLE_STATE;
             this.initialized = false;
+            this.willRegen = 10;
         }
         Hero.prototype.shift = function (shift) {
             var self = this;

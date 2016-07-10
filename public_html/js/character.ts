@@ -4,12 +4,12 @@ namespace Lich {
         protected HEALTH_REGEN_TIME = 1000;
         protected maxHealth = 100;
         protected currentHealth = this.maxHealth;
-        protected healthRegen = 1;
+        protected healthRegen = 0;
 
         protected WILL_REGEN_TIME = 1000;
         protected maxWill = 50;
         protected currentWill = this.maxWill;
-        protected willRegen = 5;
+        protected willRegen = 0;
 
         public spellCooldowns = new Array<number>();
 

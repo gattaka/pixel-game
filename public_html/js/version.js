@@ -28,6 +28,8 @@ var Lich;
             version.addChange("<SHIFT> toggles surface/surface-background digging");
             version.addChange("Surface background does not collide with objects anymore");
             version.addChange("Health and Will UI improved");
+            version.addChange("Health and Will regeneration");
+            version.addChange("Spells cost");
             this.addVersion(version);
             version = new Version("0.3");
             version.addChange("Placing walls (surface background)");
