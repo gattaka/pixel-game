@@ -505,7 +505,7 @@ namespace Lich {
             }
         };
 
-        digSurfaceBgr(rx, ry) {
+        digSurfaceBgr(rx, ry): boolean {
             var self = this;
 
             var dugIndex = self.tilesMap.mapBgrRecord.getValue(rx, ry);
@@ -544,10 +544,12 @@ namespace Lich {
                         }
                     }
                 })();
+                return true;
             }
+            return false;
         }
 
-        digSurface(rx, ry) {
+        digSurface(rx, ry): boolean {
             var self = this;
             var tilesToReset = [];
 
@@ -624,7 +626,9 @@ namespace Lich {
                 })();
 
                 this.mapReshape(tilesToReset);
+                return true;
             }
+            return false;
 
         }
 
@@ -664,7 +668,7 @@ namespace Lich {
             })();
         }
 
-        digObject(rx, ry) {
+        digObject(rx, ry): boolean {
             var self = this;
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
             if (objectElement !== null) {
@@ -703,10 +707,12 @@ namespace Lich {
                         }
                     }
                 }
+                return true;
             }
+            return false;
         }
 
-        dig(x: number, y: number, asBackground: boolean) {
+        dig(x: number, y: number, asBackground: boolean): boolean {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Utils.even(coord.x);
@@ -715,19 +721,17 @@ namespace Lich {
             // kopl jsem do nějakého povrchu?
             if (asBackground) {
                 if (self.tilesMap.mapBgrRecord.getValue(rx, ry) != null) {
-                    self.digSurfaceBgr(rx, ry);
-                    return true;
+                    return self.digSurfaceBgr(rx, ry);
                 }
             } else {
                 if (self.tilesMap.mapRecord.getValue(rx, ry) !== SurfaceIndex.VOID) {
-                    self.digSurface(rx, ry);
-                    return true;
+                    return self.digSurface(rx, ry);
                 } else {
                     // kopl jsem do objektu?
-                    self.digObject(rx, ry);
-                    return true;
+                    return self.digObject(rx, ry);
                 }
             }
+            return false;
         }
 
         placeSurfaceBgr(rx, ry, surfaceType: string) {

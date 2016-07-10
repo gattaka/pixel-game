@@ -431,7 +431,9 @@ var Lich;
                         }
                     }
                 })();
+                return true;
             }
+            return false;
         };
         Render.prototype.digSurface = function (rx, ry) {
             var self = this;
@@ -497,7 +499,9 @@ var Lich;
                     }
                 })();
                 this.mapReshape(tilesToReset);
+                return true;
             }
+            return false;
         };
         Render.prototype.mapReshape = function (tilesToReset) {
             var self = this;
@@ -565,7 +569,9 @@ var Lich;
                         }
                     }
                 }
+                return true;
             }
+            return false;
         };
         Render.prototype.dig = function (x, y, asBackground) {
             var self = this;
@@ -575,21 +581,19 @@ var Lich;
             // kopl jsem do nějakého povrchu?
             if (asBackground) {
                 if (self.tilesMap.mapBgrRecord.getValue(rx, ry) != null) {
-                    self.digSurfaceBgr(rx, ry);
-                    return true;
+                    return self.digSurfaceBgr(rx, ry);
                 }
             }
             else {
                 if (self.tilesMap.mapRecord.getValue(rx, ry) !== Lich.SurfaceIndex.VOID) {
-                    self.digSurface(rx, ry);
-                    return true;
+                    return self.digSurface(rx, ry);
                 }
                 else {
                     // kopl jsem do objektu?
-                    self.digObject(rx, ry);
-                    return true;
+                    return self.digObject(rx, ry);
                 }
             }
+            return false;
         };
         Render.prototype.placeSurfaceBgr = function (rx, ry, surfaceType) {
             var self = this;
