@@ -11,12 +11,12 @@ var Lich;
             _super.call(this);
             this.game = game;
             var self = this;
-            // splashScreen
+            // SplashScreen
             self.splashScreenUI = new Lich.SplashScreenUI();
             self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
             self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
-            // inventář
+            // Inventář
             var inventoryUI = new Lich.InventoryUI();
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
@@ -34,6 +34,12 @@ var Lich;
             musicUI.y = UI.SCREEN_SPACING;
             self.addChild(musicUI);
             self.musicUI = musicUI;
+            // Stav (mana, zdraví)
+            var conditionUI = new ConditionUI();
+            conditionUI.x = game.canvas.width - conditionUI.width - UI.SCREEN_SPACING;
+            conditionUI.y = game.canvas.height - conditionUI.height - UI.SCREEN_SPACING;
+            self.addChild(conditionUI);
+            self.conditionUI = conditionUI;
             /*
              // přehled postavy
              (function () {
@@ -121,24 +127,11 @@ var Lich;
              */
             // zdraví a mana
             (function () {
-                self.stateCont = new createjs.Container();
-                self.stateCont.width = 350;
-                self.stateCont.height = 160;
-                self.stateCont.x = game.canvas.width - self.stateCont.width - 20;
-                self.stateCont.y = game.canvas.height - self.stateCont.height - 20;
-                var outerShape = new createjs.Shape();
-                outerShape.graphics.setStrokeStyle(2);
-                outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-                outerShape.graphics.beginFill("rgba(255,0,0,0.7)");
-                outerShape.graphics.drawRect(0, 80, 250, 25);
-                outerShape.graphics.beginFill("rgba(70,30,255,0.7)");
-                outerShape.graphics.drawRect(0, 110, 250, 25);
-                self.stateCont.addChild(outerShape);
-                var skull = Lich.Resources.INSTANCE.getBitmap(Lich.Resources.SKULL_KEY);
-                skull.x = self.stateCont.width - skull.image.width;
-                skull.y = self.stateCont.height - skull.image.height;
-                self.stateCont.addChild(skull);
-                self.addChild(self.stateCont);
+                //                var skull = Resources.INSTANCE.getBitmap(Resources.SKULL_KEY);
+                //                skull.x = self.stateCont.width - skull.image.width;
+                //                skull.y = self.stateCont.height - skull.image.height;
+                //                self.stateCont.addChild(skull);
+                //                self.addChild(self.stateCont);
             })();
         }
         UI.prototype.isMouseInUI = function (x, y) {
@@ -167,4 +160,99 @@ var Lich;
         return UI;
     }(createjs.Container));
     Lich.UI = UI;
+    var ConditionUI = (function (_super) {
+        __extends(ConditionUI, _super);
+        function ConditionUI() {
+            _super.call(this, 350, 2 * Lich.AbstractUI.BORDER + Lich.Resources.PARTS_SIZE);
+            this.healthBar = new createjs.Shape();
+            this.willBar = new createjs.Shape();
+            this.maxHealth = 0;
+            this.maxWill = 0;
+            this.currentHealth = 0;
+            this.currentWill = 0;
+            this.barWidth = this.width - ConditionUI.INNER_BORDER * 2;
+            this.barHeight = this.height / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
+            // podklady 
+            var healthBgrBar = new createjs.Shape();
+            healthBgrBar.graphics.setStrokeStyle(2);
+            healthBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
+            healthBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, ConditionUI.INNER_BORDER, this.barWidth, this.barHeight, 3);
+            this.addChild(healthBgrBar);
+            var willBgrBar = new createjs.Shape();
+            willBgrBar.graphics.setStrokeStyle(2);
+            willBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
+            willBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, this.height / 2 + ConditionUI.SPACING / 2, this.barWidth, this.barHeight, 3);
+            this.addChild(willBgrBar);
+            // zdraví
+            this.addChild(this.healthBar);
+            this.healthText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.healthText.y = ConditionUI.INNER_BORDER;
+            this.addChild(this.healthText);
+            // vůle
+            this.addChild(this.willBar);
+            this.willText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.willText.y = this.height / 2 + ConditionUI.SPACING / 2;
+            this.addChild(this.willText);
+            this.updateHealthBar();
+            this.updateWillBar();
+        }
+        ConditionUI.prototype.setMaxHealth = function (maxHealth) {
+            this.maxHealth = maxHealth;
+            this.setHealth(this.currentHealth);
+        };
+        ConditionUI.prototype.setMaxWill = function (maxWill) {
+            this.maxWill = maxWill;
+            this.setWill(this.currentWill);
+        };
+        ConditionUI.prototype.setHealth = function (currentHealth) {
+            if (currentHealth > this.maxHealth) {
+                this.currentHealth = this.maxHealth;
+            }
+            else if (currentHealth < 0) {
+                this.currentHealth = 0;
+            }
+            else {
+                this.currentHealth = currentHealth;
+            }
+            this.updateHealthBar();
+        };
+        ConditionUI.prototype.setWill = function (currentWill) {
+            if (currentWill > this.maxWill) {
+                this.currentWill = this.maxWill;
+            }
+            else if (currentWill < 0) {
+                this.currentWill = 0;
+            }
+            else {
+                this.currentWill = currentWill;
+            }
+            this.updateWillBar();
+        };
+        ConditionUI.prototype.updateHealthBar = function () {
+            this.healthBar.graphics.clear();
+            this.healthBar.graphics.setStrokeStyle(2);
+            this.healthBar.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.healthBar.graphics.beginFill("rgba(255,0,0,0.7)");
+            var width = this.barWidth * (this.currentHealth / this.maxHealth);
+            var x = ConditionUI.INNER_BORDER + this.barWidth - width;
+            this.healthBar.graphics.drawRoundRect(x, ConditionUI.INNER_BORDER, width, this.barHeight, 3);
+            this.healthText.setText(this.currentHealth + "/" + this.maxHealth);
+            this.healthText.x = this.width / 2 - this.healthText.getBounds().width / 2;
+        };
+        ConditionUI.prototype.updateWillBar = function () {
+            this.willBar.graphics.clear();
+            this.willBar.graphics.setStrokeStyle(2);
+            this.willBar.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.willBar.graphics.beginFill("rgba(70,30,255,0.7)");
+            var width = this.barWidth * (this.currentWill / this.maxWill);
+            var x = ConditionUI.INNER_BORDER + this.barWidth - width;
+            this.willBar.graphics.drawRoundRect(x, this.height / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
+            this.willText.setText(this.currentWill + "/" + this.maxWill);
+            this.willText.x = this.width / 2 - this.willText.getBounds().width / 2;
+        };
+        ConditionUI.INNER_BORDER = 5;
+        ConditionUI.SPACING = 4;
+        return ConditionUI;
+    }(Lich.AbstractUI));
+    Lich.ConditionUI = ConditionUI;
 })(Lich || (Lich = {}));

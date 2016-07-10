@@ -15,6 +15,10 @@ namespace Lich {
 
         mouse = new Mouse();
 
+        // debug
+        hh = 200;
+        ww = 150;
+
         constructor(canvasId: string) {
 
             var self = this;
@@ -98,6 +102,12 @@ namespace Lich {
                 self.debugUI.x = 10;
                 self.debugUI.y = 10;
                 self.ui.addChild(self.debugUI);
+
+                // debug
+                self.ui.conditionUI.setMaxHealth(self.hh);
+                self.ui.conditionUI.setHealth(self.hh);
+                self.ui.conditionUI.setMaxWill(self.ww);
+                self.ui.conditionUI.setWill(self.ww);
 
                 /*---------------------*/
                 /* Measurements, debug */
@@ -201,6 +211,14 @@ namespace Lich {
                         if (self.keys[49 + i]) {
                             self.ui.spellsUI.selectSpell(i);
                         }
+                    }
+
+                    // H
+                    if (self.keys[72]) {
+                        self.hh -= 10;
+                        self.ww -= 10;
+                        self.ui.conditionUI.setHealth(self.hh);
+                        self.ui.conditionUI.setWill(self.ww);
                     }
 
                     self.world.update(delta, directions);
