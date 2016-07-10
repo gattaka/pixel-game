@@ -4,7 +4,14 @@ namespace Lich {
      * Předek všech Spell definic
      */
     export abstract class SpellDefinition {
-        constructor(public key: string, public cooldown: number) { }
+        constructor(
+            // id spellu
+            public key: string,
+            // náročnost na will
+            public cost: number,
+            // prodleva před dalším použitím
+            public cooldown: number
+        ) { }
 
         public abstract cast(
             // iniciátor spell akce
@@ -35,7 +42,8 @@ namespace Lich {
 
         constructor(
             key: string,
-            public cooldown: number,
+            cost: number,
+            cooldown: number,
             public castSoundKey: string,
             public hitSoundKey: string,
             public speed: number,
@@ -44,7 +52,7 @@ namespace Lich {
             public piercing: boolean,
             public damage: number
         ) {
-            super(key, cooldown);
+            super(key, cost, cooldown);
         }
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
@@ -116,10 +124,12 @@ namespace Lich {
         static PIERCING = true;
         static DAMAGE = 50;
         static COOLDOWN = 200;
+        static COST = 10;
 
         constructor() {
             super(
                 Resources.SPELL_FIREBALL_KEY,
+                FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
                 Resources.SND_BURN_KEY,
                 Resources.SND_FIREBALL_KEY,
@@ -142,10 +152,12 @@ namespace Lich {
         static PIERCING = false;
         static DAMAGE = 30;
         static COOLDOWN = 100;
+        static COST = 2;
 
         constructor() {
             super(
                 Resources.SPELL_BOLT_KEY,
+                BoltSpellDef.COST,
                 BoltSpellDef.COOLDOWN,
                 Resources.SND_BOLT_CAST,
                 Resources.SND_FIREBALL_KEY,
@@ -164,8 +176,8 @@ namespace Lich {
      */
     export abstract class HeroReachSpellDef extends SpellDefinition {
 
-        constructor(key: string, cooldown: number) {
-            super(key, cooldown);
+        constructor(key: string, cost: number, cooldown: number) {
+            super(key, cost, cooldown);
         }
 
         public abstract castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean;
@@ -209,7 +221,7 @@ namespace Lich {
         constructor(key: string,
             // pokládá se povrch jako podklad
             private asBackground) {
-            super(key, AbstractDigSpellDef.COOLDOWN);
+            super(key, 0, AbstractDigSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
@@ -255,7 +267,7 @@ namespace Lich {
             // pokládá se povrch jako podklad
             private asBackground
         ) {
-            super(key, AbstractPlaceSpellDef.COOLDOWN);
+            super(key, 0, AbstractPlaceSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
@@ -301,7 +313,7 @@ namespace Lich {
     export class EnemySpellDef extends SpellDefinition {
 
         constructor() {
-            super(Resources.SPELL_ENEMY_KEY, 200);
+            super(Resources.SPELL_ENEMY_KEY, 0, 200);
         }
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {

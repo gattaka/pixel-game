@@ -10,6 +10,7 @@ var Lich;
         function UI(game) {
             _super.call(this);
             this.game = game;
+            UI.INSTANCE = this;
             var self = this;
             // SplashScreen
             self.splashScreenUI = new Lich.SplashScreenUI();
@@ -212,7 +213,7 @@ var Lich;
                 this.currentHealth = 0;
             }
             else {
-                this.currentHealth = currentHealth;
+                this.currentHealth = Math.ceil(currentHealth);
             }
             this.updateHealthBar();
         };
@@ -224,7 +225,7 @@ var Lich;
                 this.currentWill = 0;
             }
             else {
-                this.currentWill = currentWill;
+                this.currentWill = Math.ceil(currentWill);
             }
             this.updateWillBar();
         };

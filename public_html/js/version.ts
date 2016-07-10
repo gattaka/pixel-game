@@ -29,6 +29,7 @@ namespace Lich {
             version.addChange("Surface background digging");
             version.addChange("<SHIFT> toggles surface/surface-background digging");
             version.addChange("Surface background does not collide with objects anymore");
+            version.addChange("Health and Will UI improved");
             this.addVersion(version);
 
             version = new Version("0.3");

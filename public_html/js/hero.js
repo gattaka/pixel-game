@@ -77,15 +77,16 @@ var Lich;
         Hero.prototype.die = function (game) {
             this.performState(Hero.DIE_STATE);
         };
-        Hero.prototype.hit = function (damage, game) {
-            if (this.life > 0) {
-                this.life -= damage;
-                if (this.life <= 0) {
-                    this.life = 0;
-                    this.die(game);
-                }
-            }
+        Hero.prototype.onHealthChange = function (difference) {
+            Lich.UI.INSTANCE.conditionUI.setMaxHealth(this.maxHealth);
+            Lich.UI.INSTANCE.conditionUI.setHealth(this.currentHealth);
         };
+        ;
+        Hero.prototype.onWillChange = function (difference) {
+            Lich.UI.INSTANCE.conditionUI.setMaxWill(this.maxWill);
+            Lich.UI.INSTANCE.conditionUI.setWill(this.currentWill);
+        };
+        ;
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/

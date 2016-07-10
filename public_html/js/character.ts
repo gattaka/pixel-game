@@ -1,29 +1,17 @@
 namespace Lich {
     export abstract class Character extends AbstractWorldObject {
 
-        /*-----------*/
-        /* VARIABLES */
-        /*-----------*/
+        protected HEALTH_REGEN_TIME = 1000;
+        protected maxHealth = 100;
+        protected currentHealth = this.maxHealth;
+        protected healthRegen = 1;
 
-        public life = 100;
+        protected WILL_REGEN_TIME = 1000;
+        protected maxWill = 50;
+        protected currentWill = this.maxWill;
+        protected willRegen = 5;
+
         public spellCooldowns = new Array<number>();
-
-        initialized = false;
-
-        shift(shift) {
-            var self = this;
-            if (self.initialized) {
-                // TODO
-            }
-        }
-
-        performState(desiredState) {
-            var self = this;
-            if (self.state !== desiredState) {
-                self.gotoAndPlay(self.getStateAnimation(desiredState));
-                self.state = desiredState;
-            }
-        }
 
         abstract getStateAnimation(state: string);
 
@@ -37,7 +25,82 @@ namespace Lich {
         abstract fall();
         abstract die(game: Game);
 
-        abstract hit(damage: number, game: Game);
+        abstract onHealthChange(difference: number);
+        abstract onWillChange(difference: number);
+
+        /**
+         * Health metody
+         */
+
+        hit(damage: number, game: Game) {
+            var oldValue = this.currentHealth;
+            if (this.currentHealth > 0) {
+                this.currentHealth -= damage;
+                if (this.currentHealth <= 0) {
+                    this.currentHealth = 0;
+                    this.die(game);
+                }
+            }
+            this.onHealthChange(this.currentHealth - oldValue);
+        }
+
+        fillHealth(amount: number) {
+            this.currentHealth += amount;
+            if (this.currentHealth > this.maxHealth)
+                this.currentHealth = this.maxHealth;
+            this.onHealthChange(0);
+        }
+
+        setNewMaxHealth(maxHealth: number) {
+            this.maxHealth = maxHealth;
+            if (this.currentHealth > this.maxHealth)
+                this.currentHealth = this.maxHealth;
+            this.onHealthChange(0);
+        }
+
+        getMaxHealth() {
+            return this.maxHealth;
+        }
+
+        getCurrentHealth() {
+            return this.currentHealth;
+        }
+
+        /**
+         * Will metody
+         */
+
+        decreseWill(amount: number) {
+            var oldValue = this.currentWill;
+            if (this.currentWill > 0) {
+                this.currentWill -= amount;
+                if (this.currentWill < 0)
+                    this.currentWill = 0;
+                this.onWillChange(this.currentWill - oldValue);
+            }
+        }
+
+        fillWill(amount: number) {
+            this.currentWill += amount;
+            if (this.currentWill > this.maxWill)
+                this.currentWill = this.maxWill;
+            this.onWillChange(0);
+        }
+
+        setNewMaxWill(maxWill: number) {
+            this.maxWill = maxWill;
+            if (this.currentWill > this.maxWill)
+                this.currentWill = this.maxWill;
+            this.onWillChange(0);
+        }
+
+        getMaxWill() {
+            return this.maxWill;
+        }
+
+        getCurrentWill() {
+            return this.currentWill;
+        }
 
         updateAnimations() {
             var self = this;
@@ -61,5 +124,17 @@ namespace Lich {
             }
         }
 
+        performState(desiredState) {
+            var self = this;
+            if (self.state !== desiredState) {
+                self.gotoAndPlay(self.getStateAnimation(desiredState));
+                self.state = desiredState;
+            }
+        }
+
+        handleTick(delta) {
+            this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);
+            this.fillWill((delta / this.WILL_REGEN_TIME) * this.willRegen);
+        }
     }
 }

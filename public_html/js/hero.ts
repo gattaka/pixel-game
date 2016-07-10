@@ -125,15 +125,15 @@ namespace Lich {
             this.performState(Hero.DIE_STATE);
         }
 
-        hit(damage: number, game: Game) {
-            if (this.life > 0) {
-                this.life -= damage;
-                if (this.life <= 0) {
-                    this.life = 0;
-                    this.die(game);
-                }
-            }
-        }
+        onHealthChange(difference: number) {
+            UI.INSTANCE.conditionUI.setMaxHealth(this.maxHealth);
+            UI.INSTANCE.conditionUI.setHealth(this.currentHealth);
+        };
+
+        onWillChange(difference: number) {
+            UI.INSTANCE.conditionUI.setMaxWill(this.maxWill);
+            UI.INSTANCE.conditionUI.setWill(this.currentWill);
+        };
 
     }
 }

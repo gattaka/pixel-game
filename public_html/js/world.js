@@ -169,7 +169,7 @@ var Lich;
             var sDelta = delta / 1000; // ms -> s
             // AI Enemies
             self.enemies.forEach(function (enemy) {
-                if (enemy.life > 0) {
+                if (enemy.getCurrentHealth() > 0) {
                     if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
                         enemy.speedx = 0;
                     }
@@ -439,6 +439,7 @@ var Lich;
             // je vybrán spell?
             var choosenSpell = self.game.ui.spellsUI.getChoosenSpell();
             if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                var spellDef = Lich.Resources.INSTANCE.spellDefs.byKey(choosenSpell);
                 // provádím spell za hráče, takže kontroluji jeho cooldown
                 var cooldown = self.hero.spellCooldowns[choosenSpell];
                 // ještě nebyl použit? Takže je v pořádku a může se provést
@@ -448,16 +449,16 @@ var Lich;
                 }
                 // Sniž dle delay
                 self.hero.spellCooldowns[choosenSpell] -= delta;
-                // Může se provést (cooldown je pryč)?
-                if (cooldown <= 0 && (mouse.down || mouse.click)) {
+                // Může se provést (cooldown je pryč a mám will)?
+                if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down || mouse.click)) {
                     mouse.click = false;
-                    var spellDef = Lich.Resources.INSTANCE.spellDefs.byKey(choosenSpell);
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 4;
                     // zkus cast
                     if (spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
-                        // ok, cast se provedl, nastav nový cooldown
+                        // ok, cast se provedl, nastav nový cooldown a odeber will
                         self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                        self.hero.decreseWill(spellDef.cost);
                     }
                 }
             }
@@ -482,6 +483,10 @@ var Lich;
             var self = this;
             self.render.handleTick();
             self.background.handleTick(delta);
+            self.hero.handleTick(delta);
+            self.enemies.forEach(function (enemy) {
+                enemy.handleTick(delta);
+            });
         };
         ;
         /*-----------*/

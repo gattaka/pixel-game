@@ -98,7 +98,7 @@ var Lich;
                 var enemyRet = null;
                 for (var e = 0; e < game.world.enemies.length; e++) {
                     var enemy = game.world.enemies[e];
-                    if (enemy.life > 0
+                    if (enemy.getCurrentHealth() > 0
                         && x > enemy.x && x < enemy.x + enemy.width
                         && y > enemy.y && y < enemy.y + enemy.height) {
                         enemyRet = new Lich.CollisionTestResult(true, x, y);

@@ -84,7 +84,7 @@ namespace Lich {
         }
 
         getStateAnimation(desiredState: string) {
-            if (this.life == 0 && desiredState != Enemy.DIE_STATE) {
+            if (this.currentHealth == 0 && desiredState != Enemy.DIE_STATE) {
                 return Enemy.stateAnimation[Enemy.DEAD_STATE];
             } else {
                 return Enemy.stateAnimation[desiredState];
@@ -130,17 +130,22 @@ namespace Lich {
         }
 
         hit(damage: number, game: Game) {
-            if (this.life > 0) {
+            if (this.currentHealth > 0) {
                 Mixer.play(Resources.SND_BONECRACK_KEY);
-                this.life -= damage;
-                if (this.life <= 0) {
-                    this.life = 0;
+                this.currentHealth -= damage;
+                if (this.currentHealth <= 0) {
+                    this.currentHealth = 0;
                     this.speedx = 0;
                     this.die(game);
                 }
             }
         }
 
+        onHealthChange(difference: number) {
+        };
+
+        onWillChange(difference: number) {
+        };
 
     }
 }

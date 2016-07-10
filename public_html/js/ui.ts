@@ -1,6 +1,8 @@
 namespace Lich {
     export class UI extends createjs.Container {
 
+        static INSTANCE: UI;
+
         static SCREEN_SPACING = 20;
 
         charCont: createjs.Container;
@@ -14,6 +16,7 @@ namespace Lich {
         constructor(public game: Game) {
             super();
 
+            UI.INSTANCE = this;
             var self = this;
 
             // SplashScreen
@@ -209,7 +212,7 @@ namespace Lich {
             } else if (currentHealth < 0) {
                 this.currentHealth = 0;
             } else {
-                this.currentHealth = currentHealth;
+                this.currentHealth = Math.ceil(currentHealth);
             }
             this.updateHealthBar();
         }
@@ -220,7 +223,7 @@ namespace Lich {
             } else if (currentWill < 0) {
                 this.currentWill = 0;
             } else {
-                this.currentWill = currentWill;
+                this.currentWill = Math.ceil(currentWill);
             }
             this.updateWillBar();
         }

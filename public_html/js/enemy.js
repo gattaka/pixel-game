@@ -48,7 +48,7 @@ var Lich;
             }
         };
         Enemy.prototype.getStateAnimation = function (desiredState) {
-            if (this.life == 0 && desiredState != Enemy.DIE_STATE) {
+            if (this.currentHealth == 0 && desiredState != Enemy.DIE_STATE) {
                 return Enemy.stateAnimation[Enemy.DEAD_STATE];
             }
             else {
@@ -85,16 +85,22 @@ var Lich;
             // TODO loot
         };
         Enemy.prototype.hit = function (damage, game) {
-            if (this.life > 0) {
+            if (this.currentHealth > 0) {
                 Lich.Mixer.play(Lich.Resources.SND_BONECRACK_KEY);
-                this.life -= damage;
-                if (this.life <= 0) {
-                    this.life = 0;
+                this.currentHealth -= damage;
+                if (this.currentHealth <= 0) {
+                    this.currentHealth = 0;
                     this.speedx = 0;
                     this.die(game);
                 }
             }
         };
+        Enemy.prototype.onHealthChange = function (difference) {
+        };
+        ;
+        Enemy.prototype.onWillChange = function (difference) {
+        };
+        ;
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/

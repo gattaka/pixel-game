@@ -9,8 +9,15 @@ var Lich;
      * Předek všech Spell definic
      */
     var SpellDefinition = (function () {
-        function SpellDefinition(key, cooldown) {
+        function SpellDefinition(
+            // id spellu
+            key, 
+            // náročnost na will
+            cost, 
+            // prodleva před dalším použitím
+            cooldown) {
             this.key = key;
+            this.cost = cost;
             this.cooldown = cooldown;
         }
         return SpellDefinition;
@@ -22,9 +29,8 @@ var Lich;
      */
     var BulletSpellDef = (function (_super) {
         __extends(BulletSpellDef, _super);
-        function BulletSpellDef(key, cooldown, castSoundKey, hitSoundKey, speed, spriteKey, destroyMap, piercing, damage) {
-            _super.call(this, key, cooldown);
-            this.cooldown = cooldown;
+        function BulletSpellDef(key, cost, cooldown, castSoundKey, hitSoundKey, speed, spriteKey, destroyMap, piercing, damage) {
+            _super.call(this, key, cost, cooldown);
             this.castSoundKey = castSoundKey;
             this.hitSoundKey = hitSoundKey;
             this.speed = speed;
@@ -85,13 +91,14 @@ var Lich;
     var FireballSpellDef = (function (_super) {
         __extends(FireballSpellDef, _super);
         function FireballSpellDef() {
-            _super.call(this, Lich.Resources.SPELL_FIREBALL_KEY, FireballSpellDef.COOLDOWN, Lich.Resources.SND_BURN_KEY, Lich.Resources.SND_FIREBALL_KEY, FireballSpellDef.SPEED, Lich.Resources.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE);
+            _super.call(this, Lich.Resources.SPELL_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.Resources.SND_BURN_KEY, Lich.Resources.SND_FIREBALL_KEY, FireballSpellDef.SPEED, Lich.Resources.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE);
         }
         FireballSpellDef.SPEED = 1500;
         FireballSpellDef.MAP_DESTROY = true;
         FireballSpellDef.PIERCING = true;
         FireballSpellDef.DAMAGE = 50;
         FireballSpellDef.COOLDOWN = 200;
+        FireballSpellDef.COST = 10;
         return FireballSpellDef;
     }(BulletSpellDef));
     Lich.FireballSpellDef = FireballSpellDef;
@@ -101,13 +108,14 @@ var Lich;
     var BoltSpellDef = (function (_super) {
         __extends(BoltSpellDef, _super);
         function BoltSpellDef() {
-            _super.call(this, Lich.Resources.SPELL_BOLT_KEY, BoltSpellDef.COOLDOWN, Lich.Resources.SND_BOLT_CAST, Lich.Resources.SND_FIREBALL_KEY, BoltSpellDef.SPEED, Lich.Resources.BOLT_ANIMATION_KEY, BoltSpellDef.MAP_DESTROY, BoltSpellDef.PIERCING, BoltSpellDef.DAMAGE);
+            _super.call(this, Lich.Resources.SPELL_BOLT_KEY, BoltSpellDef.COST, BoltSpellDef.COOLDOWN, Lich.Resources.SND_BOLT_CAST, Lich.Resources.SND_FIREBALL_KEY, BoltSpellDef.SPEED, Lich.Resources.BOLT_ANIMATION_KEY, BoltSpellDef.MAP_DESTROY, BoltSpellDef.PIERCING, BoltSpellDef.DAMAGE);
         }
         BoltSpellDef.SPEED = 1500;
         BoltSpellDef.MAP_DESTROY = false;
         BoltSpellDef.PIERCING = false;
         BoltSpellDef.DAMAGE = 30;
         BoltSpellDef.COOLDOWN = 100;
+        BoltSpellDef.COST = 2;
         return BoltSpellDef;
     }(BulletSpellDef));
     Lich.BoltSpellDef = BoltSpellDef;
@@ -116,8 +124,8 @@ var Lich;
      */
     var HeroReachSpellDef = (function (_super) {
         __extends(HeroReachSpellDef, _super);
-        function HeroReachSpellDef(key, cooldown) {
-            _super.call(this, key, cooldown);
+        function HeroReachSpellDef(key, cost, cooldown) {
+            _super.call(this, key, cost, cooldown);
         }
         HeroReachSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
             // tady trochu zahazuju parametry, protože reach spells jsou speciálně pro hráče
@@ -152,7 +160,7 @@ var Lich;
         function AbstractDigSpellDef(key, 
             // pokládá se povrch jako podklad
             asBackground) {
-            _super.call(this, key, AbstractDigSpellDef.COOLDOWN);
+            _super.call(this, key, 0, AbstractDigSpellDef.COOLDOWN);
             this.asBackground = asBackground;
         }
         AbstractDigSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
@@ -200,7 +208,7 @@ var Lich;
         function AbstractPlaceSpellDef(key, 
             // pokládá se povrch jako podklad
             asBackground) {
-            _super.call(this, key, AbstractPlaceSpellDef.COOLDOWN);
+            _super.call(this, key, 0, AbstractPlaceSpellDef.COOLDOWN);
             this.asBackground = asBackground;
         }
         AbstractPlaceSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
@@ -251,7 +259,7 @@ var Lich;
     var EnemySpellDef = (function (_super) {
         __extends(EnemySpellDef, _super);
         function EnemySpellDef() {
-            _super.call(this, Lich.Resources.SPELL_ENEMY_KEY, 200);
+            _super.call(this, Lich.Resources.SPELL_ENEMY_KEY, 0, 200);
         }
         EnemySpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
             Lich.Mixer.play(Lich.Resources.SND_SPAWN_KEY);
