@@ -246,17 +246,13 @@ var Lich;
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
-            registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 10, function (x, y, obj, objType) {
-                game.world.render.digObject(x, y, false);
-                var objWidth = objType.mapSpriteWidth;
-                var objHeight = objType.mapSpriteHeight;
-                game.world.render.placeObject(x, y, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
+            registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 10, function (rx, ry, obj, objType) {
+                game.world.render.digObject(rx, ry, false);
+                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
             }).setCollision(true));
-            registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (x, y, obj, objType) {
-                game.world.render.digObject(x, y, false);
-                var objWidth = objType.mapSpriteWidth;
-                var objHeight = objType.mapSpriteHeight;
-                game.world.render.placeObject(x, y, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
+            registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
+                game.world.render.digObject(rx, ry, false);
+                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
             }).setCollision(true));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
@@ -278,7 +274,7 @@ var Lich;
             // usaditelných jako objekt
             registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_MUSHROOM_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]));
             // usaditelných jako povrch
             registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
                 .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_WOODWALL_KEY]));

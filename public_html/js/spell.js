@@ -158,7 +158,7 @@ var Lich;
     var MapObjectsInteractionSpellDef = (function (_super) {
         __extends(MapObjectsInteractionSpellDef, _super);
         function MapObjectsInteractionSpellDef() {
-            _super.call(this, Lich.Resources.SPELL_INTERACT_KEY, 0, AbstractDigSpellDef.COOLDOWN);
+            _super.call(this, Lich.Resources.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
         MapObjectsInteractionSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
             return game.world.render.interact(xAim, yAim);

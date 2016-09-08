@@ -448,7 +448,6 @@ var Lich;
                     if (rmbSpellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
                         // ok, cast se provedl, nastav nový cooldown 
                         self.hero.spellCooldowns[Lich.Resources.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
-                        mouse.rightDown = false;
                     }
                 }
             }

@@ -724,10 +724,11 @@ namespace Lich {
             if (objectElement !== null) {
                 var objType: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
                 if (objType.rmbAction) {
-                    var pixels = self.tilesToPixel(
+                    objType.rmbAction(
                         rx - objectElement.objTileX,
-                        ry - objectElement.objTileY);
-                    objType.rmbAction(pixels.x, pixels.y, objectElement, objType);
+                        // aby se to bralo/usazovalo za spodní řadu
+                        ry - objectElement.objTileY + objType.mapSpriteHeight - 2,
+                        objectElement, objType);
                     return true;
                 }
             }
@@ -865,7 +866,11 @@ namespace Lich {
             var self = this;
             // musí se posunout dolů o object.mapObj.mapSpriteHeight,
             // protože objekty se počítají počátkem levého SPODNÍHO rohu 
-            MapTools.writeObjectRecord(self.tilesMap, rx, ry + mapObj.mapSpriteHeight, mapObj);
+            MapTools.writeObjectRecord(self.tilesMap, rx, ry + 2, mapObj);
+            // objekty se "pokládají", takže se počítá posuv o výšku
+            // stále ale musí být na poklik dostupné poslední spodní 
+            // řádkou dílků (vše je po dvou kostkách), takže +2
+            ry = ry - mapObj.mapSpriteHeight + 2;
             // Sheet index dílku objektu
             for (var tx = 0; tx < mapObj.mapSpriteWidth; tx++) {
                 for (var ty = 0; ty < mapObj.mapSpriteHeight; ty++) {
@@ -906,8 +911,7 @@ namespace Lich {
                 if (self.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
                     // jde o objekt
                     if (object.mapObj != null) {
-                        // objekty se "pokládají", takže se počítá posuv o výšku
-                        this.placeObject(rx, ry - object.mapObj.mapSpriteHeight + 2, object.mapObj);
+                        this.placeObject(rx, ry, object.mapObj);
                         return true;
                     }
                     // jde o povrch 

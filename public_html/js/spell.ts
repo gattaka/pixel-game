@@ -218,7 +218,7 @@ namespace Lich {
         static COOLDOWN = 200;
 
         constructor() {
-            super(Resources.SPELL_INTERACT_KEY, 0, AbstractDigSpellDef.COOLDOWN);
+            super(Resources.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {

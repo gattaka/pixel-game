@@ -538,7 +538,6 @@ namespace Lich {
                     if (rmbSpellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
                         // ok, cast se provedl, nastav nový cooldown 
                         self.hero.spellCooldowns[Resources.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
-                        mouse.rightDown = false;
                     }
                 }
             }
