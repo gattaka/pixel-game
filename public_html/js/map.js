@@ -6,16 +6,16 @@
  */
 var Lich;
 (function (Lich) {
-    var Map = (function () {
-        function Map() {
+    var GameMap = (function () {
+        function GameMap() {
             var self = this;
-            var tilesMap = new Lich.TilesMap(Map.MAP_WIDTH, Map.MAP_HEIGHT);
+            var tilesMap = new Lich.TilesMap(GameMap.MAP_WIDTH, GameMap.MAP_HEIGHT);
             self.tilesMap = tilesMap;
             var mass = tilesMap.height * tilesMap.width;
             // base generation
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
-                    if (y < Map.MAP_GROUND_LEVEL) {
+                    if (y < GameMap.MAP_GROUND_LEVEL) {
                         tilesMap.mapRecord.setValue(x, y, Lich.SurfaceIndex.VOID);
                     }
                     else {
@@ -188,11 +188,11 @@ var Lich;
             })();
         }
         // musí být sudé
-        Map.MAP_WIDTH = 800;
-        Map.MAP_HEIGHT = 500;
-        Map.MAP_GROUND_LEVEL = 60;
-        return Map;
+        GameMap.MAP_WIDTH = 800;
+        GameMap.MAP_HEIGHT = 500;
+        GameMap.MAP_GROUND_LEVEL = 60;
+        return GameMap;
     }());
-    Lich.Map = Map;
+    Lich.GameMap = GameMap;
 })(Lich || (Lich = {}));
 ;

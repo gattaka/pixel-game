@@ -210,6 +210,21 @@ namespace Lich {
         }
     }
 
+    /**
+     * Spell pro interakci objektů a povrchů z mapy
+     */
+    export class MapObjectsInteractionSpellDef extends HeroReachSpellDef {
+
+        static COOLDOWN = 200;
+
+        constructor() {
+            super(Resources.SPELL_INTERACT_KEY, 0, AbstractDigSpellDef.COOLDOWN);
+        }
+
+        public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
+            return game.world.render.interact(xAim, yAim);
+        }
+    }
 
     /**
      * Spell pro vykopávání objektů a povrchů z mapy
@@ -219,7 +234,7 @@ namespace Lich {
         static COOLDOWN = 100;
 
         constructor(key: string,
-            // pokládá se povrch jako podklad
+            // kope se povrch jako podklad?
             private asBackground) {
             super(key, 0, AbstractDigSpellDef.COOLDOWN);
         }
@@ -264,7 +279,7 @@ namespace Lich {
 
         constructor(
             key: string,
-            // pokládá se povrch jako podklad
+            // pokládá se povrch jako podklad?
             private asBackground
         ) {
             super(key, 0, AbstractPlaceSpellDef.COOLDOWN);

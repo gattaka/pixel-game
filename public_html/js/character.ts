@@ -11,7 +11,7 @@ namespace Lich {
         protected currentWill = this.maxWill;
         protected willRegen = 0;
 
-        public spellCooldowns = new Array<number>();
+        public spellCooldowns = new Table<number>();
 
         abstract getStateAnimation(state: string);
 

@@ -17,7 +17,7 @@ var Lich;
             this.maxWill = 50;
             this.currentWill = this.maxWill;
             this.willRegen = 0;
-            this.spellCooldowns = new Array();
+            this.spellCooldowns = new Lich.Table();
         }
         /**
          * Health metody

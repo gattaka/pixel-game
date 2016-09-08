@@ -43,14 +43,24 @@ var Lich;
                 self.stage.addEventListener("stagemousedown", function (event) {
                     self.mouse.x = event["stageX"];
                     self.mouse.y = event["stageY"];
-                    self.mouse.down = true;
+                    if (event.nativeEvent.button == 0) {
+                        self.mouse.down = true;
+                    }
+                    else {
+                        self.mouse.rightDown = true;
+                    }
                 });
                 self.stage.addEventListener("stagemousemove", function (event) {
                     self.mouse.x = event["stageX"];
                     self.mouse.y = event["stageY"];
                 });
                 self.stage.addEventListener("stagemouseup", function (event) {
-                    self.mouse.down = false;
+                    if (event.nativeEvent.button == 0) {
+                        self.mouse.down = false;
+                    }
+                    else {
+                        self.mouse.rightDown = false;
+                    }
                 });
                 // wheel createjs ještě neumí
                 // https://github.com/CreateJS/EaselJS/issues/97

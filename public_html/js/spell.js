@@ -153,12 +153,27 @@ var Lich;
     }(SpellDefinition));
     Lich.HeroReachSpellDef = HeroReachSpellDef;
     /**
+     * Spell pro interakci objektů a povrchů z mapy
+     */
+    var MapObjectsInteractionSpellDef = (function (_super) {
+        __extends(MapObjectsInteractionSpellDef, _super);
+        function MapObjectsInteractionSpellDef() {
+            _super.call(this, Lich.Resources.SPELL_INTERACT_KEY, 0, AbstractDigSpellDef.COOLDOWN);
+        }
+        MapObjectsInteractionSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
+            return game.world.render.interact(xAim, yAim);
+        };
+        MapObjectsInteractionSpellDef.COOLDOWN = 200;
+        return MapObjectsInteractionSpellDef;
+    }(HeroReachSpellDef));
+    Lich.MapObjectsInteractionSpellDef = MapObjectsInteractionSpellDef;
+    /**
      * Spell pro vykopávání objektů a povrchů z mapy
      */
     var AbstractDigSpellDef = (function (_super) {
         __extends(AbstractDigSpellDef, _super);
         function AbstractDigSpellDef(key, 
-            // pokládá se povrch jako podklad
+            // kope se povrch jako podklad?
             asBackground) {
             _super.call(this, key, 0, AbstractDigSpellDef.COOLDOWN);
             this.asBackground = asBackground;
@@ -206,7 +221,7 @@ var Lich;
     var AbstractPlaceSpellDef = (function (_super) {
         __extends(AbstractPlaceSpellDef, _super);
         function AbstractPlaceSpellDef(key, 
-            // pokládá se povrch jako podklad
+            // pokládá se povrch jako podklad?
             asBackground) {
             _super.call(this, key, 0, AbstractPlaceSpellDef.COOLDOWN);
             this.asBackground = asBackground;

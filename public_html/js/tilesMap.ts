@@ -1,19 +1,6 @@
 namespace Lich {
 
     /**
-     * Záznam v mapě o celém objektu
-     */
-    export class MapObjectRecord {
-        constructor(
-            // souřadnice, na kterých začíná objektu jako celek
-            public x: number,
-            public y: number,
-            // typ objektu 
-            public obj: string
-        ) { }
-    }
-
-    /**
      * Dílek z objektu (strom se skládá z více dílků, které jsou rozmístěny v souřadnicích mapy)
      */
     export class MapObjectTile {

@@ -85,7 +85,7 @@ namespace Lich {
 
         mapUpdateRegion = new MapUpdateRegion();
 
-        constructor(public game: Game, public map: Map, public world: World) {
+        constructor(public game: Game, public map: GameMap, public world: World) {
             var self = this;
             self.tilesMap = map.tilesMap;
 
@@ -668,7 +668,7 @@ namespace Lich {
             })();
         }
 
-        digObject(rx, ry): boolean {
+        digObject(rx, ry, fireListeners = true): boolean {
             var self = this;
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
             if (objectElement !== null) {
@@ -679,9 +679,11 @@ namespace Lich {
                 var posx = objectElement.objTileX;
                 var posy = objectElement.objTileY;
 
-                self.onDigObjectListeners.forEach(function(fce) {
-                    fce(objType, rx, ry);
-                });
+                if (fireListeners) {
+                    self.onDigObjectListeners.forEach(function(fce) {
+                        fce(objType, rx, ry);
+                    });
+                }
 
                 // projdi všechny okolní dílky, které patří danému objektu
                 for (var x = 0; x < objWidth; x++) {
@@ -701,13 +703,33 @@ namespace Lich {
                             self.markSector(sectorParent);
                             object.parent.removeChild(object);
 
-                            // odstraň dílke objektu z map
+                            // odstraň dílek objektu z map
                             self.tilesMap.mapObjectsTiles.setValue(globalX, globalY, null);
                             self.sceneObjectsMap.setValue(globalX, globalY, null);
                         }
                     }
                 }
                 return true;
+            }
+            return false;
+        }
+
+        interact(x: number, y: number): boolean {
+            var self = this;
+            var coord = self.pixelsToTiles(x, y);
+            var rx = Utils.even(coord.x);
+            var ry = Utils.even(coord.y);
+
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
+            if (objectElement !== null) {
+                var objType: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
+                if (objType.rmbAction) {
+                    var pixels = self.tilesToPixel(
+                        rx - objectElement.objTileX,
+                        ry - objectElement.objTileY);
+                    objType.rmbAction(pixels.x, pixels.y, objectElement, objType);
+                    return true;
+                }
             }
             return false;
         }
@@ -841,17 +863,16 @@ namespace Lich {
 
         placeObject(rx, ry, mapObj: MapObjDefinition) {
             var self = this;
-            var sector = self.getSectorByTiles(rx, ry);
             // musí se posunout dolů o object.mapObj.mapSpriteHeight,
             // protože objekty se počítají počátkem levého SPODNÍHO rohu 
             MapTools.writeObjectRecord(self.tilesMap, rx, ry + mapObj.mapSpriteHeight, mapObj);
-            // Sheet index dílku objektu (pokládané objekty jsou vždy 2x2 TILE)
-            // TODO změnit -- tohle je blbost -- může být i větší objekt a pak se musí klasicky 
-            // počítat záběr a volný prostor
-            for (var tx = 0; tx < 2; tx++) {
-                for (var ty = 0; ty < 2; ty++) {
+            // Sheet index dílku objektu
+            for (var tx = 0; tx < mapObj.mapSpriteWidth; tx++) {
+                for (var ty = 0; ty < mapObj.mapSpriteHeight; ty++) {
                     var objectTile = new MapObjectTile(mapObj.mapKey, tx, ty);
                     var tile = self.createObject(objectTile);
+
+                    var sector = self.getSectorByTiles(rx + tx, ry + ty);
 
                     // přidej dílek do sektoru
                     if (tile instanceof createjs.Sprite) {
@@ -864,10 +885,9 @@ namespace Lich {
 
                     // Přidej objekt do globální mapy objektů
                     self.sceneObjectsMap.setValue(rx + tx, ry + ty, tile);
+                    self.markSector(sector);
                 }
             }
-
-            self.markSector(sector);
         }
 
         /**
@@ -886,7 +906,8 @@ namespace Lich {
                 if (self.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
                     // jde o objekt
                     if (object.mapObj != null) {
-                        this.placeObject(rx, ry, object.mapObj);
+                        // objekty se "pokládají", takže se počítá posuv o výšku
+                        this.placeObject(rx, ry - object.mapObj.mapSpriteHeight + 2, object.mapObj);
                         return true;
                     }
                     // jde o povrch 

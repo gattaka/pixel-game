@@ -1,22 +1,6 @@
 var Lich;
 (function (Lich) {
     /**
-     * Záznam v mapě o celém objektu
-     */
-    var MapObjectRecord = (function () {
-        function MapObjectRecord(
-            // souřadnice, na kterých začíná objektu jako celek
-            x, y, 
-            // typ objektu 
-            obj) {
-            this.x = x;
-            this.y = y;
-            this.obj = obj;
-        }
-        return MapObjectRecord;
-    }());
-    Lich.MapObjectRecord = MapObjectRecord;
-    /**
      * Dílek z objektu (strom se skládá z více dílků, které jsou rozmístěny v souřadnicích mapy)
      */
     var MapObjectTile = (function () {

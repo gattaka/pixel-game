@@ -80,6 +80,7 @@ namespace Lich {
     export class MapObjDefinition extends Diggable {
 
         public frames: number = 1;
+        public collision = false;
 
         constructor(
             // údaje o objektu na mapě
@@ -88,15 +89,22 @@ namespace Lich {
             public mapSpriteHeight: number,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             public invObj: string,
-            // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
+            // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             public quant: number,
             // jak často takový objekt v mapě je 
-            public freq: number) {
+            public freq: number,
+            // akce na RMB kliknutí
+            public rmbAction?: (x: number, y: number, obj: MapObjectTile, objType: MapObjDefinition) => any) {
             super(mapKey, invObj, quant);
         }
 
         public setFrames(frames: number): MapObjDefinition {
             this.frames = frames;
+            return this;
+        }
+        
+        public setCollision(collision: boolean): MapObjDefinition {
+            this.collision = collision;
             return this;
         }
     }
@@ -127,7 +135,7 @@ namespace Lich {
             super(mapKey, invObj, quant);
         }
     }
-    
+
     /**
      * Stěny povrchů (pozadí) jsou ve 4 formách:
      * 

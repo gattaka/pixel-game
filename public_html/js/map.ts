@@ -5,7 +5,7 @@
  * 
  */
 namespace Lich {
-    export class Map {
+    export class GameMap {
 
         // musí být sudé
         static MAP_WIDTH = 800;
@@ -17,7 +17,7 @@ namespace Lich {
         constructor() {
             var self = this;
 
-            var tilesMap = new TilesMap(Map.MAP_WIDTH, Map.MAP_HEIGHT);
+            var tilesMap = new TilesMap(GameMap.MAP_WIDTH, GameMap.MAP_HEIGHT);
             self.tilesMap = tilesMap;
 
             var mass = tilesMap.height * tilesMap.width;
@@ -25,7 +25,7 @@ namespace Lich {
             // base generation
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
-                    if (y < Map.MAP_GROUND_LEVEL) {
+                    if (y < GameMap.MAP_GROUND_LEVEL) {
                         tilesMap.mapRecord.setValue(x, y, SurfaceIndex.VOID);
                     } else {
                         // získá výchozí prostřední dílek dle vzoru, 

@@ -94,6 +94,8 @@ namespace Lich {
         static MAP_TREE2_KEY = "MAP_TREE2_KEY";
         static MAP_FLORITE_KEY = "MAP_FLORITE_KEY";
         static MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
+        static MAP_DOOR_CLOSED_KEY = "MAP_DOOR_CLOSED_KEY";
+        static MAP_DOOR_OPEN_KEY = "MAP_DOOR_OPEN_KEY";
 
         // inv items
         static INV_BERRY_KEY = "INV_BERRY_KEY";
@@ -111,10 +113,10 @@ namespace Lich {
         static INV_KRYSTAL_KEY = "INV_KRYSTAL_KEY";
         static INV_FLORITE_KEY = "INV_FLORITE_KEY";
         static INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
+        static INV_DOOR_KEY = "INV_DOOR_KEY";
 
         // characters
         static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
-
 
         // ui
         static SKULL_KEY = "SKULL_KEY";
@@ -131,6 +133,9 @@ namespace Lich {
         static SPELL_FIREBALL_KEY = "SPELL_FIREBALL_KEY";
         static SPELL_BOLT_KEY = "SPELL_BOLT_KEY";
         static SPELL_ENEMY_KEY = "SPELL_ENEMY_KEY";
+
+        // RMB click interakce s objekty
+        static SPELL_INTERACT_KEY = "SPELL_RMB_KEY";
 
         // sounds
         static SND_FIREBALL_KEY = "SND_FIREBALL_KEY";
@@ -160,7 +165,7 @@ namespace Lich {
         // definice povrchů a objektů
         public mapSurfaceDefs = new Array<MapSurfaceDefinition>();
         public mapSurfacesBgrDefs = new Array<MapSurfaceBgrDefinition>();
-        public mapObjectDefs = new Array<MapObjDefinition>();
+        public mapObjectDefs = new Array<MapObjDefinition>(); 
         public mapSurfacesFreqPool = new Array<string>();
         public mapObjectDefsFreqPool = new Array<string>();
 
@@ -169,6 +174,7 @@ namespace Lich {
 
         // definice spells
         public spellDefs = new Table<SpellDefinition>();
+        public interactSpellDef = new MapObjectsInteractionSpellDef();
 
         /*
          * Sprite indexy
@@ -182,7 +188,7 @@ namespace Lich {
             console.log('Static constructor');
         })();
 
-        constructor(game, callback?) {
+        constructor(game: Game, callback?) {
 
             var self = this;
             var manifest = [
@@ -213,6 +219,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_krystals.png", Resources.INV_KRYSTAL_KEY),
                 new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
                 new Load("images/ui/inventory/inv_campfire.png", Resources.INV_CAMPFIRE_KEY),
+                new Load("images/ui/inventory/inv_door.png", Resources.INV_DOOR_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -248,6 +255,8 @@ namespace Lich {
                 new Load("images/parts/tree2.png", Resources.MAP_TREE2_KEY),
                 new Load("images/parts/florite.png", Resources.MAP_FLORITE_KEY),
                 new Load("images/parts/campfire.png", Resources.MAP_CAMPFIRE_KEY),
+                new Load("images/parts/door_closed.png", Resources.MAP_DOOR_CLOSED_KEY),
+                new Load("images/parts/door_open.png", Resources.MAP_DOOR_OPEN_KEY),
                 // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
@@ -372,8 +381,8 @@ namespace Lich {
                         Resources.INSTANCE.mapSurfacesFreqPool.push(key);
                     }
                 }
-            })();
-
+            })();  
+            
             /**
              * STĚNY POVRCHŮ
              */
@@ -416,6 +425,21 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 10,
+                function(x: number, y: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.world.render.digObject(x, y, false);
+                    var objWidth = objType.mapSpriteWidth;
+                    var objHeight = objType.mapSpriteHeight;
+                    game.world.render.placeObject(x, y, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
+                }).setCollision(true));
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0,
+                function(x: number, y: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.world.render.digObject(x, y, false);
+                    var objWidth = objType.mapSpriteWidth;
+                    var objHeight = objType.mapSpriteHeight;
+                    game.world.render.placeObject(x, y, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
+                }).setCollision(true));
+
 
 
             (function() {
@@ -441,6 +465,7 @@ namespace Lich {
             // usaditelných jako objekt
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_MUSHROOM_KEY]));
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
+            registerInvObjectDefs(new InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]));
 
             // usaditelných jako povrch
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])

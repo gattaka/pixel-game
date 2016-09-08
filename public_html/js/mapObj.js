@@ -94,10 +94,12 @@ var Lich;
             mapKey, mapSpriteWidth, mapSpriteHeight, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             invObj, 
-            // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
+            // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             quant, 
             // jak často takový objekt v mapě je 
-            freq) {
+            freq, 
+            // akce na RMB kliknutí
+            rmbAction) {
             _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.mapSpriteWidth = mapSpriteWidth;
@@ -105,10 +107,16 @@ var Lich;
             this.invObj = invObj;
             this.quant = quant;
             this.freq = freq;
+            this.rmbAction = rmbAction;
             this.frames = 1;
+            this.collision = false;
         }
         MapObjDefinition.prototype.setFrames = function (frames) {
             this.frames = frames;
+            return this;
+        };
+        MapObjDefinition.prototype.setCollision = function (collision) {
+            this.collision = collision;
             return this;
         };
         return MapObjDefinition;

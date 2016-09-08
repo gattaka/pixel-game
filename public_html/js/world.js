@@ -40,7 +40,7 @@ var Lich;
             this.bulletObjects = Array();
             this.enemies = new Array();
             var self = this;
-            self.map = new Lich.Map();
+            self.map = new Lich.GameMap();
             self.tilesMap = self.map.tilesMap;
             self.render = new Lich.Render(game, self.map, self);
             self.background = new Lich.Background(game);
@@ -436,7 +436,24 @@ var Lich;
         ;
         World.prototype.handleMouse = function (mouse, delta) {
             var self = this;
+            // je prováděna interakce s objektem?
+            if (mouse.rightDown) {
+                var rmbSpellDef = Lich.Resources.INSTANCE.interactSpellDef;
+                // Může se provést (cooldown je pryč)?
+                var rmbCooldown = self.hero.spellCooldowns[Lich.Resources.SPELL_INTERACT_KEY];
+                if (!rmbCooldown || rmbCooldown <= 0) {
+                    var heroCenterX = self.hero.x + self.hero.width / 2;
+                    var heroCenterY = self.hero.y + self.hero.height / 4;
+                    // zkus cast
+                    if (rmbSpellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                        // ok, cast se provedl, nastav nový cooldown 
+                        self.hero.spellCooldowns[Lich.Resources.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
+                        mouse.rightDown = false;
+                    }
+                }
+            }
             // je vybrán spell?
+            // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
             var choosenSpell = self.game.ui.spellsUI.getChoosenSpell();
             if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
                 var spellDef = Lich.Resources.INSTANCE.spellDefs.byKey(choosenSpell);
@@ -449,9 +466,8 @@ var Lich;
                 }
                 // Sniž dle delay
                 self.hero.spellCooldowns[choosenSpell] -= delta;
-                // Může se provést (cooldown je pryč a mám will)?
-                if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down || mouse.click)) {
-                    mouse.click = false;
+                // Může se provést (cooldown je pryč, mám will a chci cast) ?
+                if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 4;
                     // zkus cast
@@ -487,6 +503,16 @@ var Lich;
             self.enemies.forEach(function (enemy) {
                 enemy.handleTick(delta);
             });
+            // TODO cooldown - delta pro všechny položky spell v hráčovi a všech nepřátel
+            var rmbCooldown = self.hero.spellCooldowns[Lich.Resources.SPELL_INTERACT_KEY];
+            if (!rmbCooldown) {
+                rmbCooldown = 0;
+                self.hero.spellCooldowns[Lich.Resources.SPELL_INTERACT_KEY] = 0;
+            }
+            else {
+                // Sniž dle delay
+                self.hero.spellCooldowns[Lich.Resources.SPELL_INTERACT_KEY] -= delta;
+            }
         };
         ;
         /*-----------*/
