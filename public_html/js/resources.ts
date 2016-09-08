@@ -149,6 +149,8 @@ namespace Lich {
         static SND_BONECRACK_KEY = "SND_BONECRACK_KEY";
         static SND_SKELETON_DIE_KEY = "SND_GHOST_KEY";
         static SND_SPAWN_KEY = "SND_SPAWN_KEY";
+        static SND_DOOR_OPEN_KEY = "SND_DOOR_OPEN_KEY";
+        static SND_DOOR_CLOSE_KEY = "SND_DOOR_CLOSE_KEY";
 
         // music
         static MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
@@ -289,6 +291,8 @@ namespace Lich {
                 new Load("sound/bonecrack.ogg", Resources.SND_BONECRACK_KEY),
                 new Load("sound/skeleton_die.ogg", Resources.SND_SKELETON_DIE_KEY),
                 new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
+                new Load("sound/door_open.ogg", Resources.SND_DOOR_OPEN_KEY),
+                new Load("sound/door_close.ogg", Resources.SND_DOOR_CLOSE_KEY),
                 // music
                 new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)
@@ -429,11 +433,13 @@ namespace Lich {
                 function(rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                     game.world.render.digObject(rx, ry, false);
                     game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
+                    Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
                 }).setCollision(true));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0,
                 function(rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                     game.world.render.digObject(rx, ry, false);
                     game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
+                    Mixer.play(Resources.SND_DOOR_OPEN_KEY);
                 }).setCollision(true));
 
 
