@@ -252,7 +252,7 @@ var Lich;
                 game.world.render.digObject(rx, ry, false);
                 game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
                 Lich.Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
-            }).setCollision(true));
+            }));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
                 game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);

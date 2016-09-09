@@ -346,6 +346,13 @@ var Lich;
             if (val == null || val != 0) {
                 return new Lich.CollisionTestResult(true, x, y);
             }
+            // kolize s kolizními objekty
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
+            if (objectElement !== null) {
+                var objType = Lich.Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
+                if (objType.collision)
+                    return new Lich.CollisionTestResult(true, x, y);
+            }
             // bez kolize
             return new Lich.CollisionTestResult(false, x, y);
         };

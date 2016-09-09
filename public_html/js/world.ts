@@ -425,6 +425,15 @@ namespace Lich {
             if (val == null || val != 0) {
                 return new CollisionTestResult(true, x, y);
             }
+            
+            // kolize s kolizními objekty
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
+            if (objectElement !== null) {
+                var objType: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
+                if (objType.collision)
+                    return new CollisionTestResult(true, x, y);
+            }
+            
             // bez kolize
             return new CollisionTestResult(false, x, y);
         };
