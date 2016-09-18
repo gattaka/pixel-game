@@ -4,7 +4,14 @@
     "version": "0.1.0",
     "command": "tsc",
     "isShellCommand": true,
-    "args": ["-p", "."],
-    "showOutput": "silent",
+    "args": [
+        "-p",
+        "public_html/engine",
+        "--outDir",
+        "public_html/engine/js",
+        "--listFiles"
+    ],
+    "showOutput": "always",
+    "echoCommand": true,
     "problemMatcher": "$tsc"
 }

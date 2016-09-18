@@ -1,168 +1,130 @@
 ///<reference path='lib/createjs/createjs.d.ts'/>
-
-namespace Lich {
-    export class Game {
-
-        canvas: HTMLCanvasElement;
-        stage: createjs.Stage;
-        fpsLabel: Label;
-        mouseLabel: Label;
-        world: World;
-        ui: UI;
-        debugUI: DebugLogUI;
-        initialized = false;
-        keys = {};
-
-        mouse = new Mouse();
-
-        constructor(canvasId: string) {
-
+var Lich;
+(function (Lich) {
+    var Game = (function () {
+        function Game(canvasId) {
+            this.initialized = false;
+            this.keys = {};
+            this.mouse = new Lich.Mouse();
             var self = this;
-
             /*------------*/
             /* Stage init */
             /*------------*/
-
             console.log("running");
-
-            self.canvas = <HTMLCanvasElement>document.getElementById(canvasId);
+            self.canvas = document.getElementById(canvasId);
             self.canvas.style.backgroundColor = "#b1ecff";
-
             // resize the canvas to fill browser window dynamically
             window.addEventListener('resize', resizeCanvas, false);
-
             function resizeCanvas() {
                 self.canvas.width = window.innerWidth;
                 self.canvas.height = window.innerHeight;
             }
             resizeCanvas();
-
             self.stage = new createjs.Stage(self.canvas);
-
             /*----------*/
             /* Controls */
             /*----------*/
-
             self.keys = {};
-
             function keydown(event) {
                 self.keys[event.keyCode] = true;
             }
-
             function keyup(event) {
                 delete self.keys[event.keyCode];
             }
-
             document.onkeydown = keydown;
             document.onkeyup = keyup;
-
             /*--------------*/
             /* Mouse events */
             /*--------------*/
-
-            (function() {
+            (function () {
                 // Všechno musí být s prefixem 'stage' jinak se bude snažit chytat 
                 // eventy s ohledem na konkrétní objekty a to se drasticky projevuje 
                 // na FPS -- takhle se zjišťuje event obecně a je to bez ztrát 
-                self.stage.addEventListener("stagemousedown", function(event: any) {
+                self.stage.addEventListener("stagemousedown", function (event) {
                     self.mouse.x = event["stageX"];
                     self.mouse.y = event["stageY"];
                     if (event.nativeEvent.button == 0) {
                         self.mouse.down = true;
-                    } else {
+                    }
+                    else {
                         self.mouse.rightDown = true;
                     }
                 });
-                self.stage.addEventListener("stagemousemove", function(event) {
+                self.stage.addEventListener("stagemousemove", function (event) {
                     self.mouse.x = event["stageX"];
                     self.mouse.y = event["stageY"];
                 });
-                self.stage.addEventListener("stagemouseup", function(event: any) {
+                self.stage.addEventListener("stagemouseup", function (event) {
                     if (event.nativeEvent.button == 0) {
                         self.mouse.down = false;
-                    } else {
+                    }
+                    else {
                         self.mouse.rightDown = false;
                     }
                 });
                 // wheel createjs ještě neumí
                 // https://github.com/CreateJS/EaselJS/issues/97
-                self.canvas.addEventListener('mousewheel', function(event) {
+                self.canvas.addEventListener('mousewheel', function (event) {
                     self.mouse.wheelDeltaY = event.wheelDeltaY;
                     return false;
                 }, false);
-
             })();
-
             /*----------------*/
             /* Resources init */
             /*----------------*/
-            new Resources(self, function() {
-
+            new Lich.Resources(self, function () {
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
-                self.ui = new UI(self);
-                self.debugUI = new DebugLogUI(400, 0);
+                self.ui = new Lich.UI(self);
+                self.debugUI = new Lich.DebugLogUI(400, 0);
                 self.debugUI.x = 10;
                 self.debugUI.y = 10;
                 self.ui.addChild(self.debugUI);
-
                 /*---------------------*/
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
-
-                self.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+                self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.fpsLabel);
-
                 self.stage.addEventListener("stagemousemove", handleMouseMove);
-                self.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+                self.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
                 self.debugUI.addNextChild(self.mouseLabel);
-
-                self.world = new World(self);
+                self.world = new Lich.World(self);
                 self.stage.addChild(self.world);
                 self.stage.addChild(self.ui);
-
                 function handleMouseMove(event) {
                     if (typeof self.mouseLabel !== "undefined") {
                         self.mouseLabel.setText("x: " + event.stageX + " y: " + event.stageY);
                     }
                 }
-
                 self.initialized = true;
             });
-
             /*-----------*/
             /* Time init */
             /*-----------*/
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
             createjs.Ticker.addEventListener("tick", handleTick);
             createjs.Ticker.setFPS(60);
-
             function handleTick(event) {
                 var delta = event.delta;
-
                 if (self.initialized) {
-
                     // Measurements
                     if (typeof self.fpsLabel !== "undefined") {
                         self.fpsLabel.setText(Math.round(createjs.Ticker.getMeasuredFPS()) + " fps");
                     }
-
                     // Idle
                     self.world.handleTick(delta);
-
                     // UI má při akcích myši přednost
                     if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
                         self.ui.handleMouse(self.mouse, delta);
-                    } else {
+                    }
+                    else {
                         self.world.handleMouse(self.mouse, delta);
                     }
-
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 
                     // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
                     // už nedrží např. šipku -- holt "LAG" :)
-
                     // Controls
                     var directions = {
                         up: false,
@@ -192,17 +154,20 @@ namespace Lich {
                         directions.down = true;
                     if (self.keys[27]) {
                         self.ui.splashScreenUI.toggleInv();
-                    } else {
+                    }
+                    else {
                         self.ui.splashScreenUI.prepareForToggleInv();
                     }
                     if (self.keys[73]) {
                         self.ui.inventoryUI.toggleInv();
-                    } else {
+                    }
+                    else {
                         self.ui.inventoryUI.prepareForToggleInv();
                     }
                     if (self.keys[16]) {
                         self.ui.spellsUI.toggleShift();
-                    } else {
+                    }
+                    else {
                         self.ui.spellsUI.prepareForToggleShift();
                     }
                     for (var i = 0; i < self.ui.spellsUI.spellIndex.length; i++) {
@@ -210,12 +175,13 @@ namespace Lich {
                             self.ui.spellsUI.selectSpell(i);
                         }
                     }
-
                     self.world.update(delta, directions);
                 }
-
                 self.stage.update();
             }
-        };
-    }
-}
+        }
+        ;
+        return Game;
+    }());
+    Lich.Game = Game;
+})(Lich || (Lich = {}));
