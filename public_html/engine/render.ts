@@ -344,7 +344,7 @@ namespace Lich {
         shiftSectorsX(dst: number) {
             var self = this;
             self.screenOffsetX += dst;
-            self.sectorsCont.children.forEach(function(sector) {
+            self.sectorsCont.children.forEach(function (sector) {
                 sector.x += dst;
             });
             self.updateSectors();
@@ -361,7 +361,7 @@ namespace Lich {
         shiftSectorsY(dst: number) {
             var self = this;
             self.screenOffsetY += dst;
-            self.sectorsCont.children.forEach(function(sector) {
+            self.sectorsCont.children.forEach(function (sector) {
                 sector.y += dst;
             });
             self.updateSectors();
@@ -425,7 +425,7 @@ namespace Lich {
             var ctx = self.minimap.canvas.getContext("2d");
             var imgData = ctx.createImageData(w, h); // width x height
 
-            (function() {
+            (function () {
                 for (var y = y0; y <= mapUpdateRegion.toY; y++) {
                     for (var x = x0; x <= mapUpdateRegion.toX; x++) {
                         self.drawMinimapTile(imgData, x, y);
@@ -449,7 +449,7 @@ namespace Lich {
             var ctx = self.minimap.canvas.getContext("2d");
             var imgData = ctx.createImageData(self.tilesMap.width, self.tilesMap.height); // width x height
 
-            (function() {
+            (function () {
                 for (var y = 0; y < self.tilesMap.height; y++) {
                     for (var x = 0; x < self.tilesMap.width; x++) {
                         self.drawMinimapTile(imgData, x, y);
@@ -513,11 +513,11 @@ namespace Lich {
                 var surfaceType = Resources.INSTANCE.surfaceBgrIndex.getType(dugIndex);
                 var objType: Diggable = Resources.INSTANCE.mapSurfacesBgrDefs[surfaceType];
 
-                self.onDigSurfaceListeners.forEach(function(fce) {
+                self.onDigSurfaceListeners.forEach(function (fce) {
                     fce(objType, rx, ry);
                 });
 
-                (function() {
+                (function () {
                     for (var x = rx; x <= rx + 1; x++) {
                         for (var y = ry; y <= ry + 1; y++) {
                             var val = self.tilesMap.mapBgrRecord.getValue(x, y);
@@ -558,11 +558,11 @@ namespace Lich {
                 var surfaceType = Resources.INSTANCE.surfaceIndex.getType(dugIndex);
                 var objType: Diggable = Resources.INSTANCE.mapSurfaceDefs[surfaceType];
 
-                self.onDigSurfaceListeners.forEach(function(fce) {
+                self.onDigSurfaceListeners.forEach(function (fce) {
                     fce(objType, rx, ry);
                 });
 
-                (function() {
+                (function () {
                     for (var x = rx - 1; x <= rx + 2; x++) {
                         for (var y = ry - 1; y <= ry + 2; y++) {
                             var val = self.tilesMap.mapRecord.getValue(x, y);
@@ -636,8 +636,8 @@ namespace Lich {
             var self = this;
 
             // Přegeneruj hrany
-            (function() {
-                tilesToReset.forEach(function(item) {
+            (function () {
+                tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
                     MapTools.generateEdge(self.tilesMap, x, y);
@@ -645,8 +645,8 @@ namespace Lich {
             })();
 
             // Přegeneruj rohy
-            (function() {
-                tilesToReset.forEach(function(item) {
+            (function () {
+                tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
                     MapTools.generateCorner(self.tilesMap, x, y);
@@ -654,8 +654,8 @@ namespace Lich {
             })();
 
             // Překresli dílky
-            (function() {
-                tilesToReset.forEach(function(item) {
+            (function () {
+                tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
                     // pokud už je alokován dílek na obrazovce, rovnou ho uprav
@@ -680,7 +680,7 @@ namespace Lich {
                 var posy = objectElement.objTileY;
 
                 if (fireListeners) {
-                    self.onDigObjectListeners.forEach(function(fce) {
+                    self.onDigObjectListeners.forEach(function (fce) {
                         fce(objType, rx, ry);
                     });
                 }
@@ -760,7 +760,7 @@ namespace Lich {
         placeSurfaceBgr(rx, ry, surfaceType: string) {
             var self = this;
 
-            (function() {
+            (function () {
                 for (var x = rx; x <= rx + 1; x++) {
                     for (var y = ry; y <= ry + 1; y++) {
                         var sector = self.getSectorByTiles(x, y);
@@ -799,7 +799,7 @@ namespace Lich {
             var self = this;
             var tilesToReset = [];
 
-            (function() {
+            (function () {
                 for (var x = rx - 1; x <= rx + 2; x++) {
                     for (var y = ry - 1; y <= ry + 2; y++) {
                         var val = self.tilesMap.mapRecord.getValue(x, y);
@@ -895,6 +895,20 @@ namespace Lich {
             }
         }
 
+        private isForegroundFree(rx: number, ry: number, object?: InvObjDefinition): boolean {
+            if (object) {
+                for (let x = 0; x < object.mapObj.mapSpriteWidth / 2; x++) {
+                    for (let y = 0; y < object.mapObj.mapSpriteHeight / 2; y++) {
+                        // je vkládáno odspoda
+                        if (this.isForegroundFree(rx + x, ry - y) == false) return false;
+                    }
+                }
+                return true;
+            } else {
+                return this.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && this.tilesMap.mapObjectsTiles.getValue(rx, ry) === null;
+            }
+        }
+
         /**
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true, 
          * pokud se to podařilo 
@@ -907,23 +921,26 @@ namespace Lich {
 
             // pokud je co vkládat
             if (typeof object !== "undefined") {
-                // pokud je místo prázdné a bez objektu, lze vkládat objekty a povrchy
-                if (self.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
-                    // jde o objekt
-                    if (object.mapObj != null) {
+                // jde o objekt
+                if (object.mapObj != null) {
+                    // pokud je místo prázdné a bez objektu (v celé velikosti objektu), lze vložit objekt
+                    if (self.isForegroundFree(rx, ry, object)) {
                         this.placeObject(rx, ry, object.mapObj);
                         return true;
                     }
-                    // jde o povrch 
-                    if (object.mapSurface != null && asBackground == false) {
+                }
+                // jde o povrch 
+                if (object.mapSurface != null && asBackground == false) {
+                    // pokud je místo prázdné a bez objektu, lze vkládat povrchy
+                    if (self.isForegroundFree(rx, ry)) {
                         this.placeSurface(rx, ry, object.mapSurface.mapKey);
                         return true;
                     }
                 }
-                // pokud je místo bez pozadí, lze vkládat pozadí povrchu
-                if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
-                    // jde o pozadí povrchu 
-                    if (object.mapSurfaceBgr != null && asBackground) {
+                // jde o pozadí povrchu 
+                if (object.mapSurfaceBgr != null && asBackground) {
+                    // pokud je místo bez pozadí, lze vkládat pozadí povrchu
+                    if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
                         this.placeSurfaceBgr(rx, ry, object.mapSurfaceBgr.mapKey);
                         return true;
                     }

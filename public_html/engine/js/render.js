@@ -728,6 +728,21 @@ var Lich;
                 }
             }
         };
+        Render.prototype.isForegroundFree = function (rx, ry, object) {
+            if (object) {
+                for (var x = 0; x < object.mapObj.mapSpriteWidth / 2; x++) {
+                    for (var y = 0; y < object.mapObj.mapSpriteHeight / 2; y++) {
+                        // je vkládáno odspoda
+                        if (this.isForegroundFree(rx + x, ry - y) == false)
+                            return false;
+                    }
+                }
+                return true;
+            }
+            else {
+                return this.tilesMap.mapRecord.getValue(rx, ry) === Lich.SurfaceIndex.VOID && this.tilesMap.mapObjectsTiles.getValue(rx, ry) === null;
+            }
+        };
         /**
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true,
          * pokud se to podařilo
@@ -739,23 +754,26 @@ var Lich;
             var ry = Lich.Utils.even(coord.y);
             // pokud je co vkládat
             if (typeof object !== "undefined") {
-                // pokud je místo prázdné a bez objektu, lze vkládat objekty a povrchy
-                if (self.tilesMap.mapRecord.getValue(rx, ry) === Lich.SurfaceIndex.VOID && self.tilesMap.mapObjectsTiles.getValue(rx, ry) === null) {
-                    // jde o objekt
-                    if (object.mapObj != null) {
+                // jde o objekt
+                if (object.mapObj != null) {
+                    // pokud je místo prázdné a bez objektu (v celé velikosti objektu), lze vložit objekt
+                    if (self.isForegroundFree(rx, ry, object)) {
                         this.placeObject(rx, ry, object.mapObj);
                         return true;
                     }
-                    // jde o povrch 
-                    if (object.mapSurface != null && asBackground == false) {
+                }
+                // jde o povrch 
+                if (object.mapSurface != null && asBackground == false) {
+                    // pokud je místo prázdné a bez objektu, lze vkládat povrchy
+                    if (self.isForegroundFree(rx, ry)) {
                         this.placeSurface(rx, ry, object.mapSurface.mapKey);
                         return true;
                     }
                 }
-                // pokud je místo bez pozadí, lze vkládat pozadí povrchu
-                if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
-                    // jde o pozadí povrchu 
-                    if (object.mapSurfaceBgr != null && asBackground) {
+                // jde o pozadí povrchu 
+                if (object.mapSurfaceBgr != null && asBackground) {
+                    // pokud je místo bez pozadí, lze vkládat pozadí povrchu
+                    if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
                         this.placeSurfaceBgr(rx, ry, object.mapSurfaceBgr.mapKey);
                         return true;
                     }
