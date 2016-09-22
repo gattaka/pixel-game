@@ -5,6 +5,7 @@
     "command": "tsc",
     "isShellCommand": true,
     "args": [
+        "-w",
         "-p",
         "public_html/engine",
         "--outDir",
