@@ -96,6 +96,8 @@ namespace Lich {
         static MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
         static MAP_DOOR_CLOSED_KEY = "MAP_DOOR_CLOSED_KEY";
         static MAP_DOOR_OPEN_KEY = "MAP_DOOR_OPEN_KEY";
+        static MAP_DOOR_CLOSED2_KEY = "MAP_DOOR_CLOSED2_KEY";
+        static MAP_DOOR_OPEN2_KEY = "MAP_DOOR_OPEN2_KEY";
 
         // inv items
         static INV_BERRY_KEY = "INV_BERRY_KEY";
@@ -167,7 +169,7 @@ namespace Lich {
         // definice povrchů a objektů
         public mapSurfaceDefs = new Array<MapSurfaceDefinition>();
         public mapSurfacesBgrDefs = new Array<MapSurfaceBgrDefinition>();
-        public mapObjectDefs = new Array<MapObjDefinition>(); 
+        public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new Array<string>();
         public mapObjectDefsFreqPool = new Array<string>();
 
@@ -259,6 +261,8 @@ namespace Lich {
                 new Load("images/parts/campfire.png", Resources.MAP_CAMPFIRE_KEY),
                 new Load("images/parts/door_closed.png", Resources.MAP_DOOR_CLOSED_KEY),
                 new Load("images/parts/door_open.png", Resources.MAP_DOOR_OPEN_KEY),
+                new Load("images/parts/door_closed2.png", Resources.MAP_DOOR_CLOSED2_KEY),
+                new Load("images/parts/door_open2.png", Resources.MAP_DOOR_OPEN2_KEY),
                 // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
@@ -305,7 +309,7 @@ namespace Lich {
                 */
             ];
 
-            (function() {
+            (function () {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
                     manifest.push({
                         src: "images/background/cloud" + i + ".png",
@@ -334,14 +338,14 @@ namespace Lich {
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
             self.loader.installPlugin(createjs.Sound);
-            self.loader.addEventListener("progress", function(event) {
+            self.loader.addEventListener("progress", function (event) {
                 loadLabel.setText(Math.floor(event.loaded * 100) + "% Loading... ");
             });
-            self.loader.addEventListener("complete", function() {
+            self.loader.addEventListener("complete", function () {
                 createjs.Tween.get(loadScreenCont)
                     .to({
                         alpha: 0
-                    }, 2000).call(function() {
+                    }, 2000).call(function () {
                         game.stage.removeChild(loadScreenCont);
                     });
                 if (typeof callback !== "undefined") {
@@ -361,7 +365,7 @@ namespace Lich {
              */
 
             // Definice mapových povrchů
-            var registerSurfaceDefs = function(mapSurface: MapSurfaceDefinition) {
+            var registerSurfaceDefs = function (mapSurface: MapSurfaceDefinition) {
                 Resources.INSTANCE.mapSurfaceDefs[mapSurface.mapKey] = mapSurface;
                 // Definice indexových počátků pro typy povrchu
                 Resources.INSTANCE.surfaceIndex.insert(mapSurface.mapKey);
@@ -376,7 +380,7 @@ namespace Lich {
             registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_DIRT_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_STRAW_KEY, Resources.INV_STRAW_KEY, 1, 0));
 
-            (function() {
+            (function () {
                 // vytvoř frekvenční pool pro povrchy
                 for (var key in Resources.INSTANCE.mapSurfaceDefs) {
                     var item = Resources.INSTANCE.mapSurfaceDefs[key];
@@ -385,14 +389,14 @@ namespace Lich {
                         Resources.INSTANCE.mapSurfacesFreqPool.push(key);
                     }
                 }
-            })();  
-            
+            })();
+
             /**
              * STĚNY POVRCHŮ
              */
 
             // Definice mapových stěn povrchů
-            var registerSurfaceBgrDefs = function(mapSurface: MapSurfaceBgrDefinition) {
+            var registerSurfaceBgrDefs = function (mapSurface: MapSurfaceBgrDefinition) {
                 Resources.INSTANCE.mapSurfacesBgrDefs[mapSurface.mapKey] = mapSurface;
                 // Definice indexových počátků pro typy povrchu
                 Resources.INSTANCE.surfaceBgrIndex.insert(mapSurface.mapKey);
@@ -407,7 +411,7 @@ namespace Lich {
              */
 
             // Definice mapových objektů
-            var registerObjectDefs = function(mapObj: MapObjDefinition) {
+            var registerObjectDefs = function (mapObj: MapObjDefinition) {
                 Resources.INSTANCE.mapObjectDefs[mapObj.mapKey] = mapObj;
             };
 
@@ -430,21 +434,33 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 10,
-                function(rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                     game.world.render.digObject(rx, ry, false);
                     game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
                     Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
                 }));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0,
-                function(rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                     game.world.render.digObject(rx, ry, false);
                     game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
+                    Mixer.play(Resources.SND_DOOR_OPEN_KEY);
+                }).setCollision(true));
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_OPEN2_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0,
+                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.world.render.digObject(rx, ry, false);
+                    game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED2_KEY]);
+                    Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
+                }));
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_CLOSED2_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0,
+                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.world.render.digObject(rx, ry, false);
+                    game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]);
                     Mixer.play(Resources.SND_DOOR_OPEN_KEY);
                 }).setCollision(true));
 
 
 
-            (function() {
+            (function () {
                 // vytvoř frekvenční pool pro objekty 
                 for (var key in Resources.INSTANCE.mapObjectDefs) {
                     var item = Resources.INSTANCE.mapObjectDefs[key];
@@ -460,14 +476,15 @@ namespace Lich {
              */
 
             // Definice inventárních objektů
-            var registerInvObjectDefs = function(invObj: InvObjDefinition) {
+            var registerInvObjectDefs = function (invObj: InvObjDefinition) {
                 Resources.INSTANCE.invObjectDefs[invObj.invKey] = invObj;
             };
 
             // usaditelných jako objekt
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_MUSHROOM_KEY]));
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
-            registerInvObjectDefs(new InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY])
+                .setMapObjAlternative(Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]));
 
             // usaditelných jako povrch
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
@@ -485,7 +502,7 @@ namespace Lich {
              */
 
             // Definice spells
-            var registerSpellDefs = function(spell: SpellDefinition) {
+            var registerSpellDefs = function (spell: SpellDefinition) {
                 Resources.INSTANCE.spellDefs.insert(spell.key, spell);
             };
 

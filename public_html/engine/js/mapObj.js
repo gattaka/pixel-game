@@ -52,9 +52,12 @@ var Lich;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             this.mapObj = null;
+            // případně jeho alternativa
+            this.mapObjAlternative = null;
             // je možné tento INV objekt znovu umístit (kameny -> zeď) 
             // pokud ano, jaký objekt mapy se má vytvořit  
             this.mapSurface = null;
+            // případně jako pozadí
             this.mapSurfaceBgr = null;
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = target;
@@ -70,6 +73,10 @@ var Lich;
         };
         InvObjDefinition.prototype.setBackground = function (background) {
             this.mapSurfaceBgr = background;
+            return this;
+        };
+        InvObjDefinition.prototype.setMapObjAlternative = function (mapObjAlternative) {
+            this.mapObjAlternative = mapObjAlternative;
             return this;
         };
         return InvObjDefinition;

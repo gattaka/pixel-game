@@ -103,6 +103,8 @@ var Lich;
                 new Load("images/parts/campfire.png", Resources.MAP_CAMPFIRE_KEY),
                 new Load("images/parts/door_closed.png", Resources.MAP_DOOR_CLOSED_KEY),
                 new Load("images/parts/door_open.png", Resources.MAP_DOOR_OPEN_KEY),
+                new Load("images/parts/door_closed2.png", Resources.MAP_DOOR_CLOSED2_KEY),
+                new Load("images/parts/door_open2.png", Resources.MAP_DOOR_OPEN2_KEY),
                 // misc
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
@@ -258,6 +260,16 @@ var Lich;
                 game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
                 Lich.Mixer.play(Resources.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
+            registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_OPEN2_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
+                game.world.render.digObject(rx, ry, false);
+                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED2_KEY]);
+                Lich.Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
+            }));
+            registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_CLOSED2_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
+                game.world.render.digObject(rx, ry, false);
+                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]);
+                Lich.Mixer.play(Resources.SND_DOOR_OPEN_KEY);
+            }).setCollision(true));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
                 for (var key in Resources.INSTANCE.mapObjectDefs) {
@@ -278,7 +290,8 @@ var Lich;
             // usaditelných jako objekt
             registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_MUSHROOM_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY])
+                .setMapObjAlternative(Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]));
             // usaditelných jako povrch
             registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
                 .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_WOODWALL_KEY]));
@@ -426,6 +439,8 @@ var Lich;
         Resources.MAP_CAMPFIRE_KEY = "MAP_CAMPFIRE_KEY";
         Resources.MAP_DOOR_CLOSED_KEY = "MAP_DOOR_CLOSED_KEY";
         Resources.MAP_DOOR_OPEN_KEY = "MAP_DOOR_OPEN_KEY";
+        Resources.MAP_DOOR_CLOSED2_KEY = "MAP_DOOR_CLOSED2_KEY";
+        Resources.MAP_DOOR_OPEN2_KEY = "MAP_DOOR_OPEN2_KEY";
         // inv items
         Resources.INV_BERRY_KEY = "INV_BERRY_KEY";
         Resources.INV_BONES_KEY = "INV_BONES_KEY";

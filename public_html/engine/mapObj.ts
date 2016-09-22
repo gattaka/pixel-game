@@ -39,9 +39,12 @@ namespace Lich {
         // je možné tento INV objekt znovu umístit (váza) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapObj: MapObjDefinition = null;
+        // případně jeho alternativa
+        public mapObjAlternative: MapObjDefinition = null;
         // je možné tento INV objekt znovu umístit (kameny -> zeď) 
         // pokud ano, jaký objekt mapy se má vytvořit  
         public mapSurface: MapSurfaceDefinition = null;
+        // případně jako pozadí
         public mapSurfaceBgr: MapSurfaceBgrDefinition = null;
 
         constructor(public invKey: string, target: Diggable) {
@@ -60,6 +63,11 @@ namespace Lich {
 
         public setBackground(background: MapSurfaceBgrDefinition): InvObjDefinition {
             this.mapSurfaceBgr = background;
+            return this;
+        }
+
+        public setMapObjAlternative(mapObjAlternative: MapObjDefinition): InvObjDefinition {
+            this.mapObjAlternative = mapObjAlternative;
             return this;
         }
     }

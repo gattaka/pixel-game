@@ -279,8 +279,8 @@ namespace Lich {
 
         constructor(
             key: string,
-            // pokládá se povrch jako podklad?
-            private asBackground
+            // pokládá se povrch/objekt jako podklad/alterantiva?
+            private alternative
         ) {
             super(key, 0, AbstractPlaceSpellDef.COOLDOWN);
         }
@@ -291,7 +291,7 @@ namespace Lich {
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
-                if (this.asBackground == false && object.mapSurface != null) {
+                if (this.alternative == false && object.mapSurface != null) {
                     if (mouseCoord.x <= heroCoordBR.x && mouseCoord.x >= heroCoordTL.x &&
                         mouseCoord.y <= heroCoordBR.y && mouseCoord.y >= heroCoordTL.y) {
                         // koliduju s hráčem
@@ -299,7 +299,7 @@ namespace Lich {
                     }
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
-                if (game.world.render.place(xAim, yAim, object, this.asBackground)) {
+                if (game.world.render.place(xAim, yAim, object, this.alternative)) {
                     Mixer.play(Resources.SND_PLACE_KEY);
                     game.ui.inventoryUI.decrease(uiItem, 1);
                     return true;

@@ -728,10 +728,10 @@ var Lich;
                 }
             }
         };
-        Render.prototype.isForegroundFree = function (rx, ry, object) {
-            if (object) {
-                for (var x = 0; x < object.mapObj.mapSpriteWidth / 2; x++) {
-                    for (var y = 0; y < object.mapObj.mapSpriteHeight / 2; y++) {
+        Render.prototype.isForegroundFree = function (rx, ry, mapObj) {
+            if (mapObj) {
+                for (var x = 0; x < mapObj.mapSpriteWidth / 2; x++) {
+                    for (var y = 0; y < mapObj.mapSpriteHeight / 2; y++) {
                         // je vkládáno odspoda
                         if (this.isForegroundFree(rx + x, ry - y) == false)
                             return false;
@@ -747,7 +747,7 @@ var Lich;
          * Pokusí se umístit objekt na pixel souřadnice a vrátí true,
          * pokud se to podařilo
          */
-        Render.prototype.place = function (x, y, object, asBackground) {
+        Render.prototype.place = function (x, y, object, alternative) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Lich.Utils.even(coord.x);
@@ -756,14 +756,22 @@ var Lich;
             if (typeof object !== "undefined") {
                 // jde o objekt
                 if (object.mapObj != null) {
+                    // zohledni, zda je o alternativu nebo původní variantu objektu
+                    var mapObj = void 0;
+                    if (alternative && object.mapObjAlternative) {
+                        mapObj = object.mapObjAlternative;
+                    }
+                    else {
+                        mapObj = object.mapObj;
+                    }
                     // pokud je místo prázdné a bez objektu (v celé velikosti objektu), lze vložit objekt
-                    if (self.isForegroundFree(rx, ry, object)) {
-                        this.placeObject(rx, ry, object.mapObj);
+                    if (self.isForegroundFree(rx, ry, mapObj)) {
+                        this.placeObject(rx, ry, mapObj);
                         return true;
                     }
                 }
                 // jde o povrch 
-                if (object.mapSurface != null && asBackground == false) {
+                if (object.mapSurface != null && alternative == false) {
                     // pokud je místo prázdné a bez objektu, lze vkládat povrchy
                     if (self.isForegroundFree(rx, ry)) {
                         this.placeSurface(rx, ry, object.mapSurface.mapKey);
@@ -771,7 +779,7 @@ var Lich;
                     }
                 }
                 // jde o pozadí povrchu 
-                if (object.mapSurfaceBgr != null && asBackground) {
+                if (object.mapSurfaceBgr != null && alternative) {
                     // pokud je místo bez pozadí, lze vkládat pozadí povrchu
                     if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
                         this.placeSurfaceBgr(rx, ry, object.mapSurfaceBgr.mapKey);
