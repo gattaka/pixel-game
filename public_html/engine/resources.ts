@@ -294,7 +294,7 @@ namespace Lich {
                 new Load("sound/door_open.ogg", Resources.SND_DOOR_OPEN_KEY),
                 new Load("sound/door_close.ogg", Resources.SND_DOOR_CLOSE_KEY),
                 // music
-                new Load("music/Dirt 2.ogg", Resources.MSC_DIRT_THEME_KEY),
+                new Load("music/Dirt_2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)
                 /*
                 new Load("music/Building In Progress.ogg", Resources.MSC_BUILD_THEME_KEY),
