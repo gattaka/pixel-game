@@ -8,6 +8,11 @@ var Lich;
     var Label = (function (_super) {
         __extends(Label, _super);
         function Label(text, font, color, outline, outlineColor, outlineWidth) {
+            if (font === void 0) { font = Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT; }
+            if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
+            if (outline === void 0) { outline = true; }
+            if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
+            if (outlineWidth === void 0) { outlineWidth = 1; }
             _super.call(this);
             this.label = new createjs.Text(text, font, color);
             if (outline) {

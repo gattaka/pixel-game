@@ -23,6 +23,14 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.5");
+            version.addChange("Changelog");
+            version.addChange("Doors added");
+            version.addChange("Object <RMB> interacting (open/close doors)");
+            version.addChange("Object collisions (closed doors)");
+            version.addChange("<SHIFT> toggles object alternative placing (L/R doors)");
+            this.addVersion(version);
+
             version = new Version("0.4");
             version.addChange("Changelog");
             version.addChange("Grave and bones added");
@@ -124,7 +132,7 @@ namespace Lich {
             var shape = self.createBaseButtonShape(SplashScreenUI.BTN_SIDE, SplashScreenUI.BTN_SIDE);
             shape.graphics.beginFill("rgba(250,250,10,1)");
             shape.graphics.drawPolyStar(SplashScreenUI.BTN_SIDE / 2, SplashScreenUI.BTN_SIDE / 2 + 1, 5, 3, 0.5, -90);
-            shape.on("mousedown", function() {
+            shape.on("mousedown", function () {
                 if (self.currentLine > 0) {
                     self.currentLine--;
                     self.print();
@@ -138,7 +146,7 @@ namespace Lich {
             var shape = self.createBaseButtonShape(SplashScreenUI.BTN_SIDE, SplashScreenUI.BTN_SIDE);
             shape.graphics.beginFill("rgba(250,250,10,1)");
             shape.graphics.drawPolyStar(SplashScreenUI.BTN_SIDE / 2, SplashScreenUI.BTN_SIDE / 2 - 1, 5, 3, 0.5, 90);
-            shape.on("mousedown", function() {
+            shape.on("mousedown", function () {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine++;
                     self.print();
@@ -152,7 +160,7 @@ namespace Lich {
             var shape = self.createBaseButtonShape(42, SplashScreenUI.BTN_SIDE);
 
             var cont = new createjs.Container();
-            cont.on("mousedown", function() {
+            cont.on("mousedown", function () {
                 self.visible = false;
             }, null, false);
             cont.hitArea = shape.hitArea;
@@ -189,14 +197,16 @@ namespace Lich {
             self.lines.push("- Press <I> to minimize inventory");
             self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");
             self.lines.push("- Press <LMB> to dig, place or attack");
+            self.lines.push("- Press <RMB> to interact with an object");
             self.lines.push("- Hold <SHIFT> to toggle between surface and wall digging/placing");
+            self.lines.push("- Hold <SHIFT> to toggle between object alternatives placing");
             self.lines.push(" ");
             self.lines.push("== CHANGELOG ==");
             self.lines.push(" ");
 
-            changelog.versions.forEach(function(version: Version) {
+            changelog.versions.forEach(function (version: Version) {
                 self.lines.push("Version: " + version.version);
-                version.changes.forEach(function(change: string) {
+                version.changes.forEach(function (change: string) {
                     self.lines.push("- " + change);
                 });
                 self.lines.push(" ");

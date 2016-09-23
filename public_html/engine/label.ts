@@ -7,7 +7,12 @@ namespace Lich {
         public height: number;
         public width: number;
 
-        constructor(text: string, font: string, color: string, outline?: boolean, outlineColor?: string, outlineWidth?: number) {
+        constructor(text: string,
+            font = PartsUI.TEXT_SIZE + "px " + Resources.FONT,
+            color = Resources.TEXT_COLOR,
+            outline = true,
+            outlineColor = Resources.OUTLINE_COLOR,
+            outlineWidth = 1) {
             super();
 
             this.label = new createjs.Text(text, font, color);

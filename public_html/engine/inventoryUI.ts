@@ -1,12 +1,5 @@
 namespace Lich {
 
-    class InvItem {
-        constructor(public item: string,
-            public quant: number,
-            public element: createjs.Sprite,
-            public count: Label) { }
-    }
-
     export class InventoryUI extends PartsUI {
 
         static N = 10;
@@ -18,14 +11,13 @@ namespace Lich {
         choosenItem: string = null;
         draggedItem: string = null;
 
-        invContent = new Array<InvItem>();
+        invContent = new Array<ItemUI>();
         itemHighlight: createjs.Shape;
         itemsCont = new createjs.Container();
 
         collapsed = false;
         collapsedCont = new createjs.Container();
-        collapsedSprite: createjs.Sprite;
-        collapsedCount: Label;
+        collapsedItem: ItemUI;
         collapsedHighlight: createjs.Shape;
 
         constructor() {
@@ -78,7 +70,7 @@ namespace Lich {
                 }
                 self.itemsCont.visible = self.collapsed;
                 self.itemHighlight.visible = self.collapsed && self.choosenItem != null;
-                if (self.collapsedSprite != null) {
+                if (self.collapsedItem != null) {
                     self.collapsedCont.visible = !self.collapsed;
                 }
                 self.collapsed = !self.collapsed;
@@ -92,25 +84,21 @@ namespace Lich {
 
         decrease(item: string, quant: number) {
             var self = this;
-            // TODO v případě 0 odebrat
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 var invItem = self.invContent[i];
                 if (invItem != null && invItem.item === item) {
                     invItem.quant -= quant;
                     invItem.count.setText(invItem.quant);
-                    if (self.collapsedSprite != null) {
-                        self.collapsedCount.setText(invItem.quant);
+                    if (self.collapsedItem != null) {
+                        self.collapsedItem.count.setText(invItem.quant);
                     }
                     if (invItem.quant == 0) {
-                        if (self.collapsedSprite != null) {
-                            self.collapsedCont.removeChild(self.collapsedSprite);
-                            self.collapsedCont.removeChild(self.collapsedCount);
-                            self.collapsedSprite = null;
-                            self.collapsedCount = null;
+                        if (self.collapsedItem != null) {
+                            self.collapsedCont.removeChild(self.collapsedItem);
+                            self.collapsedItem = null;
                             self.collapsedHighlight.visible = false;
                         }
-                        self.itemsCont.removeChild(invItem.element);
-                        self.itemsCont.removeChild(invItem.count);
+                        self.itemsCont.removeChild(invItem);
                         self.choosenItem = null;
                         self.draggedItem = null;
                         self.itemHighlight.visible = false;
@@ -130,7 +118,7 @@ namespace Lich {
                     invItem.quant += quant;
                     invItem.count.setText(invItem.quant);
                     if (self.choosenItem === item) {
-                        self.collapsedCount.setText(invItem.quant);
+                        self.collapsedItem.count.setText(invItem.quant);
                     }
                     return true; // přidáno
                 }
@@ -138,47 +126,31 @@ namespace Lich {
             // zkus založit novou
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (self.invContent[i] == null) {
-                    var invDef: InvObjDefinition = Resources.INSTANCE.invObjectDefs[item];
-                    var frames = 1;
-                    if (typeof invDef === "undefined" || invDef == null) {
-                        frames = 1;
-                    } else {
-                        frames = invDef.frames;
-                    }
-                    var sprite = Resources.INSTANCE.getSprite(item, frames);
-                    self.itemsCont.addChild(sprite);
-                    sprite.x = (i % InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
-                    sprite.y = Math.floor(i / InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
-                    var text = new Label("" + quant, PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-                    self.itemsCont.addChild(text);
-                    text.x = sprite.x;
-                    text.y = sprite.y + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
-                    self.invContent[i] = new InvItem(item, quant, sprite, text);
+                    let itemUI = new ItemUI(item, quant);
+                    self.invContent[i] = itemUI;
+                    self.itemsCont.addChild(itemUI);
+                    itemUI.x = (i % InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+                    itemUI.y = Math.floor(i / InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
 
                     var hitArea = new createjs.Shape();
                     hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-                    sprite.hitArea = hitArea;
+                    itemUI.hitArea = hitArea;
 
                     (function() {
                         var currentItem = self.invContent[i];
-                        sprite.on("mousedown", function(evt) {
+                        itemUI.on("mousedown", function(evt) {
                             self.itemHighlight.visible = true;
-                            self.itemHighlight.x = sprite.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
-                            self.itemHighlight.y = sprite.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+                            self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+                            self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                             self.choosenItem = item;
                             self.draggedItem = item;
 
-                            self.collapsedCont.removeChild(self.collapsedSprite);
-                            self.collapsedCont.removeChild(self.collapsedCount);
+                            self.collapsedCont.removeChild(self.collapsedItem);
                             self.collapsedHighlight.visible = true;
-                            self.collapsedSprite = Resources.INSTANCE.getSprite(item, frames);
-                            self.collapsedCount = new Label("" + currentItem.quant, PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-                            self.collapsedCont.addChild(self.collapsedSprite);
-                            self.collapsedCont.addChild(self.collapsedCount);
-                            self.collapsedSprite.x = PartsUI.BORDER
-                            self.collapsedSprite.y = PartsUI.BORDER
-                            self.collapsedCount.x = PartsUI.BORDER;
-                            self.collapsedCount.y = PartsUI.BORDER + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
+                            self.collapsedItem = new ItemUI(item, currentItem.quant);
+                            self.collapsedCont.addChild(self.collapsedItem);
+                            self.collapsedItem.x = PartsUI.BORDER;
+                            self.collapsedItem.y = PartsUI.BORDER;
                             self.collapsedCont.visible = false;
                         }, null, false);
                     })();

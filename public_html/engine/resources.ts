@@ -117,6 +117,8 @@ namespace Lich {
         static INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
         static INV_DOOR_KEY = "INV_DOOR_KEY";
 
+        static RECIPE_ARROW_KEY = "RECIPE_ARROW_KEY";
+
         // characters
         static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
 
@@ -224,6 +226,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
                 new Load("images/ui/inventory/inv_campfire.png", Resources.INV_CAMPFIRE_KEY),
                 new Load("images/ui/inventory/inv_door.png", Resources.INV_DOOR_KEY),
+                new Load("images/ui/inventory/recipe_arrow.png", Resources.RECIPE_ARROW_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -422,8 +425,8 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(Resources.MAP_GRASS_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_GRASS2_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_GRASS3_KEY, 2, 2, Resources.INV_STRAW_KEY, 1, 20));
-            registerObjectDefs(new MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 2, 10));
-            registerObjectDefs(new MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 5, 20));
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_TREE_KEY, 4, 9, Resources.INV_WOOD_KEY, 5, 10));
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_TREE2_KEY, 8, 15, Resources.INV_WOOD_KEY, 10, 20));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_MUSHROOM_KEY, 2, 2, Resources.INV_MUSHROOM_KEY, 1, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_MUSHROOM2_KEY, 2, 2, Resources.INV_MUSHROOM2_KEY, 1, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_MUSHROOM3_KEY, 2, 2, Resources.INV_MUSHROOM3_KEY, 1, 1));

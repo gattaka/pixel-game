@@ -78,8 +78,8 @@ var Lich;
                 /*-------------------------*/
                 self.ui = new Lich.UI(self);
                 self.debugUI = new Lich.DebugLogUI(400, 0);
-                self.debugUI.x = 10;
-                self.debugUI.y = 10;
+                self.debugUI.x = Lich.UI.SCREEN_SPACING;
+                self.debugUI.y = Lich.UI.SCREEN_SPACING;
                 self.ui.addChild(self.debugUI);
                 /*---------------------*/
                 /* Measurements, debug */

@@ -60,11 +60,11 @@ namespace Lich {
             /* Mouse events */
             /*--------------*/
 
-            (function() {
+            (function () {
                 // Všechno musí být s prefixem 'stage' jinak se bude snažit chytat 
                 // eventy s ohledem na konkrétní objekty a to se drasticky projevuje 
                 // na FPS -- takhle se zjišťuje event obecně a je to bez ztrát 
-                self.stage.addEventListener("stagemousedown", function(event: any) {
+                self.stage.addEventListener("stagemousedown", function (event: any) {
                     self.mouse.x = event["stageX"];
                     self.mouse.y = event["stageY"];
                     if (event.nativeEvent.button == 0) {
@@ -73,11 +73,11 @@ namespace Lich {
                         self.mouse.rightDown = true;
                     }
                 });
-                self.stage.addEventListener("stagemousemove", function(event) {
+                self.stage.addEventListener("stagemousemove", function (event) {
                     self.mouse.x = event["stageX"];
                     self.mouse.y = event["stageY"];
                 });
-                self.stage.addEventListener("stagemouseup", function(event: any) {
+                self.stage.addEventListener("stagemouseup", function (event: any) {
                     if (event.nativeEvent.button == 0) {
                         self.mouse.down = false;
                     } else {
@@ -86,7 +86,7 @@ namespace Lich {
                 });
                 // wheel createjs ještě neumí
                 // https://github.com/CreateJS/EaselJS/issues/97
-                self.canvas.addEventListener('mousewheel', function(event) {
+                self.canvas.addEventListener('mousewheel', function (event) {
                     self.mouse.wheelDeltaY = event.wheelDeltaY;
                     return false;
                 }, false);
@@ -96,15 +96,15 @@ namespace Lich {
             /*----------------*/
             /* Resources init */
             /*----------------*/
-            new Resources(self, function() {
+            new Resources(self, function () {
 
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
                 self.ui = new UI(self);
                 self.debugUI = new DebugLogUI(400, 0);
-                self.debugUI.x = 10;
-                self.debugUI.y = 10;
+                self.debugUI.x = UI.SCREEN_SPACING;
+                self.debugUI.y = UI.SCREEN_SPACING;
                 self.ui.addChild(self.debugUI);
 
                 /*---------------------*/

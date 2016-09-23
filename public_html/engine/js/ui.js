@@ -23,6 +23,12 @@ var Lich;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
+            // Crafting
+            var craftingUI = new Lich.CraftingUI();
+            craftingUI.x = UI.SCREEN_SPACING;
+            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2 - craftingUI.height;
+            self.addChild(craftingUI);
+            self.craftingUI = craftingUI;
             // Schopnosti
             var spellsUI = new Lich.SpellsUI();
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;

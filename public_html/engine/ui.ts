@@ -6,10 +6,12 @@ namespace Lich {
         static SCREEN_SPACING = 20;
 
         charCont: createjs.Container;
+        
         inventoryUI: InventoryUI;
         spellsUI: SpellsUI;
         musicUI: MusicUI;
         conditionUI: ConditionUI;
+        craftingUI: CraftingUI;
 
         splashScreenUI: SplashScreenUI;
 
@@ -31,6 +33,13 @@ namespace Lich {
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
+
+            // Crafting
+            var craftingUI = new CraftingUI();
+            craftingUI.x = UI.SCREEN_SPACING;
+            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2 - craftingUI.height;
+            self.addChild(craftingUI);
+            self.craftingUI = craftingUI;
 
             // Schopnosti
             var spellsUI = new SpellsUI();
@@ -140,7 +149,7 @@ namespace Lich {
              */
 
             // zdraví a mana
-            (function() {
+            (function () {
 
                 //                var skull = Resources.INSTANCE.getBitmap(Resources.SKULL_KEY);
                 //                skull.x = self.stateCont.width - skull.image.width;
@@ -153,7 +162,7 @@ namespace Lich {
         isMouseInUI(x: number, y: number): boolean {
             var self = this;
             var uiHit = false;
-            self.children.forEach(function(item) {
+            self.children.forEach(function (item) {
                 if (item.hitTest(x - item.x, y - item.y) === true) {
                     uiHit = true;
                     return;
@@ -164,7 +173,7 @@ namespace Lich {
 
         handleMouse(mouse: Mouse, delta: number) {
             var self = this;
-            self.children.forEach(function(item) {
+            self.children.forEach(function (item) {
                 if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {
                     if (typeof item["handleMouse"] !== "undefined") {
                         item["handleMouse"](mouse);

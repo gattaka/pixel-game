@@ -925,8 +925,8 @@ namespace Lich {
                 if (object.mapObj != null) {
                     // zohledni, zda je o alternativu nebo původní variantu objektu
                     let mapObj;
-                    if (alternative &&  object.mapObjAlternative) {
-                        mapObj = object.mapObjAlternative; 
+                    if (alternative && object.mapObjAlternative) {
+                        mapObj = object.mapObjAlternative;
                     } else {
                         mapObj = object.mapObj;
                     }

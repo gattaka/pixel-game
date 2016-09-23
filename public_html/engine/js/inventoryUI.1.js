@@ -5,6 +5,15 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
+    var InvItem = (function () {
+        function InvItem(item, quant, element, count) {
+            this.item = item;
+            this.quant = quant;
+            this.element = element;
+            this.count = count;
+        }
+        return InvItem;
+    }());
     var InventoryUI = (function (_super) {
         __extends(InventoryUI, _super);
         function InventoryUI() {
@@ -58,7 +67,7 @@ var Lich;
                 }
                 self.itemsCont.visible = self.collapsed;
                 self.itemHighlight.visible = self.collapsed && self.choosenItem != null;
-                if (self.collapsedItem != null) {
+                if (self.collapsedSprite != null) {
                     self.collapsedCont.visible = !self.collapsed;
                 }
                 self.collapsed = !self.collapsed;
@@ -70,21 +79,25 @@ var Lich;
         };
         InventoryUI.prototype.decrease = function (item, quant) {
             var self = this;
+            // TODO v případě 0 odebrat
             for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 var invItem = self.invContent[i];
                 if (invItem != null && invItem.item === item) {
                     invItem.quant -= quant;
                     invItem.count.setText(invItem.quant);
-                    if (self.collapsedItem != null) {
-                        self.collapsedItem.count.setText(invItem.quant);
+                    if (self.collapsedSprite != null) {
+                        self.collapsedCount.setText(invItem.quant);
                     }
                     if (invItem.quant == 0) {
-                        if (self.collapsedItem != null) {
-                            self.collapsedCont.removeChild(self.collapsedItem);
-                            self.collapsedItem = null;
+                        if (self.collapsedSprite != null) {
+                            self.collapsedCont.removeChild(self.collapsedSprite);
+                            self.collapsedCont.removeChild(self.collapsedCount);
+                            self.collapsedSprite = null;
+                            self.collapsedCount = null;
                             self.collapsedHighlight.visible = false;
                         }
-                        self.itemsCont.removeChild(invItem);
+                        self.itemsCont.removeChild(invItem.element);
+                        self.itemsCont.removeChild(invItem.count);
                         self.choosenItem = null;
                         self.draggedItem = null;
                         self.itemHighlight.visible = false;
@@ -103,46 +116,58 @@ var Lich;
                     invItem.quant += quant;
                     invItem.count.setText(invItem.quant);
                     if (self.choosenItem === item) {
-                        self.collapsedItem.count.setText(invItem.quant);
+                        self.collapsedCount.setText(invItem.quant);
                     }
                     return true; // přidáno
                 }
             }
             // zkus založit novou
-            var _loop_1 = function() {
+            for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
                 if (self.invContent[i] == null) {
-                    var itemUI_1 = new Lich.ItemUI(item, quant);
-                    self.invContent[i] = itemUI_1;
-                    self.itemsCont.addChild(itemUI_1);
-                    itemUI_1.x = (i % InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-                    itemUI_1.y = Math.floor(i / InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-                    hitArea = new createjs.Shape();
+                    var invDef = Lich.Resources.INSTANCE.invObjectDefs[item];
+                    var frames = 1;
+                    if (typeof invDef === "undefined" || invDef == null) {
+                        frames = 1;
+                    }
+                    else {
+                        frames = invDef.frames;
+                    }
+                    var sprite = Lich.Resources.INSTANCE.getSprite(item, frames);
+                    self.itemsCont.addChild(sprite);
+                    sprite.x = (i % InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+                    sprite.y = Math.floor(i / InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+                    var text = new Lich.Label("" + quant, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+                    self.itemsCont.addChild(text);
+                    text.x = sprite.x;
+                    text.y = sprite.y + Lich.Resources.PARTS_SIZE - Lich.PartsUI.TEXT_SIZE;
+                    self.invContent[i] = new InvItem(item, quant, sprite, text);
+                    var hitArea = new createjs.Shape();
                     hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-                    itemUI_1.hitArea = hitArea;
+                    sprite.hitArea = hitArea;
                     (function () {
                         var currentItem = self.invContent[i];
-                        itemUI_1.on("mousedown", function (evt) {
+                        sprite.on("mousedown", function (evt) {
                             self.itemHighlight.visible = true;
-                            self.itemHighlight.x = itemUI_1.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
-                            self.itemHighlight.y = itemUI_1.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                            self.itemHighlight.x = sprite.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                            self.itemHighlight.y = sprite.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                             self.choosenItem = item;
                             self.draggedItem = item;
-                            self.collapsedCont.removeChild(self.collapsedItem);
+                            self.collapsedCont.removeChild(self.collapsedSprite);
+                            self.collapsedCont.removeChild(self.collapsedCount);
                             self.collapsedHighlight.visible = true;
-                            self.collapsedItem = new Lich.ItemUI(item, currentItem.quant);
-                            self.collapsedCont.addChild(self.collapsedItem);
-                            self.collapsedItem.x = Lich.PartsUI.BORDER;
-                            self.collapsedItem.y = Lich.PartsUI.BORDER;
+                            self.collapsedSprite = Lich.Resources.INSTANCE.getSprite(item, frames);
+                            self.collapsedCount = new Lich.Label("" + currentItem.quant, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+                            self.collapsedCont.addChild(self.collapsedSprite);
+                            self.collapsedCont.addChild(self.collapsedCount);
+                            self.collapsedSprite.x = Lich.PartsUI.BORDER;
+                            self.collapsedSprite.y = Lich.PartsUI.BORDER;
+                            self.collapsedCount.x = Lich.PartsUI.BORDER;
+                            self.collapsedCount.y = Lich.PartsUI.BORDER + Lich.Resources.PARTS_SIZE - Lich.PartsUI.TEXT_SIZE;
                             self.collapsedCont.visible = false;
                         }, null, false);
                     })();
-                    return { value: true }; // usazeno
+                    return true; // usazeno
                 }
-            };
-            var hitArea;
-            for (var i = 0; i < InventoryUI.INV_SIZE; i++) {
-                var state_1 = _loop_1();
-                if (typeof state_1 === "object") return state_1.value;
             }
             return false; // nevešel se
         };
