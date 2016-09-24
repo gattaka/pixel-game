@@ -11,14 +11,26 @@ var Lich;
             _super.apply(this, arguments);
         }
         RecipeUI.prototype.addItem = function (item) {
-            if (this.children.length == 1) {
-                var arrow = Lich.Resources.INSTANCE.getBitmap(Lich.Resources.RECIPE_ARROW_KEY);
-                this.addChild(arrow);
-                arrow.y = 0;
-                arrow.x = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING;
+            if (this.children.length == 0) {
+                var btn = new Lich.Button();
+                this.addChild(btn);
+                btn.y = 0;
+                btn.x = 0;
+                item.y = Lich.PartsUI.SELECT_BORDER;
+                item.x = Lich.PartsUI.SELECT_BORDER;
             }
-            item.y = 0;
-            item.x = this.children.length == 0 ? 0 : (this.children.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING));
+            if (this.children.length == 2) {
+                var arrow = Lich.Resources.INSTANCE.getBitmap(Lich.Resources.UI_LEFT_KEY);
+                this.addChild(arrow);
+                arrow.y = Lich.PartsUI.SELECT_BORDER;
+                arrow.x = Lich.Resources.PARTS_SIZE + 12;
+                item.y = Lich.PartsUI.SELECT_BORDER;
+                item.x = Lich.Resources.PARTS_SIZE * 2 + 18;
+            }
+            if (this.children.length > 3) {
+                item.y = Lich.PartsUI.SELECT_BORDER;
+                item.x = this.children[this.children.length - 1].x + (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+            }
             this.addChild(item);
             return this;
         };
@@ -28,12 +40,14 @@ var Lich;
         __extends(CraftingUI, _super);
         function CraftingUI() {
             _super.call(this, CraftingUI.N, CraftingUI.M);
+            this.toggleFlag = true;
+            this.parentRef = null;
             this.choosenItem = null;
             this.invContent = new Array();
             this.itemsCont = new createjs.Container();
             var self = this;
             // zvýraznění vybrané položky
-            self.itemHighlight = self.createHighlightShape();
+            self.itemHighlight = new Lich.Highlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
             // kontejner položek
@@ -48,14 +62,37 @@ var Lich;
                 new RecipeUI()
                     .addItem(new Lich.ItemUI(Lich.Resources.INV_CAMPFIRE_KEY, 1))
                     .addItem(new Lich.ItemUI(Lich.Resources.INV_WOOD_KEY, 2))
-                    .addItem(new Lich.ItemUI(Lich.Resources.INV_STRAW_KEY, 2))
+                    .addItem(new Lich.ItemUI(Lich.Resources.INV_STRAW_KEY, 2)),
+                new RecipeUI()
+                    .addItem(new Lich.ItemUI(Lich.Resources.INV_WOODWALL_KEY, 1))
+                    .addItem(new Lich.ItemUI(Lich.Resources.INV_WOOD_KEY, 1)),
+                new RecipeUI()
+                    .addItem(new Lich.ItemUI(Lich.Resources.INV_BRICKWALL_KEY, 1))
+                    .addItem(new Lich.ItemUI(Lich.Resources.INV_DIRT_KEY, 1))
             ];
             recipes.forEach(function (v, i) {
                 self.addChild(v);
-                v.x = Lich.PartsUI.SPACING;
-                v.y = Lich.PartsUI.SPACING + i * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+                v.x = Lich.PartsUI.SELECT_BORDER;
+                v.y = Lich.PartsUI.SELECT_BORDER + i * (Lich.Resources.PARTS_SIZE + 16);
             });
         }
+        CraftingUI.prototype.toggle = function () {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag) {
+                if (self.parent == null) {
+                    self.parentRef.addChild(self);
+                }
+                else {
+                    self.parentRef = self.parent;
+                    self.parent.removeChild(self);
+                }
+                self.toggleFlag = false;
+            }
+        };
+        CraftingUI.prototype.prepareForToggle = function () {
+            this.toggleFlag = true;
+        };
         CraftingUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
             }

@@ -116,8 +116,8 @@ namespace Lich {
         static INV_FLORITE_KEY = "INV_FLORITE_KEY";
         static INV_CAMPFIRE_KEY = "INV_CAMPFIRE_KEY";
         static INV_DOOR_KEY = "INV_DOOR_KEY";
-
-        static RECIPE_ARROW_KEY = "RECIPE_ARROW_KEY";
+        static INV_BRICKWALL_KEY = "INV_BRICKWALL_KEY";
+        static INV_WOODWALL_KEY = "INV_WOODWALL_KEY";
 
         // characters
         static PLAYER_ICON_KEY = "PLAYER_ICON_KEY";
@@ -128,6 +128,12 @@ namespace Lich {
         static TORSO_KEY = "TORSO_KEY";
         static GAUNTLET_KEY = "GAUNTLET_KEY";
         static UI_SOUND_KEY = "UI_SOUND_KEY";
+
+        // buttons, misc.
+        static UI_UP_KEY = "UI_UP_KEY";
+        static UI_DOWN_KEY = "UI_DOWN_KEY";
+        static UI_LEFT_KEY = "UI_LEFT_KEY";
+        static UI_RIGHT_KEY = "UI_RIGHT_KEY";
 
         // ui spells
         static SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
@@ -182,6 +188,8 @@ namespace Lich {
         public spellDefs = new Table<SpellDefinition>();
         public interactSpellDef = new MapObjectsInteractionSpellDef();
 
+        // definice receptů
+
         /*
          * Sprite indexy
          */
@@ -226,7 +234,8 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_florite.png", Resources.INV_FLORITE_KEY),
                 new Load("images/ui/inventory/inv_campfire.png", Resources.INV_CAMPFIRE_KEY),
                 new Load("images/ui/inventory/inv_door.png", Resources.INV_DOOR_KEY),
-                new Load("images/ui/inventory/recipe_arrow.png", Resources.RECIPE_ARROW_KEY),
+                new Load("images/ui/inventory/inv_brick.png", Resources.INV_BRICKWALL_KEY),
+                new Load("images/ui/inventory/inv_woodwall.png", Resources.INV_WOODWALL_KEY),
                 // characters
                 new Load("images/characters/lich_animation.png", Resources.LICH_ANIMATION_KEY),
                 new Load("images/characters/corpse_animation.png", Resources.CORPSE_ANIMATION_KEY),
@@ -270,6 +279,10 @@ namespace Lich {
                 new Load("images/characters/player_icon.png", Resources.PLAYER_ICON_KEY),
                 new Load("images/ui/skull.png", Resources.SKULL_KEY),
                 new Load("images/ui/sound.png", Resources.UI_SOUND_KEY),
+                new Load("images/ui/up.png", Resources.UI_UP_KEY),
+                new Load("images/ui/down.png", Resources.UI_DOWN_KEY),
+                new Load("images/ui/left.png", Resources.UI_LEFT_KEY),
+                new Load("images/ui/right.png", Resources.UI_RIGHT_KEY),
                 // armor
                 new Load("images/armor/helmet.png", Resources.HELMET_KEY),
                 new Load("images/armor/torso.png", Resources.TORSO_KEY),

@@ -83,21 +83,28 @@ namespace Lich {
         private toggleFlag = true;
         private parentRef: createjs.Container = null;
 
-        toggleInv() {
+        hide() {
+            this.parentRef = this.parent;
+            this.parent.removeChild(this);
+        }
+
+        show() {
+            this.parentRef.addChild(this);
+        }
+        toggle() {
             var self = this;
             // dochází ke změně?
             if (self.toggleFlag) {
                 if (self.parent == null) {
-                    self.parentRef.addChild(self);
+                    self.show();
                 } else {
-                    self.parentRef = self.parent;
-                    self.parent.removeChild(self);
+                    self.hide();
                 }
                 self.toggleFlag = false;
             }
         }
 
-        prepareForToggleInv() {
+        prepareForToggle() {
             this.toggleFlag = true;
         }
 
@@ -161,7 +168,7 @@ namespace Lich {
 
             var cont = new createjs.Container();
             cont.on("mousedown", function () {
-                self.visible = false;
+                self.hide();
             }, null, false);
             cont.hitArea = shape.hitArea;
 
@@ -195,6 +202,7 @@ namespace Lich {
             self.lines.push("- Press <ESC> to toggle this window");
             self.lines.push("- Press <W>, <A>, <S>, <D> to move");
             self.lines.push("- Press <I> to minimize inventory");
+            self.lines.push("- Press <C> to toggle crafting window");
             self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");
             self.lines.push("- Press <LMB> to dig, place or attack");
             self.lines.push("- Press <RMB> to interact with an object");

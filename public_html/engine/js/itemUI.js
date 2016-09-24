@@ -10,7 +10,6 @@ var Lich;
         function ItemUI(item, quant) {
             _super.call(this);
             this.item = item;
-            this.quant = quant;
             this.width = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING;
             this.height = this.width;
             var invDef = Lich.Resources.INSTANCE.invObjectDefs[item];

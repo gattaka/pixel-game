@@ -27,7 +27,7 @@ namespace Lich {
             self.trackInsert(Resources.MSC_LAVA_THEME_KEY);
 
             // zvýraznění vybrané položky
-            self.itemHighlightShape = self.createHighlightShape();
+            self.itemHighlightShape = new Highlight();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
 

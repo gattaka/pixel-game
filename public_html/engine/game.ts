@@ -190,10 +190,15 @@ namespace Lich {
                         directions.right = true;
                     if (self.keys[83])
                         directions.down = true;
-                    if (self.keys[27]) {
-                        self.ui.splashScreenUI.toggleInv();
+                    if (self.keys[67]) {
+                        self.ui.craftingUI.toggle();
                     } else {
-                        self.ui.splashScreenUI.prepareForToggleInv();
+                        self.ui.craftingUI.prepareForToggle();
+                    }
+                    if (self.keys[27]) {
+                        self.ui.splashScreenUI.toggle();
+                    } else {
+                        self.ui.splashScreenUI.prepareForToggle();
                     }
                     if (self.keys[73]) {
                         self.ui.inventoryUI.toggleInv();

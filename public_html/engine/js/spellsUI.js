@@ -23,7 +23,7 @@ var Lich;
             self.spellInsert(Lich.Resources.SPELL_BOLT_KEY);
             self.spellInsert(Lich.Resources.SPELL_ENEMY_KEY);
             // zvýraznění vybrané položky
-            self.itemHighlightShape = self.createHighlightShape();
+            self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
             // kontejner položek

@@ -24,7 +24,7 @@ var Lich;
             self.trackInsert(Lich.Resources.MSC_FLOOD_THEME_KEY);
             self.trackInsert(Lich.Resources.MSC_LAVA_THEME_KEY);
             // zvýraznění vybrané položky
-            self.itemHighlightShape = self.createHighlightShape();
+            self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
             // kontejner položek

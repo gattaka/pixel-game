@@ -17,8 +17,10 @@ var Lich;
             self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
             self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
+            // Crafting recipes 
+            var recipeListener = new Lich.RecipeListener();
             // Inventář
-            var inventoryUI = new Lich.InventoryUI();
+            var inventoryUI = new Lich.InventoryUI(recipeListener);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
@@ -132,14 +134,6 @@ var Lich;
              
              })();
              */
-            // zdraví a mana
-            (function () {
-                //                var skull = Resources.INSTANCE.getBitmap(Resources.SKULL_KEY);
-                //                skull.x = self.stateCont.width - skull.image.width;
-                //                skull.y = self.stateCont.height - skull.image.height;
-                //                self.stateCont.addChild(skull);
-                //                self.addChild(self.stateCont);
-            })();
         }
         UI.prototype.isMouseInUI = function (x, y) {
             var self = this;

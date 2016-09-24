@@ -27,6 +27,50 @@ var Lich;
         return AbstractUI;
     }(createjs.Container));
     Lich.AbstractUI = AbstractUI;
+    var UIShape = (function (_super) {
+        __extends(UIShape, _super);
+        function UIShape(red, green, blue, red2, green2, blue2, op, op2) {
+            if (red2 === void 0) { red2 = red; }
+            if (green2 === void 0) { green2 = green; }
+            if (blue2 === void 0) { blue2 = blue; }
+            if (op === void 0) { op = 0.2; }
+            if (op2 === void 0) { op2 = 0.5; }
+            _super.call(this);
+            this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
+            this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
+            this.graphics.setStrokeStyle(2);
+            var side = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            this.graphics.drawRoundRect(0, 0, side, side, 3);
+        }
+        return UIShape;
+    }(createjs.Shape));
+    Lich.UIShape = UIShape;
+    var Highlight = (function (_super) {
+        __extends(Highlight, _super);
+        function Highlight() {
+            _super.call(this, 250, 250, 10);
+        }
+        return Highlight;
+    }(UIShape));
+    Lich.Highlight = Highlight;
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        function Button(bitmap) {
+            _super.call(this);
+            var bgr = new UIShape(255, 250, 10, 0, 0, 0, 0.2, 0.7);
+            this.addChild(bgr);
+            bgr.x = 0;
+            bgr.y = 0;
+            if (bitmap) {
+                var btmp = Lich.Resources.INSTANCE.getBitmap(bitmap);
+                this.addChild(btmp);
+                btmp.x = PartsUI.SELECT_BORDER;
+                btmp.y = PartsUI.SELECT_BORDER;
+            }
+        }
+        return Button;
+    }(createjs.Container));
+    Lich.Button = Button;
     var PartsUI = (function (_super) {
         __extends(PartsUI, _super);
         function PartsUI(n, m) {
@@ -36,15 +80,6 @@ var Lich;
         }
         PartsUI.pixelsByX = function (x) {
             return x * Lich.Resources.PARTS_SIZE + (x - 1) * (PartsUI.SPACING) + 2 * AbstractUI.BORDER;
-        };
-        PartsUI.prototype.createHighlightShape = function () {
-            var shape = new createjs.Shape();
-            shape.graphics.beginStroke("rgba(250,250,10,0.5)");
-            shape.graphics.beginFill("rgba(250,250,10,0.2)");
-            shape.graphics.setStrokeStyle(2);
-            shape.graphics.drawRoundRect(0, 0, Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2, Lich.Resources.PARTS_SIZE
-                + PartsUI.SELECT_BORDER * 2, 3);
-            return shape;
         };
         PartsUI.SELECT_BORDER = 5;
         PartsUI.SPACING = 12;

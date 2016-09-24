@@ -21,14 +21,14 @@ namespace Lich {
             var self = this;
 
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
-            self.spellInsert(Resources.SPELL_DIG_KEY,Resources.SPELL_DIG_BGR_KEY);
+            self.spellInsert(Resources.SPELL_DIG_KEY, Resources.SPELL_DIG_BGR_KEY);
             self.spellInsert(Resources.SPELL_PLACE_KEY, Resources.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Resources.SPELL_FIREBALL_KEY);
             self.spellInsert(Resources.SPELL_BOLT_KEY);
             self.spellInsert(Resources.SPELL_ENEMY_KEY);
 
             // zvýraznění vybrané položky
-            self.itemHighlightShape = self.createHighlightShape();
+            self.itemHighlightShape = new Highlight();
             self.itemHighlightShape.visible = false;
             self.addChild(self.itemHighlightShape);
 
@@ -105,7 +105,7 @@ namespace Lich {
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
 
-            bitmap.on("mousedown", function() {
+            bitmap.on("mousedown", function () {
                 self.selectSpell(index);
             }, null, false);
         }

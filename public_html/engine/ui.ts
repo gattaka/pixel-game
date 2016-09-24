@@ -6,7 +6,7 @@ namespace Lich {
         static SCREEN_SPACING = 20;
 
         charCont: createjs.Container;
-        
+
         inventoryUI: InventoryUI;
         spellsUI: SpellsUI;
         musicUI: MusicUI;
@@ -27,8 +27,11 @@ namespace Lich {
             self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
 
+            // Crafting recipes 
+            let recipeListener = new RecipeListener();
+
             // Inventář
-            var inventoryUI = new InventoryUI();
+            var inventoryUI = new InventoryUI(recipeListener);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
@@ -147,16 +150,6 @@ namespace Lich {
              
              })();
              */
-
-            // zdraví a mana
-            (function () {
-
-                //                var skull = Resources.INSTANCE.getBitmap(Resources.SKULL_KEY);
-                //                skull.x = self.stateCont.width - skull.image.width;
-                //                skull.y = self.stateCont.height - skull.image.height;
-                //                self.stateCont.addChild(skull);
-                //                self.addChild(self.stateCont);
-            })();
         }
 
         isMouseInUI(x: number, y: number): boolean {
