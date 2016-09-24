@@ -29,12 +29,16 @@ namespace Lich {
         // mapa existujících UI prvků dle typu položky
         itemsUIMap = new LinkedHashMap<ItemUI>();
         itemHighlight: createjs.Shape;
+        itemHighlightVisibleBeforeCollapse = true;
         itemsCont = new createjs.Container();
 
         collapsed = false;
         collapsedCont = new createjs.Container();
         collapsedItem: ItemUI;
         collapsedHighlight: createjs.Shape;
+
+        upBtn: Button;
+        downBtn: Button;
 
         constructor(private recipeListener: RecipeListener) {
             super(InventoryUI.N, InventoryUI.M);
@@ -62,15 +66,19 @@ namespace Lich {
             // tlačítka
             let upBtn = new Button(Resources.UI_UP_KEY);
             let downBtn = new Button(Resources.UI_DOWN_KEY);
+            self.upBtn = upBtn;
+            self.downBtn = downBtn;
             self.addChild(upBtn);
             self.addChild(downBtn);
-            upBtn.x = PartsUI.pixelsByX(InventoryUI.N) - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER - PartsUI.BORDER;
-            upBtn.y = PartsUI.SELECT_BORDER;
+            upBtn.x = PartsUI.pixelsByX(InventoryUI.N) + PartsUI.SELECT_BORDER;
+            upBtn.y = 0;
             downBtn.x = upBtn.x;
-            downBtn.y = PartsUI.pixelsByX(InventoryUI.M) - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER - PartsUI.BORDER;
+            downBtn.y = PartsUI.pixelsByX(InventoryUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
+
+            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
 
             let upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
+            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
             upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
@@ -80,10 +88,10 @@ namespace Lich {
             }, null, false);
 
             let downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
+            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
             downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
-                let occupLines = Math.ceil(self.itemsTypeArray.length / (InventoryUI.N - 1));
+                let occupLines = Math.ceil(self.itemsTypeArray.length / InventoryUI.N);
                 if (self.lineOffset < occupLines - InventoryUI.M) {
                     self.lineOffset++;
                     self.render();
@@ -94,9 +102,10 @@ namespace Lich {
 
         render() {
             this.itemsCont.removeAllChildren();
-            let itemsOffset = this.lineOffset * (InventoryUI.N - 1);
+            this.itemHighlight.visible = false;
+            let itemsOffset = this.lineOffset * InventoryUI.N;
             for (let i = itemsOffset;
-                i < (InventoryUI.N - 1) * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length;
+                i < InventoryUI.N * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length;
                 i++) {
                 this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
             }
@@ -119,15 +128,21 @@ namespace Lich {
                     self.width = PartsUI.pixelsByX(InventoryUI.N);
                     self.height = newHeight;
                     self.drawBackground();
+                    self.itemHighlight.visible = self.itemHighlightVisibleBeforeCollapse;
+                    self.upBtn.visible = true;
+                    self.downBtn.visible = true;
                 } else {
                     var newHeight = PartsUI.pixelsByX(1);
                     self.y = self.y + (self.height - newHeight);
                     self.width = PartsUI.pixelsByX(1);
                     self.height = newHeight;
                     self.drawBackground();
+                    self.itemHighlightVisibleBeforeCollapse = self.itemHighlight.visible;
+                    self.itemHighlight.visible = false;
+                    self.upBtn.visible = false;
+                    self.downBtn.visible = false;
                 }
                 self.itemsCont.visible = self.collapsed;
-                self.itemHighlight.visible = self.collapsed && self.choosenItem != null;
                 if (self.collapsedItem != null) {
                     self.collapsedCont.visible = !self.collapsed;
                 }
@@ -201,9 +216,9 @@ namespace Lich {
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
 
-                let itemsOffset = self.lineOffset * (InventoryUI.N - 1);
+                let itemsOffset = self.lineOffset * InventoryUI.N;
                 if (i >= itemsOffset
-                    && i < (InventoryUI.N - 1) * InventoryUI.M + itemsOffset) {
+                    && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
                     self.createUIItem(item, i);
                 }
 
@@ -217,12 +232,18 @@ namespace Lich {
             let itemUI = new ItemUI(item, quant);
             self.itemsUIMap[item] = itemUI;
             self.itemsCont.addChild(itemUI);
-            itemUI.x = (i % (InventoryUI.N - 1)) * (Resources.PARTS_SIZE + PartsUI.SPACING);
-            itemUI.y = Math.floor(i / (InventoryUI.N - 1)) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+            itemUI.x = (i % InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+            itemUI.y = Math.floor(i / InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
 
             let hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             itemUI.hitArea = hitArea;
+
+            if (self.choosenItem == item) {
+                self.itemHighlight.visible = true;
+                self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+                self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+            }
 
             (function () {
                 var currentItem = self.itemsUIMap[item];

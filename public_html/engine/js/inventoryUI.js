@@ -29,6 +29,7 @@ var Lich;
             // --- UI ----
             // mapa existujících UI prvků dle typu položky
             this.itemsUIMap = new LinkedHashMap();
+            this.itemHighlightVisibleBeforeCollapse = true;
             this.itemsCont = new createjs.Container();
             this.collapsed = false;
             this.collapsedCont = new createjs.Container();
@@ -51,14 +52,17 @@ var Lich;
             // tlačítka
             var upBtn = new Lich.Button(Lich.Resources.UI_UP_KEY);
             var downBtn = new Lich.Button(Lich.Resources.UI_DOWN_KEY);
+            self.upBtn = upBtn;
+            self.downBtn = downBtn;
             self.addChild(upBtn);
             self.addChild(downBtn);
-            upBtn.x = Lich.PartsUI.pixelsByX(InventoryUI.N) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.SELECT_BORDER - Lich.PartsUI.BORDER;
-            upBtn.y = Lich.PartsUI.SELECT_BORDER;
+            upBtn.x = Lich.PartsUI.pixelsByX(InventoryUI.N) + Lich.PartsUI.SELECT_BORDER;
+            upBtn.y = 0;
             downBtn.x = upBtn.x;
-            downBtn.y = Lich.PartsUI.pixelsByX(InventoryUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.SELECT_BORDER - Lich.PartsUI.BORDER;
+            downBtn.y = Lich.PartsUI.pixelsByX(InventoryUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
+            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
             var upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
+            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
             upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
@@ -67,10 +71,10 @@ var Lich;
                 }
             }, null, false);
             var downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
+            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
             downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
-                var occupLines = Math.ceil(self.itemsTypeArray.length / (InventoryUI.N - 1));
+                var occupLines = Math.ceil(self.itemsTypeArray.length / InventoryUI.N);
                 if (self.lineOffset < occupLines - InventoryUI.M) {
                     self.lineOffset++;
                     self.render();
@@ -79,8 +83,9 @@ var Lich;
         }
         InventoryUI.prototype.render = function () {
             this.itemsCont.removeAllChildren();
-            var itemsOffset = this.lineOffset * (InventoryUI.N - 1);
-            for (var i = itemsOffset; i < (InventoryUI.N - 1) * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length; i++) {
+            this.itemHighlight.visible = false;
+            var itemsOffset = this.lineOffset * InventoryUI.N;
+            for (var i = itemsOffset; i < InventoryUI.N * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length; i++) {
                 this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
             }
         };
@@ -99,6 +104,9 @@ var Lich;
                     self.width = Lich.PartsUI.pixelsByX(InventoryUI.N);
                     self.height = newHeight;
                     self.drawBackground();
+                    self.itemHighlight.visible = self.itemHighlightVisibleBeforeCollapse;
+                    self.upBtn.visible = true;
+                    self.downBtn.visible = true;
                 }
                 else {
                     var newHeight = Lich.PartsUI.pixelsByX(1);
@@ -106,9 +114,12 @@ var Lich;
                     self.width = Lich.PartsUI.pixelsByX(1);
                     self.height = newHeight;
                     self.drawBackground();
+                    self.itemHighlightVisibleBeforeCollapse = self.itemHighlight.visible;
+                    self.itemHighlight.visible = false;
+                    self.upBtn.visible = false;
+                    self.downBtn.visible = false;
                 }
                 self.itemsCont.visible = self.collapsed;
-                self.itemHighlight.visible = self.collapsed && self.choosenItem != null;
                 if (self.collapsedItem != null) {
                     self.collapsedCont.visible = !self.collapsed;
                 }
@@ -179,9 +190,9 @@ var Lich;
                 self.itemsTypeArray[i] = item;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
-                var itemsOffset = self.lineOffset * (InventoryUI.N - 1);
+                var itemsOffset = self.lineOffset * InventoryUI.N;
                 if (i >= itemsOffset
-                    && i < (InventoryUI.N - 1) * InventoryUI.M + itemsOffset) {
+                    && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
                     self.createUIItem(item, i);
                 }
                 return true; // usazeno
@@ -193,11 +204,16 @@ var Lich;
             var itemUI = new Lich.ItemUI(item, quant);
             self.itemsUIMap[item] = itemUI;
             self.itemsCont.addChild(itemUI);
-            itemUI.x = (i % (InventoryUI.N - 1)) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-            itemUI.y = Math.floor(i / (InventoryUI.N - 1)) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+            itemUI.x = (i % InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+            itemUI.y = Math.floor(i / InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
             itemUI.hitArea = hitArea;
+            if (self.choosenItem == item) {
+                self.itemHighlight.visible = true;
+                self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+            }
             (function () {
                 var currentItem = self.itemsUIMap[item];
                 itemUI.on("mousedown", function (evt) {
