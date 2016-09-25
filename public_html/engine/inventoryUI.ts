@@ -218,7 +218,7 @@ namespace Lich {
                 let itemsOffset = self.lineOffset * InventoryUI.N;
                 if (i >= itemsOffset
                     && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
-                    self.createUIItem(item, i);
+                    self.createUIItem(item, i - itemsOffset);
                 }
 
                 return true; // usazeno
