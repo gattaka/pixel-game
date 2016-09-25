@@ -396,10 +396,10 @@ namespace Lich {
             // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
             // jsou dle frekvence usazovány jiné povrchy
             registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_DIRT_KEY, Resources.INV_DIRT_KEY, 1, 0));
-            registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1, 0));
+            registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_WOODWALL_KEY, Resources.INV_WOODWALL_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_KRYSTAL_KEY, Resources.INV_KRYSTAL_KEY, 1, 1));
             registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_FLORITE_KEY, Resources.INV_FLORITE_KEY, 1, 1));
-            registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_DIRT_KEY, 1, 0));
+            registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_BRICK_KEY, Resources.INV_BRICKWALL_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(Resources.SRFC_STRAW_KEY, Resources.INV_STRAW_KEY, 1, 0));
 
             (function () {
@@ -509,6 +509,7 @@ namespace Lich {
                 .setMapObjAlternative(Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]));
 
             // usaditelných jako povrch
+            registerInvObjectDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_DIRT_KEY]));
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_WOODWALL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
                 .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_WOODWALL_KEY]));
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_BRICKWALL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_BRICK_KEY])
