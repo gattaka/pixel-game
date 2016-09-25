@@ -82,6 +82,7 @@ namespace Lich {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
+                    Mixer.play(Resources.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -93,6 +94,7 @@ namespace Lich {
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
                     self.render();
+                    Mixer.play(Resources.SND_CLICK_KEY);
                 }
             }, null, false);
 

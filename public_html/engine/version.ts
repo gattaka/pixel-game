@@ -24,6 +24,7 @@ namespace Lich {
             var version;
 
             version = new Version("0.5");
+            version.addChange("Crafting introduced");
             version.addChange("Doors added");
             version.addChange("Object <RMB> interacting (open/close doors)");
             version.addChange("Object collisions (closed doors)");
@@ -73,7 +74,7 @@ namespace Lich {
         static TOP_OFFSET = 40;
         static WIDTH = 500;
         static OUTLINE = 1;
-        static BTN_SIDE = 20;
+        static SCROLL_LINES = 2;
 
         private lines = new Array<string>();
         private cont = new createjs.Container();
@@ -120,65 +121,40 @@ namespace Lich {
             }
         }
 
-        private createBaseButtonShape(width: number, height: number): createjs.Shape {
+        protected createUpButton(): Button {
             var self = this;
-            var shape = new createjs.Shape();
-            shape.graphics.beginStroke("rgba(0,0,0,0.5)");
-            shape.graphics.beginFill("rgba(250,250,10,0.4)");
-            shape.graphics.setStrokeStyle(2);
-            shape.graphics.drawRoundRect(0, 0, width, height, 3);
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, width, height);
-            shape.hitArea = hitArea;
-            return shape;
-        }
-
-        protected createUpButton(): createjs.Shape {
-            var self = this;
-            var shape = self.createBaseButtonShape(SplashScreenUI.BTN_SIDE, SplashScreenUI.BTN_SIDE);
-            shape.graphics.beginFill("rgba(250,250,10,1)");
-            shape.graphics.drawPolyStar(SplashScreenUI.BTN_SIDE / 2, SplashScreenUI.BTN_SIDE / 2 + 1, 5, 3, 0.5, -90);
-            shape.on("mousedown", function () {
+            let upBtn = new Button(Resources.UI_UP_KEY);
+            self.addChild(upBtn);
+            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            let upBtnHitArea = new createjs.Shape();
+            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            upBtn.hitArea = upBtnHitArea;
+            upBtn.on("mousedown", function (evt) {
                 if (self.currentLine > 0) {
-                    self.currentLine--;
+                    self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    Mixer.play(Resources.SND_CLICK_KEY);
                 }
             }, null, false);
-            return shape;
+            return upBtn;
         }
 
-        protected createDownButton(): createjs.Shape {
+        protected createDownButton(): Button {
             var self = this;
-            var shape = self.createBaseButtonShape(SplashScreenUI.BTN_SIDE, SplashScreenUI.BTN_SIDE);
-            shape.graphics.beginFill("rgba(250,250,10,1)");
-            shape.graphics.drawPolyStar(SplashScreenUI.BTN_SIDE / 2, SplashScreenUI.BTN_SIDE / 2 - 1, 5, 3, 0.5, 90);
-            shape.on("mousedown", function () {
+            let downBtn = new Button(Resources.UI_DOWN_KEY);
+            self.addChild(downBtn);
+            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            let downBtnHitArea = new createjs.Shape();
+            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            downBtn.hitArea = downBtnHitArea;
+            downBtn.on("mousedown", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
-                    self.currentLine++;
+                    self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    Mixer.play(Resources.SND_CLICK_KEY);
                 }
             }, null, false);
-            return shape;
-        }
-
-        protected createCloseButton(): createjs.Container {
-            var self = this;
-            var shape = self.createBaseButtonShape(42, SplashScreenUI.BTN_SIDE);
-
-            var cont = new createjs.Container();
-            cont.on("mousedown", function () {
-                self.hide();
-            }, null, false);
-            cont.hitArea = shape.hitArea;
-
-            cont.addChild(shape);
-
-            var label = new Label("CLOSE", "12px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR);
-            cont.addChild(label);
-            label.x = 4;
-            label.y = 2;
-
-            return cont;
+            return downBtn;
         }
 
         constructor() {
@@ -188,7 +164,7 @@ namespace Lich {
 
             var changelog = new Changelog();
 
-            var label = new Label("LichEngine " + changelog.versions.byIndex(0).version, "20px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            var label = new Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka", "20px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
             label.x = SplashScreenUI.MARGIN;
             label.y = SplashScreenUI.MARGIN;
             super.addChild(label);
@@ -223,18 +199,13 @@ namespace Lich {
 
             var up = this.createUpButton();
             super.addChild(up);
-            up.x = self.width - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
-            up.y = SplashScreenUI.MARGIN;
+            up.x = self.width + PartsUI.SELECT_BORDER;
+            up.y = 0;
 
             var down = this.createDownButton();
             super.addChild(down);
-            down.x = self.width - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
-            down.y = self.height - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
-
-            var close = this.createCloseButton();
-            super.addChild(close);
-            close.x = self.width / 2 - 42 / 2;
-            close.y = self.height - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
+            down.x = self.width + PartsUI.SELECT_BORDER;
+            down.y = self.height - Resources.PARTS_SIZE - PartsUI.BORDER;
         }
 
     }

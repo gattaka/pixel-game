@@ -22,6 +22,7 @@ var Lich;
             this.versions = new Lich.Table();
             var version;
             version = new Version("0.5");
+            version.addChange("Crafting introduced");
             version.addChange("Doors added");
             version.addChange("Object <RMB> interacting (open/close doors)");
             version.addChange("Object collisions (closed doors)");
@@ -73,7 +74,7 @@ var Lich;
             this.parentRef = null;
             var self = this;
             var changelog = new Changelog();
-            var label = new Lich.Label("LichEngine " + changelog.versions.byIndex(0).version, "20px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            var label = new Lich.Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka", "20px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             label.x = SplashScreenUI.MARGIN;
             label.y = SplashScreenUI.MARGIN;
             _super.prototype.addChild.call(this, label);
@@ -103,16 +104,12 @@ var Lich;
             self.print();
             var up = this.createUpButton();
             _super.prototype.addChild.call(this, up);
-            up.x = self.width - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
-            up.y = SplashScreenUI.MARGIN;
+            up.x = self.width + Lich.PartsUI.SELECT_BORDER;
+            up.y = 0;
             var down = this.createDownButton();
             _super.prototype.addChild.call(this, down);
-            down.x = self.width - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
-            down.y = self.height - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
-            var close = this.createCloseButton();
-            _super.prototype.addChild.call(this, close);
-            close.x = self.width / 2 - 42 / 2;
-            close.y = self.height - SplashScreenUI.MARGIN - SplashScreenUI.BTN_SIDE;
+            down.x = self.width + Lich.PartsUI.SELECT_BORDER;
+            down.y = self.height - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
         }
         SplashScreenUI.prototype.hide = function () {
             this.parentRef = this.parent;
@@ -148,58 +145,39 @@ var Lich;
                 child.y = SplashScreenUI.TOP_OFFSET + i * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING);
             }
         };
-        SplashScreenUI.prototype.createBaseButtonShape = function (width, height) {
-            var self = this;
-            var shape = new createjs.Shape();
-            shape.graphics.beginStroke("rgba(0,0,0,0.5)");
-            shape.graphics.beginFill("rgba(250,250,10,0.4)");
-            shape.graphics.setStrokeStyle(2);
-            shape.graphics.drawRoundRect(0, 0, width, height, 3);
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, width, height);
-            shape.hitArea = hitArea;
-            return shape;
-        };
         SplashScreenUI.prototype.createUpButton = function () {
             var self = this;
-            var shape = self.createBaseButtonShape(SplashScreenUI.BTN_SIDE, SplashScreenUI.BTN_SIDE);
-            shape.graphics.beginFill("rgba(250,250,10,1)");
-            shape.graphics.drawPolyStar(SplashScreenUI.BTN_SIDE / 2, SplashScreenUI.BTN_SIDE / 2 + 1, 5, 3, 0.5, -90);
-            shape.on("mousedown", function () {
+            var upBtn = new Lich.Button(Lich.Resources.UI_UP_KEY);
+            self.addChild(upBtn);
+            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
+            var upBtnHitArea = new createjs.Shape();
+            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            upBtn.hitArea = upBtnHitArea;
+            upBtn.on("mousedown", function (evt) {
                 if (self.currentLine > 0) {
-                    self.currentLine--;
+                    self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
                 }
             }, null, false);
-            return shape;
+            return upBtn;
         };
         SplashScreenUI.prototype.createDownButton = function () {
             var self = this;
-            var shape = self.createBaseButtonShape(SplashScreenUI.BTN_SIDE, SplashScreenUI.BTN_SIDE);
-            shape.graphics.beginFill("rgba(250,250,10,1)");
-            shape.graphics.drawPolyStar(SplashScreenUI.BTN_SIDE / 2, SplashScreenUI.BTN_SIDE / 2 - 1, 5, 3, 0.5, 90);
-            shape.on("mousedown", function () {
+            var downBtn = new Lich.Button(Lich.Resources.UI_DOWN_KEY);
+            self.addChild(downBtn);
+            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
+            var downBtnHitArea = new createjs.Shape();
+            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            downBtn.hitArea = downBtnHitArea;
+            downBtn.on("mousedown", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
-                    self.currentLine++;
+                    self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
                 }
             }, null, false);
-            return shape;
-        };
-        SplashScreenUI.prototype.createCloseButton = function () {
-            var self = this;
-            var shape = self.createBaseButtonShape(42, SplashScreenUI.BTN_SIDE);
-            var cont = new createjs.Container();
-            cont.on("mousedown", function () {
-                self.hide();
-            }, null, false);
-            cont.hitArea = shape.hitArea;
-            cont.addChild(shape);
-            var label = new Lich.Label("CLOSE", "12px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR);
-            cont.addChild(label);
-            label.x = 4;
-            label.y = 2;
-            return cont;
+            return downBtn;
         };
         SplashScreenUI.MARGIN = 8;
         SplashScreenUI.PADDING = 5;
@@ -208,7 +186,7 @@ var Lich;
         SplashScreenUI.TOP_OFFSET = 40;
         SplashScreenUI.WIDTH = 500;
         SplashScreenUI.OUTLINE = 1;
-        SplashScreenUI.BTN_SIDE = 20;
+        SplashScreenUI.SCROLL_LINES = 2;
         return SplashScreenUI;
     }(Lich.AbstractUI));
     Lich.SplashScreenUI = SplashScreenUI;

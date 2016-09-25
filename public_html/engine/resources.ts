@@ -163,6 +163,7 @@ namespace Lich {
         static SND_DOOR_OPEN_KEY = "SND_DOOR_OPEN_KEY";
         static SND_DOOR_CLOSE_KEY = "SND_DOOR_CLOSE_KEY";
         static SND_CRAFT_KEY = "SND_CRAFT_KEY";
+        static SND_CLICK_KEY = "SND_CLICK_KEY";
 
         // music
         static MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
@@ -317,6 +318,7 @@ namespace Lich {
                 new Load("sound/door_open.ogg", Resources.SND_DOOR_OPEN_KEY),
                 new Load("sound/door_close.ogg", Resources.SND_DOOR_CLOSE_KEY),
                 new Load("sound/craft.ogg", Resources.SND_CRAFT_KEY),
+                new Load("sound/click.ogg", Resources.SND_CLICK_KEY),
                 // music
                 new Load("music/Dirt_2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)
