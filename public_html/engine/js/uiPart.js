@@ -57,7 +57,7 @@ var Lich;
         __extends(Button, _super);
         function Button(bitmap) {
             _super.call(this);
-            var bgr = new UIShape(255, 250, 10, 0, 0, 0, 0.2, 0.7);
+            var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
             this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;

@@ -1,6 +1,6 @@
 namespace Lich {
 
-    export abstract class AbstractUI extends createjs.Container {
+    export class AbstractUI extends createjs.Container {
 
         static BORDER = 10;
         static TEXT_SIZE = 15;
@@ -48,7 +48,7 @@ namespace Lich {
         constructor(bitmap?: string) {
             super();
 
-            let bgr = new UIShape(255, 250, 10, 0, 0, 0, 0.2, 0.7);
+            let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
             this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;
@@ -63,7 +63,7 @@ namespace Lich {
         }
     }
 
-    export abstract class PartsUI extends AbstractUI {
+    export class PartsUI extends AbstractUI {
 
         static SELECT_BORDER = 5;
         static SPACING = 12;

@@ -1,9 +1,5 @@
 namespace Lich {
 
-    class LinkedHashMap<V> {
-        [key: string]: V;
-    }
-
     export class InventoryUI extends PartsUI {
 
         static N = 3;
@@ -21,13 +17,13 @@ namespace Lich {
         // pole obsazení položkami
         itemsTypeArray = new Array<string>();
         // mapa pořadí typů položek
-        itemsTypeIndexMap = new LinkedHashMap<number>();
+        itemsTypeIndexMap = new HashMap<number>();
         // mapa počtů dle typu položky
-        itemsQuantityMap = new LinkedHashMap<number>();
+        itemsQuantityMap = new HashMap<number>();
 
         // --- UI ----
         // mapa existujících UI prvků dle typu položky
-        itemsUIMap = new LinkedHashMap<ItemUI>();
+        itemsUIMap = new HashMap<ItemUI>();
         itemHighlight: createjs.Shape;
         itemHighlightVisibleBeforeCollapse = true;
         itemsCont = new createjs.Container();
@@ -40,7 +36,7 @@ namespace Lich {
         upBtn: Button;
         downBtn: Button;
 
-        constructor(private recipeListener: RecipeListener) {
+        constructor(private recipeListener: RecipeManager) {
             super(InventoryUI.N, InventoryUI.M);
 
             var self = this;
@@ -215,6 +211,7 @@ namespace Lich {
                 self.itemsTypeArray[i] = item;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
+                self.recipeListener.updateQuant(item, quant);
 
                 let itemsOffset = self.lineOffset * InventoryUI.N;
                 if (i >= itemsOffset

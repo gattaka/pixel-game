@@ -27,8 +27,13 @@ namespace Lich {
             self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
 
+            // Crafting
+            var craftingUI = new CraftingUI();
+            self.addChild(craftingUI);
+            self.craftingUI = craftingUI;
+
             // Crafting recipes 
-            let recipeListener = new RecipeListener();
+            let recipeListener = new RecipeManager(craftingUI.createRecipeAvailChangeListener());
 
             // Inventář
             var inventoryUI = new InventoryUI(recipeListener);
@@ -37,12 +42,11 @@ namespace Lich {
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
 
-            // Crafting
-            var craftingUI = new CraftingUI();
+            craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
-            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2 - craftingUI.height;
-            self.addChild(craftingUI);
-            self.craftingUI = craftingUI;
+            // musí se posunout víc, protože má externí řádek pro ingredience
+            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
+                - craftingUI.height - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 3;
 
             // Schopnosti
             var spellsUI = new SpellsUI();

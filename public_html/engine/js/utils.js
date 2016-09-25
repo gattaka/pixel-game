@@ -1,5 +1,11 @@
 var Lich;
 (function (Lich) {
+    var HashMap = (function () {
+        function HashMap() {
+        }
+        return HashMap;
+    }());
+    Lich.HashMap = HashMap;
     var CollisionTestResult = (function () {
         function CollisionTestResult(hit, x, y) {
             this.hit = hit;

@@ -1,56 +1,64 @@
 var Lich;
 (function (Lich) {
     var RecipeItem = (function () {
-        function RecipeItem(key, reqQuant) {
+        function RecipeItem(key, quant) {
             this.key = key;
-            this.reqQuant = reqQuant;
+            this.quant = quant;
         }
-        RecipeItem.prototype.check = function (quant) {
-            this.available = quant >= this.reqQuant;
-            // pokud available skončilo false, nemá cenu 
-            // vůbec testovat recept jako celek
-            if (this.available) {
-                this.recipe.check();
+        RecipeItem.prototype.check = function (newQuant) {
+            var oldAvail = this.available;
+            this.available = newQuant >= this.quant;
+            if (oldAvail != this.available) {
+                this.recipe.changeAvailability(this.available);
             }
         };
         return RecipeItem;
     }());
+    Lich.RecipeItem = RecipeItem;
     var Recipe = (function () {
-        function Recipe(outcome, ingredients, availableChangedListener) {
+        function Recipe(outcome, ingredients, recipeListener) {
             this.outcome = outcome;
             this.ingredients = ingredients;
-            this.availableChangedListener = availableChangedListener;
+            this.recipeListener = recipeListener;
             outcome.recipe = this;
             for (var _i = 0, _a = this.ingredients; _i < _a.length; _i++) {
                 var item = _a[_i];
                 item.recipe = this;
             }
         }
-        Recipe.prototype.check = function () {
+        Recipe.prototype.changeAvailability = function (value) {
             var oldAvail = this.available;
-            for (var _i = 0, _a = this.ingredients; _i < _a.length; _i++) {
-                var item = _a[_i];
-                this.available = item.available;
-                if (!this.available)
-                    break;
+            if (value) {
+                // Pokud je jedné ingredience dostatek, stále se musí 
+                // ještě zkontrolovat i ty ostatní
+                for (var _i = 0, _a = this.ingredients; _i < _a.length; _i++) {
+                    var item = _a[_i];
+                    this.available = item.available;
+                    if (!this.available)
+                        break;
+                }
+            }
+            else {
+                // Znepřístupnit recept může absence jediné ingredience
+                this.available = false;
             }
             if (oldAvail != this.available) {
                 // změnila se dostupnost, dej vědět listeneru,
                 // aby mohl recept skrýt/odkrýt
-                this.availableChangedListener(this);
+                this.recipeListener(this);
             }
         };
         return Recipe;
     }());
+    Lich.Recipe = Recipe;
     var IngredientByKey = (function () {
         function IngredientByKey() {
         }
         return IngredientByKey;
     }());
-    // export interface RecipeListener
     var RecipeManager = (function () {
-        function RecipeManager(availableChangedListener) {
-            this.availableChangedListener = availableChangedListener;
+        function RecipeManager(recipeListener) {
+            this.recipeListener = recipeListener;
             this.ingredientByKey = new IngredientByKey();
             this.buildRecipe([
                 [Lich.Resources.INV_DOOR_KEY, 1], [
@@ -63,6 +71,16 @@ var Lich;
                     [Lich.Resources.INV_STRAW_KEY, 1]
                 ]
             ]);
+            this.buildRecipe([
+                [Lich.Resources.INV_BRICKWALL_KEY, 5], [
+                    [Lich.Resources.INV_DIRT_KEY, 1]
+                ]
+            ]);
+            this.buildRecipe([
+                [Lich.Resources.INV_WOODWALL_KEY, 5], [
+                    [Lich.Resources.INV_WOOD_KEY, 1]
+                ]
+            ]);
         }
         RecipeManager.prototype.buildRecipe = function (json) {
             var self = this;
@@ -73,7 +91,7 @@ var Lich;
                 var ingArr = _a[_i];
                 ingreds.push(new RecipeItem(ingArr[0], ingArr[1]));
             }
-            var recipe = new Recipe(new RecipeItem(outcome, outcomeQuant), ingreds, this.availableChangedListener);
+            var recipe = new Recipe(new RecipeItem(outcome, outcomeQuant), ingreds, this.recipeListener);
             recipe.ingredients.forEach(function (ingredient) {
                 var arr = self.ingredientByKey[ingredient.key];
                 if (!arr) {

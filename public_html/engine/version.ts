@@ -24,15 +24,14 @@ namespace Lich {
             var version;
 
             version = new Version("0.5");
-            version.addChange("Changelog");
             version.addChange("Doors added");
             version.addChange("Object <RMB> interacting (open/close doors)");
             version.addChange("Object collisions (closed doors)");
             version.addChange("<SHIFT> toggles object alternative placing (L/R doors)");
+            version.addChange("Inventory paging");
             this.addVersion(version);
 
             version = new Version("0.4");
-            version.addChange("Changelog");
             version.addChange("Grave and bones added");
             version.addChange("Surface background digging");
             version.addChange("<SHIFT> toggles surface/surface-background digging");

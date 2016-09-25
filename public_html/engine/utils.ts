@@ -1,5 +1,9 @@
 namespace Lich {
 
+    export class HashMap<V> {
+        [key: string]: V;
+    }
+
     export class CollisionTestResult {
         constructor(public hit: boolean, public x?: number, public y?: number) { }
     }

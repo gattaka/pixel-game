@@ -5,7 +5,7 @@ namespace Lich {
         public sprite: createjs.Sprite;
         public count: Label;
         public invDef: InvObjDefinition;
-        public frames : number;
+        public frames: number;
 
         constructor(public item: string, quant: number) {
             super();
@@ -33,5 +33,5 @@ namespace Lich {
             text.y = this.height - PartsUI.TEXT_SIZE - PartsUI.SPACING;
         }
     }
-
+ 
 }

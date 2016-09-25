@@ -1,46 +1,38 @@
 namespace Lich {
 
-    class RecipeUI extends createjs.Container {
-        public addItem(item: ItemUI): RecipeUI {
-            if (this.children.length == 0) {
-                let btn = new Button();
-                this.addChild(btn);
-                btn.y = 0;
-                btn.x = 0;
-                item.y = PartsUI.SELECT_BORDER;
-                item.x = PartsUI.SELECT_BORDER
-            }
-            if (this.children.length == 2) {
-                let arrow = Resources.INSTANCE.getBitmap(Resources.UI_LEFT_KEY);
-                this.addChild(arrow);
-                arrow.y = PartsUI.SELECT_BORDER;
-                arrow.x = Resources.PARTS_SIZE + 12;
-                item.y = PartsUI.SELECT_BORDER;
-                item.x = Resources.PARTS_SIZE * 2 + 18;
-            }
-            if (this.children.length > 3) {
-                item.y = PartsUI.SELECT_BORDER;
-                item.x = this.children[this.children.length - 1].x + (Resources.PARTS_SIZE + PartsUI.SPACING);
-            }
-            this.addChild(item);
-            return this;
-        }
-    }
-
     export class CraftingUI extends PartsUI {
 
-        static N = 10;
-        static M = 12;
+        static N = 3;
+        static M = 2;
         static CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
 
         toggleFlag = true;
         private parentRef: createjs.Container = null;
 
+        lineOffset = 0;
+
+        itemHighlight: createjs.Shape;
         choosenItem: string = null;
 
-        invContent = new Array<ItemUI>();
-        itemHighlight: createjs.Shape;
+        // --- Virtuální seznam ---
+        // pole obsazení položkami
+        itemsTypeArray = new Array<Recipe>();
+        // mapa pořadí typů položek
+        itemsTypeIndexMap = new HashMap<number>();
+
+        // --- UI ----
+        // mapa existujících UI prvků dle typu položky
+        itemsUIMap = new HashMap<ItemUI>();
+
         itemsCont = new createjs.Container();
+
+        craftBtn: Button;
+        ingredientsCont: AbstractUI;
+        inventoryUI: InventoryUI;
+
+        public setInventoryUI(inventoryUI: InventoryUI) {
+            this.inventoryUI = inventoryUI;
+        }
 
         constructor() {
             super(CraftingUI.N, CraftingUI.M);
@@ -57,29 +49,141 @@ namespace Lich {
             self.itemsCont.y = PartsUI.BORDER;
             self.addChild(self.itemsCont);
 
-            // recepty
-            let recipes = [
-                new RecipeUI()
-                    .addItem(new ItemUI(Resources.INV_DOOR_KEY, 1))
-                    .addItem(new ItemUI(Resources.INV_WOOD_KEY, 2)),
-                new RecipeUI()
-                    .addItem(new ItemUI(Resources.INV_CAMPFIRE_KEY, 1))
-                    .addItem(new ItemUI(Resources.INV_WOOD_KEY, 2))
-                    .addItem(new ItemUI(Resources.INV_STRAW_KEY, 2)),
-                new RecipeUI()
-                    .addItem(new ItemUI(Resources.INV_WOODWALL_KEY, 1))
-                    .addItem(new ItemUI(Resources.INV_WOOD_KEY, 1)),
-                new RecipeUI()
-                    .addItem(new ItemUI(Resources.INV_BRICKWALL_KEY, 1))
-                    .addItem(new ItemUI(Resources.INV_DIRT_KEY, 1))
-            ];
+            // tlačítka
+            let upBtn = new Button(Resources.UI_UP_KEY);
+            let downBtn = new Button(Resources.UI_DOWN_KEY);
+            self.addChild(upBtn);
+            self.addChild(downBtn);
+            upBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
+            upBtn.y = 0;
+            downBtn.x = upBtn.x;
+            downBtn.y = PartsUI.pixelsByX(CraftingUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            recipes.forEach((v: RecipeUI, i: number) => {
-                self.addChild(v);
-                v.x = PartsUI.SELECT_BORDER;
-                v.y = PartsUI.SELECT_BORDER + i * (Resources.PARTS_SIZE + 16);
-            });
+            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
 
+            let upBtnHitArea = new createjs.Shape();
+            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            upBtn.hitArea = upBtnHitArea;
+            upBtn.on("mousedown", function (evt) {
+                if (self.lineOffset > 0) {
+                    self.lineOffset--;
+                    self.render();
+                }
+            }, null, false);
+
+            let downBtnHitArea = new createjs.Shape();
+            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            downBtn.hitArea = downBtnHitArea;
+            downBtn.on("mousedown", function (evt) {
+                let occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
+                if (self.lineOffset < occupLines - CraftingUI.M) {
+                    self.lineOffset++;
+                    self.render();
+                }
+            }, null, false);
+
+            // Přehled ingrediencí
+            self.ingredientsCont = new AbstractUI(CraftingUI.N * (Resources.PARTS_SIZE + PartsUI.SPACING) - PartsUI.SPACING + 2 * AbstractUI.BORDER,
+                Resources.PARTS_SIZE + 2 * PartsUI.SELECT_BORDER);
+            self.addChild(self.ingredientsCont);
+            self.ingredientsCont.x = 0;
+            self.ingredientsCont.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
+
+            // craft tlačítko
+            let craftBtn = new Button(Resources.UI_CRAFT_KEY);
+            self.addChild(craftBtn);
+            craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
+            craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
+
+            let craftBtnHitArea = new createjs.Shape();
+            craftBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            craftBtn.hitArea = craftBtnHitArea;
+            craftBtn.on("mousedown", function (evt) {
+                if (self.choosenItem) {
+                    let index = self.itemsTypeIndexMap[self.choosenItem];
+                    let recipe = self.itemsTypeArray[index];
+                    for (let ingred of recipe.ingredients) {
+                        self.inventoryUI.decrease(ingred.key, ingred.quant);
+                    }
+                    self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
+                    Mixer.play(Resources.SND_CRAFT_KEY);
+                }
+            }, null, false);
+
+        }
+
+        render() {
+            this.itemsCont.removeAllChildren();
+            this.itemHighlight.visible = false;
+            let itemsOffset = this.lineOffset * CraftingUI.N;
+            for (let i = itemsOffset;
+                i < CraftingUI.N * CraftingUI.M + itemsOffset && i < this.itemsTypeArray.length;
+                i++) {
+                let item = this.itemsTypeArray[i];
+                if (item) {
+                    this.createUIItem(item, i - itemsOffset);
+                }
+            }
+        }
+
+        createUIItem(item: Recipe, i: number) {
+            let self = this;
+            let key = JSON.stringify(item, self.replacer);
+            let itemUI = new ItemUI(item.outcome.key, item.outcome.quant);
+            self.itemsUIMap[key] = itemUI;
+            self.itemsCont.addChild(itemUI);
+            itemUI.x = (i % CraftingUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+            itemUI.y = Math.floor(i / CraftingUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+
+            let hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
+            itemUI.hitArea = hitArea;
+
+            if (self.choosenItem == key) {
+                self.itemHighlight.visible = true;
+                self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+                self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+            }
+
+            (function () {
+                var currentItem = self.itemsUIMap[key];
+                itemUI.on("mousedown", function (evt) {
+                    self.itemHighlight.visible = true;
+                    self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+                    self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+                    self.choosenItem = key;
+                }, null, false);
+            })();
+        }
+
+        private replacer(key, value) {
+            if (key == "recipe") return undefined;
+            if (key == "available") return undefined;
+            else return value;
+        }
+
+        public createRecipeAvailChangeListener(): (Recipe) => void {
+            let self = this;
+            return function (recipe: Recipe) {
+                let key = JSON.stringify(recipe, self.replacer);
+                if (recipe.available) {
+                    let i = 0;
+                    for (i = 0; i < self.itemsTypeArray.length; i++) {
+                        // buď najdi volné místo...
+                        if (!self.itemsTypeArray[i]) {
+                            break;
+                        }
+                    }
+                    // ...nebo vlož položku na konec pole
+                    self.itemsTypeArray[i] = recipe;
+                    self.itemsTypeIndexMap[key] = i;
+                } else {
+                    let i = self.itemsTypeIndexMap[key];
+                    delete self.itemsTypeIndexMap[key];
+                    delete self.itemsTypeArray[i];
+                }
+                self.render();
+            };
         }
 
         toggle() {

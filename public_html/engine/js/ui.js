@@ -17,20 +17,23 @@ var Lich;
             self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
             self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
+            // Crafting
+            var craftingUI = new Lich.CraftingUI();
+            self.addChild(craftingUI);
+            self.craftingUI = craftingUI;
             // Crafting recipes 
-            var recipeListener = new Lich.RecipeListener();
+            var recipeListener = new Lich.RecipeManager(craftingUI.createRecipeAvailChangeListener());
             // Inventář
             var inventoryUI = new Lich.InventoryUI(recipeListener);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
-            // Crafting
-            var craftingUI = new Lich.CraftingUI();
+            craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
-            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2 - craftingUI.height;
-            self.addChild(craftingUI);
-            self.craftingUI = craftingUI;
+            // musí se posunout víc, protože má externí řádek pro ingredience
+            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
+                - craftingUI.height - Lich.Resources.PARTS_SIZE - Lich.PartsUI.SELECT_BORDER * 3;
             // Schopnosti
             var spellsUI = new Lich.SpellsUI();
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;

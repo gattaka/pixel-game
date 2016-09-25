@@ -134,6 +134,7 @@ namespace Lich {
         static UI_DOWN_KEY = "UI_DOWN_KEY";
         static UI_LEFT_KEY = "UI_LEFT_KEY";
         static UI_RIGHT_KEY = "UI_RIGHT_KEY";
+        static UI_CRAFT_KEY = "UI_CRAFT_KEY";
 
         // ui spells
         static SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
@@ -161,6 +162,7 @@ namespace Lich {
         static SND_SPAWN_KEY = "SND_SPAWN_KEY";
         static SND_DOOR_OPEN_KEY = "SND_DOOR_OPEN_KEY";
         static SND_DOOR_CLOSE_KEY = "SND_DOOR_CLOSE_KEY";
+        static SND_CRAFT_KEY = "SND_CRAFT_KEY";
 
         // music
         static MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
@@ -283,6 +285,7 @@ namespace Lich {
                 new Load("images/ui/down.png", Resources.UI_DOWN_KEY),
                 new Load("images/ui/left.png", Resources.UI_LEFT_KEY),
                 new Load("images/ui/right.png", Resources.UI_RIGHT_KEY),
+                new Load("images/ui/craft.png", Resources.UI_CRAFT_KEY),
                 // armor
                 new Load("images/armor/helmet.png", Resources.HELMET_KEY),
                 new Load("images/armor/torso.png", Resources.TORSO_KEY),
@@ -313,6 +316,7 @@ namespace Lich {
                 new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
                 new Load("sound/door_open.ogg", Resources.SND_DOOR_OPEN_KEY),
                 new Load("sound/door_close.ogg", Resources.SND_DOOR_CLOSE_KEY),
+                new Load("sound/craft.ogg", Resources.SND_CRAFT_KEY),
                 // music
                 new Load("music/Dirt_2.ogg", Resources.MSC_DIRT_THEME_KEY),
                 // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)

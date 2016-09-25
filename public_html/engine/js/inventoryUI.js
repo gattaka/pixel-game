@@ -5,11 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
-    var LinkedHashMap = (function () {
-        function LinkedHashMap() {
-        }
-        return LinkedHashMap;
-    }());
     var InventoryUI = (function (_super) {
         __extends(InventoryUI, _super);
         function InventoryUI(recipeListener) {
@@ -23,12 +18,12 @@ var Lich;
             // pole obsazení položkami
             this.itemsTypeArray = new Array();
             // mapa pořadí typů položek
-            this.itemsTypeIndexMap = new LinkedHashMap();
+            this.itemsTypeIndexMap = new Lich.HashMap();
             // mapa počtů dle typu položky
-            this.itemsQuantityMap = new LinkedHashMap();
+            this.itemsQuantityMap = new Lich.HashMap();
             // --- UI ----
             // mapa existujících UI prvků dle typu položky
-            this.itemsUIMap = new LinkedHashMap();
+            this.itemsUIMap = new Lich.HashMap();
             this.itemHighlightVisibleBeforeCollapse = true;
             this.itemsCont = new createjs.Container();
             this.collapsed = false;
@@ -190,6 +185,7 @@ var Lich;
                 self.itemsTypeArray[i] = item;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
+                self.recipeListener.updateQuant(item, quant);
                 var itemsOffset = self.lineOffset * InventoryUI.N;
                 if (i >= itemsOffset
                     && i < InventoryUI.N * InventoryUI.M + itemsOffset) {

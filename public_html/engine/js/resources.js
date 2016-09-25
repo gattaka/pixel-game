@@ -116,6 +116,7 @@ var Lich;
                 new Load("images/ui/down.png", Resources.UI_DOWN_KEY),
                 new Load("images/ui/left.png", Resources.UI_LEFT_KEY),
                 new Load("images/ui/right.png", Resources.UI_RIGHT_KEY),
+                new Load("images/ui/craft.png", Resources.UI_CRAFT_KEY),
                 // armor
                 new Load("images/armor/helmet.png", Resources.HELMET_KEY),
                 new Load("images/armor/torso.png", Resources.TORSO_KEY),
@@ -146,6 +147,7 @@ var Lich;
                 new Load("sound/252083__pepingrillin__spawn.ogg", Resources.SND_SPAWN_KEY),
                 new Load("sound/door_open.ogg", Resources.SND_DOOR_OPEN_KEY),
                 new Load("sound/door_close.ogg", Resources.SND_DOOR_CLOSE_KEY),
+                new Load("sound/craft.ogg", Resources.SND_CRAFT_KEY),
                 // music
                 new Load("music/Dirt_2.ogg", Resources.MSC_DIRT_THEME_KEY),
             ];
@@ -480,6 +482,7 @@ var Lich;
         Resources.UI_DOWN_KEY = "UI_DOWN_KEY";
         Resources.UI_LEFT_KEY = "UI_LEFT_KEY";
         Resources.UI_RIGHT_KEY = "UI_RIGHT_KEY";
+        Resources.UI_CRAFT_KEY = "UI_CRAFT_KEY";
         // ui spells
         Resources.SPELL_PLACE_KEY = "SPELL_PLACE_KEY";
         Resources.SPELL_PLACE_BGR_KEY = "SPELL_PLACE_BGR_KEY";
@@ -504,6 +507,7 @@ var Lich;
         Resources.SND_SPAWN_KEY = "SND_SPAWN_KEY";
         Resources.SND_DOOR_OPEN_KEY = "SND_DOOR_OPEN_KEY";
         Resources.SND_DOOR_CLOSE_KEY = "SND_DOOR_CLOSE_KEY";
+        Resources.SND_CRAFT_KEY = "SND_CRAFT_KEY";
         // music
         Resources.MSC_DIRT_THEME_KEY = "MSC_DIRT_THEME_KEY";
         Resources.MSC_BUILD_THEME_KEY = "MSC_BUILD_THEME_KEY";
