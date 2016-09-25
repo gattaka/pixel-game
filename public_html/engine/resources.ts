@@ -422,8 +422,8 @@ namespace Lich {
                 Resources.INSTANCE.surfaceBgrIndex.insert(mapSurface.mapKey);
             };
 
-            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(Resources.SRFC_BGR_BRICK_KEY, Resources.INV_DIRT_KEY, 1));
-            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(Resources.SRFC_BGR_WOODWALL_KEY, Resources.INV_WOOD_KEY, 1));
+            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(Resources.SRFC_BGR_BRICK_KEY, Resources.INV_BRICKWALL_KEY, 1));
+            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(Resources.SRFC_BGR_WOODWALL_KEY, Resources.INV_WOODWALL_KEY, 1));
             registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(Resources.SRFC_BGR_STRAW_KEY, Resources.INV_STRAW_KEY, 1));
 
             /**
@@ -453,7 +453,7 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(Resources.MAP_PLANT4_KEY, 2, 2, Resources.INV_PLANT4_KEY, 1, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_FLORITE_KEY, 2, 2, Resources.INV_FLORITE_KEY, 5, 1));
             registerObjectDefs(new MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
-            registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 10,
+            registerObjectDefs(new MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0,
                 function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                     game.world.render.digObject(rx, ry, false);
                     game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
@@ -507,9 +507,9 @@ namespace Lich {
                 .setMapObjAlternative(Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]));
 
             // usaditelných jako povrch
-            registerInvObjectDefs(new InvObjDefinition(Resources.INV_WOOD_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
+            registerInvObjectDefs(new InvObjDefinition(Resources.INV_WOODWALL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
                 .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_WOODWALL_KEY]));
-            registerInvObjectDefs(new InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_BRICK_KEY])
+            registerInvObjectDefs(new InvObjDefinition(Resources.INV_BRICKWALL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_BRICK_KEY])
                 .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_BRICK_KEY]));
             registerInvObjectDefs(new InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_STRAW_KEY])
                 .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_STRAW_KEY]));

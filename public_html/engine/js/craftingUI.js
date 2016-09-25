@@ -5,6 +5,17 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
+    var IngredientsCont = (function (_super) {
+        __extends(IngredientsCont, _super);
+        function IngredientsCont() {
+            _super.call(this, CraftingUI.N * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING) - Lich.PartsUI.SPACING + 2 * Lich.AbstractUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.PartsUI.SELECT_BORDER);
+            this.itemsCont = new createjs.Container();
+            this.itemsCont.x = Lich.PartsUI.BORDER;
+            this.itemsCont.y = Lich.PartsUI.SELECT_BORDER;
+            this.addChild(this.itemsCont);
+        }
+        return IngredientsCont;
+    }(Lich.AbstractUI));
     var CraftingUI = (function (_super) {
         __extends(CraftingUI, _super);
         function CraftingUI() {
@@ -61,7 +72,7 @@ var Lich;
                 }
             }, null, false);
             // Přehled ingrediencí
-            self.ingredientsCont = new Lich.AbstractUI(CraftingUI.N * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING) - Lich.PartsUI.SPACING + 2 * Lich.AbstractUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.PartsUI.SELECT_BORDER);
+            self.ingredientsCont = new IngredientsCont();
             self.addChild(self.ingredientsCont);
             self.ingredientsCont.x = 0;
             self.ingredientsCont.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
@@ -79,7 +90,7 @@ var Lich;
                     var recipe = self.itemsTypeArray[index];
                     for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
                         var ingred = _a[_i];
-                        self.inventoryUI.decrease(ingred.key, ingred.quant);
+                        self.inventoryUI.invRemove(ingred.key, ingred.quant);
                     }
                     self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
                     Lich.Mixer.play(Lich.Resources.SND_CRAFT_KEY);
@@ -123,6 +134,17 @@ var Lich;
                     self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.choosenItem = key;
+                    // vypiš ingredience
+                    self.ingredientsCont.itemsCont.removeAllChildren();
+                    var index = self.itemsTypeIndexMap[self.choosenItem];
+                    var recipe = self.itemsTypeArray[index];
+                    for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
+                        var ingred = _a[_i];
+                        var ingredUI = new Lich.ItemUI(ingred.key, ingred.quant);
+                        ingredUI.x = self.ingredientsCont.itemsCont.children.length * (Lich.PartsUI.SPACING + Lich.Resources.PARTS_SIZE);
+                        ingredUI.y = 0;
+                        self.ingredientsCont.itemsCont.addChild(ingredUI);
+                    }
                 }, null, false);
             })();
         };
@@ -151,6 +173,10 @@ var Lich;
                     self.itemsTypeIndexMap[key] = i;
                 }
                 else {
+                    if (self.choosenItem == key) {
+                        self.choosenItem = null;
+                        self.ingredientsCont.itemsCont.removeAllChildren();
+                    }
                     var i = self.itemsTypeIndexMap[key];
                     delete self.itemsTypeIndexMap[key];
                     delete self.itemsTypeArray[i];

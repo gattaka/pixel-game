@@ -242,7 +242,7 @@ var Lich;
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
                 if (game.world.render.place(xAim, yAim, object, this.alternative)) {
                     Lich.Mixer.play(Lich.Resources.SND_PLACE_KEY);
-                    game.ui.inventoryUI.decrease(uiItem, 1);
+                    game.ui.inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
                 return false;

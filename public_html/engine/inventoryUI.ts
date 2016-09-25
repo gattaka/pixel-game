@@ -151,7 +151,7 @@ namespace Lich {
             this.toggleFlag = true;
         }
 
-        decrease(item: string, quantChange: number) {
+        invRemove(item: string, quantChange: number) {
             var self = this;
             var itemUI = self.itemsUIMap[item];
             if (itemUI) {

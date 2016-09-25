@@ -125,7 +125,7 @@ var Lich;
         InventoryUI.prototype.prepareForToggleInv = function () {
             this.toggleFlag = true;
         };
-        InventoryUI.prototype.decrease = function (item, quantChange) {
+        InventoryUI.prototype.invRemove = function (item, quantChange) {
             var self = this;
             var itemUI = self.itemsUIMap[item];
             if (itemUI) {
