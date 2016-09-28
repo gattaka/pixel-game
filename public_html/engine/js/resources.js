@@ -192,7 +192,6 @@ var Lich;
                 }
             });
             self.loader.loadManifest(manifest, true);
-            Resources.INSTANCE = this;
             /**
              * Definice
              */
@@ -201,9 +200,9 @@ var Lich;
              */
             // Definice mapových povrchů
             var registerSurfaceDefs = function (mapSurface) {
-                Resources.INSTANCE.mapSurfaceDefs[mapSurface.mapKey] = mapSurface;
+                self.mapSurfaceDefs[mapSurface.mapKey] = mapSurface;
                 // Definice indexových počátků pro typy povrchu
-                Resources.INSTANCE.surfaceIndex.insert(mapSurface.mapKey);
+                self.surfaceIndex.insert(mapSurface.mapKey);
             };
             // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
             // jsou dle frekvence usazovány jiné povrchy
@@ -215,11 +214,11 @@ var Lich;
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(Resources.SRFC_STRAW_KEY, Resources.INV_STRAW_KEY, 1, 0));
             (function () {
                 // vytvoř frekvenční pool pro povrchy
-                for (var key in Resources.INSTANCE.mapSurfaceDefs) {
-                    var item = Resources.INSTANCE.mapSurfaceDefs[key];
+                for (var key in self.mapSurfaceDefs) {
+                    var item = self.mapSurfaceDefs[key];
                     // vlož index objektu tolikrát, kolik je jeho frekvenc
                     for (var i = 0; i < item.freq; i++) {
-                        Resources.INSTANCE.mapSurfacesFreqPool.push(key);
+                        self.mapSurfacesFreqPool.push(key);
                     }
                 }
             })();
@@ -228,9 +227,9 @@ var Lich;
              */
             // Definice mapových stěn povrchů
             var registerSurfaceBgrDefs = function (mapSurface) {
-                Resources.INSTANCE.mapSurfacesBgrDefs[mapSurface.mapKey] = mapSurface;
+                self.mapSurfacesBgrDefs[mapSurface.mapKey] = mapSurface;
                 // Definice indexových počátků pro typy povrchu
-                Resources.INSTANCE.surfaceBgrIndex.insert(mapSurface.mapKey);
+                self.surfaceBgrIndex.insert(mapSurface.mapKey);
             };
             registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(Resources.SRFC_BGR_BRICK_KEY, Resources.INV_BRICKWALL_KEY, 1));
             registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(Resources.SRFC_BGR_WOODWALL_KEY, Resources.INV_WOODWALL_KEY, 1));
@@ -240,7 +239,7 @@ var Lich;
              */
             // Definice mapových objektů
             var registerObjectDefs = function (mapObj) {
-                Resources.INSTANCE.mapObjectDefs[mapObj.mapKey] = mapObj;
+                self.mapObjectDefs[mapObj.mapKey] = mapObj;
             };
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_GRAVE_KEY, 6, 3, Resources.INV_BONES_KEY, 5, 1));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_BERRY_KEY, 2, 2, Resources.INV_BERRY_KEY, 1, 1));
@@ -262,31 +261,31 @@ var Lich;
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_CAMPFIRE_KEY, 2, 2, Resources.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_OPEN_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
+                game.world.render.placeObject(rx, ry, self.mapObjectDefs[Resources.MAP_DOOR_CLOSED_KEY]);
                 Lich.Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
             }));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_CLOSED_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
+                game.world.render.placeObject(rx, ry, self.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY]);
                 Lich.Mixer.play(Resources.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_OPEN2_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_CLOSED2_KEY]);
+                game.world.render.placeObject(rx, ry, self.mapObjectDefs[Resources.MAP_DOOR_CLOSED2_KEY]);
                 Lich.Mixer.play(Resources.SND_DOOR_CLOSE_KEY);
             }));
             registerObjectDefs(new Lich.MapObjDefinition(Resources.MAP_DOOR_CLOSED2_KEY, 2, 4, Resources.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]);
+                game.world.render.placeObject(rx, ry, self.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]);
                 Lich.Mixer.play(Resources.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
-                for (var key in Resources.INSTANCE.mapObjectDefs) {
-                    var item = Resources.INSTANCE.mapObjectDefs[key];
+                for (var key in self.mapObjectDefs) {
+                    var item = self.mapObjectDefs[key];
                     // vlož index objektu tolikrát, kolik je jeho frekvenc
                     for (var i = 0; i < item.freq; i++) {
-                        Resources.INSTANCE.mapObjectDefsFreqPool.push(key);
+                        self.mapObjectDefsFreqPool.push(key);
                     }
                 }
             })();
@@ -295,29 +294,29 @@ var Lich;
              */
             // Definice inventárních objektů
             var registerInvObjectDefs = function (invObj) {
-                Resources.INSTANCE.invObjectDefs[invObj.invKey] = invObj;
+                self.invObjectDefs[invObj.invKey] = invObj;
             };
             // usaditelných jako objekt
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_MUSHROOM_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DOOR_KEY, Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY])
-                .setMapObjAlternative(Resources.INSTANCE.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_MUSHROOM_KEY, self.mapObjectDefs[Resources.MAP_MUSHROOM_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_CAMPFIRE_KEY, self.mapObjectDefs[Resources.MAP_CAMPFIRE_KEY]).setFrames(4));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DOOR_KEY, self.mapObjectDefs[Resources.MAP_DOOR_OPEN_KEY])
+                .setMapObjAlternative(self.mapObjectDefs[Resources.MAP_DOOR_OPEN2_KEY]));
             // usaditelných jako povrch
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_DIRT_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_WOODWALL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
-                .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_WOODWALL_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_BRICKWALL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_BRICK_KEY])
-                .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_BRICK_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_STRAW_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_STRAW_KEY])
-                .setBackground(Resources.INSTANCE.mapSurfacesBgrDefs[Resources.SRFC_BGR_STRAW_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_KRYSTAL_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, Resources.INSTANCE.mapSurfaceDefs[Resources.SRFC_FLORITE_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_DIRT_KEY, self.mapSurfaceDefs[Resources.SRFC_DIRT_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_WOODWALL_KEY, self.mapSurfaceDefs[Resources.SRFC_WOODWALL_KEY])
+                .setBackground(self.mapSurfacesBgrDefs[Resources.SRFC_BGR_WOODWALL_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_BRICKWALL_KEY, self.mapSurfaceDefs[Resources.SRFC_BRICK_KEY])
+                .setBackground(self.mapSurfacesBgrDefs[Resources.SRFC_BGR_BRICK_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_STRAW_KEY, self.mapSurfaceDefs[Resources.SRFC_STRAW_KEY])
+                .setBackground(self.mapSurfacesBgrDefs[Resources.SRFC_BGR_STRAW_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_KRYSTAL_KEY, self.mapSurfaceDefs[Resources.SRFC_KRYSTAL_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(Resources.INV_FLORITE_KEY, self.mapSurfaceDefs[Resources.SRFC_FLORITE_KEY]));
             /**
              * SPELLS
              */
             // Definice spells
             var registerSpellDefs = function (spell) {
-                Resources.INSTANCE.spellDefs.insert(spell.key, spell);
+                self.spellDefs.insert(spell.key, spell);
             };
             registerSpellDefs(new Lich.FireballSpellDef());
             registerSpellDefs(new Lich.DigSpellDef());
@@ -327,6 +326,12 @@ var Lich;
             registerSpellDefs(new Lich.BoltSpellDef());
             registerSpellDefs(new Lich.EnemySpellDef());
         }
+        Resources.getInstance = function (game, callback) {
+            if (!Resources.INSTANCE) {
+                Resources.INSTANCE = new Resources(game, callback);
+            }
+            return Resources.INSTANCE;
+        };
         ;
         Resources.prototype.getImage = function (key) {
             return this.loader.getResult(key);
@@ -518,9 +523,6 @@ var Lich;
         Resources.MSC_KRYSTAL_THEME_KEY = "MSC_KRYSTAL_THEME_KEY";
         Resources.MSC_FLOOD_THEME_KEY = "MSC_FLOOD_THEME_KEY";
         Resources.MSC_LAVA_THEME_KEY = "MSC_LAVA_THEME_KEY";
-        Resources._constructor = (function () {
-            console.log('Static constructor');
-        })();
         return Resources;
     }());
     Lich.Resources = Resources;

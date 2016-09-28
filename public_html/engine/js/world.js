@@ -52,15 +52,6 @@ var Lich;
             self.hero.x = game.canvas.width / 2;
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
-            /*---------------------*/
-            /* Measurements, debug */
-            /*---------------------*/
-            self.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            game.debugUI.addNextChild(self.tilesLabel);
-            self.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            game.debugUI.addNextChild(self.sectorLabel);
-            self.playerLabel = new Lich.Label("PLAYER x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            game.debugUI.addNextChild(self.playerLabel);
             // light test
             /*
             var bitmap = self.game.resources.getBitmap(Resources.DARKNESS_KEY);
@@ -474,10 +465,10 @@ var Lich;
                 self.hero.spellCooldowns[choosenSpell] -= delta;
                 // Může se provést (cooldown je pryč, mám will a chci cast) ?
                 if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                    var heroCenterX = self.hero.x + self.hero.width / 2;
-                    var heroCenterY = self.hero.y + self.hero.height / 4;
+                    var heroCenterX_1 = self.hero.x + self.hero.width / 2;
+                    var heroCenterY_1 = self.hero.y + self.hero.height / 4;
                     // zkus cast
-                    if (spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                    if (spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game)) {
                         // ok, cast se provedl, nastav nový cooldown a odeber will
                         self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
                         self.hero.decreseWill(spellDef.cost);
@@ -487,18 +478,8 @@ var Lich;
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y);
             var typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
-            if (typeof self.tilesLabel !== "undefined") {
-                self.tilesLabel.setText("TILES x: " + clsn.x + " y: " + clsn.y + " clsn: " + clsn.hit + " type: " + typ);
-            }
             var sector = self.render.getSectorByTiles(coord.x, coord.y);
-            if (typeof self.sectorLabel !== "undefined") {
-                if (typeof sector !== "undefined" && sector !== null) {
-                    self.sectorLabel.setText("SECTOR: x: " + sector.map_x + " y: " + sector.map_y);
-                }
-                else {
-                    self.sectorLabel.setText("SECTOR: -");
-                }
-            }
+            Lich.EventBus.getInstance().fireEvent(new Lich.PointedAreaEventPayload(clsn.x, clsn.y, clsn.hit, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
         };
         ;
         World.prototype.handleTick = function (delta) {

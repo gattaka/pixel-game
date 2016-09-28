@@ -7,6 +7,7 @@ namespace Lich {
 
         charCont: createjs.Container;
 
+        debugUI: DebugLogUI;
         inventoryUI: InventoryUI;
         spellsUI: SpellsUI;
         musicUI: MusicUI;
@@ -20,6 +21,12 @@ namespace Lich {
 
             UI.INSTANCE = this;
             var self = this;
+
+            // Debug and loging
+            self.debugUI = new DebugLogUI(400, 0);
+            self.debugUI.x = UI.SCREEN_SPACING;
+            self.debugUI.y = UI.SCREEN_SPACING;
+            self.addChild(self.debugUI);
 
             // SplashScreen
             self.splashScreenUI = new SplashScreenUI();
@@ -47,7 +54,6 @@ namespace Lich {
             // musí se posunout víc, protože má externí řádek pro ingredience
             craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
                 - craftingUI.height - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 3;
-
             // Schopnosti
             var spellsUI = new SpellsUI();
             spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
@@ -68,7 +74,6 @@ namespace Lich {
             conditionUI.y = game.canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
-
             /*
              // přehled postavy
              (function () {

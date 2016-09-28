@@ -110,6 +110,7 @@ var Lich;
             _super.prototype.addChild.call(this, down);
             down.x = self.width + Lich.PartsUI.SELECT_BORDER;
             down.y = self.height - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
+            self.cache(-5, -5, self.width + Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2 + Lich.PartsUI.SELECT_BORDER + 10, self.height + 10);
         }
         SplashScreenUI.prototype.hide = function () {
             this.parentRef = this.parent;
@@ -157,6 +158,7 @@ var Lich;
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    self.updateCache();
                     Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
                 }
             }, null, false);
@@ -174,6 +176,7 @@ var Lich;
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    self.updateCache();
                     Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
                 }
             }, null, false);

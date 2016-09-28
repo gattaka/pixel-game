@@ -133,6 +133,7 @@ namespace Lich {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    self.updateCache();
                     Mixer.play(Resources.SND_CLICK_KEY);
                 }
             }, null, false);
@@ -151,6 +152,7 @@ namespace Lich {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
+                    self.updateCache();
                     Mixer.play(Resources.SND_CLICK_KEY);
                 }
             }, null, false);
@@ -206,6 +208,10 @@ namespace Lich {
             super.addChild(down);
             down.x = self.width + PartsUI.SELECT_BORDER;
             down.y = self.height - Resources.PARTS_SIZE - PartsUI.BORDER;
+
+            self.cache(-5, -5,
+                self.width + Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2 + PartsUI.SELECT_BORDER + 10,
+                self.height + 10);
         }
 
     }

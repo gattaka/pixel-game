@@ -9,6 +9,32 @@ var Lich;
         __extends(DebugLogUI, _super);
         function DebugLogUI(x, y) {
             _super.call(this, x, y);
+            var self = this;
+            this.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.addNextChild(this.fpsLabel);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.FPS_CHANGE, function (data) {
+                self.fpsLabel.setText(Math.round(data.payload) + " fps");
+            });
+            this.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.addNextChild(this.mouseLabel);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MOUSE_MOVE, function (data) {
+                self.mouseLabel.setText("x: " + data.x + " y: " + data.y);
+            });
+            this.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.addNextChild(this.tilesLabel);
+            this.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.addNextChild(this.sectorLabel);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.POINTED_AREA_CHANGE, function (data) {
+                self.tilesLabel.setText("TILES x: " + data.clsnx + " y: " + data.clsny + " clsn: " + data.clsnHit + " type: " + data.tileType);
+                if (data.secx) {
+                    self.sectorLabel.setText("SECTOR: x: " + data.secx + " y: " + data.secy);
+                }
+                else {
+                    self.sectorLabel.setText("SECTOR: -");
+                }
+            });
+            this.playerLabel = new Lich.Label("PLAYER x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.addNextChild(this.playerLabel);
         }
         DebugLogUI.prototype.addNextChild = function (child) {
             if (this.height == 0) {

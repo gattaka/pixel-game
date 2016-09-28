@@ -12,6 +12,11 @@ var Lich;
             this.game = game;
             UI.INSTANCE = this;
             var self = this;
+            // Debug and loging
+            self.debugUI = new Lich.DebugLogUI(400, 0);
+            self.debugUI.x = UI.SCREEN_SPACING;
+            self.debugUI.y = UI.SCREEN_SPACING;
+            self.addChild(self.debugUI);
             // SplashScreen
             self.splashScreenUI = new Lich.SplashScreenUI();
             self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;

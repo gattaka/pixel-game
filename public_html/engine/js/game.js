@@ -72,32 +72,21 @@ var Lich;
             /*----------------*/
             /* Resources init */
             /*----------------*/
-            new Lich.Resources(self, function () {
+            Lich.Resources.getInstance(self, function () {
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
                 self.ui = new Lich.UI(self);
-                self.debugUI = new Lich.DebugLogUI(400, 0);
-                self.debugUI.x = Lich.UI.SCREEN_SPACING;
-                self.debugUI.y = Lich.UI.SCREEN_SPACING;
-                self.ui.addChild(self.debugUI);
                 /*---------------------*/
                 /* Measurements, debug */
                 /*---------------------*/
                 console.log("Measurements init");
-                self.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-                self.debugUI.addNextChild(self.fpsLabel);
-                self.stage.addEventListener("stagemousemove", handleMouseMove);
-                self.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-                self.debugUI.addNextChild(self.mouseLabel);
                 self.world = new Lich.World(self);
                 self.stage.addChild(self.world);
                 self.stage.addChild(self.ui);
-                function handleMouseMove(event) {
-                    if (typeof self.mouseLabel !== "undefined") {
-                        self.mouseLabel.setText("x: " + event.stageX + " y: " + event.stageY);
-                    }
-                }
+                self.stage.addEventListener("stagemousemove", function (event) {
+                    Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
+                });
                 self.initialized = true;
             });
             /*-----------*/
@@ -110,9 +99,7 @@ var Lich;
                 var delta = event.delta;
                 if (self.initialized) {
                     // Measurements
-                    if (typeof self.fpsLabel !== "undefined") {
-                        self.fpsLabel.setText(Math.round(createjs.Ticker.getMeasuredFPS()) + " fps");
-                    }
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.FPS_CHANGE, createjs.Ticker.getMeasuredFPS()));
                     // Idle
                     self.world.handleTick(delta);
                     // UI má při akcích myši přednost

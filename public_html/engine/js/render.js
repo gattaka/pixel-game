@@ -116,7 +116,7 @@ var Lich;
                                         // vytvoř dílek
                                         var tile = self.createBgrTile(bgrElement);
                                         // přidej dílek do sektoru
-                                        sector.addCachableChild(tile);
+                                        sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         // přidej dílek do globální mapy
@@ -128,7 +128,7 @@ var Lich;
                                         // vytvoř dílek
                                         var tile = self.createTile(tileElement);
                                         // přidej dílek do sektoru
-                                        sector.addCachableChild(tile);
+                                        sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         // přidej dílek do globální mapy
@@ -144,7 +144,7 @@ var Lich;
                                             sector.addAnimatedChild(object);
                                         }
                                         else {
-                                            sector.addCachableChild(object);
+                                            sector.addCacheableChild(object);
                                         }
                                         object.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         object.y = (my % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
@@ -484,7 +484,7 @@ var Lich;
                                             targetSector.removeAnimatedChild(child);
                                         }
                                         else {
-                                            targetSector.removeCachableChild(child);
+                                            targetSector.removeCacheableChild(child);
                                         }
                                     }
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -680,7 +680,7 @@ var Lich;
                                 // vytvoř dílek
                                 var tile = self.createTile(posIndex);
                                 // přidej dílek do sektoru
-                                sector.addCachableChild(tile);
+                                sector.addCacheableChild(tile);
                                 tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 // přidej dílek do globální mapy
@@ -718,7 +718,7 @@ var Lich;
                         sector.addAnimatedChild(tile);
                     }
                     else {
-                        sector.addCachableChild(tile);
+                        sector.addCacheableChild(tile);
                     }
                     tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                     tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;

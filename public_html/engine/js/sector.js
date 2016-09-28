@@ -15,33 +15,33 @@ var Lich;
             this.width = width;
             this.height = height;
             this.backgroundCont = new createjs.Container();
-            this.cachableCont = new createjs.Container();
+            this.cacheableCont = new createjs.Container();
             this.animatedCont = new createjs.Container();
             this.backgroundCont.width = this.width;
             this.backgroundCont.height = this.height;
-            this.cachableCont.width = this.width;
-            this.cachableCont.height = this.height;
+            this.cacheableCont.width = this.width;
+            this.cacheableCont.height = this.height;
             this.animatedCont.width = this.width;
             this.animatedCont.height = this.height;
             this.addChild(this.backgroundCont);
-            this.addChild(this.cachableCont);
+            this.addChild(this.cacheableCont);
             this.addChild(this.animatedCont);
         }
         // override
         Sector.prototype.cache = function (x, y, width, height, scale) {
             this.backgroundCont.cache(x, y, width, height);
-            this.cachableCont.cache(x, y, width, height);
+            this.cacheableCont.cache(x, y, width, height);
         };
         // override
         Sector.prototype.updateCache = function (compositeOperation) {
             this.backgroundCont.updateCache();
-            this.cachableCont.updateCache();
+            this.cacheableCont.updateCache();
         };
         Sector.prototype.addBackgroundChild = function (child) {
             this.backgroundCont.addChild(child);
         };
-        Sector.prototype.addCachableChild = function (child) {
-            this.cachableCont.addChild(child);
+        Sector.prototype.addCacheableChild = function (child) {
+            this.cacheableCont.addChild(child);
         };
         Sector.prototype.addAnimatedChild = function (child) {
             this.animatedCont.addChild(child);
@@ -49,8 +49,8 @@ var Lich;
         Sector.prototype.removeBackgroundChild = function (child) {
             this.backgroundCont.removeChild(child);
         };
-        Sector.prototype.removeCachableChild = function (child) {
-            this.cachableCont.removeChild(child);
+        Sector.prototype.removeCacheableChild = function (child) {
+            this.cacheableCont.removeChild(child);
         };
         Sector.prototype.removeAnimatedChild = function (child) {
             this.animatedCont.removeChild(child);

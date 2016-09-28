@@ -47,10 +47,6 @@ namespace Lich {
         freeObjects = Array<WorldObject>();
         bulletObjects = Array<BulletObject>();
 
-        tilesLabel: Label;
-        sectorLabel: Label;
-        playerLabel: Label;
-
         map: GameMap;
         tilesMap: TilesMap;
         render: Render;
@@ -78,18 +74,6 @@ namespace Lich {
             self.hero.y = game.canvas.height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
 
-            /*---------------------*/
-            /* Measurements, debug */
-            /*---------------------*/
-            self.tilesLabel = new Label("TILES x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-            game.debugUI.addNextChild(self.tilesLabel);
-
-            self.sectorLabel = new Label("SECTOR: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-            game.debugUI.addNextChild(self.sectorLabel);
-
-            self.playerLabel = new Label("PLAYER x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-            game.debugUI.addNextChild(self.playerLabel);
-
             // light test
             /*
             var bitmap = self.game.resources.getBitmap(Resources.DARKNESS_KEY);
@@ -101,7 +85,7 @@ namespace Lich {
             /*------------*/
             /* Dig events */
             /*------------*/
-            var digListener = function(objType: Diggable, x: number, y: number) {
+            var digListener = function (objType: Diggable, x: number, y: number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
                         var invDef: InvObjDefinition = Resources.INSTANCE.invObjectDefs[objType.invObj];
@@ -163,7 +147,7 @@ namespace Lich {
                     object.height - object.collYOffset * 2,
                     0,
                     distanceY,
-                    function(x: number, y: number) { return self.isCollision(x, y); }
+                    function (x: number, y: number) { return self.isCollision(x, y); }
                 );
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
@@ -196,7 +180,7 @@ namespace Lich {
                     object.height - object.collYOffset * 2,
                     distanceX,
                     0,
-                    function(x: number, y: number) { return self.isCollision(x, y); }
+                    function (x: number, y: number) { return self.isCollision(x, y); }
                 );
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
@@ -225,7 +209,7 @@ namespace Lich {
                     object.height - object.collYOffset * 2,
                     0,
                     -1,
-                    function(x: number, y: number) { return self.isCollision(x, y); }
+                    function (x: number, y: number) { return self.isCollision(x, y); }
                 );
                 if (clsnTest.hit === false) {
                     object.speedy = -1;
@@ -243,7 +227,7 @@ namespace Lich {
             var sDelta = delta / 1000; // ms -> s
 
             // AI Enemies
-            self.enemies.forEach(function(enemy) {
+            self.enemies.forEach(function (enemy) {
                 if (enemy.getCurrentHealth() > 0) {
                     if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
                         enemy.speedx = 0;
@@ -285,7 +269,7 @@ namespace Lich {
                 self.hero.speedx = 0;
             }
 
-            var makeShiftX = function(dst) {
+            var makeShiftX = function (dst) {
                 var rndDst = Utils.floor(dst);
                 var canvasCenterX = self.game.canvas.width / 2;
                 if (self.render.canShiftX(rndDst) && self.hero.x == canvasCenterX) {
@@ -293,13 +277,13 @@ namespace Lich {
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftX(rndDst);
                     self.background.shift(rndDst, 0);
-                    self.freeObjects.forEach(function(item) {
+                    self.freeObjects.forEach(function (item) {
                         item.x += rndDst;
                     });
-                    self.bulletObjects.forEach(function(item) {
+                    self.bulletObjects.forEach(function (item) {
                         item.x += rndDst;
                     });
-                    self.enemies.forEach(function(enemy) {
+                    self.enemies.forEach(function (enemy) {
                         enemy.x += rndDst;
                     });
                 } else {
@@ -314,7 +298,7 @@ namespace Lich {
                 }
             };
 
-            var makeShiftY = function(dst) {
+            var makeShiftY = function (dst) {
                 var rndDst = Utils.floor(dst);
                 var canvasCenterY = self.game.canvas.height / 2;
                 if (self.render.canShiftY(rndDst) && self.hero.y == canvasCenterY) {
@@ -322,13 +306,13 @@ namespace Lich {
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftY(rndDst);
                     self.background.shift(0, rndDst);
-                    self.freeObjects.forEach(function(item) {
+                    self.freeObjects.forEach(function (item) {
                         item.y += rndDst;
                     });
-                    self.bulletObjects.forEach(function(item) {
+                    self.bulletObjects.forEach(function (item) {
                         item.y += rndDst;
                     });
-                    self.enemies.forEach(function(enemy) {
+                    self.enemies.forEach(function (enemy) {
                         enemy.y += rndDst;
                     });
                 } else {
@@ -346,21 +330,21 @@ namespace Lich {
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
 
-            self.enemies.forEach(function(enemy) {
+            self.enemies.forEach(function (enemy) {
                 // update nepřátel
                 self.updateObject(sDelta, enemy,
-                    function(dst) {
+                    function (dst) {
                         var rndDst = Utils.floor(dst);
                         enemy.x -= rndDst;
                     },
-                    function(dst) {
+                    function (dst) {
                         var rndDst = Utils.floor(dst);
                         enemy.y -= rndDst;
                     });
             });
 
             // update projektilů
-            (function() {
+            (function () {
                 for (var i = 0; i < self.bulletObjects.length; i++) {
                     var object = self.bulletObjects[i];
                     object.update(sDelta, self.game);
@@ -372,13 +356,13 @@ namespace Lich {
             })();
 
             // update sebratelných objektů
-            (function() {
+            (function () {
                 for (var i = 0; i < self.freeObjects.length; i++) {
                     var object = self.freeObjects[i];
                     // pohni objekty
-                    self.updateObject(sDelta, object, function(x) {
+                    self.updateObject(sDelta, object, function (x) {
                         object.x -= x;
-                    }, function(y) {
+                    }, function (y) {
                         object.y -= y;
                     });
                     var heroCenterX = self.hero.x + self.hero.width / 2;
@@ -425,7 +409,7 @@ namespace Lich {
             if (val == null || val != 0) {
                 return new CollisionTestResult(true, x, y);
             }
-            
+
             // kolize s kolizními objekty
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
             if (objectElement !== null) {
@@ -433,7 +417,7 @@ namespace Lich {
                 if (objType.collision)
                     return new CollisionTestResult(true, x, y);
             }
-            
+
             // bez kolize
             return new CollisionTestResult(false, x, y);
         };
@@ -567,8 +551,8 @@ namespace Lich {
                 self.hero.spellCooldowns[choosenSpell] -= delta;
                 // Může se provést (cooldown je pryč, mám will a chci cast) ?
                 if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                    var heroCenterX = self.hero.x + self.hero.width / 2;
-                    var heroCenterY = self.hero.y + self.hero.height / 4;
+                    let heroCenterX = self.hero.x + self.hero.width / 2;
+                    let heroCenterY = self.hero.y + self.hero.height / 4;
 
                     // zkus cast
                     if (spellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
@@ -579,21 +563,12 @@ namespace Lich {
                 }
             }
 
-            var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
-            var clsn = self.isCollisionByTiles(coord.x, coord.y);
-            var typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
-            if (typeof self.tilesLabel !== "undefined") {
-                self.tilesLabel.setText("TILES x: " + clsn.x + " y: " + clsn.y + " clsn: " + clsn.hit + " type: " + typ);
-            }
-
-            var sector = self.render.getSectorByTiles(coord.x, coord.y);
-            if (typeof self.sectorLabel !== "undefined") {
-                if (typeof sector !== "undefined" && sector !== null) {
-                    self.sectorLabel.setText("SECTOR: x: " + sector.map_x + " y: " + sector.map_y);
-                } else {
-                    self.sectorLabel.setText("SECTOR: -");
-                }
-            }
+            let coord = self.render.pixelsToTiles(mouse.x, mouse.y);
+            let clsn = self.isCollisionByTiles(coord.x, coord.y);
+            let typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
+            let sector = self.render.getSectorByTiles(coord.x, coord.y);
+            EventBus.getInstance().fireEvent(new PointedAreaEventPayload(
+                clsn.x, clsn.y, clsn.hit, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
 
         };
 
@@ -602,7 +577,7 @@ namespace Lich {
             self.render.handleTick();
             self.background.handleTick(delta);
             self.hero.handleTick(delta);
-            self.enemies.forEach(function(enemy) {
+            self.enemies.forEach(function (enemy) {
                 enemy.handleTick(delta);
             });
 

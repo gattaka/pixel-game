@@ -166,7 +166,7 @@ namespace Lich {
                                         var tile = self.createBgrTile(bgrElement);
 
                                         // přidej dílek do sektoru
-                                        sector.addCachableChild(tile);
+                                        sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
@@ -181,7 +181,7 @@ namespace Lich {
                                         var tile = self.createTile(tileElement);
 
                                         // přidej dílek do sektoru
-                                        sector.addCachableChild(tile);
+                                        sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
@@ -199,7 +199,7 @@ namespace Lich {
                                         if (object instanceof createjs.Sprite) {
                                             sector.addAnimatedChild(object);
                                         } else {
-                                            sector.addCachableChild(object);
+                                            sector.addCacheableChild(object);
                                         }
                                         object.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                         object.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
@@ -609,7 +609,7 @@ namespace Lich {
                                         if (child instanceof createjs.Sprite) {
                                             targetSector.removeAnimatedChild(child);
                                         } else {
-                                            targetSector.removeCachableChild(child);
+                                            targetSector.removeCacheableChild(child);
                                         }
                                     }
 
@@ -839,7 +839,7 @@ namespace Lich {
                                 var tile = self.createTile(posIndex);
 
                                 // přidej dílek do sektoru
-                                sector.addCachableChild(tile);
+                                sector.addCacheableChild(tile);
                                 tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                 tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
@@ -883,7 +883,7 @@ namespace Lich {
                     if (tile instanceof createjs.Sprite) {
                         sector.addAnimatedChild(tile);
                     } else {
-                        sector.addCachableChild(tile);
+                        sector.addCacheableChild(tile);
                     }
                     tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                     tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
@@ -1029,7 +1029,7 @@ namespace Lich {
         }
 
         // dle souřadnic tiles spočítá souřadnici sektoru
-        getSectorByTiles(x: number, y: number) {
+        getSectorByTiles(x: number, y: number): Sector {
             var self = this;
             var sx = Math.floor(x / Render.SECTOR_SIZE);
             var sy = Math.floor(y / Render.SECTOR_SIZE);
