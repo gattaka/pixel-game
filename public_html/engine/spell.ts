@@ -6,7 +6,7 @@ namespace Lich {
     export abstract class SpellDefinition {
         constructor(
             // id spellu
-            public key: string,
+            public key: SpellKey,
             // náročnost na will
             public cost: number,
             // prodleva před dalším použitím
@@ -41,13 +41,13 @@ namespace Lich {
         static COLLYOFFSET = 20;
 
         constructor(
-            key: string,
+            key: SpellKey,
             cost: number,
             cooldown: number,
-            public castSoundKey: string,
-            public hitSoundKey: string,
+            public castSoundKey: SoundKey,
+            public hitSoundKey: SoundKey,
             public speed: number,
-            public spriteKey: string,
+            public spriteKey: AnimationKey,
             public destroyMap: boolean,
             public piercing: boolean,
             public damage: number
@@ -128,13 +128,13 @@ namespace Lich {
 
         constructor() {
             super(
-                Resources.SPELL_FIREBALL_KEY,
+                SpellKey.SPELL_FIREBALL_KEY,
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
-                Resources.SND_BURN_KEY,
-                Resources.SND_FIREBALL_KEY,
+                SoundKey.SND_BURN_KEY,
+                SoundKey.SND_FIREBALL_KEY,
                 FireballSpellDef.SPEED,
-                Resources.FIREBALL_ANIMATION_KEY,
+                AnimationKey.FIREBALL_ANIMATION_KEY,
                 FireballSpellDef.MAP_DESTROY,
                 FireballSpellDef.PIERCING,
                 FireballSpellDef.DAMAGE
@@ -156,13 +156,13 @@ namespace Lich {
 
         constructor() {
             super(
-                Resources.SPELL_BOLT_KEY,
+                SpellKey.SPELL_BOLT_KEY,
                 BoltSpellDef.COST,
                 BoltSpellDef.COOLDOWN,
-                Resources.SND_BOLT_CAST,
-                Resources.SND_FIREBALL_KEY,
+                SoundKey.SND_BOLT_CAST,
+                SoundKey.SND_FIREBALL_KEY,
                 BoltSpellDef.SPEED,
-                Resources.BOLT_ANIMATION_KEY,
+                AnimationKey.BOLT_ANIMATION_KEY,
                 BoltSpellDef.MAP_DESTROY,
                 BoltSpellDef.PIERCING,
                 BoltSpellDef.DAMAGE
@@ -176,7 +176,7 @@ namespace Lich {
      */
     export abstract class HeroReachSpellDef extends SpellDefinition {
 
-        constructor(key: string, cost: number, cooldown: number) {
+        constructor(key: SpellKey, cost: number, cooldown: number) {
             super(key, cost, cooldown);
         }
 
@@ -218,7 +218,7 @@ namespace Lich {
         static COOLDOWN = 200;
 
         constructor() {
-            super(Resources.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
@@ -233,7 +233,7 @@ namespace Lich {
 
         static COOLDOWN = 100;
 
-        constructor(key: string,
+        constructor(key: SpellKey,
             // kope se povrch jako podklad?
             private asBackground) {
             super(key, 0, AbstractDigSpellDef.COOLDOWN);
@@ -243,13 +243,13 @@ namespace Lich {
             if (game.world.render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
-                        Mixer.play(Resources.SND_PICK_AXE_1_KEY);
+                        Mixer.play(SoundKey.SND_PICK_AXE_1_KEY);
                         break;
                     case 1:
-                        Mixer.play(Resources.SND_PICK_AXE_2_KEY);
+                        Mixer.play(SoundKey.SND_PICK_AXE_2_KEY);
                         break;
                     case 2:
-                        Mixer.play(Resources.SND_PICK_AXE_3_KEY);
+                        Mixer.play(SoundKey.SND_PICK_AXE_3_KEY);
                         break;
                 }
                 return true;
@@ -260,13 +260,13 @@ namespace Lich {
 
     export class DigSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(Resources.SPELL_DIG_KEY, false);
+            super(SpellKey.SPELL_DIG_KEY, false);
         }
     }
 
     export class DigBgrSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(Resources.SPELL_DIG_BGR_KEY, true);
+            super(SpellKey.SPELL_DIG_BGR_KEY, true);
         }
     }
 
@@ -278,7 +278,7 @@ namespace Lich {
         static COOLDOWN = 100;
 
         constructor(
-            key: string,
+            key: SpellKey,
             // pokládá se povrch/objekt jako podklad/alterantiva?
             private alternative
         ) {
@@ -300,7 +300,7 @@ namespace Lich {
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
                 if (game.world.render.place(xAim, yAim, object, this.alternative)) {
-                    Mixer.play(Resources.SND_PLACE_KEY);
+                    Mixer.play(SoundKey.SND_PLACE_KEY);
                     game.ui.inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
@@ -311,13 +311,13 @@ namespace Lich {
 
     export class PlaceSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(Resources.SPELL_PLACE_KEY, false);
+            super(SpellKey.SPELL_PLACE_KEY, false);
         }
     }
 
     export class PlaceBgrSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(Resources.SPELL_PLACE_BGR_KEY, true);
+            super(SpellKey.SPELL_PLACE_BGR_KEY, true);
         }
     }
 
@@ -328,12 +328,12 @@ namespace Lich {
     export class EnemySpellDef extends SpellDefinition {
 
         constructor() {
-            super(Resources.SPELL_ENEMY_KEY, 0, 200);
+            super(SpellKey.SPELL_ENEMY_KEY, 0, 200);
         }
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
 
-            Mixer.play(Resources.SND_SPAWN_KEY);
+            Mixer.play(SoundKey.SND_SPAWN_KEY);
 
             // maximálně 4 najednou
             var batch = Math.random() * 10;

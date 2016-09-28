@@ -1,37 +1,25 @@
 namespace Lich {
 
-    export enum SurfacePositionKey {
+    export enum SurfaceBgrPositionKey {
         VOID = 0,
         M1 = 1,
         M2 = 2,
         M3 = 3,
-        TL = 4,
-        TR = 5,
-        T = 6,
-        I_TR = 7,
-        I_TL = 8,
-        M4 = 9,
-        M5 = 10,
-        M6 = 11,
-        BL = 12,
-        BR = 13,
-        R = 14,
-        I_BR = 15,
-        I_BL = 16,
-        M7 = 17,
-        M8 = 18,
-        M9 = 19,
-        B = 20,
-        L = 21
+        M4 = 4,
+        M5 = 5,
+        M6 = 6,
+        M7 = 7,
+        M8 = 8,
+        M9 = 9
     }
 
-    export class SurfaceIndex {
+    export class SurfaceBgrIndex {
 
         // počet evidovaných typů
         protected size = 0;
         // index 
         protected types: { [key: string]: number } = {};
-        protected reversedTypes = new Array<SurfaceKey>();
+        protected reversedTypes = new Array<SurfaceBgrKey>();
 
         // počet pozic
         protected optionsCount = 0;
@@ -40,22 +28,22 @@ namespace Lich {
 
         constructor() {
             // přidej pozice
-            for (let pos in SurfacePositionKey) {
-                let key = SurfacePositionKey[pos];
+            for (let pos in SurfaceBgrPositionKey) {
+                let key = SurfaceBgrPositionKey[pos];
                 if (typeof key == "number") {
                     let num: number = key;
-                    this.putIntoPositions(SurfacePositionKey[SurfacePositionKey[pos]],num);
+                    this.putIntoPositions(SurfaceBgrPositionKey[SurfaceBgrPositionKey[pos]], num);
                 }
             }
         };
 
         // automaticky je spočítá
-        protected putIntoPositions(positionKey: SurfacePositionKey, position: number) {
+        protected putIntoPositions(positionKey: SurfaceBgrPositionKey, position: number) {
             this.positions[positionKey] = position;
             this.optionsCount++;
         };
 
-        insert(key: SurfaceKey) {
+        insert(key: SurfaceBgrKey) {
             this.types[key] = this.size;
             this.size = this.reversedTypes.push(key);
         }
@@ -63,7 +51,7 @@ namespace Lich {
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
          */
-        getType(sampleIndex: number): SurfaceKey {
+        getType(sampleIndex: number): SurfaceBgrKey {
             // -1 za VOID, který je na 0. pozici
             var typ = Math.floor((sampleIndex - 1) / this.optionsCount);
             return this.reversedTypes[typ];
@@ -72,14 +60,14 @@ namespace Lich {
         /**
          * Spočítá index pro daný typ povrchu a danou pozici
          */
-        getPositionIndex(key: SurfaceKey, positionKey: SurfacePositionKey): number {
+        getPositionIndex(key: SurfaceBgrKey, positionKey: SurfaceBgrPositionKey): number {
             return this.types[key] * this.optionsCount + this.positions[positionKey];
         }
 
         /**
          * Změní na povrch, ale zachová pozici 
          */
-        changeType(index: number, key: SurfaceKey): number {
+        changeType(index: number, key: SurfaceBgrKey): number {
             var pos = this.getPosition(index);
             return this.types[key] * this.optionsCount + pos;
         }
@@ -87,7 +75,7 @@ namespace Lich {
         /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu 
          */
-        isPosition(index: number, positionKey: SurfacePositionKey) {
+        isPosition(index: number, positionKey: SurfaceBgrPositionKey) {
             return this.getPosition(index) == this.positions[positionKey];
         }
 
@@ -98,21 +86,6 @@ namespace Lich {
             // 24 -> 23 % 23 ->  0 + 1 ->  1
             return (index - 1) % this.optionsCount + 1;
         }
-
-        /**
-         * Zjistí, zda index je nekrajovou instancí nějakého typu povrchu 
-         */
-        isMiddlePosition(index: number) {
-            var reducedIndex = this.getPosition(index);
-            return reducedIndex == this.positions[SurfacePositionKey.M1]
-                || reducedIndex == this.positions[SurfacePositionKey.M2]
-                || reducedIndex == this.positions[SurfacePositionKey.M3]
-                || reducedIndex == this.positions[SurfacePositionKey.M4]
-                || reducedIndex == this.positions[SurfacePositionKey.M5]
-                || reducedIndex == this.positions[SurfacePositionKey.M6]
-                || reducedIndex == this.positions[SurfacePositionKey.M7]
-                || reducedIndex == this.positions[SurfacePositionKey.M8]
-                || reducedIndex == this.positions[SurfacePositionKey.M9];
-        }
     }
+
 }

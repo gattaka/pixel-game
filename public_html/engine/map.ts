@@ -26,19 +26,19 @@ namespace Lich {
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     if (y < GameMap.MAP_GROUND_LEVEL) {
-                        tilesMap.mapRecord.setValue(x, y, SurfaceIndex.VOID);
+                        tilesMap.mapRecord.setValue(x, y, SurfacePositionKey.VOID);
                     } else {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
-                        var pos = MapTools.getPositionByCoordPattern(x, y);
-                        tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(Resources.SRFC_DIRT_KEY, pos));
+                        var pos = MapTools.getSurfacePositionByCoordPattern(x, y);
+                        tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(SurfaceKey.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
 
             // Holes
-            (function() {
-                var createHole = function(x0, y0, d0) {
+            (function () {
+                var createHole = function (x0, y0, d0) {
                     var d = Utils.even(d0);
                     var x = Utils.even(x0);
                     var y = Utils.even(y0);
@@ -53,7 +53,7 @@ namespace Lich {
                                 // ose dva zápisy, jinak by vznikla mřížka
                                 for (var __x = _x; __x <= _x + 1; __x++) {
                                     for (var __y = _y; __y <= _y + 1; __y++) {
-                                        tilesMap.mapRecord.setValue(__x, __y, SurfaceIndex.VOID);
+                                        tilesMap.mapRecord.setValue(__x, __y, SurfacePositionKey.VOID);
                                     }
                                 }
                             }
@@ -84,10 +84,10 @@ namespace Lich {
             })();
 
             // tráva boky
-            (function() {
+            (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        if (tilesMap.mapRecord.getValue(x, y) === SurfaceIndex.VOID)
+                        if (tilesMap.mapRecord.getValue(x, y) === SurfacePositionKey.VOID)
                             continue;
                         MapTools.generateEdge(tilesMap, x, y);
                     }
@@ -95,10 +95,10 @@ namespace Lich {
             })();
 
             // tráva rohy
-            (function() {
+            (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        if (tilesMap.mapRecord.getValue(x, y) === SurfaceIndex.VOID)
+                        if (tilesMap.mapRecord.getValue(x, y) === SurfacePositionKey.VOID)
                             continue;
                         MapTools.generateCorner(tilesMap, x, y);
                     }
@@ -106,8 +106,8 @@ namespace Lich {
             })();
 
             // Minerály 
-            (function() {
-                var createDeposit = function(x0: number, y0: number, d0: number, oreKey: string) {
+            (function () {
+                var createDeposit = function (x0: number, y0: number, d0: number, oreKey: SurfaceKey) {
                     var d = Utils.even(d0);
                     var x = Utils.even(x0);
                     var y = Utils.even(y0);
@@ -123,7 +123,7 @@ namespace Lich {
                                 for (var __x = _x; __x <= _x + 1; __x++) {
                                     for (var __y = _y; __y <= _y + 1; __y++) {
                                         var posIndex = tilesMap.mapRecord.getValue(__x, __y);
-                                        if (posIndex != SurfaceIndex.VOID) {
+                                        if (posIndex != SurfacePositionKey.VOID) {
                                             // nahradí aktuální dílek dílkem daného minerálu
                                             // přičemž zachová pozici dílku
                                             tilesMap.mapRecord.setValue(__x, __y, Resources.INSTANCE.surfaceIndex.changeType(posIndex, oreKey));
@@ -160,16 +160,16 @@ namespace Lich {
             })();
 
             // objekty 
-            (function() {
+            (function () {
 
-                var isFree = function(x0, y0, width, height) {
+                var isFree = function (x0, y0, width, height) {
                     for (var y = y0 - height; y <= y0; y++) {
                         for (var x = x0; x <= x0 + width - 1; x++) {
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), SurfaceIndex.T) == false) ||
-                                (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== SurfaceIndex.VOID) ||
+                            if ((y === y0 && Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.T) == false) ||
+                                (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== SurfacePositionKey.VOID) ||
                                 (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
                         }
@@ -181,7 +181,7 @@ namespace Lich {
                     for (var x = 0; x < tilesMap.width; x += 2) {
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                        if (Resources.INSTANCE.surfaceIndex.isPosition(val, SurfaceIndex.T)) {
+                        if (Resources.INSTANCE.surfaceIndex.isPosition(val, SurfacePositionKey.T)) {
                             // bude tam nějaký objekt? (100% ano)
                             if (Math.random() > 0) {
                                 var tries = 0;

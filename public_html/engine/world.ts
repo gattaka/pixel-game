@@ -375,7 +375,7 @@ namespace Lich {
                         self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
-                        Mixer.play(Resources.SND_PICK_KEY, false, 0.2);
+                        Mixer.play(SoundKey.SND_PICK_KEY, false, 0.2);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
@@ -522,7 +522,7 @@ namespace Lich {
             if (mouse.rightDown) {
                 var rmbSpellDef = Resources.INSTANCE.interactSpellDef;
                 // Může se provést (cooldown je pryč)?
-                var rmbCooldown = self.hero.spellCooldowns[Resources.SPELL_INTERACT_KEY];
+                var rmbCooldown = self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY];
                 if (!rmbCooldown || rmbCooldown <= 0) {
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 4;
@@ -530,7 +530,7 @@ namespace Lich {
                     // zkus cast
                     if (rmbSpellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
                         // ok, cast se provedl, nastav nový cooldown 
-                        self.hero.spellCooldowns[Resources.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
+                        self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
                     }
                 }
             }
@@ -539,7 +539,7 @@ namespace Lich {
             // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
             var choosenSpell = self.game.ui.spellsUI.getChoosenSpell();
             if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
-                var spellDef: SpellDefinition = Resources.INSTANCE.spellDefs.byKey(choosenSpell);
+                var spellDef: SpellDefinition = Resources.INSTANCE.spellDefs.byKey(SpellKey[choosenSpell]);
                 // provádím spell za hráče, takže kontroluji jeho cooldown
                 var cooldown = self.hero.spellCooldowns[choosenSpell];
                 // ještě nebyl použit? Takže je v pořádku a může se provést
@@ -583,13 +583,13 @@ namespace Lich {
 
             // TODO cooldown - delta pro všechny položky spell v hráčovi a všech nepřátel
 
-            var rmbCooldown = self.hero.spellCooldowns[Resources.SPELL_INTERACT_KEY];
+            var rmbCooldown = self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY];
             if (!rmbCooldown) {
                 rmbCooldown = 0;
-                self.hero.spellCooldowns[Resources.SPELL_INTERACT_KEY] = 0;
+                self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] = 0;
             } else {
                 // Sniž dle delay
-                self.hero.spellCooldowns[Resources.SPELL_INTERACT_KEY] -= delta;
+                self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
         };
     }

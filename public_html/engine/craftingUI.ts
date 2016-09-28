@@ -64,8 +64,8 @@ namespace Lich {
             self.addChild(self.itemsCont);
 
             // tlačítka
-            let upBtn = new Button(Resources.UI_UP_KEY);
-            let downBtn = new Button(Resources.UI_DOWN_KEY);
+            let upBtn = new Button(UIGFXKey.UI_UP_KEY);
+            let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
             self.addChild(upBtn);
             self.addChild(downBtn);
             upBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
@@ -82,7 +82,7 @@ namespace Lich {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Mixer.play(Resources.SND_CLICK_KEY);
+                    Mixer.play(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -94,7 +94,7 @@ namespace Lich {
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Mixer.play(Resources.SND_CLICK_KEY);
+                    Mixer.play(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -105,7 +105,7 @@ namespace Lich {
             self.ingredientsCont.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
 
             // craft tlačítko
-            let craftBtn = new Button(Resources.UI_CRAFT_KEY);
+            let craftBtn = new Button(UIGFXKey.UI_CRAFT_KEY);
             self.addChild(craftBtn);
             craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
             craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
@@ -121,7 +121,7 @@ namespace Lich {
                         self.inventoryUI.invRemove(ingred.key, ingred.quant);
                     }
                     self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
-                    Mixer.play(Resources.SND_CRAFT_KEY);
+                    Mixer.play(SoundKey.SND_CRAFT_KEY);
                 }
             }, null, false);
 

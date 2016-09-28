@@ -385,7 +385,7 @@ namespace Lich {
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
             var item = self.tilesMap.mapRecord.getValue(x, y);
-            if (item === SurfaceIndex.VOID) {
+            if (item === SurfacePositionKey.VOID) {
                 imgData.data[imgData.counter++] = 209; // R
                 imgData.data[imgData.counter++] = 251; // G
                 imgData.data[imgData.counter++] = 255; // B
@@ -492,7 +492,7 @@ namespace Lich {
 
             self.initMinimap();
 
-            self.playerIcon = Resources.INSTANCE.getBitmap(Resources.PLAYER_ICON_KEY);
+            self.playerIcon = Resources.INSTANCE.getBitmap(UIGFXKey.PLAYER_ICON_KEY);
             self.playerIcon.alpha = 0.7;
             self.minimap.cont.addChild(self.playerIcon);
 
@@ -576,8 +576,8 @@ namespace Lich {
                                 if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
 
                                     // okraje vyresetuj
-                                    if (val !== SurfaceIndex.VOID) {
-                                        self.tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfaceIndex.M1));
+                                    if (val !== SurfacePositionKey.VOID) {
+                                        self.tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);
 
                                         // zjisti sektor dílku, aby byl přidán do fronty 
@@ -596,13 +596,13 @@ namespace Lich {
 
                                     // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
                                     if (y === ry &&
-                                        (indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.T) ||
-                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.TL) ||
-                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfaceIndex.TR))) {
+                                        (indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.T) ||
+                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.TL) ||
+                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.TR))) {
                                         self.digObject(x, y - 1);
                                     }
 
-                                    self.tilesMap.mapRecord.setValue(x, y, SurfaceIndex.VOID);
+                                    self.tilesMap.mapRecord.setValue(x, y, SurfacePositionKey.VOID);
                                     var targetSector = self.getSectorByTiles(x, y);
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = self.sceneTilesMap.getValue(x, y);
@@ -747,7 +747,7 @@ namespace Lich {
                     return self.digSurfaceBgr(rx, ry);
                 }
             } else {
-                if (self.tilesMap.mapRecord.getValue(rx, ry) !== SurfaceIndex.VOID) {
+                if (self.tilesMap.mapRecord.getValue(rx, ry) !== SurfacePositionKey.VOID) {
                     return self.digSurface(rx, ry);
                 } else {
                     // kopl jsem do objektu?
@@ -757,7 +757,7 @@ namespace Lich {
             return false;
         }
 
-        placeSurfaceBgr(rx, ry, surfaceType: string) {
+        placeSurfaceBgr(rx, ry, surfaceBgrType: SurfaceBgrKey) {
             var self = this;
 
             (function () {
@@ -765,11 +765,10 @@ namespace Lich {
                     for (var y = ry; y <= ry + 1; y++) {
                         var sector = self.getSectorByTiles(x, y);
 
-                        // TODO tohle patří k surface, nikoliv bgr, ale zatím je to stejné
-                        var pos = MapTools.getPositionByCoordPattern(x, y);
+                        var pos = MapTools.getSurfaceBgrPositionByCoordPattern(x, y);
 
                         // vytvoř nové dílky
-                        var posIndex = Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceType, pos);
+                        var posIndex = Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceBgrType, pos);
                         self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
                         var targetSector = self.getSectorByTiles(x, y);
 
@@ -795,7 +794,7 @@ namespace Lich {
             })();
         }
 
-        placeSurface(rx, ry, surfaceType: string) {
+        placeSurface(rx, ry, surfaceType: SurfaceKey) {
             var self = this;
             var tilesToReset = [];
 
@@ -814,8 +813,12 @@ namespace Lich {
                                 var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
 
                                 // okraje vyresetuj (pokud nejsou středy
-                                if (val !== SurfaceIndex.VOID) {
-                                    self.tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, MapTools.getPositionByCoordPattern(x, y)));
+                                if (val !== SurfacePositionKey.VOID) {
+                                    self.tilesMap.mapRecord.setValue(x, y,
+                                        Resources.INSTANCE.surfaceIndex.getPositionIndex(
+                                            srfcType,
+                                            MapTools.getSurfacePositionByCoordPattern(x, y)
+                                        ));
                                     tilesToReset.push([x, y]);
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -829,7 +832,7 @@ namespace Lich {
                             }
                             // pokud jsem vnitřní část výběru, vytvoř nové dílky
                             else {
-                                var pos = MapTools.getPositionByCoordPattern(x, y);
+                                var pos = MapTools.getSurfacePositionByCoordPattern(x, y);
                                 var posIndex = Resources.INSTANCE.surfaceIndex.getPositionIndex(surfaceType, pos);
                                 self.tilesMap.mapRecord.setValue(x, y, posIndex);
                                 var targetSector = self.getSectorByTiles(x, y);
@@ -905,7 +908,7 @@ namespace Lich {
                 }
                 return true;
             } else {
-                return this.tilesMap.mapRecord.getValue(rx, ry) === SurfaceIndex.VOID && this.tilesMap.mapObjectsTiles.getValue(rx, ry) === null;
+                return this.tilesMap.mapRecord.getValue(rx, ry) === SurfacePositionKey.VOID && this.tilesMap.mapObjectsTiles.getValue(rx, ry) === null;
             }
         }
 

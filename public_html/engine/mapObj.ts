@@ -10,7 +10,7 @@ namespace Lich {
      * Tuple pro INV objekt a množství z map objektu/povrchu/stěny
      */
     export class MapObjItem {
-        constructor(public invObj: string, public quant: number) { };
+        constructor(public invObj: InventoryKey, public quant: number) { };
     }
 
     /**
@@ -20,9 +20,9 @@ namespace Lich {
         public item: MapObjItem;
         constructor(
             // klíč
-            public mapKey: string,
+            public mapKey: SurfaceKey | SurfaceBgrKey | MapObjectKey,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
-            public invObj: string,
+            public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
             public quant: number) {
             this.item = new MapObjItem(invObj, quant);
@@ -47,7 +47,7 @@ namespace Lich {
         // případně jako pozadí
         public mapSurfaceBgr: MapSurfaceBgrDefinition = null;
 
-        constructor(public invKey: string, target: Diggable) {
+        constructor(public invKey: InventoryKey, target: Diggable) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
             }
@@ -92,11 +92,11 @@ namespace Lich {
 
         constructor(
             // údaje o objektu na mapě
-            public mapKey: string,
+            public mapKey: MapObjectKey,
             public mapSpriteWidth: number,
             public mapSpriteHeight: number,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
-            public invObj: string,
+            public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             public quant: number,
             // jak často takový objekt v mapě je 
@@ -110,7 +110,7 @@ namespace Lich {
             this.frames = frames;
             return this;
         }
-        
+
         public setCollision(collision: boolean): MapObjDefinition {
             this.collision = collision;
             return this;
@@ -133,9 +133,9 @@ namespace Lich {
     export class MapSurfaceDefinition extends Diggable {
         constructor(
             // údaje o povrchu na mapě
-            public mapKey: string,
+            public mapKey: SurfaceKey,
             // id objektu, který má vypadnout do světa po vytěžení
-            public invObj: string,
+            public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
             public quant: number,
             // jak často takový povrch v mapě je 
@@ -160,9 +160,9 @@ namespace Lich {
     export class MapSurfaceBgrDefinition extends Diggable {
         constructor(
             // údaje o povrchu na mapě
-            public mapKey: string,
+            public mapKey: SurfaceBgrKey,
             // id objektu, který má vypadnout do světa po vytěžení
-            public invObj: string,
+            public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
             public quant: number) {
             super(mapKey, invObj, quant);

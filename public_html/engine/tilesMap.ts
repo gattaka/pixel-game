@@ -6,7 +6,7 @@ namespace Lich {
     export class MapObjectTile {
         constructor(
             // typ objektu
-            public mapKey: string,
+            public mapKey: MapObjectKey,
             // relativní souřadnice dílku objektu v sheetmapě
             public objTileX: number,
             public objTileY: number

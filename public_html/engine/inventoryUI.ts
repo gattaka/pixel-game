@@ -8,14 +8,14 @@ namespace Lich {
 
         toggleFlag = true;
 
-        choosenItem: string = null;
-        draggedItem: string = null;
+        choosenItem: InventoryKey = null;
+        draggedItem: InventoryKey = null;
 
         lineOffset = 0;
 
         // --- Virtuální inventář ---
         // pole obsazení položkami
-        itemsTypeArray = new Array<string>();
+        itemsTypeArray = new Array<InventoryKey>();
         // mapa pořadí typů položek
         itemsTypeIndexMap = new HashMap<number>();
         // mapa počtů dle typu položky
@@ -60,8 +60,8 @@ namespace Lich {
             self.collapsedCont.addChild(self.collapsedHighlight);
 
             // tlačítka
-            let upBtn = new Button(Resources.UI_UP_KEY);
-            let downBtn = new Button(Resources.UI_DOWN_KEY);
+            let upBtn = new Button(UIGFXKey.UI_UP_KEY);
+            let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
             self.upBtn = upBtn;
             self.downBtn = downBtn;
             self.addChild(upBtn);
@@ -80,7 +80,7 @@ namespace Lich {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Mixer.play(Resources.SND_CLICK_KEY);
+                    Mixer.play(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -92,7 +92,7 @@ namespace Lich {
                 if (self.lineOffset < occupLines - InventoryUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Mixer.play(Resources.SND_CLICK_KEY);
+                    Mixer.play(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -153,7 +153,7 @@ namespace Lich {
             this.toggleFlag = true;
         }
 
-        invRemove(item: string, quantChange: number) {
+        invRemove(item: InventoryKey, quantChange: number) {
             var self = this;
             var itemUI = self.itemsUIMap[item];
             if (itemUI) {
@@ -183,7 +183,7 @@ namespace Lich {
             }
         }
 
-        invInsert(item: string, quantChange: number) {
+        invInsert(item: InventoryKey, quantChange: number) {
             let self = this;
             let quant = quantChange;
             if (self.itemsTypeIndexMap[item] || self.itemsTypeIndexMap[item] == 0) {
@@ -225,7 +225,7 @@ namespace Lich {
             }
         }
 
-        createUIItem(item: string, i: number) {
+        createUIItem(item: InventoryKey, i: number) {
             let self = this;
             let quant = self.itemsQuantityMap[item];
             let itemUI = new ItemUI(item, quant);

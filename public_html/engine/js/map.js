@@ -16,13 +16,13 @@ var Lich;
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     if (y < GameMap.MAP_GROUND_LEVEL) {
-                        tilesMap.mapRecord.setValue(x, y, Lich.SurfaceIndex.VOID);
+                        tilesMap.mapRecord.setValue(x, y, Lich.SurfacePositionKey.VOID);
                     }
                     else {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
-                        var pos = Lich.MapTools.getPositionByCoordPattern(x, y);
-                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(Lich.Resources.SRFC_DIRT_KEY, pos));
+                        var pos = Lich.MapTools.getSurfacePositionByCoordPattern(x, y);
+                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(Lich.SurfaceKey.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
@@ -43,7 +43,7 @@ var Lich;
                                 // ose dva zápisy, jinak by vznikla mřížka
                                 for (var __x = _x; __x <= _x + 1; __x++) {
                                     for (var __y = _y; __y <= _y + 1; __y++) {
-                                        tilesMap.mapRecord.setValue(__x, __y, Lich.SurfaceIndex.VOID);
+                                        tilesMap.mapRecord.setValue(__x, __y, Lich.SurfacePositionKey.VOID);
                                     }
                                 }
                             }
@@ -75,7 +75,7 @@ var Lich;
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        if (tilesMap.mapRecord.getValue(x, y) === Lich.SurfaceIndex.VOID)
+                        if (tilesMap.mapRecord.getValue(x, y) === Lich.SurfacePositionKey.VOID)
                             continue;
                         Lich.MapTools.generateEdge(tilesMap, x, y);
                     }
@@ -85,7 +85,7 @@ var Lich;
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        if (tilesMap.mapRecord.getValue(x, y) === Lich.SurfaceIndex.VOID)
+                        if (tilesMap.mapRecord.getValue(x, y) === Lich.SurfacePositionKey.VOID)
                             continue;
                         Lich.MapTools.generateCorner(tilesMap, x, y);
                     }
@@ -109,7 +109,7 @@ var Lich;
                                 for (var __x = _x; __x <= _x + 1; __x++) {
                                     for (var __y = _y; __y <= _y + 1; __y++) {
                                         var posIndex = tilesMap.mapRecord.getValue(__x, __y);
-                                        if (posIndex != Lich.SurfaceIndex.VOID) {
+                                        if (posIndex != Lich.SurfacePositionKey.VOID) {
                                             // nahradí aktuální dílek dílkem daného minerálu
                                             // přičemž zachová pozici dílku
                                             tilesMap.mapRecord.setValue(__x, __y, Lich.Resources.INSTANCE.surfaceIndex.changeType(posIndex, oreKey));
@@ -151,8 +151,8 @@ var Lich;
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Lich.Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), Lich.SurfaceIndex.T) == false) ||
-                                (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== Lich.SurfaceIndex.VOID) ||
+                            if ((y === y0 && Lich.Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.T) == false) ||
+                                (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== Lich.SurfacePositionKey.VOID) ||
                                 (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
                         }
@@ -163,7 +163,7 @@ var Lich;
                     for (var x = 0; x < tilesMap.width; x += 2) {
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                        if (Lich.Resources.INSTANCE.surfaceIndex.isPosition(val, Lich.SurfaceIndex.T)) {
+                        if (Lich.Resources.INSTANCE.surfaceIndex.isPosition(val, Lich.SurfacePositionKey.T)) {
                             // bude tam nějaký objekt? (100% ano)
                             if (Math.random() > 0) {
                                 var tries = 0;

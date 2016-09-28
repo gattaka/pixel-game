@@ -9,8 +9,8 @@ namespace Lich {
 
         choosenItemNumber: number;
         spellContent = new Array<createjs.Bitmap>();
-        spellIndex = new Array<string>();
-        alternativeSpellIndex = new Array<string>();
+        spellIndex = new Array<SpellKey>();
+        alternativeSpellIndex = new Array<SpellKey>();
 
         itemsCont = new createjs.Container();
         itemHighlightShape = new createjs.Shape();
@@ -21,11 +21,11 @@ namespace Lich {
             var self = this;
 
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
-            self.spellInsert(Resources.SPELL_DIG_KEY, Resources.SPELL_DIG_BGR_KEY);
-            self.spellInsert(Resources.SPELL_PLACE_KEY, Resources.SPELL_PLACE_BGR_KEY);
-            self.spellInsert(Resources.SPELL_FIREBALL_KEY);
-            self.spellInsert(Resources.SPELL_BOLT_KEY);
-            self.spellInsert(Resources.SPELL_ENEMY_KEY);
+            self.spellInsert(SpellKey.SPELL_DIG_KEY, SpellKey.SPELL_DIG_BGR_KEY);
+            self.spellInsert(SpellKey.SPELL_PLACE_KEY, SpellKey.SPELL_PLACE_BGR_KEY);
+            self.spellInsert(SpellKey.SPELL_FIREBALL_KEY);
+            self.spellInsert(SpellKey.SPELL_BOLT_KEY);
+            self.spellInsert(SpellKey.SPELL_ENEMY_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Highlight();
@@ -76,7 +76,7 @@ namespace Lich {
             self.choosenItemNumber = spellNumber;
         }
 
-        getChoosenSpell(): string {
+        getChoosenSpell(): SpellKey {
             var alt = this.alternativeSpellIndex[this.choosenItemNumber];
             if (this.toggleFlag && typeof alt !== "undefined") {
                 return alt;
@@ -85,7 +85,7 @@ namespace Lich {
             }
         }
 
-        spellInsert(spell: string, altSpell?: string) {
+        spellInsert(spell: SpellKey, altSpell?: SpellKey) {
             var self = this;
             var bitmap = Resources.INSTANCE.getBitmap(spell);
             self.itemsCont.addChild(bitmap);

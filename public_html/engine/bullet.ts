@@ -54,7 +54,7 @@ namespace Lich {
             public collXOffset: number,
             public collYOffset: number,
             // zvuk dopadu
-            public hitSound: string,
+            public hitSound: SoundKey,
             // ničí střela i mapu (povrch/objekty)
             public mapDestroy: boolean,
             // škodí střela více cílům najednou
@@ -81,7 +81,7 @@ namespace Lich {
             stateAnimation: Object,
             collXOffset: number,
             collYOffset: number,
-            hitSoundKey: string,
+            hitSoundKey: SoundKey,
             mapDestroy: boolean,
             piercing: boolean,
             damage: number

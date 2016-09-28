@@ -19,12 +19,12 @@ namespace Lich {
             var self = this;
 
             // zatím rovnou:
-            self.trackInsert(Resources.MSC_DIRT_THEME_KEY);
-            self.trackInsert(Resources.MSC_BUILD_THEME_KEY);
-            self.trackInsert(Resources.MSC_BOSS_THEME_KEY);
-            self.trackInsert(Resources.MSC_KRYSTAL_THEME_KEY);
-            self.trackInsert(Resources.MSC_FLOOD_THEME_KEY);
-            self.trackInsert(Resources.MSC_LAVA_THEME_KEY);
+            self.trackInsert(MusicKey.MSC_DIRT_THEME_KEY);
+            self.trackInsert(MusicKey.MSC_BUILD_THEME_KEY);
+            self.trackInsert(MusicKey.MSC_BOSS_THEME_KEY);
+            self.trackInsert(MusicKey.MSC_KRYSTAL_THEME_KEY);
+            self.trackInsert(MusicKey.MSC_FLOOD_THEME_KEY);
+            self.trackInsert(MusicKey.MSC_LAVA_THEME_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Highlight();
@@ -36,7 +36,7 @@ namespace Lich {
             self.itemsCont.y = AbstractUI.BORDER;
             self.addChild(self.itemsCont);
 
-            self.selectTrack(Resources.MSC_DIRT_THEME_KEY);
+            self.selectTrack(MusicKey.MSC_DIRT_THEME_KEY);
         }
 
 
@@ -56,7 +56,7 @@ namespace Lich {
 
         trackInsert(track) {
             var self = this;
-            var bitmap = Resources.INSTANCE.getBitmap(Resources.UI_SOUND_KEY);
+            var bitmap = Resources.INSTANCE.getBitmap(UIGFXKey.UI_SOUND_KEY);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
             bitmap.y = 0;
@@ -68,7 +68,7 @@ namespace Lich {
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             bitmap.hitArea = hitArea;
 
-            bitmap.on("mousedown", function() {
+            bitmap.on("mousedown", function () {
                 self.selectTrack(track);
             }, null, false);
         }

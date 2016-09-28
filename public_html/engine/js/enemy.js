@@ -10,7 +10,7 @@ var Lich;
         function Enemy() {
             _super.call(this, Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Lich.Resources.INSTANCE.getImage(Lich.Resources.CORPSE_ANIMATION_KEY)],
+                "images": [Lich.Resources.INSTANCE.getImage(Lich.AnimationKey.CORPSE_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,
@@ -81,12 +81,12 @@ var Lich;
         };
         Enemy.prototype.die = function (game) {
             this.performState(Enemy.DIE_STATE);
-            Lich.Mixer.play(Lich.Resources.SND_SKELETON_DIE_KEY);
+            Lich.Mixer.play(Lich.SoundKey.SND_SKELETON_DIE_KEY);
             // TODO loot
         };
         Enemy.prototype.hit = function (damage, game) {
             if (this.currentHealth > 0) {
-                Lich.Mixer.play(Lich.Resources.SND_BONECRACK_KEY);
+                Lich.Mixer.play(Lich.SoundKey.SND_BONECRACK_KEY);
                 this.currentHealth -= damage;
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;

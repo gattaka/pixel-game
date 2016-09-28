@@ -43,8 +43,8 @@ var Lich;
             self.itemsCont.y = Lich.PartsUI.BORDER;
             self.addChild(self.itemsCont);
             // tlačítka
-            var upBtn = new Lich.Button(Lich.Resources.UI_UP_KEY);
-            var downBtn = new Lich.Button(Lich.Resources.UI_DOWN_KEY);
+            var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
+            var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
             self.addChild(upBtn);
             self.addChild(downBtn);
             upBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
@@ -59,7 +59,7 @@ var Lich;
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             var downBtnHitArea = new createjs.Shape();
@@ -70,7 +70,7 @@ var Lich;
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             // Přehled ingrediencí
@@ -79,7 +79,7 @@ var Lich;
             self.ingredientsCont.x = 0;
             self.ingredientsCont.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             // craft tlačítko
-            var craftBtn = new Lich.Button(Lich.Resources.UI_CRAFT_KEY);
+            var craftBtn = new Lich.Button(Lich.UIGFXKey.UI_CRAFT_KEY);
             self.addChild(craftBtn);
             craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
@@ -95,7 +95,7 @@ var Lich;
                         self.inventoryUI.invRemove(ingred.key, ingred.quant);
                     }
                     self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
-                    Lich.Mixer.play(Lich.Resources.SND_CRAFT_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CRAFT_KEY);
                 }
             }, null, false);
         }

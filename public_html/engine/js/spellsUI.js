@@ -17,11 +17,11 @@ var Lich;
             this.itemHighlightShape = new createjs.Shape();
             var self = this;
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
-            self.spellInsert(Lich.Resources.SPELL_DIG_KEY, Lich.Resources.SPELL_DIG_BGR_KEY);
-            self.spellInsert(Lich.Resources.SPELL_PLACE_KEY, Lich.Resources.SPELL_PLACE_BGR_KEY);
-            self.spellInsert(Lich.Resources.SPELL_FIREBALL_KEY);
-            self.spellInsert(Lich.Resources.SPELL_BOLT_KEY);
-            self.spellInsert(Lich.Resources.SPELL_ENEMY_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_PLACE_KEY, Lich.SpellKey.SPELL_PLACE_BGR_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_ENEMY_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;

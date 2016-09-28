@@ -17,12 +17,12 @@ var Lich;
             this.itemHighlightShape = new createjs.Shape();
             var self = this;
             // zatím rovnou:
-            self.trackInsert(Lich.Resources.MSC_DIRT_THEME_KEY);
-            self.trackInsert(Lich.Resources.MSC_BUILD_THEME_KEY);
-            self.trackInsert(Lich.Resources.MSC_BOSS_THEME_KEY);
-            self.trackInsert(Lich.Resources.MSC_KRYSTAL_THEME_KEY);
-            self.trackInsert(Lich.Resources.MSC_FLOOD_THEME_KEY);
-            self.trackInsert(Lich.Resources.MSC_LAVA_THEME_KEY);
+            self.trackInsert(Lich.MusicKey.MSC_DIRT_THEME_KEY);
+            self.trackInsert(Lich.MusicKey.MSC_BUILD_THEME_KEY);
+            self.trackInsert(Lich.MusicKey.MSC_BOSS_THEME_KEY);
+            self.trackInsert(Lich.MusicKey.MSC_KRYSTAL_THEME_KEY);
+            self.trackInsert(Lich.MusicKey.MSC_FLOOD_THEME_KEY);
+            self.trackInsert(Lich.MusicKey.MSC_LAVA_THEME_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;
@@ -31,7 +31,7 @@ var Lich;
             self.itemsCont.x = Lich.AbstractUI.BORDER;
             self.itemsCont.y = Lich.AbstractUI.BORDER;
             self.addChild(self.itemsCont);
-            self.selectTrack(Lich.Resources.MSC_DIRT_THEME_KEY);
+            self.selectTrack(Lich.MusicKey.MSC_DIRT_THEME_KEY);
         }
         MusicUI.prototype.selectTrack = function (track) {
             var self = this;
@@ -47,7 +47,7 @@ var Lich;
         };
         MusicUI.prototype.trackInsert = function (track) {
             var self = this;
-            var bitmap = Lich.Resources.INSTANCE.getBitmap(Lich.Resources.UI_SOUND_KEY);
+            var bitmap = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey.UI_SOUND_KEY);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             bitmap.y = 0;

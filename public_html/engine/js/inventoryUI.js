@@ -45,8 +45,8 @@ var Lich;
             self.collapsedHighlight.y = Lich.PartsUI.SELECT_BORDER;
             self.collapsedCont.addChild(self.collapsedHighlight);
             // tlačítka
-            var upBtn = new Lich.Button(Lich.Resources.UI_UP_KEY);
-            var downBtn = new Lich.Button(Lich.Resources.UI_DOWN_KEY);
+            var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
+            var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
             self.upBtn = upBtn;
             self.downBtn = downBtn;
             self.addChild(upBtn);
@@ -63,7 +63,7 @@ var Lich;
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             var downBtnHitArea = new createjs.Shape();
@@ -74,7 +74,7 @@ var Lich;
                 if (self.lineOffset < occupLines - InventoryUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
         }

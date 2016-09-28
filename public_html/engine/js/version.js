@@ -148,7 +148,7 @@ var Lich;
         };
         SplashScreenUI.prototype.createUpButton = function () {
             var self = this;
-            var upBtn = new Lich.Button(Lich.Resources.UI_UP_KEY);
+            var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
             self.addChild(upBtn);
             var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
             var upBtnHitArea = new createjs.Shape();
@@ -159,14 +159,14 @@ var Lich;
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return upBtn;
         };
         SplashScreenUI.prototype.createDownButton = function () {
             var self = this;
-            var downBtn = new Lich.Button(Lich.Resources.UI_DOWN_KEY);
+            var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
             self.addChild(downBtn);
             var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
             var downBtnHitArea = new createjs.Shape();
@@ -177,7 +177,7 @@ var Lich;
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Lich.Mixer.play(Lich.Resources.SND_CLICK_KEY);
+                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return downBtn;

@@ -123,7 +123,7 @@ namespace Lich {
 
         protected createUpButton(): Button {
             var self = this;
-            let upBtn = new Button(Resources.UI_UP_KEY);
+            let upBtn = new Button(UIGFXKey.UI_UP_KEY);
             self.addChild(upBtn);
             let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
             let upBtnHitArea = new createjs.Shape();
@@ -134,7 +134,7 @@ namespace Lich {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Mixer.play(Resources.SND_CLICK_KEY);
+                    Mixer.play(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return upBtn;
@@ -142,7 +142,7 @@ namespace Lich {
 
         protected createDownButton(): Button {
             var self = this;
-            let downBtn = new Button(Resources.UI_DOWN_KEY);
+            let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
             self.addChild(downBtn);
             let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
             let downBtnHitArea = new createjs.Shape();
@@ -153,7 +153,7 @@ namespace Lich {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Mixer.play(Resources.SND_CLICK_KEY);
+                    Mixer.play(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return downBtn;

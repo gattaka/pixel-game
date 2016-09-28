@@ -45,7 +45,7 @@ namespace Lich {
     }
 
     export class Button extends createjs.Container {
-        constructor(bitmap?: string) {
+        constructor(bitmap: UIGFXKey) {
             super();
 
             let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);

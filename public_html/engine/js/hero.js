@@ -10,7 +10,7 @@ var Lich;
         function Hero() {
             _super.call(this, Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Lich.Resources.INSTANCE.getImage(Lich.Resources.LICH_ANIMATION_KEY)],
+                "images": [Lich.Resources.INSTANCE.getImage(Lich.AnimationKey.LICH_ANIMATION_KEY)],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,

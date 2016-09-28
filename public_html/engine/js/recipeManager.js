@@ -61,24 +61,24 @@ var Lich;
             this.recipeListener = recipeListener;
             this.ingredientByKey = new IngredientByKey();
             this.buildRecipe([
-                [Lich.Resources.INV_DOOR_KEY, 1], [
-                    [Lich.Resources.INV_WOOD_KEY, 2]
+                [Lich.InventoryKey.INV_DOOR_KEY, 1], [
+                    [Lich.InventoryKey.INV_WOOD_KEY, 2]
                 ]
             ]);
             this.buildRecipe([
-                [Lich.Resources.INV_CAMPFIRE_KEY, 1], [
-                    [Lich.Resources.INV_WOOD_KEY, 2],
-                    [Lich.Resources.INV_STRAW_KEY, 1]
+                [Lich.InventoryKey.INV_CAMPFIRE_KEY, 1], [
+                    [Lich.InventoryKey.INV_WOOD_KEY, 2],
+                    [Lich.InventoryKey.INV_STRAW_KEY, 1]
                 ]
             ]);
             this.buildRecipe([
-                [Lich.Resources.INV_BRICKWALL_KEY, 5], [
-                    [Lich.Resources.INV_DIRT_KEY, 1]
+                [Lich.InventoryKey.INV_BRICKWALL_KEY, 5], [
+                    [Lich.InventoryKey.INV_DIRT_KEY, 1]
                 ]
             ]);
             this.buildRecipe([
-                [Lich.Resources.INV_WOODWALL_KEY, 5], [
-                    [Lich.Resources.INV_WOOD_KEY, 1]
+                [Lich.InventoryKey.INV_WOODWALL_KEY, 5], [
+                    [Lich.InventoryKey.INV_WOOD_KEY, 1]
                 ]
             ]);
         }

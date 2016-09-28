@@ -4,7 +4,7 @@ namespace Lich {
         // mám dostatek této ingredience?
         public available: boolean;
         recipe: Recipe;
-        constructor(public key: string, public quant: number) { }
+        constructor(public key: InventoryKey, public quant: number) { }
         public check(newQuant: number) {
             let oldAvail = this.available;
             this.available = newQuant >= this.quant;
@@ -57,24 +57,24 @@ namespace Lich {
 
         constructor(private recipeListener: (Recipe) => void) {
             this.buildRecipe([
-                [Resources.INV_DOOR_KEY, 1], [
-                    [Resources.INV_WOOD_KEY, 2]
+                [InventoryKey.INV_DOOR_KEY, 1], [
+                    [InventoryKey.INV_WOOD_KEY, 2]
                 ]
             ]);
             this.buildRecipe([
-                [Resources.INV_CAMPFIRE_KEY, 1], [
-                    [Resources.INV_WOOD_KEY, 2],
-                    [Resources.INV_STRAW_KEY, 1]
+                [InventoryKey.INV_CAMPFIRE_KEY, 1], [
+                    [InventoryKey.INV_WOOD_KEY, 2],
+                    [InventoryKey.INV_STRAW_KEY, 1]
                 ]
             ]);
             this.buildRecipe([
-                [Resources.INV_BRICKWALL_KEY, 5], [
-                    [Resources.INV_DIRT_KEY, 1]
+                [InventoryKey.INV_BRICKWALL_KEY, 5], [
+                    [InventoryKey.INV_DIRT_KEY, 1]
                 ]
             ]);
             this.buildRecipe([
-                [Resources.INV_WOODWALL_KEY, 5], [
-                    [Resources.INV_WOOD_KEY, 1]
+                [InventoryKey.INV_WOODWALL_KEY, 5], [
+                    [InventoryKey.INV_WOOD_KEY, 1]
                 ]
             ]);
         }
@@ -82,7 +82,7 @@ namespace Lich {
         buildRecipe(json: any) {
             let self = this;
 
-            let outcome: string = json[0][0];
+            let outcome: InventoryKey = json[0][0];
             let outcomeQuant: number = json[0][1];
             let ingreds = new Array<RecipeItem>();
             for (let ingArr of json[1]) {
@@ -100,7 +100,7 @@ namespace Lich {
             });
         }
 
-        public updateQuant(ingredientKey: string, currentQuant: number) {
+        public updateQuant(ingredientKey: InventoryKey, currentQuant: number) {
             let ingredients = this.ingredientByKey[ingredientKey];
             if (ingredients) {
                 ingredients.forEach((i) => {

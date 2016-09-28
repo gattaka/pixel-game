@@ -7,7 +7,7 @@ namespace Lich {
         public invDef: InvObjDefinition;
         public frames: number;
 
-        constructor(public item: string, quant: number) {
+        constructor(public item: InventoryKey, quant: number) {
             super();
             this.width = Resources.PARTS_SIZE + PartsUI.SPACING;
             this.height = this.width;
