@@ -9,7 +9,6 @@ namespace Lich {
         toggleFlag = true;
 
         choosenItem: InventoryKey = null;
-        draggedItem: InventoryKey = null;
 
         lineOffset = 0;
 
@@ -175,7 +174,6 @@ namespace Lich {
                     }
                     self.itemsCont.removeChild(itemUI);
                     self.choosenItem = null;
-                    self.draggedItem = null;
                     self.itemHighlight.visible = false;
                     self.itemsQuantityMap[item] = null;
                     self.itemsUIMap[item] = null
@@ -253,7 +251,6 @@ namespace Lich {
                     self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.choosenItem = item;
-                    self.draggedItem = item;
 
                     self.collapsedCont.removeChild(self.collapsedItem);
                     self.collapsedHighlight.visible = true;

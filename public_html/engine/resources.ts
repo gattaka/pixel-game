@@ -392,8 +392,6 @@ namespace Lich {
             // Definice mapových povrchů
             var registerSurfaceDefs = function (mapSurface: MapSurfaceDefinition) {
                 self.mapSurfaceDefs[mapSurface.mapKey] = mapSurface;
-                // Definice indexových počátků pro typy povrchu
-                self.surfaceIndex.insert(mapSurface.mapKey);
             };
 
             // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
@@ -422,8 +420,6 @@ namespace Lich {
             // Definice mapových stěn povrchů
             var registerSurfaceBgrDefs = function (mapSurface: MapSurfaceBgrDefinition) {
                 self.mapSurfacesBgrDefs[mapSurface.mapKey] = mapSurface;
-                // Definice indexových počátků pro typy povrchu
-                self.surfaceBgrIndex.insert(mapSurface.mapKey);
             };
 
             registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1));

@@ -15,68 +15,58 @@ var Lich;
     var SurfaceBgrPositionKey = Lich.SurfaceBgrPositionKey;
     var SurfaceBgrIndex = (function () {
         function SurfaceBgrIndex() {
-            // počet evidovaných typů
-            this.size = 0;
-            // index 
-            this.types = {};
-            this.reversedTypes = new Array();
-            // počet pozic
-            this.optionsCount = 0;
-            // Klíčovaná mapa s čísli pozic v každém surface sprite
-            this.positions = {};
-            // přidej pozice
+            // počet pozic a typů
+            this.typesCount = 0;
+            this.positionsCount = 0;
+            // spočítej pozice
             for (var pos in SurfaceBgrPositionKey) {
                 var key = SurfaceBgrPositionKey[pos];
                 if (typeof key == "number") {
-                    var num = key;
-                    this.putIntoPositions(SurfaceBgrPositionKey[SurfaceBgrPositionKey[pos]], num);
+                    this.positionsCount++;
+                }
+            }
+            // spočítej povrchy
+            for (var pos in Lich.SurfaceBgrKey) {
+                var key = Lich.SurfaceBgrKey[pos];
+                if (typeof key == "number") {
+                    this.typesCount++;
                 }
             }
         }
         ;
-        // automaticky je spočítá
-        SurfaceBgrIndex.prototype.putIntoPositions = function (positionKey, position) {
-            this.positions[positionKey] = position;
-            this.optionsCount++;
-        };
-        ;
-        SurfaceBgrIndex.prototype.insert = function (key) {
-            this.types[key] = this.size;
-            this.size = this.reversedTypes.push(key);
-        };
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
          */
         SurfaceBgrIndex.prototype.getType = function (sampleIndex) {
             // -1 za VOID, který je na 0. pozici
-            var typ = Math.floor((sampleIndex - 1) / this.optionsCount);
-            return this.reversedTypes[typ];
+            var typ = Math.floor((sampleIndex - 1) / this.positionsCount);
+            return typ;
         };
         /**
          * Spočítá index pro daný typ povrchu a danou pozici
          */
         SurfaceBgrIndex.prototype.getPositionIndex = function (key, positionKey) {
-            return this.types[key] * this.optionsCount + this.positions[positionKey];
+            return key * this.positionsCount + positionKey;
         };
         /**
          * Změní na povrch, ale zachová pozici
          */
         SurfaceBgrIndex.prototype.changeType = function (index, key) {
             var pos = this.getPosition(index);
-            return this.types[key] * this.optionsCount + pos;
+            return key * this.positionsCount + pos;
         };
         /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu
          */
         SurfaceBgrIndex.prototype.isPosition = function (index, positionKey) {
-            return this.getPosition(index) == this.positions[positionKey];
+            return this.getPosition(index) == positionKey;
         };
         SurfaceBgrIndex.prototype.getPosition = function (index) {
             // Kvůli tomu, že VOID zabírá 0. pozici, je potřeba tady pro modulo dočasně posunout škálu
             // 1  ->  0 % 23 ->  0 + 1 ->  1
             // 23 -> 22 % 23 -> 22 + 1 -> 23
             // 24 -> 23 % 23 ->  0 + 1 ->  1
-            return (index - 1) % this.optionsCount + 1;
+            return (index - 1) % this.positionsCount + 1;
         };
         return SurfaceBgrIndex;
     }());

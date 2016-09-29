@@ -12,7 +12,6 @@ var Lich;
             this.recipeListener = recipeListener;
             this.toggleFlag = true;
             this.choosenItem = null;
-            this.draggedItem = null;
             this.lineOffset = 0;
             // --- Virtuální inventář ---
             // pole obsazení položkami
@@ -149,7 +148,6 @@ var Lich;
                     }
                     self.itemsCont.removeChild(itemUI);
                     self.choosenItem = null;
-                    self.draggedItem = null;
                     self.itemHighlight.visible = false;
                     self.itemsQuantityMap[item] = null;
                     self.itemsUIMap[item] = null;
@@ -221,7 +219,6 @@ var Lich;
                     self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.choosenItem = item;
-                    self.draggedItem = item;
                     self.collapsedCont.removeChild(self.collapsedItem);
                     self.collapsedHighlight.visible = true;
                     self.collapsedItem = new Lich.ItemUI(item, quant);

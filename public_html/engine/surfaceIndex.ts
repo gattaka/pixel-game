@@ -27,53 +27,41 @@ namespace Lich {
 
     export class SurfaceIndex {
 
-        // počet evidovaných typů
-        protected size = 0;
-        // index 
-        protected types: { [key: number]: number } = {};
-        protected reversedTypes = new Array<SurfaceKey>();
-
-        // počet pozic
-        protected optionsCount = 0;
-        // Klíčovaná mapa s čísli pozic v každém surface sprite
-        protected positions: { [key: number]: number } = {};
+        // počet pozic a typů
+        private positionsCount = 0;
+        private typesCount = 0;
 
         constructor() {
-            // přidej pozice
+            // spočítej pozice
             for (let pos in SurfacePositionKey) {
                 let key = SurfacePositionKey[pos];
                 if (typeof key == "number") {
-                    let num: number = key;
-                    this.putIntoPositions(SurfacePositionKey[SurfacePositionKey[num]],num);
+                    this.positionsCount++;
+                }
+            }
+            // spočítej povrchy
+            for (let pos in SurfaceKey) {
+                let key = SurfaceKey[pos];
+                if (typeof key == "number") {
+                    this.typesCount++;
                 }
             }
         };
-
-        // automaticky je spočítá
-        protected putIntoPositions(positionKey: SurfacePositionKey, position: number) {
-            this.positions[positionKey] = position;
-            this.optionsCount++;
-        };
-
-        insert(key: SurfaceKey) {
-            this.types[key] = this.size;
-            this.size = this.reversedTypes.push(key);
-        }
 
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
          */
         getType(sampleIndex: number): SurfaceKey {
             // -1 za VOID, který je na 0. pozici
-            var typ = Math.floor((sampleIndex - 1) / this.optionsCount);
-            return this.reversedTypes[typ];
+            var typ = Math.floor((sampleIndex - 1) / this.positionsCount);
+            return typ;
         }
 
         /**
          * Spočítá index pro daný typ povrchu a danou pozici
          */
         getPositionIndex(key: SurfaceKey, positionKey: SurfacePositionKey): number {
-            return this.types[key] * this.optionsCount + this.positions[positionKey];
+            return key * this.positionsCount + positionKey;
         }
 
         /**
@@ -81,14 +69,14 @@ namespace Lich {
          */
         changeType(index: number, key: SurfaceKey): number {
             var pos = this.getPosition(index);
-            return this.types[key] * this.optionsCount + pos;
+            return key * this.positionsCount + pos;
         }
 
         /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu 
          */
         isPosition(index: number, positionKey: SurfacePositionKey) {
-            return this.getPosition(index) == this.positions[positionKey];
+            return this.getPosition(index) == positionKey;
         }
 
         getPosition(index: number): number {
@@ -96,7 +84,7 @@ namespace Lich {
             // 1  ->  0 % 23 ->  0 + 1 ->  1
             // 23 -> 22 % 23 -> 22 + 1 -> 23
             // 24 -> 23 % 23 ->  0 + 1 ->  1
-            return (index - 1) % this.optionsCount + 1;
+            return (index - 1) % this.positionsCount + 1;
         }
 
         /**
@@ -104,15 +92,15 @@ namespace Lich {
          */
         isMiddlePosition(index: number) {
             var reducedIndex = this.getPosition(index);
-            return reducedIndex == this.positions[SurfacePositionKey.M1]
-                || reducedIndex == this.positions[SurfacePositionKey.M2]
-                || reducedIndex == this.positions[SurfacePositionKey.M3]
-                || reducedIndex == this.positions[SurfacePositionKey.M4]
-                || reducedIndex == this.positions[SurfacePositionKey.M5]
-                || reducedIndex == this.positions[SurfacePositionKey.M6]
-                || reducedIndex == this.positions[SurfacePositionKey.M7]
-                || reducedIndex == this.positions[SurfacePositionKey.M8]
-                || reducedIndex == this.positions[SurfacePositionKey.M9];
+            return reducedIndex == SurfacePositionKey.M1
+                || reducedIndex == SurfacePositionKey.M2
+                || reducedIndex == SurfacePositionKey.M3
+                || reducedIndex == SurfacePositionKey.M4
+                || reducedIndex == SurfacePositionKey.M5
+                || reducedIndex == SurfacePositionKey.M6
+                || reducedIndex == SurfacePositionKey.M7
+                || reducedIndex == SurfacePositionKey.M8
+                || reducedIndex == SurfacePositionKey.M9;
         }
     }
 }
