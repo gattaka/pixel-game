@@ -105,7 +105,9 @@ namespace Lich {
             for (let i = itemsOffset;
                 i < InventoryUI.N * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length;
                 i++) {
-                this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
+                if (this.itemsTypeArray[i] != null) {
+                    this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
+                }
             }
         }
 
