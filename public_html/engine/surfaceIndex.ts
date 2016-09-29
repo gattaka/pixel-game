@@ -30,13 +30,13 @@ namespace Lich {
         // počet evidovaných typů
         protected size = 0;
         // index 
-        protected types: { [key: string]: number } = {};
+        protected types: { [key: number]: number } = {};
         protected reversedTypes = new Array<SurfaceKey>();
 
         // počet pozic
         protected optionsCount = 0;
         // Klíčovaná mapa s čísli pozic v každém surface sprite
-        protected positions: { [key: string]: number } = {};
+        protected positions: { [key: number]: number } = {};
 
         constructor() {
             // přidej pozice
@@ -44,7 +44,7 @@ namespace Lich {
                 let key = SurfacePositionKey[pos];
                 if (typeof key == "number") {
                     let num: number = key;
-                    this.putIntoPositions(SurfacePositionKey[SurfacePositionKey[pos]],num);
+                    this.putIntoPositions(SurfacePositionKey[SurfacePositionKey[num]],num);
                 }
             }
         };

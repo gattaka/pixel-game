@@ -43,23 +43,23 @@ namespace Lich {
 
             var resources = Resources.INSTANCE;
 
-            self.far_mountain = resources.getBitmap(BackgroundKey.FAR_MOUNTAIN_KEY);
-            self.far_mountain_sec = resources.getBitmap(BackgroundKey.FAR_MOUNTAIN_KEY);
-            self.mountain = resources.getBitmap(BackgroundKey.MOUNTAIN_KEY);
-            self.mountain_sec = resources.getBitmap(BackgroundKey.MOUNTAIN_KEY);
-            self.hill = resources.getBitmap(BackgroundKey.HILL_KEY);
-            self.hill_sec = resources.getBitmap(BackgroundKey.HILL_KEY);
-            self.far_hill = resources.getBitmap(BackgroundKey.FAR_HILL_KEY);
-            self.far_hill_sec = resources.getBitmap(BackgroundKey.FAR_HILL_KEY);
+            self.far_mountain = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
+            self.far_mountain_sec = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
+            self.mountain = resources.getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
+            self.mountain_sec = resources.getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
+            self.hill = resources.getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
+            self.hill_sec = resources.getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
+            self.far_hill = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
+            self.far_hill_sec = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
             for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                self.clouds.push(resources.getBitmap(BackgroundKey.CLOUD_KEY + i));
+                self.clouds.push(resources.getBitmap(BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
             }
 
             self.sky = new createjs.Shape();
             game.stage.addChild(self.sky);
             self.sky.x = 0;
             self.sky.y = 0;
-            self.sky.graphics.beginBitmapFill(resources.getImage(BackgroundKey.SKY_KEY), 'repeat').drawRect(0, 0, game.canvas.width, 250);
+            self.sky.graphics.beginBitmapFill(resources.getImage(BackgroundKey[BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, game.canvas.width, 250);
 
             var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds).concat([self.mountain, self.mountain_sec, self.far_hill, self.far_hill_sec, self.hill, self.hill_sec]);
 
@@ -89,14 +89,14 @@ namespace Lich {
             self.hill_sec.y = self.hill.y;
             self.hill_sec.x = -self.hill_sec.image.width;
 
-            self.dirt_back_startImg = resources.getImage(BackgroundKey.DIRT_BACK_START_KEY);
+            self.dirt_back_startImg = resources.getImage(BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]);
             self.dirt_back_start = new createjs.Shape();
             self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, game.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
             self.dirt_back_start.x = 0;
             self.dirt_back_start.y = Background.DIRT_START;
             game.stage.addChild(self.dirt_back_start);
 
-            self.dirt_backImg = resources.getImage(BackgroundKey.DIRTBACK_KEY);
+            self.dirt_backImg = resources.getImage(BackgroundKey[BackgroundKey.DIRTBACK_KEY]);
             self.dirt_back = new createjs.Shape();
             self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, game.canvas.width + self.dirt_backImg.width * 2, game.canvas.height + self.dirt_backImg.height * 2);
             self.dirt_back.x = 0;

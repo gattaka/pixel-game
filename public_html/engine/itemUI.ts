@@ -21,7 +21,7 @@ namespace Lich {
                 frames = invDef.frames;
             }
             this.frames = frames;
-            let sprite = Resources.INSTANCE.getSprite(item, frames);
+            let sprite = Resources.INSTANCE.getSprite(InventoryKey[item], frames);
             this.sprite = sprite;
             this.addChild(sprite);
             sprite.x = this.width / 2 - sprite.width / 2;

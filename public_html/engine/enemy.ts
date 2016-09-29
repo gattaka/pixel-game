@@ -52,7 +52,7 @@ namespace Lich {
         constructor() {
             super(Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Resources.INSTANCE.getImage(AnimationKey.CORPSE_ANIMATION_KEY)],
+                "images": [Resources.INSTANCE.getImage(AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY])],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,
@@ -125,13 +125,13 @@ namespace Lich {
 
         die(game: Game) {
             this.performState(Enemy.DIE_STATE);
-            Mixer.play(SoundKey.SND_SKELETON_DIE_KEY);
+            Mixer.playSound(SoundKey.SND_SKELETON_DIE_KEY);
             // TODO loot
         }
 
         hit(damage: number, game: Game) {
             if (this.currentHealth > 0) {
-                Mixer.play(SoundKey.SND_BONECRACK_KEY);
+                Mixer.playSound(SoundKey.SND_BONECRACK_KEY);
                 this.currentHealth -= damage;
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;

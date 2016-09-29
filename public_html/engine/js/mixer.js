@@ -3,9 +3,17 @@ var Lich;
     var Mixer = (function () {
         function Mixer() {
         }
-        Mixer.play = function (id, loop, volume) {
+        Mixer.playMusic = function (id, loop, volume) {
             if (loop === void 0) { loop = false; }
             if (volume === void 0) { volume = 0.5; }
+            this.play(Lich.MusicKey[id], loop, volume);
+        };
+        Mixer.playSound = function (id, loop, volume) {
+            if (loop === void 0) { loop = false; }
+            if (volume === void 0) { volume = 0.5; }
+            this.play(Lich.SoundKey[id], loop, volume);
+        };
+        Mixer.play = function (id, loop, volume) {
             var instance = createjs.Sound.play(id, {
                 loop: loop ? -1 : 0
             });

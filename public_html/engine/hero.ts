@@ -54,7 +54,7 @@ namespace Lich {
         constructor() {
             super(Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Resources.INSTANCE.getImage(AnimationKey.LICH_ANIMATION_KEY)],
+                "images": [Resources.INSTANCE.getImage(AnimationKey[AnimationKey.LICH_ANIMATION_KEY])],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,
@@ -76,7 +76,7 @@ namespace Lich {
                     "dead": [29, 29, "dead", 0.2]
                 }
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
-            
+
             this.willRegen = 10;
         }
 

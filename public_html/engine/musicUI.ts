@@ -40,7 +40,7 @@ namespace Lich {
         }
 
 
-        selectTrack(track) {
+        selectTrack(track: MusicKey) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
             self.itemHighlightShape.visible = true;
@@ -51,12 +51,12 @@ namespace Lich {
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
                 Mixer.stop(self.reversedTrackIndex[i]);
             }
-            Mixer.play(track, true);
+            Mixer.playMusic(track, true);
         }
 
-        trackInsert(track) {
+        trackInsert(track: MusicKey) {
             var self = this;
-            var bitmap = Resources.INSTANCE.getBitmap(UIGFXKey.UI_SOUND_KEY);
+            var bitmap = Resources.INSTANCE.getBitmap(UIGFXKey[UIGFXKey.UI_SOUND_KEY]);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
             bitmap.y = 0;

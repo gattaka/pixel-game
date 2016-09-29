@@ -95,12 +95,12 @@ namespace Lich {
                         } else {
                             frames = invDef.frames;
                         }
-                        var image = Resources.INSTANCE.getImage(objType.item.invObj);
+                        var image = Resources.INSTANCE.getImage(InventoryKey[objType.item.invObj]);
                         var object = new WorldObject(
                             objType.item,
                             image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
                             image.height,
-                            Resources.INSTANCE.getSpriteSheet(objType.invObj, frames),
+                            Resources.INSTANCE.getSpriteSheet(InventoryKey[objType.invObj], frames),
                             "idle",
                             { "idle": "idle" },
                             2,
@@ -375,7 +375,7 @@ namespace Lich {
                         self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
-                        Mixer.play(SoundKey.SND_PICK_KEY, false, 0.2);
+                        Mixer.playSound(SoundKey.SND_PICK_KEY, false, 0.2);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {

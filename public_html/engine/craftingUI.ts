@@ -82,7 +82,7 @@ namespace Lich {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Mixer.play(SoundKey.SND_CLICK_KEY);
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -94,7 +94,7 @@ namespace Lich {
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Mixer.play(SoundKey.SND_CLICK_KEY);
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -121,7 +121,7 @@ namespace Lich {
                         self.inventoryUI.invRemove(ingred.key, ingred.quant);
                     }
                     self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
-                    Mixer.play(SoundKey.SND_CRAFT_KEY);
+                    Mixer.playSound(SoundKey.SND_CRAFT_KEY);
                 }
             }, null, false);
 

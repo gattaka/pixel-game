@@ -22,7 +22,7 @@ var Lich;
                 frames = invDef.frames;
             }
             this.frames = frames;
-            var sprite = Lich.Resources.INSTANCE.getSprite(item, frames);
+            var sprite = Lich.Resources.INSTANCE.getSprite(Lich.InventoryKey[item], frames);
             this.sprite = sprite;
             this.addChild(sprite);
             sprite.x = this.width / 2 - sprite.width / 2;

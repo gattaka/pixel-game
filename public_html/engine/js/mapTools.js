@@ -89,16 +89,20 @@ var Lich;
          * který se opakuje, aby mapa byla pestřejší
          */
         MapTools.getSurfacePositionByCoordPattern = function (x, y) {
-            var m = x % 3 + 1 + ((y % 3) * 3);
-            return Lich.SurfacePositionKey[Lich.SurfacePositionKey[m]];
+            var col = x % 3 + 1; // +1 za VOID
+            var row = y % 3;
+            var key = col + row * 8; // řada má 8 položek
+            return Lich.SurfacePositionKey[Lich.SurfacePositionKey[key]];
         };
         /**
          * Získá výchozí prostřední dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
          */
         MapTools.getSurfaceBgrPositionByCoordPattern = function (x, y) {
-            var m = x % 3 + 1 + ((y % 3) * 3);
-            return Lich.SurfaceBgrPositionKey[Lich.SurfaceBgrPositionKey[m]];
+            var col = x % 3 + 1; // +1 za VOID
+            var row = y % 3;
+            var key = col + row * 3; // řada má 3 položky
+            return Lich.SurfaceBgrPositionKey[Lich.SurfaceBgrPositionKey[key]];
         };
         MapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {
             var self = this;

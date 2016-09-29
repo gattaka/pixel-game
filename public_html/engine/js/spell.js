@@ -46,7 +46,7 @@ var Lich;
             var c = Math.sqrt(a * a + b * b);
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Lich.Resources.INSTANCE.getImage(self.spriteKey)],
+                "images": [Lich.Resources.INSTANCE.getImage(Lich.AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
                     "height": BulletSpellDef.FRAME_HEIGHT,
@@ -75,7 +75,7 @@ var Lich;
             game.world.addChild(object);
             object.x = xCast - object.width / 2;
             object.y = yCast - object.height / 2;
-            Lich.Mixer.play(self.castSoundKey, false, 0.2);
+            Lich.Mixer.playSound(self.castSoundKey, false, 0.2);
             return true;
         };
         BulletSpellDef.FRAME_WIDTH = 60;
@@ -182,13 +182,13 @@ var Lich;
             if (game.world.render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
-                        Lich.Mixer.play(Lich.SoundKey.SND_PICK_AXE_1_KEY);
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_AXE_1_KEY);
                         break;
                     case 1:
-                        Lich.Mixer.play(Lich.SoundKey.SND_PICK_AXE_2_KEY);
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_AXE_2_KEY);
                         break;
                     case 2:
-                        Lich.Mixer.play(Lich.SoundKey.SND_PICK_AXE_3_KEY);
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_AXE_3_KEY);
                         break;
                 }
                 return true;
@@ -241,7 +241,7 @@ var Lich;
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
                 if (game.world.render.place(xAim, yAim, object, this.alternative)) {
-                    Lich.Mixer.play(Lich.SoundKey.SND_PLACE_KEY);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_PLACE_KEY);
                     game.ui.inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
@@ -277,7 +277,7 @@ var Lich;
             _super.call(this, Lich.SpellKey.SPELL_ENEMY_KEY, 0, 200);
         }
         EnemySpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
-            Lich.Mixer.play(Lich.SoundKey.SND_SPAWN_KEY);
+            Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
             // maximálně 4 najednou
             var batch = Math.random() * 10;
             for (var e = 0; e < batch; e++) {

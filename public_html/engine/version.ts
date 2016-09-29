@@ -134,7 +134,7 @@ namespace Lich {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Mixer.play(SoundKey.SND_CLICK_KEY);
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return upBtn;
@@ -153,7 +153,7 @@ namespace Lich {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Mixer.play(SoundKey.SND_CLICK_KEY);
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return downBtn;

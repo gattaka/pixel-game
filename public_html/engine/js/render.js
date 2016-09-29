@@ -222,14 +222,14 @@ var Lich;
         Render.prototype.createBgrTile = function (positionIndex) {
             var self = this;
             var typ = Lich.Resources.INSTANCE.surfaceBgrIndex.getType(positionIndex);
-            var tile = Lich.Resources.INSTANCE.getBitmap(typ);
+            var tile = Lich.Resources.INSTANCE.getBitmap(Lich.SurfaceBgrKey[typ]);
             this.setSurfaceBgrSourceRect(tile, positionIndex);
             return tile;
         };
         Render.prototype.createTile = function (positionIndex) {
             var self = this;
             var surfaceType = Lich.Resources.INSTANCE.surfaceIndex.getType(positionIndex);
-            var tile = Lich.Resources.INSTANCE.getBitmap(surfaceType);
+            var tile = Lich.Resources.INSTANCE.getBitmap(Lich.SurfaceKey[surfaceType]);
             this.setSurfaceSourceRect(tile, positionIndex);
             return tile;
         };
@@ -238,11 +238,11 @@ var Lich;
             var objDef = Lich.Resources.INSTANCE.mapObjectDefs[objectTile.mapKey];
             var object;
             if (objDef.frames > 1) {
-                object = Lich.Resources.INSTANCE.getSpritePart(objDef.mapKey, objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                object = Lich.Resources.INSTANCE.getSpritePart(Lich.MapObjectKey[objDef.mapKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
                 return object;
             }
             else {
-                object = Lich.Resources.INSTANCE.getBitmap(objectTile.mapKey);
+                object = Lich.Resources.INSTANCE.getBitmap(Lich.MapObjectKey[objectTile.mapKey]);
                 // Otestováno: tohle je rychlejší než extract ze Spritesheet
                 object.sourceRect = new createjs.Rectangle(objectTile.objTileX * Lich.Resources.TILE_SIZE, objectTile.objTileY * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
                 return object;
@@ -386,7 +386,7 @@ var Lich;
             border.graphics.drawRect(-1, -1, Render.MAP_SIDE + 2, Render.MAP_SIDE + 2);
             minimapCont.addChild(border);
             self.initMinimap();
-            self.playerIcon = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey.PLAYER_ICON_KEY);
+            self.playerIcon = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.PLAYER_ICON_KEY]);
             self.playerIcon.alpha = 0.7;
             self.minimap.cont.addChild(self.playerIcon);
         };

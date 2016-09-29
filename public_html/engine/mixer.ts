@@ -3,7 +3,15 @@ namespace Lich {
 
         static instances = new Array<createjs.AbstractSoundInstance>();
 
-        static play(id, loop: boolean = false, volume = 0.5) {
+        static playMusic(id: MusicKey, loop: boolean = false, volume = 0.5) {
+            this.play(MusicKey[id], loop, volume);
+        }
+
+        static playSound(id: SoundKey, loop: boolean = false, volume = 0.5) {
+            this.play(SoundKey[id], loop, volume);
+        }
+
+        private static play(id: string, loop: boolean, volume: number) {
             var instance: createjs.AbstractSoundInstance = createjs.Sound.play(id, {
                 loop: loop ? -1 : 0
             });
@@ -11,7 +19,7 @@ namespace Lich {
             this.instances[id] = instance;
         }
 
-        static stop(id) {
+        static stop(id: SoundKey) {
             var instance = this.instances[id];
             if (typeof instance !== "undefined" && instance != null) {
                 instance.stop();

@@ -300,7 +300,7 @@ namespace Lich {
         createBgrTile(positionIndex: number) {
             var self = this;
             var typ = Resources.INSTANCE.surfaceBgrIndex.getType(positionIndex);
-            var tile = Resources.INSTANCE.getBitmap(typ);
+            var tile = Resources.INSTANCE.getBitmap(SurfaceBgrKey[typ]);
             this.setSurfaceBgrSourceRect(tile, positionIndex);
             return tile;
         }
@@ -308,7 +308,7 @@ namespace Lich {
         createTile(positionIndex: number) {
             var self = this;
             var surfaceType = Resources.INSTANCE.surfaceIndex.getType(positionIndex);
-            var tile = Resources.INSTANCE.getBitmap(surfaceType);
+            var tile = Resources.INSTANCE.getBitmap(SurfaceKey[surfaceType]);
             this.setSurfaceSourceRect(tile, positionIndex);
             return tile;
         }
@@ -318,10 +318,10 @@ namespace Lich {
             var objDef: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectTile.mapKey];
             var object: any;
             if (objDef.frames > 1) {
-                object = Resources.INSTANCE.getSpritePart(objDef.mapKey, objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                object = Resources.INSTANCE.getSpritePart(MapObjectKey[objDef.mapKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
                 return object;
             } else {
-                object = Resources.INSTANCE.getBitmap(objectTile.mapKey);
+                object = Resources.INSTANCE.getBitmap(MapObjectKey[objectTile.mapKey]);
                 // Otestováno: tohle je rychlejší než extract ze Spritesheet
                 object.sourceRect = new createjs.Rectangle(
                     objectTile.objTileX * Resources.TILE_SIZE,
@@ -492,7 +492,7 @@ namespace Lich {
 
             self.initMinimap();
 
-            self.playerIcon = Resources.INSTANCE.getBitmap(UIGFXKey.PLAYER_ICON_KEY);
+            self.playerIcon = Resources.INSTANCE.getBitmap(UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]);
             self.playerIcon.alpha = 0.7;
             self.minimap.cont.addChild(self.playerIcon);
 

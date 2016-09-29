@@ -63,7 +63,7 @@ namespace Lich {
 
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Resources.INSTANCE.getImage(self.spriteKey)],
+                "images": [Resources.INSTANCE.getImage(AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
                     "height": BulletSpellDef.FRAME_HEIGHT,
@@ -110,7 +110,7 @@ namespace Lich {
             object.x = xCast - object.width / 2;
             object.y = yCast - object.height / 2;
 
-            Mixer.play(self.castSoundKey, false, 0.2);
+            Mixer.playSound(self.castSoundKey, false, 0.2);
             return true;
         }
     }
@@ -243,13 +243,13 @@ namespace Lich {
             if (game.world.render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
-                        Mixer.play(SoundKey.SND_PICK_AXE_1_KEY);
+                        Mixer.playSound(SoundKey.SND_PICK_AXE_1_KEY);
                         break;
                     case 1:
-                        Mixer.play(SoundKey.SND_PICK_AXE_2_KEY);
+                        Mixer.playSound(SoundKey.SND_PICK_AXE_2_KEY);
                         break;
                     case 2:
-                        Mixer.play(SoundKey.SND_PICK_AXE_3_KEY);
+                        Mixer.playSound(SoundKey.SND_PICK_AXE_3_KEY);
                         break;
                 }
                 return true;
@@ -300,7 +300,7 @@ namespace Lich {
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
                 if (game.world.render.place(xAim, yAim, object, this.alternative)) {
-                    Mixer.play(SoundKey.SND_PLACE_KEY);
+                    Mixer.playSound(SoundKey.SND_PLACE_KEY);
                     game.ui.inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
@@ -333,7 +333,7 @@ namespace Lich {
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
 
-            Mixer.play(SoundKey.SND_SPAWN_KEY);
+            Mixer.playSound(SoundKey.SND_SPAWN_KEY);
 
             // maximálně 4 najednou
             var batch = Math.random() * 10;

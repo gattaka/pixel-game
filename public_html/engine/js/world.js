@@ -73,9 +73,9 @@ var Lich;
                         else {
                             frames = invDef.frames;
                         }
-                        var image = Lich.Resources.INSTANCE.getImage(objType.item.invObj);
+                        var image = Lich.Resources.INSTANCE.getImage(Lich.InventoryKey[objType.item.invObj]);
                         var object = new WorldObject(objType.item, image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-                        image.height, Lich.Resources.INSTANCE.getSpriteSheet(objType.invObj, frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+                        image.height, Lich.Resources.INSTANCE.getSpriteSheet(Lich.InventoryKey[objType.invObj], frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
                         object.speedx = 0;
                         object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
                         var coord = self.render.tilesToPixel(x, y);
@@ -304,7 +304,7 @@ var Lich;
                         self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
-                        Lich.Mixer.play(Lich.SoundKey.SND_PICK_KEY, false, 0.2);
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, false, 0.2);
                         object = null;
                     }
                     if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {

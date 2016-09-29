@@ -117,7 +117,7 @@ var Lich;
             };
             var onCollision = function (clsn) {
                 if (self.ending === false) {
-                    Lich.Mixer.play(self.hitSound, false, 0.1);
+                    Lich.Mixer.playSound(self.hitSound, false, 0.1);
                     self.ending = true;
                     self.gotoAndPlay("hit");
                     if (self.mapDestroy) {

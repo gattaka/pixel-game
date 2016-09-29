@@ -159,7 +159,7 @@ var Lich;
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return upBtn;
@@ -177,7 +177,7 @@ var Lich;
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     self.updateCache();
-                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             return downBtn;

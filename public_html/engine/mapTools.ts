@@ -101,8 +101,10 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         static getSurfacePositionByCoordPattern(x: number, y: number): SurfacePositionKey {
-            var m: number = x % 3 + 1 + ((y % 3) * 3);
-            return SurfacePositionKey[SurfacePositionKey[m]];
+            let col = x % 3 + 1; // +1 za VOID
+            let row = y % 3;
+            let key = col + row * 8; // řada má 8 položek
+            return SurfacePositionKey[SurfacePositionKey[key]];
         }
 
         /**
@@ -110,8 +112,10 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         static getSurfaceBgrPositionByCoordPattern(x: number, y: number): SurfaceBgrPositionKey {
-            var m: number = x % 3 + 1 + ((y % 3) * 3);
-            return SurfaceBgrPositionKey[SurfaceBgrPositionKey[m]];
+            let col = x % 3 + 1; // +1 za VOID
+            let row = y % 3;
+            let key = col + row * 3; // řada má 3 položky
+            return SurfaceBgrPositionKey[SurfaceBgrPositionKey[key]];
         }
 
         static writeObjectRecord(tilesMap: TilesMap, cx: number, cy: number, object: MapObjDefinition) {

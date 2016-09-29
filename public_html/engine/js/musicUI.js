@@ -43,11 +43,11 @@ var Lich;
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
                 Lich.Mixer.stop(self.reversedTrackIndex[i]);
             }
-            Lich.Mixer.play(track, true);
+            Lich.Mixer.playMusic(track, true);
         };
         MusicUI.prototype.trackInsert = function (track) {
             var self = this;
-            var bitmap = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey.UI_SOUND_KEY);
+            var bitmap = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.UI_SOUND_KEY]);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             bitmap.y = 0;

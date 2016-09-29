@@ -41,7 +41,7 @@ var Lich;
                 var key = SurfacePositionKey[pos];
                 if (typeof key == "number") {
                     var num = key;
-                    this.putIntoPositions(SurfacePositionKey[SurfacePositionKey[pos]], num);
+                    this.putIntoPositions(SurfacePositionKey[SurfacePositionKey[num]], num);
                 }
             }
         }

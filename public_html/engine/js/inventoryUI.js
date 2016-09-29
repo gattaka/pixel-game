@@ -63,7 +63,7 @@ var Lich;
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
             var downBtnHitArea = new createjs.Shape();
@@ -74,7 +74,7 @@ var Lich;
                 if (self.lineOffset < occupLines - InventoryUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Lich.Mixer.play(Lich.SoundKey.SND_CLICK_KEY);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
         }

@@ -80,7 +80,7 @@ namespace Lich {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
-                    Mixer.play(SoundKey.SND_CLICK_KEY);
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 
@@ -92,7 +92,7 @@ namespace Lich {
                 if (self.lineOffset < occupLines - InventoryUI.M) {
                     self.lineOffset++;
                     self.render();
-                    Mixer.play(SoundKey.SND_CLICK_KEY);
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
 

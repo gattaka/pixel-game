@@ -8,10 +8,9 @@
 var Lich;
 (function (Lich) {
     var Load = (function () {
-        function Load(src, key) {
+        function Load(src, id) {
             this.src = src;
-            this.key = key;
-            this.id = key.toString();
+            this.id = id;
         }
         ;
         return Load;
@@ -180,119 +179,119 @@ var Lich;
                  * IMAGES
                  */
                 // spells
-                new Load("images/ui/dig_spell.png", SpellKey.SPELL_DIG_KEY),
-                new Load("images/ui/dig_bgr_spell.png", SpellKey.SPELL_DIG_BGR_KEY),
-                new Load("images/ui/fireball_spell.png", SpellKey.SPELL_FIREBALL_KEY),
-                new Load("images/ui/place_spell.png", SpellKey.SPELL_PLACE_KEY),
-                new Load("images/ui/place_bgr_spell.png", SpellKey.SPELL_PLACE_BGR_KEY),
-                new Load("images/ui/bolt_spell.png", SpellKey.SPELL_BOLT_KEY),
-                new Load("images/ui/enemy_spell.png", SpellKey.SPELL_ENEMY_KEY),
+                new Load("images/ui/dig_spell.png", SpellKey[SpellKey.SPELL_DIG_KEY]),
+                new Load("images/ui/dig_bgr_spell.png", SpellKey[SpellKey.SPELL_DIG_BGR_KEY]),
+                new Load("images/ui/fireball_spell.png", SpellKey[SpellKey.SPELL_FIREBALL_KEY]),
+                new Load("images/ui/place_spell.png", SpellKey[SpellKey.SPELL_PLACE_KEY]),
+                new Load("images/ui/place_bgr_spell.png", SpellKey[SpellKey.SPELL_PLACE_BGR_KEY]),
+                new Load("images/ui/bolt_spell.png", SpellKey[SpellKey.SPELL_BOLT_KEY]),
+                new Load("images/ui/enemy_spell.png", SpellKey[SpellKey.SPELL_ENEMY_KEY]),
                 // inventory
-                new Load("images/ui/inventory/inv_bones.png", InventoryKey.INV_BONES_KEY),
-                new Load("images/ui/inventory/inv_berry.png", InventoryKey.INV_BERRY_KEY),
-                new Load("images/ui/inventory/inv_mushroom.png", InventoryKey.INV_MUSHROOM_KEY),
-                new Load("images/ui/inventory/inv_mushroom2.png", InventoryKey.INV_MUSHROOM2_KEY),
-                new Load("images/ui/inventory/inv_mushroom3.png", InventoryKey.INV_MUSHROOM3_KEY),
-                new Load("images/ui/inventory/inv_plant.png", InventoryKey.INV_PLANT_KEY),
-                new Load("images/ui/inventory/inv_plant2.png", InventoryKey.INV_PLANT2_KEY),
-                new Load("images/ui/inventory/inv_plant3.png", InventoryKey.INV_PLANT3_KEY),
-                new Load("images/ui/inventory/inv_plant4.png", InventoryKey.INV_PLANT4_KEY),
-                new Load("images/ui/inventory/inv_straw.png", InventoryKey.INV_STRAW_KEY),
-                new Load("images/ui/inventory/inv_wood.png", InventoryKey.INV_WOOD_KEY),
-                new Load("images/ui/inventory/inv_dirt.png", InventoryKey.INV_DIRT_KEY),
-                new Load("images/ui/inventory/inv_krystals.png", InventoryKey.INV_KRYSTAL_KEY),
-                new Load("images/ui/inventory/inv_florite.png", InventoryKey.INV_FLORITE_KEY),
-                new Load("images/ui/inventory/inv_campfire.png", InventoryKey.INV_CAMPFIRE_KEY),
-                new Load("images/ui/inventory/inv_door.png", InventoryKey.INV_DOOR_KEY),
-                new Load("images/ui/inventory/inv_brick.png", InventoryKey.INV_BRICKWALL_KEY),
-                new Load("images/ui/inventory/inv_woodwall.png", InventoryKey.INV_WOODWALL_KEY),
+                new Load("images/ui/inventory/inv_bones.png", InventoryKey[InventoryKey.INV_BONES_KEY]),
+                new Load("images/ui/inventory/inv_berry.png", InventoryKey[InventoryKey.INV_BERRY_KEY]),
+                new Load("images/ui/inventory/inv_mushroom.png", InventoryKey[InventoryKey.INV_MUSHROOM_KEY]),
+                new Load("images/ui/inventory/inv_mushroom2.png", InventoryKey[InventoryKey.INV_MUSHROOM2_KEY]),
+                new Load("images/ui/inventory/inv_mushroom3.png", InventoryKey[InventoryKey.INV_MUSHROOM3_KEY]),
+                new Load("images/ui/inventory/inv_plant.png", InventoryKey[InventoryKey.INV_PLANT_KEY]),
+                new Load("images/ui/inventory/inv_plant2.png", InventoryKey[InventoryKey.INV_PLANT2_KEY]),
+                new Load("images/ui/inventory/inv_plant3.png", InventoryKey[InventoryKey.INV_PLANT3_KEY]),
+                new Load("images/ui/inventory/inv_plant4.png", InventoryKey[InventoryKey.INV_PLANT4_KEY]),
+                new Load("images/ui/inventory/inv_straw.png", InventoryKey[InventoryKey.INV_STRAW_KEY]),
+                new Load("images/ui/inventory/inv_wood.png", InventoryKey[InventoryKey.INV_WOOD_KEY]),
+                new Load("images/ui/inventory/inv_dirt.png", InventoryKey[InventoryKey.INV_DIRT_KEY]),
+                new Load("images/ui/inventory/inv_krystals.png", InventoryKey[InventoryKey.INV_KRYSTAL_KEY]),
+                new Load("images/ui/inventory/inv_florite.png", InventoryKey[InventoryKey.INV_FLORITE_KEY]),
+                new Load("images/ui/inventory/inv_campfire.png", InventoryKey[InventoryKey.INV_CAMPFIRE_KEY]),
+                new Load("images/ui/inventory/inv_door.png", InventoryKey[InventoryKey.INV_DOOR_KEY]),
+                new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICKWALL_KEY]),
+                new Load("images/ui/inventory/inv_woodwall.png", InventoryKey[InventoryKey.INV_WOODWALL_KEY]),
                 // characters
-                new Load("images/characters/lich_animation.png", AnimationKey.LICH_ANIMATION_KEY),
-                new Load("images/characters/corpse_animation.png", AnimationKey.CORPSE_ANIMATION_KEY),
+                new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
+                new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
                 // gfx animations
-                new Load("images/effects/blast_animation.png", AnimationKey.FIREBALL_ANIMATION_KEY),
-                new Load("images/effects/bolt_animation.png", AnimationKey.BOLT_ANIMATION_KEY),
+                new Load("images/effects/blast_animation.png", AnimationKey[AnimationKey.FIREBALL_ANIMATION_KEY]),
+                new Load("images/effects/bolt_animation.png", AnimationKey[AnimationKey.BOLT_ANIMATION_KEY]),
                 // surfaces
-                new Load("images/surfaces/dirt.png", SurfaceKey.SRFC_DIRT_KEY),
-                new Load("images/surfaces/woodwall.png", SurfaceKey.SRFC_WOODWALL_KEY),
-                new Load("images/surfaces/krystals.png", SurfaceKey.SRFC_KRYSTAL_KEY),
-                new Load("images/surfaces/florite.png", SurfaceKey.SRFC_FLORITE_KEY),
-                new Load("images/surfaces/brick.png", SurfaceKey.SRFC_BRICK_KEY),
-                new Load("images/surfaces/straw.png", SurfaceKey.SRFC_STRAW_KEY),
+                new Load("images/surfaces/dirt.png", SurfaceKey[SurfaceKey.SRFC_DIRT_KEY]),
+                new Load("images/surfaces/woodwall.png", SurfaceKey[SurfaceKey.SRFC_WOODWALL_KEY]),
+                new Load("images/surfaces/krystals.png", SurfaceKey[SurfaceKey.SRFC_KRYSTAL_KEY]),
+                new Load("images/surfaces/florite.png", SurfaceKey[SurfaceKey.SRFC_FLORITE_KEY]),
+                new Load("images/surfaces/brick.png", SurfaceKey[SurfaceKey.SRFC_BRICK_KEY]),
+                new Load("images/surfaces/straw.png", SurfaceKey[SurfaceKey.SRFC_STRAW_KEY]),
                 // surface bacgrounds
-                new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY),
-                new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey.SRFC_BGR_BRICK_KEY),
-                new Load("images/surfaces/straw_bgr.png", SurfaceBgrKey.SRFC_BGR_STRAW_KEY),
+                new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
+                new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
+                new Load("images/surfaces/straw_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]),
                 // objects
-                new Load("images/parts/berry.png", MapObjectKey.MAP_BERRY_KEY),
-                new Load("images/parts/bush.png", MapObjectKey.MAP_BUSH_KEY),
-                new Load("images/parts/bush2.png", MapObjectKey.MAP_BUSH2_KEY),
-                new Load("images/parts/grass.png", MapObjectKey.MAP_GRASS_KEY),
-                new Load("images/parts/grass2.png", MapObjectKey.MAP_GRASS2_KEY),
-                new Load("images/parts/grass3.png", MapObjectKey.MAP_GRASS3_KEY),
-                new Load("images/parts/grave.png", MapObjectKey.MAP_GRAVE_KEY),
-                new Load("images/parts/mushroom.png", MapObjectKey.MAP_MUSHROOM_KEY),
-                new Load("images/parts/mushroom2.png", MapObjectKey.MAP_MUSHROOM2_KEY),
-                new Load("images/parts/mushroom3.png", MapObjectKey.MAP_MUSHROOM3_KEY),
-                new Load("images/parts/plant.png", MapObjectKey.MAP_PLANT_KEY),
-                new Load("images/parts/plant2.png", MapObjectKey.MAP_PLANT2_KEY),
-                new Load("images/parts/plant3.png", MapObjectKey.MAP_PLANT3_KEY),
-                new Load("images/parts/plant4.png", MapObjectKey.MAP_PLANT4_KEY),
-                new Load("images/parts/tree.png", MapObjectKey.MAP_TREE_KEY),
-                new Load("images/parts/tree2.png", MapObjectKey.MAP_TREE2_KEY),
-                new Load("images/parts/florite.png", MapObjectKey.MAP_FLORITE_KEY),
-                new Load("images/parts/campfire.png", MapObjectKey.MAP_CAMPFIRE_KEY),
-                new Load("images/parts/door_closed.png", MapObjectKey.MAP_DOOR_CLOSED_KEY),
-                new Load("images/parts/door_open.png", MapObjectKey.MAP_DOOR_OPEN_KEY),
-                new Load("images/parts/door_closed2.png", MapObjectKey.MAP_DOOR_CLOSED2_KEY),
-                new Load("images/parts/door_open2.png", MapObjectKey.MAP_DOOR_OPEN2_KEY),
+                new Load("images/parts/berry.png", MapObjectKey[MapObjectKey.MAP_BERRY_KEY]),
+                new Load("images/parts/bush.png", MapObjectKey[MapObjectKey.MAP_BUSH_KEY]),
+                new Load("images/parts/bush2.png", MapObjectKey[MapObjectKey.MAP_BUSH2_KEY]),
+                new Load("images/parts/grass.png", MapObjectKey[MapObjectKey.MAP_GRASS_KEY]),
+                new Load("images/parts/grass2.png", MapObjectKey[MapObjectKey.MAP_GRASS2_KEY]),
+                new Load("images/parts/grass3.png", MapObjectKey[MapObjectKey.MAP_GRASS3_KEY]),
+                new Load("images/parts/grave.png", MapObjectKey[MapObjectKey.MAP_GRAVE_KEY]),
+                new Load("images/parts/mushroom.png", MapObjectKey[MapObjectKey.MAP_MUSHROOM_KEY]),
+                new Load("images/parts/mushroom2.png", MapObjectKey[MapObjectKey.MAP_MUSHROOM2_KEY]),
+                new Load("images/parts/mushroom3.png", MapObjectKey[MapObjectKey.MAP_MUSHROOM3_KEY]),
+                new Load("images/parts/plant.png", MapObjectKey[MapObjectKey.MAP_PLANT_KEY]),
+                new Load("images/parts/plant2.png", MapObjectKey[MapObjectKey.MAP_PLANT2_KEY]),
+                new Load("images/parts/plant3.png", MapObjectKey[MapObjectKey.MAP_PLANT3_KEY]),
+                new Load("images/parts/plant4.png", MapObjectKey[MapObjectKey.MAP_PLANT4_KEY]),
+                new Load("images/parts/tree.png", MapObjectKey[MapObjectKey.MAP_TREE_KEY]),
+                new Load("images/parts/tree2.png", MapObjectKey[MapObjectKey.MAP_TREE2_KEY]),
+                new Load("images/parts/florite.png", MapObjectKey[MapObjectKey.MAP_FLORITE_KEY]),
+                new Load("images/parts/campfire.png", MapObjectKey[MapObjectKey.MAP_CAMPFIRE_KEY]),
+                new Load("images/parts/door_closed.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED_KEY]),
+                new Load("images/parts/door_open.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN_KEY]),
+                new Load("images/parts/door_closed2.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED2_KEY]),
+                new Load("images/parts/door_open2.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
                 // misc
-                new Load("images/characters/player_icon.png", UIGFXKey.PLAYER_ICON_KEY),
-                new Load("images/ui/skull.png", UIGFXKey.SKULL_KEY),
-                new Load("images/ui/sound.png", UIGFXKey.UI_SOUND_KEY),
-                new Load("images/ui/up.png", UIGFXKey.UI_UP_KEY),
-                new Load("images/ui/down.png", UIGFXKey.UI_DOWN_KEY),
-                new Load("images/ui/left.png", UIGFXKey.UI_LEFT_KEY),
-                new Load("images/ui/right.png", UIGFXKey.UI_RIGHT_KEY),
-                new Load("images/ui/craft.png", UIGFXKey.UI_CRAFT_KEY),
+                new Load("images/characters/player_icon.png", UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]),
+                new Load("images/ui/skull.png", UIGFXKey[UIGFXKey.SKULL_KEY]),
+                new Load("images/ui/sound.png", UIGFXKey[UIGFXKey.UI_SOUND_KEY]),
+                new Load("images/ui/up.png", UIGFXKey[UIGFXKey.UI_UP_KEY]),
+                new Load("images/ui/down.png", UIGFXKey[UIGFXKey.UI_DOWN_KEY]),
+                new Load("images/ui/left.png", UIGFXKey[UIGFXKey.UI_LEFT_KEY]),
+                new Load("images/ui/right.png", UIGFXKey[UIGFXKey.UI_RIGHT_KEY]),
+                new Load("images/ui/craft.png", UIGFXKey[UIGFXKey.UI_CRAFT_KEY]),
                 // armor
-                new Load("images/armor/helmet.png", UIGFXKey.HELMET_KEY),
-                new Load("images/armor/torso.png", UIGFXKey.TORSO_KEY),
-                new Load("images/armor/gauntlet.png", UIGFXKey.GAUNTLET_KEY),
+                new Load("images/armor/helmet.png", UIGFXKey[UIGFXKey.HELMET_KEY]),
+                new Load("images/armor/torso.png", UIGFXKey[UIGFXKey.TORSO_KEY]),
+                new Load("images/armor/gauntlet.png", UIGFXKey[UIGFXKey.GAUNTLET_KEY]),
                 // background
-                new Load("images/background/sky.png", BackgroundKey.SKY_KEY),
-                new Load("images/background/far_mountain.png", BackgroundKey.FAR_MOUNTAIN_KEY),
-                new Load("images/background/mountain.png", BackgroundKey.MOUNTAIN_KEY),
-                new Load("images/background/far_woodland.png", BackgroundKey.FAR_HILL_KEY),
-                new Load("images/background/woodland.png", BackgroundKey.HILL_KEY),
-                new Load("images/background/dirt_back.png", BackgroundKey.DIRTBACK_KEY),
-                new Load("images/background/darkness.png", BackgroundKey.DARKNESS_KEY),
-                new Load("images/background/dirt_back_start.png", BackgroundKey.DIRT_BACK_START_KEY),
+                new Load("images/background/sky.png", BackgroundKey[BackgroundKey.SKY_KEY]),
+                new Load("images/background/far_mountain.png", BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]),
+                new Load("images/background/mountain.png", BackgroundKey[BackgroundKey.MOUNTAIN_KEY]),
+                new Load("images/background/far_woodland.png", BackgroundKey[BackgroundKey.FAR_HILL_KEY]),
+                new Load("images/background/woodland.png", BackgroundKey[BackgroundKey.HILL_KEY]),
+                new Load("images/background/dirt_back.png", BackgroundKey[BackgroundKey.DIRTBACK_KEY]),
+                new Load("images/background/darkness.png", BackgroundKey[BackgroundKey.DARKNESS_KEY]),
+                new Load("images/background/dirt_back_start.png", BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]),
                 /**
                  * SOUNDS AND MUSIC
                  */
                 // sounds
-                new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", SoundKey.SND_FIREBALL_KEY),
-                new Load("sound/113111__satrebor__pick.ogg", SoundKey.SND_PICK_KEY),
-                new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", SoundKey.SND_BURN_KEY),
-                new Load("sound/bolt_cast.ogg", SoundKey.SND_BOLT_CAST),
-                new Load("sound/place.ogg", SoundKey.SND_PLACE_KEY),
-                new Load("sound/pick_axe1.ogg", SoundKey.SND_PICK_AXE_1_KEY),
-                new Load("sound/pick_axe2.ogg", SoundKey.SND_PICK_AXE_2_KEY),
-                new Load("sound/pick_axe3.ogg", SoundKey.SND_PICK_AXE_3_KEY),
-                new Load("sound/bonecrack.ogg", SoundKey.SND_BONECRACK_KEY),
-                new Load("sound/skeleton_die.ogg", SoundKey.SND_SKELETON_DIE_KEY),
-                new Load("sound/252083__pepingrillin__spawn.ogg", SoundKey.SND_SPAWN_KEY),
-                new Load("sound/door_open.ogg", SoundKey.SND_DOOR_OPEN_KEY),
-                new Load("sound/door_close.ogg", SoundKey.SND_DOOR_CLOSE_KEY),
-                new Load("sound/craft.ogg", SoundKey.SND_CRAFT_KEY),
-                new Load("sound/click.ogg", SoundKey.SND_CLICK_KEY),
+                new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", SoundKey[SoundKey.SND_FIREBALL_KEY]),
+                new Load("sound/113111__satrebor__pick.ogg", SoundKey[SoundKey.SND_PICK_KEY]),
+                new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", SoundKey[SoundKey.SND_BURN_KEY]),
+                new Load("sound/bolt_cast.ogg", SoundKey[SoundKey.SND_BOLT_CAST]),
+                new Load("sound/place.ogg", SoundKey[SoundKey.SND_PLACE_KEY]),
+                new Load("sound/pick_axe1.ogg", SoundKey[SoundKey.SND_PICK_AXE_1_KEY]),
+                new Load("sound/pick_axe2.ogg", SoundKey[SoundKey.SND_PICK_AXE_2_KEY]),
+                new Load("sound/pick_axe3.ogg", SoundKey[SoundKey.SND_PICK_AXE_3_KEY]),
+                new Load("sound/bonecrack.ogg", SoundKey[SoundKey.SND_BONECRACK_KEY]),
+                new Load("sound/skeleton_die.ogg", SoundKey[SoundKey.SND_SKELETON_DIE_KEY]),
+                new Load("sound/252083__pepingrillin__spawn.ogg", SoundKey[SoundKey.SND_SPAWN_KEY]),
+                new Load("sound/door_open.ogg", SoundKey[SoundKey.SND_DOOR_OPEN_KEY]),
+                new Load("sound/door_close.ogg", SoundKey[SoundKey.SND_DOOR_CLOSE_KEY]),
+                new Load("sound/craft.ogg", SoundKey[SoundKey.SND_CRAFT_KEY]),
+                new Load("sound/click.ogg", SoundKey[SoundKey.SND_CLICK_KEY]),
                 // music
-                new Load("music/Dirt_2.ogg", MusicKey.MSC_DIRT_THEME_KEY),
+                new Load("music/Dirt_2.ogg", MusicKey[MusicKey.MSC_DIRT_THEME_KEY]),
             ];
             (function () {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                    manifest.push(new Load("images/background/cloud" + i + ".png", BackgroundKey.CLOUD_KEY + i));
+                    manifest.push(new Load("images/background/cloud" + i + ".png", BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
                 }
             })();
             var loadScreenCont = new createjs.Container();
@@ -397,22 +396,22 @@ var Lich;
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
                 game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED_KEY]);
-                Lich.Mixer.play(SoundKey.SND_DOOR_CLOSE_KEY);
+                Lich.Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
             }));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
                 game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY]);
-                Lich.Mixer.play(SoundKey.SND_DOOR_OPEN_KEY);
+                Lich.Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
                 game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED2_KEY]);
-                Lich.Mixer.play(SoundKey.SND_DOOR_CLOSE_KEY);
+                Lich.Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
             }));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
                 game.world.render.digObject(rx, ry, false);
                 game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
-                Lich.Mixer.play(SoundKey.SND_DOOR_OPEN_KEY);
+                Lich.Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
             (function () {
                 // vytvoř frekvenční pool pro objekty 
@@ -469,11 +468,11 @@ var Lich;
         };
         ;
         Resources.prototype.getImage = function (key) {
-            return this.loader.getResult(key.toString());
+            return this.loader.getResult(key);
         };
         ;
         Resources.prototype.getBitmap = function (key) {
-            return new createjs.Bitmap(this.getImage(key.toString()));
+            return new createjs.Bitmap(this.getImage(key));
         };
         ;
         Resources.prototype.getSpritePart = function (key, tileX, tileY, count, height, width) {
@@ -488,7 +487,7 @@ var Lich;
             }
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [this.getImage(key.toString())],
+                "images": [this.getImage(key)],
                 "frames": frames,
                 "animations": { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
             });
@@ -500,7 +499,7 @@ var Lich;
             var self = this;
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [self.getImage(key.toString())],
+                "images": [self.getImage(key)],
                 "frames": {
                     "regX": 0,
                     "height": Resources.PARTS_SIZE,
@@ -516,7 +515,7 @@ var Lich;
         };
         Resources.prototype.getSprite = function (key, framesCount) {
             var self = this;
-            var sprite = new createjs.Sprite(self.getSpriteSheet(key.toString(), framesCount), "idle");
+            var sprite = new createjs.Sprite(self.getSpriteSheet(key, framesCount), "idle");
             sprite.gotoAndPlay("idle");
             return sprite;
         };

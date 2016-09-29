@@ -122,7 +122,7 @@ namespace Lich {
 
             var onCollision = function(clsn) {
                 if (self.ending === false) {
-                    Mixer.play(self.hitSound, false, 0.1);
+                    Mixer.playSound(self.hitSound, false, 0.1);
                     self.ending = true;
                     self.gotoAndPlay("hit");
 
