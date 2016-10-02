@@ -7,9 +7,9 @@
     "args": [
         "-w",
         "-p",
-        "public_html/engine",
+        "public/engine",
         "--outDir",
-        "public_html/engine/js",
+        "public/engine/js",
         "--listFiles"
     ],
     "showOutput": "always",
