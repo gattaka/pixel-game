@@ -1,8 +1,6 @@
 namespace Lich {
     export class UI extends createjs.Container {
 
-        static INSTANCE: UI;
-
         static SCREEN_SPACING = 20;
 
         charCont: createjs.Container;
@@ -16,17 +14,11 @@ namespace Lich {
 
         splashScreenUI: SplashScreenUI;
 
-        public static getInstance(game: Game) {
-            if (!UI.INSTANCE) {
-                UI.INSTANCE = new UI(game);
-            }
-            return UI.INSTANCE;
-        }
-
-        private constructor(public game: Game) {
+        constructor(public game: Game) {
             super();
 
-            var self = this;
+            let self = this;
+            let canvas = game.getCanvas();
 
             // Debug and loging
             self.debugUI = new DebugLogUI(400, 0);
@@ -36,8 +28,8 @@ namespace Lich {
 
             // SplashScreen
             self.splashScreenUI = new SplashScreenUI();
-            self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
-            self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
+            self.splashScreenUI.x = canvas.width / 2 - self.splashScreenUI.width / 2;
+            self.splashScreenUI.y = canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
 
             // Crafting
@@ -51,34 +43,34 @@ namespace Lich {
             // Inventář
             var inventoryUI = new InventoryUI(recipeListener);
             inventoryUI.x = UI.SCREEN_SPACING;
-            inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
+            inventoryUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
 
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
             // musí se posunout víc, protože má externí řádek pro ingredience
-            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
+            craftingUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
                 - craftingUI.height - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 3;
 
             // Schopnosti
             var spellsUI = new SpellsUI();
-            spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
-            spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
+            spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
+            spellsUI.y = canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
 
             // Hudba
             var musicUI = new MusicUI();
-            musicUI.x = game.canvas.width / 2 - musicUI.width / 2;
+            musicUI.x = canvas.width / 2 - musicUI.width / 2;
             musicUI.y = UI.SCREEN_SPACING
             self.addChild(musicUI);
             self.musicUI = musicUI;
 
             // Stav (mana, zdraví)
             var conditionUI = new ConditionUI();
-            conditionUI.x = game.canvas.width - conditionUI.width - UI.SCREEN_SPACING;
-            conditionUI.y = game.canvas.height - conditionUI.height - UI.SCREEN_SPACING;
+            conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
+            conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
         }
@@ -107,7 +99,6 @@ namespace Lich {
             });
         }
     }
-
 
     export class ConditionUI extends AbstractUI {
 
@@ -234,6 +225,46 @@ namespace Lich {
                 self.setWill(data.currentWill);
                 return false;
             });
+        }
+
+    }
+
+    export class GameLoadUI extends createjs.Container {
+
+        private loader;
+
+        constructor(game: Game) {
+            super();
+            let self = this;
+            self.width = game.getCanvas().width;
+            self.height = game.getCanvas().height;      
+
+            var loadScreen = new createjs.Shape();
+            loadScreen.graphics.beginFill("black");
+            loadScreen.graphics.drawRect(0, 0, self.width, self.height);
+            self.addChild(loadScreen);
+
+            var loadLabel = new Label("Loading...", "30px " + Resources.FONT, Resources.TEXT_COLOR);
+            loadLabel.x = self.width / 2 - 50;
+            loadLabel.y = self.height / 2 - 50;
+            self.addChild(loadLabel);
+
+            if (!Resources.getInstance().isLoaderDone()) {
+                EventBus.getInstance().registerConsumer(EventType.LOAD_PROGRESS, (n: NumberEventPayload): boolean => {
+                    loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                    return false;
+                });
+
+                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
+                    createjs.Tween.get(self)
+                        .to({
+                            alpha: 0
+                        }, 2000).call(function () {
+                            game.getStage().removeChild(self);
+                        });
+                    return false;
+                });
+            }
         }
 
     }

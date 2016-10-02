@@ -10,7 +10,7 @@ var Lich;
         function Enemy() {
             _super.call(this, Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Lich.Resources.INSTANCE.getImage(Lich.AnimationKey[Lich.AnimationKey.CORPSE_ANIMATION_KEY])],
+                "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[Lich.AnimationKey.CORPSE_ANIMATION_KEY])],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,

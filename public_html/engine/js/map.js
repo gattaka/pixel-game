@@ -22,7 +22,7 @@ var Lich;
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
                         var pos = Lich.MapTools.getSurfacePositionByCoordPattern(x, y);
-                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(Lich.SurfaceKey.SRFC_DIRT_KEY, pos));
+                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(Lich.SurfaceKey.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
@@ -112,7 +112,7 @@ var Lich;
                                         if (posIndex != Lich.SurfacePositionKey.VOID) {
                                             // nahradí aktuální dílek dílkem daného minerálu
                                             // přičemž zachová pozici dílku
-                                            tilesMap.mapRecord.setValue(__x, __y, Lich.Resources.INSTANCE.surfaceIndex.changeType(posIndex, oreKey));
+                                            tilesMap.mapRecord.setValue(__x, __y, Lich.Resources.getInstance().surfaceIndex.changeType(posIndex, oreKey));
                                         }
                                     }
                                 }
@@ -139,8 +139,8 @@ var Lich;
                     var holeX = Math.floor(Math.random() * tilesMap.width);
                     var holeY = Math.floor(Math.random() * tilesMap.height);
                     // z čeho bude ložisko?
-                    var index = Math.floor(Lich.Resources.INSTANCE.mapSurfacesFreqPool.length * Math.random());
-                    createDeposit(holeX, holeY, dia, Lich.Resources.INSTANCE.mapSurfacesFreqPool[index]);
+                    var index = Math.floor(Lich.Resources.getInstance().mapSurfacesFreqPool.length * Math.random());
+                    createDeposit(holeX, holeY, dia, Lich.Resources.getInstance().mapSurfacesFreqPool[index]);
                 }
             })();
             // objekty 
@@ -151,7 +151,7 @@ var Lich;
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Lich.Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.T) == false) ||
+                            if ((y === y0 && Lich.Resources.getInstance().surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.T) == false) ||
                                 (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== Lich.SurfacePositionKey.VOID) ||
                                 (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
@@ -163,14 +163,14 @@ var Lich;
                     for (var x = 0; x < tilesMap.width; x += 2) {
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                        if (Lich.Resources.INSTANCE.surfaceIndex.isPosition(val, Lich.SurfacePositionKey.T)) {
+                        if (Lich.Resources.getInstance().surfaceIndex.isPosition(val, Lich.SurfacePositionKey.T)) {
                             // bude tam nějaký objekt? (100% ano)
                             if (Math.random() > 0) {
                                 var tries = 0;
-                                var index = Math.floor(Lich.Resources.INSTANCE.mapObjectDefsFreqPool.length * Math.random());
-                                while (tries < Lich.Resources.INSTANCE.mapObjectDefsFreqPool.length) {
-                                    var key = Lich.Resources.INSTANCE.mapObjectDefsFreqPool[index];
-                                    var object = Lich.Resources.INSTANCE.mapObjectDefs[key];
+                                var index = Math.floor(Lich.Resources.getInstance().mapObjectDefsFreqPool.length * Math.random());
+                                while (tries < Lich.Resources.getInstance().mapObjectDefsFreqPool.length) {
+                                    var key = Lich.Resources.getInstance().mapObjectDefsFreqPool[index];
+                                    var object = Lich.Resources.getInstance().mapObjectDefs[key];
                                     if (object.freq > 0 && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                         Lich.MapTools.writeObjectRecord(tilesMap, x, y, object);
                                         break;
@@ -178,7 +178,7 @@ var Lich;
                                     else {
                                         // další pokus na dalším objektu
                                         tries++;
-                                        index = (index + 1) % Lich.Resources.INSTANCE.mapObjectDefsFreqPool.length;
+                                        index = (index + 1) % Lich.Resources.getInstance().mapObjectDefsFreqPool.length;
                                     }
                                 }
                             }

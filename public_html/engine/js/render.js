@@ -65,8 +65,8 @@ var Lich;
             world.addChild(self.sectorsCont);
             self.sectorsCont.x = 0;
             self.sectorsCont.y = 0;
-            self.sectorsCont.width = game.canvas.width;
-            self.sectorsCont.height = game.canvas.height;
+            self.sectorsCont.width = game.getCanvas().width;
+            self.sectorsCont.height = game.getCanvas().height;
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();
             // Mapa
@@ -207,11 +207,11 @@ var Lich;
                 self.mapUpdateRegion.toY = y;
         };
         Render.prototype.setSurfaceBgrSourceRect = function (tile, positionIndex) {
-            var v = Lich.Resources.INSTANCE.surfaceBgrIndex.getPosition(positionIndex);
+            var v = Lich.Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
             this.setSourceRect(tile, v);
         };
         Render.prototype.setSurfaceSourceRect = function (tile, positionIndex) {
-            var v = Lich.Resources.INSTANCE.surfaceIndex.getPosition(positionIndex);
+            var v = Lich.Resources.getInstance().surfaceIndex.getPosition(positionIndex);
             this.setSourceRect(tile, v);
         };
         Render.prototype.setSourceRect = function (tile, v) {
@@ -221,28 +221,28 @@ var Lich;
         };
         Render.prototype.createBgrTile = function (positionIndex) {
             var self = this;
-            var typ = Lich.Resources.INSTANCE.surfaceBgrIndex.getType(positionIndex);
-            var tile = Lich.Resources.INSTANCE.getBitmap(Lich.SurfaceBgrKey[typ]);
+            var typ = Lich.Resources.getInstance().surfaceBgrIndex.getType(positionIndex);
+            var tile = Lich.Resources.getInstance().getBitmap(Lich.SurfaceBgrKey[typ]);
             this.setSurfaceBgrSourceRect(tile, positionIndex);
             return tile;
         };
         Render.prototype.createTile = function (positionIndex) {
             var self = this;
-            var surfaceType = Lich.Resources.INSTANCE.surfaceIndex.getType(positionIndex);
-            var tile = Lich.Resources.INSTANCE.getBitmap(Lich.SurfaceKey[surfaceType]);
+            var surfaceType = Lich.Resources.getInstance().surfaceIndex.getType(positionIndex);
+            var tile = Lich.Resources.getInstance().getBitmap(Lich.SurfaceKey[surfaceType]);
             this.setSurfaceSourceRect(tile, positionIndex);
             return tile;
         };
         Render.prototype.createObject = function (objectTile) {
             var self = this;
-            var objDef = Lich.Resources.INSTANCE.mapObjectDefs[objectTile.mapKey];
+            var objDef = Lich.Resources.getInstance().mapObjectDefs[objectTile.mapKey];
             var object;
             if (objDef.frames > 1) {
-                object = Lich.Resources.INSTANCE.getSpritePart(Lich.MapObjectKey[objDef.mapKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                object = Lich.Resources.getInstance().getSpritePart(Lich.MapObjectKey[objDef.mapKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
                 return object;
             }
             else {
-                object = Lich.Resources.INSTANCE.getBitmap(Lich.MapObjectKey[objectTile.mapKey]);
+                object = Lich.Resources.getInstance().getBitmap(Lich.MapObjectKey[objectTile.mapKey]);
                 // Otestováno: tohle je rychlejší než extract ze Spritesheet
                 object.sourceRect = new createjs.Rectangle(objectTile.objTileX * Lich.Resources.TILE_SIZE, objectTile.objTileY * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
                 return object;
@@ -253,7 +253,7 @@ var Lich;
          */
         Render.prototype.canShiftX = function (dst) {
             var self = this;
-            return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.map.tilesMap.width * Lich.Resources.TILE_SIZE + self.game.canvas.width;
+            return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.map.tilesMap.width * Lich.Resources.TILE_SIZE + self.game.getCanvas().width;
         };
         Render.prototype.shiftSectorsX = function (dst) {
             var self = this;
@@ -268,7 +268,7 @@ var Lich;
          */
         Render.prototype.canShiftY = function (dst) {
             var self = this;
-            return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.map.tilesMap.height * Lich.Resources.TILE_SIZE + self.game.canvas.height;
+            return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.map.tilesMap.height * Lich.Resources.TILE_SIZE + self.game.getCanvas().height;
         };
         Render.prototype.shiftSectorsY = function (dst) {
             var self = this;
@@ -301,7 +301,7 @@ var Lich;
                 imgData.data[imgData.counter++] = 200; // A
             }
             else {
-                if (Lich.Resources.INSTANCE.surfaceIndex.isMiddlePosition(item)) {
+                if (Lich.Resources.getInstance().surfaceIndex.isMiddlePosition(item)) {
                     imgData.data[imgData.counter++] = 156; // R
                     imgData.data[imgData.counter++] = 108; // G
                     imgData.data[imgData.counter++] = 36; // B
@@ -386,7 +386,7 @@ var Lich;
             border.graphics.drawRect(-1, -1, Render.MAP_SIDE + 2, Render.MAP_SIDE + 2);
             minimapCont.addChild(border);
             self.initMinimap();
-            self.playerIcon = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.PLAYER_ICON_KEY]);
+            self.playerIcon = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.PLAYER_ICON_KEY]);
             self.playerIcon.alpha = 0.7;
             self.minimap.cont.addChild(self.playerIcon);
         };
@@ -401,8 +401,8 @@ var Lich;
             var self = this;
             var dugIndex = self.tilesMap.mapBgrRecord.getValue(rx, ry);
             if (dugIndex != null && dugIndex > -1) {
-                var surfaceType = Lich.Resources.INSTANCE.surfaceBgrIndex.getType(dugIndex);
-                var objType = Lich.Resources.INSTANCE.mapSurfacesBgrDefs[surfaceType];
+                var surfaceType = Lich.Resources.getInstance().surfaceBgrIndex.getType(dugIndex);
+                var objType = Lich.Resources.getInstance().mapSurfacesBgrDefs[surfaceType];
                 self.onDigSurfaceListeners.forEach(function (fce) {
                     fce(objType, rx, ry);
                 });
@@ -413,8 +413,8 @@ var Lich;
                             self.prepareMapUpdate(x, y);
                             if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
-                                var srfcType = Lich.Resources.INSTANCE.surfaceBgrIndex.getType(val);
-                                var indx = Lich.Resources.INSTANCE.surfaceBgrIndex;
+                                var srfcType = Lich.Resources.getInstance().surfaceBgrIndex.getType(val);
+                                var indx = Lich.Resources.getInstance().surfaceBgrIndex;
                                 self.tilesMap.mapBgrRecord.setValue(x, y, null);
                                 var targetSector = self.getSectorByTiles(x, y);
                                 if (typeof targetSector !== "undefined" && targetSector !== null) {
@@ -440,8 +440,8 @@ var Lich;
             var tilesToReset = [];
             var dugIndex = self.tilesMap.mapRecord.getValue(rx, ry);
             if (dugIndex != null && dugIndex > -1) {
-                var surfaceType = Lich.Resources.INSTANCE.surfaceIndex.getType(dugIndex);
-                var objType = Lich.Resources.INSTANCE.mapSurfaceDefs[surfaceType];
+                var surfaceType = Lich.Resources.getInstance().surfaceIndex.getType(dugIndex);
+                var objType = Lich.Resources.getInstance().mapSurfaceDefs[surfaceType];
                 self.onDigSurfaceListeners.forEach(function (fce) {
                     fce(objType, rx, ry);
                 });
@@ -452,13 +452,13 @@ var Lich;
                             self.prepareMapUpdate(x, y);
                             if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
-                                var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getType(val);
-                                var indx = Lich.Resources.INSTANCE.surfaceIndex;
+                                var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
+                                var indx = Lich.Resources.getInstance().surfaceIndex;
                                 // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                                 if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
                                     // okraje vyresetuj
                                     if (val !== Lich.SurfacePositionKey.VOID) {
-                                        self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.M1));
+                                        self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);
                                         // zjisti sektor dílku, aby byl přidán do fronty 
                                         // ke cache update (postačí to udělat dle tilesToReset,
@@ -540,7 +540,7 @@ var Lich;
             var self = this;
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
             if (objectElement !== null) {
-                var objType = Lich.Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
+                var objType = Lich.Resources.getInstance().mapObjectDefs[objectElement.mapKey];
                 var objWidth = objType.mapSpriteWidth;
                 var objHeight = objType.mapSpriteHeight;
                 // relativní pozice dílku v sheetu (od počátku sprite)
@@ -583,9 +583,9 @@ var Lich;
             var ry = Lich.Utils.even(coord.y);
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
             if (objectElement !== null) {
-                var objType = Lich.Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
+                var objType = Lich.Resources.getInstance().mapObjectDefs[objectElement.mapKey];
                 if (objType.rmbAction) {
-                    objType.rmbAction(rx - objectElement.objTileX, 
+                    objType.rmbAction(self.game, rx - objectElement.objTileX, 
                     // aby se to bralo/usazovalo za spodní řadu
                     ry - objectElement.objTileY + objType.mapSpriteHeight - 2, objectElement, objType);
                     return true;
@@ -623,7 +623,7 @@ var Lich;
                         var sector = self.getSectorByTiles(x, y);
                         var pos = Lich.MapTools.getSurfaceBgrPositionByCoordPattern(x, y);
                         // vytvoř nové dílky
-                        var posIndex = Lich.Resources.INSTANCE.surfaceBgrIndex.getPositionIndex(surfaceBgrType, pos);
+                        var posIndex = Lich.Resources.getInstance().surfaceBgrIndex.getPositionIndex(surfaceBgrType, pos);
                         self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
                         var targetSector = self.getSectorByTiles(x, y);
                         // vytvoř dílek
@@ -656,11 +656,11 @@ var Lich;
                             var sector = self.getSectorByTiles(x, y);
                             // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                             if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
-                                var indx = Lich.Resources.INSTANCE.surfaceIndex;
-                                var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getType(val);
+                                var indx = Lich.Resources.getInstance().surfaceIndex;
+                                var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
                                 // okraje vyresetuj (pokud nejsou středy
                                 if (val !== Lich.SurfacePositionKey.VOID) {
-                                    self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.MapTools.getSurfacePositionByCoordPattern(x, y)));
+                                    self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.MapTools.getSurfacePositionByCoordPattern(x, y)));
                                     tilesToReset.push([x, y]);
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -672,7 +672,7 @@ var Lich;
                             }
                             else {
                                 var pos = Lich.MapTools.getSurfacePositionByCoordPattern(x, y);
-                                var posIndex = Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(surfaceType, pos);
+                                var posIndex = Lich.Resources.getInstance().surfaceIndex.getPositionIndex(surfaceType, pos);
                                 self.tilesMap.mapRecord.setValue(x, y, posIndex);
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);

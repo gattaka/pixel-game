@@ -3,14 +3,20 @@
 namespace Lich {
     export class Game {
 
-        canvas: HTMLCanvasElement;
-        stage: createjs.Stage;
-        world: World;
-        ui : UI; 
-        initialized = false;
-        keys = {};
+        private canvas: HTMLCanvasElement;
+        private stage: createjs.Stage;
+        private world: World;
+        private ui: UI;
+
+        private initialized = false;
+        private keys = {};
 
         mouse = new Mouse();
+
+        public getCanvas(): HTMLCanvasElement { return this.canvas; }
+        public getStage(): createjs.Stage { return this.stage; }
+        public getWorld(): World { return this.world; }
+        public getUI(): UI { return this.ui; }
 
         constructor(canvasId: string) {
 
@@ -90,15 +96,11 @@ namespace Lich {
 
             })();
 
-            /*----------------*/
-            /* Resources init */
-            /*----------------*/
-            Resources.getInstance(self, function () {
-
+            let init = function () {
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
-                self.ui = UI.getInstance(self);
+                self.ui = new UI(self);
 
                 /*---------------------*/
                 /* Measurements, debug */
@@ -114,7 +116,17 @@ namespace Lich {
                 });
 
                 self.initialized = true;
-            });
+            }
+
+            if (Resources.getInstance().isLoaderDone()) {
+                init();
+            } else {
+                self.stage.addChild(new GameLoadUI(self));
+                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
+                    init();
+                    return false;
+                });
+            }
 
             /*-----------*/
             /* Time init */

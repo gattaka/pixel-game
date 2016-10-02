@@ -39,7 +39,7 @@ var Lich;
                 for (var i = 0; i < this.spellIndex.length; i++) {
                     var alt = this.alternativeSpellIndex[i];
                     if (typeof alt !== "undefined") {
-                        this.spellContent[i].image = Lich.Resources.INSTANCE.getImage(Lich.SpellKey[alt]);
+                        this.spellContent[i].image = Lich.Resources.getInstance().getImage(Lich.SpellKey[alt]);
                     }
                 }
                 self.toggleFlag = true;
@@ -47,7 +47,7 @@ var Lich;
         };
         SpellsUI.prototype.prepareForToggleShift = function () {
             for (var i = 0; i < this.spellIndex.length; i++) {
-                this.spellContent[i].image = Lich.Resources.INSTANCE.getImage(Lich.SpellKey[this.spellIndex[i]]);
+                this.spellContent[i].image = Lich.Resources.getInstance().getImage(Lich.SpellKey[this.spellIndex[i]]);
             }
             this.toggleFlag = false;
         };
@@ -74,7 +74,7 @@ var Lich;
         };
         SpellsUI.prototype.spellInsert = function (spell, altSpell) {
             var self = this;
-            var bitmap = Lich.Resources.INSTANCE.getBitmap(Lich.SpellKey[spell]);
+            var bitmap = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[spell]);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.spellContent.length * (Lich.Resources.PARTS_SIZE + SpellsUI.SPACING);
             bitmap.y = 0;

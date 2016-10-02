@@ -62,7 +62,7 @@ var Lich;
             bgr.x = 0;
             bgr.y = 0;
             if (bitmap) {
-                var btmp = Lich.Resources.INSTANCE.getBitmap(Lich.UIGFXKey[bitmap]);
+                var btmp = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[bitmap]);
                 this.addChild(btmp);
                 btmp.x = PartsUI.SELECT_BORDER;
                 btmp.y = PartsUI.SELECT_BORDER;

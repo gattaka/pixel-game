@@ -37,40 +37,44 @@ namespace Lich {
         offsetX = 0;
         offsetY = 0;
 
+        private canvas: HTMLCanvasElement;
+        private stage: createjs.Stage;
+
         constructor(public game: Game) {
 
             var self = this;
 
-            var resources = Resources.INSTANCE;
+            self.stage = game.getStage();
+            self.canvas = game.getCanvas();
 
-            self.far_mountain = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
-            self.far_mountain_sec = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
-            self.mountain = resources.getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
-            self.mountain_sec = resources.getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
-            self.hill = resources.getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
-            self.hill_sec = resources.getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
-            self.far_hill = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
-            self.far_hill_sec = resources.getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
+            self.far_mountain = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
+            self.far_mountain_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
+            self.mountain = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
+            self.mountain_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
+            self.hill = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
+            self.hill_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
+            self.far_hill = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
+            self.far_hill_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
             for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                self.clouds.push(resources.getBitmap(BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
+                self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
             }
 
             self.sky = new createjs.Shape();
-            game.stage.addChild(self.sky);
+            self.stage.addChild(self.sky);
             self.sky.x = 0;
             self.sky.y = 0;
-            self.sky.graphics.beginBitmapFill(resources.getImage(BackgroundKey[BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, game.canvas.width, 250);
+            self.sky.graphics.beginBitmapFill(Resources.getInstance().getImage(BackgroundKey[BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
 
             var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds).concat([self.mountain, self.mountain_sec, self.far_hill, self.far_hill_sec, self.hill, self.hill_sec]);
 
             parallaxItems.forEach(function (entry) {
-                game.stage.addChild(entry);
-                entry.y = game.canvas.height - entry.image.height;
+                self.stage.addChild(entry);
+                entry.y = self.canvas.height - entry.image.height;
             });
 
             self.clouds.forEach(function (item) {
                 item.y = Math.random() * Background.CLOUDS_SPACE;
-                item.x = Math.random() * game.canvas.width;
+                item.x = Math.random() * self.canvas.width;
             });
 
             self.far_mountain.y = Background.FAR_MOUNTAINS_START;
@@ -89,19 +93,19 @@ namespace Lich {
             self.hill_sec.y = self.hill.y;
             self.hill_sec.x = -self.hill_sec.image.width;
 
-            self.dirt_back_startImg = resources.getImage(BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]);
+            self.dirt_back_startImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]);
             self.dirt_back_start = new createjs.Shape();
-            self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, game.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
+            self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, self.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
             self.dirt_back_start.x = 0;
             self.dirt_back_start.y = Background.DIRT_START;
-            game.stage.addChild(self.dirt_back_start);
+            self.stage.addChild(self.dirt_back_start);
 
-            self.dirt_backImg = resources.getImage(BackgroundKey[BackgroundKey.DIRTBACK_KEY]);
+            self.dirt_backImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRTBACK_KEY]);
             self.dirt_back = new createjs.Shape();
-            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, game.canvas.width + self.dirt_backImg.width * 2, game.canvas.height + self.dirt_backImg.height * 2);
+            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, self.canvas.width + self.dirt_backImg.width * 2, self.canvas.height + self.dirt_backImg.height * 2);
             self.dirt_back.x = 0;
             self.dirt_back.y = self.dirt_back_start.y + self.dirt_back_startImg.height - 4;
-            game.stage.addChild(self.dirt_back);
+            self.stage.addChild(self.dirt_back);
 
             console.log("background ready");
         }
@@ -109,7 +113,7 @@ namespace Lich {
 
         shift(distanceX, distanceY) {
             var self = this;
-            var canvas = self.game.canvas;
+            var canvas = self.canvas;
 
             self.offsetX += distanceX;
             self.offsetY += distanceY;
@@ -184,7 +188,7 @@ namespace Lich {
 
         handleTick(rawShift) {
             var self = this;
-            var canvas = self.game.canvas;
+            var canvas = self.canvas;
             var shift = rawShift / 10;
 
             // Clouds

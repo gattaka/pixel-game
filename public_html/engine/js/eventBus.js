@@ -6,11 +6,13 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Lich;
 (function (Lich) {
     (function (EventType) {
-        EventType[EventType["HEALTH_CHANGE"] = 0] = "HEALTH_CHANGE";
-        EventType[EventType["WILL_CHANGE"] = 1] = "WILL_CHANGE";
-        EventType[EventType["MOUSE_MOVE"] = 2] = "MOUSE_MOVE";
-        EventType[EventType["FPS_CHANGE"] = 3] = "FPS_CHANGE";
-        EventType[EventType["POINTED_AREA_CHANGE"] = 4] = "POINTED_AREA_CHANGE";
+        EventType[EventType["LOAD_PROGRESS"] = 0] = "LOAD_PROGRESS";
+        EventType[EventType["LOAD_FINISHED"] = 1] = "LOAD_FINISHED";
+        EventType[EventType["HEALTH_CHANGE"] = 2] = "HEALTH_CHANGE";
+        EventType[EventType["WILL_CHANGE"] = 3] = "WILL_CHANGE";
+        EventType[EventType["MOUSE_MOVE"] = 4] = "MOUSE_MOVE";
+        EventType[EventType["FPS_CHANGE"] = 5] = "FPS_CHANGE";
+        EventType[EventType["POINTED_AREA_CHANGE"] = 6] = "POINTED_AREA_CHANGE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {
@@ -19,6 +21,14 @@ var Lich;
         }
         return EventPayload;
     }());
+    var SimpleEventPayload = (function (_super) {
+        __extends(SimpleEventPayload, _super);
+        function SimpleEventPayload(type) {
+            _super.call(this, type);
+        }
+        return SimpleEventPayload;
+    }(EventPayload));
+    Lich.SimpleEventPayload = SimpleEventPayload;
     var NumberEventPayload = (function (_super) {
         __extends(NumberEventPayload, _super);
         function NumberEventPayload(type, payload) {

@@ -52,7 +52,7 @@ namespace Lich {
         constructor() {
             super(Enemy.WIDTH, Enemy.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Resources.INSTANCE.getImage(AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY])],
+                "images": [Resources.getInstance().getImage(AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY])],
                 "frames": {
                     "regX": 0,
                     "height": Enemy.HEIGHT,

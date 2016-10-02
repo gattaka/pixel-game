@@ -1,6 +1,8 @@
 namespace Lich {
 
     export enum EventType {
+        LOAD_PROGRESS,
+        LOAD_FINISHED,
         HEALTH_CHANGE,
         WILL_CHANGE,
         MOUSE_MOVE,
@@ -10,6 +12,10 @@ namespace Lich {
 
     abstract class EventPayload {
         constructor(public type: EventType) { }
+    }
+
+    export class SimpleEventPayload extends EventPayload {
+        constructor(type: EventType) { super(type); }
     }
 
     export class NumberEventPayload extends EventPayload {
@@ -36,7 +42,7 @@ namespace Lich {
 
     export class EventBus {
 
-        static INSTANCE: EventBus;
+        private static INSTANCE: EventBus;
 
         consumers: { [key: number]: Array<(payload: EventPayload) => boolean> } = {};
 

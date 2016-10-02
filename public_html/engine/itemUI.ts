@@ -12,7 +12,7 @@ namespace Lich {
             this.width = Resources.PARTS_SIZE + PartsUI.SPACING;
             this.height = this.width;
 
-            let invDef: InvObjDefinition = Resources.INSTANCE.invObjectDefs[item];
+            let invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[item];
             this.invDef = invDef;
             let frames = 1;
             if (typeof invDef === "undefined" || invDef == null) {
@@ -21,7 +21,7 @@ namespace Lich {
                 frames = invDef.frames;
             }
             this.frames = frames;
-            let sprite = Resources.INSTANCE.getSprite(InventoryKey[item], frames);
+            let sprite = Resources.getInstance().getSprite(InventoryKey[item], frames);
             this.sprite = sprite;
             this.addChild(sprite);
             sprite.x = this.width / 2 - sprite.width / 2;

@@ -14,22 +14,22 @@ namespace Lich {
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
 
-            var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
+            var srfcType = Resources.getInstance().surfaceIndex.getType(val);
 
             if (valT === SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.T));
+                tilesMap.mapRecord.setValue(x, y, Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.T));
             }
 
             if (valR === SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.R));
+                tilesMap.mapRecord.setValue(x, y, Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.R));
             }
 
             if (valB === SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.B));
+                tilesMap.mapRecord.setValue(x, y, Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.B));
             }
 
             if (valL === SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.L));
+                tilesMap.mapRecord.setValue(x, y, Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, SurfacePositionKey.L));
             }
 
             return tilesMap.mapRecord.getValue(x, y);
@@ -42,9 +42,9 @@ namespace Lich {
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
 
-            var srfcType = Resources.INSTANCE.surfaceIndex.getType(val);
-            var isMiddle = Resources.INSTANCE.surfaceIndex.isMiddlePosition(val);
-            var indx = Resources.INSTANCE.surfaceIndex;
+            var srfcType = Resources.getInstance().surfaceIndex.getType(val);
+            var isMiddle = Resources.getInstance().surfaceIndex.isMiddlePosition(val);
+            var indx = Resources.getInstance().surfaceIndex;
 
             // změny prostředních kusů
             if (isMiddle) {

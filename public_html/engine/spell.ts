@@ -63,7 +63,7 @@ namespace Lich {
 
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Resources.INSTANCE.getImage(AnimationKey[self.spriteKey])],
+                "images": [Resources.getInstance().getImage(AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
                     "height": BulletSpellDef.FRAME_HEIGHT,
@@ -105,8 +105,8 @@ namespace Lich {
 
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
-            game.world.bulletObjects.push(object);
-            game.world.addChild(object);
+            game.getWorld().bulletObjects.push(object);
+            game.getWorld().addChild(object);
             object.x = xCast - object.width / 2;
             object.y = yCast - object.height / 2;
 
@@ -189,7 +189,7 @@ namespace Lich {
             // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
             // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
             // změna projeví i na pixel místech, kde už je například kolize
-            var world = game.world;
+            var world = game.getWorld();
             var hero = world.hero;
             var heroCoordTL = world.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.collYOffset);
             var heroCoordTR = world.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.collYOffset);
@@ -222,7 +222,7 @@ namespace Lich {
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            return game.world.render.interact(xAim, yAim);
+            return game.getWorld().render.interact(xAim, yAim);
         }
     }
 
@@ -240,7 +240,7 @@ namespace Lich {
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            if (game.world.render.dig(xAim, yAim, this.asBackground)) {
+            if (game.getWorld().render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
                         Mixer.playSound(SoundKey.SND_PICK_AXE_1_KEY);
@@ -286,8 +286,8 @@ namespace Lich {
         }
 
         public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            var uiItem = game.ui.inventoryUI.choosenItem;
-            var object: InvObjDefinition = Resources.INSTANCE.invObjectDefs[uiItem];
+            var uiItem = game.getUI().inventoryUI.choosenItem;
+            var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
@@ -299,9 +299,9 @@ namespace Lich {
                     }
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
-                if (game.world.render.place(xAim, yAim, object, this.alternative)) {
+                if (game.getWorld().render.place(xAim, yAim, object, this.alternative)) {
                     Mixer.playSound(SoundKey.SND_PLACE_KEY);
-                    game.ui.inventoryUI.invRemove(uiItem, 1);
+                    game.getUI().inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
                 return false;
@@ -339,14 +339,14 @@ namespace Lich {
             var batch = Math.random() * 10;
             for (var e = 0; e < batch; e++) {
                 var enemy = new Enemy();
-                game.world.enemies.push(enemy);
-                game.world.addChild(enemy);
-                if (Math.random() > 0.5 && game.world.render.canShiftX(-enemy.width * 2) || game.world.render.canShiftX(enemy.width * 2) == false) {
-                    enemy.x = game.canvas.width + enemy.width * (Math.random() + 1);
+                game.getWorld().enemies.push(enemy);
+                game.getWorld().addChild(enemy);
+                if (Math.random() > 0.5 && game.getWorld().render.canShiftX(-enemy.width * 2) || game.getWorld().render.canShiftX(enemy.width * 2) == false) {
+                    enemy.x = game.getCanvas().width + enemy.width * (Math.random() + 1);
                 } else {
                     enemy.x = -enemy.width * (Math.random() + 1);
                 }
-                enemy.y = game.canvas.height / 2;
+                enemy.y = game.getCanvas().height / 2;
             }
 
             return true;

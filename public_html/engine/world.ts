@@ -64,14 +64,14 @@ namespace Lich {
             self.tilesMap = self.map.tilesMap;
             self.render = new Render(game, self.map, self);
             self.background = new Background(game);
-            self.hero = new Hero();
+            self.hero = new Hero(game);
 
             /*------------*/
             /* Characters */
             /*------------*/
             self.addChild(self.hero);
-            self.hero.x = game.canvas.width / 2;
-            self.hero.y = game.canvas.height / 2;
+            self.hero.x = game.getCanvas().width / 2;
+            self.hero.y = game.getCanvas().height / 2;
             self.render.updatePlayerIcon(self.hero.x, self.hero.y);
 
             // light test
@@ -88,19 +88,19 @@ namespace Lich {
             var digListener = function (objType: Diggable, x: number, y: number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var invDef: InvObjDefinition = Resources.INSTANCE.invObjectDefs[objType.invObj];
+                        var invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[objType.invObj];
                         var frames = 1;
                         if (typeof invDef === "undefined" || invDef == null) {
                             frames = 1;
                         } else {
                             frames = invDef.frames;
                         }
-                        var image = Resources.INSTANCE.getImage(InventoryKey[objType.item.invObj]);
+                        var image = Resources.getInstance().getImage(InventoryKey[objType.item.invObj]);
                         var object = new WorldObject(
                             objType.item,
                             image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
                             image.height,
-                            Resources.INSTANCE.getSpriteSheet(InventoryKey[objType.invObj], frames),
+                            Resources.getInstance().getSpriteSheet(InventoryKey[objType.invObj], frames),
                             "idle",
                             { "idle": "idle" },
                             2,
@@ -271,7 +271,7 @@ namespace Lich {
 
             var makeShiftX = function (dst) {
                 var rndDst = Utils.floor(dst);
-                var canvasCenterX = self.game.canvas.width / 2;
+                var canvasCenterX = self.game.getCanvas().width / 2;
                 if (self.render.canShiftX(rndDst) && self.hero.x == canvasCenterX) {
                     // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
@@ -300,7 +300,7 @@ namespace Lich {
 
             var makeShiftY = function (dst) {
                 var rndDst = Utils.floor(dst);
-                var canvasCenterY = self.game.canvas.height / 2;
+                var canvasCenterY = self.game.getCanvas().height / 2;
                 if (self.render.canShiftY(rndDst) && self.hero.y == canvasCenterY) {
                     // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
@@ -372,7 +372,7 @@ namespace Lich {
 
                     // zjisti, zda hráč objekt nesebral
                     if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                        self.game.ui.inventoryUI.invInsert(object.item.invObj, 1);
+                        self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
                         self.freeObjects.splice(i, 1);
                         self.removeChild(object);
                         Mixer.playSound(SoundKey.SND_PICK_KEY, false, 0.2);
@@ -413,7 +413,7 @@ namespace Lich {
             // kolize s kolizními objekty
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
             if (objectElement !== null) {
-                var objType: MapObjDefinition = Resources.INSTANCE.mapObjectDefs[objectElement.mapKey];
+                var objType: MapObjDefinition = Resources.getInstance().mapObjectDefs[objectElement.mapKey];
                 if (objType.collision)
                     return new CollisionTestResult(true, x, y);
             }
@@ -520,7 +520,7 @@ namespace Lich {
 
             // je prováděna interakce s objektem?
             if (mouse.rightDown) {
-                var rmbSpellDef = Resources.INSTANCE.interactSpellDef;
+                var rmbSpellDef = Resources.getInstance().interactSpellDef;
                 // Může se provést (cooldown je pryč)?
                 var rmbCooldown = self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY];
                 if (!rmbCooldown || rmbCooldown <= 0) {
@@ -537,9 +537,9 @@ namespace Lich {
 
             // je vybrán spell?
             // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
-            var choosenSpell = self.game.ui.spellsUI.getChoosenSpell();
+            var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
             if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
-                var spellDef: SpellDefinition = Resources.INSTANCE.spellDefs.byKey(SpellKey[choosenSpell]);
+                var spellDef: SpellDefinition = Resources.getInstance().spellDefs.byKey(SpellKey[choosenSpell]);
                 // provádím spell za hráče, takže kontroluji jeho cooldown
                 var cooldown = self.hero.spellCooldowns[choosenSpell];
                 // ještě nebyl použit? Takže je v pořádku a může se provést

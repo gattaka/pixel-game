@@ -54,7 +54,7 @@ namespace Lich {
             bgr.y = 0;
 
             if (bitmap) {
-                let btmp = Resources.INSTANCE.getBitmap(UIGFXKey[bitmap]);
+                let btmp = Resources.getInstance().getBitmap(UIGFXKey[bitmap]);
                 this.addChild(btmp);
                 btmp.x = PartsUI.SELECT_BORDER;
                 btmp.y = PartsUI.SELECT_BORDER;

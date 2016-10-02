@@ -51,10 +51,10 @@ namespace Lich {
 
         initialized = false;
 
-        constructor() {
+        constructor(game:Game) {
             super(Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Resources.INSTANCE.getImage(AnimationKey[AnimationKey.LICH_ANIMATION_KEY])],
+                "images": [Resources.getInstance().getImage(AnimationKey[AnimationKey.LICH_ANIMATION_KEY])],
                 "frames": {
                     "regX": 0,
                     "height": Hero.HEIGHT,

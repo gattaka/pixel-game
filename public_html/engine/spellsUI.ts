@@ -47,7 +47,7 @@ namespace Lich {
                 for (var i = 0; i < this.spellIndex.length; i++) {
                     var alt = this.alternativeSpellIndex[i];
                     if (typeof alt !== "undefined") {
-                        this.spellContent[i].image = Resources.INSTANCE.getImage(SpellKey[alt]);
+                        this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[alt]);
                     }
                 }
                 self.toggleFlag = true;
@@ -56,7 +56,7 @@ namespace Lich {
 
         prepareForToggleShift() {
             for (var i = 0; i < this.spellIndex.length; i++) {
-                this.spellContent[i].image = Resources.INSTANCE.getImage(SpellKey[this.spellIndex[i]]);
+                this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[this.spellIndex[i]]);
             }
             this.toggleFlag = false;
         }
@@ -87,7 +87,7 @@ namespace Lich {
 
         spellInsert(spell: SpellKey, altSpell?: SpellKey) {
             var self = this;
-            var bitmap = Resources.INSTANCE.getBitmap(SpellKey[spell]);
+            var bitmap = Resources.getInstance().getBitmap(SpellKey[spell]);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
             bitmap.y = 0;

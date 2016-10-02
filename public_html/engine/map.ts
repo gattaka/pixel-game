@@ -31,7 +31,7 @@ namespace Lich {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
                         var pos = MapTools.getSurfacePositionByCoordPattern(x, y);
-                        tilesMap.mapRecord.setValue(x, y, Resources.INSTANCE.surfaceIndex.getPositionIndex(SurfaceKey.SRFC_DIRT_KEY, pos));
+                        tilesMap.mapRecord.setValue(x, y, Resources.getInstance().surfaceIndex.getPositionIndex(SurfaceKey.SRFC_DIRT_KEY, pos));
                     }
                 }
             }
@@ -126,7 +126,7 @@ namespace Lich {
                                         if (posIndex != SurfacePositionKey.VOID) {
                                             // nahradí aktuální dílek dílkem daného minerálu
                                             // přičemž zachová pozici dílku
-                                            tilesMap.mapRecord.setValue(__x, __y, Resources.INSTANCE.surfaceIndex.changeType(posIndex, oreKey));
+                                            tilesMap.mapRecord.setValue(__x, __y, Resources.getInstance().surfaceIndex.changeType(posIndex, oreKey));
                                         }
                                     }
                                 }
@@ -154,8 +154,8 @@ namespace Lich {
                     var holeX = Math.floor(Math.random() * tilesMap.width);
                     var holeY = Math.floor(Math.random() * tilesMap.height);
                     // z čeho bude ložisko?
-                    var index = Math.floor(Resources.INSTANCE.mapSurfacesFreqPool.length * Math.random());
-                    createDeposit(holeX, holeY, dia, Resources.INSTANCE.mapSurfacesFreqPool[index]);
+                    var index = Math.floor(Resources.getInstance().mapSurfacesFreqPool.length * Math.random());
+                    createDeposit(holeX, holeY, dia, Resources.getInstance().mapSurfacesFreqPool[index]);
                 }
             })();
 
@@ -168,7 +168,7 @@ namespace Lich {
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Resources.INSTANCE.surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.T) == false) ||
+                            if ((y === y0 && Resources.getInstance().surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.T) == false) ||
                                 (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== SurfacePositionKey.VOID) ||
                                 (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
@@ -181,21 +181,21 @@ namespace Lich {
                     for (var x = 0; x < tilesMap.width; x += 2) {
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                        if (Resources.INSTANCE.surfaceIndex.isPosition(val, SurfacePositionKey.T)) {
+                        if (Resources.getInstance().surfaceIndex.isPosition(val, SurfacePositionKey.T)) {
                             // bude tam nějaký objekt? (100% ano)
                             if (Math.random() > 0) {
                                 var tries = 0;
-                                var index = Math.floor(Resources.INSTANCE.mapObjectDefsFreqPool.length * Math.random());
-                                while (tries < Resources.INSTANCE.mapObjectDefsFreqPool.length) {
-                                    var key = Resources.INSTANCE.mapObjectDefsFreqPool[index];
-                                    var object = Resources.INSTANCE.mapObjectDefs[key];
+                                var index = Math.floor(Resources.getInstance().mapObjectDefsFreqPool.length * Math.random());
+                                while (tries < Resources.getInstance().mapObjectDefsFreqPool.length) {
+                                    var key = Resources.getInstance().mapObjectDefsFreqPool[index];
+                                    var object = Resources.getInstance().mapObjectDefs[key];
                                     if (object.freq > 0 && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                         MapTools.writeObjectRecord(tilesMap, x, y, object);
                                         break;
                                     } else {
                                         // další pokus na dalším objektu
                                         tries++;
-                                        index = (index + 1) % Resources.INSTANCE.mapObjectDefsFreqPool.length;
+                                        index = (index + 1) % Resources.getInstance().mapObjectDefsFreqPool.length;
                                     }
                                 }
                             }

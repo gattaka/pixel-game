@@ -15,18 +15,18 @@ var Lich;
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
-            var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getType(val);
+            var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
             if (valT === Lich.SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.T));
+                tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.T));
             }
             if (valR === Lich.SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.R));
+                tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.R));
             }
             if (valB === Lich.SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.B));
+                tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.B));
             }
             if (valL === Lich.SurfacePositionKey.VOID) {
-                tilesMap.mapRecord.setValue(x, y, Lich.Resources.INSTANCE.surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.L));
+                tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.L));
             }
             return tilesMap.mapRecord.getValue(x, y);
         };
@@ -36,9 +36,9 @@ var Lich;
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
-            var srfcType = Lich.Resources.INSTANCE.surfaceIndex.getType(val);
-            var isMiddle = Lich.Resources.INSTANCE.surfaceIndex.isMiddlePosition(val);
-            var indx = Lich.Resources.INSTANCE.surfaceIndex;
+            var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
+            var isMiddle = Lich.Resources.getInstance().surfaceIndex.isMiddlePosition(val);
+            var indx = Lich.Resources.getInstance().surfaceIndex;
             // změny prostředních kusů
             if (isMiddle) {
                 // jsem pravý horní roh díry

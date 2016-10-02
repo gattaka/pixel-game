@@ -46,7 +46,7 @@ var Lich;
             var c = Math.sqrt(a * a + b * b);
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [Lich.Resources.INSTANCE.getImage(Lich.AnimationKey[self.spriteKey])],
+                "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
                     "height": BulletSpellDef.FRAME_HEIGHT,
@@ -71,8 +71,8 @@ var Lich;
             object.speedy = -self.speed * a / c;
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
-            game.world.bulletObjects.push(object);
-            game.world.addChild(object);
+            game.getWorld().bulletObjects.push(object);
+            game.getWorld().addChild(object);
             object.x = xCast - object.width / 2;
             object.y = yCast - object.height / 2;
             Lich.Mixer.playSound(self.castSoundKey, false, 0.2);
@@ -132,7 +132,7 @@ var Lich;
             // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
             // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
             // změna projeví i na pixel místech, kde už je například kolize
-            var world = game.world;
+            var world = game.getWorld();
             var hero = world.hero;
             var heroCoordTL = world.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.collYOffset);
             var heroCoordTR = world.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.collYOffset);
@@ -161,7 +161,7 @@ var Lich;
             _super.call(this, Lich.SpellKey.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
         MapObjectsInteractionSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            return game.world.render.interact(xAim, yAim);
+            return game.getWorld().render.interact(xAim, yAim);
         };
         MapObjectsInteractionSpellDef.COOLDOWN = 200;
         return MapObjectsInteractionSpellDef;
@@ -179,7 +179,7 @@ var Lich;
             this.asBackground = asBackground;
         }
         AbstractDigSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            if (game.world.render.dig(xAim, yAim, this.asBackground)) {
+            if (game.getWorld().render.dig(xAim, yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
                         Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_AXE_1_KEY);
@@ -227,8 +227,8 @@ var Lich;
             this.alternative = alternative;
         }
         AbstractPlaceSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            var uiItem = game.ui.inventoryUI.choosenItem;
-            var object = Lich.Resources.INSTANCE.invObjectDefs[uiItem];
+            var uiItem = game.getUI().inventoryUI.choosenItem;
+            var object = Lich.Resources.getInstance().invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
@@ -240,9 +240,9 @@ var Lich;
                     }
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
-                if (game.world.render.place(xAim, yAim, object, this.alternative)) {
+                if (game.getWorld().render.place(xAim, yAim, object, this.alternative)) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_PLACE_KEY);
-                    game.ui.inventoryUI.invRemove(uiItem, 1);
+                    game.getUI().inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
                 return false;
@@ -282,15 +282,15 @@ var Lich;
             var batch = Math.random() * 10;
             for (var e = 0; e < batch; e++) {
                 var enemy = new Lich.Enemy();
-                game.world.enemies.push(enemy);
-                game.world.addChild(enemy);
-                if (Math.random() > 0.5 && game.world.render.canShiftX(-enemy.width * 2) || game.world.render.canShiftX(enemy.width * 2) == false) {
-                    enemy.x = game.canvas.width + enemy.width * (Math.random() + 1);
+                game.getWorld().enemies.push(enemy);
+                game.getWorld().addChild(enemy);
+                if (Math.random() > 0.5 && game.getWorld().render.canShiftX(-enemy.width * 2) || game.getWorld().render.canShiftX(enemy.width * 2) == false) {
+                    enemy.x = game.getCanvas().width + enemy.width * (Math.random() + 1);
                 }
                 else {
                     enemy.x = -enemy.width * (Math.random() + 1);
                 }
-                enemy.y = game.canvas.height / 2;
+                enemy.y = game.getCanvas().height / 2;
             }
             return true;
         };

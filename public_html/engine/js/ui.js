@@ -11,6 +11,7 @@ var Lich;
             _super.call(this);
             this.game = game;
             var self = this;
+            var canvas = game.getCanvas();
             // Debug and loging
             self.debugUI = new Lich.DebugLogUI(400, 0);
             self.debugUI.x = UI.SCREEN_SPACING;
@@ -18,8 +19,8 @@ var Lich;
             self.addChild(self.debugUI);
             // SplashScreen
             self.splashScreenUI = new Lich.SplashScreenUI();
-            self.splashScreenUI.x = game.canvas.width / 2 - self.splashScreenUI.width / 2;
-            self.splashScreenUI.y = game.canvas.height / 2 - self.splashScreenUI.height / 2;
+            self.splashScreenUI.x = canvas.width / 2 - self.splashScreenUI.width / 2;
+            self.splashScreenUI.y = canvas.height / 2 - self.splashScreenUI.height / 2;
             self.addChild(self.splashScreenUI);
             // Crafting
             var craftingUI = new Lich.CraftingUI();
@@ -30,39 +31,33 @@ var Lich;
             // Inventář
             var inventoryUI = new Lich.InventoryUI(recipeListener);
             inventoryUI.x = UI.SCREEN_SPACING;
-            inventoryUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
+            inventoryUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
             // musí se posunout víc, protože má externí řádek pro ingredience
-            craftingUI.y = game.canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
+            craftingUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
                 - craftingUI.height - Lich.Resources.PARTS_SIZE - Lich.PartsUI.SELECT_BORDER * 3;
             // Schopnosti
             var spellsUI = new Lich.SpellsUI();
-            spellsUI.x = game.canvas.width / 2 - spellsUI.width / 2;
-            spellsUI.y = game.canvas.height - spellsUI.height - UI.SCREEN_SPACING;
+            spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
+            spellsUI.y = canvas.height - spellsUI.height - UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
             // Hudba
             var musicUI = new Lich.MusicUI();
-            musicUI.x = game.canvas.width / 2 - musicUI.width / 2;
+            musicUI.x = canvas.width / 2 - musicUI.width / 2;
             musicUI.y = UI.SCREEN_SPACING;
             self.addChild(musicUI);
             self.musicUI = musicUI;
             // Stav (mana, zdraví)
             var conditionUI = new ConditionUI();
-            conditionUI.x = game.canvas.width - conditionUI.width - UI.SCREEN_SPACING;
-            conditionUI.y = game.canvas.height - conditionUI.height - UI.SCREEN_SPACING;
+            conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
+            conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
         }
-        UI.getInstance = function (game) {
-            if (!UI.INSTANCE) {
-                UI.INSTANCE = new UI(game);
-            }
-            return UI.INSTANCE;
-        };
         UI.prototype.isMouseInUI = function (x, y) {
             var self = this;
             var uiHit = false;
@@ -195,4 +190,38 @@ var Lich;
         return ConditionUI;
     }(Lich.AbstractUI));
     Lich.ConditionUI = ConditionUI;
+    var GameLoadUI = (function (_super) {
+        __extends(GameLoadUI, _super);
+        function GameLoadUI(game) {
+            _super.call(this);
+            var self = this;
+            self.width = game.getCanvas().width;
+            self.height = game.getCanvas().height;
+            var loadScreen = new createjs.Shape();
+            loadScreen.graphics.beginFill("black");
+            loadScreen.graphics.drawRect(0, 0, self.width, self.height);
+            self.addChild(loadScreen);
+            var loadLabel = new Lich.Label("Loading...", "30px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
+            loadLabel.x = self.width / 2 - 50;
+            loadLabel.y = self.height / 2 - 50;
+            self.addChild(loadLabel);
+            if (!Lich.Resources.getInstance().isLoaderDone()) {
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_PROGRESS, function (n) {
+                    loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                    return false;
+                });
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
+                    createjs.Tween.get(self)
+                        .to({
+                        alpha: 0
+                    }, 2000).call(function () {
+                        game.getStage().removeChild(self);
+                    });
+                    return false;
+                });
+            }
+        }
+        return GameLoadUI;
+    }(createjs.Container));
+    Lich.GameLoadUI = GameLoadUI;
 })(Lich || (Lich = {}));

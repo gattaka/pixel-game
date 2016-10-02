@@ -56,7 +56,7 @@ namespace Lich {
 
         trackInsert(track: MusicKey) {
             var self = this;
-            var bitmap = Resources.INSTANCE.getBitmap(UIGFXKey[UIGFXKey.UI_SOUND_KEY]);
+            var bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.UI_SOUND_KEY]);
             self.itemsCont.addChild(bitmap);
             bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
             bitmap.y = 0;

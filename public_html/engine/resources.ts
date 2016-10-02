@@ -9,7 +9,7 @@
 namespace Lich {
 
     class Load {
-        constructor(public src: string, public id:string) {};
+        constructor(public src: string, public id: string) { };
     }
 
     export enum BackgroundKey {
@@ -151,7 +151,7 @@ namespace Lich {
 
     export class Resources {
 
-        static INSTANCE: Resources;
+        private static INSTANCE: Resources;
 
         static FONT = "expressway";
         static OUTLINE_COLOR = "#000";
@@ -203,16 +203,19 @@ namespace Lich {
         public surfaceIndex = new SurfaceIndex();
         public surfaceBgrIndex = new SurfaceBgrIndex();
 
-        loader;
+        private loader;
+        private loaderDone: boolean = false;
 
-        public static getInstance(game: Game, callback?) {
+        public isLoaderDone(): boolean { return this.loaderDone };
+
+        public static getInstance() {
             if (!Resources.INSTANCE) {
-                Resources.INSTANCE = new Resources(game, callback);
+                Resources.INSTANCE = new Resources();
             }
             return Resources.INSTANCE;
         }
 
-        private constructor(game: Game, callback?) {
+        constructor() {
 
             var self = this;
             var manifest = [
@@ -345,45 +348,27 @@ namespace Lich {
                 }
             })();
 
-            var loadScreenCont = new createjs.Container();
-            loadScreenCont.width = game.canvas.width;
-            loadScreenCont.height = game.canvas.height;
-            loadScreenCont.x = 0;
-            loadScreenCont.y = 0;
-            game.stage.addChild(loadScreenCont);
+            // nejprve font (nahrává se mimo loader)
 
-            var loadScreen = new createjs.Shape();
-            loadScreen.graphics.beginFill("black");
-            loadScreen.graphics.drawRect(0, 0, game.canvas.width, game.canvas.height);
-            loadScreenCont.addChild(loadScreen);
+            var config: WebFont.Config = {
+                custom: {
+                    families: ['expressway'],
+                    urls: ['/css/fonts.css']
+                },
+            }
+            WebFont.load(config);
 
-            var loadLabel = new Label("Loading...", "30px " + Resources.FONT, Resources.TEXT_COLOR);
-            loadLabel.x = game.canvas.width / 2 - 50;
-            loadLabel.y = game.canvas.height / 2 - 50;
-            loadScreenCont.addChild(loadLabel);
-
+            // pak loader 
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
             self.loader.installPlugin(createjs.Sound);
             self.loader.addEventListener("progress", function (event) {
-                loadLabel.setText(Math.floor(event.loaded * 100) + "% Loading... ");
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, event.loaded));
             });
             self.loader.addEventListener("complete", function () {
-                createjs.Tween.get(loadScreenCont)
-                    .to({
-                        alpha: 0
-                    }, 2000).call(function () {
-                        game.stage.removeChild(loadScreenCont);
-                    });
-                if (typeof callback !== "undefined") {
-                    callback();
-                }
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
             });
             self.loader.loadManifest(manifest, true);
-
-            /**
-             * Definice
-             */
 
             /**
              * POVRCHY
@@ -454,27 +439,27 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 1));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
-                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
-                    game.world.render.digObject(rx, ry, false);
-                    game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED_KEY]);
+                function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.getWorld().render.digObject(rx, ry, false);
+                    game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED_KEY]);
                     Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
                 }));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
-                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
-                    game.world.render.digObject(rx, ry, false);
-                    game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY]);
+                function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.getWorld().render.digObject(rx, ry, false);
+                    game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY]);
                     Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
                 }).setCollision(true));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
-                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
-                    game.world.render.digObject(rx, ry, false);
-                    game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED2_KEY]);
+                function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.getWorld().render.digObject(rx, ry, false);
+                    game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED2_KEY]);
                     Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
                 }));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
-                function (rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
-                    game.world.render.digObject(rx, ry, false);
-                    game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
+                function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                    game.getWorld().render.digObject(rx, ry, false);
+                    game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
                     Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
                 }).setCollision(true));
 
@@ -516,7 +501,6 @@ namespace Lich {
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_KRYSTAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_KRYSTAL_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_FLORITE_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_FLORITE_KEY]));
 
-
             /**
              * SPELLS
              */
@@ -536,15 +520,15 @@ namespace Lich {
 
         };
 
-        getImage(key:string): HTMLImageElement {
+        getImage(key: string): HTMLImageElement {
             return <HTMLImageElement>this.loader.getResult(key);
         };
 
-        getBitmap(key:string): createjs.Bitmap {
+        getBitmap(key: string): createjs.Bitmap {
             return new createjs.Bitmap(this.getImage(key));
         };
 
-        getSpritePart(key:string, tileX: number, tileY: number, count: number, height: number, width: number) {
+        getSpritePart(key: string, tileX: number, tileY: number, count: number, height: number, width: number) {
             var frames = [];
             for (var i = 0; i < count; i++) {
                 frames.push([
@@ -565,7 +549,7 @@ namespace Lich {
             return sprite;
         }
 
-        getSpriteSheet(key:string, framesCount: number): createjs.SpriteSheet {
+        getSpriteSheet(key: string, framesCount: number): createjs.SpriteSheet {
             var self = this;
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
@@ -584,7 +568,7 @@ namespace Lich {
             return sheet;
         }
 
-        getSprite(key:string, framesCount: number): createjs.Sprite {
+        getSprite(key: string, framesCount: number): createjs.Sprite {
             var self = this;
             var sprite = new createjs.Sprite(self.getSpriteSheet(key, framesCount), "idle");
             sprite.gotoAndPlay("idle");

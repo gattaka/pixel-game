@@ -12,7 +12,7 @@ var Lich;
             this.item = item;
             this.width = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING;
             this.height = this.width;
-            var invDef = Lich.Resources.INSTANCE.invObjectDefs[item];
+            var invDef = Lich.Resources.getInstance().invObjectDefs[item];
             this.invDef = invDef;
             var frames = 1;
             if (typeof invDef === "undefined" || invDef == null) {
@@ -22,7 +22,7 @@ var Lich;
                 frames = invDef.frames;
             }
             this.frames = frames;
-            var sprite = Lich.Resources.INSTANCE.getSprite(Lich.InventoryKey[item], frames);
+            var sprite = Lich.Resources.getInstance().getSprite(Lich.InventoryKey[item], frames);
             this.sprite = sprite;
             this.addChild(sprite);
             sprite.x = this.width / 2 - sprite.width / 2;

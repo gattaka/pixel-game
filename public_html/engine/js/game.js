@@ -69,14 +69,11 @@ var Lich;
                     return false;
                 }, false);
             })();
-            /*----------------*/
-            /* Resources init */
-            /*----------------*/
-            Lich.Resources.getInstance(self, function () {
+            var init = function () {
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
-                self.ui = Lich.UI.getInstance(self);
+                self.ui = new Lich.UI(self);
                 /*---------------------*/
                 /* Measurements, debug */
                 /*---------------------*/
@@ -88,7 +85,17 @@ var Lich;
                     Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
                 });
                 self.initialized = true;
-            });
+            };
+            if (Lich.Resources.getInstance().isLoaderDone()) {
+                init();
+            }
+            else {
+                self.stage.addChild(new Lich.GameLoadUI(self));
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
+                    init();
+                    return false;
+                });
+            }
             /*-----------*/
             /* Time init */
             /*-----------*/
@@ -173,6 +180,10 @@ var Lich;
                 self.stage.update();
             }
         }
+        Game.prototype.getCanvas = function () { return this.canvas; };
+        Game.prototype.getStage = function () { return this.stage; };
+        Game.prototype.getWorld = function () { return this.world; };
+        Game.prototype.getUI = function () { return this.ui; };
         ;
         return Game;
     }());

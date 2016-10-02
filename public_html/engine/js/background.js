@@ -8,31 +8,32 @@ var Lich;
             this.offsetX = 0;
             this.offsetY = 0;
             var self = this;
-            var resources = Lich.Resources.INSTANCE;
-            self.far_mountain = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
-            self.far_mountain_sec = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
-            self.mountain = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.MOUNTAIN_KEY]);
-            self.mountain_sec = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.MOUNTAIN_KEY]);
-            self.hill = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.HILL_KEY]);
-            self.hill_sec = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.HILL_KEY]);
-            self.far_hill = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_HILL_KEY]);
-            self.far_hill_sec = resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_HILL_KEY]);
+            self.stage = game.getStage();
+            self.canvas = game.getCanvas();
+            self.far_mountain = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
+            self.far_mountain_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
+            self.mountain = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.MOUNTAIN_KEY]);
+            self.mountain_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.MOUNTAIN_KEY]);
+            self.hill = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.HILL_KEY]);
+            self.hill_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.HILL_KEY]);
+            self.far_hill = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_HILL_KEY]);
+            self.far_hill_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_HILL_KEY]);
             for (var i = 1; i <= Lich.Resources.CLOUDS_NUMBER; i++) {
-                self.clouds.push(resources.getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.CLOUD_KEY] + i));
+                self.clouds.push(Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.CLOUD_KEY] + i));
             }
             self.sky = new createjs.Shape();
-            game.stage.addChild(self.sky);
+            self.stage.addChild(self.sky);
             self.sky.x = 0;
             self.sky.y = 0;
-            self.sky.graphics.beginBitmapFill(resources.getImage(Lich.BackgroundKey[Lich.BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, game.canvas.width, 250);
+            self.sky.graphics.beginBitmapFill(Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
             var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds).concat([self.mountain, self.mountain_sec, self.far_hill, self.far_hill_sec, self.hill, self.hill_sec]);
             parallaxItems.forEach(function (entry) {
-                game.stage.addChild(entry);
-                entry.y = game.canvas.height - entry.image.height;
+                self.stage.addChild(entry);
+                entry.y = self.canvas.height - entry.image.height;
             });
             self.clouds.forEach(function (item) {
                 item.y = Math.random() * Background.CLOUDS_SPACE;
-                item.x = Math.random() * game.canvas.width;
+                item.x = Math.random() * self.canvas.width;
             });
             self.far_mountain.y = Background.FAR_MOUNTAINS_START;
             self.far_mountain_sec.y = self.far_mountain.y;
@@ -46,23 +47,23 @@ var Lich;
             self.hill.y = Background.HILLS_START;
             self.hill_sec.y = self.hill.y;
             self.hill_sec.x = -self.hill_sec.image.width;
-            self.dirt_back_startImg = resources.getImage(Lich.BackgroundKey[Lich.BackgroundKey.DIRT_BACK_START_KEY]);
+            self.dirt_back_startImg = Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.DIRT_BACK_START_KEY]);
             self.dirt_back_start = new createjs.Shape();
-            self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, game.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
+            self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, self.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
             self.dirt_back_start.x = 0;
             self.dirt_back_start.y = Background.DIRT_START;
-            game.stage.addChild(self.dirt_back_start);
-            self.dirt_backImg = resources.getImage(Lich.BackgroundKey[Lich.BackgroundKey.DIRTBACK_KEY]);
+            self.stage.addChild(self.dirt_back_start);
+            self.dirt_backImg = Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.DIRTBACK_KEY]);
             self.dirt_back = new createjs.Shape();
-            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, game.canvas.width + self.dirt_backImg.width * 2, game.canvas.height + self.dirt_backImg.height * 2);
+            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, self.canvas.width + self.dirt_backImg.width * 2, self.canvas.height + self.dirt_backImg.height * 2);
             self.dirt_back.x = 0;
             self.dirt_back.y = self.dirt_back_start.y + self.dirt_back_startImg.height - 4;
-            game.stage.addChild(self.dirt_back);
+            self.stage.addChild(self.dirt_back);
             console.log("background ready");
         }
         Background.prototype.shift = function (distanceX, distanceY) {
             var self = this;
-            var canvas = self.game.canvas;
+            var canvas = self.canvas;
             self.offsetX += distanceX;
             self.offsetY += distanceY;
             var align = function (part, sec_part, dividerX, dividerY) {
@@ -127,7 +128,7 @@ var Lich;
         ;
         Background.prototype.handleTick = function (rawShift) {
             var self = this;
-            var canvas = self.game.canvas;
+            var canvas = self.canvas;
             var shift = rawShift / 10;
             // Clouds
             for (var i = 0; i < self.clouds.length; i++) {

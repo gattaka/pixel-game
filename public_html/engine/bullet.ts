@@ -99,10 +99,10 @@ namespace Lich {
             }
 
             // Zjistí zda na daných pixel-souřadnicích dochází k zásahu nepřítele 
-            var hitEnemyOrCollide = function(x: number, y: number): CollisionTestResult {
+            var hitEnemyOrCollide = function (x: number, y: number): CollisionTestResult {
                 var enemyRet = null;
-                for (var e = 0; e < game.world.enemies.length; e++) {
-                    var enemy = game.world.enemies[e];
+                for (var e = 0; e < game.getWorld().enemies.length; e++) {
+                    var enemy = game.getWorld().enemies[e];
                     if (enemy.getCurrentHealth() > 0
                         && x > enemy.x && x < enemy.x + enemy.width
                         && y > enemy.y && y < enemy.y + enemy.height) {
@@ -114,13 +114,13 @@ namespace Lich {
                     }
                 }
                 if (enemyRet == null) {
-                    return game.world.isCollision(x, y);
+                    return game.getWorld().isCollision(x, y);
                 } else {
                     return enemyRet;
                 }
             };
 
-            var onCollision = function(clsn) {
+            var onCollision = function (clsn) {
                 if (self.ending === false) {
                     Mixer.playSound(self.hitSound, false, 0.1);
                     self.ending = true;
@@ -135,7 +135,7 @@ namespace Lich {
                                 var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);
                                 var d2 = Math.pow(rad, 2);
                                 if (r2 <= d2) {
-                                    game.world.render.dig(rx, ry, false);
+                                    game.getWorld().render.dig(rx, ry, false);
                                 }
                             }
                         }
@@ -150,18 +150,18 @@ namespace Lich {
                 var distanceY = self.speedy * sDelta;
 
                 // Nenarazím na překážku?
-                clsnTest = game.world.isBoundsInCollision(
+                clsnTest = game.getWorld().isBoundsInCollision(
                     self.x + self.collXOffset,
                     self.y + self.collYOffset,
                     self.width - self.collXOffset * 2,
                     self.height - self.collYOffset * 2,
                     0,
                     distanceY,
-                    function(x: number, y: number) { return hitEnemyOrCollide(x, y); }
+                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); }
                 );
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
-                    if (self.y > game.canvas.height * 2 || self.y < -game.canvas.height) {
+                    if (self.y > game.getCanvas().height * 2 || self.y < -game.getCanvas().height) {
                         self.done = true;
                         return;
                     }
@@ -175,18 +175,18 @@ namespace Lich {
                 var distanceX = sDelta * self.speedx;
 
                 // Nenarazím na překážku?
-                clsnTest = game.world.isBoundsInCollision(
+                clsnTest = game.getWorld().isBoundsInCollision(
                     self.x + self.collXOffset,
                     self.y + self.collYOffset,
                     self.width - self.collXOffset * 2,
                     self.height - self.collYOffset * 2,
                     distanceX,
                     0,
-                    function(x: number, y: number) { return hitEnemyOrCollide(x, y); }
+                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); }
                 );
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;
-                    if (self.x > game.canvas.width * 2 || self.x < -game.canvas.width)
+                    if (self.x > game.getCanvas().width * 2 || self.x < -game.getCanvas().width)
                         self.done = true;
                     return;
                 } else {

@@ -152,7 +152,7 @@ var Lich;
     })(Lich.MusicKey || (Lich.MusicKey = {}));
     var MusicKey = Lich.MusicKey;
     var Resources = (function () {
-        function Resources(game, callback) {
+        function Resources() {
             /**
              * DEFINICE
              */
@@ -173,6 +173,7 @@ var Lich;
              */
             this.surfaceIndex = new Lich.SurfaceIndex();
             this.surfaceBgrIndex = new Lich.SurfaceBgrIndex();
+            this.loaderDone = false;
             var self = this;
             var manifest = [
                 /**
@@ -294,41 +295,25 @@ var Lich;
                     manifest.push(new Load("images/background/cloud" + i + ".png", BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
                 }
             })();
-            var loadScreenCont = new createjs.Container();
-            loadScreenCont.width = game.canvas.width;
-            loadScreenCont.height = game.canvas.height;
-            loadScreenCont.x = 0;
-            loadScreenCont.y = 0;
-            game.stage.addChild(loadScreenCont);
-            var loadScreen = new createjs.Shape();
-            loadScreen.graphics.beginFill("black");
-            loadScreen.graphics.drawRect(0, 0, game.canvas.width, game.canvas.height);
-            loadScreenCont.addChild(loadScreen);
-            var loadLabel = new Lich.Label("Loading...", "30px " + Resources.FONT, Resources.TEXT_COLOR);
-            loadLabel.x = game.canvas.width / 2 - 50;
-            loadLabel.y = game.canvas.height / 2 - 50;
-            loadScreenCont.addChild(loadLabel);
+            // nejprve font (nahrává se mimo loader)
+            var config = {
+                custom: {
+                    families: ['expressway'],
+                    urls: ['/css/fonts.css']
+                }
+            };
+            WebFont.load(config);
+            // pak loader 
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
             self.loader.installPlugin(createjs.Sound);
             self.loader.addEventListener("progress", function (event) {
-                loadLabel.setText(Math.floor(event.loaded * 100) + "% Loading... ");
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, event.loaded));
             });
             self.loader.addEventListener("complete", function () {
-                createjs.Tween.get(loadScreenCont)
-                    .to({
-                    alpha: 0
-                }, 2000).call(function () {
-                    game.stage.removeChild(loadScreenCont);
-                });
-                if (typeof callback !== "undefined") {
-                    callback();
-                }
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });
             self.loader.loadManifest(manifest, true);
-            /**
-             * Definice
-             */
             /**
              * POVRCHY
              */
@@ -389,24 +374,24 @@ var Lich;
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 1));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 1));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 1).setFrames(4));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
-                game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED_KEY]);
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
+                game.getWorld().render.digObject(rx, ry, false);
+                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED_KEY]);
                 Lich.Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
             }));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
-                game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY]);
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
+                game.getWorld().render.digObject(rx, ry, false);
+                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY]);
                 Lich.Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
-                game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED2_KEY]);
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
+                game.getWorld().render.digObject(rx, ry, false);
+                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED2_KEY]);
                 Lich.Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
             }));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (rx, ry, obj, objType) {
-                game.world.render.digObject(rx, ry, false);
-                game.world.render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
+                game.getWorld().render.digObject(rx, ry, false);
+                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
                 Lich.Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
             }).setCollision(true));
             (function () {
@@ -456,9 +441,11 @@ var Lich;
             registerSpellDefs(new Lich.BoltSpellDef());
             registerSpellDefs(new Lich.EnemySpellDef());
         }
-        Resources.getInstance = function (game, callback) {
+        Resources.prototype.isLoaderDone = function () { return this.loaderDone; };
+        ;
+        Resources.getInstance = function () {
             if (!Resources.INSTANCE) {
-                Resources.INSTANCE = new Resources(game, callback);
+                Resources.INSTANCE = new Resources();
             }
             return Resources.INSTANCE;
         };
