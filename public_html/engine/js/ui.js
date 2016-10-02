@@ -10,7 +10,6 @@ var Lich;
         function UI(game) {
             _super.call(this);
             this.game = game;
-            UI.INSTANCE = this;
             var self = this;
             // Debug and loging
             self.debugUI = new Lich.DebugLogUI(400, 0);
@@ -57,92 +56,13 @@ var Lich;
             conditionUI.y = game.canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
-            /*
-             // přehled postavy
-             (function () {
-             
-             var CHAR_WIDTH = 300;
-             var CHAR_HEIGHT = 500;
-             
-             var HELMET_WIDTH = 100;
-             var HELMET_HEIGHT = 100;
-             
-             var TORSO_WIDTH = 200;
-             var TORSO_HEIGHT = 150;
-             
-             var GAUNTLET_WIDTH = 100;
-             var GAUNTLET_HEIGHT = 100;
-             
-             // vnější kontejner
-             charCont = new createjs.Container();
-             charCont.x = game.canvas.width - CHAR_WIDTH - 20;
-             charCont.y = 40 + 200;
-             self.addChild(charCont);
-             
-             var outerShape = new createjs.Shape();
-             outerShape.graphics.setStrokeStyle(2);
-             outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-             outerShape.graphics.beginFill("rgba(70,50,10,0.5)");
-             outerShape.graphics.drawRect(0, 0, CHAR_WIDTH, CHAR_HEIGHT);
-             charCont.addChild(outerShape);
-             
-             // helmet
-             var helmetCont = new createjs.Container();
-             helmetCont.x = CHAR_WIDTH / 2 - HELMET_WIDTH / 2;
-             helmetCont.y = 20;
-             charCont.addChild(helmetCont);
-             
-             var helmetBgrShape = new createjs.Shape();
-             helmetBgrShape.graphics.setStrokeStyle(2);
-             helmetBgrShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-             helmetBgrShape.graphics.beginFill("rgba(70,50,10,0.5)");
-             helmetBgrShape.graphics.drawRect(0, 0, HELMET_WIDTH, HELMET_HEIGHT);
-             helmetCont.addChild(helmetBgrShape);
-             
-             var helmet = resources.getBitmap(resources.HELMET_KEY);
-             helmet.x = 0;
-             helmet.y = 0;
-             helmetCont.addChild(helmet);
-             
-             // torso
-             var torsoCont = new createjs.Container();
-             torsoCont.x = CHAR_WIDTH / 2 - TORSO_WIDTH / 2;
-             torsoCont.y = 20 + HELMET_HEIGHT + 20;
-             charCont.addChild(torsoCont);
-             
-             var torsoBgrShape = new createjs.Shape();
-             torsoBgrShape.graphics.setStrokeStyle(2);
-             torsoBgrShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-             torsoBgrShape.graphics.beginFill("rgba(70,50,10,0.5)");
-             torsoBgrShape.graphics.drawRect(0, 0, TORSO_WIDTH, TORSO_HEIGHT);
-             torsoCont.addChild(torsoBgrShape);
-             
-             var torso = resources.getBitmap(resources.TORSO_KEY);
-             torso.x = 0;
-             torso.y = 0;
-             torsoCont.addChild(torso);
-             
-             // gauntlet
-             var gauntletCont = new createjs.Container();
-             gauntletCont.x = 20;
-             gauntletCont.y = 20 + HELMET_HEIGHT + 20 + TORSO_HEIGHT + 20;
-             charContChild(gauntletCont);
-             
-             var gauntletBgrShape = new createjs.Shape();
-             gauntletBgrShape.graphics.setStrokeStyle(2);
-             gauntletBgrShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-             gauntletBgrShape.graphics.beginFill("rgba(70,50,10,0.5)");
-             gauntletBgrShape.graphics.drawRect(0, 0, GAUNTLET_WIDTH, GAUNTLET_HEIGHT);
-             gauntletCont.addChild(gauntletBgrShape);
-             
-             var gauntlet = resources.getBitmap(resources.GAUNTLET_KEY);
-             gauntlet.x = 0;
-             gauntlet.y = 0;
-             gauntletCont.addChild(gauntlet);
-             
-             })();
-             */
         }
+        UI.getInstance = function (game) {
+            if (!UI.INSTANCE) {
+                UI.INSTANCE = new UI(game);
+            }
+            return UI.INSTANCE;
+        };
         UI.prototype.isMouseInUI = function (x, y) {
             var self = this;
             var uiHit = false;
@@ -179,6 +99,7 @@ var Lich;
             this.maxWill = 0;
             this.currentHealth = 0;
             this.currentWill = 0;
+            var self = this;
             this.barWidth = this.width - ConditionUI.INNER_BORDER * 2;
             this.barHeight = this.height / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
             // podklady 
@@ -204,6 +125,16 @@ var Lich;
             this.addChild(this.willText);
             this.updateHealthBar();
             this.updateWillBar();
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.HEALTH_CHANGE, function (data) {
+                self.setMaxHealth(data.maxHealth);
+                self.setHealth(data.currentHealth);
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.WILL_CHANGE, function (data) {
+                self.setMaxWill(data.maxWill);
+                self.setWill(data.currentWill);
+                return false;
+            });
         }
         ConditionUI.prototype.setMaxHealth = function (maxHealth) {
             this.maxHealth = maxHealth;

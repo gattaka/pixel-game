@@ -7,9 +7,10 @@ var Lich;
 (function (Lich) {
     (function (EventType) {
         EventType[EventType["HEALTH_CHANGE"] = 0] = "HEALTH_CHANGE";
-        EventType[EventType["MOUSE_MOVE"] = 1] = "MOUSE_MOVE";
-        EventType[EventType["FPS_CHANGE"] = 2] = "FPS_CHANGE";
-        EventType[EventType["POINTED_AREA_CHANGE"] = 3] = "POINTED_AREA_CHANGE";
+        EventType[EventType["WILL_CHANGE"] = 1] = "WILL_CHANGE";
+        EventType[EventType["MOUSE_MOVE"] = 2] = "MOUSE_MOVE";
+        EventType[EventType["FPS_CHANGE"] = 3] = "FPS_CHANGE";
+        EventType[EventType["POINTED_AREA_CHANGE"] = 4] = "POINTED_AREA_CHANGE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {
@@ -51,6 +52,26 @@ var Lich;
         return PointedAreaEventPayload;
     }(EventPayload));
     Lich.PointedAreaEventPayload = PointedAreaEventPayload;
+    var HealthChangeEventPayload = (function (_super) {
+        __extends(HealthChangeEventPayload, _super);
+        function HealthChangeEventPayload(maxHealth, currentHealth) {
+            _super.call(this, EventType.HEALTH_CHANGE);
+            this.maxHealth = maxHealth;
+            this.currentHealth = currentHealth;
+        }
+        return HealthChangeEventPayload;
+    }(EventPayload));
+    Lich.HealthChangeEventPayload = HealthChangeEventPayload;
+    var WillChangeEventPayload = (function (_super) {
+        __extends(WillChangeEventPayload, _super);
+        function WillChangeEventPayload(maxWill, currentWill) {
+            _super.call(this, EventType.WILL_CHANGE);
+            this.maxWill = maxWill;
+            this.currentWill = currentWill;
+        }
+        return WillChangeEventPayload;
+    }(EventPayload));
+    Lich.WillChangeEventPayload = WillChangeEventPayload;
     var EventBus = (function () {
         function EventBus() {
             this.consumers = {};
@@ -66,7 +87,9 @@ var Lich;
             if (array) {
                 for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
                     var consumer = array_1[_i];
-                    consumer(argument);
+                    var consumed = consumer(argument);
+                    if (consumed)
+                        break;
                 }
             }
         };

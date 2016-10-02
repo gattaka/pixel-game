@@ -76,7 +76,7 @@ var Lich;
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
-                self.ui = new Lich.UI(self);
+                self.ui = Lich.UI.getInstance(self);
                 /*---------------------*/
                 /* Measurements, debug */
                 /*---------------------*/

@@ -6,7 +6,7 @@ namespace Lich {
         canvas: HTMLCanvasElement;
         stage: createjs.Stage;
         world: World;
-        ui: UI;
+        ui : UI; 
         initialized = false;
         keys = {};
 
@@ -98,7 +98,7 @@ namespace Lich {
                 /*-------------------------*/
                 /* UI - HUD, Inventory etc.*/
                 /*-------------------------*/
-                self.ui = new UI(self);
+                self.ui = UI.getInstance(self);
 
                 /*---------------------*/
                 /* Measurements, debug */

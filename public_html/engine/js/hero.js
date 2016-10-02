@@ -79,13 +79,11 @@ var Lich;
             this.performState(Hero.DIE_STATE);
         };
         Hero.prototype.onHealthChange = function (difference) {
-            Lich.UI.INSTANCE.conditionUI.setMaxHealth(this.maxHealth);
-            Lich.UI.INSTANCE.conditionUI.setHealth(this.currentHealth);
+            Lich.EventBus.getInstance().fireEvent(new Lich.HealthChangeEventPayload(this.maxHealth, this.currentHealth));
         };
         ;
         Hero.prototype.onWillChange = function (difference) {
-            Lich.UI.INSTANCE.conditionUI.setMaxWill(this.maxWill);
-            Lich.UI.INSTANCE.conditionUI.setWill(this.currentWill);
+            Lich.EventBus.getInstance().fireEvent(new Lich.WillChangeEventPayload(this.maxWill, this.currentWill));
         };
         ;
         /*-----------*/

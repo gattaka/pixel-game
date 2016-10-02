@@ -2,6 +2,7 @@ namespace Lich {
 
     export enum EventType {
         HEALTH_CHANGE,
+        WILL_CHANGE,
         MOUSE_MOVE,
         FPS_CHANGE,
         POINTED_AREA_CHANGE
@@ -25,11 +26,19 @@ namespace Lich {
             public secx: number, public secy: number) { super(EventType.POINTED_AREA_CHANGE); }
     }
 
+    export class HealthChangeEventPayload extends EventPayload {
+        constructor(public maxHealth: number, public currentHealth: number) { super(EventType.HEALTH_CHANGE); }
+    }
+
+    export class WillChangeEventPayload extends EventPayload {
+        constructor(public maxWill: number, public currentWill: number) { super(EventType.WILL_CHANGE); }
+    }
+
     export class EventBus {
 
         static INSTANCE: EventBus;
 
-        consumers: { [key: number]: Array<(payload: EventPayload) => void> } = {};
+        consumers: { [key: number]: Array<(payload: EventPayload) => boolean> } = {};
 
         public static getInstance() {
             if (!EventBus.INSTANCE) {
@@ -44,15 +53,17 @@ namespace Lich {
             let array = this.consumers[argument.type];
             if (array) {
                 for (let consumer of array) {
-                    consumer(argument);
+                    let consumed: boolean = consumer(argument);
+                    if (consumed)
+                        break;
                 }
             }
         }
 
-        public registerConsumer(type: EventType, callback: (payload: EventPayload) => void) {
+        public registerConsumer(type: EventType, callback: (payload: EventPayload) => boolean) {
             let array = this.consumers[type];
             if (!array) {
-                array = new Array<(payload: EventPayload) => void>();
+                array = new Array<(payload: EventPayload) => boolean>();
                 this.consumers[type.toString()] = array;
             }
             array.push(callback);

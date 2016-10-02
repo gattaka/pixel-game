@@ -18,12 +18,14 @@ namespace Lich {
             this.addNextChild(this.fpsLabel);
             EventBus.getInstance().registerConsumer(EventType.FPS_CHANGE, (data: NumberEventPayload) => {
                 self.fpsLabel.setText(Math.round(data.payload) + " fps");
+                return false;
             });
 
             this.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.mouseLabel);
             EventBus.getInstance().registerConsumer(EventType.MOUSE_MOVE, (data: MouseMoveEventPayload) => {
                 self.mouseLabel.setText("x: " + data.x + " y: " + data.y);
+                return false;
             });
 
             this.tilesLabel = new Label("TILES x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
@@ -37,6 +39,7 @@ namespace Lich {
                 } else {
                     self.sectorLabel.setText("SECTOR: -");
                 }
+                return false;
             });
 
             this.playerLabel = new Label("PLAYER x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);

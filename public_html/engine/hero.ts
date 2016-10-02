@@ -128,13 +128,11 @@ namespace Lich {
         }
 
         onHealthChange(difference: number) {
-            UI.INSTANCE.conditionUI.setMaxHealth(this.maxHealth);
-            UI.INSTANCE.conditionUI.setHealth(this.currentHealth);
+            EventBus.getInstance().fireEvent(new HealthChangeEventPayload(this.maxHealth, this.currentHealth));
         };
 
         onWillChange(difference: number) {
-            UI.INSTANCE.conditionUI.setMaxWill(this.maxWill);
-            UI.INSTANCE.conditionUI.setWill(this.currentWill);
+            EventBus.getInstance().fireEvent(new WillChangeEventPayload(this.maxWill, this.currentWill));
         };
 
     }

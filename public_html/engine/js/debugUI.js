@@ -14,11 +14,13 @@ var Lich;
             this.addNextChild(this.fpsLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.FPS_CHANGE, function (data) {
                 self.fpsLabel.setText(Math.round(data.payload) + " fps");
+                return false;
             });
             this.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.mouseLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MOUSE_MOVE, function (data) {
                 self.mouseLabel.setText("x: " + data.x + " y: " + data.y);
+                return false;
             });
             this.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.tilesLabel);
@@ -32,6 +34,7 @@ var Lich;
                 else {
                     self.sectorLabel.setText("SECTOR: -");
                 }
+                return false;
             });
             this.playerLabel = new Lich.Label("PLAYER x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.playerLabel);
