@@ -197,8 +197,8 @@ var Lich;
             if (mouse.down) {
             }
         };
-        CraftingUI.N = 3;
-        CraftingUI.M = 2;
+        CraftingUI.N = 5;
+        CraftingUI.M = 6;
         CraftingUI.CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
         return CraftingUI;
     }(Lich.PartsUI));

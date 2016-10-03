@@ -42,21 +42,21 @@ var Lich;
             // Schopnosti
             var spellsUI = new Lich.SpellsUI();
             spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
-            spellsUI.y = canvas.height - spellsUI.height - UI.SCREEN_SPACING;
+            spellsUI.y = UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
-            // Hudba
-            var musicUI = new Lich.MusicUI();
-            musicUI.x = canvas.width / 2 - musicUI.width / 2;
-            musicUI.y = UI.SCREEN_SPACING;
-            self.addChild(musicUI);
-            self.musicUI = musicUI;
             // Stav (mana, zdraví)
             var conditionUI = new ConditionUI();
             conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
             conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
+            // Hudba
+            var musicUI = new Lich.MusicUI();
+            musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
+            musicUI.y = canvas.height - UI.SCREEN_SPACING - conditionUI.height - UI.SCREEN_SPACING - musicUI.height;
+            self.addChild(musicUI);
+            self.musicUI = musicUI;
         }
         UI.prototype.isMouseInUI = function (x, y) {
             var self = this;

@@ -2,8 +2,8 @@ namespace Lich {
 
     export class InventoryUI extends PartsUI {
 
-        static N = 3;
-        static M = 2;
+        static N = 5;
+        static M = 3;
         static INV_SIZE = InventoryUI.N * InventoryUI.M;
 
         toggleFlag = true;

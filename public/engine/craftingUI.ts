@@ -16,8 +16,8 @@ namespace Lich {
 
     export class CraftingUI extends PartsUI {
 
-        static N = 3;
-        static M = 2;
+        static N = 5;
+        static M = 6;
         static CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
 
         toggleFlag = true;

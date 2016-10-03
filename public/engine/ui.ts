@@ -56,16 +56,9 @@ namespace Lich {
             // Schopnosti
             var spellsUI = new SpellsUI();
             spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
-            spellsUI.y = canvas.height - spellsUI.height - UI.SCREEN_SPACING;
+            spellsUI.y = UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
-
-            // Hudba
-            var musicUI = new MusicUI();
-            musicUI.x = canvas.width / 2 - musicUI.width / 2;
-            musicUI.y = UI.SCREEN_SPACING
-            self.addChild(musicUI);
-            self.musicUI = musicUI;
 
             // Stav (mana, zdraví)
             var conditionUI = new ConditionUI();
@@ -73,6 +66,13 @@ namespace Lich {
             conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
+
+            // Hudba
+            var musicUI = new MusicUI();
+            musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
+            musicUI.y = canvas.height - UI.SCREEN_SPACING - conditionUI.height - UI.SCREEN_SPACING - musicUI.height;
+            self.addChild(musicUI);
+            self.musicUI = musicUI;
         }
 
         isMouseInUI(x: number, y: number): boolean {
@@ -237,7 +237,7 @@ namespace Lich {
             super();
             let self = this;
             self.width = game.getCanvas().width;
-            self.height = game.getCanvas().height;      
+            self.height = game.getCanvas().height;
 
             var loadScreen = new createjs.Shape();
             loadScreen.graphics.beginFill("black");
