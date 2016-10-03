@@ -52,14 +52,14 @@ namespace Lich {
             }
 
             let last: any = tilesMap.mapRecord.getValue(0, 0);
-            let count = 1;
+            let count = 0; // 0 protože ještě jsem nic nenačetl
             for (let y = 0; y < tilesMap.height; y++) {
                 for (let x = 0; x < tilesMap.width; x++) {
                     let val = tilesMap.mapRecord.getValue(x, y);
                     if (last !== val) {
                         data.srf.push({ c: count, x: last });
                         last = val;
-                        count = 1;
+                        count = 1; // 1 protože už je načten
                     } else {
                         count++;
                     }
@@ -68,14 +68,14 @@ namespace Lich {
             data.srf.push({ c: count, x: last });
 
             last = tilesMap.mapBgrRecord.getValue(0, 0);
-            count = 1;
+            count = 0; // 0 protože ještě jsem nic nenačetl
             for (let y = 0; y < tilesMap.height; y++) {
                 for (let x = 0; x < tilesMap.width; x++) {
                     let val = tilesMap.mapBgrRecord.getValue(x, y);
                     if (last !== val) {
-                        data.srf.push({ c: count, x: last });
+                        data.bgr.push({ c: count, x: last });
                         last = val;
-                        count = 1;
+                        count = 1; // 1 protože už je načten
                     } else {
                         count++;
                     }
@@ -83,20 +83,14 @@ namespace Lich {
             }
             data.bgr.push({ c: count, x: last });
 
-            // last = tilesMap.mapObjectsTiles.getValue(0, 0);
-            // count = 1;
-            // for (let row of tilesMap.mapObjectsTiles.getPlainArray()) {
-            //     for (let col of row) {
-            //         if (last.mapKey !== col.mapKey && last !== null) {
-            //             data.obj.push({ c: count, x: last });
-            //             last = col;
-            //             count = 1;
-            //         } else {
-            //             count++;
-            //         }
-            //     }
-            // }
-            // data.obj.push({ c: count, x: last });
+            for (let y = 0; y < tilesMap.height; y++) {
+                for (let x = 0; x < tilesMap.width; x++) {
+                    let val = tilesMap.mapObjectsTiles.getValue(x, y);
+                    if (val) {
+                        data.obj.push({ x: x, y: y, v: val });
+                    }
+                }
+            }
 
             return JSON.stringify(data);
         }
@@ -107,24 +101,23 @@ namespace Lich {
 
             let count = 0;
             data.srf.forEach((v) => {
-                for (let i = 0; i < v.c; i++ , count++) {
+                for (let i = 0; i < v.c; i++) {
                     tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+                    count++;
                 }
             });
 
             count = 0;
             data.bgr.forEach((v) => {
-                for (let i = 0; i < v.c; i++ , count++) {
+                for (let i = 0; i < v.c; i++) {
                     tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+                    count++
                 }
             });
 
-            // count = 0;
-            // data.obj.forEach((v) => {
-            //     for (let i = 0; i < v.c; i++ , count++) {
-            //         tilesMap.mapObjectsTiles.setValue(count % data.w, count / data.w, v.x);
-            //     }
-            // });
+            data.obj.forEach((v) => {
+                tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
+            });
 
             return tilesMap;
         }
@@ -153,7 +146,7 @@ namespace Lich {
                                 console.log("Game saved");
                             },
                             error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) {
-                                console.error("Error: " + textStatus + " errorThrown:" + errorThrown);
+                                console.log("Unable to save game");
                             }
                         });
                     }

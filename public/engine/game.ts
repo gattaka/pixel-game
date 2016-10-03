@@ -5,6 +5,7 @@ namespace Lich {
 
         private canvas: HTMLCanvasElement;
         private stage: createjs.Stage;
+        private background: Background;
         private world: World;
         private ui: UI;
 
@@ -15,6 +16,7 @@ namespace Lich {
 
         public getCanvas(): HTMLCanvasElement { return this.canvas; }
         public getStage(): createjs.Stage { return this.stage; }
+        public getBackground(): Background { return this.background; }
         public getWorld(): World { return this.world; }
         public getUI(): UI { return this.ui; }
 
@@ -97,24 +99,37 @@ namespace Lich {
             })();
 
             let init = function () {
-                /*-------------------------*/
-                /* UI - HUD, Inventory etc.*/
-                /*-------------------------*/
+
                 self.ui = new UI(self);
 
-                /*---------------------*/
-                /* Measurements, debug */
-                /*---------------------*/
-                console.log("Measurements init");
+                let populateStage = (tilesMap: TilesMap) => {
+                    self.stage.removeAllChildren();
+                    delete self.world;
+                    delete self.background;
 
-                self.world = new World(self);
-                self.stage.addChild(self.world);
-                self.stage.addChild(self.ui);
+                    self.world = new World(self, tilesMap);
+                    self.background = new Background(self);
+                    self.stage.addChild(self.world);
+                    self.stage.addChild(self.ui);
+                };
+                populateStage(TilesMapGenerator.createNew());
 
-                // periodické ukládání
-                setInterval(() => {
-                    TilesMapGenerator.save(self.world.tilesMap);
-                }, 10000);
+                EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
+                    TilesMapGenerator.save(self.getWorld().tilesMap);
+                    return false;
+                });
+
+                EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
+                    let tilesMap = TilesMapGenerator.load();
+                    populateStage(tilesMap);
+                    return false;
+                });
+
+                EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
+                    let tilesMap = TilesMapGenerator.createNew();
+                    populateStage(tilesMap);
+                    return false;
+                });
 
                 self.stage.addEventListener("stagemousemove", (event: any) => {
                     EventBus.getInstance().fireEvent(new MouseMoveEventPayload(event.stageX, event.stageY));
@@ -149,13 +164,13 @@ namespace Lich {
                     EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.FPS_CHANGE, createjs.Ticker.getMeasuredFPS()));
 
                     // Idle
-                    self.world.handleTick(delta);
+                    self.getWorld().handleTick(delta);
 
                     // UI má při akcích myši přednost
                     if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
                         self.ui.handleMouse(self.mouse, delta);
                     } else {
-                        self.world.handleMouse(self.mouse, delta);
+                        self.getWorld().handleMouse(self.mouse, delta);
                     }
 
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 
@@ -215,7 +230,7 @@ namespace Lich {
                         }
                     }
 
-                    self.world.update(delta, directions);
+                    self.getWorld().update(delta, directions);
                 }
 
                 self.stage.update();

@@ -70,11 +70,6 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(InventoryUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-
-            let upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
@@ -83,9 +78,6 @@ namespace Lich {
                 }
             }, null, false);
 
-            let downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
                 let occupLines = Math.ceil(self.itemsTypeArray.length / InventoryUI.N);
                 if (self.lineOffset < occupLines - InventoryUI.M) {

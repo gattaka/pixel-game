@@ -125,10 +125,6 @@ namespace Lich {
             var self = this;
             let upBtn = new Button(UIGFXKey.UI_UP_KEY);
             self.addChild(upBtn);
-            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-            let upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
@@ -144,10 +140,6 @@ namespace Lich {
             var self = this;
             let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
             self.addChild(downBtn);
-            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-            let downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
@@ -157,6 +149,39 @@ namespace Lich {
                 }
             }, null, false);
             return downBtn;
+        }
+
+        protected createSaveButton(): Button {
+            var self = this;
+            let btn = new Button(UIGFXKey.UI_SAVE_KEY);
+            self.addChild(btn);
+            btn.on("mousedown", function (evt) {
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
+                Mixer.playSound(SoundKey.SND_CLICK_KEY);
+            }, null, false);
+            return btn;
+        }
+
+        protected createLoadButton(): Button {
+            var self = this;
+            let btn = new Button(UIGFXKey.UI_LOAD_KEY);
+            self.addChild(btn);
+            btn.on("mousedown", function (evt) {
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
+                Mixer.playSound(SoundKey.SND_CLICK_KEY);
+            }, null, false);
+            return btn;
+        }
+
+        protected createNewWorldButton(): Button {
+            var self = this;
+            let btn = new Button(UIGFXKey.UI_NEW_WORLD_KEY);
+            self.addChild(btn);
+            btn.on("mousedown", function (evt) {
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
+                Mixer.playSound(SoundKey.SND_CLICK_KEY);
+            }, null, false);
+            return btn;
         }
 
         constructor() {
@@ -209,9 +234,24 @@ namespace Lich {
             down.x = self.width + PartsUI.SELECT_BORDER;
             down.y = self.height - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            self.cache(-5, -5,
-                self.width + Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2 + PartsUI.SELECT_BORDER + 10,
-                self.height + 10);
+            var save = this.createSaveButton();
+            super.addChild(save);
+            save.x = 0 - PartsUI.SELECT_BORDER - Resources.PARTS_SIZE - PartsUI.BORDER;
+            save.y = 0;
+
+            var load = this.createLoadButton();
+            super.addChild(load);
+            load.x = 0 - PartsUI.SELECT_BORDER - Resources.PARTS_SIZE - PartsUI.BORDER;
+            load.y = PartsUI.SELECT_BORDER + Resources.PARTS_SIZE + PartsUI.BORDER;
+
+            var newWorld = this.createNewWorldButton();
+            super.addChild(newWorld);
+            newWorld.x = 0 - PartsUI.SELECT_BORDER - Resources.PARTS_SIZE - PartsUI.BORDER;
+            newWorld.y = 2 * (PartsUI.SELECT_BORDER + Resources.PARTS_SIZE + PartsUI.BORDER);
+
+            self.cache(-(Resources.PARTS_SIZE + PartsUI.SELECT_BORDER + PartsUI.SELECT_BORDER + 10), -10,
+                self.width + (Resources.PARTS_SIZE + PartsUI.SELECT_BORDER + PartsUI.SELECT_BORDER) * 2 + 20,
+                self.height + 20);
         }
 
     }

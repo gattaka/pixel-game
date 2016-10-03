@@ -73,11 +73,6 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(CraftingUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-
-            let upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
@@ -86,9 +81,6 @@ namespace Lich {
                 }
             }, null, false);
 
-            let downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
                 let occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
@@ -109,10 +101,6 @@ namespace Lich {
             self.addChild(craftBtn);
             craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
             craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
-
-            let craftBtnHitArea = new createjs.Shape();
-            craftBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            craftBtn.hitArea = craftBtnHitArea;
             craftBtn.on("mousedown", function (evt) {
                 if (self.choosenItem) {
                     let index = self.itemsTypeIndexMap[self.choosenItem];

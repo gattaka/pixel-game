@@ -51,10 +51,6 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
-            var upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
@@ -62,9 +58,6 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
-            var downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
                 var occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
@@ -83,9 +76,6 @@ var Lich;
             self.addChild(craftBtn);
             craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
-            var craftBtnHitArea = new createjs.Shape();
-            craftBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            craftBtn.hitArea = craftBtnHitArea;
             craftBtn.on("mousedown", function (evt) {
                 if (self.choosenItem) {
                     var index = self.itemsTypeIndexMap[self.choosenItem];

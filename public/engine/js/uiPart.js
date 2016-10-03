@@ -67,6 +67,10 @@ var Lich;
                 btmp.x = PartsUI.SELECT_BORDER;
                 btmp.y = PartsUI.SELECT_BORDER;
             }
+            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            var hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            this.hitArea = hitArea;
         }
         return Button;
     }(createjs.Container));

@@ -70,21 +70,31 @@ var Lich;
                 }, false);
             })();
             var init = function () {
-                /*-------------------------*/
-                /* UI - HUD, Inventory etc.*/
-                /*-------------------------*/
                 self.ui = new Lich.UI(self);
-                /*---------------------*/
-                /* Measurements, debug */
-                /*---------------------*/
-                console.log("Measurements init");
-                self.world = new Lich.World(self);
-                self.stage.addChild(self.world);
-                self.stage.addChild(self.ui);
-                // periodické ukládání
-                setInterval(function () {
-                    Lich.TilesMapGenerator.save(self.world.tilesMap);
-                }, 10000);
+                var populateStage = function (tilesMap) {
+                    self.stage.removeAllChildren();
+                    delete self.world;
+                    delete self.background;
+                    self.world = new Lich.World(self, tilesMap);
+                    self.background = new Lich.Background(self);
+                    self.stage.addChild(self.world);
+                    self.stage.addChild(self.ui);
+                };
+                populateStage(Lich.TilesMapGenerator.createNew());
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
+                    Lich.TilesMapGenerator.save(self.getWorld().tilesMap);
+                    return false;
+                });
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
+                    var tilesMap = Lich.TilesMapGenerator.load();
+                    populateStage(tilesMap);
+                    return false;
+                });
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
+                    var tilesMap = Lich.TilesMapGenerator.createNew();
+                    populateStage(tilesMap);
+                    return false;
+                });
                 self.stage.addEventListener("stagemousemove", function (event) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
                 });
@@ -112,13 +122,13 @@ var Lich;
                     // Measurements
                     Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.FPS_CHANGE, createjs.Ticker.getMeasuredFPS()));
                     // Idle
-                    self.world.handleTick(delta);
+                    self.getWorld().handleTick(delta);
                     // UI má při akcích myši přednost
                     if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
                         self.ui.handleMouse(self.mouse, delta);
                     }
                     else {
-                        self.world.handleMouse(self.mouse, delta);
+                        self.getWorld().handleMouse(self.mouse, delta);
                     }
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 
                     // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
@@ -179,13 +189,14 @@ var Lich;
                             self.ui.spellsUI.selectSpell(i);
                         }
                     }
-                    self.world.update(delta, directions);
+                    self.getWorld().update(delta, directions);
                 }
                 self.stage.update();
             }
         }
         Game.prototype.getCanvas = function () { return this.canvas; };
         Game.prototype.getStage = function () { return this.stage; };
+        Game.prototype.getBackground = function () { return this.background; };
         Game.prototype.getWorld = function () { return this.world; };
         Game.prototype.getUI = function () { return this.ui; };
         ;

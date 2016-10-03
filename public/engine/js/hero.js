@@ -7,7 +7,7 @@ var Lich;
 (function (Lich) {
     var Hero = (function (_super) {
         __extends(Hero, _super);
-        function Hero(game) {
+        function Hero() {
             _super.call(this, Hero.WIDTH, Hero.HEIGHT, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[Lich.AnimationKey.LICH_ANIMATION_KEY])],

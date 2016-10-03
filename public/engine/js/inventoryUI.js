@@ -54,10 +54,6 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(InventoryUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
-            var upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
@@ -65,9 +61,6 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
-            var downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
                 var occupLines = Math.ceil(self.itemsTypeArray.length / InventoryUI.N);
                 if (self.lineOffset < occupLines - InventoryUI.M) {

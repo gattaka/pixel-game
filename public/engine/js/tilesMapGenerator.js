@@ -36,14 +36,14 @@ var Lich;
                 obj: []
             };
             var last = tilesMap.mapRecord.getValue(0, 0);
-            var count = 1;
+            var count = 0; // 0 protože ještě jsem nic nenačetl
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     var val = tilesMap.mapRecord.getValue(x, y);
                     if (last !== val) {
                         data.srf.push({ c: count, x: last });
                         last = val;
-                        count = 1;
+                        count = 1; // 1 protože už je načten
                     }
                     else {
                         count++;
@@ -52,14 +52,14 @@ var Lich;
             }
             data.srf.push({ c: count, x: last });
             last = tilesMap.mapBgrRecord.getValue(0, 0);
-            count = 1;
+            count = 0; // 0 protože ještě jsem nic nenačetl
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     var val = tilesMap.mapBgrRecord.getValue(x, y);
                     if (last !== val) {
-                        data.srf.push({ c: count, x: last });
+                        data.bgr.push({ c: count, x: last });
                         last = val;
-                        count = 1;
+                        count = 1; // 1 protože už je načten
                     }
                     else {
                         count++;
@@ -67,42 +67,35 @@ var Lich;
                 }
             }
             data.bgr.push({ c: count, x: last });
-            // last = tilesMap.mapObjectsTiles.getValue(0, 0);
-            // count = 1;
-            // for (let row of tilesMap.mapObjectsTiles.getPlainArray()) {
-            //     for (let col of row) {
-            //         if (last.mapKey !== col.mapKey && last !== null) {
-            //             data.obj.push({ c: count, x: last });
-            //             last = col;
-            //             count = 1;
-            //         } else {
-            //             count++;
-            //         }
-            //     }
-            // }
-            // data.obj.push({ c: count, x: last });
+            for (var y = 0; y < tilesMap.height; y++) {
+                for (var x = 0; x < tilesMap.width; x++) {
+                    var val = tilesMap.mapObjectsTiles.getValue(x, y);
+                    if (val) {
+                        data.obj.push({ x: x, y: y, v: val });
+                    }
+                }
+            }
             return JSON.stringify(data);
         };
         TilesMapGenerator.deserialize = function (data) {
             var tilesMap = new Lich.TilesMap(data.w, data.h);
             var count = 0;
             data.srf.forEach(function (v) {
-                for (var i = 0; i < v.c; i++, count++) {
+                for (var i = 0; i < v.c; i++) {
                     tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+                    count++;
                 }
             });
             count = 0;
             data.bgr.forEach(function (v) {
-                for (var i = 0; i < v.c; i++, count++) {
+                for (var i = 0; i < v.c; i++) {
                     tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+                    count++;
                 }
             });
-            // count = 0;
-            // data.obj.forEach((v) => {
-            //     for (let i = 0; i < v.c; i++ , count++) {
-            //         tilesMap.mapObjectsTiles.setValue(count % data.w, count / data.w, v.x);
-            //     }
-            // });
+            data.obj.forEach(function (v) {
+                tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
+            });
             return tilesMap;
         };
         TilesMapGenerator.save = function (tilesMap) {
@@ -129,7 +122,7 @@ var Lich;
                                 console.log("Game saved");
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                console.error("Error: " + textStatus + " errorThrown:" + errorThrown);
+                                console.log("Unable to save game");
                             }
                         });
                     }

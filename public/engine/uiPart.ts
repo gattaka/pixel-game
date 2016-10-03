@@ -60,6 +60,11 @@ namespace Lich {
                 btmp.y = PartsUI.SELECT_BORDER;
             }
 
+            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            let hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            this.hitArea = hitArea;
+
         }
     }
 

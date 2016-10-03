@@ -107,6 +107,9 @@ namespace Lich {
         UI_LEFT_KEY,
         UI_RIGHT_KEY,
         UI_CRAFT_KEY,
+        UI_SAVE_KEY,
+        UI_LOAD_KEY,
+        UI_NEW_WORLD_KEY
     }
 
     export enum SpellKey {
@@ -302,6 +305,9 @@ namespace Lich {
                 new Load("images/ui/left.png", UIGFXKey[UIGFXKey.UI_LEFT_KEY]),
                 new Load("images/ui/right.png", UIGFXKey[UIGFXKey.UI_RIGHT_KEY]),
                 new Load("images/ui/craft.png", UIGFXKey[UIGFXKey.UI_CRAFT_KEY]),
+                new Load("images/ui/load.png", UIGFXKey[UIGFXKey.UI_LOAD_KEY]),
+                new Load("images/ui/save.png", UIGFXKey[UIGFXKey.UI_SAVE_KEY]),
+                new Load("images/ui/new_world.png", UIGFXKey[UIGFXKey.UI_NEW_WORLD_KEY]),
                 // armor
                 new Load("images/armor/helmet.png", UIGFXKey[UIGFXKey.HELMET_KEY]),
                 new Load("images/armor/torso.png", UIGFXKey[UIGFXKey.TORSO_KEY]),

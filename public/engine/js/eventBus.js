@@ -13,6 +13,9 @@ var Lich;
         EventType[EventType["MOUSE_MOVE"] = 4] = "MOUSE_MOVE";
         EventType[EventType["FPS_CHANGE"] = 5] = "FPS_CHANGE";
         EventType[EventType["POINTED_AREA_CHANGE"] = 6] = "POINTED_AREA_CHANGE";
+        EventType[EventType["SAVE_WORLD"] = 7] = "SAVE_WORLD";
+        EventType[EventType["LOAD_WORLD"] = 8] = "LOAD_WORLD";
+        EventType[EventType["NEW_WORLD"] = 9] = "NEW_WORLD";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

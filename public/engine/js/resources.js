@@ -110,6 +110,9 @@ var Lich;
         UIGFXKey[UIGFXKey["UI_LEFT_KEY"] = 8] = "UI_LEFT_KEY";
         UIGFXKey[UIGFXKey["UI_RIGHT_KEY"] = 9] = "UI_RIGHT_KEY";
         UIGFXKey[UIGFXKey["UI_CRAFT_KEY"] = 10] = "UI_CRAFT_KEY";
+        UIGFXKey[UIGFXKey["UI_SAVE_KEY"] = 11] = "UI_SAVE_KEY";
+        UIGFXKey[UIGFXKey["UI_LOAD_KEY"] = 12] = "UI_LOAD_KEY";
+        UIGFXKey[UIGFXKey["UI_NEW_WORLD_KEY"] = 13] = "UI_NEW_WORLD_KEY";
     })(Lich.UIGFXKey || (Lich.UIGFXKey = {}));
     var UIGFXKey = Lich.UIGFXKey;
     (function (SpellKey) {
@@ -255,6 +258,9 @@ var Lich;
                 new Load("images/ui/left.png", UIGFXKey[UIGFXKey.UI_LEFT_KEY]),
                 new Load("images/ui/right.png", UIGFXKey[UIGFXKey.UI_RIGHT_KEY]),
                 new Load("images/ui/craft.png", UIGFXKey[UIGFXKey.UI_CRAFT_KEY]),
+                new Load("images/ui/load.png", UIGFXKey[UIGFXKey.UI_LOAD_KEY]),
+                new Load("images/ui/save.png", UIGFXKey[UIGFXKey.UI_SAVE_KEY]),
+                new Load("images/ui/new_world.png", UIGFXKey[UIGFXKey.UI_NEW_WORLD_KEY]),
                 // armor
                 new Load("images/armor/helmet.png", UIGFXKey[UIGFXKey.HELMET_KEY]),
                 new Load("images/armor/torso.png", UIGFXKey[UIGFXKey.TORSO_KEY]),

@@ -50,10 +50,10 @@ var Lich;
             this.sectorsToUpdate = new Array();
             // Mapa sektorů
             this.sectorsMap = new Lich.Array2D();
-            // Globální mapa dílků
+            // Vykreslené dílky povrchu a pozadí
             this.sceneTilesMap = new Lich.Array2D();
             this.sceneBgrTilesMap = new Lich.Array2D();
-            // Globální mapa objektů
+            // Vykreslené dílky objektů
             this.sceneObjectsMap = new Lich.Array2D();
             this.mapUpdateRegion = new MapUpdateRegion();
             var self = this;

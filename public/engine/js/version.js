@@ -110,7 +110,19 @@ var Lich;
             _super.prototype.addChild.call(this, down);
             down.x = self.width + Lich.PartsUI.SELECT_BORDER;
             down.y = self.height - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            self.cache(-5, -5, self.width + Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2 + Lich.PartsUI.SELECT_BORDER + 10, self.height + 10);
+            var save = this.createSaveButton();
+            _super.prototype.addChild.call(this, save);
+            save.x = 0 - Lich.PartsUI.SELECT_BORDER - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
+            save.y = 0;
+            var load = this.createLoadButton();
+            _super.prototype.addChild.call(this, load);
+            load.x = 0 - Lich.PartsUI.SELECT_BORDER - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
+            load.y = Lich.PartsUI.SELECT_BORDER + Lich.Resources.PARTS_SIZE + Lich.PartsUI.BORDER;
+            var newWorld = this.createNewWorldButton();
+            _super.prototype.addChild.call(this, newWorld);
+            newWorld.x = 0 - Lich.PartsUI.SELECT_BORDER - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
+            newWorld.y = 2 * (Lich.PartsUI.SELECT_BORDER + Lich.Resources.PARTS_SIZE + Lich.PartsUI.BORDER);
+            self.cache(-(Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.SELECT_BORDER + 10), -10, self.width + (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.SELECT_BORDER) * 2 + 20, self.height + 20);
         }
         SplashScreenUI.prototype.hide = function () {
             this.parentRef = this.parent;
@@ -150,10 +162,6 @@ var Lich;
             var self = this;
             var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
             self.addChild(upBtn);
-            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
-            var upBtnHitArea = new createjs.Shape();
-            upBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            upBtn.hitArea = upBtnHitArea;
             upBtn.on("mousedown", function (evt) {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
@@ -168,10 +176,6 @@ var Lich;
             var self = this;
             var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
             self.addChild(downBtn);
-            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER * 2;
-            var downBtnHitArea = new createjs.Shape();
-            downBtnHitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            downBtn.hitArea = downBtnHitArea;
             downBtn.on("mousedown", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
@@ -181,6 +185,36 @@ var Lich;
                 }
             }, null, false);
             return downBtn;
+        };
+        SplashScreenUI.prototype.createSaveButton = function () {
+            var self = this;
+            var btn = new Lich.Button(Lich.UIGFXKey.UI_SAVE_KEY);
+            self.addChild(btn);
+            btn.on("mousedown", function (evt) {
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
+                Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+            }, null, false);
+            return btn;
+        };
+        SplashScreenUI.prototype.createLoadButton = function () {
+            var self = this;
+            var btn = new Lich.Button(Lich.UIGFXKey.UI_LOAD_KEY);
+            self.addChild(btn);
+            btn.on("mousedown", function (evt) {
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
+                Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+            }, null, false);
+            return btn;
+        };
+        SplashScreenUI.prototype.createNewWorldButton = function () {
+            var self = this;
+            var btn = new Lich.Button(Lich.UIGFXKey.UI_NEW_WORLD_KEY);
+            self.addChild(btn);
+            btn.on("mousedown", function (evt) {
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
+                Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+            }, null, false);
+            return btn;
         };
         SplashScreenUI.MARGIN = 8;
         SplashScreenUI.PADDING = 5;

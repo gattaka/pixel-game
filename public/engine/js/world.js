@@ -30,9 +30,10 @@ var Lich;
     }(Lich.AbstractWorldObject));
     var World = (function (_super) {
         __extends(World, _super);
-        function World(game) {
+        function World(game, tilesMap) {
             _super.call(this);
             this.game = game;
+            this.tilesMap = tilesMap;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
@@ -40,13 +41,8 @@ var Lich;
             this.bulletObjects = Array();
             this.enemies = new Array();
             var self = this;
-            self.tilesMap = Lich.TilesMapGenerator.load();
-            if (!self.tilesMap) {
-                self.tilesMap = Lich.TilesMapGenerator.createNew();
-            }
             self.render = new Lich.Render(game, self);
-            self.background = new Lich.Background(game);
-            self.hero = new Lich.Hero(game);
+            self.hero = new Lich.Hero();
             /*------------*/
             /* Characters */
             /*------------*/
@@ -211,7 +207,7 @@ var Lich;
                     // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftX(rndDst);
-                    self.background.shift(rndDst, 0);
+                    self.game.getBackground().shift(rndDst, 0);
                     self.freeObjects.forEach(function (item) {
                         item.x += rndDst;
                     });
@@ -241,7 +237,7 @@ var Lich;
                     // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftY(rndDst);
-                    self.background.shift(0, rndDst);
+                    self.game.getBackground().shift(0, rndDst);
                     self.freeObjects.forEach(function (item) {
                         item.y += rndDst;
                     });
@@ -487,7 +483,7 @@ var Lich;
         World.prototype.handleTick = function (delta) {
             var self = this;
             self.render.handleTick();
-            self.background.handleTick(delta);
+            self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 enemy.handleTick(delta);

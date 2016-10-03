@@ -7,7 +7,10 @@ namespace Lich {
         WILL_CHANGE,
         MOUSE_MOVE,
         FPS_CHANGE,
-        POINTED_AREA_CHANGE
+        POINTED_AREA_CHANGE,
+        SAVE_WORLD,
+        LOAD_WORLD,
+        NEW_WORLD
     }
 
     abstract class EventPayload {

@@ -74,10 +74,10 @@ namespace Lich {
         sectorsMap = new Array2D<Sector>();
         // Mapa dílků
         tilesMap: TilesMap;
-        // Globální mapa dílků
+        // Vykreslené dílky povrchu a pozadí
         sceneTilesMap = new Array2D<createjs.Bitmap>();
         sceneBgrTilesMap = new Array2D<createjs.Bitmap>();
-        // Globální mapa objektů
+        // Vykreslené dílky objektů
         sceneObjectsMap = new Array2D<createjs.Bitmap>();
 
         minimap;

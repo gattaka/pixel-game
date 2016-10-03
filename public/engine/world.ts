@@ -47,26 +47,18 @@ namespace Lich {
         freeObjects = Array<WorldObject>();
         bulletObjects = Array<BulletObject>();
 
-        tilesMap: TilesMap;
         render: Render;
-        background: Background;
         hero: Hero;
 
         enemies = new Array<Enemy>();
 
-        constructor(public game: Game) {
+        constructor(public game: Game, public tilesMap: TilesMap ) {
             super();
 
             var self = this;
 
-            self.tilesMap = TilesMapGenerator.load();
-            if (!self.tilesMap) {
-                self.tilesMap = TilesMapGenerator.createNew();
-            }
-
             self.render = new Render(game, self);
-            self.background = new Background(game);
-            self.hero = new Hero(game);
+            self.hero = new Hero();
 
             /*------------*/
             /* Characters */
@@ -278,7 +270,7 @@ namespace Lich {
                     // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftX(rndDst);
-                    self.background.shift(rndDst, 0);
+                    self.game.getBackground().shift(rndDst, 0);
                     self.freeObjects.forEach(function (item) {
                         item.x += rndDst;
                     });
@@ -307,7 +299,7 @@ namespace Lich {
                     // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftY(rndDst);
-                    self.background.shift(0, rndDst);
+                    self.game.getBackground().shift(0, rndDst);
                     self.freeObjects.forEach(function (item) {
                         item.y += rndDst;
                     });
@@ -577,7 +569,7 @@ namespace Lich {
         handleTick(delta) {
             var self = this;
             self.render.handleTick();
-            self.background.handleTick(delta);
+            self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 enemy.handleTick(delta);
