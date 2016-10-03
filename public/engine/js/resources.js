@@ -29,10 +29,11 @@ var Lich;
     })(Lich.BackgroundKey || (Lich.BackgroundKey = {}));
     var BackgroundKey = Lich.BackgroundKey;
     (function (AnimationKey) {
-        AnimationKey[AnimationKey["FIREBALL_ANIMATION_KEY"] = 0] = "FIREBALL_ANIMATION_KEY";
-        AnimationKey[AnimationKey["LICH_ANIMATION_KEY"] = 1] = "LICH_ANIMATION_KEY";
-        AnimationKey[AnimationKey["CORPSE_ANIMATION_KEY"] = 2] = "CORPSE_ANIMATION_KEY";
-        AnimationKey[AnimationKey["BOLT_ANIMATION_KEY"] = 3] = "BOLT_ANIMATION_KEY";
+        AnimationKey[AnimationKey["METEOR_ANIMATION_KEY"] = 0] = "METEOR_ANIMATION_KEY";
+        AnimationKey[AnimationKey["FIREBALL_ANIMATION_KEY"] = 1] = "FIREBALL_ANIMATION_KEY";
+        AnimationKey[AnimationKey["LICH_ANIMATION_KEY"] = 2] = "LICH_ANIMATION_KEY";
+        AnimationKey[AnimationKey["CORPSE_ANIMATION_KEY"] = 3] = "CORPSE_ANIMATION_KEY";
+        AnimationKey[AnimationKey["BOLT_ANIMATION_KEY"] = 4] = "BOLT_ANIMATION_KEY";
     })(Lich.AnimationKey || (Lich.AnimationKey = {}));
     var AnimationKey = Lich.AnimationKey;
     (function (SurfaceKey) {
@@ -121,28 +122,31 @@ var Lich;
         SpellKey[SpellKey["SPELL_DIG_KEY"] = 2] = "SPELL_DIG_KEY";
         SpellKey[SpellKey["SPELL_DIG_BGR_KEY"] = 3] = "SPELL_DIG_BGR_KEY";
         SpellKey[SpellKey["SPELL_FIREBALL_KEY"] = 4] = "SPELL_FIREBALL_KEY";
-        SpellKey[SpellKey["SPELL_BOLT_KEY"] = 5] = "SPELL_BOLT_KEY";
-        SpellKey[SpellKey["SPELL_ENEMY_KEY"] = 6] = "SPELL_ENEMY_KEY";
+        SpellKey[SpellKey["SPELL_METEOR_KEY"] = 5] = "SPELL_METEOR_KEY";
+        SpellKey[SpellKey["SPELL_BOLT_KEY"] = 6] = "SPELL_BOLT_KEY";
+        SpellKey[SpellKey["SPELL_ENEMY_KEY"] = 7] = "SPELL_ENEMY_KEY";
         // RMB click interakce s objekty
-        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 7] = "SPELL_INTERACT_KEY";
+        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 8] = "SPELL_INTERACT_KEY";
     })(Lich.SpellKey || (Lich.SpellKey = {}));
     var SpellKey = Lich.SpellKey;
     (function (SoundKey) {
         SoundKey[SoundKey["SND_FIREBALL_KEY"] = 0] = "SND_FIREBALL_KEY";
         SoundKey[SoundKey["SND_BURN_KEY"] = 1] = "SND_BURN_KEY";
-        SoundKey[SoundKey["SND_BOLT_CAST"] = 2] = "SND_BOLT_CAST";
-        SoundKey[SoundKey["SND_PICK_KEY"] = 3] = "SND_PICK_KEY";
-        SoundKey[SoundKey["SND_PLACE_KEY"] = 4] = "SND_PLACE_KEY";
-        SoundKey[SoundKey["SND_PICK_AXE_1_KEY"] = 5] = "SND_PICK_AXE_1_KEY";
-        SoundKey[SoundKey["SND_PICK_AXE_2_KEY"] = 6] = "SND_PICK_AXE_2_KEY";
-        SoundKey[SoundKey["SND_PICK_AXE_3_KEY"] = 7] = "SND_PICK_AXE_3_KEY";
-        SoundKey[SoundKey["SND_BONECRACK_KEY"] = 8] = "SND_BONECRACK_KEY";
-        SoundKey[SoundKey["SND_SKELETON_DIE_KEY"] = 9] = "SND_SKELETON_DIE_KEY";
-        SoundKey[SoundKey["SND_SPAWN_KEY"] = 10] = "SND_SPAWN_KEY";
-        SoundKey[SoundKey["SND_DOOR_OPEN_KEY"] = 11] = "SND_DOOR_OPEN_KEY";
-        SoundKey[SoundKey["SND_DOOR_CLOSE_KEY"] = 12] = "SND_DOOR_CLOSE_KEY";
-        SoundKey[SoundKey["SND_CRAFT_KEY"] = 13] = "SND_CRAFT_KEY";
-        SoundKey[SoundKey["SND_CLICK_KEY"] = 14] = "SND_CLICK_KEY";
+        SoundKey[SoundKey["SND_METEOR_FALL_KEY"] = 2] = "SND_METEOR_FALL_KEY";
+        SoundKey[SoundKey["SND_METEOR_HIT_KEY"] = 3] = "SND_METEOR_HIT_KEY";
+        SoundKey[SoundKey["SND_BOLT_CAST"] = 4] = "SND_BOLT_CAST";
+        SoundKey[SoundKey["SND_PICK_KEY"] = 5] = "SND_PICK_KEY";
+        SoundKey[SoundKey["SND_PLACE_KEY"] = 6] = "SND_PLACE_KEY";
+        SoundKey[SoundKey["SND_PICK_AXE_1_KEY"] = 7] = "SND_PICK_AXE_1_KEY";
+        SoundKey[SoundKey["SND_PICK_AXE_2_KEY"] = 8] = "SND_PICK_AXE_2_KEY";
+        SoundKey[SoundKey["SND_PICK_AXE_3_KEY"] = 9] = "SND_PICK_AXE_3_KEY";
+        SoundKey[SoundKey["SND_BONECRACK_KEY"] = 10] = "SND_BONECRACK_KEY";
+        SoundKey[SoundKey["SND_SKELETON_DIE_KEY"] = 11] = "SND_SKELETON_DIE_KEY";
+        SoundKey[SoundKey["SND_SPAWN_KEY"] = 12] = "SND_SPAWN_KEY";
+        SoundKey[SoundKey["SND_DOOR_OPEN_KEY"] = 13] = "SND_DOOR_OPEN_KEY";
+        SoundKey[SoundKey["SND_DOOR_CLOSE_KEY"] = 14] = "SND_DOOR_CLOSE_KEY";
+        SoundKey[SoundKey["SND_CRAFT_KEY"] = 15] = "SND_CRAFT_KEY";
+        SoundKey[SoundKey["SND_CLICK_KEY"] = 16] = "SND_CLICK_KEY";
     })(Lich.SoundKey || (Lich.SoundKey = {}));
     var SoundKey = Lich.SoundKey;
     (function (MusicKey) {
@@ -186,6 +190,7 @@ var Lich;
                 new Load("images/ui/dig_spell.png", SpellKey[SpellKey.SPELL_DIG_KEY]),
                 new Load("images/ui/dig_bgr_spell.png", SpellKey[SpellKey.SPELL_DIG_BGR_KEY]),
                 new Load("images/ui/fireball_spell.png", SpellKey[SpellKey.SPELL_FIREBALL_KEY]),
+                new Load("images/ui/meteor_spell.png", SpellKey[SpellKey.SPELL_METEOR_KEY]),
                 new Load("images/ui/place_spell.png", SpellKey[SpellKey.SPELL_PLACE_KEY]),
                 new Load("images/ui/place_bgr_spell.png", SpellKey[SpellKey.SPELL_PLACE_BGR_KEY]),
                 new Load("images/ui/bolt_spell.png", SpellKey[SpellKey.SPELL_BOLT_KEY]),
@@ -213,6 +218,7 @@ var Lich;
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
                 // gfx animations
+                new Load("images/effects/meteor_animation.png", AnimationKey[AnimationKey.METEOR_ANIMATION_KEY]),
                 new Load("images/effects/blast_animation.png", AnimationKey[AnimationKey.FIREBALL_ANIMATION_KEY]),
                 new Load("images/effects/bolt_animation.png", AnimationKey[AnimationKey.BOLT_ANIMATION_KEY]),
                 // surfaces
@@ -293,6 +299,8 @@ var Lich;
                 new Load("sound/door_close.ogg", SoundKey[SoundKey.SND_DOOR_CLOSE_KEY]),
                 new Load("sound/craft.ogg", SoundKey[SoundKey.SND_CRAFT_KEY]),
                 new Load("sound/click.ogg", SoundKey[SoundKey.SND_CLICK_KEY]),
+                new Load("sound/meteor_fall.ogg", SoundKey[SoundKey.SND_METEOR_FALL_KEY]),
+                new Load("sound/meteor_hit.ogg", SoundKey[SoundKey.SND_METEOR_HIT_KEY]),
                 // music
                 new Load("music/Dirt_2.ogg", MusicKey[MusicKey.MSC_DIRT_THEME_KEY]),
             ];
@@ -439,6 +447,7 @@ var Lich;
             var registerSpellDefs = function (spell) {
                 self.spellDefs.insert(SpellKey[spell.key], spell);
             };
+            registerSpellDefs(new Lich.MeteorSpellDef());
             registerSpellDefs(new Lich.FireballSpellDef());
             registerSpellDefs(new Lich.DigSpellDef());
             registerSpellDefs(new Lich.DigBgrSpellDef());

@@ -50,9 +50,18 @@ namespace Lich {
             public spriteKey: AnimationKey,
             public destroyMap: boolean,
             public piercing: boolean,
-            public damage: number
+            public damage: number,
+            private radius?: number
         ) {
             super(key, cost, cooldown);
+        }
+
+        protected getFrameWidth(): number {
+            return BulletSpellDef.FRAME_WIDTH;
+        }
+
+        protected getFrameHeight(): number {
+            return BulletSpellDef.FRAME_HEIGHT;
         }
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
@@ -66,10 +75,10 @@ namespace Lich {
                 "images": [Resources.getInstance().getImage(AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
-                    "height": BulletSpellDef.FRAME_HEIGHT,
+                    "height": self.getFrameHeight(),
                     "count": 5,
                     "regY": 0,
-                    "width": BulletSpellDef.FRAME_WIDTH
+                    "width": self.getFrameWidth()
                 },
                 "animations": {
                     "fly": [0, 0, "fly", 1],
@@ -80,8 +89,8 @@ namespace Lich {
 
             var object = new BasicBullet(
                 owner,
-                BulletSpellDef.FRAME_HEIGHT,
-                BulletSpellDef.FRAME_WIDTH,
+                self.getFrameWidth(),
+                self.getFrameHeight(),
                 sheet,
                 "fly",
                 "done",
@@ -95,7 +104,8 @@ namespace Lich {
                 self.hitSoundKey,
                 self.destroyMap,
                 self.piercing,
-                self.damage
+                self.damage,
+                self.radius
             );
 
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
@@ -125,19 +135,66 @@ namespace Lich {
         static DAMAGE = 50;
         static COOLDOWN = 200;
         static COST = 10;
+        static RADIUS = 4;
 
         constructor() {
             super(
                 SpellKey.SPELL_FIREBALL_KEY,
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
-                SoundKey.SND_BURN_KEY,
                 SoundKey.SND_FIREBALL_KEY,
+                SoundKey.SND_BURN_KEY,
                 FireballSpellDef.SPEED,
                 AnimationKey.FIREBALL_ANIMATION_KEY,
                 FireballSpellDef.MAP_DESTROY,
                 FireballSpellDef.PIERCING,
-                FireballSpellDef.DAMAGE
+                FireballSpellDef.DAMAGE,
+                FireballSpellDef.RADIUS
+            );
+        }
+
+    }
+
+    /**
+     * Spell meteoritu, který ničí i povrch
+     */
+    export class MeteorSpellDef extends BulletSpellDef {
+        static SPEED = 1500;
+        static MAP_DESTROY = true;
+        static PIERCING = true;
+        static DAMAGE = 50;
+        static COOLDOWN = 200;
+        static COST = 10;
+        static RADIUS = 10;
+
+        static FRAME_WIDTH = 120;
+        static FRAME_HEIGHT = 120;
+
+        protected getFrameWidth(): number {
+            return MeteorSpellDef.FRAME_WIDTH;
+        }
+
+        protected getFrameHeight(): number {
+            return MeteorSpellDef.FRAME_HEIGHT;
+        }
+
+        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
+            return super.cast(owner, xAim + 200 - (Math.floor(Math.random() * 2) * 400), 0, xAim, yAim, game);
+        }
+
+        constructor() {
+            super(
+                SpellKey.SPELL_METEOR_KEY,
+                MeteorSpellDef.COST,
+                MeteorSpellDef.COOLDOWN,
+                SoundKey.SND_METEOR_FALL_KEY,
+                SoundKey.SND_METEOR_HIT_KEY,
+                MeteorSpellDef.SPEED,
+                AnimationKey.METEOR_ANIMATION_KEY,
+                MeteorSpellDef.MAP_DESTROY,
+                MeteorSpellDef.PIERCING,
+                MeteorSpellDef.DAMAGE,
+                MeteorSpellDef.RADIUS
             );
         }
 

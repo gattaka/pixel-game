@@ -20,6 +20,7 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_PLACE_KEY, Lich.SpellKey.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_ENEMY_KEY);
             // zvýraznění vybrané položky
@@ -93,7 +94,7 @@ var Lich;
                 self.selectSpell(index);
             }, null, false);
         };
-        SpellsUI.N = 5;
+        SpellsUI.N = 6;
         SpellsUI.M = 1;
         return SpellsUI;
     }(Lich.PartsUI));

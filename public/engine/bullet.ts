@@ -84,7 +84,8 @@ namespace Lich {
             hitSoundKey: SoundKey,
             mapDestroy: boolean,
             piercing: boolean,
-            damage: number
+            damage: number,
+            private radius?:number,
         ) {
             super(owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
         };
@@ -129,7 +130,7 @@ namespace Lich {
                     if (self.mapDestroy) {
                         var centX = self.x + self.width / 2;
                         var centY = self.y + self.height / 2;
-                        var rad = Resources.TILE_SIZE * 4;
+                        var rad = Resources.TILE_SIZE * self.radius;
                         for (var rx = centX - rad; rx <= centX + rad; rx += Resources.TILE_SIZE) {
                             for (var ry = centY - rad; ry <= centY + rad; ry += Resources.TILE_SIZE) {
                                 var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);

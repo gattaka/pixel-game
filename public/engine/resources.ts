@@ -26,6 +26,7 @@ namespace Lich {
     }
 
     export enum AnimationKey {
+        METEOR_ANIMATION_KEY,
         FIREBALL_ANIMATION_KEY,
         LICH_ANIMATION_KEY,
         CORPSE_ANIMATION_KEY,
@@ -118,6 +119,7 @@ namespace Lich {
         SPELL_DIG_KEY,
         SPELL_DIG_BGR_KEY,
         SPELL_FIREBALL_KEY,
+        SPELL_METEOR_KEY,
         SPELL_BOLT_KEY,
         SPELL_ENEMY_KEY,
 
@@ -128,6 +130,8 @@ namespace Lich {
     export enum SoundKey {
         SND_FIREBALL_KEY,
         SND_BURN_KEY,
+        SND_METEOR_FALL_KEY,
+        SND_METEOR_HIT_KEY,
         SND_BOLT_CAST,
         SND_PICK_KEY,
         SND_PLACE_KEY,
@@ -233,6 +237,7 @@ namespace Lich {
                 new Load("images/ui/dig_spell.png", SpellKey[SpellKey.SPELL_DIG_KEY]),
                 new Load("images/ui/dig_bgr_spell.png", SpellKey[SpellKey.SPELL_DIG_BGR_KEY]),
                 new Load("images/ui/fireball_spell.png", SpellKey[SpellKey.SPELL_FIREBALL_KEY]),
+                new Load("images/ui/meteor_spell.png", SpellKey[SpellKey.SPELL_METEOR_KEY]),
                 new Load("images/ui/place_spell.png", SpellKey[SpellKey.SPELL_PLACE_KEY]),
                 new Load("images/ui/place_bgr_spell.png", SpellKey[SpellKey.SPELL_PLACE_BGR_KEY]),
                 new Load("images/ui/bolt_spell.png", SpellKey[SpellKey.SPELL_BOLT_KEY]),
@@ -260,6 +265,7 @@ namespace Lich {
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
                 // gfx animations
+                new Load("images/effects/meteor_animation.png", AnimationKey[AnimationKey.METEOR_ANIMATION_KEY]),
                 new Load("images/effects/blast_animation.png", AnimationKey[AnimationKey.FIREBALL_ANIMATION_KEY]),
                 new Load("images/effects/bolt_animation.png", AnimationKey[AnimationKey.BOLT_ANIMATION_KEY]),
                 // surfaces
@@ -340,6 +346,8 @@ namespace Lich {
                 new Load("sound/door_close.ogg", SoundKey[SoundKey.SND_DOOR_CLOSE_KEY]),
                 new Load("sound/craft.ogg", SoundKey[SoundKey.SND_CRAFT_KEY]),
                 new Load("sound/click.ogg", SoundKey[SoundKey.SND_CLICK_KEY]),
+                new Load("sound/meteor_fall.ogg", SoundKey[SoundKey.SND_METEOR_FALL_KEY]),
+                new Load("sound/meteor_hit.ogg", SoundKey[SoundKey.SND_METEOR_HIT_KEY]),
                 // music
                 new Load("music/Dirt_2.ogg", MusicKey[MusicKey.MSC_DIRT_THEME_KEY]),
                 // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)
@@ -519,6 +527,7 @@ namespace Lich {
                 self.spellDefs.insert(SpellKey[spell.key], spell);
             };
 
+            registerSpellDefs(new MeteorSpellDef());
             registerSpellDefs(new FireballSpellDef());
             registerSpellDefs(new DigSpellDef());
             registerSpellDefs(new DigBgrSpellDef());

@@ -81,8 +81,9 @@ var Lich;
     Lich.BulletObject = BulletObject;
     var BasicBullet = (function (_super) {
         __extends(BasicBullet, _super);
-        function BasicBullet(owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage) {
+        function BasicBullet(owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
             _super.call(this, owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
+            this.radius = radius;
         }
         ;
         BasicBullet.prototype.update = function (sDelta, game) {
@@ -123,7 +124,7 @@ var Lich;
                     if (self.mapDestroy) {
                         var centX = self.x + self.width / 2;
                         var centY = self.y + self.height / 2;
-                        var rad = Lich.Resources.TILE_SIZE * 4;
+                        var rad = Lich.Resources.TILE_SIZE * self.radius;
                         for (var rx = centX - rad; rx <= centX + rad; rx += Lich.Resources.TILE_SIZE) {
                             for (var ry = centY - rad; ry <= centY + rad; ry += Lich.Resources.TILE_SIZE) {
                                 var r2 = Math.pow(centX - rx, 2) + Math.pow(centY - ry, 2);

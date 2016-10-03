@@ -29,7 +29,7 @@ var Lich;
      */
     var BulletSpellDef = (function (_super) {
         __extends(BulletSpellDef, _super);
-        function BulletSpellDef(key, cost, cooldown, castSoundKey, hitSoundKey, speed, spriteKey, destroyMap, piercing, damage) {
+        function BulletSpellDef(key, cost, cooldown, castSoundKey, hitSoundKey, speed, spriteKey, destroyMap, piercing, damage, radius) {
             _super.call(this, key, cost, cooldown);
             this.castSoundKey = castSoundKey;
             this.hitSoundKey = hitSoundKey;
@@ -38,7 +38,14 @@ var Lich;
             this.destroyMap = destroyMap;
             this.piercing = piercing;
             this.damage = damage;
+            this.radius = radius;
         }
+        BulletSpellDef.prototype.getFrameWidth = function () {
+            return BulletSpellDef.FRAME_WIDTH;
+        };
+        BulletSpellDef.prototype.getFrameHeight = function () {
+            return BulletSpellDef.FRAME_HEIGHT;
+        };
         BulletSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
             var self = this;
             var b = xAim - xCast;
@@ -49,10 +56,10 @@ var Lich;
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
-                    "height": BulletSpellDef.FRAME_HEIGHT,
+                    "height": self.getFrameHeight(),
                     "count": 5,
                     "regY": 0,
-                    "width": BulletSpellDef.FRAME_WIDTH
+                    "width": self.getFrameWidth()
                 },
                 "animations": {
                     "fly": [0, 0, "fly", 1],
@@ -60,11 +67,11 @@ var Lich;
                     "done": [4, 4, "done", 1]
                 }
             });
-            var object = new Lich.BasicBullet(owner, BulletSpellDef.FRAME_HEIGHT, BulletSpellDef.FRAME_WIDTH, sheet, "fly", "done", {
+            var object = new Lich.BasicBullet(owner, self.getFrameWidth(), self.getFrameHeight(), sheet, "fly", "done", {
                 "fly": "fly",
                 "hit": "hit",
                 "done": "done"
-            }, BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage);
+            }, BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
             // přepony dle rychlosti projektilu
             object.speedx = -self.speed * b / c;
@@ -91,7 +98,7 @@ var Lich;
     var FireballSpellDef = (function (_super) {
         __extends(FireballSpellDef, _super);
         function FireballSpellDef() {
-            _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.SoundKey.SND_BURN_KEY, Lich.SoundKey.SND_FIREBALL_KEY, FireballSpellDef.SPEED, Lich.AnimationKey.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE);
+            _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.SoundKey.SND_FIREBALL_KEY, Lich.SoundKey.SND_BURN_KEY, FireballSpellDef.SPEED, Lich.AnimationKey.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE, FireballSpellDef.RADIUS);
         }
         FireballSpellDef.SPEED = 1500;
         FireballSpellDef.MAP_DESTROY = true;
@@ -99,9 +106,39 @@ var Lich;
         FireballSpellDef.DAMAGE = 50;
         FireballSpellDef.COOLDOWN = 200;
         FireballSpellDef.COST = 10;
+        FireballSpellDef.RADIUS = 4;
         return FireballSpellDef;
     }(BulletSpellDef));
     Lich.FireballSpellDef = FireballSpellDef;
+    /**
+     * Spell meteoritu, který ničí i povrch
+     */
+    var MeteorSpellDef = (function (_super) {
+        __extends(MeteorSpellDef, _super);
+        function MeteorSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, MeteorSpellDef.COST, MeteorSpellDef.COOLDOWN, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, MeteorSpellDef.SPEED, Lich.AnimationKey.METEOR_ANIMATION_KEY, MeteorSpellDef.MAP_DESTROY, MeteorSpellDef.PIERCING, MeteorSpellDef.DAMAGE, MeteorSpellDef.RADIUS);
+        }
+        MeteorSpellDef.prototype.getFrameWidth = function () {
+            return MeteorSpellDef.FRAME_WIDTH;
+        };
+        MeteorSpellDef.prototype.getFrameHeight = function () {
+            return MeteorSpellDef.FRAME_HEIGHT;
+        };
+        MeteorSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
+            return _super.prototype.cast.call(this, owner, xAim + 200 - (Math.floor(Math.random() * 2) * 400), 0, xAim, yAim, game);
+        };
+        MeteorSpellDef.SPEED = 1500;
+        MeteorSpellDef.MAP_DESTROY = true;
+        MeteorSpellDef.PIERCING = true;
+        MeteorSpellDef.DAMAGE = 50;
+        MeteorSpellDef.COOLDOWN = 200;
+        MeteorSpellDef.COST = 10;
+        MeteorSpellDef.RADIUS = 10;
+        MeteorSpellDef.FRAME_WIDTH = 120;
+        MeteorSpellDef.FRAME_HEIGHT = 120;
+        return MeteorSpellDef;
+    }(BulletSpellDef));
+    Lich.MeteorSpellDef = MeteorSpellDef;
     /**
      * Spell mana-boltu, který neničí povrch
      */
