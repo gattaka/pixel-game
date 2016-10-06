@@ -21,6 +21,10 @@ var Lich;
         function Changelog() {
             this.versions = new Lich.Table();
             var version;
+            version = new Version("0.6");
+            version.addChange("Save/Load/New-world buttons");
+            version.addChange("Meteor spell");
+            this.addVersion(version);
             version = new Version("0.5");
             version.addChange("Crafting introduced");
             version.addChange("Doors added");

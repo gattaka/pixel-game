@@ -46,13 +46,19 @@ var Lich;
         BulletSpellDef.prototype.getFrameHeight = function () {
             return BulletSpellDef.FRAME_HEIGHT;
         };
-        BulletSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
-            var self = this;
+        BulletSpellDef.prototype.adjustObjectSpeed = function (xCast, yCast, xAim, yAim, object) {
             var b = xAim - xCast;
             var a = yAim - yCast;
             var c = Math.sqrt(a * a + b * b);
+            // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
+            // přepony dle rychlosti projektilu
+            object.speedx = -this.speed * b / c;
+            object.speedy = -this.speed * a / c;
+        };
+        BulletSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
+            var self = this;
             var sheet = new createjs.SpriteSheet({
-                framerate: 10,
+                framerate: 30,
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
@@ -72,10 +78,7 @@ var Lich;
                 "hit": "hit",
                 "done": "done"
             }, BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
-            // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
-            // přepony dle rychlosti projektilu
-            object.speedx = -self.speed * b / c;
-            object.speedy = -self.speed * a / c;
+            self.adjustObjectSpeed(xCast, yCast, xAim, yAim, object);
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
             game.getWorld().bulletObjects.push(object);
@@ -125,7 +128,9 @@ var Lich;
             return MeteorSpellDef.FRAME_HEIGHT;
         };
         MeteorSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
-            return _super.prototype.cast.call(this, owner, xAim + 200 - (Math.floor(Math.random() * 2) * 400), 0, xAim, yAim, game);
+            var a = yAim;
+            var b = Math.tan(Math.PI / 6) * a;
+            return _super.prototype.cast.call(this, owner, xAim + b - (Math.floor(Math.random() * 2) * b * 2), 0, xAim, yAim, game);
         };
         MeteorSpellDef.SPEED = 1500;
         MeteorSpellDef.MAP_DESTROY = true;

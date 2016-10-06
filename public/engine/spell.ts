@@ -64,14 +64,22 @@ namespace Lich {
             return BulletSpellDef.FRAME_HEIGHT;
         }
 
-        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
-            var self = this;
+        protected adjustObjectSpeed(xCast: number, yCast: number, xAim: number, yAim: number, object: AbstractWorldObject) {
             var b = xAim - xCast;
             var a = yAim - yCast;
             var c = Math.sqrt(a * a + b * b);
 
+            // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
+            // přepony dle rychlosti projektilu
+            object.speedx = -this.speed * b / c;
+            object.speedy = -this.speed * a / c;
+        }
+
+        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
+            var self = this;
+
             var sheet = new createjs.SpriteSheet({
-                framerate: 10,
+                framerate: 30,
                 "images": [Resources.getInstance().getImage(AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
@@ -108,10 +116,7 @@ namespace Lich {
                 self.radius
             );
 
-            // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
-            // přepony dle rychlosti projektilu
-            object.speedx = -self.speed * b / c;
-            object.speedy = -self.speed * a / c;
+            self.adjustObjectSpeed(xCast, yCast, xAim, yAim, object);
 
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
@@ -179,7 +184,9 @@ namespace Lich {
         }
 
         public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
-            return super.cast(owner, xAim + 200 - (Math.floor(Math.random() * 2) * 400), 0, xAim, yAim, game);
+            let a = yAim;
+            let b = Math.tan(Math.PI / 6) * a;
+            return super.cast(owner, xAim + b - (Math.floor(Math.random() * 2) * b * 2), 0, xAim, yAim, game);
         }
 
         constructor() {
