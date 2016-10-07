@@ -123,22 +123,25 @@ namespace Lich {
                         inv: {}
                     };
                     DB.saveData(data);
-                    return false;
+                    return true;
                 });
 
                 EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
+                    self.loadUI.reset();
+                    self.stage.addChild(self.loadUI);
+                    self.loadUI.alpha = 1;
                     let data = DB.loadData();
                     if (data.map) {
                         let tilesMap = TilesMapGenerator.deserialize(data.map);
                         populateContent(tilesMap);
                     }
-                    return false;
+                    return true;
                 });
 
                 EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
                     let tilesMap = TilesMapGenerator.createNew();
                     populateContent(tilesMap);
-                    return false;
+                    return true;
                 });
 
                 self.stage.addEventListener("stagemousemove", (event: any) => {
@@ -154,8 +157,10 @@ namespace Lich {
             if (Resources.getInstance().isLoaderDone()) {
                 init();
             } else {
-                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
+                let listener;
+                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, listener = (): boolean => {
                     init();
+                    EventBus.getInstance().unregisterConsumer(EventType.LOAD_FINISHED, listener);
                     return false;
                 });
                 self.stage.addChild(self.loadUI = new GameLoadUI(self));
@@ -166,7 +171,7 @@ namespace Lich {
                         }, 1500).call(function () {
                             self.stage.removeChild(self.loadUI);
                         });
-                    return false;
+                    return true;
                 });
             }
 

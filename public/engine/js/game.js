@@ -87,20 +87,23 @@ var Lich;
                         inv: {}
                     };
                     Lich.DB.saveData(data);
-                    return false;
+                    return true;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
+                    self.loadUI.reset();
+                    self.stage.addChild(self.loadUI);
+                    self.loadUI.alpha = 1;
                     var data = Lich.DB.loadData();
                     if (data.map) {
                         var tilesMap = Lich.TilesMapGenerator.deserialize(data.map);
                         populateContent(tilesMap);
                     }
-                    return false;
+                    return true;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
                     var tilesMap = Lich.TilesMapGenerator.createNew();
                     populateContent(tilesMap);
-                    return false;
+                    return true;
                 });
                 self.stage.addEventListener("stagemousemove", function (event) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
@@ -113,8 +116,10 @@ var Lich;
                 init();
             }
             else {
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
+                var listener_1;
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, listener_1 = function () {
                     init();
+                    Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.LOAD_FINISHED, listener_1);
                     return false;
                 });
                 self.stage.addChild(self.loadUI = new Lich.GameLoadUI(self));
@@ -125,7 +130,7 @@ var Lich;
                     }, 1500).call(function () {
                         self.stage.removeChild(self.loadUI);
                     });
-                    return false;
+                    return true;
                 });
             }
             /*-----------*/

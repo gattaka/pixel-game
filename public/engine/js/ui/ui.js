@@ -197,27 +197,31 @@ var Lich;
             var self = this;
             self.width = game.getCanvas().width;
             self.height = game.getCanvas().height;
-            var loadScreen = new createjs.Shape();
-            loadScreen.graphics.beginFill("black");
-            loadScreen.graphics.drawRect(0, 0, self.width, self.height);
-            self.addChild(loadScreen);
-            var loadLabel = new Lich.Label("Loading...", "30px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
-            loadLabel.x = self.width / 2 - 50;
-            loadLabel.y = self.height / 2 - 50;
-            self.addChild(loadLabel);
-            var loadItemLabel = new Lich.Label("-", "15px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
-            loadItemLabel.x = self.width / 2 - 50;
-            loadItemLabel.y = loadLabel.y + 40;
-            self.addChild(loadItemLabel);
+            self.loadScreen = new createjs.Shape();
+            self.loadScreen.graphics.beginFill("black");
+            self.loadScreen.graphics.drawRect(0, 0, self.width, self.height);
+            self.addChild(self.loadScreen);
+            self.progressLabel = new Lich.Label("Loading...", "30px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
+            self.progressLabel.x = self.width / 2 - 50;
+            self.progressLabel.y = self.height / 2 - 50;
+            self.addChild(self.progressLabel);
+            self.currentItemLabel = new Lich.Label("-", "15px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
+            self.currentItemLabel.x = self.width / 2 - 50;
+            self.currentItemLabel.y = self.progressLabel.y + 40;
+            self.addChild(self.currentItemLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_PROGRESS, function (n) {
-                loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
-                return false;
+                self.progressLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                return true;
             });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_ITEM, function (e) {
-                loadItemLabel.setText(e.payload);
-                return false;
+                self.currentItemLabel.setText(e.payload);
+                return true;
             });
         }
+        GameLoadUI.prototype.reset = function () {
+            this.currentItemLabel.setText(" ");
+            this.progressLabel.setText(" ");
+        };
         return GameLoadUI;
     }(createjs.Container));
     Lich.GameLoadUI = GameLoadUI;

@@ -110,9 +110,19 @@ var Lich;
             if (array) {
                 for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
                     var consumer = array_1[_i];
-                    var consumed = consumer(argument);
-                    if (consumed)
-                        break;
+                    if (consumer) {
+                        var consumed = consumer(argument);
+                        if (consumed)
+                            break;
+                    }
+                }
+            }
+        };
+        EventBus.prototype.unregisterConsumer = function (type, callback) {
+            var array = this.consumers[type];
+            for (var i = 0; i < array.length; i++) {
+                if (array[i] == callback) {
+                    array[i] = undefined;
                 }
             }
         };

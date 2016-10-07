@@ -67,9 +67,20 @@ namespace Lich {
             let array = this.consumers[argument.type];
             if (array) {
                 for (let consumer of array) {
-                    let consumed: boolean = consumer(argument);
-                    if (consumed)
-                        break;
+                    if (consumer) {
+                        let consumed: boolean = consumer(argument);
+                        if (consumed)
+                            break;
+                    }
+                }
+            }
+        }
+
+        public unregisterConsumer(type: EventType, callback: (payload: EventPayload) => boolean) {
+            let array = this.consumers[type];
+            for (let i = 0; i < array.length; i++) {
+                if (array[i] == callback) {
+                    array[i] = undefined;
                 }
             }
         }

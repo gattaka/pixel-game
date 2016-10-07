@@ -82,7 +82,12 @@ namespace Lich {
 
         public static deserialize(data: SaveStructure): TilesMap {
 
+            let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
+            let progress = 0;
+
             let tilesMap = new TilesMap(data.w, data.h);
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Surface"));
 
             let count = 0;
             for (let v = 0; v < data.srf.length; v += 2) {
@@ -90,9 +95,12 @@ namespace Lich {
                 let key = data.srf[v + 1];
                 for (let i = 0; i < amount; i++) {
                     tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
             }
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Background"));
 
             count = 0;
             for (let v = 0; v < data.bgr.length; v += 2) {
@@ -100,13 +108,19 @@ namespace Lich {
                 let key = data.bgr[v + 1];
                 for (let i = 0; i < amount; i++) {
                     tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
             }
 
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Objects"));
+
             data.obj.forEach((v) => {
                 tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
             });
+
+            EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
 
             return tilesMap;
         }

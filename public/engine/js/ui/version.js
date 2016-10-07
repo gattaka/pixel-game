@@ -166,7 +166,7 @@ var Lich;
             var self = this;
             var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
             self.addChild(upBtn);
-            upBtn.on("mousedown", function (evt) {
+            upBtn.on("click", function (evt) {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
@@ -180,7 +180,7 @@ var Lich;
             var self = this;
             var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
             self.addChild(downBtn);
-            downBtn.on("mousedown", function (evt) {
+            downBtn.on("click", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
@@ -194,7 +194,7 @@ var Lich;
             var self = this;
             var btn = new Lich.Button(Lich.UIGFXKey.UI_SAVE_KEY);
             self.addChild(btn);
-            btn.on("mousedown", function (evt) {
+            btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
             }, null, false);
@@ -204,7 +204,7 @@ var Lich;
             var self = this;
             var btn = new Lich.Button(Lich.UIGFXKey.UI_LOAD_KEY);
             self.addChild(btn);
-            btn.on("mousedown", function (evt) {
+            btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
             }, null, false);
@@ -214,7 +214,7 @@ var Lich;
             var self = this;
             var btn = new Lich.Button(Lich.UIGFXKey.UI_NEW_WORLD_KEY);
             self.addChild(btn);
-            btn.on("mousedown", function (evt) {
+            btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
             }, null, false);

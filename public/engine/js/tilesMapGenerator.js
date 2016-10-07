@@ -64,28 +64,37 @@ var Lich;
             return data;
         };
         TilesMapGenerator.deserialize = function (data) {
+            var total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
+            var progress = 0;
             var tilesMap = new Lich.TilesMap(data.w, data.h);
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Surface"));
             var count = 0;
             for (var v = 0; v < data.srf.length; v += 2) {
                 var amount = data.srf[v];
                 var key = data.srf[v + 1];
                 for (var i = 0; i < amount; i++) {
                     tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
             }
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Background"));
             count = 0;
             for (var v = 0; v < data.bgr.length; v += 2) {
                 var amount = data.bgr[v];
                 var key = data.bgr[v + 1];
                 for (var i = 0; i < amount; i++) {
                     tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
             }
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Objects"));
             data.obj.forEach(function (v) {
                 tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
             });
+            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             return tilesMap;
         };
         TilesMapGenerator.createNew = function (width, height, groundLevel) {
