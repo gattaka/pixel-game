@@ -9,24 +9,6 @@ var Lich;
     var TilesMapGenerator = (function () {
         function TilesMapGenerator() {
         }
-        TilesMapGenerator.createUserKey = function () {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            for (var i = 0; i < 5; i++)
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            return text;
-        };
-        TilesMapGenerator.getUserKey = function () {
-            var key = Cookies.get(Lich.Resources.COOKIE_KEY);
-            if (key) {
-                return key;
-            }
-            else {
-                key = TilesMapGenerator.createUserKey();
-                Cookies.set(Lich.Resources.COOKIE_KEY, key, { expires: 10 * 365 });
-                return key;
-            }
-        };
         TilesMapGenerator.serialize = function (tilesMap) {
             var data = {
                 w: tilesMap.width,
@@ -75,7 +57,7 @@ var Lich;
                     }
                 }
             }
-            return JSON.stringify(data);
+            return data;
         };
         TilesMapGenerator.deserialize = function (data) {
             var tilesMap = new Lich.TilesMap(data.w, data.h);
@@ -97,60 +79,6 @@ var Lich;
                 tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
             });
             return tilesMap;
-        };
-        TilesMapGenerator.save = function (tilesMap) {
-            var userKey = TilesMapGenerator.getUserKey();
-            if (userKey) {
-                var data_1 = TilesMapGenerator.serialize(tilesMap);
-                jQuery.ajax({
-                    url: './posts/1',
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    processData: false,
-                    data: data_1,
-                    success: function (result) {
-                        console.log("Game saved");
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        jQuery.ajax({
-                            url: './posts',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            processData: false,
-                            data: data_1,
-                            success: function (result) {
-                                console.log("Game saved");
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log("Unable to save game");
-                            }
-                        });
-                    }
-                });
-            }
-            else {
-                console.error("Failed to obtain a user key");
-            }
-        };
-        TilesMapGenerator.load = function () {
-            var userKey = TilesMapGenerator.getUserKey();
-            if (userKey) {
-                var response = jQuery.ajax({
-                    url: './posts/1',
-                    type: 'GET',
-                    success: function (result) {
-                        console.log("Game loaded");
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error: " + textStatus + " errorThrown:" + errorThrown);
-                    },
-                    async: false
-                });
-                if (response.status != 404 && response.responseJSON) {
-                    return TilesMapGenerator.deserialize(response.responseJSON);
-                }
-            }
-            return null;
         };
         TilesMapGenerator.createNew = function (width, height, groundLevel) {
             if (width === void 0) { width = TilesMapGenerator.DEFAULT_MAP_WIDTH; }

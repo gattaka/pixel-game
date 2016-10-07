@@ -6,7 +6,7 @@
  */
 namespace Lich {
 
-    interface SaveStructure {
+    export interface SaveStructure {
         w: number,
         h: number,
         srf: Array<any>,
@@ -23,27 +23,8 @@ namespace Lich {
 
         private constructor() { }
 
-        private static createUserKey(): string {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            for (var i = 0; i < 5; i++)
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            return text;
-        }
-
-        private static getUserKey(): string {
-            let key = Cookies.get(Resources.COOKIE_KEY);
-            if (key) {
-                return key;
-            } else {
-                key = TilesMapGenerator.createUserKey();
-                Cookies.set(Resources.COOKIE_KEY, key, { expires: 10 * 365 });
-                return key;
-            }
-        }
-
-        private static serialize(tilesMap: TilesMap): string {
-            let data = {
+        public static serialize(tilesMap: TilesMap): SaveStructure {
+            let data: SaveStructure = {
                 w: tilesMap.width,
                 h: tilesMap.height,
                 srf: [],
@@ -92,10 +73,10 @@ namespace Lich {
                 }
             }
 
-            return JSON.stringify(data);
+            return data;
         }
 
-        private static deserialize(data: SaveStructure): TilesMap {
+        public static deserialize(data: SaveStructure): TilesMap {
 
             let tilesMap = new TilesMap(data.w, data.h);
 
@@ -120,61 +101,6 @@ namespace Lich {
             });
 
             return tilesMap;
-        }
-
-        public static save(tilesMap: TilesMap) {
-            let userKey = TilesMapGenerator.getUserKey();
-            if (userKey) {
-                let data = TilesMapGenerator.serialize(tilesMap);
-                jQuery.ajax({
-                    url: './posts/1',
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    processData: false,
-                    data: data,
-                    success: function (result) {
-                        console.log("Game saved");
-                    },
-                    error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) {
-                        jQuery.ajax({
-                            url: './posts',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            processData: false,
-                            data: data,
-                            success: function (result) {
-                                console.log("Game saved");
-                            },
-                            error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) {
-                                console.log("Unable to save game");
-                            }
-                        });
-                    }
-                });
-            } else {
-                console.error("Failed to obtain a user key");
-            }
-        }
-
-        public static load(): TilesMap {
-            let userKey = TilesMapGenerator.getUserKey();
-            if (userKey) {
-                let response = jQuery.ajax({
-                    url: './posts/1',
-                    type: 'GET',
-                    success: function (result) {
-                        console.log("Game loaded");
-                    },
-                    error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) {
-                        console.error("Error: " + textStatus + " errorThrown:" + errorThrown);
-                    },
-                    async: false
-                });
-                if (response.status != 404 && response.responseJSON) {
-                    return TilesMapGenerator.deserialize(response.responseJSON);
-                }
-            }
-            return null;
         }
 
         public static createNew(
