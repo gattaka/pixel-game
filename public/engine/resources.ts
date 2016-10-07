@@ -382,6 +382,9 @@ namespace Lich {
             self.loader.addEventListener("progress", function (event) {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, event.loaded));
             });
+            self.loader.addEventListener("filestart", function (event) {
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, event.item.src));
+            });
             self.loader.addEventListener("complete", function () {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
             });

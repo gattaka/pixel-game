@@ -249,22 +249,21 @@ namespace Lich {
             loadLabel.y = self.height / 2 - 50;
             self.addChild(loadLabel);
 
-            if (!Resources.getInstance().isLoaderDone()) {
-                EventBus.getInstance().registerConsumer(EventType.LOAD_PROGRESS, (n: NumberEventPayload): boolean => {
-                    loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
-                    return false;
-                });
+            var loadItemLabel = new Label("-", "15px " + Resources.FONT, Resources.TEXT_COLOR);
+            loadItemLabel.x = self.width / 2 - 50;
+            loadItemLabel.y = loadLabel.y + 40;
+            self.addChild(loadItemLabel);
 
-                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
-                    createjs.Tween.get(self)
-                        .to({
-                            alpha: 0
-                        }, 2000).call(function () {
-                            game.getStage().removeChild(self);
-                        });
-                    return false;
-                });
-            }
+            EventBus.getInstance().registerConsumer(EventType.LOAD_PROGRESS, (n: NumberEventPayload): boolean => {
+                loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                return false;
+            });
+
+            EventBus.getInstance().registerConsumer(EventType.LOAD_ITEM, (e: StringEventPayload): boolean => {
+                loadItemLabel.setText(e.payload);
+                return false;
+            });
+
         }
 
     }

@@ -7,15 +7,16 @@ var Lich;
 (function (Lich) {
     (function (EventType) {
         EventType[EventType["LOAD_PROGRESS"] = 0] = "LOAD_PROGRESS";
-        EventType[EventType["LOAD_FINISHED"] = 1] = "LOAD_FINISHED";
-        EventType[EventType["HEALTH_CHANGE"] = 2] = "HEALTH_CHANGE";
-        EventType[EventType["WILL_CHANGE"] = 3] = "WILL_CHANGE";
-        EventType[EventType["MOUSE_MOVE"] = 4] = "MOUSE_MOVE";
-        EventType[EventType["FPS_CHANGE"] = 5] = "FPS_CHANGE";
-        EventType[EventType["POINTED_AREA_CHANGE"] = 6] = "POINTED_AREA_CHANGE";
-        EventType[EventType["SAVE_WORLD"] = 7] = "SAVE_WORLD";
-        EventType[EventType["LOAD_WORLD"] = 8] = "LOAD_WORLD";
-        EventType[EventType["NEW_WORLD"] = 9] = "NEW_WORLD";
+        EventType[EventType["LOAD_ITEM"] = 1] = "LOAD_ITEM";
+        EventType[EventType["LOAD_FINISHED"] = 2] = "LOAD_FINISHED";
+        EventType[EventType["HEALTH_CHANGE"] = 3] = "HEALTH_CHANGE";
+        EventType[EventType["WILL_CHANGE"] = 4] = "WILL_CHANGE";
+        EventType[EventType["MOUSE_MOVE"] = 5] = "MOUSE_MOVE";
+        EventType[EventType["FPS_CHANGE"] = 6] = "FPS_CHANGE";
+        EventType[EventType["POINTED_AREA_CHANGE"] = 7] = "POINTED_AREA_CHANGE";
+        EventType[EventType["SAVE_WORLD"] = 8] = "SAVE_WORLD";
+        EventType[EventType["LOAD_WORLD"] = 9] = "LOAD_WORLD";
+        EventType[EventType["NEW_WORLD"] = 10] = "NEW_WORLD";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {
@@ -32,6 +33,15 @@ var Lich;
         return SimpleEventPayload;
     }(EventPayload));
     Lich.SimpleEventPayload = SimpleEventPayload;
+    var StringEventPayload = (function (_super) {
+        __extends(StringEventPayload, _super);
+        function StringEventPayload(type, payload) {
+            _super.call(this, type);
+            this.payload = payload;
+        }
+        return StringEventPayload;
+    }(EventPayload));
+    Lich.StringEventPayload = StringEventPayload;
     var NumberEventPayload = (function (_super) {
         __extends(NumberEventPayload, _super);
         function NumberEventPayload(type, payload) {

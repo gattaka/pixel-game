@@ -205,21 +205,18 @@ var Lich;
             loadLabel.x = self.width / 2 - 50;
             loadLabel.y = self.height / 2 - 50;
             self.addChild(loadLabel);
-            if (!Lich.Resources.getInstance().isLoaderDone()) {
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_PROGRESS, function (n) {
-                    loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
-                    return false;
-                });
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
-                    createjs.Tween.get(self)
-                        .to({
-                        alpha: 0
-                    }, 2000).call(function () {
-                        game.getStage().removeChild(self);
-                    });
-                    return false;
-                });
-            }
+            var loadItemLabel = new Lich.Label("-", "15px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR);
+            loadItemLabel.x = self.width / 2 - 50;
+            loadItemLabel.y = loadLabel.y + 40;
+            self.addChild(loadItemLabel);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_PROGRESS, function (n) {
+                loadLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_ITEM, function (e) {
+                loadItemLabel.setText(e.payload);
+                return false;
+            });
         }
         return GameLoadUI;
     }(createjs.Container));

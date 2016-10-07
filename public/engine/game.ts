@@ -5,9 +5,12 @@ namespace Lich {
 
         private canvas: HTMLCanvasElement;
         private stage: createjs.Stage;
+        private content: createjs.Container;
         private background: Background;
         private world: World;
         private ui: UI;
+
+        private loadUI: GameLoadUI;
 
         private initialized = false;
         private keys = {};
@@ -15,7 +18,7 @@ namespace Lich {
         mouse = new Mouse();
 
         public getCanvas(): HTMLCanvasElement { return this.canvas; }
-        public getStage(): createjs.Stage { return this.stage; }
+        public getContent(): createjs.Container { return this.content; }
         public getBackground(): Background { return this.background; }
         public getWorld(): World { return this.world; }
         public getUI(): UI { return this.ui; }
@@ -102,17 +105,17 @@ namespace Lich {
 
                 self.ui = new UI(self);
 
-                let populateStage = (tilesMap: TilesMap) => {
-                    self.stage.removeAllChildren();
+                let populateContent = (tilesMap: TilesMap) => {
+                    self.content.removeAllChildren();
                     delete self.world;
                     delete self.background;
 
                     self.world = new World(self, tilesMap);
                     self.background = new Background(self);
-                    self.stage.addChild(self.world);
-                    self.stage.addChild(self.ui);
+                    self.content.addChild(self.world);
+                    self.content.addChild(self.ui);
                 };
-                populateStage(TilesMapGenerator.createNew());
+                populateContent(TilesMapGenerator.createNew());
 
                 EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
                     let data = {
@@ -127,14 +130,14 @@ namespace Lich {
                     let data = DB.loadData();
                     if (data.map) {
                         let tilesMap = TilesMapGenerator.deserialize(data.map);
-                        populateStage(tilesMap);
+                        populateContent(tilesMap);
                     }
                     return false;
                 });
 
                 EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
                     let tilesMap = TilesMapGenerator.createNew();
-                    populateStage(tilesMap);
+                    populateContent(tilesMap);
                     return false;
                 });
 
@@ -145,12 +148,24 @@ namespace Lich {
                 self.initialized = true;
             }
 
+            self.content = new createjs.Container();
+            self.stage.addChild(self.content);
+
             if (Resources.getInstance().isLoaderDone()) {
                 init();
             } else {
-                self.stage.addChild(new GameLoadUI(self));
                 EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
                     init();
+                    return false;
+                });
+                self.stage.addChild(self.loadUI = new GameLoadUI(self));
+                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                            alpha: 0
+                        }, 1500).call(function () {
+                            self.stage.removeChild(self.loadUI);
+                        });
                     return false;
                 });
             }

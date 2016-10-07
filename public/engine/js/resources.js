@@ -324,6 +324,9 @@ var Lich;
             self.loader.addEventListener("progress", function (event) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, event.loaded));
             });
+            self.loader.addEventListener("filestart", function (event) {
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, event.item.src));
+            });
             self.loader.addEventListener("complete", function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });

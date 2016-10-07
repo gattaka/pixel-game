@@ -2,6 +2,7 @@ namespace Lich {
 
     export enum EventType {
         LOAD_PROGRESS,
+        LOAD_ITEM,
         LOAD_FINISHED,
         HEALTH_CHANGE,
         WILL_CHANGE,
@@ -19,6 +20,10 @@ namespace Lich {
 
     export class SimpleEventPayload extends EventPayload {
         constructor(type: EventType) { super(type); }
+    }
+
+    export class StringEventPayload extends EventPayload {
+        constructor(type: EventType, public payload: string) { super(type); }
     }
 
     export class NumberEventPayload extends EventPayload {

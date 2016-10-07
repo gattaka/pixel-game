@@ -71,16 +71,16 @@ var Lich;
             })();
             var init = function () {
                 self.ui = new Lich.UI(self);
-                var populateStage = function (tilesMap) {
-                    self.stage.removeAllChildren();
+                var populateContent = function (tilesMap) {
+                    self.content.removeAllChildren();
                     delete self.world;
                     delete self.background;
                     self.world = new Lich.World(self, tilesMap);
                     self.background = new Lich.Background(self);
-                    self.stage.addChild(self.world);
-                    self.stage.addChild(self.ui);
+                    self.content.addChild(self.world);
+                    self.content.addChild(self.ui);
                 };
-                populateStage(Lich.TilesMapGenerator.createNew());
+                populateContent(Lich.TilesMapGenerator.createNew());
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                     var data = {
                         map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
@@ -93,13 +93,13 @@ var Lich;
                     var data = Lich.DB.loadData();
                     if (data.map) {
                         var tilesMap = Lich.TilesMapGenerator.deserialize(data.map);
-                        populateStage(tilesMap);
+                        populateContent(tilesMap);
                     }
                     return false;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
                     var tilesMap = Lich.TilesMapGenerator.createNew();
-                    populateStage(tilesMap);
+                    populateContent(tilesMap);
                     return false;
                 });
                 self.stage.addEventListener("stagemousemove", function (event) {
@@ -107,13 +107,24 @@ var Lich;
                 });
                 self.initialized = true;
             };
+            self.content = new createjs.Container();
+            self.stage.addChild(self.content);
             if (Lich.Resources.getInstance().isLoaderDone()) {
                 init();
             }
             else {
-                self.stage.addChild(new Lich.GameLoadUI(self));
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
                     init();
+                    return false;
+                });
+                self.stage.addChild(self.loadUI = new Lich.GameLoadUI(self));
+                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                        alpha: 0
+                    }, 1500).call(function () {
+                        self.stage.removeChild(self.loadUI);
+                    });
                     return false;
                 });
             }
@@ -202,7 +213,7 @@ var Lich;
             }
         }
         Game.prototype.getCanvas = function () { return this.canvas; };
-        Game.prototype.getStage = function () { return this.stage; };
+        Game.prototype.getContent = function () { return this.content; };
         Game.prototype.getBackground = function () { return this.background; };
         Game.prototype.getWorld = function () { return this.world; };
         Game.prototype.getUI = function () { return this.ui; };

@@ -8,7 +8,7 @@ var Lich;
             this.offsetX = 0;
             this.offsetY = 0;
             var self = this;
-            self.stage = game.getStage();
+            self.content = game.getContent();
             self.canvas = game.getCanvas();
             self.far_mountain = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
             self.far_mountain_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
@@ -22,13 +22,13 @@ var Lich;
                 self.clouds.push(Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.CLOUD_KEY] + i));
             }
             self.sky = new createjs.Shape();
-            self.stage.addChild(self.sky);
+            self.content.addChild(self.sky);
             self.sky.x = 0;
             self.sky.y = 0;
             self.sky.graphics.beginBitmapFill(Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
             var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds).concat([self.mountain, self.mountain_sec, self.far_hill, self.far_hill_sec, self.hill, self.hill_sec]);
             parallaxItems.forEach(function (entry) {
-                self.stage.addChild(entry);
+                self.content.addChild(entry);
                 entry.y = self.canvas.height - entry.image.height;
             });
             self.clouds.forEach(function (item) {
@@ -52,13 +52,13 @@ var Lich;
             self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, self.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
             self.dirt_back_start.x = 0;
             self.dirt_back_start.y = Background.DIRT_START;
-            self.stage.addChild(self.dirt_back_start);
+            self.content.addChild(self.dirt_back_start);
             self.dirt_backImg = Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.DIRTBACK_KEY]);
             self.dirt_back = new createjs.Shape();
             self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, self.canvas.width + self.dirt_backImg.width * 2, self.canvas.height + self.dirt_backImg.height * 2);
             self.dirt_back.x = 0;
             self.dirt_back.y = self.dirt_back_start.y + self.dirt_back_startImg.height - 4;
-            self.stage.addChild(self.dirt_back);
+            self.content.addChild(self.dirt_back);
             console.log("background ready");
         }
         Background.prototype.shift = function (distanceX, distanceY) {
