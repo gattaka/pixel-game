@@ -23,7 +23,8 @@ var Lich;
                 for (var x = 0; x < tilesMap.width; x++) {
                     var val = tilesMap.mapRecord.getValue(x, y);
                     if (last !== val) {
-                        data.srf.push({ c: count, x: last });
+                        data.srf.push(count);
+                        data.srf.push(last);
                         last = val;
                         count = 1; // 1 protože už je načten
                     }
@@ -32,14 +33,16 @@ var Lich;
                     }
                 }
             }
-            data.srf.push({ c: count, x: last });
+            data.srf.push(count);
+            data.srf.push(last);
             last = tilesMap.mapBgrRecord.getValue(0, 0);
             count = 0; // 0 protože ještě jsem nic nenačetl
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     var val = tilesMap.mapBgrRecord.getValue(x, y);
                     if (last !== val) {
-                        data.bgr.push({ c: count, x: last });
+                        data.bgr.push(count);
+                        data.bgr.push(last);
                         last = val;
                         count = 1; // 1 protože už je načten
                     }
@@ -48,7 +51,8 @@ var Lich;
                     }
                 }
             }
-            data.bgr.push({ c: count, x: last });
+            data.bgr.push(count);
+            data.bgr.push(last);
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     var val = tilesMap.mapObjectsTiles.getValue(x, y);
@@ -62,19 +66,23 @@ var Lich;
         TilesMapGenerator.deserialize = function (data) {
             var tilesMap = new Lich.TilesMap(data.w, data.h);
             var count = 0;
-            data.srf.forEach(function (v) {
-                for (var i = 0; i < v.c; i++) {
-                    tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+            for (var v = 0; v < data.srf.length; v += 2) {
+                var amount = data.srf[v];
+                var key = data.srf[v + 1];
+                for (var i = 0; i < amount; i++) {
+                    tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
                     count++;
                 }
-            });
+            }
             count = 0;
-            data.bgr.forEach(function (v) {
-                for (var i = 0; i < v.c; i++) {
-                    tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+            for (var v = 0; v < data.bgr.length; v += 2) {
+                var amount = data.bgr[v];
+                var key = data.bgr[v + 1];
+                for (var i = 0; i < amount; i++) {
+                    tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
                     count++;
                 }
-            });
+            }
             data.obj.forEach(function (v) {
                 tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
             });

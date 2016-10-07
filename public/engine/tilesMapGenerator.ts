@@ -38,7 +38,8 @@ namespace Lich {
                 for (let x = 0; x < tilesMap.width; x++) {
                     let val = tilesMap.mapRecord.getValue(x, y);
                     if (last !== val) {
-                        data.srf.push({ c: count, x: last });
+                        data.srf.push(count);
+                        data.srf.push(last);
                         last = val;
                         count = 1; // 1 protože už je načten
                     } else {
@@ -46,7 +47,8 @@ namespace Lich {
                     }
                 }
             }
-            data.srf.push({ c: count, x: last });
+            data.srf.push(count);
+            data.srf.push(last);
 
             last = tilesMap.mapBgrRecord.getValue(0, 0);
             count = 0; // 0 protože ještě jsem nic nenačetl
@@ -54,7 +56,8 @@ namespace Lich {
                 for (let x = 0; x < tilesMap.width; x++) {
                     let val = tilesMap.mapBgrRecord.getValue(x, y);
                     if (last !== val) {
-                        data.bgr.push({ c: count, x: last });
+                        data.bgr.push(count);
+                        data.bgr.push(last);
                         last = val;
                         count = 1; // 1 protože už je načten
                     } else {
@@ -62,7 +65,8 @@ namespace Lich {
                     }
                 }
             }
-            data.bgr.push({ c: count, x: last });
+            data.bgr.push(count);
+            data.bgr.push(last);
 
             for (let y = 0; y < tilesMap.height; y++) {
                 for (let x = 0; x < tilesMap.width; x++) {
@@ -81,20 +85,24 @@ namespace Lich {
             let tilesMap = new TilesMap(data.w, data.h);
 
             let count = 0;
-            data.srf.forEach((v) => {
-                for (let i = 0; i < v.c; i++) {
-                    tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
+            for (let v = 0; v < data.srf.length; v += 2) {
+                let amount = data.srf[v];
+                let key = data.srf[v + 1];
+                for (let i = 0; i < amount; i++) {
+                    tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
                     count++;
                 }
-            });
+            }
 
             count = 0;
-            data.bgr.forEach((v) => {
-                for (let i = 0; i < v.c; i++) {
-                    tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), v.x);
-                    count++
+            for (let v = 0; v < data.bgr.length; v += 2) {
+                let amount = data.bgr[v];
+                let key = data.bgr[v + 1];
+                for (let i = 0; i < amount; i++) {
+                    tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                    count++;
                 }
-            });
+            }
 
             data.obj.forEach((v) => {
                 tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
