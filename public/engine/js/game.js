@@ -82,11 +82,6 @@ var Lich;
                 };
                 populateContent(Lich.TilesMapGenerator.createNew());
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
-                    // let data = {
-                    //     map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                    //     inv: {}
-                    // };
-                    // DB.saveData(data);
                     var idb = Lich.IndexedDB.getInstance();
                     var data = {
                         map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
@@ -96,14 +91,6 @@ var Lich;
                     return true;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
-                    // self.loadUI.reset();
-                    // self.stage.addChild(self.loadUI);
-                    // self.loadUI.alpha = 1;
-                    // let data = DB.loadData();
-                    // if (data.map) {
-                    //     let tilesMap = TilesMapGenerator.deserialize(data.map);
-                    //     populateContent(tilesMap);
-                    // }
                     var idb = Lich.IndexedDB.getInstance();
                     idb.loadData(function (data) {
                         var obj = JSON.parse(data);

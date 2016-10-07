@@ -177,7 +177,12 @@ var Lich;
                 // Retrieve the file that was just stored
                 transaction.objectStore(_this.objectstoreName).get(_this.itemName).onsuccess = function (event) {
                     var result = event.target.result;
-                    console.log("Load:" + result.length);
+                    if (result) {
+                        console.log("Load:" + result.length);
+                    }
+                    else {
+                        console.log("Load failed -- no data found");
+                    }
                     callback(result);
                 };
             };

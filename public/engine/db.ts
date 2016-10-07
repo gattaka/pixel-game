@@ -135,15 +135,6 @@ namespace Lich {
             return IndexedDB.INSTANCE;
         }
 
-        private makeReady() {
-            this.ready = true;
-            this.todo.forEach((e) => {
-                if (e) {
-                    e();
-                }
-            });
-        }
-
         private constructor() {
             let self = this;
 
@@ -193,13 +184,26 @@ namespace Lich {
 
         }
 
+        private makeReady() {
+            this.ready = true;
+            this.todo.forEach((e) => {
+                if (e) {
+                    e();
+                }
+            });
+        }
+
         public loadData(callback: (data: string) => void) {
             let operation = () => {
                 let transaction = this.openTransaction();
                 // Retrieve the file that was just stored
                 transaction.objectStore(this.objectstoreName).get(this.itemName).onsuccess = function (event) {
                     let result = event.target.result;
-                    console.log("Load:" + result.length);
+                    if (result) {
+                        console.log("Load:" + result.length);
+                    } else {
+                        console.log("Load failed -- no data found");
+                    }
                     callback(result);
                 };
             }
