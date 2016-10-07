@@ -685,6 +685,8 @@ namespace Lich {
                     });
                 }
 
+                self.tilesMap.mapObjRecord.setValue(rx - posx, ry - posy + objHeight, undefined);
+
                 // projdi všechny okolní dílky, které patří danému objektu
                 for (var x = 0; x < objWidth; x++) {
                     for (var y = 0; y < objHeight; y++) {

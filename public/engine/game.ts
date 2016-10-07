@@ -133,7 +133,7 @@ namespace Lich {
                             inv: {}
                         };
                         idb.saveData(JSON.stringify(data));
-                    }, 1000);
+                    }, 1);
                     return true;
                 });
                 setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
@@ -199,6 +199,16 @@ namespace Lich {
 
             function handleTick(event) {
                 var delta = event.delta;
+
+                window.onbeforeunload = function (e) {
+                    var e = e || window.event;
+                    //IE & Firefox
+                    if (e) {
+                        e.returnValue = 'Are you sure?';
+                    }
+                    // For Safari
+                    return 'Are you sure?';
+                };
 
                 if (self.initialized) {
 

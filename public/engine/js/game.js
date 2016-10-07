@@ -95,7 +95,7 @@ var Lich;
                             inv: {}
                         };
                         idb.saveData(JSON.stringify(data));
-                    }, 1000);
+                    }, 1);
                     return true;
                 });
                 setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
@@ -153,6 +153,15 @@ var Lich;
             createjs.Ticker.setFPS(60);
             function handleTick(event) {
                 var delta = event.delta;
+                window.onbeforeunload = function (e) {
+                    var e = e || window.event;
+                    //IE & Firefox
+                    if (e) {
+                        e.returnValue = 'Are you sure?';
+                    }
+                    // For Safari
+                    return 'Are you sure?';
+                };
                 if (self.initialized) {
                     // Measurements
                     Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.FPS_CHANGE, createjs.Ticker.getMeasuredFPS()));
