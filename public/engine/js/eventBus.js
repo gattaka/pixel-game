@@ -105,6 +105,9 @@ var Lich;
             }
             return EventBus.INSTANCE;
         };
+        EventBus.prototype.clear = function () {
+            this.consumers = {};
+        };
         EventBus.prototype.fireEvent = function (argument) {
             var array = this.consumers[argument.type];
             if (array) {

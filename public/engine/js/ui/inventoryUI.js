@@ -70,6 +70,24 @@ var Lich;
                 }
             }, null, false);
         }
+        InventoryUI.prototype.serialize = function () {
+            var _this = this;
+            var array = [];
+            this.itemsTypeArray.forEach(function (i) {
+                if (i) {
+                    array.push(_this.itemsQuantityMap[i]);
+                    array.push(i);
+                }
+            });
+            return array;
+        };
+        InventoryUI.prototype.deserialize = function (array) {
+            for (var i = 0; i < array.length; i += 2) {
+                var amount = array[i];
+                var item = array[i + 1];
+                this.invInsert(item, amount);
+            }
+        };
         InventoryUI.prototype.render = function () {
             this.itemsCont.removeAllChildren();
             this.itemHighlight.visible = false;

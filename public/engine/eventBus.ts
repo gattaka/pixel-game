@@ -63,6 +63,10 @@ namespace Lich {
 
         private constructor() { }
 
+        public clear() {
+            this.consumers = {};
+        }
+
         public fireEvent(argument: EventPayload) {
             let array = this.consumers[argument.type];
             if (array) {

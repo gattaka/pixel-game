@@ -70,36 +70,7 @@ var Lich;
                 }, false);
             })();
             var init = function () {
-                self.ui = new Lich.UI(self);
-                var populateContent = function (tilesMap) {
-                    self.content.removeAllChildren();
-                    delete self.world;
-                    delete self.background;
-                    self.world = new Lich.World(self, tilesMap);
-                    self.background = new Lich.Background(self);
-                    self.content.addChild(self.world);
-                    self.content.addChild(self.ui);
-                    createjs.Tween.get(self.loadUI)
-                        .to({
-                        alpha: 0
-                    }, 1500).call(function () {
-                        self.stage.removeChild(self.loadUI);
-                    });
-                    self.initialized = true;
-                };
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
-                    setTimeout(function () {
-                        var idb = Lich.IndexedDB.getInstance();
-                        var data = {
-                            map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                            inv: {}
-                        };
-                        idb.saveData(JSON.stringify(data));
-                    }, 1);
-                    return true;
-                });
-                setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
+                var loadWorld = function () {
                     var idb = Lich.IndexedDB.getInstance();
                     idb.loadData(function (data) {
                         // podařilo se něco nahrát?
@@ -111,7 +82,10 @@ var Lich;
                             if (obj.map) {
                                 var tilesMap_1 = Lich.TilesMapGenerator.deserialize(obj.map);
                                 populateContent(tilesMap_1);
-                                return;
+                                if (obj.inv) {
+                                    self.ui.inventoryUI.deserialize(obj.inv);
+                                    return;
+                                }
                             }
                         }
                         // pokud neexistuje save, vytvoř ho
@@ -119,17 +93,53 @@ var Lich;
                         populateContent(tilesMap);
                         Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                     });
-                    return true;
-                });
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
-                    var tilesMap = Lich.TilesMapGenerator.createNew();
-                    populateContent(tilesMap);
-                    return true;
-                });
+                };
+                var populateContent = function (tilesMap) {
+                    // clean 
+                    self.content.removeAllChildren();
+                    delete self.world;
+                    delete self.background;
+                    Lich.EventBus.getInstance().clear();
+                    Lich.Mixer.stopAll();
+                    // re-init
+                    self.ui = new Lich.UI(self);
+                    self.world = new Lich.World(self, tilesMap);
+                    self.background = new Lich.Background(self);
+                    self.content.addChild(self.world);
+                    self.content.addChild(self.ui);
+                    Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
+                        setTimeout(function () {
+                            var idb = Lich.IndexedDB.getInstance();
+                            var data = {
+                                map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                                inv: self.ui.inventoryUI.serialize()
+                            };
+                            idb.saveData(JSON.stringify(data));
+                        }, 1);
+                        return true;
+                    });
+                    setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
+                    Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
+                        loadWorld();
+                        return true;
+                    });
+                    Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
+                        var tilesMap = Lich.TilesMapGenerator.createNew();
+                        populateContent(tilesMap);
+                        return true;
+                    });
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                        alpha: 0
+                    }, 1500).call(function () {
+                        self.stage.removeChild(self.loadUI);
+                    });
+                    self.initialized = true;
+                };
                 self.stage.addEventListener("stagemousemove", function (event) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
                 });
-                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
+                loadWorld();
             };
             self.content = new createjs.Container();
             self.stage.addChild(self.content);

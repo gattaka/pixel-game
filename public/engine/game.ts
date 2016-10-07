@@ -103,42 +103,7 @@ namespace Lich {
 
             let init = function () {
 
-                self.ui = new UI(self);
-
-                let populateContent = (tilesMap: TilesMap) => {
-                    self.content.removeAllChildren();
-                    delete self.world;
-                    delete self.background;
-
-                    self.world = new World(self, tilesMap);
-                    self.background = new Background(self);
-                    self.content.addChild(self.world);
-                    self.content.addChild(self.ui);
-
-                    createjs.Tween.get(self.loadUI)
-                        .to({
-                            alpha: 0
-                        }, 1500).call(function () {
-                            self.stage.removeChild(self.loadUI);
-                        });
-
-                    self.initialized = true;
-                };
-
-                EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
-                    setTimeout(() => {
-                        let idb = IndexedDB.getInstance();
-                        let data = {
-                            map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                            inv: {}
-                        };
-                        idb.saveData(JSON.stringify(data));
-                    }, 1);
-                    return true;
-                });
-                setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
-
-                EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
+                let loadWorld = () => {
                     let idb = IndexedDB.getInstance();
                     idb.loadData((data) => {
                         // podařilo se něco nahrát?
@@ -150,7 +115,10 @@ namespace Lich {
                             if (obj.map) {
                                 let tilesMap = TilesMapGenerator.deserialize(obj.map);
                                 populateContent(tilesMap);
-                                return;
+                                if (obj.inv) {
+                                    self.ui.inventoryUI.deserialize(obj.inv);
+                                    return;
+                                }
                             }
                         }
 
@@ -159,20 +127,62 @@ namespace Lich {
                         populateContent(tilesMap);
                         EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                     });
-                    return true;
-                });
+                };
 
-                EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
-                    let tilesMap = TilesMapGenerator.createNew();
-                    populateContent(tilesMap);
-                    return true;
-                });
+                let populateContent = (tilesMap: TilesMap) => {
+                    // clean 
+                    self.content.removeAllChildren();
+                    delete self.world;
+                    delete self.background;
+                    EventBus.getInstance().clear();
+                    Mixer.stopAll();
+
+                    // re-init
+                    self.ui = new UI(self);
+                    self.world = new World(self, tilesMap);
+                    self.background = new Background(self);
+                    self.content.addChild(self.world);
+                    self.content.addChild(self.ui);
+
+                    EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
+                        setTimeout(() => {
+                            let idb = IndexedDB.getInstance();
+                            let data = {
+                                map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                                inv: self.ui.inventoryUI.serialize()
+                            };
+                            idb.saveData(JSON.stringify(data));
+                        }, 1);
+                        return true;
+                    });
+                    setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
+
+                    EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
+                        loadWorld();
+                        return true;
+                    });
+
+                    EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
+                        let tilesMap = TilesMapGenerator.createNew();
+                        populateContent(tilesMap);
+                        return true;
+                    });
+
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                            alpha: 0
+                        }, 1500).call(function () {
+                            self.stage.removeChild(self.loadUI);
+                        });
+
+                    self.initialized = true;
+                };
 
                 self.stage.addEventListener("stagemousemove", (event: any) => {
                     EventBus.getInstance().fireEvent(new MouseMoveEventPayload(event.stageX, event.stageY));
                 });
 
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
+                loadWorld();
             }
 
             self.content = new createjs.Container();

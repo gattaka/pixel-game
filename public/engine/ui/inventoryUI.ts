@@ -35,6 +35,25 @@ namespace Lich {
         upBtn: Button;
         downBtn: Button;
 
+        public serialize() {
+            let array = [];
+            this.itemsTypeArray.forEach((i) => {
+                if (i) {
+                    array.push(this.itemsQuantityMap[i]);
+                    array.push(i);
+                }
+            });
+            return array;
+        }
+
+        public deserialize(array) {
+            for (let i = 0; i < array.length; i += 2) {
+                let amount = array[i];
+                let item = array[i + 1];
+                this.invInsert(item, amount);
+            }
+        }
+
         constructor(private recipeListener: RecipeManager) {
             super(InventoryUI.N, InventoryUI.M);
 
