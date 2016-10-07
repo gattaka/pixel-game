@@ -26,9 +26,15 @@ namespace Lich {
         // 2D pole dílků objektů na mapě
         public mapObjectsTiles: Array2D<MapObjectTile>;
 
+        // předpis rozmístění objektů (celých, nikoliv dílků)
+        // hra se bez tohohle přehledu obejde, ale značně to 
+        // urychluje save/load
+        public mapObjRecord: Array2D<number>;
+
         constructor(public width, public height) {
             this.mapRecord = new Array2D<number>(width, height);
             this.mapBgrRecord = new Array2D<number>(width, height);
+            this.mapObjRecord = new Array2D<number>(width, height);
             this.mapObjectsTiles = new Array2D<MapObjectTile>(width, height);
         }
 

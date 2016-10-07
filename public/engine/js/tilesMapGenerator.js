@@ -55,9 +55,11 @@ var Lich;
             data.bgr.push(last);
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
-                    var val = tilesMap.mapObjectsTiles.getValue(x, y);
+                    var val = tilesMap.mapObjRecord.getValue(x, y);
                     if (val) {
-                        data.obj.push({ x: x, y: y, v: val });
+                        data.obj.push(x);
+                        data.obj.push(y);
+                        data.obj.push(val);
                     }
                 }
             }
@@ -90,10 +92,15 @@ var Lich;
                 }
             }
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Objects"));
-            data.obj.forEach(function (v) {
-                tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
+            for (var v = 0; v < data.obj.length; v += 3) {
+                var x = data.obj[v];
+                var y = data.obj[v + 1];
+                var key = data.obj[v + 2];
+                tilesMap.mapObjRecord.setValue(x, y, key);
+                Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, Lich.Resources.getInstance().mapObjectDefs[key]);
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
-            });
+            }
+            ;
             Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             return tilesMap;
         };

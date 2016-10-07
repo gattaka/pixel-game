@@ -61,7 +61,7 @@ namespace Lich {
             return null;
         }
 
-        public static saveData(data) :boolean {
+        public static saveData(data): boolean {
             let userKey = DB.getUserKey();
             console.log("Trying to do SAVE for user '" + userKey + "'");
             let userId = DB.getUserId(userKey);
@@ -113,4 +113,126 @@ namespace Lich {
             return jQuery.ajax(args);
         }
     }
+
+
+    export class IndexedDB {
+
+        private static INSTANCE: IndexedDB;
+
+        dbVersion = 1.0;
+        dbName = "lich";
+        objectstoreName = "saves";
+        itemName = "savedMap";
+        db;
+
+        ready: boolean;
+        todo = new Array<() => any>();
+
+        public static getInstance() {
+            if (!IndexedDB.INSTANCE) {
+                IndexedDB.INSTANCE = new IndexedDB();
+            }
+            return IndexedDB.INSTANCE;
+        }
+
+        private makeReady() {
+            this.ready = true;
+            this.todo.forEach((e) => {
+                if (e) {
+                    e();
+                }
+            });
+        }
+
+        private constructor() {
+            let self = this;
+
+            // IndexedDB
+            let indexedDB = window.indexedDB || window["webkitIndexedDB"] || window["mozIndexedDB"] || window["OIndexedDB"] || window["msIndexedDB"];
+            let IDBTransaction = window["IDBTransaction"] || window["webkitIDBTransaction"] || window["OIDBTransaction"] || window["msIDBTransaction"];
+
+            // Create/open database
+            let request = indexedDB.open(this.dbName, this.dbVersion);
+            let createObjectStore = function (database) {
+                // Create an objectStore
+                console.log("Creating objectStore")
+                database.createObjectStore(self.objectstoreName);
+            };
+
+            request.onerror = function (event) {
+                console.log("Error creating/accessing IndexedDB database");
+            };
+
+            request.onsuccess = function (event) {
+                console.log("Success creating/accessing IndexedDB database");
+                self.db = request.result;
+
+                self.db.onerror = function (event) {
+                    console.log("Error creating/accessing IndexedDB database");
+                };
+
+                // Interim solution for Google Chrome to create an objectStore. Will be deprecated
+                if (self.db.setVersion) {
+                    if (self.db.version != self.dbVersion) {
+                        var setVersion = self.db.setVersion(self.dbVersion);
+                        setVersion.onsuccess = function () {
+                            createObjectStore(self.db);
+                            self.makeReady();
+                        };
+                    }
+                }
+                else {
+                    self.makeReady();
+                }
+            }
+
+            // For future use. Currently only in latest Firefox versions
+            request.onupgradeneeded = function (event) {
+                createObjectStore(event.target.result);
+            };
+
+        }
+
+        public loadData(callback: (data: string) => void) {
+            let operation = () => {
+                let transaction = this.openTransaction();
+                // Retrieve the file that was just stored
+                transaction.objectStore(this.objectstoreName).get(this.itemName).onsuccess = function (event) {
+                    let result = event.target.result;
+                    console.log("Load:" + result.length);
+                    callback(result);
+                };
+            }
+            if (this.ready) {
+                operation();
+            } else {
+                this.todo.push(operation);
+            }
+        }
+
+        public saveData(data: string): boolean {
+            let operation = () => {
+                console.log("Save:" + data.length);
+                // Put the blob into the dabase
+                let transaction = this.openTransaction();
+                let put = transaction.objectStore(this.objectstoreName).put(data, this.itemName);
+            }
+            if (this.ready) {
+                operation();
+            } else {
+                this.todo.push(operation);
+            }
+            // TODO
+            return true;
+        }
+
+        private openTransaction() {
+            // Open a transaction to the database
+            let readWriteMode = typeof IDBTransaction.READ_WRITE == "undefined" ? "readwrite" : IDBTransaction.READ_WRITE;
+            let transaction = this.db.transaction([this.objectstoreName], readWriteMode);
+            return transaction;
+        }
+
+    }
+
 }

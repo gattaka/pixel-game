@@ -106,6 +106,8 @@ var Lich;
         };
         TilesMapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {
             var self = this;
+            // zapiš objekt 
+            tilesMap.mapObjRecord.setValue(cx, cy, object.mapKey);
             // zapiš obsazení jednotlivými dílky objektu
             for (var x = 0; x < object.mapSpriteWidth; x++) {
                 for (var y = 0; y < object.mapSpriteHeight; y++) {

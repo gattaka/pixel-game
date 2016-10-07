@@ -118,23 +118,40 @@ namespace Lich {
                 populateContent(TilesMapGenerator.createNew());
 
                 EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
+                    // let data = {
+                    //     map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                    //     inv: {}
+                    // };
+                    // DB.saveData(data);
+                    let idb = IndexedDB.getInstance();
                     let data = {
                         map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
                         inv: {}
                     };
-                    DB.saveData(data);
+                    idb.saveData(JSON.stringify(data));
                     return true;
                 });
 
                 EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
-                    self.loadUI.reset();
-                    self.stage.addChild(self.loadUI);
-                    self.loadUI.alpha = 1;
-                    let data = DB.loadData();
-                    if (data.map) {
-                        let tilesMap = TilesMapGenerator.deserialize(data.map);
-                        populateContent(tilesMap);
-                    }
+                    // self.loadUI.reset();
+                    // self.stage.addChild(self.loadUI);
+                    // self.loadUI.alpha = 1;
+                    // let data = DB.loadData();
+                    // if (data.map) {
+                    //     let tilesMap = TilesMapGenerator.deserialize(data.map);
+                    //     populateContent(tilesMap);
+                    // }
+                    let idb = IndexedDB.getInstance();
+                    idb.loadData((data) => {
+                        let obj = JSON.parse(data);
+                        self.loadUI.reset();
+                        self.stage.addChild(self.loadUI);
+                        self.loadUI.alpha = 1;
+                        if (obj.map) {
+                            let tilesMap = TilesMapGenerator.deserialize(obj.map);
+                            populateContent(tilesMap);
+                        }
+                    });
                     return true;
                 });
 

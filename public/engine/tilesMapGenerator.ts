@@ -70,9 +70,11 @@ namespace Lich {
 
             for (let y = 0; y < tilesMap.height; y++) {
                 for (let x = 0; x < tilesMap.width; x++) {
-                    let val = tilesMap.mapObjectsTiles.getValue(x, y);
+                    let val = tilesMap.mapObjRecord.getValue(x, y);
                     if (val) {
-                        data.obj.push({ x: x, y: y, v: val });
+                        data.obj.push(x);
+                        data.obj.push(y);
+                        data.obj.push(val);
                     }
                 }
             }
@@ -115,10 +117,14 @@ namespace Lich {
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Objects"));
 
-            data.obj.forEach((v) => {
-                tilesMap.mapObjectsTiles.setValue(v.x, v.y, v.v);
+            for (let v = 0; v < data.obj.length; v += 3) {
+                let x = data.obj[v];
+                let y = data.obj[v + 1];
+                let key = data.obj[v + 2];
+                tilesMap.mapObjRecord.setValue(x, y, key);
+                TilesMapTools.writeObjectRecord(tilesMap, x, y, Resources.getInstance().mapObjectDefs[key]);
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
-            });
+            };
 
             EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
 

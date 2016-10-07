@@ -26,6 +26,7 @@ var Lich;
             this.height = height;
             this.mapRecord = new Lich.Array2D(width, height);
             this.mapBgrRecord = new Lich.Array2D(width, height);
+            this.mapObjRecord = new Lich.Array2D(width, height);
             this.mapObjectsTiles = new Lich.Array2D(width, height);
         }
         return TilesMap;

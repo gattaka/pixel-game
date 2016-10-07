@@ -82,22 +82,39 @@ var Lich;
                 };
                 populateContent(Lich.TilesMapGenerator.createNew());
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
+                    // let data = {
+                    //     map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                    //     inv: {}
+                    // };
+                    // DB.saveData(data);
+                    var idb = Lich.IndexedDB.getInstance();
                     var data = {
                         map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
                         inv: {}
                     };
-                    Lich.DB.saveData(data);
+                    idb.saveData(JSON.stringify(data));
                     return true;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
-                    self.loadUI.reset();
-                    self.stage.addChild(self.loadUI);
-                    self.loadUI.alpha = 1;
-                    var data = Lich.DB.loadData();
-                    if (data.map) {
-                        var tilesMap = Lich.TilesMapGenerator.deserialize(data.map);
-                        populateContent(tilesMap);
-                    }
+                    // self.loadUI.reset();
+                    // self.stage.addChild(self.loadUI);
+                    // self.loadUI.alpha = 1;
+                    // let data = DB.loadData();
+                    // if (data.map) {
+                    //     let tilesMap = TilesMapGenerator.deserialize(data.map);
+                    //     populateContent(tilesMap);
+                    // }
+                    var idb = Lich.IndexedDB.getInstance();
+                    idb.loadData(function (data) {
+                        var obj = JSON.parse(data);
+                        self.loadUI.reset();
+                        self.stage.addChild(self.loadUI);
+                        self.loadUI.alpha = 1;
+                        if (obj.map) {
+                            var tilesMap = Lich.TilesMapGenerator.deserialize(obj.map);
+                            populateContent(tilesMap);
+                        }
+                    });
                     return true;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {

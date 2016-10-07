@@ -110,4 +110,108 @@ var Lich;
         return DB;
     }());
     Lich.DB = DB;
+    var IndexedDB = (function () {
+        function IndexedDB() {
+            this.dbVersion = 1.0;
+            this.dbName = "lich";
+            this.objectstoreName = "saves";
+            this.itemName = "savedMap";
+            this.todo = new Array();
+            var self = this;
+            // IndexedDB
+            var indexedDB = window.indexedDB || window["webkitIndexedDB"] || window["mozIndexedDB"] || window["OIndexedDB"] || window["msIndexedDB"];
+            var IDBTransaction = window["IDBTransaction"] || window["webkitIDBTransaction"] || window["OIDBTransaction"] || window["msIDBTransaction"];
+            // Create/open database
+            var request = indexedDB.open(this.dbName, this.dbVersion);
+            var createObjectStore = function (database) {
+                // Create an objectStore
+                console.log("Creating objectStore");
+                database.createObjectStore(self.objectstoreName);
+            };
+            request.onerror = function (event) {
+                console.log("Error creating/accessing IndexedDB database");
+            };
+            request.onsuccess = function (event) {
+                console.log("Success creating/accessing IndexedDB database");
+                self.db = request.result;
+                self.db.onerror = function (event) {
+                    console.log("Error creating/accessing IndexedDB database");
+                };
+                // Interim solution for Google Chrome to create an objectStore. Will be deprecated
+                if (self.db.setVersion) {
+                    if (self.db.version != self.dbVersion) {
+                        var setVersion = self.db.setVersion(self.dbVersion);
+                        setVersion.onsuccess = function () {
+                            createObjectStore(self.db);
+                            self.makeReady();
+                        };
+                    }
+                }
+                else {
+                    self.makeReady();
+                }
+            };
+            // For future use. Currently only in latest Firefox versions
+            request.onupgradeneeded = function (event) {
+                createObjectStore(event.target.result);
+            };
+        }
+        IndexedDB.getInstance = function () {
+            if (!IndexedDB.INSTANCE) {
+                IndexedDB.INSTANCE = new IndexedDB();
+            }
+            return IndexedDB.INSTANCE;
+        };
+        IndexedDB.prototype.makeReady = function () {
+            this.ready = true;
+            this.todo.forEach(function (e) {
+                if (e) {
+                    e();
+                }
+            });
+        };
+        IndexedDB.prototype.loadData = function (callback) {
+            var _this = this;
+            var operation = function () {
+                var transaction = _this.openTransaction();
+                // Retrieve the file that was just stored
+                transaction.objectStore(_this.objectstoreName).get(_this.itemName).onsuccess = function (event) {
+                    var result = event.target.result;
+                    console.log("Load:" + result.length);
+                    callback(result);
+                };
+            };
+            if (this.ready) {
+                operation();
+            }
+            else {
+                this.todo.push(operation);
+            }
+        };
+        IndexedDB.prototype.saveData = function (data) {
+            var _this = this;
+            var operation = function () {
+                console.log("Save:" + data.length);
+                // Put the blob into the dabase
+                var transaction = _this.openTransaction();
+                var put = transaction.objectStore(_this.objectstoreName).put(data, _this.itemName);
+            };
+            if (this.ready) {
+                operation();
+            }
+            else {
+                this.todo.push(operation);
+            }
+            // TODO
+            return true;
+        };
+        IndexedDB.prototype.openTransaction = function () {
+            // Open a transaction to the database
+            var readWriteMode = typeof IDBTransaction.READ_WRITE == "undefined" ? "readwrite" : IDBTransaction.READ_WRITE;
+            var transaction = this.db.transaction([this.objectstoreName], readWriteMode);
+            return transaction;
+        };
+        return IndexedDB;
+    }());
+    Lich.IndexedDB = IndexedDB;
 })(Lich || (Lich = {}));
