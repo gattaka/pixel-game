@@ -79,28 +79,45 @@ var Lich;
                     self.background = new Lich.Background(self);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                        alpha: 0
+                    }, 1500).call(function () {
+                        self.stage.removeChild(self.loadUI);
+                    });
+                    self.initialized = true;
                 };
-                populateContent(Lich.TilesMapGenerator.createNew());
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
-                    var idb = Lich.IndexedDB.getInstance();
-                    var data = {
-                        map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                        inv: {}
-                    };
-                    idb.saveData(JSON.stringify(data));
+                    setTimeout(function () {
+                        var idb = Lich.IndexedDB.getInstance();
+                        var data = {
+                            map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                            inv: {}
+                        };
+                        idb.saveData(JSON.stringify(data));
+                    }, 1000);
                     return true;
                 });
+                setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
                     var idb = Lich.IndexedDB.getInstance();
                     idb.loadData(function (data) {
-                        var obj = JSON.parse(data);
-                        self.loadUI.reset();
-                        self.stage.addChild(self.loadUI);
-                        self.loadUI.alpha = 1;
-                        if (obj.map) {
-                            var tilesMap = Lich.TilesMapGenerator.deserialize(obj.map);
-                            populateContent(tilesMap);
+                        // podařilo se něco nahrát?
+                        if (data) {
+                            var obj = JSON.parse(data);
+                            self.loadUI.reset();
+                            self.stage.addChild(self.loadUI);
+                            self.loadUI.alpha = 1;
+                            if (obj.map) {
+                                var tilesMap_1 = Lich.TilesMapGenerator.deserialize(obj.map);
+                                populateContent(tilesMap_1);
+                                return;
+                            }
                         }
+                        // pokud neexistuje save, vytvoř ho
+                        var tilesMap = Lich.TilesMapGenerator.createNew();
+                        populateContent(tilesMap);
+                        Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                     });
                     return true;
                 });
@@ -112,7 +129,7 @@ var Lich;
                 self.stage.addEventListener("stagemousemove", function (event) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
                 });
-                self.initialized = true;
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
             };
             self.content = new createjs.Container();
             self.stage.addChild(self.content);
@@ -127,15 +144,6 @@ var Lich;
                     return false;
                 });
                 self.stage.addChild(self.loadUI = new Lich.GameLoadUI(self));
-                Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_FINISHED, function () {
-                    createjs.Tween.get(self.loadUI)
-                        .to({
-                        alpha: 0
-                    }, 1500).call(function () {
-                        self.stage.removeChild(self.loadUI);
-                    });
-                    return true;
-                });
             }
             /*-----------*/
             /* Time init */

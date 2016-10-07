@@ -76,9 +76,9 @@ var Lich;
                 var key = data.srf[v + 1];
                 for (var i = 0; i < amount; i++) {
                     tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
             }
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Background"));
             count = 0;
@@ -87,9 +87,9 @@ var Lich;
                 var key = data.bgr[v + 1];
                 for (var i = 0; i < amount; i++) {
                     tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
             }
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Objects"));
             for (var v = 0; v < data.obj.length; v += 3) {

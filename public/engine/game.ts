@@ -114,30 +114,50 @@ namespace Lich {
                     self.background = new Background(self);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
+
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                            alpha: 0
+                        }, 1500).call(function () {
+                            self.stage.removeChild(self.loadUI);
+                        });
+
+                    self.initialized = true;
                 };
-                populateContent(TilesMapGenerator.createNew());
 
                 EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
-                    let idb = IndexedDB.getInstance();
-                    let data = {
-                        map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                        inv: {}
-                    };
-                    idb.saveData(JSON.stringify(data));
+                    setTimeout(() => {
+                        let idb = IndexedDB.getInstance();
+                        let data = {
+                            map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                            inv: {}
+                        };
+                        idb.saveData(JSON.stringify(data));
+                    }, 1000);
                     return true;
                 });
+                setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
 
                 EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
                     let idb = IndexedDB.getInstance();
                     idb.loadData((data) => {
-                        let obj = JSON.parse(data);
-                        self.loadUI.reset();
-                        self.stage.addChild(self.loadUI);
-                        self.loadUI.alpha = 1;
-                        if (obj.map) {
-                            let tilesMap = TilesMapGenerator.deserialize(obj.map);
-                            populateContent(tilesMap);
+                        // podařilo se něco nahrát?
+                        if (data) {
+                            let obj = JSON.parse(data);
+                            self.loadUI.reset();
+                            self.stage.addChild(self.loadUI);
+                            self.loadUI.alpha = 1;
+                            if (obj.map) {
+                                let tilesMap = TilesMapGenerator.deserialize(obj.map);
+                                populateContent(tilesMap);
+                                return;
+                            }
                         }
+
+                        // pokud neexistuje save, vytvoř ho
+                        let tilesMap = TilesMapGenerator.createNew();
+                        populateContent(tilesMap);
+                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                     });
                     return true;
                 });
@@ -152,7 +172,7 @@ namespace Lich {
                     EventBus.getInstance().fireEvent(new MouseMoveEventPayload(event.stageX, event.stageY));
                 });
 
-                self.initialized = true;
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
             }
 
             self.content = new createjs.Container();
@@ -168,15 +188,6 @@ namespace Lich {
                     return false;
                 });
                 self.stage.addChild(self.loadUI = new GameLoadUI(self));
-                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, (): boolean => {
-                    createjs.Tween.get(self.loadUI)
-                        .to({
-                            alpha: 0
-                        }, 1500).call(function () {
-                            self.stage.removeChild(self.loadUI);
-                        });
-                    return true;
-                });
             }
 
             /*-----------*/

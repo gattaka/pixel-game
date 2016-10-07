@@ -97,9 +97,9 @@ namespace Lich {
                 let key = data.srf[v + 1];
                 for (let i = 0; i < amount; i++) {
                     tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
             }
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Background"));
@@ -110,9 +110,9 @@ namespace Lich {
                 let key = data.bgr[v + 1];
                 for (let i = 0; i < amount; i++) {
                     tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                     count++;
                 }
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
             }
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Objects"));
