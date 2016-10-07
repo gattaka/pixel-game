@@ -115,12 +115,17 @@ namespace Lich {
                 populateStage(TilesMapGenerator.createNew());
 
                 EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
-                    TilesMapGenerator.save(self.getWorld().tilesMap);
+                    let data = {
+                        map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                        inv: {}
+                    };
+                    DB.saveData(data);
                     return false;
                 });
 
                 EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
-                    let tilesMap = TilesMapGenerator.load();
+                    let data = DB.loadData();
+                    let tilesMap = TilesMapGenerator.deserialize(data.map);
                     populateStage(tilesMap);
                     return false;
                 });

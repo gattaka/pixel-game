@@ -82,11 +82,16 @@ var Lich;
                 };
                 populateStage(Lich.TilesMapGenerator.createNew());
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
-                    Lich.TilesMapGenerator.save(self.getWorld().tilesMap);
+                    var data = {
+                        map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                        inv: {}
+                    };
+                    Lich.DB.saveData(data);
                     return false;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
-                    var tilesMap = Lich.TilesMapGenerator.load();
+                    var data = Lich.DB.loadData();
+                    var tilesMap = Lich.TilesMapGenerator.deserialize(data.map);
                     populateStage(tilesMap);
                     return false;
                 });

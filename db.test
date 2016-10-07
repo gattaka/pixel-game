@@ -1,0 +1,7 @@
+PUT http://localhost:1337/saves/1 HTTP/1.1
+content-type: application/json
+
+{
+    "userId": "5g2fds52se5e2227",
+    "map": "adddd"     
+}
