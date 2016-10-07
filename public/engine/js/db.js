@@ -31,47 +31,48 @@ var Lich;
         DB.getUserId = function (userKey) {
             // nejprve získám 'rychle' id dle userKey
             var response = DB.runREST('profiles/?userKey=' + userKey, Method.GET);
-            if (response.status == 200 && response.responseJSON) {
+            if (response.status == 200) {
                 // účet již existuje
-                var userId = response.responseJSON.userId;
-                if (userId) {
+                if (response.responseJSON && response.responseJSON[0] && response.responseJSON[0].userId) {
+                    var userId = response.responseJSON[0].userId;
                     console.log("User '" + userKey + "' profile found in DB as '" + userId + "'");
                     return userId;
                 }
-            }
-            if (response.status == 404) {
-                // uživatel je tady nový, založ profil a dummy save
-                console.log("User '" + userKey + "' profile not found in DB -- creating one");
-                response = DB.runREST('saves/' + userKey, Method.POST, null, {
-                    userKey: userKey,
-                    data: {}
-                });
-                if (response.status == 200 && response.responseJSON) {
-                    var userId = response.responseJSON.id;
-                    if (userId) {
-                        response = DB.runREST('profiles/' + userKey, Method.POST, null, {
-                            userKey: userKey,
-                            userId: userId
-                        });
-                        if (response.status == 200 && response.responseJSON) {
-                            console.log("A profile (userId: '" + userId + "') for the new user '" + userKey + "' was successfully created");
-                            return userId;
+                else {
+                    // uživatel je tady nový, založ profil a dummy save
+                    console.log("User '" + userKey + "' profile not found in DB -- creating one");
+                    response = DB.runREST('saves/', Method.POST, undefined, {
+                        userKey: userKey,
+                        data: {}
+                    });
+                    if (response.status == 201 && response.responseJSON) {
+                        var userId = response.responseJSON.id;
+                        if (userId) {
+                            response = DB.runREST('profiles/', Method.POST, undefined, {
+                                userKey: userKey,
+                                userId: userId
+                            });
+                            if (response.status == 201 && response.responseJSON) {
+                                console.log("A profile (userId: '" + userId + "') for the new user '" + userKey + "' was successfully created");
+                                return userId;
+                            }
                         }
                     }
+                    console.log("Failed to create new profile for user '" + userKey + "'");
                 }
-                console.log("Failed to create new profile for user '" + userKey + "'");
             }
-            console.log("User '" + userKey + "' profile search failed");
+            console.log("User '" + userKey + "' profile search failed (response.status = " + response.status + ")");
             return null;
         };
         DB.saveData = function (data) {
             var userKey = DB.getUserKey();
             console.log("Trying to do SAVE for user '" + userKey + "'");
             var userId = DB.getUserId(userKey);
-            return DB.runREST('saves/' + userId, Method.PUT, null, {
+            var resp = DB.runREST('saves/' + userId, Method.PUT, undefined, {
                 userKey: userKey,
                 data: data
             });
+            return resp.status == 200;
         };
         DB.loadData = function () {
             var userKey = DB.getUserKey();
@@ -86,6 +87,7 @@ var Lich;
             }
         };
         DB.runREST = function (url, method, options, data) {
+            if (options === void 0) { options = { async: false }; }
             var args = {
                 url: url,
                 type: Method[method]

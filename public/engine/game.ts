@@ -125,8 +125,10 @@ namespace Lich {
 
                 EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
                     let data = DB.loadData();
-                    let tilesMap = TilesMapGenerator.deserialize(data.map);
-                    populateStage(tilesMap);
+                    if (data.map) {
+                        let tilesMap = TilesMapGenerator.deserialize(data.map);
+                        populateStage(tilesMap);
+                    }
                     return false;
                 });
 

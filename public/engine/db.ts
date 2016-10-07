@@ -28,48 +28,48 @@ namespace Lich {
         private static getUserId(userKey: string): number {
             // nejprve získám 'rychle' id dle userKey
             let response = DB.runREST('profiles/?userKey=' + userKey, Method.GET);
-            if (response.status == 200 && response.responseJSON) {
+            if (response.status == 200) {
                 // účet již existuje
-                let userId = response.responseJSON.userId;
-                if (userId) {
+                if (response.responseJSON && response.responseJSON[0] && response.responseJSON[0].userId) {
+                    let userId = response.responseJSON[0].userId;
                     console.log("User '" + userKey + "' profile found in DB as '" + userId + "'");
                     return userId;
-                }
-            }
-            if (response.status == 404) {
-                // uživatel je tady nový, založ profil a dummy save
-                console.log("User '" + userKey + "' profile not found in DB -- creating one");
-                response = DB.runREST('saves/' + userKey, Method.POST, null, {
-                    userKey: userKey,
-                    data: {}
-                });
-                if (response.status == 200 && response.responseJSON) {
-                    let userId = response.responseJSON.id;
-                    if (userId) {
-                        response = DB.runREST('profiles/' + userKey, Method.POST, null, {
-                            userKey: userKey,
-                            userId: userId
-                        });
-                        if (response.status == 200 && response.responseJSON) {
-                            console.log("A profile (userId: '" + userId + "') for the new user '" + userKey + "' was successfully created");
-                            return userId;
+                } else {
+                    // uživatel je tady nový, založ profil a dummy save
+                    console.log("User '" + userKey + "' profile not found in DB -- creating one");
+                    response = DB.runREST('saves/', Method.POST, undefined, {
+                        userKey: userKey,
+                        data: {}
+                    });
+                    if (response.status == 201 && response.responseJSON) {
+                        let userId = response.responseJSON.id;
+                        if (userId) {
+                            response = DB.runREST('profiles/', Method.POST, undefined, {
+                                userKey: userKey,
+                                userId: userId
+                            });
+                            if (response.status == 201 && response.responseJSON) {
+                                console.log("A profile (userId: '" + userId + "') for the new user '" + userKey + "' was successfully created");
+                                return userId;
+                            }
                         }
                     }
+                    console.log("Failed to create new profile for user '" + userKey + "'");
                 }
-                console.log("Failed to create new profile for user '" + userKey + "'");
             }
-            console.log("User '" + userKey + "' profile search failed");
+            console.log("User '" + userKey + "' profile search failed (response.status = " + response.status + ")");
             return null;
         }
 
-        public static saveData(data) {
+        public static saveData(data) :boolean {
             let userKey = DB.getUserKey();
             console.log("Trying to do SAVE for user '" + userKey + "'");
             let userId = DB.getUserId(userKey);
-            return DB.runREST('saves/' + userId, Method.PUT, null, {
+            let resp = DB.runREST('saves/' + userId, Method.PUT, undefined, {
                 userKey: userKey,
                 data: data
             });
+            return resp.status == 200;
         }
 
         public static loadData() {
@@ -86,11 +86,11 @@ namespace Lich {
 
         private static runREST(url: string,
             method: Method,
-            options?: {
+            options: {
                 async: boolean,
-                onSuccess: (arg: any) => void,
-                onError: (arg: any) => void
-            },
+                onSuccess?: (arg: any) => void,
+                onError?: (arg: any) => void
+            } = { async: false },
             data?
         ): JQueryXHR {
             let args: any = {

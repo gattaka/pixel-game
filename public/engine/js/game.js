@@ -91,8 +91,10 @@ var Lich;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
                     var data = Lich.DB.loadData();
-                    var tilesMap = Lich.TilesMapGenerator.deserialize(data.map);
-                    populateStage(tilesMap);
+                    if (data.map) {
+                        var tilesMap = Lich.TilesMapGenerator.deserialize(data.map);
+                        populateStage(tilesMap);
+                    }
                     return false;
                 });
                 Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
