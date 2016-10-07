@@ -17,9 +17,9 @@ namespace Lich {
     export class TilesMapGenerator {
 
         // musí být sudé
-        static DEFAULT_MAP_WIDTH = 800;
-        static DEFAULT_MAP_HEIGHT = 500;
-        static DEFAULT_MAP_GROUND_LEVEL = 60;
+        static DEFAULT_MAP_WIDTH = 2000;
+        static DEFAULT_MAP_HEIGHT = 1000;
+        static DEFAULT_MAP_GROUND_LEVEL = 80;
 
         private constructor() { }
 

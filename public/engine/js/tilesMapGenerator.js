@@ -287,9 +287,9 @@ var Lich;
             return tilesMap;
         };
         // musí být sudé
-        TilesMapGenerator.DEFAULT_MAP_WIDTH = 800;
-        TilesMapGenerator.DEFAULT_MAP_HEIGHT = 500;
-        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 60;
+        TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
+        TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;
+        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 80;
         return TilesMapGenerator;
     }());
     Lich.TilesMapGenerator = TilesMapGenerator;

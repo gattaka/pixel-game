@@ -155,7 +155,6 @@ namespace Lich {
                         }, 1);
                         return true;
                     });
-                    setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
 
                     EventBus.getInstance().registerConsumer(EventType.LOAD_WORLD, (): boolean => {
                         loadWorld();
@@ -177,6 +176,8 @@ namespace Lich {
 
                     self.initialized = true;
                 };
+
+                setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
 
                 self.stage.addEventListener("stagemousemove", (event: any) => {
                     EventBus.getInstance().fireEvent(new MouseMoveEventPayload(event.stageX, event.stageY));

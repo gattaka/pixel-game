@@ -145,12 +145,12 @@ var Lich;
         /* CONSTANTS */
         /*-----------*/
         Background.CLOUDS_SPACE = 150;
-        Background.REPEAT_POINT = -1200;
+        Background.REPEAT_POINT = -1500;
         Background.FAR_MOUNTAINS_START = 50;
         Background.MOUNTAINS_START = 250;
         Background.FAR_HILLS_START = 500;
         Background.HILLS_START = 650;
-        Background.DIRT_START = 900;
+        Background.DIRT_START = 1200;
         return Background;
     }());
     Lich.Background = Background;

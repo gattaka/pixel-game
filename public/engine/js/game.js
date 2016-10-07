@@ -118,7 +118,6 @@ var Lich;
                         }, 1);
                         return true;
                     });
-                    setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
                         loadWorld();
                         return true;
@@ -136,6 +135,7 @@ var Lich;
                     });
                     self.initialized = true;
                 };
+                setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
                 self.stage.addEventListener("stagemousemove", function (event) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
                 });
