@@ -93,6 +93,8 @@ var Lich;
                 // uprav rychlost objektu, která se dá spočítat jako: 
                 // v = v_0 + at
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
+                if (object.speedy < World.MAX_FREEFALL_SPEED)
+                    object.speedy = World.MAX_FREEFALL_SPEED;
                 // Nenarazím na překážku?
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, function (x, y) { return self.isCollision(x, y); });
                 if (clsnTest.hit === false) {
@@ -254,6 +256,7 @@ var Lich;
             };
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
+            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.HERO_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
             self.enemies.forEach(function (enemy) {
                 // update nepřátel
                 self.updateObject(sDelta, enemy, function (dst) {
@@ -505,6 +508,7 @@ var Lich;
         World.HERO_VERTICAL_SPEED = 500;
         // Pixel/s2
         World.WORLD_GRAVITY = -1200;
+        World.MAX_FREEFALL_SPEED = -1500;
         return World;
     }(createjs.Container));
     Lich.World = World;

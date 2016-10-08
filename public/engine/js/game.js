@@ -137,7 +137,7 @@ var Lich;
                 };
                 setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
                 self.stage.addEventListener("stagemousemove", function (event) {
-                    Lich.EventBus.getInstance().fireEvent(new Lich.MouseMoveEventPayload(event.stageX, event.stageY));
+                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, event.stageX, event.stageY));
                 });
                 loadWorld();
             };

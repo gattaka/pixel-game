@@ -39,6 +39,7 @@ namespace Lich {
 
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
+        static MAX_FREEFALL_SPEED = -1500;
 
         /*-----------*/
         /* VARIABLES */
@@ -52,7 +53,7 @@ namespace Lich {
 
         enemies = new Array<Enemy>();
 
-        constructor(public game: Game, public tilesMap: TilesMap ) {
+        constructor(public game: Game, public tilesMap: TilesMap) {
             super();
 
             var self = this;
@@ -123,6 +124,8 @@ namespace Lich {
                 // uprav rychlost objektu, která se dá spočítat jako: 
                 // v = v_0 + at
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
+                if (object.speedy < World.MAX_FREEFALL_SPEED)
+                    object.speedy = World.MAX_FREEFALL_SPEED;
 
                 // Nenarazím na překážku?
                 clsnTest = self.isBoundsInCollision(
@@ -314,6 +317,8 @@ namespace Lich {
 
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
+
+            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.HERO_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
 
             self.enemies.forEach(function (enemy) {
                 // update nepřátel

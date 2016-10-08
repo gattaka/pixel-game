@@ -23,8 +23,8 @@ namespace Lich {
 
             this.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.mouseLabel);
-            EventBus.getInstance().registerConsumer(EventType.MOUSE_MOVE, (data: MouseMoveEventPayload) => {
-                self.mouseLabel.setText("x: " + data.x + " y: " + data.y);
+            EventBus.getInstance().registerConsumer(EventType.MOUSE_MOVE, (data: TupleEventPayload) => {
+                self.mouseLabel.setText("PIXELS x: " + data.x + " y: " + data.y);
                 return false;
             });
 
@@ -42,7 +42,11 @@ namespace Lich {
                 return false;
             });
 
-            this.playerLabel = new Label("PLAYER x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.playerLabel = new Label("SPEED x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            EventBus.getInstance().registerConsumer(EventType.HERO_SPEED_CHANGE, (data: TupleEventPayload) => {
+                self.playerLabel.setText("SPEED x: " + Math.floor(data.x) + " y: " + Math.floor(data.y));
+                return false;
+            });
             this.addNextChild(this.playerLabel);
 
         }

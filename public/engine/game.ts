@@ -180,7 +180,7 @@ namespace Lich {
                 setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
 
                 self.stage.addEventListener("stagemousemove", (event: any) => {
-                    EventBus.getInstance().fireEvent(new MouseMoveEventPayload(event.stageX, event.stageY));
+                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, event.stageX, event.stageY));
                 });
 
                 loadWorld();

@@ -12,11 +12,12 @@ var Lich;
         EventType[EventType["HEALTH_CHANGE"] = 3] = "HEALTH_CHANGE";
         EventType[EventType["WILL_CHANGE"] = 4] = "WILL_CHANGE";
         EventType[EventType["MOUSE_MOVE"] = 5] = "MOUSE_MOVE";
-        EventType[EventType["FPS_CHANGE"] = 6] = "FPS_CHANGE";
-        EventType[EventType["POINTED_AREA_CHANGE"] = 7] = "POINTED_AREA_CHANGE";
-        EventType[EventType["SAVE_WORLD"] = 8] = "SAVE_WORLD";
-        EventType[EventType["LOAD_WORLD"] = 9] = "LOAD_WORLD";
-        EventType[EventType["NEW_WORLD"] = 10] = "NEW_WORLD";
+        EventType[EventType["HERO_SPEED_CHANGE"] = 6] = "HERO_SPEED_CHANGE";
+        EventType[EventType["FPS_CHANGE"] = 7] = "FPS_CHANGE";
+        EventType[EventType["POINTED_AREA_CHANGE"] = 8] = "POINTED_AREA_CHANGE";
+        EventType[EventType["SAVE_WORLD"] = 9] = "SAVE_WORLD";
+        EventType[EventType["LOAD_WORLD"] = 10] = "LOAD_WORLD";
+        EventType[EventType["NEW_WORLD"] = 11] = "NEW_WORLD";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {
@@ -51,16 +52,16 @@ var Lich;
         return NumberEventPayload;
     }(EventPayload));
     Lich.NumberEventPayload = NumberEventPayload;
-    var MouseMoveEventPayload = (function (_super) {
-        __extends(MouseMoveEventPayload, _super);
-        function MouseMoveEventPayload(x, y) {
-            _super.call(this, EventType.MOUSE_MOVE);
+    var TupleEventPayload = (function (_super) {
+        __extends(TupleEventPayload, _super);
+        function TupleEventPayload(type, x, y) {
+            _super.call(this, type);
             this.x = x;
             this.y = y;
         }
-        return MouseMoveEventPayload;
+        return TupleEventPayload;
     }(EventPayload));
-    Lich.MouseMoveEventPayload = MouseMoveEventPayload;
+    Lich.TupleEventPayload = TupleEventPayload;
     var PointedAreaEventPayload = (function (_super) {
         __extends(PointedAreaEventPayload, _super);
         function PointedAreaEventPayload(clsnx, clsny, clsnHit, tileType, secx, secy) {

@@ -19,7 +19,7 @@ var Lich;
             this.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.mouseLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MOUSE_MOVE, function (data) {
-                self.mouseLabel.setText("x: " + data.x + " y: " + data.y);
+                self.mouseLabel.setText("PIXELS x: " + data.x + " y: " + data.y);
                 return false;
             });
             this.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
@@ -36,7 +36,11 @@ var Lich;
                 }
                 return false;
             });
-            this.playerLabel = new Lich.Label("PLAYER x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            this.playerLabel = new Lich.Label("SPEED x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.HERO_SPEED_CHANGE, function (data) {
+                self.playerLabel.setText("SPEED x: " + Math.floor(data.x) + " y: " + Math.floor(data.y));
+                return false;
+            });
             this.addNextChild(this.playerLabel);
         }
         DebugLogUI.prototype.addNextChild = function (child) {

@@ -7,6 +7,7 @@ namespace Lich {
         HEALTH_CHANGE,
         WILL_CHANGE,
         MOUSE_MOVE,
+        HERO_SPEED_CHANGE,
         FPS_CHANGE,
         POINTED_AREA_CHANGE,
         SAVE_WORLD,
@@ -30,8 +31,8 @@ namespace Lich {
         constructor(type: EventType, public payload: number) { super(type); }
     }
 
-    export class MouseMoveEventPayload extends EventPayload {
-        constructor(public x: number, public y: number) { super(EventType.MOUSE_MOVE); }
+    export class TupleEventPayload extends EventPayload {
+        constructor(type:EventType, public x: number, public y: number) { super(type); }
     }
 
     export class PointedAreaEventPayload extends EventPayload {
