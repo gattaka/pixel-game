@@ -153,7 +153,7 @@ var Lich;
                     Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.LOAD_FINISHED, listener_1);
                     return false;
                 });
-                self.stage.addChild(self.loadUI = new Lich.GameLoadUI(self));
+                self.stage.addChild(self.loadUI = new Lich.LoaderUI(self));
             }
             /*-----------*/
             /* Time init */

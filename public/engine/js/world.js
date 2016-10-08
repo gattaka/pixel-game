@@ -49,14 +49,6 @@ var Lich;
             self.addChild(self.hero);
             self.hero.x = game.getCanvas().width / 2;
             self.hero.y = game.getCanvas().height / 2;
-            self.render.updatePlayerIcon(self.hero.x, self.hero.y);
-            // light test
-            /*
-            var bitmap = self.game.resources.getBitmap(Resources.DARKNESS_KEY);
-            bitmap.x = game.canvas.width / 2 - bitmap.image.width / 2;
-            bitmap.y = game.canvas.height / 2 - bitmap.image.height / 2;
-            self.addChild(bitmap);
-            */
             /*------------*/
             /* Dig events */
             /*------------*/

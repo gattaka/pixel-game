@@ -1,4 +1,5 @@
 namespace Lich {
+
     export class UI extends createjs.Container {
 
         static SCREEN_SPACING = 20;
@@ -100,178 +101,85 @@ namespace Lich {
         }
     }
 
-    export class ConditionUI extends AbstractUI {
+    export class AbstractUI extends createjs.Container {
 
-        static INNER_BORDER = 5;
-        static SPACING = 4;
+        static BORDER = 10;
+        static TEXT_SIZE = 15;
 
-        private healthBar = new createjs.Shape();
-        private willBar = new createjs.Shape();
+        outerShape: createjs.Shape;
 
-        private healthText: Label;
-        private willText: Label;
+        constructor(public width: number, public height: number) {
+            super();
 
-        private barWidth: number;
-        private barHeight: number;
-
-        private maxHealth: number = 0;
-        private maxWill: number = 0;
-
-        private currentHealth: number = 0;
-        private currentWill: number = 0;
-
-        setMaxHealth(maxHealth: number) {
-            this.maxHealth = maxHealth;
-            this.setHealth(this.currentHealth);
+            this.outerShape = new createjs.Shape();
+            this.drawBackground();
+            this.addChild(this.outerShape);
         }
 
-        setMaxWill(maxWill: number) {
-            this.maxWill = maxWill;
-            this.setWill(this.currentWill);
-        }
-
-        setHealth(currentHealth: number) {
-            if (currentHealth > this.maxHealth) {
-                this.currentHealth = this.maxHealth;
-            } else if (currentHealth < 0) {
-                this.currentHealth = 0;
-            } else {
-                this.currentHealth = Math.ceil(currentHealth);
-            }
-            this.updateHealthBar();
-        }
-
-        setWill(currentWill: number) {
-            if (currentWill > this.maxWill) {
-                this.currentWill = this.maxWill;
-            } else if (currentWill < 0) {
-                this.currentWill = 0;
-            } else {
-                this.currentWill = Math.ceil(currentWill);
-            }
-            this.updateWillBar();
-        }
-
-        private updateHealthBar() {
-            this.healthBar.graphics.clear();
-            this.healthBar.graphics.setStrokeStyle(2);
-            this.healthBar.graphics.beginStroke("rgba(0,0,0,0.7)");
-            this.healthBar.graphics.beginFill("rgba(255,0,0,0.7)");
-            var width = this.barWidth * (this.currentHealth / this.maxHealth);
-            var x = ConditionUI.INNER_BORDER + this.barWidth - width;
-            this.healthBar.graphics.drawRoundRect(x, ConditionUI.INNER_BORDER, width, this.barHeight, 3);
-
-            this.healthText.setText(this.currentHealth + "/" + this.maxHealth);
-            this.healthText.x = this.width / 2 - this.healthText.getBounds().width / 2;
-        }
-
-        private updateWillBar() {
-            this.willBar.graphics.clear();
-            this.willBar.graphics.setStrokeStyle(2);
-            this.willBar.graphics.beginStroke("rgba(0,0,0,0.7)");
-            this.willBar.graphics.beginFill("rgba(70,30,255,0.7)");
-            var width = this.barWidth * (this.currentWill / this.maxWill);
-            var x = ConditionUI.INNER_BORDER + this.barWidth - width;
-            this.willBar.graphics.drawRoundRect(x, this.height / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
-
-            this.willText.setText(this.currentWill + "/" + this.maxWill);
-            this.willText.x = this.width / 2 - this.willText.getBounds().width / 2;
-        }
-
-        constructor() {
-            super(350, 2 * AbstractUI.BORDER + Resources.PARTS_SIZE);
-
-            let self = this;
-
-            this.barWidth = this.width - ConditionUI.INNER_BORDER * 2;
-            this.barHeight = this.height / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
-
-            // podklady 
-            var healthBgrBar = new createjs.Shape();
-            healthBgrBar.graphics.setStrokeStyle(2);
-            healthBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
-            healthBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, ConditionUI.INNER_BORDER, this.barWidth, this.barHeight, 3);
-            this.addChild(healthBgrBar);
-
-            var willBgrBar = new createjs.Shape();
-            willBgrBar.graphics.setStrokeStyle(2);
-            willBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
-            willBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, this.height / 2 + ConditionUI.SPACING / 2, this.barWidth, this.barHeight, 3);
-            this.addChild(willBgrBar);
-
-            // zdraví
-            this.addChild(this.healthBar);
-            this.healthText = new Label(" ", PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-            this.healthText.y = ConditionUI.INNER_BORDER;
-            this.addChild(this.healthText);
-
-            // vůle
-            this.addChild(this.willBar);
-            this.willText = new Label(" ", PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-            this.willText.y = this.height / 2 + ConditionUI.SPACING / 2;
-            this.addChild(this.willText);
-
-            this.updateHealthBar();
-            this.updateWillBar();
-
-            EventBus.getInstance().registerConsumer(EventType.HEALTH_CHANGE, (data: HealthChangeEventPayload) => {
-                self.setMaxHealth(data.maxHealth);
-                self.setHealth(data.currentHealth);
-                return false;
-            });
-
-            EventBus.getInstance().registerConsumer(EventType.WILL_CHANGE, (data: WillChangeEventPayload) => {
-                self.setMaxWill(data.maxWill);
-                self.setWill(data.currentWill);
-                return false;
-            });
+        protected drawBackground() {
+            this.outerShape.graphics.clear();
+            this.outerShape.graphics.setStrokeStyle(2);
+            this.outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
+            this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
         }
 
     }
 
-    export class GameLoadUI extends createjs.Container {
-
-        private loader;
-
-        private loadScreen : createjs.Shape;
-        private progressLabel :Label;
-        private currentItemLabel :Label;
-
-        constructor(game: Game) {
+    export class UIShape extends createjs.Shape {
+        constructor(red: number, green: number, blue: number,
+            red2 = red, green2 = green, blue2 = blue, op = 0.2, op2 = 0.5) {
             super();
-            let self = this;
-            self.width = game.getCanvas().width;
-            self.height = game.getCanvas().height;
 
-            self.loadScreen = new createjs.Shape();
-            self.loadScreen.graphics.beginFill("black");
-            self.loadScreen.graphics.drawRect(0, 0, self.width, self.height);
-            self.addChild(self.loadScreen);
+            this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
+            this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
+            this.graphics.setStrokeStyle(2);
+            var side = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            this.graphics.drawRoundRect(0, 0, side, side, 3);
+        }
+    }
 
-            self.progressLabel = new Label("Loading...", "30px " + Resources.FONT, Resources.TEXT_COLOR);
-            self.progressLabel.x = self.width / 2 - 50;
-            self.progressLabel.y = self.height / 2 - 50;
-            self.addChild(self.progressLabel);
+    export class Highlight extends UIShape {
+        constructor() {
+            super(250, 250, 10);
+        }
+    }
 
-            self.currentItemLabel = new Label("-", "15px " + Resources.FONT, Resources.TEXT_COLOR);
-            self.currentItemLabel.x = self.width / 2 - 50;
-            self.currentItemLabel.y = self.progressLabel.y + 40;
-            self.addChild(self.currentItemLabel);
+    export class Button extends createjs.Container {
+        constructor(bitmap: UIGFXKey) {
+            super();
 
-            EventBus.getInstance().registerConsumer(EventType.LOAD_PROGRESS, (n: NumberEventPayload): boolean => {
-                self.progressLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
-                return true;
-            });
+            let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
+            this.addChild(bgr);
+            bgr.x = 0;
+            bgr.y = 0;
 
-            EventBus.getInstance().registerConsumer(EventType.LOAD_ITEM, (e: StringEventPayload): boolean => {
-                self.currentItemLabel.setText(e.payload);
-                return true;
-            });
+            if (bitmap) {
+                let btmp = Resources.getInstance().getBitmap(UIGFXKey[bitmap]);
+                this.addChild(btmp);
+                btmp.x = PartsUI.SELECT_BORDER;
+                btmp.y = PartsUI.SELECT_BORDER;
+            }
+
+            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            let hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            this.hitArea = hitArea;
+
+        }
+    }
+
+    export class PartsUI extends AbstractUI {
+
+        static SELECT_BORDER = 5;
+        static SPACING = 12;
+
+        constructor(public n: number, public m: number) {
+            super(PartsUI.pixelsByX(n), PartsUI.pixelsByX(m));
         }
 
-        public reset() {
-            this.currentItemLabel.setText(" ");
-            this.progressLabel.setText(" ");
+        static pixelsByX(x: number): number {
+            return x * Resources.PARTS_SIZE + (x - 1) * (PartsUI.SPACING) + 2 * AbstractUI.BORDER;
         }
 
     }

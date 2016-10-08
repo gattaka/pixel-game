@@ -10,7 +10,7 @@ namespace Lich {
         private world: World;
         private ui: UI;
 
-        private loadUI: GameLoadUI;
+        private loadUI: LoaderUI;
 
         private initialized = false;
         private keys = {};
@@ -198,7 +198,7 @@ namespace Lich {
                     EventBus.getInstance().unregisterConsumer(EventType.LOAD_FINISHED, listener);
                     return false;
                 });
-                self.stage.addChild(self.loadUI = new GameLoadUI(self));
+                self.stage.addChild(self.loadUI = new LoaderUI(self));
             }
 
             /*-----------*/
