@@ -192,20 +192,16 @@ var Lich;
                         up: false,
                         down: false,
                         left: false,
-                        right: false,
-                        up2: false,
-                        down2: false,
-                        left2: false,
-                        right2: false
+                        right: false
                     };
                     if (self.keys[37])
-                        directions.left2 = true;
+                        directions.left = true;
                     if (self.keys[38])
-                        directions.up2 = true;
+                        directions.up = true;
                     if (self.keys[39])
-                        directions.right2 = true;
+                        directions.right = true;
                     if (self.keys[40])
-                        directions.down2 = true;
+                        directions.down = true;
                     if (self.keys[65])
                         directions.left = true;
                     if (self.keys[87])
