@@ -438,6 +438,13 @@ var Lich;
             };
             // usaditelných jako objekt
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM2_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM2_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM3_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM3_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_BERRY_KEY, self.mapObjectDefs[MapObjectKey.MAP_BERRY_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT2_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT2_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT3_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT3_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT4_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]).setFrames(4));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_DOOR_KEY, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]));
