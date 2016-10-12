@@ -40,7 +40,8 @@ namespace Lich {
         SRFC_FLORITE_KEY,
         SRFC_BRICK_KEY,
         SRFC_STRAW_KEY,
-        SRFC_ROOF_KEY
+        SRFC_ROOF_KEY,
+        SRFC_IRON_KEY
     }
 
     export enum SurfaceBgrKey {
@@ -94,7 +95,8 @@ namespace Lich {
         INV_DOOR_KEY,
         INV_BRICKWALL_KEY,
         INV_WOODWALL_KEY,
-        INV_ROOF_KEY
+        INV_ROOF_KEY,
+        INV_IRON_KEY
     }
 
     export enum UIGFXKey {
@@ -265,6 +267,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICKWALL_KEY]),
                 new Load("images/ui/inventory/inv_woodwall.png", InventoryKey[InventoryKey.INV_WOODWALL_KEY]),
                 new Load("images/ui/inventory/inv_roof.png", InventoryKey[InventoryKey.INV_ROOF_KEY]),
+                new Load("images/ui/inventory/inv_iron.png", InventoryKey[InventoryKey.INV_IRON_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -280,6 +283,7 @@ namespace Lich {
                 new Load("images/surfaces/brick.png", SurfaceKey[SurfaceKey.SRFC_BRICK_KEY]),
                 new Load("images/surfaces/straw.png", SurfaceKey[SurfaceKey.SRFC_STRAW_KEY]),
                 new Load("images/surfaces/roof.png", SurfaceKey[SurfaceKey.SRFC_ROOF_KEY]),
+                new Load("images/surfaces/iron.png", SurfaceKey[SurfaceKey.SRFC_IRON_KEY]),
                 // surface backgrounds
                 new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
                 new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
@@ -414,6 +418,7 @@ namespace Lich {
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 10));
 
             (function () {
                 // vytvoř frekvenční pool pro povrchy

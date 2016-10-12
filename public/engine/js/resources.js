@@ -44,6 +44,7 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_BRICK_KEY"] = 4] = "SRFC_BRICK_KEY";
         SurfaceKey[SurfaceKey["SRFC_STRAW_KEY"] = 5] = "SRFC_STRAW_KEY";
         SurfaceKey[SurfaceKey["SRFC_ROOF_KEY"] = 6] = "SRFC_ROOF_KEY";
+        SurfaceKey[SurfaceKey["SRFC_IRON_KEY"] = 7] = "SRFC_IRON_KEY";
     })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
     var SurfaceKey = Lich.SurfaceKey;
     (function (SurfaceBgrKey) {
@@ -98,6 +99,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_BRICKWALL_KEY"] = 16] = "INV_BRICKWALL_KEY";
         InventoryKey[InventoryKey["INV_WOODWALL_KEY"] = 17] = "INV_WOODWALL_KEY";
         InventoryKey[InventoryKey["INV_ROOF_KEY"] = 18] = "INV_ROOF_KEY";
+        InventoryKey[InventoryKey["INV_IRON_KEY"] = 19] = "INV_IRON_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
     (function (UIGFXKey) {
@@ -218,6 +220,7 @@ var Lich;
                 new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICKWALL_KEY]),
                 new Load("images/ui/inventory/inv_woodwall.png", InventoryKey[InventoryKey.INV_WOODWALL_KEY]),
                 new Load("images/ui/inventory/inv_roof.png", InventoryKey[InventoryKey.INV_ROOF_KEY]),
+                new Load("images/ui/inventory/inv_iron.png", InventoryKey[InventoryKey.INV_IRON_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -233,6 +236,7 @@ var Lich;
                 new Load("images/surfaces/brick.png", SurfaceKey[SurfaceKey.SRFC_BRICK_KEY]),
                 new Load("images/surfaces/straw.png", SurfaceKey[SurfaceKey.SRFC_STRAW_KEY]),
                 new Load("images/surfaces/roof.png", SurfaceKey[SurfaceKey.SRFC_ROOF_KEY]),
+                new Load("images/surfaces/iron.png", SurfaceKey[SurfaceKey.SRFC_IRON_KEY]),
                 // surface backgrounds
                 new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
                 new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
@@ -353,6 +357,7 @@ var Lich;
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1, 0));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 10));
             (function () {
                 // vytvoř frekvenční pool pro povrchy
                 for (var _i = 0, _a = self.mapSurfaceDefs; _i < _a.length; _i++) {
