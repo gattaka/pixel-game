@@ -15,6 +15,8 @@ namespace Lich {
 
     export class SurfaceBgrIndex {
 
+        static SPRITE_SIDE = 3;
+
         // počet pozic a typů
         protected typesCount = 0;
         protected positionsCount = 0;
@@ -35,6 +37,18 @@ namespace Lich {
                 }
             }
         };
+
+
+        /**
+         * Získá výchozí prostřední dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        getSurfaceBgrPositionByCoordPattern(x: number, y: number): SurfaceBgrPositionKey {
+            let col = x % 3 + 1; // +1 za VOID
+            let row = y % 3;
+            let key = col + row * SurfaceBgrIndex.SPRITE_SIDE;
+            return SurfaceBgrPositionKey[SurfaceBgrPositionKey[key]];
+        }
 
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je

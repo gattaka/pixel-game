@@ -540,6 +540,7 @@ namespace Lich {
                 .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_KRYSTAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_KRYSTAL_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_FLORITE_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_FLORITE_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_IRON_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_IRON_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_ROOF_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROOF_KEY])
                 .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]));
 

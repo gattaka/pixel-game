@@ -35,6 +35,16 @@ var Lich;
         }
         ;
         /**
+         * Získá výchozí prostřední dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        SurfaceBgrIndex.prototype.getSurfaceBgrPositionByCoordPattern = function (x, y) {
+            var col = x % 3 + 1; // +1 za VOID
+            var row = y % 3;
+            var key = col + row * SurfaceBgrIndex.SPRITE_SIDE;
+            return SurfaceBgrPositionKey[SurfaceBgrPositionKey[key]];
+        };
+        /**
          * Ze vzorku zjistí z jakého typu povrchu index je
          */
         SurfaceBgrIndex.prototype.getType = function (sampleIndex) {
@@ -68,6 +78,7 @@ var Lich;
             // 24 -> 23 % 23 ->  0 + 1 ->  1
             return (index - 1) % this.positionsCount + 1;
         };
+        SurfaceBgrIndex.SPRITE_SIDE = 3;
         return SurfaceBgrIndex;
     }());
     Lich.SurfaceBgrIndex = SurfaceBgrIndex;

@@ -1,31 +1,17 @@
 namespace Lich {
 
     export enum SurfacePositionKey {
-        VOID = 0,
-        M1 = 1,
-        M2 = 2,
-        M3 = 3,
-        TL = 4,
-        TR = 5,
-        T = 6,
-        I_TR = 7,
-        I_TL = 8,
-        M4 = 9,
-        M5 = 10,
-        M6 = 11,
-        BL = 12,
-        BR = 13,
-        R = 14,
-        I_BR = 15,
-        I_BL = 16,
-        M7 = 17,
-        M8 = 18,
-        M9 = 19,
-        B = 20,
-        L = 21
+        VOID,
+        TL, T1, T2, T3, TR, I_TR,
+        L1, M1, M2, M3, R1, I_BR,
+        L2, M4, M5, M6, R2, I_TL,
+        L3, M7, M8, M9, R3, I_BL,
+        BL, B1, B2, B3, BR
     }
 
     export class SurfaceIndex {
+
+        static SPRITE_SIDE = 6;
 
         // počet pozic a typů
         private positionsCount = 0;
@@ -47,6 +33,59 @@ namespace Lich {
                 }
             }
         };
+
+        /**
+         * Získá výchozí prostřední dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        getMiddlePositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
+            let col = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite 
+            let row = y % 3 + 1; // +1 za předcházející dílky ve sprite 
+            let key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        /**
+         * Získá výchozí horní dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        getTopPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
+            let key = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        /**
+         * Získá výchozí levý dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        getLeftPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
+            let col = 1; // +1 za VOID
+            let row = y % 3 + 1; // +1 za předcházející dílky ve sprite
+            let key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        /**
+         * Získá výchozí pravý dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        getRightPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
+            let col = 1 + 4; // +1 za VOID +4 za předcházející dílky ve sprite
+            let row = y % 3 + 1; // +1 za předcházející dílky ve sprite
+            let key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        /**
+         * Získá výchozí spodní dílek dle vzoru, 
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        getBottomPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
+            let col = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let row = 4; // +4 za předcházející dílky ve sprite
+            let key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
 
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
@@ -75,7 +114,7 @@ namespace Lich {
         /**
          * Zjistí, zda index je instancí dané pozice nějakého typu povrchu 
          */
-        isPosition(index: number, positionKey: SurfacePositionKey) {
+        private isPosition(index: number, positionKey: SurfacePositionKey) {
             return this.getPosition(index) == positionKey;
         }
 
@@ -102,5 +141,74 @@ namespace Lich {
                 || reducedIndex == SurfacePositionKey.M8
                 || reducedIndex == SurfacePositionKey.M9;
         }
+
+        /**
+         * Zjistí, zda index je horní instancí nějakého typu povrchu 
+         */
+        isTopPosition(index: number) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.T1
+                || reducedIndex == SurfacePositionKey.T2
+                || reducedIndex == SurfacePositionKey.T3;
+        }
+
+        /**
+         * Zjistí, zda index je levou instancí nějakého typu povrchu 
+         */
+        isLeftPosition(index: number) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.L1
+                || reducedIndex == SurfacePositionKey.L2
+                || reducedIndex == SurfacePositionKey.L3;
+        }
+
+        /**
+         * Zjistí, zda index je pravou instancí nějakého typu povrchu 
+         */
+        isRightPosition(index: number) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.R1
+                || reducedIndex == SurfacePositionKey.R2
+                || reducedIndex == SurfacePositionKey.R3;
+        }
+
+        /**
+         * Zjistí, zda index je spodní instancí nějakého typu povrchu 
+         */
+        isBottomPosition(index: number) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.B1
+                || reducedIndex == SurfacePositionKey.B2
+                || reducedIndex == SurfacePositionKey.B3;
+        }
+
+        /**
+         * Zjistí, zda index je horní levou instancí nějakého typu povrchu 
+         */
+        isTopLeftPosition(index: number) {
+            return this.getPosition(index) == SurfacePositionKey.TL;
+        }
+
+        /**
+         * Zjistí, zda index je horní pravou instancí nějakého typu povrchu 
+         */
+        isTopRightPosition(index: number) {
+            return this.getPosition(index) == SurfacePositionKey.TR;
+        }
+
+        /**
+         * Zjistí, zda index je spodní levou instancí nějakého typu povrchu 
+         */
+        isBottomLeftPosition(index: number) {
+            return this.getPosition(index) == SurfacePositionKey.BL;
+        }
+
+        /**
+         * Zjistí, zda index je spodní pravou instancí nějakého typu povrchu 
+         */
+        isBottomRightPosition(index: number) {
+            return this.getPosition(index) == SurfacePositionKey.BR;
+        }
+
     }
 }

@@ -119,8 +119,7 @@ var Lich;
                     else {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
-                        var pos = Lich.TilesMapTools.getSurfacePositionByCoordPattern(x, y);
-                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(Lich.SurfaceKey.SRFC_DIRT_KEY, pos));
+                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, Lich.SurfaceKey.SRFC_DIRT_KEY));
                     }
                 }
             }
@@ -249,7 +248,7 @@ var Lich;
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Lich.Resources.getInstance().surfaceIndex.isPosition(tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.T) == false) ||
+                            if ((y === y0 && Lich.Resources.getInstance().surfaceIndex.isTopPosition(tilesMap.mapRecord.getValue(x, y)) == false) ||
                                 (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== Lich.SurfacePositionKey.VOID) ||
                                 (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
@@ -261,7 +260,7 @@ var Lich;
                     for (var x = 0; x < tilesMap.width; x += 2) {
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
-                        if (Lich.Resources.getInstance().surfaceIndex.isPosition(val, Lich.SurfacePositionKey.T)) {
+                        if (Lich.Resources.getInstance().surfaceIndex.isTopPosition(val)) {
                             // bude tam nějaký objekt? (100% ano)
                             if (Math.random() > 0) {
                                 var tries = 0;

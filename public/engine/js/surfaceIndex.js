@@ -2,27 +2,35 @@ var Lich;
 (function (Lich) {
     (function (SurfacePositionKey) {
         SurfacePositionKey[SurfacePositionKey["VOID"] = 0] = "VOID";
-        SurfacePositionKey[SurfacePositionKey["M1"] = 1] = "M1";
-        SurfacePositionKey[SurfacePositionKey["M2"] = 2] = "M2";
-        SurfacePositionKey[SurfacePositionKey["M3"] = 3] = "M3";
-        SurfacePositionKey[SurfacePositionKey["TL"] = 4] = "TL";
+        SurfacePositionKey[SurfacePositionKey["TL"] = 1] = "TL";
+        SurfacePositionKey[SurfacePositionKey["T1"] = 2] = "T1";
+        SurfacePositionKey[SurfacePositionKey["T2"] = 3] = "T2";
+        SurfacePositionKey[SurfacePositionKey["T3"] = 4] = "T3";
         SurfacePositionKey[SurfacePositionKey["TR"] = 5] = "TR";
-        SurfacePositionKey[SurfacePositionKey["T"] = 6] = "T";
-        SurfacePositionKey[SurfacePositionKey["I_TR"] = 7] = "I_TR";
-        SurfacePositionKey[SurfacePositionKey["I_TL"] = 8] = "I_TL";
-        SurfacePositionKey[SurfacePositionKey["M4"] = 9] = "M4";
-        SurfacePositionKey[SurfacePositionKey["M5"] = 10] = "M5";
-        SurfacePositionKey[SurfacePositionKey["M6"] = 11] = "M6";
-        SurfacePositionKey[SurfacePositionKey["BL"] = 12] = "BL";
-        SurfacePositionKey[SurfacePositionKey["BR"] = 13] = "BR";
-        SurfacePositionKey[SurfacePositionKey["R"] = 14] = "R";
-        SurfacePositionKey[SurfacePositionKey["I_BR"] = 15] = "I_BR";
-        SurfacePositionKey[SurfacePositionKey["I_BL"] = 16] = "I_BL";
-        SurfacePositionKey[SurfacePositionKey["M7"] = 17] = "M7";
-        SurfacePositionKey[SurfacePositionKey["M8"] = 18] = "M8";
-        SurfacePositionKey[SurfacePositionKey["M9"] = 19] = "M9";
-        SurfacePositionKey[SurfacePositionKey["B"] = 20] = "B";
-        SurfacePositionKey[SurfacePositionKey["L"] = 21] = "L";
+        SurfacePositionKey[SurfacePositionKey["I_TR"] = 6] = "I_TR";
+        SurfacePositionKey[SurfacePositionKey["L1"] = 7] = "L1";
+        SurfacePositionKey[SurfacePositionKey["M1"] = 8] = "M1";
+        SurfacePositionKey[SurfacePositionKey["M2"] = 9] = "M2";
+        SurfacePositionKey[SurfacePositionKey["M3"] = 10] = "M3";
+        SurfacePositionKey[SurfacePositionKey["R1"] = 11] = "R1";
+        SurfacePositionKey[SurfacePositionKey["I_BR"] = 12] = "I_BR";
+        SurfacePositionKey[SurfacePositionKey["L2"] = 13] = "L2";
+        SurfacePositionKey[SurfacePositionKey["M4"] = 14] = "M4";
+        SurfacePositionKey[SurfacePositionKey["M5"] = 15] = "M5";
+        SurfacePositionKey[SurfacePositionKey["M6"] = 16] = "M6";
+        SurfacePositionKey[SurfacePositionKey["R2"] = 17] = "R2";
+        SurfacePositionKey[SurfacePositionKey["I_TL"] = 18] = "I_TL";
+        SurfacePositionKey[SurfacePositionKey["L3"] = 19] = "L3";
+        SurfacePositionKey[SurfacePositionKey["M7"] = 20] = "M7";
+        SurfacePositionKey[SurfacePositionKey["M8"] = 21] = "M8";
+        SurfacePositionKey[SurfacePositionKey["M9"] = 22] = "M9";
+        SurfacePositionKey[SurfacePositionKey["R3"] = 23] = "R3";
+        SurfacePositionKey[SurfacePositionKey["I_BL"] = 24] = "I_BL";
+        SurfacePositionKey[SurfacePositionKey["BL"] = 25] = "BL";
+        SurfacePositionKey[SurfacePositionKey["B1"] = 26] = "B1";
+        SurfacePositionKey[SurfacePositionKey["B2"] = 27] = "B2";
+        SurfacePositionKey[SurfacePositionKey["B3"] = 28] = "B3";
+        SurfacePositionKey[SurfacePositionKey["BR"] = 29] = "BR";
     })(Lich.SurfacePositionKey || (Lich.SurfacePositionKey = {}));
     var SurfacePositionKey = Lich.SurfacePositionKey;
     var SurfaceIndex = (function () {
@@ -46,6 +54,54 @@ var Lich;
             }
         }
         ;
+        /**
+         * Získá výchozí prostřední dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        SurfaceIndex.prototype.getMiddlePositionIndexByCoordPattern = function (x, y, type) {
+            var col = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite 
+            var row = y % 3 + 1; // +1 za předcházející dílky ve sprite 
+            var key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
+        /**
+         * Získá výchozí horní dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        SurfaceIndex.prototype.getTopPositionIndexByCoordPattern = function (x, y, type) {
+            var key = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
+        /**
+         * Získá výchozí levý dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        SurfaceIndex.prototype.getLeftPositionIndexByCoordPattern = function (x, y, type) {
+            var col = 1; // +1 za VOID
+            var row = y % 3 + 1; // +1 za předcházející dílky ve sprite
+            var key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
+        /**
+         * Získá výchozí pravý dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        SurfaceIndex.prototype.getRightPositionIndexByCoordPattern = function (x, y, type) {
+            var col = 1 + 4; // +1 za VOID +4 za předcházející dílky ve sprite
+            var row = y % 3 + 1; // +1 za předcházející dílky ve sprite
+            var key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
+        /**
+         * Získá výchozí spodní dílek dle vzoru,
+         * který se opakuje, aby mapa byla pestřejší
+         */
+        SurfaceIndex.prototype.getBottomPositionIndexByCoordPattern = function (x, y, type) {
+            var col = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            var row = 4; // +4 za předcházející dílky ve sprite
+            var key = col + row * SurfaceIndex.SPRITE_SIDE;
+            return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
          */
@@ -95,6 +151,67 @@ var Lich;
                 || reducedIndex == SurfacePositionKey.M8
                 || reducedIndex == SurfacePositionKey.M9;
         };
+        /**
+         * Zjistí, zda index je horní instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isTopPosition = function (index) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.T1
+                || reducedIndex == SurfacePositionKey.T2
+                || reducedIndex == SurfacePositionKey.T3;
+        };
+        /**
+         * Zjistí, zda index je levou instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isLeftPosition = function (index) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.L1
+                || reducedIndex == SurfacePositionKey.L2
+                || reducedIndex == SurfacePositionKey.L3;
+        };
+        /**
+         * Zjistí, zda index je pravou instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isRightPosition = function (index) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.R1
+                || reducedIndex == SurfacePositionKey.R2
+                || reducedIndex == SurfacePositionKey.R3;
+        };
+        /**
+         * Zjistí, zda index je spodní instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isBottomPosition = function (index) {
+            var reducedIndex = this.getPosition(index);
+            return reducedIndex == SurfacePositionKey.B1
+                || reducedIndex == SurfacePositionKey.B2
+                || reducedIndex == SurfacePositionKey.B3;
+        };
+        /**
+         * Zjistí, zda index je horní levou instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isTopLeftPosition = function (index) {
+            return this.getPosition(index) == SurfacePositionKey.TL;
+        };
+        /**
+         * Zjistí, zda index je horní pravou instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isTopRightPosition = function (index) {
+            return this.getPosition(index) == SurfacePositionKey.TR;
+        };
+        /**
+         * Zjistí, zda index je spodní levou instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isBottomLeftPosition = function (index) {
+            return this.getPosition(index) == SurfacePositionKey.BL;
+        };
+        /**
+         * Zjistí, zda index je spodní pravou instancí nějakého typu povrchu
+         */
+        SurfaceIndex.prototype.isBottomRightPosition = function (index) {
+            return this.getPosition(index) == SurfacePositionKey.BR;
+        };
+        SurfaceIndex.SPRITE_SIDE = 6;
         return SurfaceIndex;
     }());
     Lich.SurfaceIndex = SurfaceIndex;
