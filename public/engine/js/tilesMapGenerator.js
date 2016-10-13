@@ -191,6 +191,7 @@ var Lich;
             // Minerály 
             (function () {
                 var createDeposit = function (x0, y0, d0, oreKey) {
+                    var tilesToReset = new Array();
                     var d = Lich.Utils.even(d0);
                     var x = Lich.Utils.even(x0);
                     var y = Lich.Utils.even(y0);
@@ -201,15 +202,31 @@ var Lich;
                             var r2 = Math.pow(x - _x, 2) + Math.pow(y - _y, 2);
                             var d2 = Math.pow(d, 2);
                             if (r2 <= d2) {
-                                // protože skáču po dvou, musím udělat vždy v každé
-                                // ose dva zápisy, jinak by vznikla mřížka
-                                for (var __x = _x; __x <= _x + 1; __x++) {
-                                    for (var __y = _y; __y <= _y + 1; __y++) {
-                                        var posIndex = tilesMap.mapRecord.getValue(__x, __y);
-                                        if (posIndex != Lich.SurfacePositionKey.VOID) {
+                                var posIndex = tilesMap.mapRecord.getValue(_x, _y);
+                                if (posIndex != Lich.SurfacePositionKey.VOID) {
+                                    // protože skáču po dvou, musím udělat vždy v každé
+                                    // ose dva zápisy, jinak by vznikla mřížka
+                                    for (var __x = _x; __x <= _x + 1; __x++) {
+                                        for (var __y = _y; __y <= _y + 1; __y++) {
                                             // nahradí aktuální dílek dílkem daného minerálu
                                             // přičemž zachová pozici dílku
-                                            tilesMap.mapRecord.setValue(__x, __y, Lich.Resources.getInstance().surfaceIndex.changeType(posIndex, oreKey));
+                                            tilesMap.mapRecord.setValue(__x, __y, Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(__x, __y, oreKey));
+                                        }
+                                    }
+                                    for (var __x = _x - 1; __x <= _x + 2; __x++) {
+                                        for (var __y = _y - 1; __y <= _y + 2; __y++) {
+                                            var val = tilesMap.mapRecord.getValue(__x, __y);
+                                            if (val != null) {
+                                                if (val !== Lich.SurfacePositionKey.VOID) {
+                                                    var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
+                                                    // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
+                                                    if (__x === _x - 1 || __x === _x + 2 || __y === _y - 1 || __y === _y + 2) {
+                                                        // okraje vyresetuj
+                                                        tilesMap.mapRecord.setValue(__x, __y, Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(__x, __y, srfcType));
+                                                    }
+                                                    tilesToReset.push([__x, __y]);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -228,6 +245,22 @@ var Lich;
                             }
                         }
                     }
+                    // Přegeneruj hrany
+                    (function () {
+                        tilesToReset.forEach(function (item) {
+                            var x = item[0];
+                            var y = item[1];
+                            Lich.TilesMapTools.generateEdge(tilesMap, x, y);
+                        });
+                    })();
+                    // Přegeneruj rohy
+                    (function () {
+                        tilesToReset.forEach(function (item) {
+                            var x = item[0];
+                            var y = item[1];
+                            Lich.TilesMapTools.generateCorner(tilesMap, x, y);
+                        });
+                    })();
                 };
                 // random deposit
                 var holesP = mass * 0.001;

@@ -211,6 +211,13 @@ var Lich;
         SurfaceIndex.prototype.isBottomRightPosition = function (index) {
             return this.getPosition(index) == SurfacePositionKey.BR;
         };
+        /**
+         * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
+         */
+        SurfaceIndex.prototype.isSeamless = function (index, type) {
+            var type2 = this.getType(index);
+            return type == type2;
+        };
         SurfaceIndex.SPRITE_SIDE = 6;
         return SurfaceIndex;
     }());

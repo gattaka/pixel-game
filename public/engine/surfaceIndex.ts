@@ -210,5 +210,13 @@ namespace Lich {
             return this.getPosition(index) == SurfacePositionKey.BR;
         }
 
+        /**
+         * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
+         */
+        isSeamless(index: number, type: SurfaceKey) {
+            let type2 = this.getType(index);
+            return type == type2;
+        }
+
     }
 }
