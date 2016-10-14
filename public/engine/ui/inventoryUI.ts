@@ -38,7 +38,7 @@ namespace Lich {
         public serialize() {
             let array = [];
             this.itemsTypeArray.forEach((i) => {
-                if (i) {
+                if (i == 0 || i) {
                     array.push(this.itemsQuantityMap[i]);
                     array.push(i);
                 }
@@ -224,7 +224,7 @@ namespace Lich {
                 let i = 0;
                 for (i = 0; i < self.itemsTypeArray.length; i++) {
                     // buď najdi volné místo...
-                    if (!self.itemsTypeArray[i]) {
+                    if (self.itemsTypeArray[i] != 0 && !self.itemsTypeArray[i]) {
                         break;
                     }
                 }

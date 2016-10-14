@@ -56,7 +56,7 @@ var Lich;
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     var val = tilesMap.mapObjRecord.getValue(x, y);
-                    if (val) {
+                    if (val == 0 || val) {
                         data.obj.push(x);
                         data.obj.push(y);
                         data.obj.push(val);

@@ -71,7 +71,7 @@ namespace Lich {
             for (let y = 0; y < tilesMap.height; y++) {
                 for (let x = 0; x < tilesMap.width; x++) {
                     let val = tilesMap.mapObjRecord.getValue(x, y);
-                    if (val) {
+                    if (val == 0 || val) {
                         data.obj.push(x);
                         data.obj.push(y);
                         data.obj.push(val);

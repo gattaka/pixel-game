@@ -76,7 +76,7 @@ var Lich;
             var _this = this;
             var array = [];
             this.itemsTypeArray.forEach(function (i) {
-                if (i) {
+                if (i == 0 || i) {
                     array.push(_this.itemsQuantityMap[i]);
                     array.push(i);
                 }
@@ -195,7 +195,7 @@ var Lich;
                 var i = 0;
                 for (i = 0; i < self.itemsTypeArray.length; i++) {
                     // buď najdi volné místo...
-                    if (!self.itemsTypeArray[i]) {
+                    if (self.itemsTypeArray[i] != 0 && !self.itemsTypeArray[i]) {
                         break;
                     }
                 }
