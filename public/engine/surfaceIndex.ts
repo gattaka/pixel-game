@@ -215,6 +215,11 @@ namespace Lich {
          */
         isSeamless(index: number, type: SurfaceKey) {
             let type2 = this.getType(index);
+            let seamCheck = (type: SurfaceKey, type2: SurfaceKey, ok1: SurfaceKey, ok2: SurfaceKey) => {
+                return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
+            };
+            if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_BRICK_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_WOODWALL_KEY)) return true;
             return type == type2;
         }
 

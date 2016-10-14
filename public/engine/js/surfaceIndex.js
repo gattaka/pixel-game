@@ -216,6 +216,13 @@ var Lich;
          */
         SurfaceIndex.prototype.isSeamless = function (index, type) {
             var type2 = this.getType(index);
+            var seamCheck = function (type, type2, ok1, ok2) {
+                return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2;
+            };
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_WOODWALL_KEY))
+                return true;
             return type == type2;
         };
         SurfaceIndex.SPRITE_SIDE = 6;

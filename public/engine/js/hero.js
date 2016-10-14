@@ -105,8 +105,8 @@ var Lich;
         Hero.WIDTH = 56;
         Hero.HEIGHT = 80;
         // Collision offset
-        Hero.COLLXOFFSET = 14;
-        Hero.COLLYOFFSET = 10;
+        Hero.COLLXOFFSET = 16;
+        Hero.COLLYOFFSET = 12;
         Hero.stateAnimation = {
             WALKR_STATE: "walkR",
             WALKL_STATE: "walkL",

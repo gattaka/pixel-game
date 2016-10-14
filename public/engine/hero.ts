@@ -22,8 +22,8 @@ namespace Lich {
         static HEIGHT = 80;
 
         // Collision offset
-        static COLLXOFFSET = 14;
-        static COLLYOFFSET = 10;
+        static COLLXOFFSET = 16;
+        static COLLYOFFSET = 12;
 
         static stateAnimation = {
             WALKR_STATE: "walkR",
