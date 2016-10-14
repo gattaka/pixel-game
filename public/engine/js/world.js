@@ -508,7 +508,7 @@ var Lich;
         World.HERO_VERTICAL_SPEED = 500;
         // Pixel/s2
         World.WORLD_GRAVITY = -1200;
-        World.MAX_FREEFALL_SPEED = -1500;
+        World.MAX_FREEFALL_SPEED = -1200;
         return World;
     }(createjs.Container));
     Lich.World = World;

@@ -39,7 +39,7 @@ namespace Lich {
 
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
-        static MAX_FREEFALL_SPEED = -1500;
+        static MAX_FREEFALL_SPEED = -1200;
 
         /*-----------*/
         /* VARIABLES */
