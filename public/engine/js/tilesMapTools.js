@@ -11,28 +11,31 @@ var Lich;
         }
         TilesMapTools.generateEdge = function (tilesMap, x, y) {
             var val = tilesMap.mapRecord.getValue(x, y);
+            if (!val || val == Lich.SurfacePositionKey.VOID)
+                return;
             var valT = tilesMap.mapRecord.getValue(x, y - 1);
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
             var valL = tilesMap.mapRecord.getValue(x - 1, y);
             var srfi = Lich.Resources.getInstance().surfaceIndex;
             var srfcType = srfi.getType(val);
-            if (valT === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false) {
+            if (!valT || valT === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getTopPositionIndexByCoordPattern(x, y, srfcType));
             }
-            if (valR === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valR, srfcType) == false) {
+            if (!valR || valR === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valR, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getRightPositionIndexByCoordPattern(x, y, srfcType));
             }
-            if (valB === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valB, srfcType) == false) {
+            if (!valB || valB === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valB, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getBottomPositionIndexByCoordPattern(x, y, srfcType));
             }
-            if (valL === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valL, srfcType) == false) {
+            if (!valL || valL === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valL, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getLeftPositionIndexByCoordPattern(x, y, srfcType));
             }
-            return tilesMap.mapRecord.getValue(x, y);
         };
         TilesMapTools.generateCorner = function (tilesMap, x, y) {
             var val = tilesMap.mapRecord.getValue(x, y);
+            if (!val || val == Lich.SurfacePositionKey.VOID)
+                return;
             var valT = tilesMap.mapRecord.getValue(x, y - 1);
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
@@ -75,7 +78,6 @@ var Lich;
             if (srfi.isRightPosition(val) && (srfi.isTopPosition(valL) || valT === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false)) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.TR));
             }
-            return tilesMap.mapRecord.getValue(x, y);
         };
         TilesMapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {
             var self = this;

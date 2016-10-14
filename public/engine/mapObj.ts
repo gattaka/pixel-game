@@ -131,6 +131,10 @@ namespace Lich {
      * Povrchy, které jsou na mapě
      */
     export class MapSurfaceDefinition extends Diggable {
+        public minSize = 1;
+        public maxSize = 3;
+        public minDepth = 10;
+        public maxDepth = 100;
         constructor(
             // údaje o povrchu na mapě
             public mapKey: SurfaceKey,
@@ -141,6 +145,17 @@ namespace Lich {
             // jak často takový povrch v mapě je 
             public freq: number) {
             super(mapKey, invObj, quant);
+        }
+
+        public setSize(minSize: number, maxSize: number): MapSurfaceDefinition {
+            this.minSize = minSize;
+            this.maxSize = maxSize;
+            return this;
+        }
+        public setDepth(minDepth: number, maxDepth: number): MapSurfaceDefinition {
+            this.minDepth = minDepth;
+            this.maxDepth = maxDepth;
+            return this;
         }
     }
 

@@ -146,7 +146,7 @@ var Lich;
                             }
                             // občas udělej na okraji díry... díru
                             if (_x === x + d || _x === x - d || _y === y + d || _y === y - d) {
-                                if (Math.random() > 0.5) {
+                                if (Math.random() > 0.3) {
                                     var auxX = _x;
                                     var auxY = _y;
                                     if (_x === x + d)
@@ -162,30 +162,10 @@ var Lich;
                 // random holes
                 var holesP = mass * 0.005;
                 for (var i = 0; i < holesP; i++) {
-                    var dia = Math.floor(Math.random() * 4) + 2;
+                    var dia = Math.floor(Math.random() * 5) + 1;
                     var holeX = Math.floor(Math.random() * tilesMap.width);
                     var holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
-                }
-            })();
-            // tráva boky
-            (function () {
-                for (var y = 0; y < tilesMap.height; y++) {
-                    for (var x = 0; x < tilesMap.width; x++) {
-                        if (tilesMap.mapRecord.getValue(x, y) === Lich.SurfacePositionKey.VOID)
-                            continue;
-                        Lich.TilesMapTools.generateEdge(tilesMap, x, y);
-                    }
-                }
-            })();
-            // tráva rohy
-            (function () {
-                for (var y = 0; y < tilesMap.height; y++) {
-                    for (var x = 0; x < tilesMap.width; x++) {
-                        if (tilesMap.mapRecord.getValue(x, y) === Lich.SurfacePositionKey.VOID)
-                            continue;
-                        Lich.TilesMapTools.generateCorner(tilesMap, x, y);
-                    }
                 }
             })();
             // Minerály 
@@ -245,32 +225,37 @@ var Lich;
                             }
                         }
                     }
-                    // Přegeneruj hrany
-                    (function () {
-                        tilesToReset.forEach(function (item) {
-                            var x = item[0];
-                            var y = item[1];
-                            Lich.TilesMapTools.generateEdge(tilesMap, x, y);
-                        });
-                    })();
-                    // Přegeneruj rohy
-                    (function () {
-                        tilesToReset.forEach(function (item) {
-                            var x = item[0];
-                            var y = item[1];
-                            Lich.TilesMapTools.generateCorner(tilesMap, x, y);
-                        });
-                    })();
                 };
                 // random deposit
-                var holesP = mass * 0.001;
-                for (var i = 0; i < holesP; i++) {
-                    var dia = Math.floor(Math.random() * 4) + 2;
-                    var holeX = Math.floor(Math.random() * tilesMap.width);
-                    var holeY = Math.floor(Math.random() * tilesMap.height);
+                var depositP = mass * 0.005;
+                for (var i = 0; i < depositP; i++) {
+                    var depositX = Math.floor(Math.random() * tilesMap.width);
+                    var depositY = Math.floor(Math.random() * tilesMap.height);
                     // z čeho bude ložisko?
                     var index = Math.floor(Lich.Resources.getInstance().mapSurfacesFreqPool.length * Math.random());
-                    createDeposit(holeX, holeY, dia, Lich.Resources.getInstance().mapSurfacesFreqPool[index]);
+                    var srfIndex = Lich.Resources.getInstance().mapSurfacesFreqPool[index];
+                    var definition = Lich.Resources.getInstance().mapSurfaceDefs[srfIndex];
+                    var dia = Math.floor(Math.random() * definition.maxSize) + 2;
+                    // var dia = Math.floor(Math.random() * 3) + 2;
+                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)) {
+                        createDeposit(depositX, depositY, dia, srfIndex);
+                    }
+                }
+            })();
+            // hrany
+            (function () {
+                for (var y = 0; y < tilesMap.height; y++) {
+                    for (var x = 0; x < tilesMap.width; x++) {
+                        Lich.TilesMapTools.generateEdge(tilesMap, x, y);
+                    }
+                }
+            })();
+            // rohy
+            (function () {
+                for (var y = 0; y < tilesMap.height; y++) {
+                    for (var x = 0; x < tilesMap.width; x++) {
+                        Lich.TilesMapTools.generateCorner(tilesMap, x, y);
+                    }
                 }
             })();
             // objekty 

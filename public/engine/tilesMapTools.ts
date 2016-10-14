@@ -11,6 +11,9 @@ namespace Lich {
 
         static generateEdge(tilesMap: TilesMap, x: number, y: number) {
             let val = tilesMap.mapRecord.getValue(x, y);
+            if (!val || val == SurfacePositionKey.VOID)
+                return;
+
             let valT = tilesMap.mapRecord.getValue(x, y - 1);
             let valR = tilesMap.mapRecord.getValue(x + 1, y);
             let valB = tilesMap.mapRecord.getValue(x, y + 1);
@@ -20,27 +23,28 @@ namespace Lich {
 
             let srfcType = srfi.getType(val);
 
-            if (valT === SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false) {
+            if (!valT || valT === SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getTopPositionIndexByCoordPattern(x, y, srfcType));
             }
 
-            if (valR === SurfacePositionKey.VOID || srfi.isSeamless(valR, srfcType) == false) {
+            if (!valR || valR === SurfacePositionKey.VOID || srfi.isSeamless(valR, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getRightPositionIndexByCoordPattern(x, y, srfcType));
             }
 
-            if (valB === SurfacePositionKey.VOID || srfi.isSeamless(valB, srfcType) == false) {
+            if (!valB || valB === SurfacePositionKey.VOID || srfi.isSeamless(valB, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getBottomPositionIndexByCoordPattern(x, y, srfcType));
             }
 
-            if (valL === SurfacePositionKey.VOID || srfi.isSeamless(valL, srfcType) == false) {
+            if (!valL || valL === SurfacePositionKey.VOID || srfi.isSeamless(valL, srfcType) == false) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getLeftPositionIndexByCoordPattern(x, y, srfcType));
             }
-
-            return tilesMap.mapRecord.getValue(x, y);
         }
 
         static generateCorner(tilesMap: TilesMap, x: number, y: number) {
             var val = tilesMap.mapRecord.getValue(x, y);
+            if (!val || val == SurfacePositionKey.VOID)
+                return;
+
             var valT = tilesMap.mapRecord.getValue(x, y - 1);
             var valR = tilesMap.mapRecord.getValue(x + 1, y);
             var valB = tilesMap.mapRecord.getValue(x, y + 1);
@@ -87,8 +91,6 @@ namespace Lich {
             if (srfi.isRightPosition(val) && (srfi.isTopPosition(valL) || valT === SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false)) {
                 tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.TR));
             }
-
-            return tilesMap.mapRecord.getValue(x, y);
         }
 
         static writeObjectRecord(tilesMap: TilesMap, cx: number, cy: number, object: MapObjDefinition) {
