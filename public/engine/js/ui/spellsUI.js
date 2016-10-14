@@ -31,6 +31,8 @@ var Lich;
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
+            var offset = 5;
+            self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
             self.selectSpell(0);
         }
         SpellsUI.prototype.toggleShift = function () {
@@ -63,6 +65,7 @@ var Lich;
             self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.choosenItemNumber = spellNumber;
+            self.updateCache();
         };
         SpellsUI.prototype.getChoosenSpell = function () {
             var alt = this.alternativeSpellIndex[this.choosenItemNumber];

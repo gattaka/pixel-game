@@ -78,6 +78,9 @@ namespace Lich {
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
 
             this.willRegen = 10;
+
+            this.onHealthChange(0);
+            this.onWillChange(0);
         }
 
         shift(shift) {

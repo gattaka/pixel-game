@@ -45,10 +45,12 @@ namespace Lich {
         }
 
         fillHealth(amount: number) {
-            this.currentHealth += amount;
-            if (this.currentHealth > this.maxHealth)
-                this.currentHealth = this.maxHealth;
-            this.onHealthChange(0);
+            if (this.currentHealth < this.maxHealth) {
+                this.currentHealth += amount;
+                if (this.currentHealth > this.maxHealth)
+                    this.currentHealth = this.maxHealth;
+                this.onHealthChange(0);
+            }
         }
 
         setNewMaxHealth(maxHealth: number) {
@@ -81,10 +83,12 @@ namespace Lich {
         }
 
         fillWill(amount: number) {
-            this.currentWill += amount;
-            if (this.currentWill > this.maxWill)
-                this.currentWill = this.maxWill;
-            this.onWillChange(0);
+            if (this.currentWill < this.maxWill) {
+                this.currentWill += amount;
+                if (this.currentWill > this.maxWill)
+                    this.currentWill = this.maxWill;
+                this.onWillChange(0);
+            }
         }
 
         setNewMaxWill(maxWill: number) {

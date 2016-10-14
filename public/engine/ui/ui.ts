@@ -145,7 +145,23 @@ namespace Lich {
         }
     }
 
+    export class PartsUI extends AbstractUI {
+
+        static SELECT_BORDER = 5;
+        static SPACING = 12;
+
+        constructor(public n: number, public m: number) {
+            super(PartsUI.pixelsByX(n), PartsUI.pixelsByX(m));
+        }
+
+        static pixelsByX(x: number): number {
+            return x * Resources.PARTS_SIZE + (x - 1) * (PartsUI.SPACING) + 2 * AbstractUI.BORDER;
+        }
+
+    }
+
     export class Button extends createjs.Container {
+        public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
         constructor(bitmap: UIGFXKey) {
             super();
 
@@ -161,27 +177,11 @@ namespace Lich {
                 btmp.y = PartsUI.SELECT_BORDER;
             }
 
-            let btnHitAreaSide = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
             let hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, Button.sideSize, Button.sideSize);
             this.hitArea = hitArea;
 
         }
-    }
-
-    export class PartsUI extends AbstractUI {
-
-        static SELECT_BORDER = 5;
-        static SPACING = 12;
-
-        constructor(public n: number, public m: number) {
-            super(PartsUI.pixelsByX(n), PartsUI.pixelsByX(m));
-        }
-
-        static pixelsByX(x: number): number {
-            return x * Resources.PARTS_SIZE + (x - 1) * (PartsUI.SPACING) + 2 * AbstractUI.BORDER;
-        }
-
     }
 
 }

@@ -88,6 +88,8 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CRAFT_KEY);
                 }
             }, null, false);
+            var offset = 5;
+            self.cache(-offset, -offset, self.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2, self.height + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2);
         }
         CraftingUI.prototype.setInventoryUI = function (inventoryUI) {
             this.inventoryUI = inventoryUI;
@@ -102,6 +104,7 @@ var Lich;
                     this.createUIItem(item, i - itemsOffset);
                 }
             }
+            this.updateCache();
         };
         CraftingUI.prototype.createUIItem = function (item, i) {
             var self = this;
@@ -137,6 +140,7 @@ var Lich;
                         ingredUI.y = 0;
                         self.ingredientsCont.itemsCont.addChild(ingredUI);
                     }
+                    self.updateCache();
                 }, null, false);
             })();
         };

@@ -38,6 +38,9 @@ namespace Lich {
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
 
+            let offset = 5;
+            self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
+
             self.selectSpell(0);
         }
 
@@ -75,6 +78,7 @@ namespace Lich {
             self.itemHighlightShape.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.itemHighlightShape.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.choosenItemNumber = spellNumber;
+            self.updateCache();
         }
 
         getChoosenSpell(): SpellKey {

@@ -106,6 +106,11 @@ namespace Lich {
                 }
             }, null, false);
 
+            let offset = 5;
+            self.cache(-offset, -offset,
+                self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
+                self.height + offset * 2);
+
         }
 
         render() {
@@ -119,6 +124,7 @@ namespace Lich {
                     this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
                 }
             }
+            this.updateCache();
         }
 
         handleMouse(mouse) {
@@ -158,6 +164,7 @@ namespace Lich {
                 }
                 self.collapsed = !self.collapsed;
                 self.toggleFlag = false;
+                self.updateCache();
             }
         }
 
@@ -191,6 +198,7 @@ namespace Lich {
                     self.itemsTypeArray[self.itemsTypeIndexMap[item]] = null;
                     self.itemsTypeIndexMap[item] = null;
                 }
+                self.updateCache();
             }
         }
 
@@ -231,9 +239,8 @@ namespace Lich {
                     && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
                     self.createUIItem(item, i - itemsOffset);
                 }
-
-                return true; // usazeno
             }
+            self.updateCache();
         }
 
         createUIItem(item: InventoryKey, i: number) {
@@ -270,6 +277,7 @@ namespace Lich {
                     self.collapsedItem.x = PartsUI.BORDER;
                     self.collapsedItem.y = PartsUI.BORDER;
                     self.collapsedCont.visible = false;
+                    self.updateCache();
                 }, null, false);
             })();
         }

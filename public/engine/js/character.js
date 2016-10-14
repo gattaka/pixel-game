@@ -34,10 +34,12 @@ var Lich;
             this.onHealthChange(this.currentHealth - oldValue);
         };
         Character.prototype.fillHealth = function (amount) {
-            this.currentHealth += amount;
-            if (this.currentHealth > this.maxHealth)
-                this.currentHealth = this.maxHealth;
-            this.onHealthChange(0);
+            if (this.currentHealth < this.maxHealth) {
+                this.currentHealth += amount;
+                if (this.currentHealth > this.maxHealth)
+                    this.currentHealth = this.maxHealth;
+                this.onHealthChange(0);
+            }
         };
         Character.prototype.setNewMaxHealth = function (maxHealth) {
             this.maxHealth = maxHealth;
@@ -64,10 +66,12 @@ var Lich;
             }
         };
         Character.prototype.fillWill = function (amount) {
-            this.currentWill += amount;
-            if (this.currentWill > this.maxWill)
-                this.currentWill = this.maxWill;
-            this.onWillChange(0);
+            if (this.currentWill < this.maxWill) {
+                this.currentWill += amount;
+                if (this.currentWill > this.maxWill)
+                    this.currentWill = this.maxWill;
+                this.onWillChange(0);
+            }
         };
         Character.prototype.setNewMaxWill = function (maxWill) {
             this.maxWill = maxWill;

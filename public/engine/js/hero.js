@@ -42,6 +42,8 @@ var Lich;
             this.state = Hero.IDLE_STATE;
             this.initialized = false;
             this.willRegen = 10;
+            this.onHealthChange(0);
+            this.onWillChange(0);
         }
         Hero.prototype.shift = function (shift) {
             var self = this;

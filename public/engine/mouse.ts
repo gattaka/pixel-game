@@ -2,8 +2,11 @@ namespace Lich {
     export class Mouse {
         down: boolean;
         rightDown: boolean;
-        x: number;
+        clickChanged: boolean;
+        clickChangedX: number;
+        clickChangedY: number;
+        consumedByUI: boolean;
         y: number;
-        wheelDeltaY: number;
+        x: number;
     }
 }
