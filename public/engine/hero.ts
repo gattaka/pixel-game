@@ -22,8 +22,8 @@ namespace Lich {
         static HEIGHT = 80;
 
         // Collision offset
-        static COLLXOFFSET = 14;
-        static COLLYOFFSET = 10;
+        static COLLXOFFSET = 16;
+        static COLLYOFFSET = 12;
 
         static stateAnimation = {
             WALKR_STATE: "walkR",
@@ -78,6 +78,9 @@ namespace Lich {
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
 
             this.willRegen = 10;
+
+            this.onHealthChange(0);
+            this.onWillChange(0);
         }
 
         shift(shift) {

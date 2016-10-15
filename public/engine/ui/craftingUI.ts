@@ -113,6 +113,10 @@ namespace Lich {
                 }
             }, null, false);
 
+            let offset = 5;
+            self.cache(-offset, -offset,
+                self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
+                self.height + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2);
         }
 
         render() {
@@ -127,6 +131,7 @@ namespace Lich {
                     this.createUIItem(item, i - itemsOffset);
                 }
             }
+            this.updateCache();
         }
 
         createUIItem(item: Recipe, i: number) {
@@ -166,6 +171,7 @@ namespace Lich {
                         ingredUI.y = 0;
                         self.ingredientsCont.itemsCont.addChild(ingredUI);
                     }
+                    self.updateCache();
                 }, null, false);
             })();
         }

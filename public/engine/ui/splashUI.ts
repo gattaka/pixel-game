@@ -23,6 +23,20 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.7");
+            version.addChange("Optimization");
+            version.addChange("Surface sprites and map format extended");
+            version.addChange("Minor GFX changes");
+            version.addChange("Arrow keys movement");
+            version.addChange("Coal introduced");
+            version.addChange("Iron introduced");
+            version.addChange("Roof introduced");
+            version.addChange("Surface separation (surface transitions)");
+            version.addChange("Fall speed limited");
+            version.addChange("UI-or-World mouse dispatch improved");
+            version.addChange("Player collision with surface improved");
+            this.addVersion(version);
+
             version = new Version("0.6");
             version.addChange("Save/Load/New-world buttons");
             version.addChange("Meteor spell");
@@ -174,7 +188,7 @@ namespace Lich {
             btn.on("click", function (evt) {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
-            }, null, false);    
+            }, null, false);
             return btn;
         }
 

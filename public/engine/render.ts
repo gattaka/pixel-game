@@ -455,9 +455,9 @@ namespace Lich {
 
                                     // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
                                     if (y === ry &&
-                                        (indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.T) ||
-                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.TL) ||
-                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), SurfacePositionKey.TR))) {
+                                        (indx.isTopPosition(self.tilesMap.mapRecord.getValue(x, y)) ||
+                                            indx.isTopLeftPosition(self.tilesMap.mapRecord.getValue(x, y)) ||
+                                            indx.isTopRightPosition(self.tilesMap.mapRecord.getValue(x, y)))) {
                                         self.digObject(x, y - 1);
                                     }
 
@@ -626,7 +626,7 @@ namespace Lich {
                     for (var y = ry; y <= ry + 1; y++) {
                         var sector = self.getSectorByTiles(x, y);
 
-                        var pos = TilesMapTools.getSurfaceBgrPositionByCoordPattern(x, y);
+                        var pos = Resources.getInstance().surfaceBgrIndex.getSurfaceBgrPositionByCoordPattern(x, y);
 
                         // vytvoř nové dílky
                         var posIndex = Resources.getInstance().surfaceBgrIndex.getPositionIndex(surfaceBgrType, pos);
@@ -676,10 +676,7 @@ namespace Lich {
                                 // okraje vyresetuj (pokud nejsou středy
                                 if (val !== SurfacePositionKey.VOID) {
                                     self.tilesMap.mapRecord.setValue(x, y,
-                                        Resources.getInstance().surfaceIndex.getPositionIndex(
-                                            srfcType,
-                                            TilesMapTools.getSurfacePositionByCoordPattern(x, y)
-                                        ));
+                                        Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
                                     tilesToReset.push([x, y]);
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -693,8 +690,7 @@ namespace Lich {
                             }
                             // pokud jsem vnitřní část výběru, vytvoř nové dílky
                             else {
-                                var pos = TilesMapTools.getSurfacePositionByCoordPattern(x, y);
-                                var posIndex = Resources.getInstance().surfaceIndex.getPositionIndex(surfaceType, pos);
+                                var posIndex = Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, surfaceType);
                                 self.tilesMap.mapRecord.setValue(x, y, posIndex);
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);

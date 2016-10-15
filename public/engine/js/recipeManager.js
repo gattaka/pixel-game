@@ -81,6 +81,12 @@ var Lich;
                     [Lich.InventoryKey.INV_WOOD_KEY, 1]
                 ]
             ]);
+            this.buildRecipe([
+                [Lich.InventoryKey.INV_ROOF_KEY, 5], [
+                    [Lich.InventoryKey.INV_WOOD_KEY, 1],
+                    [Lich.InventoryKey.INV_DIRT_KEY, 1]
+                ]
+            ]);
         }
         RecipeManager.prototype.buildRecipe = function (json) {
             var self = this;

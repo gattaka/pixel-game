@@ -157,7 +157,21 @@ var Lich;
             this.invObj = invObj;
             this.quant = quant;
             this.freq = freq;
+            this.minSize = 1;
+            this.maxSize = 3;
+            this.minDepth = 10;
+            this.maxDepth = 100;
         }
+        MapSurfaceDefinition.prototype.setSize = function (minSize, maxSize) {
+            this.minSize = minSize;
+            this.maxSize = maxSize;
+            return this;
+        };
+        MapSurfaceDefinition.prototype.setDepth = function (minDepth, maxDepth) {
+            this.minDepth = minDepth;
+            this.maxDepth = maxDepth;
+            return this;
+        };
         return MapSurfaceDefinition;
     }(Diggable));
     Lich.MapSurfaceDefinition = MapSurfaceDefinition;

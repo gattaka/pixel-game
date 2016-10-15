@@ -43,12 +43,17 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_FLORITE_KEY"] = 3] = "SRFC_FLORITE_KEY";
         SurfaceKey[SurfaceKey["SRFC_BRICK_KEY"] = 4] = "SRFC_BRICK_KEY";
         SurfaceKey[SurfaceKey["SRFC_STRAW_KEY"] = 5] = "SRFC_STRAW_KEY";
+        SurfaceKey[SurfaceKey["SRFC_ROOF_KEY"] = 6] = "SRFC_ROOF_KEY";
+        SurfaceKey[SurfaceKey["SRFC_IRON_KEY"] = 7] = "SRFC_IRON_KEY";
+        SurfaceKey[SurfaceKey["SRFC_COAL_KEY"] = 8] = "SRFC_COAL_KEY";
+        SurfaceKey[SurfaceKey["SRFC_ROCK_KEY"] = 9] = "SRFC_ROCK_KEY";
     })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
     var SurfaceKey = Lich.SurfaceKey;
     (function (SurfaceBgrKey) {
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_BRICK_KEY"] = 0] = "SRFC_BGR_BRICK_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_WOODWALL_KEY"] = 1] = "SRFC_BGR_WOODWALL_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_STRAW_KEY"] = 2] = "SRFC_BGR_STRAW_KEY";
+        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROOF_KEY"] = 3] = "SRFC_BGR_ROOF_KEY";
     })(Lich.SurfaceBgrKey || (Lich.SurfaceBgrKey = {}));
     var SurfaceBgrKey = Lich.SurfaceBgrKey;
     (function (MapObjectKey) {
@@ -95,6 +100,10 @@ var Lich;
         InventoryKey[InventoryKey["INV_DOOR_KEY"] = 15] = "INV_DOOR_KEY";
         InventoryKey[InventoryKey["INV_BRICKWALL_KEY"] = 16] = "INV_BRICKWALL_KEY";
         InventoryKey[InventoryKey["INV_WOODWALL_KEY"] = 17] = "INV_WOODWALL_KEY";
+        InventoryKey[InventoryKey["INV_ROOF_KEY"] = 18] = "INV_ROOF_KEY";
+        InventoryKey[InventoryKey["INV_IRON_KEY"] = 19] = "INV_IRON_KEY";
+        InventoryKey[InventoryKey["INV_COAL_KEY"] = 20] = "INV_COAL_KEY";
+        InventoryKey[InventoryKey["INV_ROCK_KEY"] = 21] = "INV_ROCK_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
     (function (UIGFXKey) {
@@ -214,6 +223,10 @@ var Lich;
                 new Load("images/ui/inventory/inv_door.png", InventoryKey[InventoryKey.INV_DOOR_KEY]),
                 new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICKWALL_KEY]),
                 new Load("images/ui/inventory/inv_woodwall.png", InventoryKey[InventoryKey.INV_WOODWALL_KEY]),
+                new Load("images/ui/inventory/inv_roof.png", InventoryKey[InventoryKey.INV_ROOF_KEY]),
+                new Load("images/ui/inventory/inv_iron.png", InventoryKey[InventoryKey.INV_IRON_KEY]),
+                new Load("images/ui/inventory/inv_coal.png", InventoryKey[InventoryKey.INV_COAL_KEY]),
+                new Load("images/ui/inventory/inv_rock.png", InventoryKey[InventoryKey.INV_ROCK_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -228,10 +241,15 @@ var Lich;
                 new Load("images/surfaces/florite.png", SurfaceKey[SurfaceKey.SRFC_FLORITE_KEY]),
                 new Load("images/surfaces/brick.png", SurfaceKey[SurfaceKey.SRFC_BRICK_KEY]),
                 new Load("images/surfaces/straw.png", SurfaceKey[SurfaceKey.SRFC_STRAW_KEY]),
-                // surface bacgrounds
+                new Load("images/surfaces/roof.png", SurfaceKey[SurfaceKey.SRFC_ROOF_KEY]),
+                new Load("images/surfaces/iron.png", SurfaceKey[SurfaceKey.SRFC_IRON_KEY]),
+                new Load("images/surfaces/coal.png", SurfaceKey[SurfaceKey.SRFC_COAL_KEY]),
+                new Load("images/surfaces/rock.png", SurfaceKey[SurfaceKey.SRFC_ROCK_KEY]),
+                // surface backgrounds
                 new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
                 new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
                 new Load("images/surfaces/straw_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]),
+                new Load("images/surfaces/roof_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]),
                 // objects
                 new Load("images/parts/berry.png", MapObjectKey[MapObjectKey.MAP_BERRY_KEY]),
                 new Load("images/parts/bush.png", MapObjectKey[MapObjectKey.MAP_BUSH_KEY]),
@@ -342,10 +360,14 @@ var Lich;
             // jsou dle frekvence usazovány jiné povrchy
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_DIRT_KEY, InventoryKey.INV_DIRT_KEY, 1, 0));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 1));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 1));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 1).setDepth(50, 100));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 1).setDepth(70, 100));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1, 0));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 10).setDepth(15, 100));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_COAL_KEY, InventoryKey.INV_COAL_KEY, 1, 10).setDepth(20, 100));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 20).setDepth(10, 100).setSize(2, 5));
             (function () {
                 // vytvoř frekvenční pool pro povrchy
                 for (var _i = 0, _a = self.mapSurfaceDefs; _i < _a.length; _i++) {
@@ -366,6 +388,7 @@ var Lich;
             registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1));
             registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1));
             registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1));
+            registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1));
             /**
              * OBJEKTY
              */
@@ -430,6 +453,13 @@ var Lich;
             };
             // usaditelných jako objekt
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM2_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM2_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM3_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM3_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_BERRY_KEY, self.mapObjectDefs[MapObjectKey.MAP_BERRY_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT2_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT2_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT3_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT3_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT4_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]).setFrames(4));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_DOOR_KEY, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]));
@@ -443,6 +473,11 @@ var Lich;
                 .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_KRYSTAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_KRYSTAL_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_FLORITE_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_FLORITE_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_IRON_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_IRON_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_COAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_COAL_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ROCK_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ROOF_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROOF_KEY])
+                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]));
             /**
              * SPELLS
              */

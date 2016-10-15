@@ -356,9 +356,9 @@ var Lich;
                                 else {
                                     // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
                                     if (y === ry &&
-                                        (indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.T) ||
-                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.TL) ||
-                                            indx.isPosition(self.tilesMap.mapRecord.getValue(x, y), Lich.SurfacePositionKey.TR))) {
+                                        (indx.isTopPosition(self.tilesMap.mapRecord.getValue(x, y)) ||
+                                            indx.isTopLeftPosition(self.tilesMap.mapRecord.getValue(x, y)) ||
+                                            indx.isTopRightPosition(self.tilesMap.mapRecord.getValue(x, y)))) {
                                         self.digObject(x, y - 1);
                                     }
                                     self.tilesMap.mapRecord.setValue(x, y, Lich.SurfacePositionKey.VOID);
@@ -507,7 +507,7 @@ var Lich;
                 for (var x = rx; x <= rx + 1; x++) {
                     for (var y = ry; y <= ry + 1; y++) {
                         var sector = self.getSectorByTiles(x, y);
-                        var pos = Lich.TilesMapTools.getSurfaceBgrPositionByCoordPattern(x, y);
+                        var pos = Lich.Resources.getInstance().surfaceBgrIndex.getSurfaceBgrPositionByCoordPattern(x, y);
                         // vytvoř nové dílky
                         var posIndex = Lich.Resources.getInstance().surfaceBgrIndex.getPositionIndex(surfaceBgrType, pos);
                         self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
@@ -546,7 +546,7 @@ var Lich;
                                 var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
                                 // okraje vyresetuj (pokud nejsou středy
                                 if (val !== Lich.SurfacePositionKey.VOID) {
-                                    self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.TilesMapTools.getSurfacePositionByCoordPattern(x, y)));
+                                    self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
                                     tilesToReset.push([x, y]);
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -557,8 +557,7 @@ var Lich;
                                 }
                             }
                             else {
-                                var pos = Lich.TilesMapTools.getSurfacePositionByCoordPattern(x, y);
-                                var posIndex = Lich.Resources.getInstance().surfaceIndex.getPositionIndex(surfaceType, pos);
+                                var posIndex = Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, surfaceType);
                                 self.tilesMap.mapRecord.setValue(x, y, posIndex);
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);

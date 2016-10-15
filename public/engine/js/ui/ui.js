@@ -132,28 +132,6 @@ var Lich;
         return Highlight;
     }(UIShape));
     Lich.Highlight = Highlight;
-    var Button = (function (_super) {
-        __extends(Button, _super);
-        function Button(bitmap) {
-            _super.call(this);
-            var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
-            this.addChild(bgr);
-            bgr.x = 0;
-            bgr.y = 0;
-            if (bitmap) {
-                var btmp = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[bitmap]);
-                this.addChild(btmp);
-                btmp.x = PartsUI.SELECT_BORDER;
-                btmp.y = PartsUI.SELECT_BORDER;
-            }
-            var btnHitAreaSide = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, btnHitAreaSide, btnHitAreaSide);
-            this.hitArea = hitArea;
-        }
-        return Button;
-    }(createjs.Container));
-    Lich.Button = Button;
     var PartsUI = (function (_super) {
         __extends(PartsUI, _super);
         function PartsUI(n, m) {
@@ -169,4 +147,26 @@ var Lich;
         return PartsUI;
     }(AbstractUI));
     Lich.PartsUI = PartsUI;
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        function Button(bitmap) {
+            _super.call(this);
+            var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
+            this.addChild(bgr);
+            bgr.x = 0;
+            bgr.y = 0;
+            if (bitmap) {
+                var btmp = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[bitmap]);
+                this.addChild(btmp);
+                btmp.x = PartsUI.SELECT_BORDER;
+                btmp.y = PartsUI.SELECT_BORDER;
+            }
+            var hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0, Button.sideSize, Button.sideSize);
+            this.hitArea = hitArea;
+        }
+        Button.sideSize = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+        return Button;
+    }(createjs.Container));
+    Lich.Button = Button;
 })(Lich || (Lich = {}));

@@ -68,38 +68,32 @@ namespace Lich {
             /* Mouse events */
             /*--------------*/
 
-            (function () {
-                // Všechno musí být s prefixem 'stage' jinak se bude snažit chytat 
-                // eventy s ohledem na konkrétní objekty a to se drasticky projevuje 
-                // na FPS -- takhle se zjišťuje event obecně a je to bez ztrát 
-                self.stage.addEventListener("stagemousedown", function (event: any) {
-                    self.mouse.x = event["stageX"];
-                    self.mouse.y = event["stageY"];
-                    if (event.nativeEvent.button == 0) {
-                        self.mouse.down = true;
-                    } else {
-                        self.mouse.rightDown = true;
-                    }
-                });
-                self.stage.addEventListener("stagemousemove", function (event) {
-                    self.mouse.x = event["stageX"];
-                    self.mouse.y = event["stageY"];
-                });
-                self.stage.addEventListener("stagemouseup", function (event: any) {
-                    if (event.nativeEvent.button == 0) {
-                        self.mouse.down = false;
-                    } else {
-                        self.mouse.rightDown = false;
-                    }
-                });
-                // wheel createjs ještě neumí
-                // https://github.com/CreateJS/EaselJS/issues/97
-                self.canvas.addEventListener('mousewheel', function (event) {
-                    self.mouse.wheelDeltaY = event.wheelDeltaY;
-                    return false;
-                }, false);
+            self.canvas.onmousedown = (event: MouseEvent) => {
+                if (event.button == 0) {
+                    self.mouse.down = true;
+                } else {
+                    self.mouse.rightDown = true;
+                }
+                self.mouse.clickChanged = true;
+                self.mouse.clickChangedX = event.clientX;
+                self.mouse.clickChangedY = event.clientY;
+            };
 
-            })();
+            self.canvas.onmousemove = (event: MouseEvent) => {
+                self.mouse.x = event.clientX;
+                self.mouse.y = event.clientY;
+            };
+
+            self.canvas.onmouseup = (event: MouseEvent) => {
+                if (event.button == 0) {
+                    self.mouse.down = false;
+                } else {
+                    self.mouse.rightDown = false;
+                }
+                self.mouse.clickChanged = true;
+                self.mouse.clickChangedX = event.clientX;
+                self.mouse.clickChangedY = event.clientY;
+            }
 
             let init = function () {
 
@@ -230,10 +224,21 @@ namespace Lich {
                     self.getWorld().handleTick(delta);
 
                     // UI má při akcích myši přednost
-                    if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
+                    // isMouseInUI je časově náročné, proto je volání filtrováno přes clickChanged příznak
+                    // a porovnání souřadnic
+                    if (self.mouse.clickChanged && self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
                         self.ui.handleMouse(self.mouse, delta);
+                        self.mouse.clickChanged = false;
+                        self.mouse.consumedByUI = true;
                     } else {
-                        self.getWorld().handleMouse(self.mouse, delta);
+                        // změna clickChanged se zapíše jenom jednou, pak začnu padat do této větve podmínky,
+                        // kontroluj proto ještě souřadnice, na kterých se to stalo (ale jenom v případě, že 
+                        // tomu předcházelo kliknutí do UI -- jinak by se muselo po mousedown ještě pohnout
+                        // kurzorem aby se ve world něco stalo)
+                        if (self.mouse.consumedByUI == false || (self.mouse.x != self.mouse.clickChangedX && self.mouse.y != self.mouse.clickChangedY)) {
+                            self.getWorld().handleMouse(self.mouse, delta);
+                            self.mouse.consumedByUI = false;
+                        }
                     }
 
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 
@@ -246,19 +251,15 @@ namespace Lich {
                         down: false,
                         left: false,
                         right: false,
-                        up2: false,
-                        down2: false,
-                        left2: false,
-                        right2: false
                     };
                     if (self.keys[37])
-                        directions.left2 = true;
+                        directions.left = true;
                     if (self.keys[38])
-                        directions.up2 = true;
+                        directions.up = true;
                     if (self.keys[39])
-                        directions.right2 = true;
+                        directions.right = true;
                     if (self.keys[40])
-                        directions.down2 = true;
+                        directions.down = true;
                     if (self.keys[65])
                         directions.left = true;
                     if (self.keys[87])

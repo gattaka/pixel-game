@@ -69,12 +69,14 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
+            var offset = 5;
+            self.cache(-offset, -offset, self.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2, self.height + offset * 2);
         }
         InventoryUI.prototype.serialize = function () {
             var _this = this;
             var array = [];
             this.itemsTypeArray.forEach(function (i) {
-                if (i) {
+                if (i == 0 || i) {
                     array.push(_this.itemsQuantityMap[i]);
                     array.push(i);
                 }
@@ -97,6 +99,7 @@ var Lich;
                     this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
                 }
             }
+            this.updateCache();
         };
         InventoryUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
@@ -134,6 +137,7 @@ var Lich;
                 }
                 self.collapsed = !self.collapsed;
                 self.toggleFlag = false;
+                self.updateCache();
             }
         };
         InventoryUI.prototype.prepareForToggleInv = function () {
@@ -165,6 +169,7 @@ var Lich;
                     self.itemsTypeArray[self.itemsTypeIndexMap[item]] = null;
                     self.itemsTypeIndexMap[item] = null;
                 }
+                self.updateCache();
             }
         };
         InventoryUI.prototype.invInsert = function (item, quantChange) {
@@ -190,7 +195,7 @@ var Lich;
                 var i = 0;
                 for (i = 0; i < self.itemsTypeArray.length; i++) {
                     // buď najdi volné místo...
-                    if (!self.itemsTypeArray[i]) {
+                    if (self.itemsTypeArray[i] != 0 && !self.itemsTypeArray[i]) {
                         break;
                     }
                 }
@@ -204,8 +209,8 @@ var Lich;
                     && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
                     self.createUIItem(item, i - itemsOffset);
                 }
-                return true; // usazeno
             }
+            self.updateCache();
         };
         InventoryUI.prototype.createUIItem = function (item, i) {
             var self = this;
@@ -237,6 +242,7 @@ var Lich;
                     self.collapsedItem.x = Lich.PartsUI.BORDER;
                     self.collapsedItem.y = Lich.PartsUI.BORDER;
                     self.collapsedCont.visible = false;
+                    self.updateCache();
                 }, null, false);
             })();
         };
