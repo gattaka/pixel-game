@@ -173,20 +173,20 @@ var Lich;
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno přes clickChanged příznak
                     // a porovnání souřadnic
-                    if (self.mouse.clickChanged && self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                        self.ui.handleMouse(self.mouse, delta);
-                        self.mouse.clickChanged = false;
-                        self.mouse.consumedByUI = true;
-                    }
-                    else {
-                        // změna clickChanged se zapíše jenom jednou, pak začnu padat do této větve podmínky,
-                        // kontroluj proto ještě souřadnice, na kterých se to stalo (ale jenom v případě, že 
-                        // tomu předcházelo kliknutí do UI -- jinak by se muselo po mousedown ještě pohnout
-                        // kurzorem aby se ve world něco stalo)
-                        if (self.mouse.consumedByUI == false || (self.mouse.x != self.mouse.clickChangedX && self.mouse.y != self.mouse.clickChangedY)) {
-                            self.getWorld().handleMouse(self.mouse, delta);
-                            self.mouse.consumedByUI = false;
+                    if (self.mouse.clickChanged) {
+                        if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
+                            self.ui.handleMouse(self.mouse, delta);
+                            self.mouse.consumedByUI = true;
                         }
+                        self.mouse.clickChanged = false;
+                    }
+                    // změna clickChanged se zapíše jenom jednou, pak začnu padat do této větve podmínky,
+                    // kontroluj proto ještě souřadnice, na kterých se to stalo (ale jenom v případě, že 
+                    // tomu předcházelo kliknutí do UI -- jinak by se muselo po mousedown ještě pohnout
+                    // kurzorem aby se ve world něco stalo)
+                    if (self.mouse.consumedByUI == false || (self.mouse.x != self.mouse.clickChangedX && self.mouse.y != self.mouse.clickChangedY)) {
+                        self.getWorld().handleMouse(self.mouse, delta);
+                        self.mouse.consumedByUI = false;
                     }
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 
                     // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
