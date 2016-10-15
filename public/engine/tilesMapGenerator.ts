@@ -19,7 +19,7 @@ namespace Lich {
         // musí být sudé
         static DEFAULT_MAP_WIDTH = 2000;
         static DEFAULT_MAP_HEIGHT = 1000;
-        static DEFAULT_MAP_GROUND_LEVEL = 80;
+        static DEFAULT_MAP_GROUND_LEVEL = 40;
 
         private constructor() { }
 
@@ -140,16 +140,52 @@ namespace Lich {
 
             var mass = tilesMap.height * tilesMap.width;
 
+            // hills profile
+            let hills = new Array<number>();
+            // main
+            let mainSpeed = 180 / tilesMap.width;
+            let mainAmp = 25;
+            let mainShift = Math.random() * 180;
+            // osc1
+            let osc1Speed = 0.5;
+            let osc1Amp = 1;
+            let osc1Shift = 0;
+            // osc2
+            let osc2Speed = 3;
+            let osc2Amp = 1;
+            let osc2Shift = 0;
+            // osc3
+            let osc3Speed = 6;
+            let osc3Amp = 1;
+            let osc3Shift = 0;
+            for (var x = 0; x < tilesMap.width; x++) {
+                let xx = x * mainSpeed + mainShift;
+                let y1 = Math.sin(osc1Speed * Math.PI / 180 * (xx + osc1Shift)) * osc1Amp;
+                let y2 = Math.sin(osc2Speed * Math.PI / 180 * (xx + osc2Shift)) * osc2Amp;
+                let y3 = Math.sin(osc3Speed * Math.PI / 180 * (xx + osc3Shift)) * osc3Amp;
+                hills[x] = Math.abs(y1 + y2 + y3) * mainAmp;
+            }
+
+            let fillTile = (x: number, y: number, callback: (nx, ny) => any) => {
+                for (var _x = x; _x <= x + 1; _x++) {
+                    for (var _y = y; _y <= y + 1; _y++) {
+                        callback(_x, _y);
+                    }
+                }
+            }
+
             // base generation
-            for (var y = 0; y < tilesMap.height; y++) {
-                for (var x = 0; x < tilesMap.width; x++) {
-                    if (y < TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL) {
-                        tilesMap.mapRecord.setValue(x, y, SurfacePositionKey.VOID);
-                    } else {
+            for (var y = 0; y < tilesMap.height; y += 2) {
+                for (var x = 0; x < tilesMap.width; x += 2) {
+                    // aplikuj profil kopce pokud je vytvořen "vzduch" mapy
+                    fillTile(x, y, (nx, ny) => {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
-                        tilesMap.mapRecord.setValue(x, y, Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, SurfaceKey.SRFC_DIRT_KEY));
-                    }
+                        tilesMap.mapRecord.setValue(nx, ny,
+                            y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, SurfaceKey.SRFC_DIRT_KEY)
+                                : SurfacePositionKey.VOID
+                        );
+                    });
                 }
             }
 
@@ -176,7 +212,7 @@ namespace Lich {
                             }
                             // občas udělej na okraji díry... díru
                             if (_x === x + d || _x === x - d || _y === y + d || _y === y - d) {
-                                if (Math.random() > 0.3) {
+                                if (Math.random() > 0.5) {
                                     var auxX = _x;
                                     var auxY = _y;
                                     if (_x === x + d)
@@ -191,9 +227,9 @@ namespace Lich {
                 };
 
                 // random holes
-                let holesP = mass * 0.005;
+                let holesP = mass * 0.001;
                 for (let i = 0; i < holesP; i++) {
-                    let dia = Math.floor(Math.random() * 5) + 1;
+                    let dia = Math.floor(Math.random() * 4) + 2;
                     let holeX = Math.floor(Math.random() * tilesMap.width);
                     let holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);

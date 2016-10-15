@@ -110,17 +110,48 @@ var Lich;
             if (groundLevel === void 0) { groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL; }
             var tilesMap = new Lich.TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             var mass = tilesMap.height * tilesMap.width;
-            // base generation
-            for (var y = 0; y < tilesMap.height; y++) {
-                for (var x = 0; x < tilesMap.width; x++) {
-                    if (y < TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL) {
-                        tilesMap.mapRecord.setValue(x, y, Lich.SurfacePositionKey.VOID);
+            // hills profile
+            var hills = new Array();
+            // main
+            var mainSpeed = 180 / tilesMap.width;
+            var mainAmp = 25;
+            var mainShift = Math.random() * 180;
+            // osc1
+            var osc1Speed = 0.5;
+            var osc1Amp = 1;
+            var osc1Shift = 0;
+            // osc2
+            var osc2Speed = 3;
+            var osc2Amp = 1;
+            var osc2Shift = 0;
+            // osc3
+            var osc3Speed = 6;
+            var osc3Amp = 1;
+            var osc3Shift = 0;
+            for (var x = 0; x < tilesMap.width; x++) {
+                var xx = x * mainSpeed + mainShift;
+                var y1 = Math.sin(osc1Speed * Math.PI / 180 * (xx + osc1Shift)) * osc1Amp;
+                var y2 = Math.sin(osc2Speed * Math.PI / 180 * (xx + osc2Shift)) * osc2Amp;
+                var y3 = Math.sin(osc3Speed * Math.PI / 180 * (xx + osc3Shift)) * osc3Amp;
+                hills[x] = Math.abs(y1 + y2 + y3) * mainAmp;
+            }
+            var fillTile = function (x, y, callback) {
+                for (var _x = x; _x <= x + 1; _x++) {
+                    for (var _y = y; _y <= y + 1; _y++) {
+                        callback(_x, _y);
                     }
-                    else {
+                }
+            };
+            // base generation
+            for (var y = 0; y < tilesMap.height; y += 2) {
+                for (var x = 0; x < tilesMap.width; x += 2) {
+                    // aplikuj profil kopce pokud je vytvořen "vzduch" mapy
+                    fillTile(x, y, function (nx, ny) {
                         // získá výchozí prostřední dílek dle vzoru, 
                         // který se opakuje, aby mapa byla pestřejší
-                        tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, Lich.SurfaceKey.SRFC_DIRT_KEY));
-                    }
+                        tilesMap.mapRecord.setValue(nx, ny, y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, Lich.SurfaceKey.SRFC_DIRT_KEY)
+                            : Lich.SurfacePositionKey.VOID);
+                    });
                 }
             }
             // Holes
@@ -146,7 +177,7 @@ var Lich;
                             }
                             // občas udělej na okraji díry... díru
                             if (_x === x + d || _x === x - d || _y === y + d || _y === y - d) {
-                                if (Math.random() > 0.3) {
+                                if (Math.random() > 0.5) {
                                     var auxX = _x;
                                     var auxY = _y;
                                     if (_x === x + d)
@@ -160,9 +191,9 @@ var Lich;
                     }
                 };
                 // random holes
-                var holesP = mass * 0.005;
+                var holesP = mass * 0.001;
                 for (var i = 0; i < holesP; i++) {
-                    var dia = Math.floor(Math.random() * 5) + 1;
+                    var dia = Math.floor(Math.random() * 4) + 2;
                     var holeX = Math.floor(Math.random() * tilesMap.width);
                     var holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
@@ -310,7 +341,7 @@ var Lich;
         // musí být sudé
         TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
         TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;
-        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 80;
+        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 40;
         return TilesMapGenerator;
     }());
     Lich.TilesMapGenerator = TilesMapGenerator;

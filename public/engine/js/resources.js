@@ -365,9 +365,9 @@ var Lich;
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1, 0));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
             registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 10).setDepth(15, 100));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_COAL_KEY, InventoryKey.INV_COAL_KEY, 1, 10).setDepth(20, 100));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 20).setDepth(10, 100).setSize(2, 5));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 10).setDepth(5, 100));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_COAL_KEY, InventoryKey.INV_COAL_KEY, 1, 10).setDepth(10, 100));
+            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 20).setDepth(0, 100).setSize(2, 5));
             (function () {
                 // vytvoř frekvenční pool pro povrchy
                 for (var _i = 0, _a = self.mapSurfaceDefs; _i < _a.length; _i++) {
