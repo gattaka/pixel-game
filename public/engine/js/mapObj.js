@@ -117,6 +117,8 @@ var Lich;
             this.rmbAction = rmbAction;
             this.frames = 1;
             this.collision = false;
+            this.minDepth = 10;
+            this.maxDepth = 100;
         }
         MapObjDefinition.prototype.setFrames = function (frames) {
             this.frames = frames;
@@ -124,6 +126,11 @@ var Lich;
         };
         MapObjDefinition.prototype.setCollision = function (collision) {
             this.collision = collision;
+            return this;
+        };
+        MapObjDefinition.prototype.setDepth = function (minDepth, maxDepth) {
+            this.minDepth = minDepth;
+            this.maxDepth = maxDepth;
             return this;
         };
         return MapObjDefinition;

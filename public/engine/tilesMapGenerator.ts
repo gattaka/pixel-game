@@ -274,8 +274,8 @@ namespace Lich {
                     let srfIndex = Resources.getInstance().mapSurfacesFreqPool[index];
                     let definition = Resources.getInstance().mapSurfaceDefs[srfIndex];
                     let dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                    // var dia = Math.floor(Math.random() * 3) + 2;
-                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)) {
+                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)
+                        && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
                         createDeposit(depositX, depositY, dia, srfIndex);
                     }
                 }
@@ -329,7 +329,11 @@ namespace Lich {
                                 while (tries < Resources.getInstance().mapObjectDefsFreqPool.length) {
                                     var key = Resources.getInstance().mapObjectDefsFreqPool[index];
                                     var object = Resources.getInstance().mapObjectDefs[key];
-                                    if (object.freq > 0 && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
+                                    let lvl = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL - 1;
+                                    if (object.freq > 0
+                                        && ((y - lvl) / (tilesMap.height - lvl)) > (object.minDepth / 100)
+                                        && ((y - lvl) / (tilesMap.height - lvl)) < (object.maxDepth / 100)
+                                        && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                         TilesMapTools.writeObjectRecord(tilesMap, x, y, object);
                                         break;
                                     } else {

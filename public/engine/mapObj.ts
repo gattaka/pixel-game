@@ -89,6 +89,8 @@ namespace Lich {
 
         public frames: number = 1;
         public collision = false;
+        public minDepth = 10;
+        public maxDepth = 100;
 
         constructor(
             // údaje o objektu na mapě
@@ -113,6 +115,12 @@ namespace Lich {
 
         public setCollision(collision: boolean): MapObjDefinition {
             this.collision = collision;
+            return this;
+        }
+
+        public setDepth(minDepth: number, maxDepth: number): MapObjDefinition {
+            this.minDepth = minDepth;
+            this.maxDepth = maxDepth;
             return this;
         }
     }
@@ -152,6 +160,7 @@ namespace Lich {
             this.maxSize = maxSize;
             return this;
         }
+
         public setDepth(minDepth: number, maxDepth: number): MapSurfaceDefinition {
             this.minDepth = minDepth;
             this.maxDepth = maxDepth;

@@ -236,8 +236,8 @@ var Lich;
                     var srfIndex = Lich.Resources.getInstance().mapSurfacesFreqPool[index];
                     var definition = Lich.Resources.getInstance().mapSurfaceDefs[srfIndex];
                     var dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                    // var dia = Math.floor(Math.random() * 3) + 2;
-                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)) {
+                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)
+                        && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
                         createDeposit(depositX, depositY, dia, srfIndex);
                     }
                 }
@@ -286,7 +286,11 @@ var Lich;
                                 while (tries < Lich.Resources.getInstance().mapObjectDefsFreqPool.length) {
                                     var key = Lich.Resources.getInstance().mapObjectDefsFreqPool[index];
                                     var object = Lich.Resources.getInstance().mapObjectDefs[key];
-                                    if (object.freq > 0 && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
+                                    var lvl = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL - 1;
+                                    if (object.freq > 0
+                                        && ((y - lvl) / (tilesMap.height - lvl)) > (object.minDepth / 100)
+                                        && ((y - lvl) / (tilesMap.height - lvl)) < (object.maxDepth / 100)
+                                        && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
                                         Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, object);
                                         break;
                                     }
