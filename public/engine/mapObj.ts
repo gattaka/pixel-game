@@ -102,7 +102,7 @@ namespace Lich {
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             public quant: number,
             // jak často takový objekt v mapě je 
-            public freq: number,
+            public cooldown: number,
             // akce na RMB kliknutí
             public rmbAction?: (game: Game, x: number, y: number, obj: MapObjectTile, objType: MapObjDefinition) => any) {
             super(mapKey, invObj, quant);
@@ -151,7 +151,7 @@ namespace Lich {
             // kolik INV objektů vznikne po vytěření
             public quant: number,
             // jak často takový povrch v mapě je 
-            public freq: number) {
+            public cooldown: number) {
             super(mapKey, invObj, quant);
         }
 

@@ -137,22 +137,31 @@ namespace Lich {
             groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL): TilesMap {
 
             var tilesMap = new TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
+            let mass = tilesMap.height * tilesMap.width;
 
-            var mass = tilesMap.height * tilesMap.width;
+            let progress = 0;
+            let total = tilesMap.height // ground 
+                + mass * 0.001 // holes
+                + mass * 0.005 // ore
+                + tilesMap.height // edges
+                + tilesMap.height // corners
+                + tilesMap.height; // objects
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Surface prepare"));
 
             // hills profile
             let hills = new Array<number>();
             // main
             let mainSpeed = 180 / tilesMap.width;
-            let mainAmp = 25;
+            let mainAmp = 20;
             let mainShift = Math.random() * 180;
             // osc1
             let osc1Speed = 0.5;
             let osc1Amp = 1;
             let osc1Shift = 0;
             // osc2
-            let osc2Speed = 3;
-            let osc2Amp = 1;
+            let osc2Speed = 5;
+            let osc2Amp = 2;
             let osc2Shift = 0;
             // osc3
             let osc3Speed = 6;
@@ -187,7 +196,10 @@ namespace Lich {
                         );
                     });
                 }
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, (progress += 2) / total));
             }
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating holes"));
 
             // Holes
             (function () {
@@ -233,9 +245,11 @@ namespace Lich {
                     let holeX = Math.floor(Math.random() * tilesMap.width);
                     let holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
 
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Seeding ore"));
 
             // Minerály 
             (function () {
@@ -306,16 +320,20 @@ namespace Lich {
                     let depositX = Math.floor(Math.random() * tilesMap.width);
                     let depositY = Math.floor(Math.random() * tilesMap.height);
                     // z čeho bude ložisko?
-                    let index = Math.floor(Resources.getInstance().mapSurfacesFreqPool.length * Math.random());
-                    let srfIndex = Resources.getInstance().mapSurfacesFreqPool[index];
-                    let definition = Resources.getInstance().mapSurfaceDefs[srfIndex];
-                    let dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)
-                        && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
-                        createDeposit(depositX, depositY, dia, srfIndex);
-                    }
+                    Resources.getInstance().mapSurfacesFreqPool.yield((definition: MapSurfaceDefinition): boolean => {
+                        if ((depositY / tilesMap.height) > (definition.minDepth / 100)
+                            && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
+                            let dia = Math.floor(Math.random() * definition.maxSize) + 2;
+                            createDeposit(depositX, depositY, dia, definition.mapKey);
+                            return true;
+                        }
+                        return false;
+                    });
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating surface edges"));
 
             // hrany
             (function () {
@@ -323,8 +341,11 @@ namespace Lich {
                     for (var x = 0; x < tilesMap.width; x++) {
                         TilesMapTools.generateEdge(tilesMap, x, y);
                     }
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating surface corners"));
 
             // rohy
             (function () {
@@ -332,8 +353,11 @@ namespace Lich {
                     for (var x = 0; x < tilesMap.width; x++) {
                         TilesMapTools.generateCorner(tilesMap, x, y);
                     }
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
+
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating objects"));
 
             // objekty 
             (function () {
@@ -344,9 +368,10 @@ namespace Lich {
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Resources.getInstance().surfaceIndex.isTopPosition(tilesMap.mapRecord.getValue(x, y)) == false) ||
-                                (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== SurfacePositionKey.VOID) ||
-                                (tilesMap.mapObjectsTiles.getValue(x, y) != null))
+                            if ((y === y0 && (Resources.getInstance().surfaceIndex.isTopPosition(tilesMap.mapRecord.getValue(x, y)) == false
+                                || Resources.getInstance().surfaceIndex.getType(tilesMap.mapRecord.getValue(x, y)) != SurfaceKey.SRFC_DIRT_KEY))
+                                || (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== SurfacePositionKey.VOID)
+                                || (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
                         }
                     }
@@ -358,31 +383,23 @@ namespace Lich {
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
                         if (Resources.getInstance().surfaceIndex.isTopPosition(val)) {
-                            // bude tam nějaký objekt? (100% ano)
-                            if (Math.random() > 0) {
-                                var tries = 0;
-                                var index = Math.floor(Resources.getInstance().mapObjectDefsFreqPool.length * Math.random());
-                                while (tries < Resources.getInstance().mapObjectDefsFreqPool.length) {
-                                    var key = Resources.getInstance().mapObjectDefsFreqPool[index];
-                                    var object = Resources.getInstance().mapObjectDefs[key];
-                                    let lvl = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL - 1;
-                                    if (object.freq > 0
-                                        && ((y - lvl) / (tilesMap.height - lvl)) > (object.minDepth / 100)
-                                        && ((y - lvl) / (tilesMap.height - lvl)) < (object.maxDepth / 100)
-                                        && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
-                                        TilesMapTools.writeObjectRecord(tilesMap, x, y, object);
-                                        break;
-                                    } else {
-                                        // další pokus na dalším objektu
-                                        tries++;
-                                        index = (index + 1) % Resources.getInstance().mapObjectDefsFreqPool.length;
-                                    }
+                            Resources.getInstance().mapObjectDefsFreqPool.yield((definition: MapObjDefinition): boolean => {
+                                let lvl = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL - 1;
+                                if (((y - lvl) / (tilesMap.height - lvl)) > (definition.minDepth / 100)
+                                    && ((y - lvl) / (tilesMap.height - lvl)) < (definition.maxDepth / 100)
+                                    && isFree(x, y, definition.mapSpriteWidth, definition.mapSpriteHeight)) {
+                                    TilesMapTools.writeObjectRecord(tilesMap, x, y, definition);
+                                    return true;
                                 }
-                            }
+                                return false;
+                            });
                         }
                     }
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, (progress += 2) / total));
                 }
             })();
+
+            EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
 
             return tilesMap;
 

@@ -116,8 +116,13 @@ var Lich;
                         return true;
                     });
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
-                        var tilesMap = Lich.TilesMapGenerator.createNew();
-                        populateContent(tilesMap);
+                        self.loadUI.reset();
+                        self.stage.addChild(self.loadUI);
+                        self.loadUI.alpha = 1;
+                        setTimeout(function () {
+                            var tilesMap = Lich.TilesMapGenerator.createNew();
+                            populateContent(tilesMap);
+                        }, 1);
                         return true;
                     });
                     createjs.Tween.get(self.loadUI)

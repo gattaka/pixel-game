@@ -29,6 +29,14 @@ namespace Lich {
             self.currentItemLabel.y = self.progressLabel.y + 40;
             self.addChild(self.currentItemLabel);
 
+            self.reset();
+        }
+
+        public reset() {
+            let self = this;
+            this.currentItemLabel.setText(" ");
+            this.progressLabel.setText("Loading...");
+
             EventBus.getInstance().registerConsumer(EventType.LOAD_PROGRESS, (n: NumberEventPayload): boolean => {
                 self.progressLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
                 return true;
@@ -38,11 +46,6 @@ namespace Lich {
                 self.currentItemLabel.setText(e.payload);
                 return true;
             });
-        }
-
-        public reset() {
-            this.currentItemLabel.setText(" ");
-            this.progressLabel.setText(" ");
         }
 
     }

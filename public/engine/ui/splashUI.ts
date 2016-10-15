@@ -35,6 +35,7 @@ namespace Lich {
             version.addChange("Fall speed limited");
             version.addChange("UI-or-World mouse dispatch improved");
             version.addChange("Player collision with surface improved");
+            version.addChange("Hills");
             this.addVersion(version);
 
             version = new Version("0.6");

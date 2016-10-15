@@ -24,6 +24,12 @@ var Lich;
             self.currentItemLabel.x = self.width / 2 - 50;
             self.currentItemLabel.y = self.progressLabel.y + 40;
             self.addChild(self.currentItemLabel);
+            self.reset();
+        }
+        LoaderUI.prototype.reset = function () {
+            var self = this;
+            this.currentItemLabel.setText(" ");
+            this.progressLabel.setText("Loading...");
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_PROGRESS, function (n) {
                 self.progressLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
                 return true;
@@ -32,10 +38,6 @@ var Lich;
                 self.currentItemLabel.setText(e.payload);
                 return true;
             });
-        }
-        LoaderUI.prototype.reset = function () {
-            this.currentItemLabel.setText(" ");
-            this.progressLabel.setText(" ");
         };
         return LoaderUI;
     }(createjs.Container));

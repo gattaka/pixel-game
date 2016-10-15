@@ -70,6 +70,7 @@ namespace Lich {
         MAP_PLANT4_KEY,
         MAP_TREE_KEY,
         MAP_TREE2_KEY,
+        MAP_TREE3_KEY,
         MAP_FLORITE_KEY,
         MAP_CAMPFIRE_KEY,
         MAP_DOOR_CLOSED_KEY,
@@ -165,6 +166,60 @@ namespace Lich {
         MSC_LAVA_THEME_KEY
     }
 
+    export interface HasCooldown {
+        cooldown: number;
+    }
+
+    export class FreqPool<T extends HasCooldown> {
+        cooldowns = new Array<number>();
+        palette = new Array<T>();
+        yield(accept: (item: T) => boolean) {
+            // sniž čekání položek na použití
+            this.cooldowns.forEach((x, idx, arr) => {
+                if (x) {
+                    arr[idx]--;
+                }
+            });
+            let tries = 0;
+            let tried = {}
+            // vyber náhodně položku
+            let randomIndex = () => {
+                return Math.floor(Math.random() * this.palette.length);
+            }
+            let idx = randomIndex();
+            do {
+                if (this.cooldowns[idx] == 0) {
+                    // pokud je položka připravena, zkus ji použít
+                    let it = this.palette[idx];
+                    if (accept(it)) {
+                        this.cooldowns[idx] = it.cooldown;
+                        return;
+                    }
+                }
+                // nové losování
+                // nemůžu se jenom posunout, protože by to tak mělo tendenci často losovat objekty,
+                // které mají nízký cooldown (nebo se snadno usazují) a jsou první za objektem, 
+                // který má velkým cooldown (nebo se špatně usazuje)  
+                tries++;
+                tried[idx] = true;
+                idx = randomIndex();
+                // pokud už byl vyzkoušen, posuň se
+                // tady se posouvat už můžu, protože jde pouze o přeskočení již vyzkoušených objektů
+                while (tried[idx] && tries != this.palette.length) {
+                    idx = (idx + 1) % this.palette.length;
+                    tries++;
+                    tried[idx] = true;
+                }
+                // pokud jsem nevyzkoušel už všechny zkoušej           
+            } while (tries != this.palette.length)
+            return null;
+        }
+        insert(item: T) {
+            this.palette.push(item);
+            this.cooldowns.push(item.cooldown);
+        }
+    }
+
     export class Resources {
 
         private static INSTANCE: Resources;
@@ -205,8 +260,8 @@ namespace Lich {
         public mapSurfaceDefs = new Array<MapSurfaceDefinition>();
         public mapSurfacesBgrDefs = new Array<MapSurfaceBgrDefinition>();
         public mapObjectDefs = new Array<MapObjDefinition>();
-        public mapSurfacesFreqPool = new Array<SurfaceKey>();
-        public mapObjectDefsFreqPool = new Array<MapObjectKey>();
+        public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
+        public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
 
         // definice inv položek
         public invObjectDefs = new Array<InvObjDefinition>();
@@ -314,6 +369,7 @@ namespace Lich {
                 new Load("images/parts/plant4.png", MapObjectKey[MapObjectKey.MAP_PLANT4_KEY]),
                 new Load("images/parts/tree.png", MapObjectKey[MapObjectKey.MAP_TREE_KEY]),
                 new Load("images/parts/tree2.png", MapObjectKey[MapObjectKey.MAP_TREE2_KEY]),
+                new Load("images/parts/tree3.png", MapObjectKey[MapObjectKey.MAP_TREE3_KEY]),
                 new Load("images/parts/florite.png", MapObjectKey[MapObjectKey.MAP_FLORITE_KEY]),
                 new Load("images/parts/campfire.png", MapObjectKey[MapObjectKey.MAP_CAMPFIRE_KEY]),
                 new Load("images/parts/door_closed.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED_KEY]),
@@ -415,30 +471,23 @@ namespace Lich {
             // Definice mapových povrchů
             var registerSurfaceDefs = function (mapSurface: MapSurfaceDefinition) {
                 self.mapSurfaceDefs[mapSurface.mapKey] = mapSurface;
+                if (mapSurface.cooldown > 0) {
+                    self.mapSurfacesFreqPool.insert(mapSurface);
+                }
             };
 
             // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
             // jsou dle frekvence usazovány jiné povrchy
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_DIRT_KEY, InventoryKey.INV_DIRT_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1, 0));
-            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 1).setDepth(50, 100));
-            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 1).setDepth(70, 100));
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 10).setDepth(50, 100));
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 10).setDepth(70, 100));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
-            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 10).setDepth(5, 100));
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 5).setDepth(5, 100));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_COAL_KEY, InventoryKey.INV_COAL_KEY, 1, 10).setDepth(10, 100));
-            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 20).setDepth(0, 100).setSize(2, 5));
-
-            (function () {
-                // vytvoř frekvenční pool pro povrchy
-                for (var item of self.mapSurfaceDefs) {
-                    // vlož index objektu tolikrát, kolik je jeho frekvenc
-                    for (var i = 0; i < item.freq; i++) {
-                        self.mapSurfacesFreqPool.push(item.mapKey);
-                    }
-                }
-            })();
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 1).setDepth(0, 100).setSize(2, 5));
 
             /**
              * STĚNY POVRCHŮ
@@ -461,25 +510,29 @@ namespace Lich {
             // Definice mapových objektů
             var registerObjectDefs = function (mapObj: MapObjDefinition) {
                 self.mapObjectDefs[mapObj.mapKey] = mapObj;
+                if (mapObj.cooldown > 0) {
+                    self.mapObjectDefsFreqPool.insert(mapObj);
+                }
             };
 
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 6, 3, InventoryKey.INV_BONES_KEY, 5, 1).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_BERRY_KEY, 2, 2, InventoryKey.INV_BERRY_KEY, 1, 1).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 10).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 10).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRASS_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 20).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRASS2_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 20).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRASS3_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 20).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TREE_KEY, 4, 9, InventoryKey.INV_WOOD_KEY, 5, 10).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TREE2_KEY, 8, 15, InventoryKey.INV_WOOD_KEY, 10, 20).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_MUSHROOM_KEY, 2, 2, InventoryKey.INV_MUSHROOM_KEY, 1, 1).setDepth(5,10));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_MUSHROOM2_KEY, 2, 2, InventoryKey.INV_MUSHROOM2_KEY, 1, 1).setDepth(5,10));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_MUSHROOM3_KEY, 2, 2, InventoryKey.INV_MUSHROOM3_KEY, 1, 1).setDepth(5,10));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT_KEY, 2, 2, InventoryKey.INV_PLANT_KEY, 1, 1).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT2_KEY, 2, 2, InventoryKey.INV_PLANT2_KEY, 1, 1).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT3_KEY, 2, 2, InventoryKey.INV_PLANT3_KEY, 1, 1).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 1).setDepth(0,5));
-            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 1).setDepth(70,100));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 6, 3, InventoryKey.INV_BONES_KEY, 5, 160).setDepth(0, 5));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_BERRY_KEY, 2, 2, InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 15).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 15).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRASS_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRASS2_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_GRASS3_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TREE_KEY, 4, 9, InventoryKey.INV_WOOD_KEY, 5, 1).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TREE2_KEY, 8, 15, InventoryKey.INV_WOOD_KEY, 10, 1).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TREE3_KEY, 4, 7, InventoryKey.INV_WOOD_KEY, 10, 1).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_MUSHROOM_KEY, 2, 2, InventoryKey.INV_MUSHROOM_KEY, 1, 100).setDepth(5, 40));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_MUSHROOM2_KEY, 2, 2, InventoryKey.INV_MUSHROOM2_KEY, 1, 100).setDepth(5, 100));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_MUSHROOM3_KEY, 2, 2, InventoryKey.INV_MUSHROOM3_KEY, 1, 140).setDepth(5, 100));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT_KEY, 2, 2, InventoryKey.INV_PLANT_KEY, 1, 60).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT2_KEY, 2, 2, InventoryKey.INV_PLANT2_KEY, 1, 60).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT3_KEY, 2, 2, InventoryKey.INV_PLANT3_KEY, 1, 60).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
                 function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
@@ -505,18 +558,6 @@ namespace Lich {
                     game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
                     Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
                 }).setCollision(true));
-
-
-
-            (function () {
-                // vytvoř frekvenční pool pro objekty 
-                for (var item of self.mapObjectDefs) {
-                    // vlož index objektu tolikrát, kolik je jeho frekvenc
-                    for (var i = 0; i < item.freq; i++) {
-                        self.mapObjectDefsFreqPool.push(item.mapKey);
-                    }
-                }
-            })();
 
             /**
              * INVENTÁŘ 

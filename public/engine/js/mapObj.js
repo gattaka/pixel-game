@@ -104,7 +104,7 @@ var Lich;
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             quant, 
             // jak často takový objekt v mapě je 
-            freq, 
+            cooldown, 
             // akce na RMB kliknutí
             rmbAction) {
             _super.call(this, mapKey, invObj, quant);
@@ -113,7 +113,7 @@ var Lich;
             this.mapSpriteHeight = mapSpriteHeight;
             this.invObj = invObj;
             this.quant = quant;
-            this.freq = freq;
+            this.cooldown = cooldown;
             this.rmbAction = rmbAction;
             this.frames = 1;
             this.collision = false;
@@ -158,12 +158,12 @@ var Lich;
             // kolik INV objektů vznikne po vytěření
             quant, 
             // jak často takový povrch v mapě je 
-            freq) {
+            cooldown) {
             _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.invObj = invObj;
             this.quant = quant;
-            this.freq = freq;
+            this.cooldown = cooldown;
             this.minSize = 1;
             this.maxSize = 3;
             this.minDepth = 10;

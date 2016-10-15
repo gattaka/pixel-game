@@ -156,8 +156,13 @@ namespace Lich {
                     });
 
                     EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
-                        let tilesMap = TilesMapGenerator.createNew();
-                        populateContent(tilesMap);
+                        self.loadUI.reset();
+                        self.stage.addChild(self.loadUI);
+                        self.loadUI.alpha = 1;
+                        setTimeout(() => {
+                            let tilesMap = TilesMapGenerator.createNew();
+                            populateContent(tilesMap);
+                        }, 1);
                         return true;
                     });
 

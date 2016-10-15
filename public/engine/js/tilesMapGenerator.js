@@ -110,19 +110,27 @@ var Lich;
             if (groundLevel === void 0) { groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL; }
             var tilesMap = new Lich.TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             var mass = tilesMap.height * tilesMap.width;
+            var progress = 0;
+            var total = tilesMap.height // ground 
+                + mass * 0.001 // holes
+                + mass * 0.005 // ore
+                + tilesMap.height // edges
+                + tilesMap.height // corners
+                + tilesMap.height; // objects
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Surface prepare"));
             // hills profile
             var hills = new Array();
             // main
             var mainSpeed = 180 / tilesMap.width;
-            var mainAmp = 25;
+            var mainAmp = 20;
             var mainShift = Math.random() * 180;
             // osc1
             var osc1Speed = 0.5;
             var osc1Amp = 1;
             var osc1Shift = 0;
             // osc2
-            var osc2Speed = 3;
-            var osc2Amp = 1;
+            var osc2Speed = 5;
+            var osc2Amp = 2;
             var osc2Shift = 0;
             // osc3
             var osc3Speed = 6;
@@ -153,7 +161,9 @@ var Lich;
                             : Lich.SurfacePositionKey.VOID);
                     });
                 }
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, (progress += 2) / total));
             }
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Creating holes"));
             // Holes
             (function () {
                 var createHole = function (x0, y0, d0) {
@@ -197,8 +207,10 @@ var Lich;
                     var holeX = Math.floor(Math.random() * tilesMap.width);
                     var holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Seeding ore"));
             // Minerály 
             (function () {
                 var createDeposit = function (x0, y0, d0, oreKey) {
@@ -259,36 +271,46 @@ var Lich;
                 };
                 // random deposit
                 var depositP = mass * 0.005;
-                for (var i = 0; i < depositP; i++) {
+                var _loop_1 = function(i) {
                     var depositX = Math.floor(Math.random() * tilesMap.width);
                     var depositY = Math.floor(Math.random() * tilesMap.height);
                     // z čeho bude ložisko?
-                    var index = Math.floor(Lich.Resources.getInstance().mapSurfacesFreqPool.length * Math.random());
-                    var srfIndex = Lich.Resources.getInstance().mapSurfacesFreqPool[index];
-                    var definition = Lich.Resources.getInstance().mapSurfaceDefs[srfIndex];
-                    var dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)
-                        && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
-                        createDeposit(depositX, depositY, dia, srfIndex);
-                    }
+                    Lich.Resources.getInstance().mapSurfacesFreqPool.yield(function (definition) {
+                        if ((depositY / tilesMap.height) > (definition.minDepth / 100)
+                            && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
+                            var dia = Math.floor(Math.random() * definition.maxSize) + 2;
+                            createDeposit(depositX, depositY, dia, definition.mapKey);
+                            return true;
+                        }
+                        return false;
+                    });
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                };
+                for (var i = 0; i < depositP; i++) {
+                    _loop_1(i);
                 }
             })();
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Creating surface edges"));
             // hrany
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
                         Lich.TilesMapTools.generateEdge(tilesMap, x, y);
                     }
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Creating surface corners"));
             // rohy
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
                         Lich.TilesMapTools.generateCorner(tilesMap, x, y);
                     }
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Creating objects"));
             // objekty 
             (function () {
                 var isFree = function (x0, y0, width, height) {
@@ -297,9 +319,10 @@ var Lich;
                             // spodní buňky musí být všechny tvořený plochou DIRT.T
                             // objekt nemůže "překlenovat" díru nebo viset z okraje
                             // nelze kolidovat s jiným objektem
-                            if ((y === y0 && Lich.Resources.getInstance().surfaceIndex.isTopPosition(tilesMap.mapRecord.getValue(x, y)) == false) ||
-                                (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== Lich.SurfacePositionKey.VOID) ||
-                                (tilesMap.mapObjectsTiles.getValue(x, y) != null))
+                            if ((y === y0 && (Lich.Resources.getInstance().surfaceIndex.isTopPosition(tilesMap.mapRecord.getValue(x, y)) == false
+                                || Lich.Resources.getInstance().surfaceIndex.getType(tilesMap.mapRecord.getValue(x, y)) != Lich.SurfaceKey.SRFC_DIRT_KEY))
+                                || (y !== y0 && tilesMap.mapRecord.getValue(x, y) !== Lich.SurfacePositionKey.VOID)
+                                || (tilesMap.mapObjectsTiles.getValue(x, y) != null))
                                 return false;
                         }
                     }
@@ -310,32 +333,22 @@ var Lich;
                         var val = tilesMap.mapRecord.getValue(x, y);
                         // pokud jsem povrchová kostka je zde šance, že bude umístěn objekt
                         if (Lich.Resources.getInstance().surfaceIndex.isTopPosition(val)) {
-                            // bude tam nějaký objekt? (100% ano)
-                            if (Math.random() > 0) {
-                                var tries = 0;
-                                var index = Math.floor(Lich.Resources.getInstance().mapObjectDefsFreqPool.length * Math.random());
-                                while (tries < Lich.Resources.getInstance().mapObjectDefsFreqPool.length) {
-                                    var key = Lich.Resources.getInstance().mapObjectDefsFreqPool[index];
-                                    var object = Lich.Resources.getInstance().mapObjectDefs[key];
-                                    var lvl = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL - 1;
-                                    if (object.freq > 0
-                                        && ((y - lvl) / (tilesMap.height - lvl)) > (object.minDepth / 100)
-                                        && ((y - lvl) / (tilesMap.height - lvl)) < (object.maxDepth / 100)
-                                        && isFree(x, y, object.mapSpriteWidth, object.mapSpriteHeight)) {
-                                        Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, object);
-                                        break;
-                                    }
-                                    else {
-                                        // další pokus na dalším objektu
-                                        tries++;
-                                        index = (index + 1) % Lich.Resources.getInstance().mapObjectDefsFreqPool.length;
-                                    }
+                            Lich.Resources.getInstance().mapObjectDefsFreqPool.yield(function (definition) {
+                                var lvl = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL - 1;
+                                if (((y - lvl) / (tilesMap.height - lvl)) > (definition.minDepth / 100)
+                                    && ((y - lvl) / (tilesMap.height - lvl)) < (definition.maxDepth / 100)
+                                    && isFree(x, y, definition.mapSpriteWidth, definition.mapSpriteHeight)) {
+                                    Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, definition);
+                                    return true;
                                 }
-                            }
+                                return false;
+                            });
                         }
                     }
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, (progress += 2) / total));
                 }
             })();
+            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             return tilesMap;
         };
         // musí být sudé
