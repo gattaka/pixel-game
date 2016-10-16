@@ -11,7 +11,7 @@ namespace Lich {
         static MOUNTAINS_START = 250;
         static FAR_HILLS_START = 500;
         static HILLS_START = 650;
-        static DIRT_START = 1200;
+        static DIRT_START = 1500;
 
         /*-----------*/
         /* VARIABLES */

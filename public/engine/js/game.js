@@ -12,7 +12,7 @@ var Lich;
             /*------------*/
             console.log("running");
             self.canvas = document.getElementById(canvasId);
-            self.canvas.style.backgroundColor = "#b1ecff";
+            self.canvas.style.backgroundColor = "#839e61";
             // resize the canvas to fill browser window dynamically
             window.addEventListener('resize', resizeCanvas, false);
             function resizeCanvas() {

@@ -133,8 +133,8 @@ var Lich;
             var osc2Amp = 2;
             var osc2Shift = 0;
             // osc3
-            var osc3Speed = 6;
-            var osc3Amp = 1;
+            var osc3Speed = 10;
+            var osc3Amp = 0.5;
             var osc3Shift = 0;
             for (var x = 0; x < tilesMap.width; x++) {
                 var xx = x * mainSpeed + mainShift;
@@ -353,8 +353,8 @@ var Lich;
         };
         // musí být sudé
         TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
-        TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;
-        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 40;
+        TilesMapGenerator.DEFAULT_MAP_HEIGHT = 2000;
+        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 80;
         return TilesMapGenerator;
     }());
     Lich.TilesMapGenerator = TilesMapGenerator;

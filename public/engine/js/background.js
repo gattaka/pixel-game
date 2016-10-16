@@ -150,7 +150,7 @@ var Lich;
         Background.MOUNTAINS_START = 250;
         Background.FAR_HILLS_START = 500;
         Background.HILLS_START = 650;
-        Background.DIRT_START = 1200;
+        Background.DIRT_START = 1500;
         return Background;
     }());
     Lich.Background = Background;

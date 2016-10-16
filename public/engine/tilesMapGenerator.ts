@@ -18,8 +18,8 @@ namespace Lich {
 
         // musí být sudé
         static DEFAULT_MAP_WIDTH = 2000;
-        static DEFAULT_MAP_HEIGHT = 1000;
-        static DEFAULT_MAP_GROUND_LEVEL = 40;
+        static DEFAULT_MAP_HEIGHT = 2000;
+        static DEFAULT_MAP_GROUND_LEVEL = 80;
 
         private constructor() { }
 
@@ -164,8 +164,8 @@ namespace Lich {
             let osc2Amp = 2;
             let osc2Shift = 0;
             // osc3
-            let osc3Speed = 6;
-            let osc3Amp = 1;
+            let osc3Speed = 10;
+            let osc3Amp = 0.5;
             let osc3Shift = 0;
             for (var x = 0; x < tilesMap.width; x++) {
                 let xx = x * mainSpeed + mainShift;
