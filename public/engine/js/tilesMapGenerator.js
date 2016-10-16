@@ -354,7 +354,7 @@ var Lich;
         // musí být sudé
         TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
         TilesMapGenerator.DEFAULT_MAP_HEIGHT = 2000;
-        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 80;
+        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 50;
         return TilesMapGenerator;
     }());
     Lich.TilesMapGenerator = TilesMapGenerator;
