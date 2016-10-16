@@ -36,6 +36,7 @@ namespace Lich {
             version.addChange("UI-or-World mouse dispatch improved");
             version.addChange("Player collision with surface improved");
             version.addChange("Hills");
+            version.addChange("Minimap reimplemented");
             this.addVersion(version);
 
             version = new Version("0.6");
@@ -196,6 +197,7 @@ namespace Lich {
             self.lines.push("- Press <W>, <A>, <S>, <D> to move");
             self.lines.push("- Press <I> to minimize inventory");
             self.lines.push("- Press <C> to toggle crafting window");
+            self.lines.push("- Press <M> to toggle map");
             self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");
             self.lines.push("- Press <LMB> to dig, place or attack");
             self.lines.push("- Press <RMB> to interact with an object");

@@ -84,6 +84,7 @@ namespace Lich {
             minimapUI.y = UI.SCREEN_SPACING;
             self.addChild(minimapUI);
             self.minimapUI = minimapUI;
+            minimapUI.hide();
 
         }
 

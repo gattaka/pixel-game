@@ -65,6 +65,7 @@ var Lich;
             minimapUI.y = UI.SCREEN_SPACING;
             self.addChild(minimapUI);
             self.minimapUI = minimapUI;
+            minimapUI.hide();
         }
         UI.prototype.isMouseInUI = function (x, y) {
             var self = this;

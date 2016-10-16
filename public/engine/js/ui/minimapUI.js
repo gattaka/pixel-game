@@ -10,6 +10,10 @@ var Lich;
         function MinimapUI(tilesMap, mainCanvasWidth, mainCanvasHeight) {
             _super.call(this, mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2, mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2);
             this.tilesMap = tilesMap;
+            this.shiftX = 0;
+            this.shiftY = 0;
+            this.playerX = 0;
+            this.playerY = 0;
             var self = this;
             self.canvas = document.getElementById("mapCanvas");
             self.canvas.width = self.tilesMap.width / 2;
@@ -39,15 +43,34 @@ var Lich;
             self.addChild(self.bitmap);
             self.playerIcon = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.PLAYER_ICON_KEY]);
             self.playerIcon.alpha = 0.7;
+            self.playerIcon.width = self.playerIcon.getBounds().width;
+            self.playerIcon.height = self.playerIcon.getBounds().height;
             this.addChild(self.playerIcon);
-            // EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
-            //     self.bitmap.sourceRect.x = Math.floor(-1 * payload.payload / Resources.TILE_SIZE);
-            //     return false;
-            // });
-            // EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
-            //     self.bitmap.sourceRect.y = Math.floor(-1 * payload.payload / Resources.TILE_SIZE);
-            //     return false;
-            // });
+            var adjustMap = function () {
+                // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
+                // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
+                self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Lich.Resources.TILE_SIZE)) * self.bitmap.scaleX;
+                self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Lich.Resources.TILE_SIZE)) * self.bitmap.scaleY;
+                // a pak se ještě vycentruje ikona
+                self.playerIcon.x -= self.playerIcon.width / 2;
+                self.playerIcon.y -= self.playerIcon.height / 2;
+            };
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
+                self.shiftX = payload.payload;
+                adjustMap();
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_Y, function (payload) {
+                self.shiftY = payload.payload;
+                adjustMap();
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, function (payload) {
+                self.playerX = payload.x;
+                self.playerY = payload.y;
+                adjustMap();
+                return false;
+            });
         }
         MinimapUI.prototype.drawMinimapTile = function (imgData, x, y) {
             var self = this;

@@ -5,9 +5,14 @@ namespace Lich {
         static MAP_SIDE = 200;
         static MINIMAP_COOLDOWN = 30;
 
-        playerIcon;
+        playerIcon: createjs.Bitmap;
         canvas: HTMLCanvasElement;
         bitmap: createjs.Bitmap;
+
+        shiftX: number = 0;
+        shiftY: number = 0;
+        playerX: number = 0;
+        playerY: number = 0;
 
         constructor(private tilesMap: TilesMap, mainCanvasWidth: number, mainCanvasHeight: number) {
             super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
@@ -47,17 +52,38 @@ namespace Lich {
 
             self.playerIcon = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]);
             self.playerIcon.alpha = 0.7;
+            self.playerIcon.width = self.playerIcon.getBounds().width;
+            self.playerIcon.height = self.playerIcon.getBounds().height;
             this.addChild(self.playerIcon);
 
-            // EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
-            //     self.bitmap.sourceRect.x = Math.floor(-1 * payload.payload / Resources.TILE_SIZE);
-            //     return false;
-            // });
+            let adjustMap = () => {
+                // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
+                // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
+                self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Resources.TILE_SIZE)) * self.bitmap.scaleX;
+                self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Resources.TILE_SIZE)) * self.bitmap.scaleY;
+                // a pak se ještě vycentruje ikona
+                self.playerIcon.x -= self.playerIcon.width / 2;
+                self.playerIcon.y -= self.playerIcon.height / 2
+            };
 
-            // EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
-            //     self.bitmap.sourceRect.y = Math.floor(-1 * payload.payload / Resources.TILE_SIZE);
-            //     return false;
-            // });
+            EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
+                self.shiftX = payload.payload;
+                adjustMap();
+                return false;
+            });
+
+            EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
+                self.shiftY = payload.payload;
+                adjustMap();
+                return false;
+            });
+
+            EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, (payload: TupleEventPayload) => {
+                self.playerX = payload.x;
+                self.playerY = payload.y;
+                adjustMap();
+                return false;
+            });
         }
 
         drawMinimapTile(imgData, x: number, y: number) {
