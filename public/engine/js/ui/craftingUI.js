@@ -20,8 +20,6 @@ var Lich;
         __extends(CraftingUI, _super);
         function CraftingUI() {
             _super.call(this, CraftingUI.N, CraftingUI.M);
-            this.toggleFlag = true;
-            this.parentRef = null;
             this.lineOffset = 0;
             this.choosenItem = null;
             // --- Virtuální seznam ---
@@ -179,23 +177,6 @@ var Lich;
                 }
                 self.render();
             };
-        };
-        CraftingUI.prototype.toggle = function () {
-            var self = this;
-            // dochází ke změně?
-            if (self.toggleFlag) {
-                if (self.parent == null) {
-                    self.parentRef.addChild(self);
-                }
-                else {
-                    self.parentRef = self.parent;
-                    self.parent.removeChild(self);
-                }
-                self.toggleFlag = false;
-            }
-        };
-        CraftingUI.prototype.prepareForToggle = function () {
-            this.toggleFlag = true;
         };
         CraftingUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {

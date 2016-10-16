@@ -20,9 +20,6 @@ namespace Lich {
         static M = 6;
         static CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
 
-        toggleFlag = true;
-        private parentRef: createjs.Container = null;
-
         lineOffset = 0;
 
         itemHighlight: createjs.Shape;
@@ -208,24 +205,6 @@ namespace Lich {
                 }
                 self.render();
             };
-        }
-
-        toggle() {
-            var self = this;
-            // dochází ke změně?
-            if (self.toggleFlag) {
-                if (self.parent == null) {
-                    self.parentRef.addChild(self);
-                } else {
-                    self.parentRef = self.parent;
-                    self.parent.removeChild(self);
-                }
-                self.toggleFlag = false;
-            }
-        }
-
-        prepareForToggle() {
-            this.toggleFlag = true;
         }
 
         handleMouse(mouse) {

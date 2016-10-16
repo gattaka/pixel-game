@@ -88,8 +88,6 @@ var Lich;
             this.lines = new Array();
             this.cont = new createjs.Container();
             this.currentLine = 0;
-            this.toggleFlag = true;
-            this.parentRef = null;
             var self = this;
             var changelog = new Changelog();
             var label = new Lich.Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka", "20px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
@@ -142,29 +140,6 @@ var Lich;
             newWorld.y = 2 * (Lich.PartsUI.SELECT_BORDER + Lich.Resources.PARTS_SIZE + Lich.PartsUI.BORDER);
             self.cache(-(Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.SELECT_BORDER + 10), -10, self.width + (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.SELECT_BORDER) * 2 + 20, self.height + 20);
         }
-        SplashScreenUI.prototype.hide = function () {
-            this.parentRef = this.parent;
-            this.parent.removeChild(this);
-        };
-        SplashScreenUI.prototype.show = function () {
-            this.parentRef.addChild(this);
-        };
-        SplashScreenUI.prototype.toggle = function () {
-            var self = this;
-            // dochází ke změně?
-            if (self.toggleFlag) {
-                if (self.parent == null) {
-                    self.show();
-                }
-                else {
-                    self.hide();
-                }
-                self.toggleFlag = false;
-            }
-        };
-        SplashScreenUI.prototype.prepareForToggle = function () {
-            this.toggleFlag = true;
-        };
         SplashScreenUI.prototype.print = function () {
             this.cont.removeAllChildren();
             for (var i = 0; i < SplashScreenUI.LINES; i++) {

@@ -57,6 +57,14 @@ var Lich;
             musicUI.y = canvas.height - UI.SCREEN_SPACING - conditionUI.height - UI.SCREEN_SPACING - musicUI.height;
             self.addChild(musicUI);
             self.musicUI = musicUI;
+            // Minimapa
+            var minimapUI = new Lich.MinimapUI(game.getWorld().tilesMap, canvas.width, canvas.height);
+            // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
+            // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
+            minimapUI.x = UI.SCREEN_SPACING;
+            minimapUI.y = UI.SCREEN_SPACING;
+            self.addChild(minimapUI);
+            self.minimapUI = minimapUI;
         }
         UI.prototype.isMouseInUI = function (x, y) {
             var self = this;
@@ -90,6 +98,8 @@ var Lich;
             _super.call(this);
             this.width = width;
             this.height = height;
+            this.toggleFlag = true;
+            this.parentRef = null;
             this.outerShape = new createjs.Shape();
             this.drawBackground();
             this.addChild(this.outerShape);
@@ -100,6 +110,29 @@ var Lich;
             this.outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
             this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
             this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
+        };
+        AbstractUI.prototype.hide = function () {
+            this.parentRef = this.parent;
+            this.parent.removeChild(this);
+        };
+        AbstractUI.prototype.show = function () {
+            this.parentRef.addChild(this);
+        };
+        AbstractUI.prototype.toggle = function () {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag) {
+                if (self.parent == null) {
+                    self.show();
+                }
+                else {
+                    self.hide();
+                }
+                self.toggleFlag = false;
+            }
+        };
+        AbstractUI.prototype.prepareForToggle = function () {
+            this.toggleFlag = true;
         };
         AbstractUI.BORDER = 10;
         AbstractUI.TEXT_SIZE = 15;

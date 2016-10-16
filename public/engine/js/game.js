@@ -95,9 +95,9 @@ var Lich;
                     Lich.EventBus.getInstance().clear();
                     Lich.Mixer.stopAll();
                     // re-init
-                    self.ui = new Lich.UI(self);
                     self.world = new Lich.World(self, tilesMap);
                     self.background = new Lich.Background(self);
+                    self.ui = new Lich.UI(self);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
@@ -232,10 +232,16 @@ var Lich;
                         self.ui.splashScreenUI.prepareForToggle();
                     }
                     if (self.keys[73]) {
-                        self.ui.inventoryUI.toggleInv();
+                        self.ui.inventoryUI.toggle();
                     }
                     else {
-                        self.ui.inventoryUI.prepareForToggleInv();
+                        self.ui.inventoryUI.prepareForToggle();
+                    }
+                    if (self.keys[77]) {
+                        self.ui.minimapUI.toggle();
+                    }
+                    else {
+                        self.ui.minimapUI.prepareForToggle();
                     }
                     if (self.keys[16]) {
                         self.ui.spellsUI.toggleShift();

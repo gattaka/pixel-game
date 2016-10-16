@@ -7,12 +7,15 @@ namespace Lich {
         HEALTH_CHANGE,
         WILL_CHANGE,
         MOUSE_MOVE,
-        HERO_SPEED_CHANGE,
+        PLAYER_SPEED_CHANGE,
         FPS_CHANGE,
         POINTED_AREA_CHANGE,
         SAVE_WORLD,
         LOAD_WORLD,
-        NEW_WORLD
+        NEW_WORLD,
+        MAP_SHIFT_X,
+        MAP_SHIFT_Y,
+        PLAYER_POSITION_CHANGE,
     }
 
     abstract class EventPayload {
@@ -32,7 +35,7 @@ namespace Lich {
     }
 
     export class TupleEventPayload extends EventPayload {
-        constructor(type:EventType, public x: number, public y: number) { super(type); }
+        constructor(type: EventType, public x: number, public y: number) { super(type); }
     }
 
     export class PointedAreaEventPayload extends EventPayload {

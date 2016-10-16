@@ -12,12 +12,15 @@ var Lich;
         EventType[EventType["HEALTH_CHANGE"] = 3] = "HEALTH_CHANGE";
         EventType[EventType["WILL_CHANGE"] = 4] = "WILL_CHANGE";
         EventType[EventType["MOUSE_MOVE"] = 5] = "MOUSE_MOVE";
-        EventType[EventType["HERO_SPEED_CHANGE"] = 6] = "HERO_SPEED_CHANGE";
+        EventType[EventType["PLAYER_SPEED_CHANGE"] = 6] = "PLAYER_SPEED_CHANGE";
         EventType[EventType["FPS_CHANGE"] = 7] = "FPS_CHANGE";
         EventType[EventType["POINTED_AREA_CHANGE"] = 8] = "POINTED_AREA_CHANGE";
         EventType[EventType["SAVE_WORLD"] = 9] = "SAVE_WORLD";
         EventType[EventType["LOAD_WORLD"] = 10] = "LOAD_WORLD";
         EventType[EventType["NEW_WORLD"] = 11] = "NEW_WORLD";
+        EventType[EventType["MAP_SHIFT_X"] = 12] = "MAP_SHIFT_X";
+        EventType[EventType["MAP_SHIFT_Y"] = 13] = "MAP_SHIFT_Y";
+        EventType[EventType["PLAYER_POSITION_CHANGE"] = 14] = "PLAYER_POSITION_CHANGE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

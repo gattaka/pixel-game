@@ -318,7 +318,8 @@ namespace Lich {
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
 
-            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.HERO_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
+            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
 
             self.enemies.forEach(function (enemy) {
                 // update nepřátel
@@ -418,7 +419,8 @@ namespace Lich {
          * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje, 
          * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem. 
          */
-        isBoundsInCollision(x: number, y: number, fullWidth: number, fullHeight: number, fullXShift: number, fullYShift: number, collisionTester: (x: number, y: number) => CollisionTestResult): CollisionTestResult {
+        isBoundsInCollision(x: number, y: number, fullWidth: number, fullHeight: number, fullXShift: number, fullYShift: number,
+            collisionTester: (x: number, y: number) => CollisionTestResult): CollisionTestResult {
             var self = this;
             var tx;
             var ty;

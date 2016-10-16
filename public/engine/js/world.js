@@ -256,7 +256,8 @@ var Lich;
             };
             // update hráče
             self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
-            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.HERO_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
+            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
             self.enemies.forEach(function (enemy) {
                 // update nepřátel
                 self.updateObject(sDelta, enemy, function (dst) {

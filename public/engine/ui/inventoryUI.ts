@@ -6,8 +6,6 @@ namespace Lich {
         static M = 3;
         static INV_SIZE = InventoryUI.N * InventoryUI.M;
 
-        toggleFlag = true;
-
         choosenItem: InventoryKey = null;
 
         lineOffset = 0;
@@ -133,7 +131,7 @@ namespace Lich {
             }
         }
 
-        toggleInv() {
+        toggle() {
             var self = this;
             // dochází ke změně?
             if (self.toggleFlag) {
@@ -168,7 +166,7 @@ namespace Lich {
             }
         }
 
-        prepareForToggleInv() {
+        prepareForToggle() {
             this.toggleFlag = true;
         }
 

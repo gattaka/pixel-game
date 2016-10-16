@@ -259,6 +259,7 @@ var Lich;
                 sector.x += dst;
             });
             self.updateSectors();
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_X, self.screenOffsetX));
         };
         /**
          * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
@@ -274,6 +275,7 @@ var Lich;
                 sector.y += dst;
             });
             self.updateSectors();
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_Y, self.screenOffsetY));
         };
         Render.prototype.markSector = function (sector) {
             var self = this;

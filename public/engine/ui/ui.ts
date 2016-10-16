@@ -12,6 +12,7 @@ namespace Lich {
         musicUI: MusicUI;
         conditionUI: ConditionUI;
         craftingUI: CraftingUI;
+        minimapUI: MinimapUI;
 
         splashScreenUI: SplashScreenUI;
 
@@ -34,7 +35,7 @@ namespace Lich {
             self.addChild(self.splashScreenUI);
 
             // Crafting
-            var craftingUI = new CraftingUI();
+            let craftingUI = new CraftingUI();
             self.addChild(craftingUI);
             self.craftingUI = craftingUI;
 
@@ -42,7 +43,7 @@ namespace Lich {
             let recipeListener = new RecipeManager(craftingUI.createRecipeAvailChangeListener());
 
             // Inventář
-            var inventoryUI = new InventoryUI(recipeListener);
+            let inventoryUI = new InventoryUI(recipeListener);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             self.addChild(inventoryUI);
@@ -55,30 +56,40 @@ namespace Lich {
                 - craftingUI.height - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 3;
 
             // Schopnosti
-            var spellsUI = new SpellsUI();
+            let spellsUI = new SpellsUI();
             spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = UI.SCREEN_SPACING;
             self.addChild(spellsUI);
             self.spellsUI = spellsUI;
 
             // Stav (mana, zdraví)
-            var conditionUI = new ConditionUI();
+            let conditionUI = new ConditionUI();
             conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
             conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
             self.addChild(conditionUI);
             self.conditionUI = conditionUI;
 
             // Hudba
-            var musicUI = new MusicUI();
+            let musicUI = new MusicUI();
             musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
             musicUI.y = canvas.height - UI.SCREEN_SPACING - conditionUI.height - UI.SCREEN_SPACING - musicUI.height;
             self.addChild(musicUI);
             self.musicUI = musicUI;
+
+            // Minimapa
+            let minimapUI = new MinimapUI(game.getWorld().tilesMap, canvas.width, canvas.height);
+            // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
+            // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
+            minimapUI.x = UI.SCREEN_SPACING;
+            minimapUI.y = UI.SCREEN_SPACING;
+            self.addChild(minimapUI);
+            self.minimapUI = minimapUI;
+
         }
 
         isMouseInUI(x: number, y: number): boolean {
-            var self = this;
-            var uiHit = false;
+            let self = this;
+            let uiHit = false;
             self.children.forEach(function (item) {
                 if (item.hitTest(x - item.x, y - item.y) === true) {
                     uiHit = true;
@@ -89,7 +100,7 @@ namespace Lich {
         }
 
         handleMouse(mouse: Mouse, delta: number) {
-            var self = this;
+            let self = this;
             self.children.forEach(function (item) {
                 if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {
                     if (typeof item["handleMouse"] !== "undefined") {
@@ -105,6 +116,9 @@ namespace Lich {
 
         static BORDER = 10;
         static TEXT_SIZE = 15;
+
+        protected toggleFlag = true;
+        protected parentRef: createjs.Container = null;
 
         outerShape: createjs.Shape;
 
@@ -124,6 +138,32 @@ namespace Lich {
             this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
         }
 
+        hide() {
+            this.parentRef = this.parent;
+            this.parent.removeChild(this);
+        }
+
+        show() {
+            this.parentRef.addChild(this);
+        }
+
+        public toggle() {
+            var self = this;
+            // dochází ke změně?
+            if (self.toggleFlag) {
+                if (self.parent == null) {
+                    self.show();
+                } else {
+                    self.hide();
+                }
+                self.toggleFlag = false;
+            }
+        }
+
+        public prepareForToggle() {
+            this.toggleFlag = true;
+        }
+
     }
 
     export class UIShape extends createjs.Shape {
@@ -134,7 +174,7 @@ namespace Lich {
             this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
             this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
             this.graphics.setStrokeStyle(2);
-            var side = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            let side = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
             this.graphics.drawRoundRect(0, 0, side, side, 3);
         }
     }

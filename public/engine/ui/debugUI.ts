@@ -43,7 +43,7 @@ namespace Lich {
             });
 
             this.playerLabel = new Label("SPEED x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
-            EventBus.getInstance().registerConsumer(EventType.HERO_SPEED_CHANGE, (data: TupleEventPayload) => {
+            EventBus.getInstance().registerConsumer(EventType.PLAYER_SPEED_CHANGE, (data: TupleEventPayload) => {
                 self.playerLabel.setText("SPEED x: " + Math.floor(data.x) + " y: " + Math.floor(data.y));
                 return false;
             });

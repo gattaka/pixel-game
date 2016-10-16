@@ -37,7 +37,7 @@ var Lich;
                 return false;
             });
             this.playerLabel = new Lich.Label("SPEED x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.HERO_SPEED_CHANGE, function (data) {
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_SPEED_CHANGE, function (data) {
                 self.playerLabel.setText("SPEED x: " + Math.floor(data.x) + " y: " + Math.floor(data.y));
                 return false;
             });

@@ -100,35 +100,6 @@ namespace Lich {
         private cont = new createjs.Container();
         private currentLine = 0;
 
-        private toggleFlag = true;
-        private parentRef: createjs.Container = null;
-
-        hide() {
-            this.parentRef = this.parent;
-            this.parent.removeChild(this);
-        }
-
-        show() {
-            this.parentRef.addChild(this);
-        }
-        toggle() {
-            var self = this;
-            // dochází ke změně?
-            if (self.toggleFlag) {
-                if (self.parent == null) {
-                    self.show();
-                } else {
-                    self.hide();
-                }
-                self.toggleFlag = false;
-            }
-        }
-
-        prepareForToggle() {
-            this.toggleFlag = true;
-        }
-
-
         public print() {
             this.cont.removeAllChildren();
             for (var i = 0; i < SplashScreenUI.LINES; i++) {

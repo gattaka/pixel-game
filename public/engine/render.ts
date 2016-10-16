@@ -338,6 +338,7 @@ namespace Lich {
                 sector.x += dst;
             });
             self.updateSectors();
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_X, self.screenOffsetX));
         }
 
         /**
@@ -355,6 +356,7 @@ namespace Lich {
                 sector.y += dst;
             });
             self.updateSectors();
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_Y, self.screenOffsetY));
         }
 
         markSector(sector: Sector) {

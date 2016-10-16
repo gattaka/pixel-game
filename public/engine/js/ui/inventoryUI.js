@@ -10,7 +10,6 @@ var Lich;
         function InventoryUI(recipeListener) {
             _super.call(this, InventoryUI.N, InventoryUI.M);
             this.recipeListener = recipeListener;
-            this.toggleFlag = true;
             this.choosenItem = null;
             this.lineOffset = 0;
             // --- Virtuální inventář ---
@@ -105,7 +104,7 @@ var Lich;
             if (mouse.down) {
             }
         };
-        InventoryUI.prototype.toggleInv = function () {
+        InventoryUI.prototype.toggle = function () {
             var self = this;
             // dochází ke změně?
             if (self.toggleFlag) {
@@ -140,7 +139,7 @@ var Lich;
                 self.updateCache();
             }
         };
-        InventoryUI.prototype.prepareForToggleInv = function () {
+        InventoryUI.prototype.prepareForToggle = function () {
             this.toggleFlag = true;
         };
         InventoryUI.prototype.invRemove = function (item, quantChange) {
