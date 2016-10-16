@@ -43,14 +43,16 @@ namespace Lich {
         SRFC_ROOF_KEY,
         SRFC_IRON_KEY,
         SRFC_COAL_KEY,
-        SRFC_ROCK_KEY
+        SRFC_ROCK_KEY,
+        SRFC_ROCK_BRICK_KEY
     }
 
     export enum SurfaceBgrKey {
         SRFC_BGR_BRICK_KEY,
         SRFC_BGR_WOODWALL_KEY,
         SRFC_BGR_STRAW_KEY,
-        SRFC_BGR_ROOF_KEY
+        SRFC_BGR_ROOF_KEY,
+        SRFC_BGR_ROCK_BRICK_KEY
     }
 
     export enum MapObjectKey {
@@ -96,12 +98,13 @@ namespace Lich {
         INV_FLORITE_KEY,
         INV_CAMPFIRE_KEY,
         INV_DOOR_KEY,
-        INV_BRICKWALL_KEY,
+        INV_BRICK_KEY,
         INV_WOODWALL_KEY,
         INV_ROOF_KEY,
         INV_IRON_KEY,
         INV_COAL_KEY,
-        INV_ROCK_KEY
+        INV_ROCK_KEY,
+        INV_ROCK_BRICK_KEY
     }
 
     export enum UIGFXKey {
@@ -323,12 +326,13 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_florite.png", InventoryKey[InventoryKey.INV_FLORITE_KEY]),
                 new Load("images/ui/inventory/inv_campfire.png", InventoryKey[InventoryKey.INV_CAMPFIRE_KEY]),
                 new Load("images/ui/inventory/inv_door.png", InventoryKey[InventoryKey.INV_DOOR_KEY]),
-                new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICKWALL_KEY]),
+                new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICK_KEY]),
                 new Load("images/ui/inventory/inv_woodwall.png", InventoryKey[InventoryKey.INV_WOODWALL_KEY]),
                 new Load("images/ui/inventory/inv_roof.png", InventoryKey[InventoryKey.INV_ROOF_KEY]),
                 new Load("images/ui/inventory/inv_iron.png", InventoryKey[InventoryKey.INV_IRON_KEY]),
                 new Load("images/ui/inventory/inv_coal.png", InventoryKey[InventoryKey.INV_COAL_KEY]),
                 new Load("images/ui/inventory/inv_rock.png", InventoryKey[InventoryKey.INV_ROCK_KEY]),
+                new Load("images/ui/inventory/inv_rock_brick.png", InventoryKey[InventoryKey.INV_ROCK_BRICK_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -347,11 +351,13 @@ namespace Lich {
                 new Load("images/surfaces/iron.png", SurfaceKey[SurfaceKey.SRFC_IRON_KEY]),
                 new Load("images/surfaces/coal.png", SurfaceKey[SurfaceKey.SRFC_COAL_KEY]),
                 new Load("images/surfaces/rock.png", SurfaceKey[SurfaceKey.SRFC_ROCK_KEY]),
+                new Load("images/surfaces/rock_brick.png", SurfaceKey[SurfaceKey.SRFC_ROCK_BRICK_KEY]),
                 // surface backgrounds
                 new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
                 new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
                 new Load("images/surfaces/straw_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]),
                 new Load("images/surfaces/roof_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]),
+                new Load("images/surfaces/rock_brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY]),
                 // objects
                 new Load("images/parts/berry.png", MapObjectKey[MapObjectKey.MAP_BERRY_KEY]),
                 new Load("images/parts/bush.png", MapObjectKey[MapObjectKey.MAP_BUSH_KEY]),
@@ -482,7 +488,8 @@ namespace Lich {
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 10).setDepth(50, 100));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 10).setDepth(70, 100));
-            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1, 0));
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICK_KEY, 1, 0));
+            registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_KEY, InventoryKey.INV_ROCK_BRICK_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
             registerSurfaceDefs(new MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 5).setDepth(5, 100));
@@ -498,7 +505,8 @@ namespace Lich {
                 self.mapSurfacesBgrDefs[mapSurface.mapKey] = mapSurface;
             };
 
-            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, InventoryKey.INV_BRICKWALL_KEY, 1));
+            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, InventoryKey.INV_BRICK_KEY, 1));
+            registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, InventoryKey.INV_ROCK_BRICK_KEY, 1));
             registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1));
             registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1));
             registerSurfaceBgrDefs(new MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1));
@@ -585,8 +593,10 @@ namespace Lich {
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_DIRT_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_DIRT_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_WOODWALL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_WOODWALL_KEY])
                 .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]));
-            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_BRICKWALL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_BRICK_KEY])
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_BRICK_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_BRICK_KEY])
                 .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_KEY])
+                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_STRAW_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_STRAW_KEY])
                 .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_KRYSTAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_KRYSTAL_KEY]));

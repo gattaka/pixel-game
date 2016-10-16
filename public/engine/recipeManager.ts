@@ -68,8 +68,13 @@ namespace Lich {
                 ]
             ]);
             this.buildRecipe([
-                [InventoryKey.INV_BRICKWALL_KEY, 5], [
+                [InventoryKey.INV_BRICK_KEY, 5], [
                     [InventoryKey.INV_DIRT_KEY, 1]
+                ]
+            ]);
+            this.buildRecipe([
+                [InventoryKey.INV_ROCK_BRICK_KEY, 5], [
+                    [InventoryKey.INV_ROCK_KEY, 1]
                 ]
             ]);
             this.buildRecipe([

@@ -18,7 +18,7 @@ namespace Lich {
 
         // musí být sudé
         static DEFAULT_MAP_WIDTH = 2000;
-        static DEFAULT_MAP_HEIGHT = 2000;
+        static DEFAULT_MAP_HEIGHT = 1000;
         static DEFAULT_MAP_GROUND_LEVEL = 50;
 
         private constructor() { }
