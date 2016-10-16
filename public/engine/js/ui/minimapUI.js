@@ -7,25 +7,31 @@ var Lich;
 (function (Lich) {
     var MinimapUI = (function (_super) {
         __extends(MinimapUI, _super);
-        function MinimapUI(tilesMap, mainCanvasWidth, mainCanvasHeight) {
+        function MinimapUI(mainCanvasWidth, mainCanvasHeight, tilesMap) {
             _super.call(this, mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2, mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2);
-            this.tilesMap = tilesMap;
             this.shiftX = 0;
             this.shiftY = 0;
             this.playerX = 0;
             this.playerY = 0;
             var self = this;
+            var border = new createjs.Shape();
+            border.graphics.setStrokeStyle(1);
+            border.graphics.beginStroke("rgba(0,0,0,255)");
+            border.graphics.beginFill("rgba(209,251,255,255)");
+            border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
+            this.addChild(border);
             self.canvas = document.getElementById("mapCanvas");
+            var ctx = self.canvas.getContext("2d");
+            self.bitmap = new createjs.Bitmap(self.canvas);
+            self.addChild(self.bitmap);
+            self.playerIcon = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.PLAYER_ICON_KEY]);
+            self.playerIcon.width = self.playerIcon.getBounds().width;
+            self.playerIcon.height = self.playerIcon.getBounds().height;
+            this.addChild(self.playerIcon);
+            self.tilesMap = tilesMap;
             self.canvas.width = self.tilesMap.width / 2;
             self.canvas.height = self.tilesMap.height / 2;
             self.canvas.style.backgroundColor = "#eee";
-            // var border = new createjs.Shape();
-            // border.graphics.setStrokeStyle(1);
-            // border.graphics.beginStroke("rgba(0,0,0,255)");
-            // border.graphics.beginFill("rgba(209,251,255,255)");
-            // border.graphics.drawRect(-1, -1, MinimapUI.MAP_SIDE + 2, MinimapUI.MAP_SIDE + 2);
-            // this.addChild(border);
-            var ctx = self.canvas.getContext("2d");
             var imgData = ctx.createImageData(self.tilesMap.width / 2, self.tilesMap.height / 2); // width x height
             (function () {
                 for (var y = 0; y < self.tilesMap.height; y += 2) {
@@ -35,15 +41,9 @@ var Lich;
                 }
                 ctx.putImageData(imgData, 0, 0);
             })();
-            self.bitmap = new createjs.Bitmap(self.canvas);
             self.bitmap.scaleX = (mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2) / self.canvas.width;
             self.bitmap.scaleY = (mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2) / self.canvas.height;
             // self.bitmap.sourceRect = new createjs.Rectangle(0, 0, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
-            self.addChild(self.bitmap);
-            self.playerIcon = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.PLAYER_ICON_KEY]);
-            self.playerIcon.width = self.playerIcon.getBounds().width;
-            self.playerIcon.height = self.playerIcon.getBounds().height;
-            this.addChild(self.playerIcon);
             var adjustPlayerIcon = function () {
                 // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
                 // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
@@ -71,13 +71,16 @@ var Lich;
             });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, function (payload) {
                 var imgData = ctx.createImageData(1, 1);
-                for (var i = 0; i < imgData.data.length; i += 4) {
+                var _loop_1 = function(i) {
                     self.processFillBySurface(payload.x, payload.y, function (r, g, b) {
                         imgData.data[i + 0] = r;
                         imgData.data[i + 1] = g;
                         imgData.data[i + 2] = b;
                         imgData.data[i + 3] = 250;
                     });
+                };
+                for (var i = 0; i < imgData.data.length; i += 4) {
+                    _loop_1(i);
                 }
                 ;
                 ctx.putImageData(imgData, payload.x / 2, payload.y / 2);

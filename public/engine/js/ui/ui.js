@@ -7,11 +7,10 @@ var Lich;
 (function (Lich) {
     var UI = (function (_super) {
         __extends(UI, _super);
-        function UI(game) {
+        function UI(canvas, tilesMap) {
             _super.call(this);
-            this.game = game;
+            this.canvas = canvas;
             var self = this;
-            var canvas = game.getCanvas();
             // Debug and loging
             self.debugUI = new Lich.DebugLogUI(400, 0);
             self.debugUI.x = UI.SCREEN_SPACING;
@@ -58,7 +57,7 @@ var Lich;
             self.addChild(musicUI);
             self.musicUI = musicUI;
             // Minimapa
-            var minimapUI = new Lich.MinimapUI(game.getWorld().tilesMap, canvas.width, canvas.height);
+            var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, tilesMap);
             // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
             // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
             minimapUI.x = UI.SCREEN_SPACING;

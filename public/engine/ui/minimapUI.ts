@@ -14,45 +14,50 @@ namespace Lich {
         playerX: number = 0;
         playerY: number = 0;
 
-        constructor(private tilesMap: TilesMap, mainCanvasWidth: number, mainCanvasHeight: number) {
-            super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
+        private tilesMap: TilesMap;
 
-            var self = this;
+        constructor(mainCanvasWidth: number, mainCanvasHeight: number, tilesMap: TilesMap) {
+            super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
+            let self = this;
+
+            let border = new createjs.Shape();
+            border.graphics.setStrokeStyle(1);
+            border.graphics.beginStroke("rgba(0,0,0,255)");
+            border.graphics.beginFill("rgba(209,251,255,255)");
+            border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
+            this.addChild(border);
 
             self.canvas = <HTMLCanvasElement>document.getElementById("mapCanvas");
-            self.canvas.width = self.tilesMap.width / 2;
-            self.canvas.height = self.tilesMap.height / 2;
-            self.canvas.style.backgroundColor = "#eee";
-
-            // var border = new createjs.Shape();
-            // border.graphics.setStrokeStyle(1);
-            // border.graphics.beginStroke("rgba(0,0,0,255)");
-            // border.graphics.beginFill("rgba(209,251,255,255)");
-            // border.graphics.drawRect(-1, -1, MinimapUI.MAP_SIDE + 2, MinimapUI.MAP_SIDE + 2);
-            // this.addChild(border);
-
-            var ctx = self.canvas.getContext("2d");
-            var imgData = ctx.createImageData(self.tilesMap.width / 2, self.tilesMap.height / 2); // width x height
-
-            (function () {
-                for (var y = 0; y < self.tilesMap.height; y += 2) {
-                    for (var x = 0; x < self.tilesMap.width; x += 2) {
-                        self.drawMinimapTile(imgData, x, y);
-                    }
-                }
-                ctx.putImageData(imgData, 0, 0);
-            })();
+            let ctx = self.canvas.getContext("2d");
 
             self.bitmap = new createjs.Bitmap(self.canvas);
-            self.bitmap.scaleX = (mainCanvasWidth - UI.SCREEN_SPACING * 2) / self.canvas.width;
-            self.bitmap.scaleY = (mainCanvasHeight - UI.SCREEN_SPACING * 2) / self.canvas.height;
-            // self.bitmap.sourceRect = new createjs.Rectangle(0, 0, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]);
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             this.addChild(self.playerIcon);
+
+            self.tilesMap = tilesMap;
+
+            self.canvas.width = self.tilesMap.width / 2;
+            self.canvas.height = self.tilesMap.height / 2;
+            self.canvas.style.backgroundColor = "#eee";
+
+            let imgData = ctx.createImageData(self.tilesMap.width / 2, self.tilesMap.height / 2); // width x height
+
+            (function () {
+                for (let y = 0; y < self.tilesMap.height; y += 2) {
+                    for (let x = 0; x < self.tilesMap.width; x += 2) {
+                        self.drawMinimapTile(imgData, x, y);
+                    }
+                }
+                ctx.putImageData(imgData, 0, 0);
+            })();
+
+            self.bitmap.scaleX = (mainCanvasWidth - UI.SCREEN_SPACING * 2) / self.canvas.width;
+            self.bitmap.scaleY = (mainCanvasHeight - UI.SCREEN_SPACING * 2) / self.canvas.height;
+            // self.bitmap.sourceRect = new createjs.Rectangle(0, 0, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
 
             let adjustPlayerIcon = () => {
                 // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
@@ -84,8 +89,8 @@ namespace Lich {
             });
 
             EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, (payload: TupleEventPayload) => {
-                var imgData = ctx.createImageData(1, 1);
-                for (var i = 0; i < imgData.data.length; i += 4) {
+                let imgData = ctx.createImageData(1, 1);
+                for (let i = 0; i < imgData.data.length; i += 4) {
                     self.processFillBySurface(payload.x, payload.y, (r: number, g: number, b: number) => {
                         imgData.data[i + 0] = r;
                         imgData.data[i + 1] = g;
@@ -121,7 +126,7 @@ namespace Lich {
         }
 
         private drawMinimapTile(imgData, x: number, y: number) {
-            var self = this;
+            let self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
             let fill = (r: number, g: number, b: number) => {
@@ -134,7 +139,7 @@ namespace Lich {
         };
 
         updateMinimap(mapUpdateRegion) {
-            var self = this;
+            let self = this;
             if (mapUpdateRegion.prepared === false) {
                 return;
             }
@@ -145,17 +150,17 @@ namespace Lich {
 
             mapUpdateRegion.cooldown = 0;
 
-            var x0 = mapUpdateRegion.fromX;
-            var y0 = mapUpdateRegion.fromY;
-            var w = mapUpdateRegion.toX - mapUpdateRegion.fromX + 1;
-            var h = mapUpdateRegion.toY - mapUpdateRegion.fromY + 1;
+            let x0 = mapUpdateRegion.fromX;
+            let y0 = mapUpdateRegion.fromY;
+            let w = mapUpdateRegion.toX - mapUpdateRegion.fromX + 1;
+            let h = mapUpdateRegion.toY - mapUpdateRegion.fromY + 1;
 
-            var ctx = self.canvas.getContext("2d");
-            var imgData = ctx.createImageData(w, h); // width x height
+            let ctx = self.canvas.getContext("2d");
+            let imgData = ctx.createImageData(w, h); // width x height
 
             (function () {
-                for (var y = y0; y <= mapUpdateRegion.toY; y++) {
-                    for (var x = x0; x <= mapUpdateRegion.toX; x++) {
+                for (let y = y0; y <= mapUpdateRegion.toY; y++) {
+                    for (let x = x0; x <= mapUpdateRegion.toX; x++) {
                         self.drawMinimapTile(imgData, x, y);
                     }
                 }
@@ -163,7 +168,7 @@ namespace Lich {
             })();
 
             //minimap.cont.removeChild(minimap.bitmap);
-            var dataURL = self.canvas.toDataURL();
+            let dataURL = self.canvas.toDataURL();
             self.bitmap.image = new createjs.Bitmap(dataURL).image;
             //minimap.cont.addChild(minimap.bitmap);
 

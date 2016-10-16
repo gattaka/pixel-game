@@ -131,10 +131,10 @@ namespace Lich {
                     EventBus.getInstance().clear();
                     Mixer.stopAll();
 
-                    // re-init
+                    // (re)-init
+                    self.ui = new UI(self.canvas,tilesMap);
                     self.world = new World(self, tilesMap);
                     self.background = new Background(self);
-                    self.ui = new UI(self);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
 

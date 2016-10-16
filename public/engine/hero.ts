@@ -79,8 +79,8 @@ namespace Lich {
 
             this.willRegen = 10;
 
-            this.onHealthChange(0);
-            this.onWillChange(0);
+            this.onHealthChange(this.currentHealth);
+            this.onWillChange(this.currentWill);
         }
 
         shift(shift) {

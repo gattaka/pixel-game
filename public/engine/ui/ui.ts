@@ -16,11 +16,10 @@ namespace Lich {
 
         splashScreenUI: SplashScreenUI;
 
-        constructor(public game: Game) {
+        constructor(public canvas: HTMLCanvasElement,tilesMap: TilesMap) {
             super();
 
             let self = this;
-            let canvas = game.getCanvas();
 
             // Debug and loging
             self.debugUI = new DebugLogUI(400, 0);
@@ -77,7 +76,7 @@ namespace Lich {
             self.musicUI = musicUI;
 
             // Minimapa
-            let minimapUI = new MinimapUI(game.getWorld().tilesMap, canvas.width, canvas.height);
+            let minimapUI = new MinimapUI(canvas.width, canvas.height,tilesMap);
             // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
             // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
             minimapUI.x = UI.SCREEN_SPACING;
