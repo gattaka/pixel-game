@@ -21,6 +21,7 @@ var Lich;
         EventType[EventType["MAP_SHIFT_X"] = 12] = "MAP_SHIFT_X";
         EventType[EventType["MAP_SHIFT_Y"] = 13] = "MAP_SHIFT_Y";
         EventType[EventType["PLAYER_POSITION_CHANGE"] = 14] = "PLAYER_POSITION_CHANGE";
+        EventType[EventType["SURFACE_CHANGE"] = 15] = "SURFACE_CHANGE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

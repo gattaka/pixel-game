@@ -386,6 +386,7 @@ var Lich;
                     }
                 })();
                 this.mapReshape(tilesToReset);
+                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_CHANGE, rx, ry));
                 return true;
             }
             return false;
@@ -583,6 +584,7 @@ var Lich;
                 }
             })();
             this.mapReshape(tilesToReset);
+            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_CHANGE, rx, ry));
         };
         Render.prototype.placeObject = function (rx, ry, mapObj) {
             var self = this;

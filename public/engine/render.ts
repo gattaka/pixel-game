@@ -487,6 +487,8 @@ namespace Lich {
                 })();
 
                 this.mapReshape(tilesToReset);
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_CHANGE, rx, ry));
+
                 return true;
             }
             return false;
@@ -722,6 +724,7 @@ namespace Lich {
 
             this.mapReshape(tilesToReset);
 
+            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_CHANGE, rx, ry));
         }
 
         placeObject(rx, ry, mapObj: MapObjDefinition) {

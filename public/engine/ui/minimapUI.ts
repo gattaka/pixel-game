@@ -43,20 +43,18 @@ namespace Lich {
                 ctx.putImageData(imgData, 0, 0);
             })();
 
-            var dataURL = self.canvas.toDataURL();
-            self.bitmap = new createjs.Bitmap(dataURL);
+            self.bitmap = new createjs.Bitmap(self.canvas);
             self.bitmap.scaleX = (mainCanvasWidth - UI.SCREEN_SPACING * 2) / self.canvas.width;
             self.bitmap.scaleY = (mainCanvasHeight - UI.SCREEN_SPACING * 2) / self.canvas.height;
             // self.bitmap.sourceRect = new createjs.Rectangle(0, 0, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]);
-            self.playerIcon.alpha = 0.7;
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             this.addChild(self.playerIcon);
 
-            let adjustMap = () => {
+            let adjustPlayerIcon = () => {
                 // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
                 // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
                 self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Resources.TILE_SIZE)) * self.bitmap.scaleX;
@@ -68,35 +66,40 @@ namespace Lich {
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
                 self.shiftX = payload.payload;
-                adjustMap();
+                adjustPlayerIcon();
                 return false;
             });
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
                 self.shiftY = payload.payload;
-                adjustMap();
+                adjustPlayerIcon();
                 return false;
             });
 
             EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, (payload: TupleEventPayload) => {
                 self.playerX = payload.x;
                 self.playerY = payload.y;
-                adjustMap();
+                adjustPlayerIcon();
+                return false;
+            });
+
+            EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, (payload: TupleEventPayload) => {
+                var imgData = ctx.createImageData(1, 1);
+                for (var i = 0; i < imgData.data.length; i += 4) {
+                    self.processFillBySurface(payload.x, payload.y, (r: number, g: number, b: number) => {
+                        imgData.data[i + 0] = r;
+                        imgData.data[i + 1] = g;
+                        imgData.data[i + 2] = b;
+                        imgData.data[i + 3] = 250;
+                    });
+                };
+                ctx.putImageData(imgData, payload.x / 2, payload.y / 2);
                 return false;
             });
         }
 
-        drawMinimapTile(imgData, x: number, y: number) {
-            var self = this;
-            if (typeof imgData.counter === "undefined" || imgData.counter === null)
-                imgData.counter = 0;
-            var item: number = self.tilesMap.mapRecord.getValue(x, y);
-            let fill = (r: number, g: number, b: number) => {
-                imgData.data[imgData.counter++] = r; // R
-                imgData.data[imgData.counter++] = g; // G
-                imgData.data[imgData.counter++] = b; // B
-                imgData.data[imgData.counter++] = 250; // A
-            };
+        private processFillBySurface(x: number, y: number, fill: (r: number, g: number, b: number) => any) {
+            let item: number = this.tilesMap.mapRecord.getValue(x, y);
             if (item != SurfacePositionKey.VOID) {
                 let key: SurfaceKey = Resources.getInstance().surfaceIndex.getType(item);
                 switch (key) {
@@ -115,6 +118,19 @@ namespace Lich {
             } else {
                 fill(209, 251, 255);
             }
+        }
+
+        private drawMinimapTile(imgData, x: number, y: number) {
+            var self = this;
+            if (typeof imgData.counter === "undefined" || imgData.counter === null)
+                imgData.counter = 0;
+            let fill = (r: number, g: number, b: number) => {
+                imgData.data[imgData.counter++] = r; // R
+                imgData.data[imgData.counter++] = g; // G
+                imgData.data[imgData.counter++] = b; // B
+                imgData.data[imgData.counter++] = 250; // A
+            };
+            self.processFillBySurface(x, y, fill);
         };
 
         updateMinimap(mapUpdateRegion) {
@@ -152,14 +168,6 @@ namespace Lich {
             //minimap.cont.addChild(minimap.bitmap);
 
             mapUpdateRegion.reset();
-        }
-
-        updatePlayerIcon(x: number, y: number) {
-            var self = this;
-            if (typeof self.playerIcon !== "undefined") {
-                self.playerIcon.x = Math.floor(x / Resources.TILE_SIZE) - (self.playerIcon.image.width / 2);
-                self.playerIcon.y = Math.floor(y / Resources.TILE_SIZE) - (self.playerIcon.image.height / 2);
-            }
         }
 
     }
