@@ -60,38 +60,30 @@ var Lich;
         function RecipeManager(recipeListener) {
             this.recipeListener = recipeListener;
             this.ingredientByKey = new IngredientByKey();
-            this.buildRecipe([
-                [Lich.InventoryKey.INV_DOOR_KEY, 1], [
+            this.buildRecipe([[Lich.InventoryKey.INV_DOOR_KEY, 1], [
                     [Lich.InventoryKey.INV_WOOD_KEY, 2]
-                ]
-            ]);
-            this.buildRecipe([
-                [Lich.InventoryKey.INV_CAMPFIRE_KEY, 1], [
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_CAMPFIRE_KEY, 1], [
                     [Lich.InventoryKey.INV_WOOD_KEY, 2],
                     [Lich.InventoryKey.INV_STRAW_KEY, 1]
-                ]
-            ]);
-            this.buildRecipe([
-                [Lich.InventoryKey.INV_BRICK_KEY, 5], [
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_TORCH_KEY, 5], [
+                    [Lich.InventoryKey.INV_WOOD_KEY, 1],
+                    [Lich.InventoryKey.INV_STRAW_KEY, 1]
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_BRICK_KEY, 5], [
                     [Lich.InventoryKey.INV_DIRT_KEY, 1]
-                ]
-            ]);
-            this.buildRecipe([
-                [Lich.InventoryKey.INV_ROCK_BRICK_KEY, 5], [
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_ROCK_BRICK_KEY, 5], [
                     [Lich.InventoryKey.INV_ROCK_KEY, 1]
-                ]
-            ]);
-            this.buildRecipe([
-                [Lich.InventoryKey.INV_WOODWALL_KEY, 5], [
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_WOODWALL_KEY, 5], [
                     [Lich.InventoryKey.INV_WOOD_KEY, 1]
-                ]
-            ]);
-            this.buildRecipe([
-                [Lich.InventoryKey.INV_ROOF_KEY, 5], [
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_ROOF_KEY, 5], [
                     [Lich.InventoryKey.INV_WOOD_KEY, 1],
                     [Lich.InventoryKey.INV_DIRT_KEY, 1]
-                ]
-            ]);
+                ]]);
         }
         RecipeManager.prototype.buildRecipe = function (json) {
             var self = this;

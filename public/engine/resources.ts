@@ -78,7 +78,8 @@ namespace Lich {
         MAP_DOOR_CLOSED_KEY,
         MAP_DOOR_OPEN_KEY,
         MAP_DOOR_CLOSED2_KEY,
-        MAP_DOOR_OPEN2_KEY
+        MAP_DOOR_OPEN2_KEY,
+        MAP_TORCH_KEY
     }
 
     export enum InventoryKey {
@@ -104,7 +105,8 @@ namespace Lich {
         INV_IRON_KEY,
         INV_COAL_KEY,
         INV_ROCK_KEY,
-        INV_ROCK_BRICK_KEY
+        INV_ROCK_BRICK_KEY,
+        INV_TORCH_KEY
     }
 
     export enum UIGFXKey {
@@ -333,6 +335,7 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_coal.png", InventoryKey[InventoryKey.INV_COAL_KEY]),
                 new Load("images/ui/inventory/inv_rock.png", InventoryKey[InventoryKey.INV_ROCK_KEY]),
                 new Load("images/ui/inventory/inv_rock_brick.png", InventoryKey[InventoryKey.INV_ROCK_BRICK_KEY]),
+                new Load("images/ui/inventory/inv_torch.png", InventoryKey[InventoryKey.INV_TORCH_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -382,6 +385,7 @@ namespace Lich {
                 new Load("images/parts/door_open.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN_KEY]),
                 new Load("images/parts/door_closed2.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED2_KEY]),
                 new Load("images/parts/door_open2.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
+                new Load("images/parts/torch.png", MapObjectKey[MapObjectKey.MAP_TORCH_KEY]),
                 // misc
                 new Load("images/characters/player_icon.png", UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]),
                 new Load("images/ui/skull.png", UIGFXKey[UIGFXKey.SKULL_KEY]),
@@ -542,6 +546,7 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
                 function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                     game.getWorld().render.digObject(rx, ry, false);
@@ -585,7 +590,8 @@ namespace Lich {
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_PLANT2_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT2_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_PLANT3_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT3_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_PLANT4_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]));
-            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]).setFrames(4));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_TORCH_KEY, self.mapObjectDefs[MapObjectKey.MAP_TORCH_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_DOOR_KEY, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]));
 
