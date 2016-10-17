@@ -79,7 +79,10 @@ namespace Lich {
         MAP_DOOR_OPEN_KEY,
         MAP_DOOR_CLOSED2_KEY,
         MAP_DOOR_OPEN2_KEY,
-        MAP_TORCH_KEY
+        MAP_TORCH_KEY,
+        MAP_ANVIL_KEY,
+        MAP_SMELTER_KEY,
+        MAP_IRON_INGOT_KEY
     }
 
     export enum InventoryKey {
@@ -106,7 +109,10 @@ namespace Lich {
         INV_COAL_KEY,
         INV_ROCK_KEY,
         INV_ROCK_BRICK_KEY,
-        INV_TORCH_KEY
+        INV_TORCH_KEY,
+        INV_ANVIL_KEY,
+        INV_SMELTER_KEY,
+        INV_IRON_INGOT_KEY
     }
 
     export enum UIGFXKey {
@@ -336,6 +342,9 @@ namespace Lich {
                 new Load("images/ui/inventory/inv_rock.png", InventoryKey[InventoryKey.INV_ROCK_KEY]),
                 new Load("images/ui/inventory/inv_rock_brick.png", InventoryKey[InventoryKey.INV_ROCK_BRICK_KEY]),
                 new Load("images/ui/inventory/inv_torch.png", InventoryKey[InventoryKey.INV_TORCH_KEY]),
+                new Load("images/ui/inventory/inv_anvil.png", InventoryKey[InventoryKey.INV_ANVIL_KEY]),
+                new Load("images/ui/inventory/inv_smelter.png", InventoryKey[InventoryKey.INV_SMELTER_KEY]),
+                new Load("images/ui/inventory/inv_iron_ingot.png", InventoryKey[InventoryKey.INV_IRON_INGOT_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -386,6 +395,9 @@ namespace Lich {
                 new Load("images/parts/door_closed2.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED2_KEY]),
                 new Load("images/parts/door_open2.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
                 new Load("images/parts/torch.png", MapObjectKey[MapObjectKey.MAP_TORCH_KEY]),
+                new Load("images/parts/anvil.png", MapObjectKey[MapObjectKey.MAP_ANVIL_KEY]),
+                new Load("images/parts/smelter.png", MapObjectKey[MapObjectKey.MAP_SMELTER_KEY]),
+                new Load("images/parts/iron_ingot.png", MapObjectKey[MapObjectKey.MAP_IRON_INGOT_KEY]),
                 // misc
                 new Load("images/characters/player_icon.png", UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]),
                 new Load("images/ui/skull.png", UIGFXKey[UIGFXKey.SKULL_KEY]),
@@ -546,6 +558,9 @@ namespace Lich {
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_SMELTER_KEY, 4, 4, InventoryKey.INV_SMELTER_KEY, 1, 0));
+            registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4));
             registerObjectDefs(new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
                 function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
@@ -592,6 +607,9 @@ namespace Lich {
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_PLANT4_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_TORCH_KEY, self.mapObjectDefs[MapObjectKey.MAP_TORCH_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_ANVIL_KEY, self.mapObjectDefs[MapObjectKey.MAP_ANVIL_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_SMELTER_KEY, self.mapObjectDefs[MapObjectKey.MAP_SMELTER_KEY]));
+            registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_IRON_INGOT_KEY, self.mapObjectDefs[MapObjectKey.MAP_IRON_INGOT_KEY]));
             registerInvObjectDefs(new InvObjDefinition(InventoryKey.INV_DOOR_KEY, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]));
 

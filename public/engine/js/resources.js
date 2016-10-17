@@ -83,6 +83,9 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_DOOR_CLOSED2_KEY"] = 21] = "MAP_DOOR_CLOSED2_KEY";
         MapObjectKey[MapObjectKey["MAP_DOOR_OPEN2_KEY"] = 22] = "MAP_DOOR_OPEN2_KEY";
         MapObjectKey[MapObjectKey["MAP_TORCH_KEY"] = 23] = "MAP_TORCH_KEY";
+        MapObjectKey[MapObjectKey["MAP_ANVIL_KEY"] = 24] = "MAP_ANVIL_KEY";
+        MapObjectKey[MapObjectKey["MAP_SMELTER_KEY"] = 25] = "MAP_SMELTER_KEY";
+        MapObjectKey[MapObjectKey["MAP_IRON_INGOT_KEY"] = 26] = "MAP_IRON_INGOT_KEY";
     })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
     var MapObjectKey = Lich.MapObjectKey;
     (function (InventoryKey) {
@@ -110,6 +113,9 @@ var Lich;
         InventoryKey[InventoryKey["INV_ROCK_KEY"] = 21] = "INV_ROCK_KEY";
         InventoryKey[InventoryKey["INV_ROCK_BRICK_KEY"] = 22] = "INV_ROCK_BRICK_KEY";
         InventoryKey[InventoryKey["INV_TORCH_KEY"] = 23] = "INV_TORCH_KEY";
+        InventoryKey[InventoryKey["INV_ANVIL_KEY"] = 24] = "INV_ANVIL_KEY";
+        InventoryKey[InventoryKey["INV_SMELTER_KEY"] = 25] = "INV_SMELTER_KEY";
+        InventoryKey[InventoryKey["INV_IRON_INGOT_KEY"] = 26] = "INV_IRON_INGOT_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
     (function (UIGFXKey) {
@@ -288,6 +294,9 @@ var Lich;
                 new Load("images/ui/inventory/inv_rock.png", InventoryKey[InventoryKey.INV_ROCK_KEY]),
                 new Load("images/ui/inventory/inv_rock_brick.png", InventoryKey[InventoryKey.INV_ROCK_BRICK_KEY]),
                 new Load("images/ui/inventory/inv_torch.png", InventoryKey[InventoryKey.INV_TORCH_KEY]),
+                new Load("images/ui/inventory/inv_anvil.png", InventoryKey[InventoryKey.INV_ANVIL_KEY]),
+                new Load("images/ui/inventory/inv_smelter.png", InventoryKey[InventoryKey.INV_SMELTER_KEY]),
+                new Load("images/ui/inventory/inv_iron_ingot.png", InventoryKey[InventoryKey.INV_IRON_INGOT_KEY]),
                 // characters
                 new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
                 new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
@@ -338,6 +347,9 @@ var Lich;
                 new Load("images/parts/door_closed2.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED2_KEY]),
                 new Load("images/parts/door_open2.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
                 new Load("images/parts/torch.png", MapObjectKey[MapObjectKey.MAP_TORCH_KEY]),
+                new Load("images/parts/anvil.png", MapObjectKey[MapObjectKey.MAP_ANVIL_KEY]),
+                new Load("images/parts/smelter.png", MapObjectKey[MapObjectKey.MAP_SMELTER_KEY]),
+                new Load("images/parts/iron_ingot.png", MapObjectKey[MapObjectKey.MAP_IRON_INGOT_KEY]),
                 // misc
                 new Load("images/characters/player_icon.png", UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]),
                 new Load("images/ui/skull.png", UIGFXKey[UIGFXKey.SKULL_KEY]),
@@ -478,6 +490,9 @@ var Lich;
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4));
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0));
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_SMELTER_KEY, 4, 4, InventoryKey.INV_SMELTER_KEY, 1, 0));
+            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4));
             registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
                 game.getWorld().render.digObject(rx, ry, false);
@@ -517,6 +532,9 @@ var Lich;
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT4_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_TORCH_KEY, self.mapObjectDefs[MapObjectKey.MAP_TORCH_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ANVIL_KEY, self.mapObjectDefs[MapObjectKey.MAP_ANVIL_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_SMELTER_KEY, self.mapObjectDefs[MapObjectKey.MAP_SMELTER_KEY]));
+            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_IRON_INGOT_KEY, self.mapObjectDefs[MapObjectKey.MAP_IRON_INGOT_KEY]));
             registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_DOOR_KEY, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]));
             // usaditelných jako povrch

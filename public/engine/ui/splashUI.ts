@@ -31,13 +31,15 @@ namespace Lich {
             version.addChange("Coal introduced");
             version.addChange("Iron introduced");
             version.addChange("Roof introduced");
+            version.addChange("Rock and rock bricks introduced");
+            version.addChange("Torches and new fireplace introduced");
+            version.addChange("Smelter and anvil introduced");
             version.addChange("Surface separation (surface transitions)");
             version.addChange("Fall speed limited");
             version.addChange("UI-or-World mouse dispatch improved");
             version.addChange("Player collision with surface improved");
             version.addChange("Hills");
             version.addChange("Minimap reimplemented");
-            version.addChange("Rock bricks");
             this.addVersion(version);
 
             version = new Version("0.6");

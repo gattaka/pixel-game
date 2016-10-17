@@ -84,6 +84,19 @@ var Lich;
                     [Lich.InventoryKey.INV_WOOD_KEY, 1],
                     [Lich.InventoryKey.INV_DIRT_KEY, 1]
                 ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_SMELTER_KEY, 1], [
+                    [Lich.InventoryKey.INV_WOOD_KEY, 5],
+                    [Lich.InventoryKey.INV_DIRT_KEY, 5],
+                    [Lich.InventoryKey.INV_ROCK_BRICK_KEY, 10]
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_ANVIL_KEY, 1], [
+                    [Lich.InventoryKey.INV_IRON_KEY, 10],
+                    [Lich.InventoryKey.INV_COAL_KEY, 5]
+                ]]);
+            this.buildRecipe([[Lich.InventoryKey.INV_IRON_INGOT_KEY, 1], [
+                    [Lich.InventoryKey.INV_IRON_KEY, 10],
+                    [Lich.InventoryKey.INV_COAL_KEY, 5]
+                ]]);
         }
         RecipeManager.prototype.buildRecipe = function (json) {
             var self = this;

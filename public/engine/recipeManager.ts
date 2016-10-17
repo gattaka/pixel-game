@@ -80,6 +80,19 @@ namespace Lich {
                 [InventoryKey.INV_WOOD_KEY, 1],
                 [InventoryKey.INV_DIRT_KEY, 1]
             ]]);
+            this.buildRecipe([[InventoryKey.INV_SMELTER_KEY, 1], [
+                [InventoryKey.INV_WOOD_KEY, 5],
+                [InventoryKey.INV_DIRT_KEY, 5],
+                [InventoryKey.INV_ROCK_BRICK_KEY, 10]
+            ]]);
+            this.buildRecipe([[InventoryKey.INV_ANVIL_KEY, 1], [
+                [InventoryKey.INV_IRON_KEY, 10],
+                [InventoryKey.INV_COAL_KEY, 5]
+            ]]);
+            this.buildRecipe([[InventoryKey.INV_IRON_INGOT_KEY, 1], [
+                [InventoryKey.INV_IRON_KEY, 10],
+                [InventoryKey.INV_COAL_KEY, 5]
+            ]]);
         }
 
         buildRecipe(json: any) {
