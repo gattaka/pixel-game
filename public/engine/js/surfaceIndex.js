@@ -223,6 +223,14 @@ var Lich;
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_WOODWALL_KEY))
                 return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_WOODWALL_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY))
+                return true;
             return type == type2;
         };
         SurfaceIndex.SPRITE_SIDE = 6;

@@ -37,6 +37,7 @@ namespace Lich {
             version.addChange("Player collision with surface improved");
             version.addChange("Hills");
             version.addChange("Minimap reimplemented");
+            version.addChange("Rock bricks");
             this.addVersion(version);
 
             version = new Version("0.6");
