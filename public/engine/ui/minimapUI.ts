@@ -114,6 +114,7 @@ namespace Lich {
                     case SurfaceKey.SRFC_WOODWALL_KEY: fill(181, 129, 28); break;
                     case SurfaceKey.SRFC_ROOF_KEY: fill(156, 60, 28); break;
                     case SurfaceKey.SRFC_ROCK_KEY: fill(82, 82, 82); break;
+                    case SurfaceKey.SRFC_ROCK_BRICK_KEY: fill(62, 62, 62); break;
                     case SurfaceKey.SRFC_STRAW_KEY: fill(219, 187, 39); break;
                     case SurfaceKey.SRFC_KRYSTAL_KEY: fill(0, 201, 201); break;
                     case SurfaceKey.SRFC_FLORITE_KEY: fill(159, 68, 181); break;

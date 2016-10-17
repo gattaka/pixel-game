@@ -110,6 +110,9 @@ var Lich;
                     case Lich.SurfaceKey.SRFC_ROCK_KEY:
                         fill(82, 82, 82);
                         break;
+                    case Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY:
+                        fill(62, 62, 62);
+                        break;
                     case Lich.SurfaceKey.SRFC_STRAW_KEY:
                         fill(219, 187, 39);
                         break;
