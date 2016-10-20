@@ -26,6 +26,7 @@ namespace Lich {
         INV_TORCH_KEY,
         INV_ANVIL_KEY,
         INV_SMELTER_KEY,
-        INV_IRON_INGOT_KEY
+        INV_IRON_INGOT_KEY,
+        INV_IRON_FENCE_KEY
     }
 }

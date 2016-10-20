@@ -16,7 +16,7 @@ namespace Lich {
 
         splashScreenUI: SplashScreenUI;
 
-        constructor(public canvas: HTMLCanvasElement,tilesMap: TilesMap) {
+        constructor(public canvas: HTMLCanvasElement, tilesMap: TilesMap) {
             super();
 
             let self = this;
@@ -51,8 +51,9 @@ namespace Lich {
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
             // musí se posunout víc, protože má externí řádek pro ingredience
-            craftingUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
-                - craftingUI.height - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 3;
+            craftingUI.x = canvas.width / 2 - craftingUI.width / 2;
+            craftingUI.y = canvas.height / 2 - craftingUI.height / 2 - Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 2;
+            craftingUI.hide();
 
             // Schopnosti
             let spellsUI = new SpellsUI();
@@ -76,7 +77,7 @@ namespace Lich {
             self.musicUI = musicUI;
 
             // Minimapa
-            let minimapUI = new MinimapUI(canvas.width, canvas.height,tilesMap);
+            let minimapUI = new MinimapUI(canvas.width, canvas.height, tilesMap);
             // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
             // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
             minimapUI.x = UI.SCREEN_SPACING;

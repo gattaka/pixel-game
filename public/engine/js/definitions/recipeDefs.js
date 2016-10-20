@@ -38,5 +38,8 @@ var Lich;
                 [Lich.InventoryKey.INV_IRON_KEY, 10],
                 [Lich.InventoryKey.INV_COAL_KEY, 5]
             ]],
+        [[Lich.InventoryKey.INV_IRON_FENCE_KEY, 5], [
+                [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
+            ]],
     ];
 })(Lich || (Lich = {}));

@@ -26,6 +26,7 @@ namespace Lich {
         ["images/ui/inventory/inv_torch.png", InventoryKey.INV_TORCH_KEY],
         ["images/ui/inventory/inv_anvil.png", InventoryKey.INV_ANVIL_KEY],
         ["images/ui/inventory/inv_smelter.png", InventoryKey.INV_SMELTER_KEY],
-        ["images/ui/inventory/inv_iron_ingot.png", InventoryKey.INV_IRON_INGOT_KEY]
+        ["images/ui/inventory/inv_iron_ingot.png", InventoryKey.INV_IRON_INGOT_KEY],
+        ["images/ui/inventory/inv_iron_fence.png", InventoryKey.INV_IRON_FENCE_KEY]
     ]
 }

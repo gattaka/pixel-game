@@ -26,6 +26,7 @@ namespace Lich {
         MAP_TORCH_KEY,
         MAP_ANVIL_KEY,
         MAP_SMELTER_KEY,
-        MAP_IRON_INGOT_KEY
+        MAP_IRON_INGOT_KEY,
+        MAP_IRON_FENCE_KEY
     }
 }

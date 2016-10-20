@@ -36,8 +36,9 @@ var Lich;
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
             // musí se posunout víc, protože má externí řádek pro ingredience
-            craftingUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING * 2
-                - craftingUI.height - Lich.Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 3;
+            craftingUI.x = canvas.width / 2 - craftingUI.width / 2;
+            craftingUI.y = canvas.height / 2 - craftingUI.height / 2 - Lich.Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 2;
+            craftingUI.hide();
             // Schopnosti
             var spellsUI = new Lich.SpellsUI();
             spellsUI.x = canvas.width / 2 - spellsUI.width / 2;

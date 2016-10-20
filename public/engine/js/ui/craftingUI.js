@@ -182,7 +182,7 @@ var Lich;
             if (mouse.down) {
             }
         };
-        CraftingUI.N = 5;
+        CraftingUI.N = 12;
         CraftingUI.M = 6;
         CraftingUI.CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
         return CraftingUI;

@@ -23,6 +23,10 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.8");
+            version.addChange("Iron fence introduced");
+            this.addVersion(version);
+
             version = new Version("0.7");
             version.addChange("Optimization");
             version.addChange("Surface sprites and map format extended");

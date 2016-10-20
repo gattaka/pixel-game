@@ -37,5 +37,8 @@ namespace Lich {
             [InventoryKey.INV_IRON_KEY, 10],
             [InventoryKey.INV_COAL_KEY, 5]
         ]],
+        [[InventoryKey.INV_IRON_FENCE_KEY, 5], [
+            [InventoryKey.INV_IRON_INGOT_KEY, 1],
+        ]],
     ]
 }

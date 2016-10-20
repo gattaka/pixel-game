@@ -1,4 +1,3 @@
-/// <reference path="mapObj.ts"/>
 /**
  * resources.js
  *

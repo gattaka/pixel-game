@@ -28,6 +28,7 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_ANVIL_KEY"] = 24] = "MAP_ANVIL_KEY";
         MapObjectKey[MapObjectKey["MAP_SMELTER_KEY"] = 25] = "MAP_SMELTER_KEY";
         MapObjectKey[MapObjectKey["MAP_IRON_INGOT_KEY"] = 26] = "MAP_IRON_INGOT_KEY";
+        MapObjectKey[MapObjectKey["MAP_IRON_FENCE_KEY"] = 27] = "MAP_IRON_FENCE_KEY";
     })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
     var MapObjectKey = Lich.MapObjectKey;
 })(Lich || (Lich = {}));
