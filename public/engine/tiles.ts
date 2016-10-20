@@ -18,7 +18,7 @@ namespace Lich {
      * dílů povrchu a dílů objektů (stromy, kameny apod.)
      */
     export class TilesMap {
-        
+
         // předpis rozmístění povrchu světa
         public mapRecord: Array2D<number>;
         // předpis rozmístění stěn (pozadí) povrchu světa
@@ -39,4 +39,5 @@ namespace Lich {
         }
 
     }
-};
+
+}

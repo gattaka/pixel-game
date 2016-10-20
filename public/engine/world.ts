@@ -8,7 +8,7 @@ namespace Lich {
 
     class WorldObject extends AbstractWorldObject {
         constructor(
-            public item: MapObjItem,
+            public item: DugObjDefinition,
             public width: number,
             public height: number,
             public spriteSheet: createjs.SpriteSheet,

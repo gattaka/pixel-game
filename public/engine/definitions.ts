@@ -7,9 +7,9 @@
 namespace Lich {
 
     /**
-     * Tuple pro INV objekt a množství z map objektu/povrchu/stěny
+     * Volný vytěžený objekt ve světě
      */
-    export class MapObjItem {
+    export class DugObjDefinition {
         constructor(public invObj: InventoryKey, public quant: number) { };
     }
 
@@ -17,15 +17,15 @@ namespace Lich {
      * Společný předek pro "dolovatelné" věci
      */
     export abstract class Diggable {
-        public item: MapObjItem;
+        public item: DugObjDefinition;
         constructor(
             // klíč
             public mapKey: SurfaceKey | SurfaceBgrKey | MapObjectKey,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             public invObj: InventoryKey,
-            // kolik INV objektů vznikne po vytěření (kusů dřeva z jednoho stromu)
+            // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             public quant: number) {
-            this.item = new MapObjItem(invObj, quant);
+            this.item = new DugObjDefinition(invObj, quant);
         }
     }
 
@@ -47,7 +47,7 @@ namespace Lich {
         // případně jako pozadí
         public mapSurfaceBgr: MapSurfaceBgrDefinition = null;
 
-        constructor(public invKey: InventoryKey, target: Diggable) {
+        constructor(public invKey: InventoryKey, target: MapObjDefinition | MapSurfaceDefinition) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
             }

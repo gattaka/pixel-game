@@ -15,170 +15,6 @@ var Lich;
         ;
         return Load;
     }());
-    (function (BackgroundKey) {
-        BackgroundKey[BackgroundKey["DIRT_BACK_START_KEY"] = 0] = "DIRT_BACK_START_KEY";
-        BackgroundKey[BackgroundKey["DIRT_BACK_KEY"] = 1] = "DIRT_BACK_KEY";
-        BackgroundKey[BackgroundKey["SKY_KEY"] = 2] = "SKY_KEY";
-        BackgroundKey[BackgroundKey["FAR_MOUNTAIN_KEY"] = 3] = "FAR_MOUNTAIN_KEY";
-        BackgroundKey[BackgroundKey["MOUNTAIN_KEY"] = 4] = "MOUNTAIN_KEY";
-        BackgroundKey[BackgroundKey["FAR_HILL_KEY"] = 5] = "FAR_HILL_KEY";
-        BackgroundKey[BackgroundKey["HILL_KEY"] = 6] = "HILL_KEY";
-        BackgroundKey[BackgroundKey["DIRTBACK_KEY"] = 7] = "DIRTBACK_KEY";
-        BackgroundKey[BackgroundKey["DARKNESS_KEY"] = 8] = "DARKNESS_KEY";
-        BackgroundKey[BackgroundKey["CLOUD_KEY"] = 9] = "CLOUD_KEY";
-    })(Lich.BackgroundKey || (Lich.BackgroundKey = {}));
-    var BackgroundKey = Lich.BackgroundKey;
-    (function (AnimationKey) {
-        AnimationKey[AnimationKey["METEOR_ANIMATION_KEY"] = 0] = "METEOR_ANIMATION_KEY";
-        AnimationKey[AnimationKey["FIREBALL_ANIMATION_KEY"] = 1] = "FIREBALL_ANIMATION_KEY";
-        AnimationKey[AnimationKey["LICH_ANIMATION_KEY"] = 2] = "LICH_ANIMATION_KEY";
-        AnimationKey[AnimationKey["CORPSE_ANIMATION_KEY"] = 3] = "CORPSE_ANIMATION_KEY";
-        AnimationKey[AnimationKey["BOLT_ANIMATION_KEY"] = 4] = "BOLT_ANIMATION_KEY";
-    })(Lich.AnimationKey || (Lich.AnimationKey = {}));
-    var AnimationKey = Lich.AnimationKey;
-    (function (SurfaceKey) {
-        SurfaceKey[SurfaceKey["SRFC_DIRT_KEY"] = 0] = "SRFC_DIRT_KEY";
-        SurfaceKey[SurfaceKey["SRFC_WOODWALL_KEY"] = 1] = "SRFC_WOODWALL_KEY";
-        SurfaceKey[SurfaceKey["SRFC_KRYSTAL_KEY"] = 2] = "SRFC_KRYSTAL_KEY";
-        SurfaceKey[SurfaceKey["SRFC_FLORITE_KEY"] = 3] = "SRFC_FLORITE_KEY";
-        SurfaceKey[SurfaceKey["SRFC_BRICK_KEY"] = 4] = "SRFC_BRICK_KEY";
-        SurfaceKey[SurfaceKey["SRFC_STRAW_KEY"] = 5] = "SRFC_STRAW_KEY";
-        SurfaceKey[SurfaceKey["SRFC_ROOF_KEY"] = 6] = "SRFC_ROOF_KEY";
-        SurfaceKey[SurfaceKey["SRFC_IRON_KEY"] = 7] = "SRFC_IRON_KEY";
-        SurfaceKey[SurfaceKey["SRFC_COAL_KEY"] = 8] = "SRFC_COAL_KEY";
-        SurfaceKey[SurfaceKey["SRFC_ROCK_KEY"] = 9] = "SRFC_ROCK_KEY";
-        SurfaceKey[SurfaceKey["SRFC_ROCK_BRICK_KEY"] = 10] = "SRFC_ROCK_BRICK_KEY";
-    })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
-    var SurfaceKey = Lich.SurfaceKey;
-    (function (SurfaceBgrKey) {
-        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_BRICK_KEY"] = 0] = "SRFC_BGR_BRICK_KEY";
-        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_WOODWALL_KEY"] = 1] = "SRFC_BGR_WOODWALL_KEY";
-        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_STRAW_KEY"] = 2] = "SRFC_BGR_STRAW_KEY";
-        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROOF_KEY"] = 3] = "SRFC_BGR_ROOF_KEY";
-        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROCK_BRICK_KEY"] = 4] = "SRFC_BGR_ROCK_BRICK_KEY";
-    })(Lich.SurfaceBgrKey || (Lich.SurfaceBgrKey = {}));
-    var SurfaceBgrKey = Lich.SurfaceBgrKey;
-    (function (MapObjectKey) {
-        MapObjectKey[MapObjectKey["MAP_BERRY_KEY"] = 0] = "MAP_BERRY_KEY";
-        MapObjectKey[MapObjectKey["MAP_BUSH_KEY"] = 1] = "MAP_BUSH_KEY";
-        MapObjectKey[MapObjectKey["MAP_BUSH2_KEY"] = 2] = "MAP_BUSH2_KEY";
-        MapObjectKey[MapObjectKey["MAP_GRASS_KEY"] = 3] = "MAP_GRASS_KEY";
-        MapObjectKey[MapObjectKey["MAP_GRASS2_KEY"] = 4] = "MAP_GRASS2_KEY";
-        MapObjectKey[MapObjectKey["MAP_GRASS3_KEY"] = 5] = "MAP_GRASS3_KEY";
-        MapObjectKey[MapObjectKey["MAP_GRAVE_KEY"] = 6] = "MAP_GRAVE_KEY";
-        MapObjectKey[MapObjectKey["MAP_MUSHROOM_KEY"] = 7] = "MAP_MUSHROOM_KEY";
-        MapObjectKey[MapObjectKey["MAP_MUSHROOM2_KEY"] = 8] = "MAP_MUSHROOM2_KEY";
-        MapObjectKey[MapObjectKey["MAP_MUSHROOM3_KEY"] = 9] = "MAP_MUSHROOM3_KEY";
-        MapObjectKey[MapObjectKey["MAP_PLANT_KEY"] = 10] = "MAP_PLANT_KEY";
-        MapObjectKey[MapObjectKey["MAP_PLANT2_KEY"] = 11] = "MAP_PLANT2_KEY";
-        MapObjectKey[MapObjectKey["MAP_PLANT3_KEY"] = 12] = "MAP_PLANT3_KEY";
-        MapObjectKey[MapObjectKey["MAP_PLANT4_KEY"] = 13] = "MAP_PLANT4_KEY";
-        MapObjectKey[MapObjectKey["MAP_TREE_KEY"] = 14] = "MAP_TREE_KEY";
-        MapObjectKey[MapObjectKey["MAP_TREE2_KEY"] = 15] = "MAP_TREE2_KEY";
-        MapObjectKey[MapObjectKey["MAP_TREE3_KEY"] = 16] = "MAP_TREE3_KEY";
-        MapObjectKey[MapObjectKey["MAP_FLORITE_KEY"] = 17] = "MAP_FLORITE_KEY";
-        MapObjectKey[MapObjectKey["MAP_CAMPFIRE_KEY"] = 18] = "MAP_CAMPFIRE_KEY";
-        MapObjectKey[MapObjectKey["MAP_DOOR_CLOSED_KEY"] = 19] = "MAP_DOOR_CLOSED_KEY";
-        MapObjectKey[MapObjectKey["MAP_DOOR_OPEN_KEY"] = 20] = "MAP_DOOR_OPEN_KEY";
-        MapObjectKey[MapObjectKey["MAP_DOOR_CLOSED2_KEY"] = 21] = "MAP_DOOR_CLOSED2_KEY";
-        MapObjectKey[MapObjectKey["MAP_DOOR_OPEN2_KEY"] = 22] = "MAP_DOOR_OPEN2_KEY";
-        MapObjectKey[MapObjectKey["MAP_TORCH_KEY"] = 23] = "MAP_TORCH_KEY";
-        MapObjectKey[MapObjectKey["MAP_ANVIL_KEY"] = 24] = "MAP_ANVIL_KEY";
-        MapObjectKey[MapObjectKey["MAP_SMELTER_KEY"] = 25] = "MAP_SMELTER_KEY";
-        MapObjectKey[MapObjectKey["MAP_IRON_INGOT_KEY"] = 26] = "MAP_IRON_INGOT_KEY";
-    })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
-    var MapObjectKey = Lich.MapObjectKey;
-    (function (InventoryKey) {
-        InventoryKey[InventoryKey["INV_BERRY_KEY"] = 0] = "INV_BERRY_KEY";
-        InventoryKey[InventoryKey["INV_BONES_KEY"] = 1] = "INV_BONES_KEY";
-        InventoryKey[InventoryKey["INV_WOOD_KEY"] = 2] = "INV_WOOD_KEY";
-        InventoryKey[InventoryKey["INV_STRAW_KEY"] = 3] = "INV_STRAW_KEY";
-        InventoryKey[InventoryKey["INV_MUSHROOM_KEY"] = 4] = "INV_MUSHROOM_KEY";
-        InventoryKey[InventoryKey["INV_MUSHROOM2_KEY"] = 5] = "INV_MUSHROOM2_KEY";
-        InventoryKey[InventoryKey["INV_MUSHROOM3_KEY"] = 6] = "INV_MUSHROOM3_KEY";
-        InventoryKey[InventoryKey["INV_PLANT_KEY"] = 7] = "INV_PLANT_KEY";
-        InventoryKey[InventoryKey["INV_PLANT2_KEY"] = 8] = "INV_PLANT2_KEY";
-        InventoryKey[InventoryKey["INV_PLANT3_KEY"] = 9] = "INV_PLANT3_KEY";
-        InventoryKey[InventoryKey["INV_PLANT4_KEY"] = 10] = "INV_PLANT4_KEY";
-        InventoryKey[InventoryKey["INV_DIRT_KEY"] = 11] = "INV_DIRT_KEY";
-        InventoryKey[InventoryKey["INV_KRYSTAL_KEY"] = 12] = "INV_KRYSTAL_KEY";
-        InventoryKey[InventoryKey["INV_FLORITE_KEY"] = 13] = "INV_FLORITE_KEY";
-        InventoryKey[InventoryKey["INV_CAMPFIRE_KEY"] = 14] = "INV_CAMPFIRE_KEY";
-        InventoryKey[InventoryKey["INV_DOOR_KEY"] = 15] = "INV_DOOR_KEY";
-        InventoryKey[InventoryKey["INV_BRICK_KEY"] = 16] = "INV_BRICK_KEY";
-        InventoryKey[InventoryKey["INV_WOODWALL_KEY"] = 17] = "INV_WOODWALL_KEY";
-        InventoryKey[InventoryKey["INV_ROOF_KEY"] = 18] = "INV_ROOF_KEY";
-        InventoryKey[InventoryKey["INV_IRON_KEY"] = 19] = "INV_IRON_KEY";
-        InventoryKey[InventoryKey["INV_COAL_KEY"] = 20] = "INV_COAL_KEY";
-        InventoryKey[InventoryKey["INV_ROCK_KEY"] = 21] = "INV_ROCK_KEY";
-        InventoryKey[InventoryKey["INV_ROCK_BRICK_KEY"] = 22] = "INV_ROCK_BRICK_KEY";
-        InventoryKey[InventoryKey["INV_TORCH_KEY"] = 23] = "INV_TORCH_KEY";
-        InventoryKey[InventoryKey["INV_ANVIL_KEY"] = 24] = "INV_ANVIL_KEY";
-        InventoryKey[InventoryKey["INV_SMELTER_KEY"] = 25] = "INV_SMELTER_KEY";
-        InventoryKey[InventoryKey["INV_IRON_INGOT_KEY"] = 26] = "INV_IRON_INGOT_KEY";
-    })(Lich.InventoryKey || (Lich.InventoryKey = {}));
-    var InventoryKey = Lich.InventoryKey;
-    (function (UIGFXKey) {
-        UIGFXKey[UIGFXKey["PLAYER_ICON_KEY"] = 0] = "PLAYER_ICON_KEY";
-        // misc.
-        UIGFXKey[UIGFXKey["SKULL_KEY"] = 1] = "SKULL_KEY";
-        UIGFXKey[UIGFXKey["HELMET_KEY"] = 2] = "HELMET_KEY";
-        UIGFXKey[UIGFXKey["TORSO_KEY"] = 3] = "TORSO_KEY";
-        UIGFXKey[UIGFXKey["GAUNTLET_KEY"] = 4] = "GAUNTLET_KEY";
-        // buttons
-        UIGFXKey[UIGFXKey["UI_SOUND_KEY"] = 5] = "UI_SOUND_KEY";
-        UIGFXKey[UIGFXKey["UI_UP_KEY"] = 6] = "UI_UP_KEY";
-        UIGFXKey[UIGFXKey["UI_DOWN_KEY"] = 7] = "UI_DOWN_KEY";
-        UIGFXKey[UIGFXKey["UI_LEFT_KEY"] = 8] = "UI_LEFT_KEY";
-        UIGFXKey[UIGFXKey["UI_RIGHT_KEY"] = 9] = "UI_RIGHT_KEY";
-        UIGFXKey[UIGFXKey["UI_CRAFT_KEY"] = 10] = "UI_CRAFT_KEY";
-        UIGFXKey[UIGFXKey["UI_SAVE_KEY"] = 11] = "UI_SAVE_KEY";
-        UIGFXKey[UIGFXKey["UI_LOAD_KEY"] = 12] = "UI_LOAD_KEY";
-        UIGFXKey[UIGFXKey["UI_NEW_WORLD_KEY"] = 13] = "UI_NEW_WORLD_KEY";
-    })(Lich.UIGFXKey || (Lich.UIGFXKey = {}));
-    var UIGFXKey = Lich.UIGFXKey;
-    (function (SpellKey) {
-        SpellKey[SpellKey["SPELL_PLACE_KEY"] = 0] = "SPELL_PLACE_KEY";
-        SpellKey[SpellKey["SPELL_PLACE_BGR_KEY"] = 1] = "SPELL_PLACE_BGR_KEY";
-        SpellKey[SpellKey["SPELL_DIG_KEY"] = 2] = "SPELL_DIG_KEY";
-        SpellKey[SpellKey["SPELL_DIG_BGR_KEY"] = 3] = "SPELL_DIG_BGR_KEY";
-        SpellKey[SpellKey["SPELL_FIREBALL_KEY"] = 4] = "SPELL_FIREBALL_KEY";
-        SpellKey[SpellKey["SPELL_METEOR_KEY"] = 5] = "SPELL_METEOR_KEY";
-        SpellKey[SpellKey["SPELL_BOLT_KEY"] = 6] = "SPELL_BOLT_KEY";
-        SpellKey[SpellKey["SPELL_ENEMY_KEY"] = 7] = "SPELL_ENEMY_KEY";
-        // RMB click interakce s objekty
-        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 8] = "SPELL_INTERACT_KEY";
-    })(Lich.SpellKey || (Lich.SpellKey = {}));
-    var SpellKey = Lich.SpellKey;
-    (function (SoundKey) {
-        SoundKey[SoundKey["SND_FIREBALL_KEY"] = 0] = "SND_FIREBALL_KEY";
-        SoundKey[SoundKey["SND_BURN_KEY"] = 1] = "SND_BURN_KEY";
-        SoundKey[SoundKey["SND_METEOR_FALL_KEY"] = 2] = "SND_METEOR_FALL_KEY";
-        SoundKey[SoundKey["SND_METEOR_HIT_KEY"] = 3] = "SND_METEOR_HIT_KEY";
-        SoundKey[SoundKey["SND_BOLT_CAST"] = 4] = "SND_BOLT_CAST";
-        SoundKey[SoundKey["SND_PICK_KEY"] = 5] = "SND_PICK_KEY";
-        SoundKey[SoundKey["SND_PLACE_KEY"] = 6] = "SND_PLACE_KEY";
-        SoundKey[SoundKey["SND_PICK_AXE_1_KEY"] = 7] = "SND_PICK_AXE_1_KEY";
-        SoundKey[SoundKey["SND_PICK_AXE_2_KEY"] = 8] = "SND_PICK_AXE_2_KEY";
-        SoundKey[SoundKey["SND_PICK_AXE_3_KEY"] = 9] = "SND_PICK_AXE_3_KEY";
-        SoundKey[SoundKey["SND_BONECRACK_KEY"] = 10] = "SND_BONECRACK_KEY";
-        SoundKey[SoundKey["SND_SKELETON_DIE_KEY"] = 11] = "SND_SKELETON_DIE_KEY";
-        SoundKey[SoundKey["SND_SPAWN_KEY"] = 12] = "SND_SPAWN_KEY";
-        SoundKey[SoundKey["SND_DOOR_OPEN_KEY"] = 13] = "SND_DOOR_OPEN_KEY";
-        SoundKey[SoundKey["SND_DOOR_CLOSE_KEY"] = 14] = "SND_DOOR_CLOSE_KEY";
-        SoundKey[SoundKey["SND_CRAFT_KEY"] = 15] = "SND_CRAFT_KEY";
-        SoundKey[SoundKey["SND_CLICK_KEY"] = 16] = "SND_CLICK_KEY";
-    })(Lich.SoundKey || (Lich.SoundKey = {}));
-    var SoundKey = Lich.SoundKey;
-    (function (MusicKey) {
-        MusicKey[MusicKey["MSC_DIRT_THEME_KEY"] = 0] = "MSC_DIRT_THEME_KEY";
-        MusicKey[MusicKey["MSC_BUILD_THEME_KEY"] = 1] = "MSC_BUILD_THEME_KEY";
-        MusicKey[MusicKey["MSC_BOSS_THEME_KEY"] = 2] = "MSC_BOSS_THEME_KEY";
-        MusicKey[MusicKey["MSC_KRYSTAL_THEME_KEY"] = 3] = "MSC_KRYSTAL_THEME_KEY";
-        MusicKey[MusicKey["MSC_FLOOD_THEME_KEY"] = 4] = "MSC_FLOOD_THEME_KEY";
-        MusicKey[MusicKey["MSC_LAVA_THEME_KEY"] = 5] = "MSC_LAVA_THEME_KEY";
-    })(Lich.MusicKey || (Lich.MusicKey = {}));
-    var MusicKey = Lich.MusicKey;
     var FreqPool = (function () {
         function FreqPool() {
             this.cooldowns = new Array();
@@ -256,152 +92,56 @@ var Lich;
             this.surfaceBgrIndex = new Lich.SurfaceBgrIndex();
             this.loaderDone = false;
             var self = this;
-            var manifest = [
-                /**
-                 * IMAGES
-                 */
-                // spells
-                new Load("images/ui/dig_spell.png", SpellKey[SpellKey.SPELL_DIG_KEY]),
-                new Load("images/ui/dig_bgr_spell.png", SpellKey[SpellKey.SPELL_DIG_BGR_KEY]),
-                new Load("images/ui/fireball_spell.png", SpellKey[SpellKey.SPELL_FIREBALL_KEY]),
-                new Load("images/ui/meteor_spell.png", SpellKey[SpellKey.SPELL_METEOR_KEY]),
-                new Load("images/ui/place_spell.png", SpellKey[SpellKey.SPELL_PLACE_KEY]),
-                new Load("images/ui/place_bgr_spell.png", SpellKey[SpellKey.SPELL_PLACE_BGR_KEY]),
-                new Load("images/ui/bolt_spell.png", SpellKey[SpellKey.SPELL_BOLT_KEY]),
-                new Load("images/ui/enemy_spell.png", SpellKey[SpellKey.SPELL_ENEMY_KEY]),
-                // inventory
-                new Load("images/ui/inventory/inv_bones.png", InventoryKey[InventoryKey.INV_BONES_KEY]),
-                new Load("images/ui/inventory/inv_berry.png", InventoryKey[InventoryKey.INV_BERRY_KEY]),
-                new Load("images/ui/inventory/inv_mushroom.png", InventoryKey[InventoryKey.INV_MUSHROOM_KEY]),
-                new Load("images/ui/inventory/inv_mushroom2.png", InventoryKey[InventoryKey.INV_MUSHROOM2_KEY]),
-                new Load("images/ui/inventory/inv_mushroom3.png", InventoryKey[InventoryKey.INV_MUSHROOM3_KEY]),
-                new Load("images/ui/inventory/inv_plant.png", InventoryKey[InventoryKey.INV_PLANT_KEY]),
-                new Load("images/ui/inventory/inv_plant2.png", InventoryKey[InventoryKey.INV_PLANT2_KEY]),
-                new Load("images/ui/inventory/inv_plant3.png", InventoryKey[InventoryKey.INV_PLANT3_KEY]),
-                new Load("images/ui/inventory/inv_plant4.png", InventoryKey[InventoryKey.INV_PLANT4_KEY]),
-                new Load("images/ui/inventory/inv_straw.png", InventoryKey[InventoryKey.INV_STRAW_KEY]),
-                new Load("images/ui/inventory/inv_wood.png", InventoryKey[InventoryKey.INV_WOOD_KEY]),
-                new Load("images/ui/inventory/inv_dirt.png", InventoryKey[InventoryKey.INV_DIRT_KEY]),
-                new Load("images/ui/inventory/inv_krystals.png", InventoryKey[InventoryKey.INV_KRYSTAL_KEY]),
-                new Load("images/ui/inventory/inv_florite.png", InventoryKey[InventoryKey.INV_FLORITE_KEY]),
-                new Load("images/ui/inventory/inv_campfire.png", InventoryKey[InventoryKey.INV_CAMPFIRE_KEY]),
-                new Load("images/ui/inventory/inv_door.png", InventoryKey[InventoryKey.INV_DOOR_KEY]),
-                new Load("images/ui/inventory/inv_brick.png", InventoryKey[InventoryKey.INV_BRICK_KEY]),
-                new Load("images/ui/inventory/inv_woodwall.png", InventoryKey[InventoryKey.INV_WOODWALL_KEY]),
-                new Load("images/ui/inventory/inv_roof.png", InventoryKey[InventoryKey.INV_ROOF_KEY]),
-                new Load("images/ui/inventory/inv_iron.png", InventoryKey[InventoryKey.INV_IRON_KEY]),
-                new Load("images/ui/inventory/inv_coal.png", InventoryKey[InventoryKey.INV_COAL_KEY]),
-                new Load("images/ui/inventory/inv_rock.png", InventoryKey[InventoryKey.INV_ROCK_KEY]),
-                new Load("images/ui/inventory/inv_rock_brick.png", InventoryKey[InventoryKey.INV_ROCK_BRICK_KEY]),
-                new Load("images/ui/inventory/inv_torch.png", InventoryKey[InventoryKey.INV_TORCH_KEY]),
-                new Load("images/ui/inventory/inv_anvil.png", InventoryKey[InventoryKey.INV_ANVIL_KEY]),
-                new Load("images/ui/inventory/inv_smelter.png", InventoryKey[InventoryKey.INV_SMELTER_KEY]),
-                new Load("images/ui/inventory/inv_iron_ingot.png", InventoryKey[InventoryKey.INV_IRON_INGOT_KEY]),
-                // characters
-                new Load("images/characters/lich_animation.png", AnimationKey[AnimationKey.LICH_ANIMATION_KEY]),
-                new Load("images/characters/corpse_animation.png", AnimationKey[AnimationKey.CORPSE_ANIMATION_KEY]),
-                // gfx animations
-                new Load("images/effects/meteor_animation.png", AnimationKey[AnimationKey.METEOR_ANIMATION_KEY]),
-                new Load("images/effects/blast_animation.png", AnimationKey[AnimationKey.FIREBALL_ANIMATION_KEY]),
-                new Load("images/effects/bolt_animation.png", AnimationKey[AnimationKey.BOLT_ANIMATION_KEY]),
-                // surfaces
-                new Load("images/surfaces/dirt.png", SurfaceKey[SurfaceKey.SRFC_DIRT_KEY]),
-                new Load("images/surfaces/woodwall.png", SurfaceKey[SurfaceKey.SRFC_WOODWALL_KEY]),
-                new Load("images/surfaces/krystals.png", SurfaceKey[SurfaceKey.SRFC_KRYSTAL_KEY]),
-                new Load("images/surfaces/florite.png", SurfaceKey[SurfaceKey.SRFC_FLORITE_KEY]),
-                new Load("images/surfaces/brick.png", SurfaceKey[SurfaceKey.SRFC_BRICK_KEY]),
-                new Load("images/surfaces/straw.png", SurfaceKey[SurfaceKey.SRFC_STRAW_KEY]),
-                new Load("images/surfaces/roof.png", SurfaceKey[SurfaceKey.SRFC_ROOF_KEY]),
-                new Load("images/surfaces/iron.png", SurfaceKey[SurfaceKey.SRFC_IRON_KEY]),
-                new Load("images/surfaces/coal.png", SurfaceKey[SurfaceKey.SRFC_COAL_KEY]),
-                new Load("images/surfaces/rock.png", SurfaceKey[SurfaceKey.SRFC_ROCK_KEY]),
-                new Load("images/surfaces/rock_brick.png", SurfaceKey[SurfaceKey.SRFC_ROCK_BRICK_KEY]),
-                // surface backgrounds
-                new Load("images/surfaces/woodwall_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
-                new Load("images/surfaces/brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
-                new Load("images/surfaces/straw_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]),
-                new Load("images/surfaces/roof_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]),
-                new Load("images/surfaces/rock_brick_bgr.png", SurfaceBgrKey[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY]),
-                // objects
-                new Load("images/parts/berry.png", MapObjectKey[MapObjectKey.MAP_BERRY_KEY]),
-                new Load("images/parts/bush.png", MapObjectKey[MapObjectKey.MAP_BUSH_KEY]),
-                new Load("images/parts/bush2.png", MapObjectKey[MapObjectKey.MAP_BUSH2_KEY]),
-                new Load("images/parts/grass.png", MapObjectKey[MapObjectKey.MAP_GRASS_KEY]),
-                new Load("images/parts/grass2.png", MapObjectKey[MapObjectKey.MAP_GRASS2_KEY]),
-                new Load("images/parts/grass3.png", MapObjectKey[MapObjectKey.MAP_GRASS3_KEY]),
-                new Load("images/parts/grave.png", MapObjectKey[MapObjectKey.MAP_GRAVE_KEY]),
-                new Load("images/parts/mushroom.png", MapObjectKey[MapObjectKey.MAP_MUSHROOM_KEY]),
-                new Load("images/parts/mushroom2.png", MapObjectKey[MapObjectKey.MAP_MUSHROOM2_KEY]),
-                new Load("images/parts/mushroom3.png", MapObjectKey[MapObjectKey.MAP_MUSHROOM3_KEY]),
-                new Load("images/parts/plant.png", MapObjectKey[MapObjectKey.MAP_PLANT_KEY]),
-                new Load("images/parts/plant2.png", MapObjectKey[MapObjectKey.MAP_PLANT2_KEY]),
-                new Load("images/parts/plant3.png", MapObjectKey[MapObjectKey.MAP_PLANT3_KEY]),
-                new Load("images/parts/plant4.png", MapObjectKey[MapObjectKey.MAP_PLANT4_KEY]),
-                new Load("images/parts/tree.png", MapObjectKey[MapObjectKey.MAP_TREE_KEY]),
-                new Load("images/parts/tree2.png", MapObjectKey[MapObjectKey.MAP_TREE2_KEY]),
-                new Load("images/parts/tree3.png", MapObjectKey[MapObjectKey.MAP_TREE3_KEY]),
-                new Load("images/parts/florite.png", MapObjectKey[MapObjectKey.MAP_FLORITE_KEY]),
-                new Load("images/parts/campfire.png", MapObjectKey[MapObjectKey.MAP_CAMPFIRE_KEY]),
-                new Load("images/parts/door_closed.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED_KEY]),
-                new Load("images/parts/door_open.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN_KEY]),
-                new Load("images/parts/door_closed2.png", MapObjectKey[MapObjectKey.MAP_DOOR_CLOSED2_KEY]),
-                new Load("images/parts/door_open2.png", MapObjectKey[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
-                new Load("images/parts/torch.png", MapObjectKey[MapObjectKey.MAP_TORCH_KEY]),
-                new Load("images/parts/anvil.png", MapObjectKey[MapObjectKey.MAP_ANVIL_KEY]),
-                new Load("images/parts/smelter.png", MapObjectKey[MapObjectKey.MAP_SMELTER_KEY]),
-                new Load("images/parts/iron_ingot.png", MapObjectKey[MapObjectKey.MAP_IRON_INGOT_KEY]),
-                // misc
-                new Load("images/characters/player_icon.png", UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]),
-                new Load("images/ui/skull.png", UIGFXKey[UIGFXKey.SKULL_KEY]),
-                new Load("images/ui/sound.png", UIGFXKey[UIGFXKey.UI_SOUND_KEY]),
-                new Load("images/ui/up.png", UIGFXKey[UIGFXKey.UI_UP_KEY]),
-                new Load("images/ui/down.png", UIGFXKey[UIGFXKey.UI_DOWN_KEY]),
-                new Load("images/ui/left.png", UIGFXKey[UIGFXKey.UI_LEFT_KEY]),
-                new Load("images/ui/right.png", UIGFXKey[UIGFXKey.UI_RIGHT_KEY]),
-                new Load("images/ui/craft.png", UIGFXKey[UIGFXKey.UI_CRAFT_KEY]),
-                new Load("images/ui/load.png", UIGFXKey[UIGFXKey.UI_LOAD_KEY]),
-                new Load("images/ui/save.png", UIGFXKey[UIGFXKey.UI_SAVE_KEY]),
-                new Load("images/ui/new_world.png", UIGFXKey[UIGFXKey.UI_NEW_WORLD_KEY]),
-                // armor
-                new Load("images/armor/helmet.png", UIGFXKey[UIGFXKey.HELMET_KEY]),
-                new Load("images/armor/torso.png", UIGFXKey[UIGFXKey.TORSO_KEY]),
-                new Load("images/armor/gauntlet.png", UIGFXKey[UIGFXKey.GAUNTLET_KEY]),
-                // background
-                new Load("images/background/sky.png", BackgroundKey[BackgroundKey.SKY_KEY]),
-                new Load("images/background/far_mountain.png", BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]),
-                new Load("images/background/mountain.png", BackgroundKey[BackgroundKey.MOUNTAIN_KEY]),
-                new Load("images/background/far_woodland.png", BackgroundKey[BackgroundKey.FAR_HILL_KEY]),
-                new Load("images/background/woodland.png", BackgroundKey[BackgroundKey.HILL_KEY]),
-                new Load("images/background/dirt_back.png", BackgroundKey[BackgroundKey.DIRTBACK_KEY]),
-                new Load("images/background/darkness.png", BackgroundKey[BackgroundKey.DARKNESS_KEY]),
-                new Load("images/background/dirt_back_start.png", BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]),
-                /**
-                 * SOUNDS AND MUSIC
-                 */
-                // sounds
-                new Load("sound/334234__liamg-sfx__fireball-cast-1.ogg", SoundKey[SoundKey.SND_FIREBALL_KEY]),
-                new Load("sound/113111__satrebor__pick.ogg", SoundKey[SoundKey.SND_PICK_KEY]),
-                new Load("sound/248116__robinhood76__05224-fireball-whoosh.ogg", SoundKey[SoundKey.SND_BURN_KEY]),
-                new Load("sound/bolt_cast.ogg", SoundKey[SoundKey.SND_BOLT_CAST]),
-                new Load("sound/place.ogg", SoundKey[SoundKey.SND_PLACE_KEY]),
-                new Load("sound/pick_axe1.ogg", SoundKey[SoundKey.SND_PICK_AXE_1_KEY]),
-                new Load("sound/pick_axe2.ogg", SoundKey[SoundKey.SND_PICK_AXE_2_KEY]),
-                new Load("sound/pick_axe3.ogg", SoundKey[SoundKey.SND_PICK_AXE_3_KEY]),
-                new Load("sound/bonecrack.ogg", SoundKey[SoundKey.SND_BONECRACK_KEY]),
-                new Load("sound/skeleton_die.ogg", SoundKey[SoundKey.SND_SKELETON_DIE_KEY]),
-                new Load("sound/252083__pepingrillin__spawn.ogg", SoundKey[SoundKey.SND_SPAWN_KEY]),
-                new Load("sound/door_open.ogg", SoundKey[SoundKey.SND_DOOR_OPEN_KEY]),
-                new Load("sound/door_close.ogg", SoundKey[SoundKey.SND_DOOR_CLOSE_KEY]),
-                new Load("sound/craft.ogg", SoundKey[SoundKey.SND_CRAFT_KEY]),
-                new Load("sound/click.ogg", SoundKey[SoundKey.SND_CLICK_KEY]),
-                new Load("sound/meteor_fall.ogg", SoundKey[SoundKey.SND_METEOR_FALL_KEY]),
-                new Load("sound/meteor_hit.ogg", SoundKey[SoundKey.SND_METEOR_HIT_KEY]),
-                // music
-                new Load("music/Dirt_2.ogg", MusicKey[MusicKey.MSC_DIRT_THEME_KEY]),
-            ];
+            var manifest = [];
+            /**
+             * IMAGES
+             */
+            // inventory
+            Lich.INVENTORY_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.InventoryKey[path[1]]));
+            });
+            // spells
+            Lich.SPELL_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.SpellKey[path[1]]));
+            });
+            // animations
+            Lich.ANIMATION_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.AnimationKey[path[1]]));
+            });
+            // surfaces
+            Lich.SURFACE_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.SurfaceKey[path[1]]));
+            });
+            // surface backgrounds
+            Lich.SURFACE_BGR_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.SurfaceBgrKey[path[1]]));
+            });
+            // objects
+            Lich.MAP_OBJECT_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.MapObjectKey[path[1]]));
+            });
+            // UI
+            Lich.UI_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.UIGFXKey[path[1]]));
+            });
+            // background
+            Lich.BACKGROUND_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.BackgroundKey[path[1]]));
+            });
+            /**
+             * SOUNDS AND MUSIC
+             */
+            // sounds
+            Lich.SOUND_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.SoundKey[path[1]]));
+            });
+            // music
+            Lich.MUSIC_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.MusicKey[path[1]]));
+            });
             (function () {
                 for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                    manifest.push(new Load("images/background/cloud" + i + ".png", BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
+                    manifest.push(new Load("images/background/cloud" + i + ".png", Lich.BackgroundKey[Lich.BackgroundKey.CLOUD_KEY] + i));
                 }
             })();
             // nejprve font (nahrává se mimo loader)
@@ -426,149 +166,42 @@ var Lich;
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });
             self.loader.loadManifest(manifest, true);
-            /**
-             * POVRCHY
-             */
             // Definice mapových povrchů
-            var registerSurfaceDefs = function (mapSurface) {
-                self.mapSurfaceDefs[mapSurface.mapKey] = mapSurface;
-                if (mapSurface.cooldown > 0) {
-                    self.mapSurfacesFreqPool.insert(mapSurface);
+            Lich.SURFACE_DEFS.forEach(function (definition) {
+                self.mapSurfaceDefs[definition.mapKey] = definition;
+                if (definition.cooldown > 0) {
+                    self.mapSurfacesFreqPool.insert(definition);
                 }
-            };
-            // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
-            // jsou dle frekvence usazovány jiné povrchy
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_DIRT_KEY, InventoryKey.INV_DIRT_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 10).setDepth(50, 100));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 10).setDepth(70, 100));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICK_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_KEY, InventoryKey.INV_ROCK_BRICK_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 5).setDepth(5, 100));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_COAL_KEY, InventoryKey.INV_COAL_KEY, 1, 10).setDepth(10, 100));
-            registerSurfaceDefs(new Lich.MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 1).setDepth(0, 100).setSize(2, 5));
-            /**
-             * STĚNY POVRCHŮ
-             */
-            // Definice mapových stěn povrchů
-            var registerSurfaceBgrDefs = function (mapSurface) {
-                self.mapSurfacesBgrDefs[mapSurface.mapKey] = mapSurface;
-            };
-            registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, InventoryKey.INV_BRICK_KEY, 1));
-            registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, InventoryKey.INV_ROCK_BRICK_KEY, 1));
-            registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1));
-            registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_STRAW_KEY, InventoryKey.INV_STRAW_KEY, 1));
-            registerSurfaceBgrDefs(new Lich.MapSurfaceBgrDefinition(SurfaceBgrKey.SRFC_BGR_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1));
-            /**
-             * OBJEKTY
-             */
+            });
+            // Definice pozadí mapových povrchů
+            Lich.SURFACE_BGR_DEFS.forEach(function (definition) {
+                self.mapSurfacesBgrDefs[definition.mapKey] = definition;
+            });
             // Definice mapových objektů
-            var registerObjectDefs = function (mapObj) {
-                self.mapObjectDefs[mapObj.mapKey] = mapObj;
-                if (mapObj.cooldown > 0) {
-                    self.mapObjectDefsFreqPool.insert(mapObj);
+            Lich.MAP_OBJECT_DEFS.forEach(function (definition) {
+                self.mapObjectDefs[definition.mapKey] = definition;
+                if (definition.cooldown > 0) {
+                    self.mapObjectDefsFreqPool.insert(definition);
                 }
-            };
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 6, 3, InventoryKey.INV_BONES_KEY, 5, 160).setDepth(0, 5));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_BERRY_KEY, 2, 2, InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 15).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 15).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_GRASS_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_GRASS2_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_GRASS3_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_TREE_KEY, 4, 9, InventoryKey.INV_WOOD_KEY, 5, 1).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_TREE2_KEY, 8, 15, InventoryKey.INV_WOOD_KEY, 10, 1).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_TREE3_KEY, 4, 7, InventoryKey.INV_WOOD_KEY, 10, 1).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_MUSHROOM_KEY, 2, 2, InventoryKey.INV_MUSHROOM_KEY, 1, 100).setDepth(5, 40));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_MUSHROOM2_KEY, 2, 2, InventoryKey.INV_MUSHROOM2_KEY, 1, 100).setDepth(5, 100));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_MUSHROOM3_KEY, 2, 2, InventoryKey.INV_MUSHROOM3_KEY, 1, 140).setDepth(5, 100));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_PLANT_KEY, 2, 2, InventoryKey.INV_PLANT_KEY, 1, 60).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_PLANT2_KEY, 2, 2, InventoryKey.INV_PLANT2_KEY, 1, 60).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_PLANT3_KEY, 2, 2, InventoryKey.INV_PLANT3_KEY, 1, 60).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_SMELTER_KEY, 4, 4, InventoryKey.INV_SMELTER_KEY, 1, 0));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
-                game.getWorld().render.digObject(rx, ry, false);
-                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED_KEY]);
-                Lich.Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
-            }));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
-                game.getWorld().render.digObject(rx, ry, false);
-                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY]);
-                Lich.Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
-            }).setCollision(true));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
-                game.getWorld().render.digObject(rx, ry, false);
-                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_CLOSED2_KEY]);
-                Lich.Mixer.playSound(SoundKey.SND_DOOR_CLOSE_KEY);
-            }));
-            registerObjectDefs(new Lich.MapObjDefinition(MapObjectKey.MAP_DOOR_CLOSED2_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
-                game.getWorld().render.digObject(rx, ry, false);
-                game.getWorld().render.placeObject(rx, ry, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
-                Lich.Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
-            }).setCollision(true));
-            /**
-             * INVENTÁŘ
-             */
-            // Definice inventárních objektů
-            var registerInvObjectDefs = function (invObj) {
-                self.invObjectDefs[invObj.invKey] = invObj;
-            };
-            // usaditelných jako objekt
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM2_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM2_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_MUSHROOM3_KEY, self.mapObjectDefs[MapObjectKey.MAP_MUSHROOM3_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_BERRY_KEY, self.mapObjectDefs[MapObjectKey.MAP_BERRY_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT2_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT2_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT3_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT3_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_PLANT4_KEY, self.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, self.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_TORCH_KEY, self.mapObjectDefs[MapObjectKey.MAP_TORCH_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ANVIL_KEY, self.mapObjectDefs[MapObjectKey.MAP_ANVIL_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_SMELTER_KEY, self.mapObjectDefs[MapObjectKey.MAP_SMELTER_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_IRON_INGOT_KEY, self.mapObjectDefs[MapObjectKey.MAP_IRON_INGOT_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_DOOR_KEY, self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
-                .setMapObjAlternative(self.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]));
-            // usaditelných jako povrch
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_DIRT_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_DIRT_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_WOODWALL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_WOODWALL_KEY])
-                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_BRICK_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_BRICK_KEY])
-                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_BRICK_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ROCK_BRICK_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_KEY])
-                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_STRAW_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_STRAW_KEY])
-                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_STRAW_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_KRYSTAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_KRYSTAL_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_FLORITE_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_FLORITE_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_IRON_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_IRON_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_COAL_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_COAL_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ROCK_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_KEY]));
-            registerInvObjectDefs(new Lich.InvObjDefinition(InventoryKey.INV_ROOF_KEY, self.mapSurfaceDefs[SurfaceKey.SRFC_ROOF_KEY])
-                .setBackground(self.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]));
-            /**
-             * SPELLS
-             */
+            });
+            // Definice inventárních objektů 
+            Lich.INVENTORY_DEFS(self).forEach(function (definition) {
+                self.invObjectDefs[definition.invKey] = definition;
+            });
             // Definice spells
-            var registerSpellDefs = function (spell) {
-                self.spellDefs.insert(SpellKey[spell.key], spell);
-            };
-            registerSpellDefs(new Lich.MeteorSpellDef());
-            registerSpellDefs(new Lich.FireballSpellDef());
-            registerSpellDefs(new Lich.DigSpellDef());
-            registerSpellDefs(new Lich.DigBgrSpellDef());
-            registerSpellDefs(new Lich.PlaceSpellDef());
-            registerSpellDefs(new Lich.PlaceBgrSpellDef());
-            registerSpellDefs(new Lich.BoltSpellDef());
-            registerSpellDefs(new Lich.EnemySpellDef());
+            var SPELL_DEFS = [
+                new Lich.MeteorSpellDef(),
+                new Lich.FireballSpellDef(),
+                new Lich.DigSpellDef(),
+                new Lich.DigBgrSpellDef(),
+                new Lich.PlaceSpellDef(),
+                new Lich.PlaceBgrSpellDef(),
+                new Lich.BoltSpellDef(),
+                new Lich.EnemySpellDef()
+            ];
+            SPELL_DEFS.forEach(function (definition) {
+                self.spellDefs.insert(Lich.SpellKey[definition.key], definition);
+            });
         }
         Resources.prototype.isLoaderDone = function () { return this.loaderDone; };
         ;
