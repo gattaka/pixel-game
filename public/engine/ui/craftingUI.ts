@@ -41,14 +41,52 @@ namespace Lich {
         ingredientsCont: IngredientsCont;
         inventoryUI: InventoryUI;
 
+        workspaceIcon: createjs.Bitmap;
+        workspaceIconBgr: UIBackground;
+
         public setInventoryUI(inventoryUI: InventoryUI) {
             this.inventoryUI = inventoryUI;
+        }
+
+        hide() {
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, undefined));
+            super.hide();
         }
 
         constructor() {
             super(CraftingUI.N, CraftingUI.M);
 
             var self = this;
+
+            this.workspaceIcon = Resources.getInstance().getBitmap(SpellKey[SpellKey.SPELL_PLACE_KEY]);
+            let bounds = this.workspaceIcon.getBounds();
+            this.workspaceIconBgr = new UIBackground();
+            this.workspaceIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
+            this.workspaceIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
+            this.workspaceIcon.x = this.workspaceIconBgr.x + PartsUI.SELECT_BORDER;
+            this.workspaceIcon.y = PartsUI.SELECT_BORDER;
+
+            this.addChild(this.workspaceIconBgr);
+            this.addChild(this.workspaceIcon);
+
+            EventBus.getInstance().registerConsumer(EventType.WORKSTATION_CHANGE, (payload: NumberEventPayload) => {
+                // pokud to volá uživatel klávesnicí, pak neřeš (payload.payload = undefined)
+                // zobrazování je přes toggle, což řídí keyboard handle od game
+                // pokud je volán jako akce workstation objektu (payload.payload != undefined)
+                // pak se zobraz, pokud už nejsi zobrazen
+                if (payload.payload && !self.parent) {
+                    self.show();
+                }
+
+                self.workspaceIcon.image = Resources.getInstance().getImage(payload.payload ? InventoryKey[WORKSTATIONS_ICONS[payload.payload]] : SpellKey[SpellKey.SPELL_PLACE_KEY]);
+                let bounds = self.workspaceIcon.getBounds();
+                self.workspaceIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
+                self.workspaceIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
+                self.workspaceIcon.x = self.workspaceIconBgr.x + PartsUI.SELECT_BORDER;
+
+                self.measureCacheArea();
+                return false;
+            });
 
             // zvýraznění vybrané položky
             self.itemHighlight = new Highlight();
@@ -110,10 +148,14 @@ namespace Lich {
                 }
             }, null, false);
 
-            let offset = 5;
-            self.cache(-offset, -offset,
-                self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
-                self.height + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2);
+            self.measureCacheArea();
+        }
+
+        private measureCacheArea() {
+            let offset = this.workspaceIconBgr.width + PartsUI.SELECT_BORDER + 5;
+            this.cache(-offset, -offset,
+                this.width + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5,
+                this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
         }
 
         render() {
@@ -179,30 +221,27 @@ namespace Lich {
             else return value;
         }
 
-        public createRecipeAvailChangeListener(): (Recipe) => void {
+        public createRecipeAvailChangeListener(): (recipes: Array<Recipe>) => void {
             let self = this;
-            return function (recipe: Recipe) {
-                let key = JSON.stringify(recipe, self.replacer);
-                if (recipe.available) {
-                    let i = 0;
-                    for (i = 0; i < self.itemsTypeArray.length; i++) {
-                        // buď najdi volné místo...
-                        if (!self.itemsTypeArray[i]) {
-                            break;
+            return function (recipes: Array<Recipe>) {
+                self.itemsTypeArray = new Array();
+                // Klíč se vytváří takhle, recepty nemůžou mít unikátní klíč, 
+                // protože tentýž výrobek lze někdy vyrobit rozdílnými ingrediencemi
+                recipes.forEach((recipe: Recipe) => {
+                    let key = JSON.stringify(recipe, self.replacer);
+                    if (recipe.available) {
+                        let i = 0;
+                        for (i = 0; i < self.itemsTypeArray.length; i++) {
+                            // buď najdi volné místo...
+                            if (!self.itemsTypeArray[i]) {
+                                break;
+                            }
                         }
+                        // ...nebo vlož položku na konec pole
+                        self.itemsTypeArray[i] = recipe;
+                        self.itemsTypeIndexMap[key] = i;
                     }
-                    // ...nebo vlož položku na konec pole
-                    self.itemsTypeArray[i] = recipe;
-                    self.itemsTypeIndexMap[key] = i;
-                } else {
-                    if (self.choosenItem == key) {
-                        self.choosenItem = null;
-                        self.ingredientsCont.itemsCont.removeAllChildren();
-                    }
-                    let i = self.itemsTypeIndexMap[key];
-                    delete self.itemsTypeIndexMap[key];
-                    delete self.itemsTypeArray[i];
-                }
+                });
                 self.render();
             };
         }

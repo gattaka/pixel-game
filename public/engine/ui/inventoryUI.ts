@@ -52,7 +52,7 @@ namespace Lich {
             }
         }
 
-        constructor(private recipeListener: RecipeManager) {
+        constructor(private recipeManager: RecipeManager) {
             super(InventoryUI.N, InventoryUI.M);
 
             var self = this;
@@ -177,7 +177,7 @@ namespace Lich {
                 var quant = self.itemsQuantityMap[item];
                 quant -= quantChange;
                 self.itemsQuantityMap[item] = quant;
-                self.recipeListener.updateQuant(item, quant);
+                self.recipeManager.updateQuant(item, quant);
                 itemUI.count.setText(quant);
                 if (self.collapsedItem != null) {
                     self.collapsedItem.count.setText(quant);
@@ -208,7 +208,7 @@ namespace Lich {
                 quant = self.itemsQuantityMap[item];
                 quant += quantChange;
                 self.itemsQuantityMap[item] = quant;
-                self.recipeListener.updateQuant(item, quant);
+                self.recipeManager.updateQuant(item, quant);
                 // pokud je ve viditelné části INV, rovnou aktualizuj popisek množství
                 let itemUI = self.itemsUIMap[item];
                 if (itemUI) {
@@ -230,7 +230,7 @@ namespace Lich {
                 self.itemsTypeArray[i] = item;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
-                self.recipeListener.updateQuant(item, quant);
+                self.recipeManager.updateQuant(item, quant);
 
                 let itemsOffset = self.lineOffset * InventoryUI.N;
                 if (i >= itemsOffset

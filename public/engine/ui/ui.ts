@@ -113,6 +113,20 @@ namespace Lich {
         }
     }
 
+    export class UIBackground extends createjs.Shape {
+        public width: number;
+        public height: number;
+        public drawBackground(width: number, height: number) {
+            this.width = width;
+            this.height = height;
+            this.graphics.clear();
+            this.graphics.setStrokeStyle(2);
+            this.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.graphics.beginFill("rgba(10,50,10,0.5)");
+            this.graphics.drawRoundRect(0, 0, width, height, 3);
+        }
+    }
+
     export class AbstractUI extends createjs.Container {
 
         static BORDER = 10;
@@ -121,22 +135,17 @@ namespace Lich {
         protected toggleFlag = true;
         protected parentRef: createjs.Container = null;
 
-        outerShape: createjs.Shape;
+        outerShape: UIBackground = new UIBackground();
 
         constructor(public width: number, public height: number) {
             super();
 
-            this.outerShape = new createjs.Shape();
             this.drawBackground();
             this.addChild(this.outerShape);
         }
 
         protected drawBackground() {
-            this.outerShape.graphics.clear();
-            this.outerShape.graphics.setStrokeStyle(2);
-            this.outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-            this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
-            this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
+            this.outerShape.drawBackground(this.width, this.height);
         }
 
         hide() {
@@ -161,6 +170,10 @@ namespace Lich {
                 }
                 self.toggleFlag = false;
             }
+        }
+
+        public suppressToggle() {
+            this.toggleFlag = false;
         }
 
         public prepareForToggle() {

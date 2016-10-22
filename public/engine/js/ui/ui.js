@@ -93,6 +93,23 @@ var Lich;
         return UI;
     }(createjs.Container));
     Lich.UI = UI;
+    var UIBackground = (function (_super) {
+        __extends(UIBackground, _super);
+        function UIBackground() {
+            _super.apply(this, arguments);
+        }
+        UIBackground.prototype.drawBackground = function (width, height) {
+            this.width = width;
+            this.height = height;
+            this.graphics.clear();
+            this.graphics.setStrokeStyle(2);
+            this.graphics.beginStroke("rgba(0,0,0,0.7)");
+            this.graphics.beginFill("rgba(10,50,10,0.5)");
+            this.graphics.drawRoundRect(0, 0, width, height, 3);
+        };
+        return UIBackground;
+    }(createjs.Shape));
+    Lich.UIBackground = UIBackground;
     var AbstractUI = (function (_super) {
         __extends(AbstractUI, _super);
         function AbstractUI(width, height) {
@@ -101,16 +118,12 @@ var Lich;
             this.height = height;
             this.toggleFlag = true;
             this.parentRef = null;
-            this.outerShape = new createjs.Shape();
+            this.outerShape = new UIBackground();
             this.drawBackground();
             this.addChild(this.outerShape);
         }
         AbstractUI.prototype.drawBackground = function () {
-            this.outerShape.graphics.clear();
-            this.outerShape.graphics.setStrokeStyle(2);
-            this.outerShape.graphics.beginStroke("rgba(0,0,0,0.7)");
-            this.outerShape.graphics.beginFill("rgba(10,50,10,0.5)");
-            this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
+            this.outerShape.drawBackground(this.width, this.height);
         };
         AbstractUI.prototype.hide = function () {
             if (this.parent) {
@@ -133,6 +146,9 @@ var Lich;
                 }
                 self.toggleFlag = false;
             }
+        };
+        AbstractUI.prototype.suppressToggle = function () {
+            this.toggleFlag = false;
         };
         AbstractUI.prototype.prepareForToggle = function () {
             this.toggleFlag = true;

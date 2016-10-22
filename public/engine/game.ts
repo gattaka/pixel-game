@@ -132,7 +132,7 @@ namespace Lich {
                     Mixer.stopAll();
 
                     // (re)-init
-                    self.ui = new UI(self.canvas,tilesMap);
+                    self.ui = new UI(self.canvas, tilesMap);
                     self.world = new World(self, tilesMap);
                     self.background = new Background(self);
                     self.content.addChild(self.world);
@@ -280,8 +280,12 @@ namespace Lich {
                         self.ui.craftingUI.prepareForToggle();
                     }
                     if (self.keys[27]) {
-                        self.ui.splashScreenUI.toggle();
-                        self.ui.craftingUI.hide();
+                        if (self.ui.craftingUI.parent) {
+                            self.ui.craftingUI.hide();
+                            self.ui.splashScreenUI.suppressToggle();
+                        } else {
+                            self.ui.splashScreenUI.toggle();
+                        }
                     } else {
                         self.ui.splashScreenUI.prepareForToggle();
                     }

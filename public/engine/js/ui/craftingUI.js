@@ -32,6 +32,31 @@ var Lich;
             this.itemsUIMap = new Lich.HashMap();
             this.itemsCont = new createjs.Container();
             var self = this;
+            this.workspaceIcon = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+            var bounds = this.workspaceIcon.getBounds();
+            this.workspaceIconBgr = new Lich.UIBackground();
+            this.workspaceIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
+            this.workspaceIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
+            this.workspaceIcon.x = this.workspaceIconBgr.x + Lich.PartsUI.SELECT_BORDER;
+            this.workspaceIcon.y = Lich.PartsUI.SELECT_BORDER;
+            this.addChild(this.workspaceIconBgr);
+            this.addChild(this.workspaceIcon);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.WORKSTATION_CHANGE, function (payload) {
+                // pokud to volá uživatel klávesnicí, pak neřeš (payload.payload = undefined)
+                // zobrazování je přes toggle, což řídí keyboard handle od game
+                // pokud je volán jako akce workstation objektu (payload.payload != undefined)
+                // pak se zobraz, pokud už nejsi zobrazen
+                if (payload.payload && !self.parent) {
+                    self.show();
+                }
+                self.workspaceIcon.image = Lich.Resources.getInstance().getImage(payload.payload ? Lich.InventoryKey[Lich.WORKSTATIONS_ICONS[payload.payload]] : Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+                var bounds = self.workspaceIcon.getBounds();
+                self.workspaceIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
+                self.workspaceIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
+                self.workspaceIcon.x = self.workspaceIconBgr.x + Lich.PartsUI.SELECT_BORDER;
+                self.measureCacheArea();
+                return false;
+            });
             // zvýraznění vybrané položky
             self.itemHighlight = new Lich.Highlight();
             self.itemHighlight.visible = false;
@@ -86,11 +111,18 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CRAFT_KEY);
                 }
             }, null, false);
-            var offset = 5;
-            self.cache(-offset, -offset, self.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2, self.height + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2);
+            self.measureCacheArea();
         }
         CraftingUI.prototype.setInventoryUI = function (inventoryUI) {
             this.inventoryUI = inventoryUI;
+        };
+        CraftingUI.prototype.hide = function () {
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, undefined));
+            _super.prototype.hide.call(this);
+        };
+        CraftingUI.prototype.measureCacheArea = function () {
+            var offset = this.workspaceIconBgr.width + Lich.PartsUI.SELECT_BORDER + 5;
+            this.cache(-offset, -offset, this.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset + 5, this.height + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset + 5);
         };
         CraftingUI.prototype.render = function () {
             this.itemsCont.removeAllChildren();
@@ -152,29 +184,25 @@ var Lich;
         };
         CraftingUI.prototype.createRecipeAvailChangeListener = function () {
             var self = this;
-            return function (recipe) {
-                var key = JSON.stringify(recipe, self.replacer);
-                if (recipe.available) {
-                    var i = 0;
-                    for (i = 0; i < self.itemsTypeArray.length; i++) {
-                        // buď najdi volné místo...
-                        if (!self.itemsTypeArray[i]) {
-                            break;
+            return function (recipes) {
+                self.itemsTypeArray = new Array();
+                // Klíč se vytváří takhle, recepty nemůžou mít unikátní klíč, 
+                // protože tentýž výrobek lze někdy vyrobit rozdílnými ingrediencemi
+                recipes.forEach(function (recipe) {
+                    var key = JSON.stringify(recipe, self.replacer);
+                    if (recipe.available) {
+                        var i = 0;
+                        for (i = 0; i < self.itemsTypeArray.length; i++) {
+                            // buď najdi volné místo...
+                            if (!self.itemsTypeArray[i]) {
+                                break;
+                            }
                         }
+                        // ...nebo vlož položku na konec pole
+                        self.itemsTypeArray[i] = recipe;
+                        self.itemsTypeIndexMap[key] = i;
                     }
-                    // ...nebo vlož položku na konec pole
-                    self.itemsTypeArray[i] = recipe;
-                    self.itemsTypeIndexMap[key] = i;
-                }
-                else {
-                    if (self.choosenItem == key) {
-                        self.choosenItem = null;
-                        self.ingredientsCont.itemsCont.removeAllChildren();
-                    }
-                    var i = self.itemsTypeIndexMap[key];
-                    delete self.itemsTypeIndexMap[key];
-                    delete self.itemsTypeArray[i];
-                }
+                });
                 self.render();
             };
         };

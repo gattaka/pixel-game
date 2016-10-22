@@ -226,8 +226,13 @@ var Lich;
                         self.ui.craftingUI.prepareForToggle();
                     }
                     if (self.keys[27]) {
-                        self.ui.splashScreenUI.toggle();
-                        self.ui.craftingUI.hide();
+                        if (self.ui.craftingUI.parent) {
+                            self.ui.craftingUI.hide();
+                            self.ui.splashScreenUI.suppressToggle();
+                        }
+                        else {
+                            self.ui.splashScreenUI.toggle();
+                        }
                     }
                     else {
                         self.ui.splashScreenUI.prepareForToggle();
