@@ -140,8 +140,10 @@ namespace Lich {
         }
 
         hide() {
-            this.parentRef = this.parent;
-            this.parent.removeChild(this);
+            if (this.parent) {
+                this.parentRef = this.parent;
+                this.parent.removeChild(this);
+            }
         }
 
         show() {

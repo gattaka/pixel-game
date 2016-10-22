@@ -281,6 +281,7 @@ namespace Lich {
                     }
                     if (self.keys[27]) {
                         self.ui.splashScreenUI.toggle();
+                        self.ui.craftingUI.hide();
                     } else {
                         self.ui.splashScreenUI.prepareForToggle();
                     }

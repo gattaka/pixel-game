@@ -113,8 +113,10 @@ var Lich;
             this.outerShape.graphics.drawRoundRect(0, 0, this.width, this.height, 3);
         };
         AbstractUI.prototype.hide = function () {
-            this.parentRef = this.parent;
-            this.parent.removeChild(this);
+            if (this.parent) {
+                this.parentRef = this.parent;
+                this.parent.removeChild(this);
+            }
         };
         AbstractUI.prototype.show = function () {
             this.parentRef.addChild(this);
