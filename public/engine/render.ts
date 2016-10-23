@@ -7,29 +7,6 @@
  */
 namespace Lich {
 
-    class MapUpdateRegion {
-
-        cooldown = 0;
-        prepared = false;
-        fromX = -1;
-        toX = -1;
-        fromY = -1;
-        toY = -1;
-
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.cooldown = 0;
-            this.prepared = false;
-            this.fromX = -1;
-            this.toX = -1;
-            this.fromY = -1;
-            this.toY = -1;
-        }
-    }
-
     class SectorUpdateRequest {
         constructor(public sector: Sector, public cooldown: number) { }
     }
@@ -76,13 +53,9 @@ namespace Lich {
         // Vykreslené dílky objektů
         sceneObjectsMap = new Array2D<createjs.Bitmap>();
 
-        mapUpdateRegion = new MapUpdateRegion();
-
         constructor(public game: Game, public world: World) {
             var self = this;
             self.tilesMap = world.tilesMap;
-
-            self.mapUpdateRegion.reset();
 
             // vytvoř kontejner pro sektory
             self.sectorsCont = new createjs.Container();
@@ -156,7 +129,7 @@ namespace Lich {
                                         var tile = self.createBgrTile(bgrElement);
 
                                         // přidej dílek do sektoru
-                                        sector.addCacheableChild(tile);
+                                        sector.addBackgroundChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
@@ -248,21 +221,6 @@ namespace Lich {
 
                 }
             }
-
-        }
-
-        prepareMapUpdate(x, y) {
-            var self = this;
-            self.mapUpdateRegion.prepared = true;
-
-            if (x < self.mapUpdateRegion.fromX || self.mapUpdateRegion.fromX === -1)
-                self.mapUpdateRegion.fromX = x;
-            if (x > self.mapUpdateRegion.toX || self.mapUpdateRegion.toX === -1)
-                self.mapUpdateRegion.toX = x;
-            if (y < self.mapUpdateRegion.fromY || self.mapUpdateRegion.fromY === -1)
-                self.mapUpdateRegion.fromY = y;
-            if (y > self.mapUpdateRegion.toY || self.mapUpdateRegion.toY === -1)
-                self.mapUpdateRegion.toY = y;
 
         }
 
@@ -382,23 +340,15 @@ namespace Lich {
                     for (var x = rx; x <= rx + 1; x++) {
                         for (var y = ry; y <= ry + 1; y++) {
                             var val = self.tilesMap.mapBgrRecord.getValue(x, y);
-                            self.prepareMapUpdate(x, y);
                             if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
                                 var srfcType = Resources.getInstance().surfaceBgrIndex.getType(val);
                                 var indx = Resources.getInstance().surfaceBgrIndex;
 
                                 self.tilesMap.mapBgrRecord.setValue(x, y, null);
-                                var targetSector = self.getSectorByTiles(x, y);
-                                if (typeof targetSector !== "undefined" && targetSector !== null) {
+                                if (sector) {
                                     var child = self.sceneBgrTilesMap.getValue(x, y);
-                                    targetSector.removeBackgroundChild(child);
-                                }
-
-                                // zjisti sektor dílku, aby byl přidán do fronty 
-                                // ke cache update (postačí to udělat dle tilesToReset,
-                                // protože to jsou okrajové dílky z oblasti změn)
-                                if (typeof sector !== "undefined" && sector !== null) {
+                                    sector.removeBackgroundChild(child);
                                     self.markSector(sector);
                                 }
                             }
@@ -427,7 +377,6 @@ namespace Lich {
                     for (var x = rx - 1; x <= rx + 2; x++) {
                         for (var y = ry - 1; y <= ry + 2; y++) {
                             var val = self.tilesMap.mapRecord.getValue(x, y);
-                            self.prepareMapUpdate(x, y);
                             if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
                                 var srfcType = Resources.getInstance().surfaceIndex.getType(val);
@@ -667,7 +616,6 @@ namespace Lich {
                 for (var x = rx - 1; x <= rx + 2; x++) {
                     for (var y = ry - 1; y <= ry + 2; y++) {
                         var val = self.tilesMap.mapRecord.getValue(x, y);
-                        self.prepareMapUpdate(x, y);
                         if (val != null) {
                             var sector = self.getSectorByTiles(x, y);
 

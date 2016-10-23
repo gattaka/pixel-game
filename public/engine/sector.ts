@@ -51,16 +51,16 @@ namespace Lich {
             this.animatedCont.addChild(child);
         }
 
-        public removeBackgroundChild(child) {
-            this.backgroundCont.removeChild(child);
+        public removeBackgroundChild(child): boolean {
+            return this.backgroundCont.removeChild(child);
         }
 
-        public removeCacheableChild(child) {
-            this.cacheableCont.removeChild(child);
+        public removeCacheableChild(child): boolean {
+            return this.cacheableCont.removeChild(child);
         }
 
-        public removeAnimatedChild(child) {
-            this.animatedCont.removeChild(child);
+        public removeAnimatedChild(child): boolean {
+            return this.animatedCont.removeChild(child);
         }
     }
 }

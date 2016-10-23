@@ -47,13 +47,13 @@ var Lich;
             this.animatedCont.addChild(child);
         };
         Sector.prototype.removeBackgroundChild = function (child) {
-            this.backgroundCont.removeChild(child);
+            return this.backgroundCont.removeChild(child);
         };
         Sector.prototype.removeCacheableChild = function (child) {
-            this.cacheableCont.removeChild(child);
+            return this.cacheableCont.removeChild(child);
         };
         Sector.prototype.removeAnimatedChild = function (child) {
-            this.animatedCont.removeChild(child);
+            return this.animatedCont.removeChild(child);
         };
         return Sector;
     }(createjs.Container));
