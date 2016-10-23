@@ -78,17 +78,6 @@ var Lich;
             });
             return uiHit;
         };
-        UI.prototype.handleMouse = function (mouse, delta) {
-            var self = this;
-            self.children.forEach(function (item) {
-                if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {
-                    if (typeof item["handleMouse"] !== "undefined") {
-                        item["handleMouse"](mouse);
-                        return;
-                    }
-                }
-            });
-        };
         UI.SCREEN_SPACING = 20;
         return UI;
     }(createjs.Container));

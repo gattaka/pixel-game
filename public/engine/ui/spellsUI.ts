@@ -50,10 +50,11 @@ namespace Lich {
             if (self.toggleFlag == false) {
                 for (var i = 0; i < this.spellIndex.length; i++) {
                     var alt = this.alternativeSpellIndex[i];
-                    if (typeof alt !== "undefined") {
+                    if (alt) {
                         this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[alt]);
                     }
                 }
+                self.updateCache();
                 self.toggleFlag = true;
             }
         }
@@ -62,13 +63,8 @@ namespace Lich {
             for (var i = 0; i < this.spellIndex.length; i++) {
                 this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[this.spellIndex[i]]);
             }
+            this.updateCache();
             this.toggleFlag = false;
-        }
-
-        handleMouse(mouse) {
-            if (mouse.down) {
-                // TODO
-            }
         }
 
         selectSpell(spellNumber: number) {

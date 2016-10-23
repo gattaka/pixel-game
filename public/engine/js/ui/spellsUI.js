@@ -41,10 +41,11 @@ var Lich;
             if (self.toggleFlag == false) {
                 for (var i = 0; i < this.spellIndex.length; i++) {
                     var alt = this.alternativeSpellIndex[i];
-                    if (typeof alt !== "undefined") {
+                    if (alt) {
                         this.spellContent[i].image = Lich.Resources.getInstance().getImage(Lich.SpellKey[alt]);
                     }
                 }
+                self.updateCache();
                 self.toggleFlag = true;
             }
         };
@@ -52,11 +53,8 @@ var Lich;
             for (var i = 0; i < this.spellIndex.length; i++) {
                 this.spellContent[i].image = Lich.Resources.getInstance().getImage(Lich.SpellKey[this.spellIndex[i]]);
             }
+            this.updateCache();
             this.toggleFlag = false;
-        };
-        SpellsUI.prototype.handleMouse = function (mouse) {
-            if (mouse.down) {
-            }
         };
         SpellsUI.prototype.selectSpell = function (spellNumber) {
             var self = this;

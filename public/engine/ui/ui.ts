@@ -100,17 +100,6 @@ namespace Lich {
             return uiHit;
         }
 
-        handleMouse(mouse: Mouse, delta: number) {
-            let self = this;
-            self.children.forEach(function (item) {
-                if (item.hitTest(mouse.x - item.x, mouse.y - item.y) === true) {
-                    if (typeof item["handleMouse"] !== "undefined") {
-                        item["handleMouse"](mouse);
-                        return;
-                    }
-                }
-            });
-        }
     }
 
     export class UIBackground extends createjs.Shape {

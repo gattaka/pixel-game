@@ -100,10 +100,6 @@ var Lich;
             }
             this.updateCache();
         };
-        InventoryUI.prototype.handleMouse = function (mouse) {
-            if (mouse.down) {
-            }
-        };
         InventoryUI.prototype.toggle = function () {
             var self = this;
             // dochází ke změně?

@@ -43,6 +43,7 @@ namespace Lich {
 
         workspaceIcon: createjs.Bitmap;
         workspaceIconBgr: UIBackground;
+        workstation: MapObjectKey;
 
         public setInventoryUI(inventoryUI: InventoryUI) {
             this.inventoryUI = inventoryUI;
@@ -50,7 +51,22 @@ namespace Lich {
 
         hide() {
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, undefined));
+            this.workstation = undefined;
             super.hide();
+        }
+
+        toggle() {
+            // pokud jsem zrovna otevřený pro nějakou workstation (ne ruční)
+            // pak zavření neudělá zavřít, ale přepnout do ručního módu
+            if (this.toggleFlag) {
+                if (this.workstation && this.parent) {
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, undefined));
+                } else {
+                    // jinak se chovej jako normální přepínač viditelnosti
+                    super.toggle();
+                }
+                this.toggleFlag = false;
+            }
         }
 
         constructor() {
@@ -83,6 +99,8 @@ namespace Lich {
                 self.workspaceIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
                 self.workspaceIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
                 self.workspaceIcon.x = self.workspaceIconBgr.x + PartsUI.SELECT_BORDER;
+
+                this.workstation = payload.payload;
 
                 self.measureCacheArea();
                 return false;

@@ -19,6 +19,7 @@ var Lich;
     var CraftingUI = (function (_super) {
         __extends(CraftingUI, _super);
         function CraftingUI() {
+            var _this = this;
             _super.call(this, CraftingUI.N, CraftingUI.M);
             this.lineOffset = 0;
             this.choosenItem = null;
@@ -54,6 +55,7 @@ var Lich;
                 self.workspaceIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
                 self.workspaceIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
                 self.workspaceIcon.x = self.workspaceIconBgr.x + Lich.PartsUI.SELECT_BORDER;
+                _this.workstation = payload.payload;
                 self.measureCacheArea();
                 return false;
             });
@@ -118,7 +120,22 @@ var Lich;
         };
         CraftingUI.prototype.hide = function () {
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, undefined));
+            this.workstation = undefined;
             _super.prototype.hide.call(this);
+        };
+        CraftingUI.prototype.toggle = function () {
+            // pokud jsem zrovna otevřený pro nějakou workstation (ne ruční)
+            // pak zavření neudělá zavřít, ale přepnout do ručního módu
+            if (this.toggleFlag) {
+                if (this.workstation && this.parent) {
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, undefined));
+                }
+                else {
+                    // jinak se chovej jako normální přepínač viditelnosti
+                    _super.prototype.toggle.call(this);
+                }
+                this.toggleFlag = false;
+            }
         };
         CraftingUI.prototype.measureCacheArea = function () {
             var offset = this.workspaceIconBgr.width + Lich.PartsUI.SELECT_BORDER + 5;

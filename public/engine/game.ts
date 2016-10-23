@@ -75,13 +75,13 @@ namespace Lich {
                     self.mouse.rightDown = true;
                 }
                 self.mouse.clickChanged = true;
-                self.mouse.clickChangedX = event.clientX;
-                self.mouse.clickChangedY = event.clientY;
+                self.mouse.consumedByUI = false;
             };
 
             self.canvas.onmousemove = (event: MouseEvent) => {
                 self.mouse.x = event.clientX;
                 self.mouse.y = event.clientY;
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
             };
 
             self.canvas.onmouseup = (event: MouseEvent) => {
@@ -91,8 +91,7 @@ namespace Lich {
                     self.mouse.rightDown = false;
                 }
                 self.mouse.clickChanged = true;
-                self.mouse.clickChangedX = event.clientX;
-                self.mouse.clickChangedY = event.clientY;
+                self.mouse.consumedByUI = false;
             }
 
             let init = function () {
@@ -178,10 +177,6 @@ namespace Lich {
 
                 setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
 
-                self.stage.addEventListener("stagemousemove", (event: any) => {
-                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, event.stageX, event.stageY));
-                });
-
                 loadWorld();
             }
 
@@ -229,22 +224,22 @@ namespace Lich {
                     self.getWorld().handleTick(delta);
 
                     // UI má při akcích myši přednost
-                    // isMouseInUI je časově náročné, proto je volání filtrováno přes clickChanged příznak
-                    // a porovnání souřadnic
-                    if (self.mouse.clickChanged) {
+                    // isMouseInUI je časově náročné, proto je volání filtrováno
+                    // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
+                    if (self.mouse.down && self.mouse.clickChanged) {
                         if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                            self.ui.handleMouse(self.mouse, delta);
+                            // blokuj akci světa
                             self.mouse.consumedByUI = true;
+                            self.mouse.clickChanged = false;
                         }
-                        self.mouse.clickChanged = false;
                     }
-                    // změna clickChanged se zapíše jenom jednou, pak začnu padat do této větve podmínky,
-                    // kontroluj proto ještě souřadnice, na kterých se to stalo (ale jenom v případě, že 
-                    // tomu předcházelo kliknutí do UI -- jinak by se muselo po mousedown ještě pohnout
-                    // kurzorem aby se ve world něco stalo)
-                    if (self.mouse.consumedByUI == false || (self.mouse.x != self.mouse.clickChangedX && self.mouse.y != self.mouse.clickChangedY)) {
+                    // Akce světa mají nižší prioritu, akce myši se projeví pouze 
+                    // pokud je již nezpracovalo UI 
+                    // Svět bere nejen mousedown akce, ale u mousedown musí dát přednost UI
+                    // bere dlouhé stisknutí protože spell efekty se opakují dokud platí mousedown
+                    if (!self.mouse.down || self.mouse.down && self.mouse.consumedByUI == false) {
                         self.getWorld().handleMouse(self.mouse, delta);
-                        self.mouse.consumedByUI = false;
+                        self.mouse.clickChanged = false;
                     }
 
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 

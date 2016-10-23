@@ -125,12 +125,6 @@ namespace Lich {
             this.updateCache();
         }
 
-        handleMouse(mouse) {
-            if (mouse.down) {
-                // TODO
-            }
-        }
-
         toggle() {
             var self = this;
             // dochází ke změně?
