@@ -23,6 +23,13 @@ namespace Lich {
         static COLLXOFFSET = 14;
         static COLLYOFFSET = 10;
 
+        // Pixel/s
+        static HERO_HORIZONTAL_SPEED = 200;
+        static HERO_VERTICAL_SPEED = 500;
+
+        static DAMAGE = 5;
+        static ATTACK_COOLDOWN = 1000;
+
         static stateAnimation = {
             WALKR_STATE: "walkR",
             WALKL_STATE: "walkL",
@@ -44,6 +51,7 @@ namespace Lich {
         height = Enemy.HEIGHT;
         speedx = 0;
         speedy = 0;
+        attackCooldown = 0;
 
         state = Enemy.IDLE_STATE;
 
@@ -74,6 +82,58 @@ namespace Lich {
                     "dead": [29, 29, "dead", 0.2]
                 }
             }), Enemy.stateAnimation[Enemy.IDLE_STATE], Enemy.stateAnimation, Enemy.COLLXOFFSET, Enemy.COLLYOFFSET);
+        }
+
+        runAI(world: World, delta: number) {
+            if (this.getCurrentHealth() > 0) {
+                if (this.attackCooldown < Enemy.ATTACK_COOLDOWN)
+                    this.attackCooldown += delta;
+                if (this.x > world.hero.x && this.x < world.hero.x + world.hero.width - world.hero.collXOffset) {
+                    this.speedx = 0;
+                    // zásah hráče?
+                    let heroHead = world.hero.y + world.hero.collYOffset;
+                    let heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
+                    let enemyHead = this.y;
+                    let enemyFeet = this.y + this.height;
+                    if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
+                        || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
+                        if (this.attackCooldown > Enemy.ATTACK_COOLDOWN) {
+                            this.attackCooldown = 0;
+                            world.hero.hit(Enemy.DAMAGE, world);
+                        }
+                    }
+                } else {
+                    if (world.hero.x > this.x) {
+                        // hráč je vpravo od nepřítele - jdi doprava           
+                        this.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
+                        // pokud už není ve skoku 
+                        if (this.speedy == 0) {
+                            let nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
+                            // pokud bych spadl nebo je přede mnou překážka, zkus vyskočit
+                            // pokud je hráč níž než já, klidně spadni (vzdálenost je obrácená)
+                            if (world.isCollision(nextX, this.y + this.height + Resources.TILE_SIZE).hit == false
+                                && world.hero.y + world.hero.height <= this.y + this.height
+                                || world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit) {
+                                this.speedy = World.HERO_VERTICAL_SPEED;
+                            }
+                        }
+                    } else {
+                        // hráč je vlevo od nepřítele - jdi doleva
+                        this.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
+                        // pokud už není ve skoku 
+                        if (this.speedy == 0) {
+                            let nextX = this.x + this.collXOffset - Resources.TILE_SIZE;
+                            // pokud bych spadl nebo je přede mnou překážka, zkus vyskočit
+                            // pokud je hráč níž než já, klidně spadni (vzdálenost je obrácená)
+                            if (world.isCollision(nextX, this.y + this.height + Resources.TILE_SIZE).hit == false
+                                && world.hero.y + world.hero.height <= this.y + this.height
+                                || world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit) {
+                                this.speedy = World.HERO_VERTICAL_SPEED;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         shift(shift) {
@@ -123,20 +183,20 @@ namespace Lich {
             this.performState(Enemy.FALL_STATE);
         }
 
-        die(game: Game) {
+        die(world: World) {
             this.performState(Enemy.DIE_STATE);
             Mixer.playSound(SoundKey.SND_SKELETON_DIE_KEY);
             // TODO loot
         }
 
-        hit(damage: number, game: Game) {
+        hit(damage: number, world: World) {
             if (this.currentHealth > 0) {
                 Mixer.playSound(SoundKey.SND_BONECRACK_KEY);
                 this.currentHealth -= damage;
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
                     this.speedx = 0;
-                    this.die(game);
+                    this.die(world);
                 }
             }
         }

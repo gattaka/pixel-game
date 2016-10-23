@@ -42,6 +42,7 @@ var Lich;
             this.state = Hero.IDLE_STATE;
             this.initialized = false;
             this.willRegen = 10;
+            this.healthRegen = 1;
             this.onHealthChange(this.currentHealth);
             this.onWillChange(this.currentWill);
         }
@@ -77,7 +78,7 @@ var Lich;
         Hero.prototype.fall = function () {
             this.performState(Hero.FALL_STATE);
         };
-        Hero.prototype.die = function (game) {
+        Hero.prototype.die = function (world) {
             this.performState(Hero.DIE_STATE);
         };
         Hero.prototype.onHealthChange = function (difference) {

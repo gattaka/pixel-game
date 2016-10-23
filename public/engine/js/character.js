@@ -22,13 +22,13 @@ var Lich;
         /**
          * Health metody
          */
-        Character.prototype.hit = function (damage, game) {
+        Character.prototype.hit = function (damage, world) {
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
                 this.currentHealth -= damage;
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
-                    this.die(game);
+                    this.die(world);
                 }
             }
             this.onHealthChange(this.currentHealth - oldValue);

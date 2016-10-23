@@ -152,28 +152,7 @@ var Lich;
             var sDelta = delta / 1000; // ms -> s
             // AI Enemies
             self.enemies.forEach(function (enemy) {
-                if (enemy.getCurrentHealth() > 0) {
-                    if (enemy.x > self.hero.x && enemy.x < self.hero.x + self.hero.width - self.hero.collXOffset) {
-                        enemy.speedx = 0;
-                    }
-                    else {
-                        if (self.hero.x > enemy.x) {
-                            enemy.speedx = -World.HERO_HORIZONTAL_SPEED / 1.5;
-                            if (self.isCollision(enemy.x + enemy.width - enemy.collXOffset, enemy.y).hit == false && enemy.speedy == 0) {
-                                enemy.speedy = World.HERO_VERTICAL_SPEED;
-                            }
-                        }
-                        else {
-                            enemy.speedx = World.HERO_HORIZONTAL_SPEED / 1.5;
-                            if (self.isCollision(enemy.x, enemy.y).hit == false && enemy.speedy == 0) {
-                                enemy.speedy = World.HERO_VERTICAL_SPEED;
-                            }
-                        }
-                    }
-                    if (directions.up2) {
-                        enemy.hit(5, self.game);
-                    }
-                }
+                enemy.runAI(self, delta);
             });
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 

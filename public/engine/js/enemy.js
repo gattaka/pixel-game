@@ -39,9 +39,63 @@ var Lich;
             this.height = Enemy.HEIGHT;
             this.speedx = 0;
             this.speedy = 0;
+            this.attackCooldown = 0;
             this.state = Enemy.IDLE_STATE;
             this.initialized = false;
         }
+        Enemy.prototype.runAI = function (world, delta) {
+            if (this.getCurrentHealth() > 0) {
+                if (this.attackCooldown < Enemy.ATTACK_COOLDOWN)
+                    this.attackCooldown += delta;
+                if (this.x > world.hero.x && this.x < world.hero.x + world.hero.width - world.hero.collXOffset) {
+                    this.speedx = 0;
+                    // zásah hráče?
+                    var heroHead = world.hero.y + world.hero.collYOffset;
+                    var heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
+                    var enemyHead = this.y;
+                    var enemyFeet = this.y + this.height;
+                    if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
+                        || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
+                        if (this.attackCooldown > Enemy.ATTACK_COOLDOWN) {
+                            this.attackCooldown = 0;
+                            world.hero.hit(Enemy.DAMAGE, world);
+                        }
+                    }
+                }
+                else {
+                    if (world.hero.x > this.x) {
+                        // hráč je vpravo od nepřítele - jdi doprava           
+                        this.speedx = -Lich.World.HERO_HORIZONTAL_SPEED / 1.5;
+                        // pokud už není ve skoku 
+                        if (this.speedy == 0) {
+                            var nextX = this.x + this.width - this.collXOffset + Lich.Resources.TILE_SIZE;
+                            // pokud bych spadl nebo je přede mnou překážka, zkus vyskočit
+                            // pokud je hráč níž než já, klidně spadni (vzdálenost je obrácená)
+                            if (world.isCollision(nextX, this.y + this.height + Lich.Resources.TILE_SIZE).hit == false
+                                && world.hero.y + world.hero.height <= this.y + this.height
+                                || world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE).hit) {
+                                this.speedy = Lich.World.HERO_VERTICAL_SPEED;
+                            }
+                        }
+                    }
+                    else {
+                        // hráč je vlevo od nepřítele - jdi doleva
+                        this.speedx = Lich.World.HERO_HORIZONTAL_SPEED / 1.5;
+                        // pokud už není ve skoku 
+                        if (this.speedy == 0) {
+                            var nextX = this.x + this.collXOffset - Lich.Resources.TILE_SIZE;
+                            // pokud bych spadl nebo je přede mnou překážka, zkus vyskočit
+                            // pokud je hráč níž než já, klidně spadni (vzdálenost je obrácená)
+                            if (world.isCollision(nextX, this.y + this.height + Lich.Resources.TILE_SIZE).hit == false
+                                && world.hero.y + world.hero.height <= this.y + this.height
+                                || world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE).hit) {
+                                this.speedy = Lich.World.HERO_VERTICAL_SPEED;
+                            }
+                        }
+                    }
+                }
+            }
+        };
         Enemy.prototype.shift = function (shift) {
             var self = this;
             if (self.initialized) {
@@ -79,19 +133,19 @@ var Lich;
         Enemy.prototype.fall = function () {
             this.performState(Enemy.FALL_STATE);
         };
-        Enemy.prototype.die = function (game) {
+        Enemy.prototype.die = function (world) {
             this.performState(Enemy.DIE_STATE);
             Lich.Mixer.playSound(Lich.SoundKey.SND_SKELETON_DIE_KEY);
             // TODO loot
         };
-        Enemy.prototype.hit = function (damage, game) {
+        Enemy.prototype.hit = function (damage, world) {
             if (this.currentHealth > 0) {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_BONECRACK_KEY);
                 this.currentHealth -= damage;
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
                     this.speedx = 0;
-                    this.die(game);
+                    this.die(world);
                 }
             }
         };
@@ -119,6 +173,11 @@ var Lich;
         // Collision offset
         Enemy.COLLXOFFSET = 14;
         Enemy.COLLYOFFSET = 10;
+        // Pixel/s
+        Enemy.HERO_HORIZONTAL_SPEED = 200;
+        Enemy.HERO_VERTICAL_SPEED = 500;
+        Enemy.DAMAGE = 5;
+        Enemy.ATTACK_COOLDOWN = 1000;
         Enemy.stateAnimation = {
             WALKR_STATE: "walkR",
             WALKL_STATE: "walkL",

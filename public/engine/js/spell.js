@@ -334,7 +334,8 @@ var Lich;
         EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
             // maximálně 4 najednou
-            var batch = Math.random() * 10;
+            // var batch = Math.random() * 10;
+            var batch = 1;
             for (var e = 0; e < batch; e++) {
                 var enemy = new Lich.Enemy();
                 context.game.getWorld().enemies.push(enemy);

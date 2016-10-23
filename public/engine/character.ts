@@ -23,7 +23,7 @@ namespace Lich {
         abstract jumpL();
         abstract midair();
         abstract fall();
-        abstract die(game: Game);
+        abstract die(world: World);
 
         abstract onHealthChange(difference: number);
         abstract onWillChange(difference: number);
@@ -32,13 +32,13 @@ namespace Lich {
          * Health metody
          */
 
-        hit(damage: number, game: Game) {
+        hit(damage: number, world: World) {
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
                 this.currentHealth -= damage;
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
-                    this.die(game);
+                    this.die(world);
                 }
             }
             this.onHealthChange(this.currentHealth - oldValue);

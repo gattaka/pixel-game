@@ -78,6 +78,7 @@ namespace Lich {
             }), Hero.stateAnimation[Hero.IDLE_STATE], Hero.stateAnimation, Hero.COLLXOFFSET, Hero.COLLYOFFSET);
 
             this.willRegen = 10;
+            this.healthRegen = 1;
 
             this.onHealthChange(this.currentHealth);
             this.onWillChange(this.currentWill);
@@ -126,7 +127,7 @@ namespace Lich {
             this.performState(Hero.FALL_STATE);
         }
 
-        die(game: Game) {
+        die(world: World) {
             this.performState(Hero.DIE_STATE);
         }
 
