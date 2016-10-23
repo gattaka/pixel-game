@@ -60,11 +60,13 @@ namespace Lich {
         }
 
         prepareForToggleShift() {
-            for (var i = 0; i < this.spellIndex.length; i++) {
-                this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[this.spellIndex[i]]);
+            if (this.toggleFlag) {
+                for (var i = 0; i < this.spellIndex.length; i++) {
+                    this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[this.spellIndex[i]]);
+                }
+                this.updateCache();
+                this.toggleFlag = false;
             }
-            this.updateCache();
-            this.toggleFlag = false;
         }
 
         selectSpell(spellNumber: number) {

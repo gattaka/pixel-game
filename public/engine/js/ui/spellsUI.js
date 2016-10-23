@@ -50,11 +50,13 @@ var Lich;
             }
         };
         SpellsUI.prototype.prepareForToggleShift = function () {
-            for (var i = 0; i < this.spellIndex.length; i++) {
-                this.spellContent[i].image = Lich.Resources.getInstance().getImage(Lich.SpellKey[this.spellIndex[i]]);
+            if (this.toggleFlag) {
+                for (var i = 0; i < this.spellIndex.length; i++) {
+                    this.spellContent[i].image = Lich.Resources.getInstance().getImage(Lich.SpellKey[this.spellIndex[i]]);
+                }
+                this.updateCache();
+                this.toggleFlag = false;
             }
-            this.updateCache();
-            this.toggleFlag = false;
         };
         SpellsUI.prototype.selectSpell = function (spellNumber) {
             var self = this;
