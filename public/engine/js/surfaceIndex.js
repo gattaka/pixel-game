@@ -219,6 +219,7 @@ var Lich;
             var seamCheck = function (type, type2, ok1, ok2) {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2;
             };
+            // TODO exportovat do definic
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_WOODWALL_KEY))
@@ -230,6 +231,12 @@ var Lich;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_WOODWALL_KEY))
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_BRICK_KEY, Lich.SurfaceKey.SRFC_ROOF_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_WOODWALL_KEY, Lich.SurfaceKey.SRFC_ROOF_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY, Lich.SurfaceKey.SRFC_ROOF_KEY))
                 return true;
             return type == type2;
         };
