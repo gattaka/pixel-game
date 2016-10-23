@@ -10,7 +10,7 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRASS3_KEY, 2, 2, Lich.InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TREE_KEY, 4, 9, Lich.InventoryKey.INV_WOOD_KEY, 5, 1).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TREE2_KEY, 8, 15, Lich.InventoryKey.INV_WOOD_KEY, 10, 1).setDepth(0, 10),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TREE3_KEY, 4, 7, Lich.InventoryKey.INV_WOOD_KEY, 10, 1).setDepth(0, 10),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TREE3_KEY, 2, 3, Lich.InventoryKey.INV_WOOD_KEY, 2, 1).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MUSHROOM_KEY, 2, 2, Lich.InventoryKey.INV_MUSHROOM_KEY, 1, 100).setDepth(5, 40),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MUSHROOM2_KEY, 2, 2, Lich.InventoryKey.INV_MUSHROOM2_KEY, 1, 100).setDepth(5, 100),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MUSHROOM3_KEY, 2, 2, Lich.InventoryKey.INV_MUSHROOM3_KEY, 1, 140).setDepth(5, 100),
