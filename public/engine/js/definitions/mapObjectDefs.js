@@ -22,9 +22,27 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, Lich.InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_ANVIL_KEY, 2, 2, Lich.InventoryKey.INV_ANVIL_KEY, 1, 0, function (game, rx, ry, obj, objType) {
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, Lich.MapObjectKey.MAP_ANVIL_KEY));
+            var listener = function (payload) {
+                var info = game.getWorld().checkReach(game.getWorld().hero, rx, ry, true);
+                if (!info.inReach) {
+                    Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
+                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.WORKSTATION_UNREACHABLE));
+                }
+                return false;
+            };
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
         }),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_SMELTER_KEY, 4, 4, Lich.InventoryKey.INV_SMELTER_KEY, 1, 0, function (game, rx, ry, obj, objType) {
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, Lich.MapObjectKey.MAP_SMELTER_KEY));
+            var listener = function (payload) {
+                var info = game.getWorld().checkReach(game.getWorld().hero, rx, ry, true);
+                if (!info.inReach) {
+                    Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
+                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.WORKSTATION_UNREACHABLE));
+                }
+                return false;
+            };
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
         }).setFrames(3),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, Lich.InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, Lich.InventoryKey.INV_IRON_FENCE_KEY, 1, 0),

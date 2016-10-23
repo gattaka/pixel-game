@@ -520,7 +520,7 @@ namespace Lich {
                     var heroCenterY = self.hero.y + self.hero.height / 4;
 
                     // zkus cast
-                    if (rmbSpellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                    if (rmbSpellDef.cast(new SpellContext(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                         // ok, cast se provedl, nastav nový cooldown 
                         self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
                     }
@@ -547,7 +547,7 @@ namespace Lich {
                     let heroCenterY = self.hero.y + self.hero.height / 4;
 
                     // zkus cast
-                    if (spellDef.cast(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                    if (spellDef.cast(new SpellContext(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                         // ok, cast se provedl, nastav nový cooldown a odeber will
                         self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
                         self.hero.decreseWill(spellDef.cost);
@@ -563,6 +563,23 @@ namespace Lich {
                 clsn.x, clsn.y, clsn.hit, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
 
         };
+
+        public checkReach(character: Character, x: number, y: number, inTiles: boolean = false): ReachInfo {
+            // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
+            // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
+            // změna projeví i na pixel místech, kde už je například kolize
+            var characterCoordTL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.collYOffset);
+            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.collYOffset);
+            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.height - character.collYOffset);
+            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.height - character.collYOffset);
+            var coord = inTiles ? new Coord2D(Utils.even(x), Utils.even(y)) : this.render.pixelsToEvenTiles(x, y);
+            // kontroluj rádius od každého rohu
+            let inReach = Utils.distance(coord.x, coord.y, characterCoordTL.x, characterCoordTL.y) < Resources.REACH_TILES_RADIUS
+                || Utils.distance(coord.x, coord.y, characterCoordTR.x, characterCoordTR.y) < Resources.REACH_TILES_RADIUS
+                || Utils.distance(coord.x, coord.y, characterCoordBR.x, characterCoordBR.y) < Resources.REACH_TILES_RADIUS
+                || Utils.distance(coord.x, coord.y, characterCoordBL.x, characterCoordBL.y) < Resources.REACH_TILES_RADIUS;
+            return new ReachInfo(coord, characterCoordTL, characterCoordTR, characterCoordBR, characterCoordBL, inReach);
+        }
 
         handleTick(delta) {
             var self = this;
@@ -584,5 +601,16 @@ namespace Lich {
                 self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
         };
+    }
+
+    export class ReachInfo {
+        constructor(
+            public source: Coord2D,
+            public characterCoordTL: Coord2D,
+            public characterCoordTR: Coord2D,
+            public characterCoordBR: Coord2D,
+            public characterCoordBL: Coord2D,
+            public inReach: boolean) {
+        }
     }
 }

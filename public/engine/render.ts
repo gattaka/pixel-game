@@ -799,34 +799,25 @@ namespace Lich {
             self.onDigSurfaceListeners.push(f);
         }
 
-        pixelsToTiles(x: number, y: number) {
+        pixelsToTiles(x: number, y: number): Coord2D {
             var self = this;
             var tileX = Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1;
             var tileY = Math.ceil((y - self.screenOffsetY) / Resources.TILE_SIZE) - 1;
-            return {
-                x: tileX,
-                y: tileY
-            };
+            return new Coord2D(tileX, tileY);
         }
 
-        pixelsToEvenTiles(x: number, y: number) {
+        pixelsToEvenTiles(x: number, y: number): Coord2D {
             var self = this;
             var tileX = Utils.even(Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1);
             var tileY = Utils.even(Math.ceil((y - self.screenOffsetY) / Resources.TILE_SIZE) - 1);
-            return {
-                x: tileX,
-                y: tileY
-            };
+            return new Coord2D(tileX, tileY);
         }
 
-        tilesToPixel(x: number, y: number) {
+        tilesToPixel(x: number, y: number): Coord2D {
             var self = this;
             var screenX = x * Resources.TILE_SIZE + self.screenOffsetX;
             var screenY = y * Resources.TILE_SIZE + self.screenOffsetY;
-            return {
-                x: screenX,
-                y: screenY
-            };
+            return new Coord2D(screenX, screenY);
         }
 
         // dle souřadnic tiles spočítá souřadnici sektoru

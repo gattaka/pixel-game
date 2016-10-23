@@ -22,10 +22,28 @@ namespace Lich {
         new MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0,
             function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, MapObjectKey.MAP_ANVIL_KEY));
+                let listener = (payload: TupleEventPayload) => {
+                    let info: ReachInfo = game.getWorld().checkReach(game.getWorld().hero, rx, ry, true)
+                    if (!info.inReach) {
+                        EventBus.getInstance().unregisterConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
+                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.WORKSTATION_UNREACHABLE));
+                    }
+                    return false;
+                };
+                EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
             }),
         new MapObjDefinition(MapObjectKey.MAP_SMELTER_KEY, 4, 4, InventoryKey.INV_SMELTER_KEY, 1, 0,
             function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, MapObjectKey.MAP_SMELTER_KEY));
+                let listener = (payload: TupleEventPayload) => {
+                    let info: ReachInfo = game.getWorld().checkReach(game.getWorld().hero, rx, ry, true)
+                    if (!info.inReach) {
+                        EventBus.getInstance().unregisterConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
+                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.WORKSTATION_UNREACHABLE));
+                    }
+                    return false;
+                };
+                EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
             }).setFrames(3),
         new MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, InventoryKey.INV_IRON_FENCE_KEY, 1, 0),

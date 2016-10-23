@@ -663,28 +663,19 @@ var Lich;
             var self = this;
             var tileX = Math.ceil((x - self.screenOffsetX) / Lich.Resources.TILE_SIZE) - 1;
             var tileY = Math.ceil((y - self.screenOffsetY) / Lich.Resources.TILE_SIZE) - 1;
-            return {
-                x: tileX,
-                y: tileY
-            };
+            return new Lich.Coord2D(tileX, tileY);
         };
         Render.prototype.pixelsToEvenTiles = function (x, y) {
             var self = this;
             var tileX = Lich.Utils.even(Math.ceil((x - self.screenOffsetX) / Lich.Resources.TILE_SIZE) - 1);
             var tileY = Lich.Utils.even(Math.ceil((y - self.screenOffsetY) / Lich.Resources.TILE_SIZE) - 1);
-            return {
-                x: tileX,
-                y: tileY
-            };
+            return new Lich.Coord2D(tileX, tileY);
         };
         Render.prototype.tilesToPixel = function (x, y) {
             var self = this;
             var screenX = x * Lich.Resources.TILE_SIZE + self.screenOffsetX;
             var screenY = y * Lich.Resources.TILE_SIZE + self.screenOffsetY;
-            return {
-                x: screenX,
-                y: screenY
-            };
+            return new Lich.Coord2D(screenX, screenY);
         };
         // dle souřadnic tiles spočítá souřadnici sektoru
         Render.prototype.getSectorByTiles = function (x, y) {

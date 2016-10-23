@@ -33,15 +33,21 @@ var Lich;
             this.itemsUIMap = new Lich.HashMap();
             this.itemsCont = new createjs.Container();
             var self = this;
-            this.workspaceIcon = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
-            var bounds = this.workspaceIcon.getBounds();
-            this.workspaceIconBgr = new Lich.UIBackground();
-            this.workspaceIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
-            this.workspaceIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
-            this.workspaceIcon.x = this.workspaceIconBgr.x + Lich.PartsUI.SELECT_BORDER;
-            this.workspaceIcon.y = Lich.PartsUI.SELECT_BORDER;
-            this.addChild(this.workspaceIconBgr);
-            this.addChild(this.workspaceIcon);
+            this.workstationIcon = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+            var bounds = this.workstationIcon.getBounds();
+            this.workstationIconBgr = new Lich.UIBackground();
+            this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
+            this.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
+            this.workstationIcon.x = this.workstationIconBgr.x + Lich.PartsUI.SELECT_BORDER;
+            this.workstationIcon.y = Lich.PartsUI.SELECT_BORDER;
+            this.addChild(this.workstationIconBgr);
+            this.addChild(this.workstationIcon);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.WORKSTATION_UNREACHABLE, function (payload) {
+                if (self.workstation && self.parent) {
+                    self.hide();
+                }
+                return false;
+            });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.WORKSTATION_CHANGE, function (payload) {
                 // pokud to volá uživatel klávesnicí, pak neřeš (payload.payload = undefined)
                 // zobrazování je přes toggle, což řídí keyboard handle od game
@@ -50,11 +56,11 @@ var Lich;
                 if (payload.payload && !self.parent) {
                     self.show();
                 }
-                self.workspaceIcon.image = Lich.Resources.getInstance().getImage(payload.payload ? Lich.InventoryKey[Lich.WORKSTATIONS_ICONS[payload.payload]] : Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
-                var bounds = self.workspaceIcon.getBounds();
-                self.workspaceIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
-                self.workspaceIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
-                self.workspaceIcon.x = self.workspaceIconBgr.x + Lich.PartsUI.SELECT_BORDER;
+                self.workstationIcon.image = Lich.Resources.getInstance().getImage(payload.payload ? Lich.InventoryKey[Lich.WORKSTATIONS_ICONS[payload.payload]] : Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+                var bounds = self.workstationIcon.getBounds();
+                self.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
+                self.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
+                self.workstationIcon.x = self.workstationIconBgr.x + Lich.PartsUI.SELECT_BORDER;
                 _this.workstation = payload.payload;
                 self.measureCacheArea();
                 return false;
@@ -138,7 +144,7 @@ var Lich;
             }
         };
         CraftingUI.prototype.measureCacheArea = function () {
-            var offset = this.workspaceIconBgr.width + Lich.PartsUI.SELECT_BORDER + 5;
+            var offset = this.workstationIconBgr.width + Lich.PartsUI.SELECT_BORDER + 5;
             this.cache(-offset, -offset, this.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset + 5, this.height + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset + 5);
         };
         CraftingUI.prototype.render = function () {

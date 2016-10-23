@@ -23,6 +23,7 @@ var Lich;
         EventType[EventType["PLAYER_POSITION_CHANGE"] = 14] = "PLAYER_POSITION_CHANGE";
         EventType[EventType["SURFACE_CHANGE"] = 15] = "SURFACE_CHANGE";
         EventType[EventType["WORKSTATION_CHANGE"] = 16] = "WORKSTATION_CHANGE";
+        EventType[EventType["WORKSTATION_UNREACHABLE"] = 17] = "WORKSTATION_UNREACHABLE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

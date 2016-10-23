@@ -1,6 +1,24 @@
 namespace Lich {
 
     /**
+     * Informace, které se hodí při provádění spell 
+     */
+    export class SpellContext {
+        constructor(
+            // kdo spell vyvolal
+            public owner: string,
+            // souřadnice, odkud je spell vyvolán
+            public xCast: number,
+            public yCast: number,
+            // souřadnice, kam je spell namířen
+            public xAim: number,
+            public yAim: number,
+            // game 
+            public game: Game) {
+        }
+    }
+
+    /**
      * Předek všech Spell definic
      */
     export abstract class SpellDefinition {
@@ -13,20 +31,9 @@ namespace Lich {
             public cooldown: number
         ) { }
 
-        public abstract cast(
-            // iniciátor spell akce
-            owner: string,
-            // souřadnice odkud je akce iniciována
-            xCast: number,
-            yCast: number,
-            // kam je akce namířena
-            xAim: number,
-            yAim: number,
-            // game kontext
-            game: Game
-        )
-            // zdařil se cast?
-            : boolean;
+        // Zkusí provést cast a vrátit, zda se to povedlo
+        public abstract cast(context: SpellContext): boolean;
+
     }
 
     /**
@@ -64,9 +71,9 @@ namespace Lich {
             return BulletSpellDef.FRAME_HEIGHT;
         }
 
-        protected adjustObjectSpeed(xCast: number, yCast: number, xAim: number, yAim: number, object: AbstractWorldObject) {
-            var b = xAim - xCast;
-            var a = yAim - yCast;
+        protected adjustObjectSpeed(context: SpellContext, object: AbstractWorldObject) {
+            var b = context.xAim - context.xCast;
+            var a = context.yAim - context.yCast;
             var c = Math.sqrt(a * a + b * b);
 
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
@@ -75,7 +82,7 @@ namespace Lich {
             object.speedy = -this.speed * a / c;
         }
 
-        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
+        public cast(context: SpellContext): boolean {
             var self = this;
 
             var sheet = new createjs.SpriteSheet({
@@ -96,7 +103,7 @@ namespace Lich {
             });
 
             var object = new BasicBullet(
-                owner,
+                context.owner,
                 self.getFrameWidth(),
                 self.getFrameHeight(),
                 sheet,
@@ -116,14 +123,14 @@ namespace Lich {
                 self.radius
             );
 
-            self.adjustObjectSpeed(xCast, yCast, xAim, yAim, object);
+            self.adjustObjectSpeed(context, object);
 
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
-            game.getWorld().bulletObjects.push(object);
-            game.getWorld().addChild(object);
-            object.x = xCast - object.width / 2;
-            object.y = yCast - object.height / 2;
+            context.game.getWorld().bulletObjects.push(object);
+            context.game.getWorld().addChild(object);
+            object.x = context.xCast - object.width / 2;
+            object.y = context.yCast - object.height / 2;
 
             Mixer.playSound(self.castSoundKey, false, 0.2);
             return true;
@@ -183,10 +190,12 @@ namespace Lich {
             return MeteorSpellDef.FRAME_HEIGHT;
         }
 
-        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
-            let a = yAim;
+        public cast(context: SpellContext): boolean {
+            let a = context.yAim;
             let b = Math.tan(Math.PI / 6) * a;
-            return super.cast(owner, xAim + b - (Math.floor(Math.random() * 2) * b * 2), 0, xAim, yAim, game);
+            context.xCast = context.xAim + b - (Math.floor(Math.random() * 2) * b * 2);
+            context.yCast = 0;
+            return super.cast(context);
         }
 
         constructor() {
@@ -244,30 +253,15 @@ namespace Lich {
             super(key, cost, cooldown);
         }
 
-        public abstract castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean;
+        public abstract castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean;
 
-        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
-
-            // tady trochu zahazuju parametry, protože reach spells jsou speciálně pro hráče
-
-            // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
-            // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
-            // změna projeví i na pixel místech, kde už je například kolize
-            var world = game.getWorld();
-            var hero = world.hero;
-            var heroCoordTL = world.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.collYOffset);
-            var heroCoordTR = world.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.collYOffset);
-            var heroCoordBR = world.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.height - hero.collYOffset);
-            var heroCoordBL = world.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.height - hero.collYOffset);
-            var mouseCoord = world.render.pixelsToEvenTiles(xAim, yAim);
+        public cast(context: SpellContext): boolean {
             // kontroluj rádius od každého rohu
-            if (Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTL.x, heroCoordTL.y) < Resources.REACH_TILES_RADIUS
-                || Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTR.x, heroCoordTR.y) < Resources.REACH_TILES_RADIUS
-                || Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBR.x, heroCoordBR.y) < Resources.REACH_TILES_RADIUS
-                || Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBL.x, heroCoordBL.y) < Resources.REACH_TILES_RADIUS) {
-
+            let world = context.game.getWorld();
+            let info: ReachInfo = world.checkReach(world.hero, context.xAim, context.yAim);
+            if (info.inReach) {
                 // ok, proveď cast
-                return this.castOnReach(xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game);
+                return this.castOnReach(context, info);
             }
 
             return false;
@@ -285,8 +279,8 @@ namespace Lich {
             super(SpellKey.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
-        public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            return game.getWorld().render.interact(xAim, yAim);
+        public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
+            return context.game.getWorld().render.interact(context.xAim, context.yAim);
         }
     }
 
@@ -303,8 +297,8 @@ namespace Lich {
             super(key, 0, AbstractDigSpellDef.COOLDOWN);
         }
 
-        public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            if (game.getWorld().render.dig(xAim, yAim, this.asBackground)) {
+        public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
+            if (context.game.getWorld().render.dig(context.xAim, context.yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
                         Mixer.playSound(SoundKey.SND_PICK_AXE_1_KEY);
@@ -349,23 +343,23 @@ namespace Lich {
             super(key, 0, AbstractPlaceSpellDef.COOLDOWN);
         }
 
-        public castOnReach(xAim: number, yAim: number, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game: Game): boolean {
-            var uiItem = game.getUI().inventoryUI.choosenItem;
+        public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
+            var uiItem = context.game.getUI().inventoryUI.choosenItem;
             var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
                 if (this.alternative == false && object.mapSurface != null) {
-                    if (mouseCoord.x <= heroCoordBR.x && mouseCoord.x >= heroCoordTL.x &&
-                        mouseCoord.y <= heroCoordBR.y && mouseCoord.y >= heroCoordTL.y) {
+                    if (reachInfo.source.x <= reachInfo.characterCoordBR.x && reachInfo.source.x >= reachInfo.characterCoordTL.x &&
+                        reachInfo.source.y <= reachInfo.characterCoordBR.y && reachInfo.source.y >= reachInfo.characterCoordTL.y) {
                         // koliduju s hráčem
                         return false;
                     }
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
-                if (game.getWorld().render.place(xAim, yAim, object, this.alternative)) {
+                if (context.game.getWorld().render.place(context.xAim, context.yAim, object, this.alternative)) {
                     Mixer.playSound(SoundKey.SND_PLACE_KEY);
-                    game.getUI().inventoryUI.invRemove(uiItem, 1);
+                    context.game.getUI().inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
                 return false;
@@ -395,7 +389,7 @@ namespace Lich {
             super(SpellKey.SPELL_ENEMY_KEY, 0, 200);
         }
 
-        public cast(owner: string, xCast: number, yCast: number, xAim: number, yAim: number, game: Game): boolean {
+        public cast(context: SpellContext): boolean {
 
             Mixer.playSound(SoundKey.SND_SPAWN_KEY);
 
@@ -403,14 +397,14 @@ namespace Lich {
             var batch = Math.random() * 10;
             for (var e = 0; e < batch; e++) {
                 var enemy = new Enemy();
-                game.getWorld().enemies.push(enemy);
-                game.getWorld().addChild(enemy);
-                if (Math.random() > 0.5 && game.getWorld().render.canShiftX(-enemy.width * 2) || game.getWorld().render.canShiftX(enemy.width * 2) == false) {
-                    enemy.x = game.getCanvas().width + enemy.width * (Math.random() + 1);
+                context.game.getWorld().enemies.push(enemy);
+                context.game.getWorld().addChild(enemy);
+                if (Math.random() > 0.5 && context.game.getWorld().render.canShiftX(-enemy.width * 2) || context.game.getWorld().render.canShiftX(enemy.width * 2) == false) {
+                    enemy.x = context.game.getCanvas().width + enemy.width * (Math.random() + 1);
                 } else {
                     enemy.x = -enemy.width * (Math.random() + 1);
                 }
-                enemy.y = game.getCanvas().height / 2;
+                enemy.y = context.game.getCanvas().height / 2;
             }
 
             return true;

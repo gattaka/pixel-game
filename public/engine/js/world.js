@@ -437,7 +437,7 @@ var Lich;
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 4;
                     // zkus cast
-                    if (rmbSpellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game)) {
+                    if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                         // ok, cast se provedl, nastav nový cooldown 
                         self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
                     }
@@ -462,7 +462,7 @@ var Lich;
                     var heroCenterX_1 = self.hero.x + self.hero.width / 2;
                     var heroCenterY_1 = self.hero.y + self.hero.height / 4;
                     // zkus cast
-                    if (spellDef.cast(Lich.Hero.OWNER_HERO_TAG, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game)) {
+                    if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
                         // ok, cast se provedl, nastav nový cooldown a odeber will
                         self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
                         self.hero.decreseWill(spellDef.cost);
@@ -476,6 +476,23 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.PointedAreaEventPayload(clsn.x, clsn.y, clsn.hit, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
         };
         ;
+        World.prototype.checkReach = function (character, x, y, inTiles) {
+            if (inTiles === void 0) { inTiles = false; }
+            // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
+            // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
+            // změna projeví i na pixel místech, kde už je například kolize
+            var characterCoordTL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.collYOffset);
+            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.collYOffset);
+            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.height - character.collYOffset);
+            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.height - character.collYOffset);
+            var coord = inTiles ? new Lich.Coord2D(Lich.Utils.even(x), Lich.Utils.even(y)) : this.render.pixelsToEvenTiles(x, y);
+            // kontroluj rádius od každého rohu
+            var inReach = Lich.Utils.distance(coord.x, coord.y, characterCoordTL.x, characterCoordTL.y) < Lich.Resources.REACH_TILES_RADIUS
+                || Lich.Utils.distance(coord.x, coord.y, characterCoordTR.x, characterCoordTR.y) < Lich.Resources.REACH_TILES_RADIUS
+                || Lich.Utils.distance(coord.x, coord.y, characterCoordBR.x, characterCoordBR.y) < Lich.Resources.REACH_TILES_RADIUS
+                || Lich.Utils.distance(coord.x, coord.y, characterCoordBL.x, characterCoordBL.y) < Lich.Resources.REACH_TILES_RADIUS;
+            return new ReachInfo(coord, characterCoordTL, characterCoordTR, characterCoordBR, characterCoordBL, inReach);
+        };
         World.prototype.handleTick = function (delta) {
             var self = this;
             self.render.handleTick();
@@ -513,4 +530,16 @@ var Lich;
         return World;
     }(createjs.Container));
     Lich.World = World;
+    var ReachInfo = (function () {
+        function ReachInfo(source, characterCoordTL, characterCoordTR, characterCoordBR, characterCoordBL, inReach) {
+            this.source = source;
+            this.characterCoordTL = characterCoordTL;
+            this.characterCoordTR = characterCoordTR;
+            this.characterCoordBR = characterCoordBR;
+            this.characterCoordBL = characterCoordBL;
+            this.inReach = inReach;
+        }
+        return ReachInfo;
+    }());
+    Lich.ReachInfo = ReachInfo;
 })(Lich || (Lich = {}));

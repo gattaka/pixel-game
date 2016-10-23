@@ -17,7 +17,8 @@ namespace Lich {
         MAP_SHIFT_Y,
         PLAYER_POSITION_CHANGE,
         SURFACE_CHANGE,
-        WORKSTATION_CHANGE
+        WORKSTATION_CHANGE,
+        WORKSTATION_UNREACHABLE
     }
 
     abstract class EventPayload {

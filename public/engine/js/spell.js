@@ -6,6 +6,29 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Lich;
 (function (Lich) {
     /**
+     * Informace, které se hodí při provádění spell
+     */
+    var SpellContext = (function () {
+        function SpellContext(
+            // kdo spell vyvolal
+            owner, 
+            // souřadnice, odkud je spell vyvolán
+            xCast, yCast, 
+            // souřadnice, kam je spell namířen
+            xAim, yAim, 
+            // game 
+            game) {
+            this.owner = owner;
+            this.xCast = xCast;
+            this.yCast = yCast;
+            this.xAim = xAim;
+            this.yAim = yAim;
+            this.game = game;
+        }
+        return SpellContext;
+    }());
+    Lich.SpellContext = SpellContext;
+    /**
      * Předek všech Spell definic
      */
     var SpellDefinition = (function () {
@@ -46,16 +69,16 @@ var Lich;
         BulletSpellDef.prototype.getFrameHeight = function () {
             return BulletSpellDef.FRAME_HEIGHT;
         };
-        BulletSpellDef.prototype.adjustObjectSpeed = function (xCast, yCast, xAim, yAim, object) {
-            var b = xAim - xCast;
-            var a = yAim - yCast;
+        BulletSpellDef.prototype.adjustObjectSpeed = function (context, object) {
+            var b = context.xAim - context.xCast;
+            var a = context.yAim - context.yCast;
             var c = Math.sqrt(a * a + b * b);
             // dle poměru přepony k odvěsnám vypočti nové odvěsny při délce
             // přepony dle rychlosti projektilu
             object.speedx = -this.speed * b / c;
             object.speedy = -this.speed * a / c;
         };
-        BulletSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
+        BulletSpellDef.prototype.cast = function (context) {
             var self = this;
             var sheet = new createjs.SpriteSheet({
                 framerate: 30,
@@ -73,18 +96,18 @@ var Lich;
                     "done": [4, 4, "done", 1]
                 }
             });
-            var object = new Lich.BasicBullet(owner, self.getFrameWidth(), self.getFrameHeight(), sheet, "fly", "done", {
+            var object = new Lich.BasicBullet(context.owner, self.getFrameWidth(), self.getFrameHeight(), sheet, "fly", "done", {
                 "fly": "fly",
                 "hit": "hit",
                 "done": "done"
             }, BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
-            self.adjustObjectSpeed(xCast, yCast, xAim, yAim, object);
+            self.adjustObjectSpeed(context, object);
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
-            game.getWorld().bulletObjects.push(object);
-            game.getWorld().addChild(object);
-            object.x = xCast - object.width / 2;
-            object.y = yCast - object.height / 2;
+            context.game.getWorld().bulletObjects.push(object);
+            context.game.getWorld().addChild(object);
+            object.x = context.xCast - object.width / 2;
+            object.y = context.yCast - object.height / 2;
             Lich.Mixer.playSound(self.castSoundKey, false, 0.2);
             return true;
         };
@@ -127,10 +150,12 @@ var Lich;
         MeteorSpellDef.prototype.getFrameHeight = function () {
             return MeteorSpellDef.FRAME_HEIGHT;
         };
-        MeteorSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
-            var a = yAim;
+        MeteorSpellDef.prototype.cast = function (context) {
+            var a = context.yAim;
             var b = Math.tan(Math.PI / 6) * a;
-            return _super.prototype.cast.call(this, owner, xAim + b - (Math.floor(Math.random() * 2) * b * 2), 0, xAim, yAim, game);
+            context.xCast = context.xAim + b - (Math.floor(Math.random() * 2) * b * 2);
+            context.yCast = 0;
+            return _super.prototype.cast.call(this, context);
         };
         MeteorSpellDef.SPEED = 1500;
         MeteorSpellDef.MAP_DESTROY = true;
@@ -169,25 +194,13 @@ var Lich;
         function HeroReachSpellDef(key, cost, cooldown) {
             _super.call(this, key, cost, cooldown);
         }
-        HeroReachSpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
-            // tady trochu zahazuju parametry, protože reach spells jsou speciálně pro hráče
-            // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
-            // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
-            // změna projeví i na pixel místech, kde už je například kolize
-            var world = game.getWorld();
-            var hero = world.hero;
-            var heroCoordTL = world.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.collYOffset);
-            var heroCoordTR = world.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.collYOffset);
-            var heroCoordBR = world.render.pixelsToEvenTiles(hero.x + hero.width - hero.collXOffset, hero.y + hero.height - hero.collYOffset);
-            var heroCoordBL = world.render.pixelsToEvenTiles(hero.x + hero.collXOffset, hero.y + hero.height - hero.collYOffset);
-            var mouseCoord = world.render.pixelsToEvenTiles(xAim, yAim);
+        HeroReachSpellDef.prototype.cast = function (context) {
             // kontroluj rádius od každého rohu
-            if (Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTL.x, heroCoordTL.y) < Lich.Resources.REACH_TILES_RADIUS
-                || Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordTR.x, heroCoordTR.y) < Lich.Resources.REACH_TILES_RADIUS
-                || Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBR.x, heroCoordBR.y) < Lich.Resources.REACH_TILES_RADIUS
-                || Lich.Utils.distance(mouseCoord.x, mouseCoord.y, heroCoordBL.x, heroCoordBL.y) < Lich.Resources.REACH_TILES_RADIUS) {
+            var world = context.game.getWorld();
+            var info = world.checkReach(world.hero, context.xAim, context.yAim);
+            if (info.inReach) {
                 // ok, proveď cast
-                return this.castOnReach(xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game);
+                return this.castOnReach(context, info);
             }
             return false;
         };
@@ -202,8 +215,8 @@ var Lich;
         function MapObjectsInteractionSpellDef() {
             _super.call(this, Lich.SpellKey.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
-        MapObjectsInteractionSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            return game.getWorld().render.interact(xAim, yAim);
+        MapObjectsInteractionSpellDef.prototype.castOnReach = function (context, reachInfo) {
+            return context.game.getWorld().render.interact(context.xAim, context.yAim);
         };
         MapObjectsInteractionSpellDef.COOLDOWN = 200;
         return MapObjectsInteractionSpellDef;
@@ -220,8 +233,8 @@ var Lich;
             _super.call(this, key, 0, AbstractDigSpellDef.COOLDOWN);
             this.asBackground = asBackground;
         }
-        AbstractDigSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            if (game.getWorld().render.dig(xAim, yAim, this.asBackground)) {
+        AbstractDigSpellDef.prototype.castOnReach = function (context, reachInfo) {
+            if (context.game.getWorld().render.dig(context.xAim, context.yAim, this.asBackground)) {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
                         Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_AXE_1_KEY);
@@ -268,23 +281,23 @@ var Lich;
             _super.call(this, key, 0, AbstractPlaceSpellDef.COOLDOWN);
             this.alternative = alternative;
         }
-        AbstractPlaceSpellDef.prototype.castOnReach = function (xAim, yAim, mouseCoord, heroCoordTL, heroCoordTR, heroCoordBR, heroCoordBL, game) {
-            var uiItem = game.getUI().inventoryUI.choosenItem;
+        AbstractPlaceSpellDef.prototype.castOnReach = function (context, reachInfo) {
+            var uiItem = context.game.getUI().inventoryUI.choosenItem;
             var object = Lich.Resources.getInstance().invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem
                 if (this.alternative == false && object.mapSurface != null) {
-                    if (mouseCoord.x <= heroCoordBR.x && mouseCoord.x >= heroCoordTL.x &&
-                        mouseCoord.y <= heroCoordBR.y && mouseCoord.y >= heroCoordTL.y) {
+                    if (reachInfo.source.x <= reachInfo.characterCoordBR.x && reachInfo.source.x >= reachInfo.characterCoordTL.x &&
+                        reachInfo.source.y <= reachInfo.characterCoordBR.y && reachInfo.source.y >= reachInfo.characterCoordTL.y) {
                         // koliduju s hráčem
                         return false;
                     }
                 }
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
-                if (game.getWorld().render.place(xAim, yAim, object, this.alternative)) {
+                if (context.game.getWorld().render.place(context.xAim, context.yAim, object, this.alternative)) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_PLACE_KEY);
-                    game.getUI().inventoryUI.invRemove(uiItem, 1);
+                    context.game.getUI().inventoryUI.invRemove(uiItem, 1);
                     return true;
                 }
                 return false;
@@ -318,21 +331,21 @@ var Lich;
         function EnemySpellDef() {
             _super.call(this, Lich.SpellKey.SPELL_ENEMY_KEY, 0, 200);
         }
-        EnemySpellDef.prototype.cast = function (owner, xCast, yCast, xAim, yAim, game) {
+        EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
             // maximálně 4 najednou
             var batch = Math.random() * 10;
             for (var e = 0; e < batch; e++) {
                 var enemy = new Lich.Enemy();
-                game.getWorld().enemies.push(enemy);
-                game.getWorld().addChild(enemy);
-                if (Math.random() > 0.5 && game.getWorld().render.canShiftX(-enemy.width * 2) || game.getWorld().render.canShiftX(enemy.width * 2) == false) {
-                    enemy.x = game.getCanvas().width + enemy.width * (Math.random() + 1);
+                context.game.getWorld().enemies.push(enemy);
+                context.game.getWorld().addChild(enemy);
+                if (Math.random() > 0.5 && context.game.getWorld().render.canShiftX(-enemy.width * 2) || context.game.getWorld().render.canShiftX(enemy.width * 2) == false) {
+                    enemy.x = context.game.getCanvas().width + enemy.width * (Math.random() + 1);
                 }
                 else {
                     enemy.x = -enemy.width * (Math.random() + 1);
                 }
-                enemy.y = game.getCanvas().height / 2;
+                enemy.y = context.game.getCanvas().height / 2;
             }
             return true;
         };

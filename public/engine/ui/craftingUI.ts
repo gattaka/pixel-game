@@ -41,8 +41,8 @@ namespace Lich {
         ingredientsCont: IngredientsCont;
         inventoryUI: InventoryUI;
 
-        workspaceIcon: createjs.Bitmap;
-        workspaceIconBgr: UIBackground;
+        workstationIcon: createjs.Bitmap;
+        workstationIconBgr: UIBackground;
         workstation: MapObjectKey;
 
         public setInventoryUI(inventoryUI: InventoryUI) {
@@ -74,16 +74,23 @@ namespace Lich {
 
             var self = this;
 
-            this.workspaceIcon = Resources.getInstance().getBitmap(SpellKey[SpellKey.SPELL_PLACE_KEY]);
-            let bounds = this.workspaceIcon.getBounds();
-            this.workspaceIconBgr = new UIBackground();
-            this.workspaceIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
-            this.workspaceIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
-            this.workspaceIcon.x = this.workspaceIconBgr.x + PartsUI.SELECT_BORDER;
-            this.workspaceIcon.y = PartsUI.SELECT_BORDER;
+            this.workstationIcon = Resources.getInstance().getBitmap(SpellKey[SpellKey.SPELL_PLACE_KEY]);
+            let bounds = this.workstationIcon.getBounds();
+            this.workstationIconBgr = new UIBackground();
+            this.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
+            this.workstationIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
+            this.workstationIcon.x = this.workstationIconBgr.x + PartsUI.SELECT_BORDER;
+            this.workstationIcon.y = PartsUI.SELECT_BORDER;
 
-            this.addChild(this.workspaceIconBgr);
-            this.addChild(this.workspaceIcon);
+            this.addChild(this.workstationIconBgr);
+            this.addChild(this.workstationIcon);
+
+            EventBus.getInstance().registerConsumer(EventType.WORKSTATION_UNREACHABLE, (payload: SimpleEventPayload) => {
+                if (self.workstation && self.parent) {
+                    self.hide();
+                }
+                return false;
+            });
 
             EventBus.getInstance().registerConsumer(EventType.WORKSTATION_CHANGE, (payload: NumberEventPayload) => {
                 // pokud to volá uživatel klávesnicí, pak neřeš (payload.payload = undefined)
@@ -94,11 +101,11 @@ namespace Lich {
                     self.show();
                 }
 
-                self.workspaceIcon.image = Resources.getInstance().getImage(payload.payload ? InventoryKey[WORKSTATIONS_ICONS[payload.payload]] : SpellKey[SpellKey.SPELL_PLACE_KEY]);
-                let bounds = self.workspaceIcon.getBounds();
-                self.workspaceIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
-                self.workspaceIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
-                self.workspaceIcon.x = self.workspaceIconBgr.x + PartsUI.SELECT_BORDER;
+                self.workstationIcon.image = Resources.getInstance().getImage(payload.payload ? InventoryKey[WORKSTATIONS_ICONS[payload.payload]] : SpellKey[SpellKey.SPELL_PLACE_KEY]);
+                let bounds = self.workstationIcon.getBounds();
+                self.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
+                self.workstationIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);
+                self.workstationIcon.x = self.workstationIconBgr.x + PartsUI.SELECT_BORDER;
 
                 this.workstation = payload.payload;
 
@@ -170,7 +177,7 @@ namespace Lich {
         }
 
         private measureCacheArea() {
-            let offset = this.workspaceIconBgr.width + PartsUI.SELECT_BORDER + 5;
+            let offset = this.workstationIconBgr.width + PartsUI.SELECT_BORDER + 5;
             this.cache(-offset, -offset,
                 this.width + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5,
                 this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
