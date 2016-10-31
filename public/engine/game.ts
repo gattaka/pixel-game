@@ -278,7 +278,10 @@ namespace Lich {
                         if (self.ui.craftingUI.parent) {
                             self.ui.craftingUI.hide();
                             self.ui.splashScreenUI.suppressToggle();
-                        } else {
+                        } else if (self.ui.minimapUI.parent) {
+                            self.ui.minimapUI.hide();
+                            self.ui.splashScreenUI.suppressToggle();
+                        }else {
                             self.ui.splashScreenUI.toggle();
                         }
                     } else {
