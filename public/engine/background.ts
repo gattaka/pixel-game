@@ -5,13 +5,13 @@ namespace Lich {
         /* CONSTANTS */
         /*-----------*/
         static CLOUDS_SPACE = 150;
-        static REPEAT_POINT = -1500;
 
         static FAR_MOUNTAINS_START = 50
         static MOUNTAINS_START = 250;
         static FAR_HILLS_START = 500;
         static HILLS_START = 650;
         static DIRT_START = 1500;
+        static REPEAT_POINT = - Background.DIRT_START - 300;
 
         /*-----------*/
         /* VARIABLES */
