@@ -7,9 +7,10 @@ namespace Lich {
         static CLOUDS_SPACE = 150;
 
         static FAR_MOUNTAINS_START = 50
-        static MOUNTAINS_START = 250;
-        static FAR_HILLS_START = 500;
-        static HILLS_START = 650;
+        static MOUNTAINS_START = 200;
+        static WOODLAND_STARTS = [400, 480, 540, 620];
+        static WOODLAND_SHIFT_X = [3.8, 3.6, 3.4, 3];
+        static WOODLAND_SHIFT_Y = [6, 5.5, 5, 4];
         static DIRT_START = 1500;
         static REPEAT_POINT = - Background.DIRT_START - 300;
 
@@ -22,10 +23,8 @@ namespace Lich {
         far_mountain_sec;
         mountain;
         mountain_sec;
-        hill;
-        hill_sec;
-        far_hill;
-        far_hill_sec;
+        woodland = [];
+        woodland_sec = [];
         dirt_back;
         dirt_back_start;
         clouds = [];
@@ -51,11 +50,7 @@ namespace Lich {
             self.far_mountain_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_MOUNTAIN_KEY]);
             self.mountain = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
             self.mountain_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.MOUNTAIN_KEY]);
-            self.hill = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
-            self.hill_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.HILL_KEY]);
-            self.far_hill = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
-            self.far_hill_sec = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.FAR_HILL_KEY]);
-            for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
+            for (var i = 1; i <= CLOUDS_BGR_NUMBER; i++) {
                 self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
             }
 
@@ -65,7 +60,17 @@ namespace Lich {
             self.sky.y = 0;
             self.sky.graphics.beginBitmapFill(Resources.getInstance().getImage(BackgroundKey[BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
 
-            var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds).concat([self.mountain, self.mountain_sec, self.far_hill, self.far_hill_sec, self.hill, self.hill_sec]);
+            var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds)
+                .concat([self.mountain, self.mountain_sec]);
+
+            for (var i = 1; i <= WOODLAND_BGR_NUMBER; i++) {
+                let btm = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.WOODLAND_KEY] + i);
+                self.woodland.push(btm);
+                parallaxItems.push(btm);
+                btm = Resources.getInstance().getBitmap(BackgroundKey[BackgroundKey.WOODLAND_KEY] + i);
+                self.woodland_sec.push(btm);
+                parallaxItems.push(btm);
+            }
 
             parallaxItems.forEach(function (entry) {
                 self.content.addChild(entry);
@@ -85,13 +90,11 @@ namespace Lich {
             self.mountain_sec.y = self.mountain.y;
             self.mountain_sec.x = -self.mountain_sec.image.width;
 
-            self.far_hill.y = Background.FAR_HILLS_START;
-            self.far_hill_sec.y = self.far_hill.y;
-            self.far_hill_sec.x = -self.far_hill_sec.image.width;
-
-            self.hill.y = Background.HILLS_START;
-            self.hill_sec.y = self.hill.y;
-            self.hill_sec.x = -self.hill_sec.image.width;
+            for (var i = 0; i < WOODLAND_BGR_NUMBER; i++) {
+                self.woodland[i].y = Background.WOODLAND_STARTS[i];
+                self.woodland_sec[i].y = self.woodland[i].y;
+                self.woodland_sec[i].x = -self.woodland_sec[i].image.width;
+            }
 
             self.dirt_back_startImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]);
             self.dirt_back_start = new createjs.Shape();
@@ -142,11 +145,10 @@ namespace Lich {
             // Mountains
             align(self.mountain, self.mountain_sec, 4, 8);
 
-            // Far Hills 
-            align(self.far_hill, self.far_hill_sec, 3, 5);
-
-            // Hills 
-            align(self.hill, self.hill_sec, 2, 3);
+            // Woodlands
+            for (var i = 0; i < WOODLAND_BGR_NUMBER; i++) {
+                align(self.woodland[i], self.woodland_sec[i], Background.WOODLAND_SHIFT_X[i], Background.WOODLAND_SHIFT_Y[i]);
+            }
 
             // Dirt back
             self.dirt_back.x = ((self.dirt_back.x + distanceX / 1.1) % self.dirt_backImg.width) - self.dirt_backImg.width;

@@ -6,11 +6,10 @@ var Lich;
         BackgroundKey[BackgroundKey["SKY_KEY"] = 2] = "SKY_KEY";
         BackgroundKey[BackgroundKey["FAR_MOUNTAIN_KEY"] = 3] = "FAR_MOUNTAIN_KEY";
         BackgroundKey[BackgroundKey["MOUNTAIN_KEY"] = 4] = "MOUNTAIN_KEY";
-        BackgroundKey[BackgroundKey["FAR_HILL_KEY"] = 5] = "FAR_HILL_KEY";
-        BackgroundKey[BackgroundKey["HILL_KEY"] = 6] = "HILL_KEY";
-        BackgroundKey[BackgroundKey["DIRTBACK_KEY"] = 7] = "DIRTBACK_KEY";
-        BackgroundKey[BackgroundKey["DARKNESS_KEY"] = 8] = "DARKNESS_KEY";
-        BackgroundKey[BackgroundKey["CLOUD_KEY"] = 9] = "CLOUD_KEY";
+        BackgroundKey[BackgroundKey["DIRTBACK_KEY"] = 5] = "DIRTBACK_KEY";
+        BackgroundKey[BackgroundKey["DARKNESS_KEY"] = 6] = "DARKNESS_KEY";
+        BackgroundKey[BackgroundKey["WOODLAND_KEY"] = 7] = "WOODLAND_KEY";
+        BackgroundKey[BackgroundKey["CLOUD_KEY"] = 8] = "CLOUD_KEY";
     })(Lich.BackgroundKey || (Lich.BackgroundKey = {}));
     var BackgroundKey = Lich.BackgroundKey;
     (function (AnimationKey) {
@@ -18,7 +17,8 @@ var Lich;
         AnimationKey[AnimationKey["FIREBALL_ANIMATION_KEY"] = 1] = "FIREBALL_ANIMATION_KEY";
         AnimationKey[AnimationKey["LICH_ANIMATION_KEY"] = 2] = "LICH_ANIMATION_KEY";
         AnimationKey[AnimationKey["CORPSE_ANIMATION_KEY"] = 3] = "CORPSE_ANIMATION_KEY";
-        AnimationKey[AnimationKey["BOLT_ANIMATION_KEY"] = 4] = "BOLT_ANIMATION_KEY";
+        AnimationKey[AnimationKey["HELLHOUND_ANIMATION_KEY"] = 4] = "HELLHOUND_ANIMATION_KEY";
+        AnimationKey[AnimationKey["BOLT_ANIMATION_KEY"] = 5] = "BOLT_ANIMATION_KEY";
     })(Lich.AnimationKey || (Lich.AnimationKey = {}));
     var AnimationKey = Lich.AnimationKey;
     (function (UIGFXKey) {

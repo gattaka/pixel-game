@@ -94,8 +94,6 @@ namespace Lich {
         static PARTS_SIZE = 2 * Resources.TILE_SIZE;
         static PARTS_SHEET_WIDTH = 20;
 
-        static CLOUDS_NUMBER = 5;
-
         /**
          * DEFINICE
          */
@@ -173,6 +171,10 @@ namespace Lich {
             BACKGROUND_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], BackgroundKey[path[1]]));
             });
+            // background
+            BACKGROUND_SETS_PATHS.forEach((path) => {
+                manifest.push(new Load(path[0], path[1]));
+            });
             /**
              * SOUNDS AND MUSIC
              */
@@ -184,12 +186,6 @@ namespace Lich {
             MUSIC_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], MusicKey[path[1]]));
             });
-
-            (function () {
-                for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                    manifest.push(new Load("images/background/cloud" + i + ".png", BackgroundKey[BackgroundKey.CLOUD_KEY] + i));
-                }
-            })();
 
             // nejprve font (nahrává se mimo loader)
             var config: WebFont.Config = {
@@ -263,7 +259,8 @@ namespace Lich {
         };
 
         getBitmap(key: string): createjs.Bitmap {
-            return new createjs.Bitmap(this.getImage(key));
+            let btm = new createjs.Bitmap(this.getImage(key));
+            return btm;
         };
 
         getSpritePart(key: string, tileX: number, tileY: number, count: number, height: number, width: number) {

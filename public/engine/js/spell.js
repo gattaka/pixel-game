@@ -337,7 +337,8 @@ var Lich;
             // var batch = Math.random() * 10;
             var batch = 1;
             for (var e = 0; e < batch; e++) {
-                var enemy = new Lich.Enemy();
+                // var enemy = new Enemy();
+                var enemy = new Lich.EnemyHellhound();
                 context.game.getWorld().enemies.push(enemy);
                 context.game.getWorld().addChild(enemy);
                 if (Math.random() > 0.5 && context.game.getWorld().render.canShiftX(-enemy.width * 2) || context.game.getWorld().render.canShiftX(enemy.width * 2) == false) {

@@ -5,10 +5,9 @@ namespace Lich {
         SKY_KEY,
         FAR_MOUNTAIN_KEY,
         MOUNTAIN_KEY,
-        FAR_HILL_KEY,
-        HILL_KEY,
         DIRTBACK_KEY,
         DARKNESS_KEY,
+        WOODLAND_KEY,
         CLOUD_KEY
     }
 
@@ -17,6 +16,7 @@ namespace Lich {
         FIREBALL_ANIMATION_KEY,
         LICH_ANIMATION_KEY,
         CORPSE_ANIMATION_KEY,
+        HELLHOUND_ANIMATION_KEY,
         BOLT_ANIMATION_KEY
     }
 

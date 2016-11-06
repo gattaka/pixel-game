@@ -3,6 +3,8 @@ var Lich;
     var Background = (function () {
         function Background(game) {
             this.game = game;
+            this.woodland = [];
+            this.woodland_sec = [];
             this.clouds = [];
             // celkový posun
             this.offsetX = 0;
@@ -14,11 +16,7 @@ var Lich;
             self.far_mountain_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_MOUNTAIN_KEY]);
             self.mountain = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.MOUNTAIN_KEY]);
             self.mountain_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.MOUNTAIN_KEY]);
-            self.hill = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.HILL_KEY]);
-            self.hill_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.HILL_KEY]);
-            self.far_hill = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_HILL_KEY]);
-            self.far_hill_sec = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.FAR_HILL_KEY]);
-            for (var i = 1; i <= Lich.Resources.CLOUDS_NUMBER; i++) {
+            for (var i = 1; i <= Lich.CLOUDS_BGR_NUMBER; i++) {
                 self.clouds.push(Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.CLOUD_KEY] + i));
             }
             self.sky = new createjs.Shape();
@@ -26,7 +24,16 @@ var Lich;
             self.sky.x = 0;
             self.sky.y = 0;
             self.sky.graphics.beginBitmapFill(Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
-            var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds).concat([self.mountain, self.mountain_sec, self.far_hill, self.far_hill_sec, self.hill, self.hill_sec]);
+            var parallaxItems = [self.far_mountain, self.far_mountain_sec].concat(self.clouds)
+                .concat([self.mountain, self.mountain_sec]);
+            for (var i = 1; i <= Lich.WOODLAND_BGR_NUMBER; i++) {
+                var btm = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.WOODLAND_KEY] + i);
+                self.woodland.push(btm);
+                parallaxItems.push(btm);
+                btm = Lich.Resources.getInstance().getBitmap(Lich.BackgroundKey[Lich.BackgroundKey.WOODLAND_KEY] + i);
+                self.woodland_sec.push(btm);
+                parallaxItems.push(btm);
+            }
             parallaxItems.forEach(function (entry) {
                 self.content.addChild(entry);
                 entry.y = self.canvas.height - entry.image.height;
@@ -41,12 +48,11 @@ var Lich;
             self.mountain.y = Background.MOUNTAINS_START;
             self.mountain_sec.y = self.mountain.y;
             self.mountain_sec.x = -self.mountain_sec.image.width;
-            self.far_hill.y = Background.FAR_HILLS_START;
-            self.far_hill_sec.y = self.far_hill.y;
-            self.far_hill_sec.x = -self.far_hill_sec.image.width;
-            self.hill.y = Background.HILLS_START;
-            self.hill_sec.y = self.hill.y;
-            self.hill_sec.x = -self.hill_sec.image.width;
+            for (var i = 0; i < Lich.WOODLAND_BGR_NUMBER; i++) {
+                self.woodland[i].y = Background.WOODLAND_STARTS[i];
+                self.woodland_sec[i].y = self.woodland[i].y;
+                self.woodland_sec[i].x = -self.woodland_sec[i].image.width;
+            }
             self.dirt_back_startImg = Lich.Resources.getInstance().getImage(Lich.BackgroundKey[Lich.BackgroundKey.DIRT_BACK_START_KEY]);
             self.dirt_back_start = new createjs.Shape();
             self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, self.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
@@ -85,10 +91,10 @@ var Lich;
             align(self.far_mountain, self.far_mountain_sec, 5, 10);
             // Mountains
             align(self.mountain, self.mountain_sec, 4, 8);
-            // Far Hills 
-            align(self.far_hill, self.far_hill_sec, 3, 5);
-            // Hills 
-            align(self.hill, self.hill_sec, 2, 3);
+            // Woodlands
+            for (var i = 0; i < Lich.WOODLAND_BGR_NUMBER; i++) {
+                align(self.woodland[i], self.woodland_sec[i], Background.WOODLAND_SHIFT_X[i], Background.WOODLAND_SHIFT_Y[i]);
+            }
             // Dirt back
             self.dirt_back.x = ((self.dirt_back.x + distanceX / 1.1) % self.dirt_backImg.width) - self.dirt_backImg.width;
             self.dirt_back.y = self.dirt_back.y + distanceY / 1.1;
@@ -146,9 +152,10 @@ var Lich;
         /*-----------*/
         Background.CLOUDS_SPACE = 150;
         Background.FAR_MOUNTAINS_START = 50;
-        Background.MOUNTAINS_START = 250;
-        Background.FAR_HILLS_START = 500;
-        Background.HILLS_START = 650;
+        Background.MOUNTAINS_START = 200;
+        Background.WOODLAND_STARTS = [400, 480, 540, 620];
+        Background.WOODLAND_SHIFT_X = [3.8, 3.6, 3.4, 3];
+        Background.WOODLAND_SHIFT_Y = [6, 5.5, 5, 4];
         Background.DIRT_START = 1500;
         Background.REPEAT_POINT = -Background.DIRT_START - 300;
         return Background;

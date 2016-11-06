@@ -127,6 +127,10 @@ var Lich;
             Lich.BACKGROUND_PATHS.forEach(function (path) {
                 manifest.push(new Load(path[0], Lich.BackgroundKey[path[1]]));
             });
+            // background
+            Lich.BACKGROUND_SETS_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], path[1]));
+            });
             /**
              * SOUNDS AND MUSIC
              */
@@ -138,11 +142,6 @@ var Lich;
             Lich.MUSIC_PATHS.forEach(function (path) {
                 manifest.push(new Load(path[0], Lich.MusicKey[path[1]]));
             });
-            (function () {
-                for (var i = 1; i <= Resources.CLOUDS_NUMBER; i++) {
-                    manifest.push(new Load("images/background/cloud" + i + ".png", Lich.BackgroundKey[Lich.BackgroundKey.CLOUD_KEY] + i));
-                }
-            })();
             // nejprve font (nahrává se mimo loader)
             var config = {
                 custom: {
@@ -216,7 +215,8 @@ var Lich;
         };
         ;
         Resources.prototype.getBitmap = function (key) {
-            return new createjs.Bitmap(this.getImage(key));
+            var btm = new createjs.Bitmap(this.getImage(key));
+            return btm;
         };
         ;
         Resources.prototype.getSpritePart = function (key, tileX, tileY, count, height, width) {
@@ -284,7 +284,6 @@ var Lich;
         Resources.TILE_SIZE = 16;
         Resources.PARTS_SIZE = 2 * Resources.TILE_SIZE;
         Resources.PARTS_SHEET_WIDTH = 20;
-        Resources.CLOUDS_NUMBER = 5;
         return Resources;
     }());
     Lich.Resources = Resources;
