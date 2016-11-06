@@ -13,14 +13,14 @@ var Lich;
 (function (Lich) {
     var WorldObject = (function (_super) {
         __extends(WorldObject, _super);
-        function WorldObject(item, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset, notificationTimer) {
-            _super.call(this, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+        function WorldObject(item, width, height, spriteSheet, initState, states, collXOffset, collYOffset, notificationTimer) {
+            _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset);
             this.item = item;
             this.width = width;
             this.height = height;
             this.spriteSheet = spriteSheet;
             this.initState = initState;
-            this.stateAnimation = stateAnimation;
+            this.states = states;
             this.collXOffset = collXOffset;
             this.collYOffset = collYOffset;
             this.notificationTimer = notificationTimer;
@@ -52,34 +52,46 @@ var Lich;
             /*------------*/
             /* Dig events */
             /*------------*/
-            var digListener = function (objType, x, y) {
+            var listener = function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var invDef = Lich.Resources.getInstance().invObjectDefs[objType.invObj];
-                        var frames = 1;
-                        if (typeof invDef === "undefined" || invDef == null) {
-                            frames = 1;
-                        }
-                        else {
-                            frames = invDef.frames;
-                        }
-                        var image = Lich.Resources.getInstance().getImage(Lich.InventoryKey[objType.item.invObj]);
-                        var object = new WorldObject(objType.item, image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-                        image.height, Lich.Resources.getInstance().getSpriteSheet(Lich.InventoryKey[objType.invObj], frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
-                        object.speedx = 0;
-                        object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
-                        var coord = self.render.tilesToPixel(x, y);
-                        object.x = coord.x + 10 - Math.random() * 20;
-                        object.y = coord.y;
-                        self.freeObjects.push(object);
-                        self.addChild(object);
+                        self.spawnObject(objType.item, x, y);
                     }
                 }
             };
-            self.render.addOnDigSurfaceListener(digListener);
-            self.render.addOnDigObjectListener(digListener);
+            self.render.addOnDigSurfaceListener(listener);
+            self.render.addOnDigObjectListener(listener);
             console.log("earth ready");
         }
+        World.prototype.spawnObject = function (invItem, x, y, inTiles) {
+            if (inTiles === void 0) { inTiles = true; }
+            var self = this;
+            var invDef = Lich.Resources.getInstance().invObjectDefs[invItem.invObj];
+            var frames = 1;
+            if (typeof invDef === "undefined" || invDef == null) {
+                frames = 1;
+            }
+            else {
+                frames = invDef.frames;
+            }
+            var image = Lich.Resources.getInstance().getImage(Lich.InventoryKey[invItem.invObj]);
+            var object = new WorldObject(invItem, image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
+            image.height, Lich.Resources.getInstance().getSpriteSheet(Lich.InventoryKey[invItem.invObj], frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+            object.speedx = 0;
+            object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
+            if (inTiles) {
+                var coord = self.render.tilesToPixel(x, y);
+                object.x = coord.x + 10 - Math.random() * 20;
+                object.y = coord.y;
+            }
+            else {
+                object.x = x + 10 - Math.random() * 20;
+                object.y = y;
+            }
+            self.freeObjects.push(object);
+            self.addChild(object);
+        };
+        ;
         World.prototype.updateObject = function (sDelta, object, makeShiftX, makeShiftY) {
             var self = this;
             var clsnTest;

@@ -96,11 +96,7 @@ var Lich;
                     "done": [4, 4, "done", 1]
                 }
             });
-            var object = new Lich.BasicBullet(context.owner, self.getFrameWidth(), self.getFrameHeight(), sheet, "fly", "done", {
-                "fly": "fly",
-                "hit": "hit",
-                "done": "done"
-            }, BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
+            var object = new Lich.BasicBullet(context.owner, self.getFrameWidth(), self.getFrameHeight(), sheet, "fly", "done", BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
             self.adjustObjectSpeed(context, object);
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
@@ -337,8 +333,8 @@ var Lich;
             // var batch = Math.random() * 10;
             var batch = 1;
             for (var e = 0; e < batch; e++) {
-                // var enemy = new Enemy();
-                var enemy = new Lich.EnemyHellhound();
+                var enemy = new Lich.Enemy.Redskull();
+                //var enemy = new Enemy.Hellhound();
                 context.game.getWorld().enemies.push(enemy);
                 context.game.getWorld().addChild(enemy);
                 if (Math.random() > 0.5 && context.game.getWorld().render.canShiftX(-enemy.width * 2) || context.game.getWorld().render.canShiftX(enemy.width * 2) == false) {

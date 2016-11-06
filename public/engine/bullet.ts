@@ -11,7 +11,6 @@ namespace Lich {
             public height: number,
             public spriteSheet: createjs.SpriteSheet,
             public initState: string,
-            public stateAnimation: Object,
             public collXOffset: number,
             public collYOffset: number) {
             super(spriteSheet, initState);
@@ -20,7 +19,7 @@ namespace Lich {
         performState(desiredState: string) {
             var self = this;
             if (self.state !== desiredState) {
-                self.gotoAndPlay(self.stateAnimation[desiredState]);
+                self.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }
         }
@@ -48,8 +47,6 @@ namespace Lich {
             public initState: string,
             // koncový stav animace
             public endState: string,
-            // stavy animace
-            public stateAnimation: Object,
             // kolizní tolerance
             public collXOffset: number,
             public collYOffset: number,
@@ -62,7 +59,7 @@ namespace Lich {
             // kolik střela ubírá
             public damage: number
         ) {
-            super(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+            super(width, height, spriteSheet, initState, collXOffset, collYOffset);
         };
 
         public abstract update(sDelta: number, game: Game);
@@ -78,16 +75,15 @@ namespace Lich {
             spriteSheet: createjs.SpriteSheet,
             initState: string,
             endState: string,
-            stateAnimation: Object,
             collXOffset: number,
             collYOffset: number,
             hitSoundKey: SoundKey,
             mapDestroy: boolean,
             piercing: boolean,
             damage: number,
-            private radius?:number,
+            private radius?: number,
         ) {
-            super(owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
+            super(owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
         };
 
         public update(sDelta: number, game: Game) {
@@ -108,7 +104,7 @@ namespace Lich {
                         && x > enemy.x && x < enemy.x + enemy.width
                         && y > enemy.y && y < enemy.y + enemy.height) {
                         enemyRet = new CollisionTestResult(true, x, y);
-                        enemy.hit(self.damage,game.getWorld());
+                        enemy.hit(self.damage, game.getWorld());
                         if (self.piercing == false) {
                             break;
                         }

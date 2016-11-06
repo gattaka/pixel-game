@@ -7,13 +7,12 @@ var Lich;
 (function (Lich) {
     var AbstractWorldObject = (function (_super) {
         __extends(AbstractWorldObject, _super);
-        function AbstractWorldObject(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset) {
+        function AbstractWorldObject(width, height, spriteSheet, initState, collXOffset, collYOffset) {
             _super.call(this, spriteSheet, initState);
             this.width = width;
             this.height = height;
             this.spriteSheet = spriteSheet;
             this.initState = initState;
-            this.stateAnimation = stateAnimation;
             this.collXOffset = collXOffset;
             this.collYOffset = collYOffset;
             this.speedx = 0;
@@ -22,7 +21,7 @@ var Lich;
         AbstractWorldObject.prototype.performState = function (desiredState) {
             var self = this;
             if (self.state !== desiredState) {
-                self.gotoAndPlay(self.stateAnimation[desiredState]);
+                self.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }
         };
@@ -44,8 +43,6 @@ var Lich;
             initState, 
             // koncový stav animace
             endState, 
-            // stavy animace
-            stateAnimation, 
             // kolizní tolerance
             collXOffset, collYOffset, 
             // zvuk dopadu
@@ -56,14 +53,13 @@ var Lich;
             piercing, 
             // kolik střela ubírá
             damage) {
-            _super.call(this, width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+            _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset);
             this.owner = owner;
             this.width = width;
             this.height = height;
             this.spriteSheet = spriteSheet;
             this.initState = initState;
             this.endState = endState;
-            this.stateAnimation = stateAnimation;
             this.collXOffset = collXOffset;
             this.collYOffset = collYOffset;
             this.hitSound = hitSound;
@@ -81,8 +77,8 @@ var Lich;
     Lich.BulletObject = BulletObject;
     var BasicBullet = (function (_super) {
         __extends(BasicBullet, _super);
-        function BasicBullet(owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
-            _super.call(this, owner, width, height, spriteSheet, initState, endState, stateAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
+        function BasicBullet(owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
+            _super.call(this, owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
             this.radius = radius;
         }
         ;

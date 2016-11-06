@@ -109,11 +109,6 @@ namespace Lich {
                 sheet,
                 "fly",
                 "done",
-                {
-                    "fly": "fly",
-                    "hit": "hit",
-                    "done": "done"
-                },
                 BulletSpellDef.COLLXOFFSET,
                 BulletSpellDef.COLLYOFFSET,
                 self.hitSoundKey,
@@ -397,8 +392,8 @@ namespace Lich {
             // var batch = Math.random() * 10;
             var batch = 1;
             for (var e = 0; e < batch; e++) {
-                // var enemy = new Enemy();
-                var enemy = new EnemyHellhound();
+                var enemy = new Enemy.Redskull();
+                //var enemy = new Enemy.Hellhound();
                 context.game.getWorld().enemies.push(enemy);
                 context.game.getWorld().addChild(enemy);
                 if (Math.random() > 0.5 && context.game.getWorld().render.canShiftX(-enemy.width * 2) || context.game.getWorld().render.canShiftX(enemy.width * 2) == false) {

@@ -13,20 +13,64 @@ namespace Lich {
 
         public spellCooldowns = new Table<number>();
 
-        abstract getStateAnimation(state: string);
+        constructor(width: number, height: number,
+            collXOffset: number, collYOffset: number,
+            animationKey: AnimationKey,
+            initState: CharacterState,
+            frames: number,
+            animations: Animations) {
+            super(width, height, new createjs.SpriteSheet({
+                framerate: 10,
+                "images": [Resources.getInstance().getImage(AnimationKey[animationKey])],
+                "frames": {
+                    "regX": 0,
+                    "height": height,
+                    "count": frames,
+                    "regY": 0,
+                    "width": width,
+                },
+                "animations": animations.serialize()
+            }), CharacterState[initState], collXOffset, collYOffset);
+        }
 
-        abstract walkL();
-        abstract walkR();
-        abstract idle();
-        abstract jump();
-        abstract jumpR();
-        abstract jumpL();
-        abstract midair();
-        abstract fall();
-        abstract die(world: World);
+        onHealthChange(difference: number) { };
+        onWillChange(difference: number) { };
 
-        abstract onHealthChange(difference: number);
-        abstract onWillChange(difference: number);
+        walkL() {
+            this.performState(CharacterState.WALKL);
+        }
+
+        walkR() {
+            this.performState(CharacterState.WALKR);
+        }
+
+        idle() {
+            this.performState(CharacterState.IDLE);
+        }
+
+        jump() {
+            this.performState(CharacterState.JUMP);
+        }
+
+        jumpR() {
+            this.performState(CharacterState.JUMPR);
+        }
+
+        jumpL() {
+            this.performState(CharacterState.JUMPL);
+        }
+
+        midair() {
+            this.performState(CharacterState.MIDAIR);
+        }
+
+        fall() {
+            this.performState(CharacterState.FALL);
+        }
+
+        die(world: World) {
+            this.performState(CharacterState.DIE);
+        }
 
         /**
          * Health metody
@@ -131,7 +175,7 @@ namespace Lich {
         performState(desiredState) {
             var self = this;
             if (self.state !== desiredState) {
-                self.gotoAndPlay(self.getStateAnimation(desiredState));
+                self.gotoAndPlay(CharacterState[desiredState]);
                 self.state = desiredState;
             }
         }

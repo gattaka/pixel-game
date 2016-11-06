@@ -13,11 +13,11 @@ namespace Lich {
             public height: number,
             public spriteSheet: createjs.SpriteSheet,
             public initState: string,
-            public stateAnimation: Object,
+            public states: Object,
             public collXOffset: number,
             public collYOffset: number,
             public notificationTimer: number) {
-            super(width, height, spriteSheet, initState, stateAnimation, collXOffset, collYOffset);
+            super(width, height, spriteSheet, initState, collXOffset, collYOffset);
         };
     }
 
@@ -51,7 +51,7 @@ namespace Lich {
         render: Render;
         hero: Hero;
 
-        enemies = new Array<Enemy>();
+        enemies = new Array<AbstractEnemy>();
 
         constructor(public game: Game, public tilesMap: TilesMap) {
             super();
@@ -71,43 +71,54 @@ namespace Lich {
             /*------------*/
             /* Dig events */
             /*------------*/
-            var digListener = function (objType: Diggable, x: number, y: number) {
+
+            let listener = function (objType: Diggable, x: number, y: number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
-                        var invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[objType.invObj];
-                        var frames = 1;
-                        if (typeof invDef === "undefined" || invDef == null) {
-                            frames = 1;
-                        } else {
-                            frames = invDef.frames;
-                        }
-                        var image = Resources.getInstance().getImage(InventoryKey[objType.item.invObj]);
-                        var object = new WorldObject(
-                            objType.item,
-                            image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-                            image.height,
-                            Resources.getInstance().getSpriteSheet(InventoryKey[objType.invObj], frames),
-                            "idle",
-                            { "idle": "idle" },
-                            2,
-                            0,
-                            World.OBJECT_NOTIFY_TIME);
-                        object.speedx = 0;
-                        object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
-                        var coord = self.render.tilesToPixel(x, y);
-                        object.x = coord.x + 10 - Math.random() * 20;
-                        object.y = coord.y;
-                        self.freeObjects.push(object);
-                        self.addChild(object);
+                        self.spawnObject(objType.item, x, y);
                     }
                 }
             };
-            self.render.addOnDigSurfaceListener(digListener);
-            self.render.addOnDigObjectListener(digListener);
+
+            self.render.addOnDigSurfaceListener(listener);
+            self.render.addOnDigObjectListener(listener);
 
             console.log("earth ready");
         }
 
+        spawnObject(invItem: DugObjDefinition, x: number, y: number, inTiles = true) {
+            let self = this;
+            var invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[invItem.invObj];
+            var frames = 1;
+            if (typeof invDef === "undefined" || invDef == null) {
+                frames = 1;
+            } else {
+                frames = invDef.frames;
+            }
+            var image = Resources.getInstance().getImage(InventoryKey[invItem.invObj]);
+            var object = new WorldObject(
+                invItem,
+                image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
+                image.height,
+                Resources.getInstance().getSpriteSheet(InventoryKey[invItem.invObj], frames),
+                "idle",
+                { "idle": "idle" },
+                2,
+                0,
+                World.OBJECT_NOTIFY_TIME);
+            object.speedx = 0;
+            object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
+            if (inTiles) {
+                var coord = self.render.tilesToPixel(x, y);
+                object.x = coord.x + 10 - Math.random() * 20;
+                object.y = coord.y;
+            } else {
+                object.x = x + 10 - Math.random() * 20;
+                object.y = y;
+            }
+            self.freeObjects.push(object);
+            self.addChild(object);
+        };
 
         updateObject(sDelta: number, object: AbstractWorldObject, makeShiftX: (number) => any, makeShiftY: (number) => any) {
             var self = this;
