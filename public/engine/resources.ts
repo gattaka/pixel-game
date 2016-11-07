@@ -171,10 +171,6 @@ namespace Lich {
             BACKGROUND_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], BackgroundKey[path[1]]));
             });
-            // background
-            BACKGROUND_SETS_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], path[1]));
-            });
             /**
              * SOUNDS AND MUSIC
              */

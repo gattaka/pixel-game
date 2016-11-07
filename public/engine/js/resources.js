@@ -127,10 +127,6 @@ var Lich;
             Lich.BACKGROUND_PATHS.forEach(function (path) {
                 manifest.push(new Load(path[0], Lich.BackgroundKey[path[1]]));
             });
-            // background
-            Lich.BACKGROUND_SETS_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], path[1]));
-            });
             /**
              * SOUNDS AND MUSIC
              */

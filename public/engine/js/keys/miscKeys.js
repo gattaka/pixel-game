@@ -8,8 +8,15 @@ var Lich;
         BackgroundKey[BackgroundKey["MOUNTAIN_KEY"] = 4] = "MOUNTAIN_KEY";
         BackgroundKey[BackgroundKey["DIRTBACK_KEY"] = 5] = "DIRTBACK_KEY";
         BackgroundKey[BackgroundKey["DARKNESS_KEY"] = 6] = "DARKNESS_KEY";
-        BackgroundKey[BackgroundKey["WOODLAND_KEY"] = 7] = "WOODLAND_KEY";
-        BackgroundKey[BackgroundKey["CLOUD_KEY"] = 8] = "CLOUD_KEY";
+        BackgroundKey[BackgroundKey["WOODLAND1_KEY"] = 7] = "WOODLAND1_KEY";
+        BackgroundKey[BackgroundKey["WOODLAND2_KEY"] = 8] = "WOODLAND2_KEY";
+        BackgroundKey[BackgroundKey["WOODLAND3_KEY"] = 9] = "WOODLAND3_KEY";
+        BackgroundKey[BackgroundKey["WOODLAND4_KEY"] = 10] = "WOODLAND4_KEY";
+        BackgroundKey[BackgroundKey["CLOUD1_KEY"] = 11] = "CLOUD1_KEY";
+        BackgroundKey[BackgroundKey["CLOUD2_KEY"] = 12] = "CLOUD2_KEY";
+        BackgroundKey[BackgroundKey["CLOUD3_KEY"] = 13] = "CLOUD3_KEY";
+        BackgroundKey[BackgroundKey["CLOUD4_KEY"] = 14] = "CLOUD4_KEY";
+        BackgroundKey[BackgroundKey["CLOUD5_KEY"] = 15] = "CLOUD5_KEY";
     })(Lich.BackgroundKey || (Lich.BackgroundKey = {}));
     var BackgroundKey = Lich.BackgroundKey;
     (function (AnimationKey) {

@@ -7,8 +7,15 @@ namespace Lich {
         MOUNTAIN_KEY,
         DIRTBACK_KEY,
         DARKNESS_KEY,
-        WOODLAND_KEY,
-        CLOUD_KEY
+        WOODLAND1_KEY,
+        WOODLAND2_KEY,
+        WOODLAND3_KEY,
+        WOODLAND4_KEY,
+        CLOUD1_KEY,
+        CLOUD2_KEY,
+        CLOUD3_KEY,
+        CLOUD4_KEY,
+        CLOUD5_KEY
     }
 
     export enum AnimationKey {
