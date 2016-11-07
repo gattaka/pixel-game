@@ -69,6 +69,7 @@ namespace Lich {
         }
 
         die(world: World) {
+            this.speedx = 0;
             this.performState(CharacterState.DIE);
         }
 
@@ -152,22 +153,24 @@ namespace Lich {
 
         updateAnimations() {
             var self = this;
-            if (self.speedx === 0 && self.speedy === 0) {
-                self.idle();
-            } else if (self.speedy !== 0) {
-                if (self.speedx === 0) {
-                    self.jump();
-                } else if (self.speedx > 0) {
-                    self.jumpL();
+            if (this.getCurrentHealth() > 0) {
+                if (self.speedx === 0 && self.speedy === 0) {
+                    self.idle();
+                } else if (self.speedy !== 0) {
+                    if (self.speedx === 0) {
+                        self.jump();
+                    } else if (self.speedx > 0) {
+                        self.jumpL();
+                    } else {
+                        self.jumpR();
+                    }
                 } else {
-                    self.jumpR();
-                }
-            } else {
-                if (self.speedx > 0) {
-                    self.walkL();
-                }
-                if (self.speedx < 0) {
-                    self.walkR();
+                    if (self.speedx > 0) {
+                        self.walkL();
+                    }
+                    if (self.speedx < 0) {
+                        self.walkR();
+                    }
                 }
             }
         }
@@ -181,8 +184,10 @@ namespace Lich {
         }
 
         handleTick(delta) {
-            this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);
-            this.fillWill((delta / this.WILL_REGEN_TIME) * this.willRegen);
+            if (this.getCurrentHealth() > 0) {
+                this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);
+                this.fillWill((delta / this.WILL_REGEN_TIME) * this.willRegen);
+            }
         }
     }
 }

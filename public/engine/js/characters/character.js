@@ -59,6 +59,7 @@ var Lich;
             this.performState(Lich.CharacterState.FALL);
         };
         Character.prototype.die = function (world) {
+            this.speedx = 0;
             this.performState(Lich.CharacterState.DIE);
         };
         /**
@@ -129,26 +130,28 @@ var Lich;
         };
         Character.prototype.updateAnimations = function () {
             var self = this;
-            if (self.speedx === 0 && self.speedy === 0) {
-                self.idle();
-            }
-            else if (self.speedy !== 0) {
-                if (self.speedx === 0) {
-                    self.jump();
+            if (this.getCurrentHealth() > 0) {
+                if (self.speedx === 0 && self.speedy === 0) {
+                    self.idle();
                 }
-                else if (self.speedx > 0) {
-                    self.jumpL();
+                else if (self.speedy !== 0) {
+                    if (self.speedx === 0) {
+                        self.jump();
+                    }
+                    else if (self.speedx > 0) {
+                        self.jumpL();
+                    }
+                    else {
+                        self.jumpR();
+                    }
                 }
                 else {
-                    self.jumpR();
-                }
-            }
-            else {
-                if (self.speedx > 0) {
-                    self.walkL();
-                }
-                if (self.speedx < 0) {
-                    self.walkR();
+                    if (self.speedx > 0) {
+                        self.walkL();
+                    }
+                    if (self.speedx < 0) {
+                        self.walkR();
+                    }
                 }
             }
         };
@@ -160,8 +163,10 @@ var Lich;
             }
         };
         Character.prototype.handleTick = function (delta) {
-            this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);
-            this.fillWill((delta / this.WILL_REGEN_TIME) * this.willRegen);
+            if (this.getCurrentHealth() > 0) {
+                this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);
+                this.fillWill((delta / this.WILL_REGEN_TIME) * this.willRegen);
+            }
         };
         return Character;
     }(Lich.AbstractWorldObject));
