@@ -16,7 +16,7 @@ namespace Lich {
             let canvas = world.game.getCanvas();
             // délky
             let borderWidthInTiles = world.render.pixelsDistanceToTiles(canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
-            let borderHeightInTiles = world.render.pixelsDistanceToTiles(canvas.height) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
+            let borderHeightInTiles = world.render.pixelsDistanceToTiles(canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;
             // počátek 
             let startTiles: Coord2D = world.render.pixelsToTiles(0, 0);
             startTiles.x -= SpawnPool.SPAWN_ZONE_SIZE;
@@ -37,18 +37,22 @@ namespace Lich {
 
                     // je možné nepřítele někam usadit?
                     // projdi vnější okraj obrazovky (tam kde hráč nevidí) a pokud nadješ prostor, 
-                    // kam se nepřítel vejde, proveď spawn
-                    for (let y = startTiles.y; y < startTiles.y + borderHeightInTiles; y++) {
-                        for (let x = startTiles.x; x < startTiles.x + borderWidthInTiles; x++) {
+                    // kam se nepřítel vejde, proveď spawn. Procházej obrazovku zespoda, aby se 
+                    // nepřátelé nespawnovaly ve vzduchu a nepadaly na hráče z rohů obrazovky.
+                    // Zároveň ale nespawnuj pod obrazovkou, aby mohli nepřátelé volně dojít k hráči
+                    // a nemuseli šplhat
+
+                    let tryToSpawn = (x): boolean => {
+                        for (let y = startTiles.y + borderHeightInTiles; y > startTiles.y; y--) {
                             // Pokud nejde o záporné souřadnice nebo mimo rámec
                             if (x < 0 || y < 0 || x >= map.width || y >= map.height)
-                                continue;
+                                return false;
                             // Pokud nejde o viditelnou část obrazovky
                             if (x > startTiles.x + SpawnPool.SPAWN_ZONE_SIZE
                                 && x < startTiles.x + borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE
                                 && y > startTiles.y + SpawnPool.SPAWN_ZONE_SIZE
                                 && y < startTiles.y + borderHeightInTiles - SpawnPool.SPAWN_ZONE_SIZE)
-                                continue;
+                                return false;
 
                             // Pak zkus najít prostor pro nepřítele
                             let fits = true;
@@ -81,12 +85,22 @@ namespace Lich {
                                 world.addChild(enemy);
                                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
                                 enemy.x = x;
-                                enemy.y = y;
+                                enemy.y = y + enHeight;
+                                console.log("SPAWN: " + enemy.x + ":" + enemy.y);
                                 // podařilo se vytvořit a usadit nepřítele, nastav jeho spawn-cooldown
                                 self.spawnCooldownState[i] = self.spawnCooldown[i];
-                                return;
+                                return true;
                             }
                         }
+                    }
+
+                    // Jednou to zkus zleva, jednou zprava
+                    if (Math.random() > 0.5) {
+                        for (let x = startTiles.x; x < startTiles.x + borderWidthInTiles; x++)
+                            if (tryToSpawn(x)) return;
+                    } else {
+                        for (let x = startTiles.x + borderWidthInTiles; x > startTiles.x; x--)
+                            if (tryToSpawn(x)) return;
                     }
                 }
             });
