@@ -86,6 +86,17 @@ namespace Lich {
             console.log("earth ready");
         }
 
+        scheduleEnemyToFade(enemy: AbstractEnemy) {
+            let self = this;
+            createjs.Tween.get(enemy)
+                .to({
+                    alpha: 0
+                }, 5000).call(function () {
+                    self.enemies.splice(enemy.id, 1);
+                    self.removeChild(enemy);
+                });
+        }
+
         spawnObject(invItem: DugObjDefinition, x: number, y: number, inTiles = true) {
             let self = this;
             var invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[invItem.invObj];

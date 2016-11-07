@@ -3,6 +3,8 @@ namespace Lich {
 
         protected currentAttackCooldown = 0;
 
+        public id: number;
+
         constructor(
             protected maxHorizontalSpeed: number,
             protected maxVerticalSpeed: number,

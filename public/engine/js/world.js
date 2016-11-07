@@ -63,6 +63,16 @@ var Lich;
             self.render.addOnDigObjectListener(listener);
             console.log("earth ready");
         }
+        World.prototype.scheduleEnemyToFade = function (enemy) {
+            var self = this;
+            createjs.Tween.get(enemy)
+                .to({
+                alpha: 0
+            }, 5000).call(function () {
+                self.enemies.splice(enemy.id, 1);
+                self.removeChild(enemy);
+            });
+        };
         World.prototype.spawnObject = function (invItem, x, y, inTiles) {
             if (inTiles === void 0) { inTiles = true; }
             var self = this;

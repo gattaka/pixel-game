@@ -39,6 +39,7 @@ namespace Lich {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_SKELETON_DIE_KEY);
                 world.spawnObject(new DugObjDefinition(InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
+                world.scheduleEnemyToFade(this);
             }
 
             hit(damage: number, world: World) {

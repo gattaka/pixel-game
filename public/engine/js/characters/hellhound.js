@@ -39,6 +39,7 @@ var Lich;
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SKELETON_DIE_KEY);
                 world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
+                world.scheduleEnemyToFade(this);
             };
             Hellhound.prototype.hit = function (damage, world) {
                 if (this.currentHealth > 0) {
