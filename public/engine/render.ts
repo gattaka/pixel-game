@@ -799,6 +799,10 @@ namespace Lich {
             self.onDigSurfaceListeners.push(f);
         }
 
+        pixelsDistanceToTiles(x: number): number {
+            return Math.ceil(x / Resources.TILE_SIZE) - 1;
+        }
+
         pixelsToTiles(x: number, y: number): Coord2D {
             var self = this;
             var tileX = Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1;

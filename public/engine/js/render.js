@@ -659,6 +659,9 @@ var Lich;
             var self = this;
             self.onDigSurfaceListeners.push(f);
         };
+        Render.prototype.pixelsDistanceToTiles = function (x) {
+            return Math.ceil(x / Lich.Resources.TILE_SIZE) - 1;
+        };
         Render.prototype.pixelsToTiles = function (x, y) {
             var self = this;
             var tileX = Math.ceil((x - self.screenOffsetX) / Lich.Resources.TILE_SIZE) - 1;

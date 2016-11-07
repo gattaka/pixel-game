@@ -329,23 +329,7 @@ var Lich;
         }
         EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
-            // maximálně 4 najednou
-            // var batch = Math.random() * 10;
-            var batch = 1;
-            for (var e = 0; e < batch; e++) {
-                var enemy = new Lich.Enemy.Redskull();
-                //var enemy = new Enemy.Hellhound();
-                var id = context.game.getWorld().enemies.push(enemy) - 1;
-                enemy.id = id;
-                context.game.getWorld().addChild(enemy);
-                if (Math.random() > 0.5 && context.game.getWorld().render.canShiftX(-enemy.width * 2) || context.game.getWorld().render.canShiftX(enemy.width * 2) == false) {
-                    enemy.x = context.game.getCanvas().width + enemy.width * (Math.random() + 1);
-                }
-                else {
-                    enemy.x = -enemy.width * (Math.random() + 1);
-                }
-                enemy.y = context.game.getCanvas().height / 2;
-            }
+            // SpawnPool !
             return true;
         };
         return EnemySpellDef;

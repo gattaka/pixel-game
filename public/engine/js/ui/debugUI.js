@@ -42,6 +42,12 @@ var Lich;
                 return false;
             });
             this.addNextChild(this.playerLabel);
+            this.enemiesLabel = new Lich.Label("ENEMIES LEFT: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.ENEMY_COUNT_CHANGE, function (data) {
+                self.enemiesLabel.setText("ENEMIES LEFT: " + data.payload);
+                return false;
+            });
+            this.addNextChild(this.enemiesLabel);
         }
         DebugLogUI.prototype.addNextChild = function (child) {
             if (this.height == 0) {

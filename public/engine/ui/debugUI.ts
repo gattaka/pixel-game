@@ -9,6 +9,7 @@ namespace Lich {
         tilesLabel: Label;
         sectorLabel: Label;
         playerLabel: Label;
+        enemiesLabel: Label;
 
         constructor(x: number, y: number) {
             super(x, y);
@@ -48,6 +49,13 @@ namespace Lich {
                 return false;
             });
             this.addNextChild(this.playerLabel);
+
+            this.enemiesLabel = new Label("ENEMIES LEFT: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            EventBus.getInstance().registerConsumer(EventType.ENEMY_COUNT_CHANGE, (data: NumberEventPayload) => {
+                self.enemiesLabel.setText("ENEMIES LEFT: " + data.payload);
+                return false;
+            });
+            this.addNextChild(this.enemiesLabel);
 
         }
         public addNextChild(child: createjs.DisplayObject) {

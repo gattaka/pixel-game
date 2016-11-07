@@ -15,6 +15,7 @@ namespace Lich {
         NEW_WORLD,
         MAP_SHIFT_X,
         MAP_SHIFT_Y,
+        ENEMY_COUNT_CHANGE,
         PLAYER_POSITION_CHANGE,
         SURFACE_CHANGE,
         WORKSTATION_CHANGE,

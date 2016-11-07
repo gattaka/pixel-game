@@ -95,13 +95,15 @@ var Lich;
                 var enemyRet = null;
                 for (var e = 0; e < game.getWorld().enemies.length; e++) {
                     var enemy = game.getWorld().enemies[e];
-                    if (enemy.getCurrentHealth() > 0
-                        && x > enemy.x && x < enemy.x + enemy.width
-                        && y > enemy.y && y < enemy.y + enemy.height) {
-                        enemyRet = new Lich.CollisionTestResult(true, x, y);
-                        enemy.hit(self.damage, game.getWorld());
-                        if (self.piercing == false) {
-                            break;
+                    if (enemy) {
+                        if (enemy.getCurrentHealth() > 0
+                            && x > enemy.x && x < enemy.x + enemy.width
+                            && y > enemy.y && y < enemy.y + enemy.height) {
+                            enemyRet = new Lich.CollisionTestResult(true, x, y);
+                            enemy.hit(self.damage, game.getWorld());
+                            if (self.piercing == false) {
+                                break;
+                            }
                         }
                     }
                 }

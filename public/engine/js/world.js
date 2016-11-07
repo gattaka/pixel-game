@@ -39,7 +39,9 @@ var Lich;
             /*-----------*/
             this.freeObjects = Array();
             this.bulletObjects = Array();
+            this.enemiesCount = 0;
             this.enemies = new Array();
+            this.spawnPool = new Lich.SpawnPool();
             var self = this;
             self.render = new Lich.Render(game, self);
             self.hero = new Lich.Hero();
@@ -69,8 +71,10 @@ var Lich;
                 .to({
                 alpha: 0
             }, 5000).call(function () {
-                self.enemies.splice(enemy.id, 1);
+                self.enemies[enemy.id] = undefined;
                 self.removeChild(enemy);
+                self.enemiesCount--;
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
             });
         };
         World.prototype.spawnObject = function (invItem, x, y, inTiles) {
@@ -174,7 +178,8 @@ var Lich;
             var sDelta = delta / 1000; // ms -> s
             // AI Enemies
             self.enemies.forEach(function (enemy) {
-                enemy.runAI(self, delta);
+                if (enemy)
+                    enemy.runAI(self, delta);
             });
             // Dle kláves nastav rychlosti
             // Nelze akcelerovat nahoru, když už 
@@ -210,7 +215,8 @@ var Lich;
                         item.x += rndDst;
                     });
                     self.enemies.forEach(function (enemy) {
-                        enemy.x += rndDst;
+                        if (enemy)
+                            enemy.x += rndDst;
                     });
                 }
                 else {
@@ -240,7 +246,8 @@ var Lich;
                         item.y += rndDst;
                     });
                     self.enemies.forEach(function (enemy) {
-                        enemy.y += rndDst;
+                        if (enemy)
+                            enemy.y += rndDst;
                     });
                 }
                 else {
@@ -260,14 +267,16 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
             self.enemies.forEach(function (enemy) {
-                // update nepřátel
-                self.updateObject(sDelta, enemy, function (dst) {
-                    var rndDst = Lich.Utils.floor(dst);
-                    enemy.x -= rndDst;
-                }, function (dst) {
-                    var rndDst = Lich.Utils.floor(dst);
-                    enemy.y -= rndDst;
-                });
+                if (enemy) {
+                    // update nepřátel
+                    self.updateObject(sDelta, enemy, function (dst) {
+                        var rndDst = Lich.Utils.floor(dst);
+                        enemy.x -= rndDst;
+                    }, function (dst) {
+                        var rndDst = Lich.Utils.floor(dst);
+                        enemy.y -= rndDst;
+                    });
+                }
             });
             // update projektilů
             (function () {
@@ -500,7 +509,8 @@ var Lich;
             self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
-                enemy.handleTick(delta);
+                if (enemy)
+                    enemy.handleTick(delta);
             });
             // TODO cooldown - delta pro všechny položky spell v hráčovi a všech nepřátel
             var rmbCooldown = self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY];
@@ -512,6 +522,8 @@ var Lich;
                 // Sniž dle delay
                 self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
+            // Spawn
+            self.spawnPool.update(delta, self);
         };
         ;
         /*-----------*/

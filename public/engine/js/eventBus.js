@@ -20,10 +20,11 @@ var Lich;
         EventType[EventType["NEW_WORLD"] = 11] = "NEW_WORLD";
         EventType[EventType["MAP_SHIFT_X"] = 12] = "MAP_SHIFT_X";
         EventType[EventType["MAP_SHIFT_Y"] = 13] = "MAP_SHIFT_Y";
-        EventType[EventType["PLAYER_POSITION_CHANGE"] = 14] = "PLAYER_POSITION_CHANGE";
-        EventType[EventType["SURFACE_CHANGE"] = 15] = "SURFACE_CHANGE";
-        EventType[EventType["WORKSTATION_CHANGE"] = 16] = "WORKSTATION_CHANGE";
-        EventType[EventType["WORKSTATION_UNREACHABLE"] = 17] = "WORKSTATION_UNREACHABLE";
+        EventType[EventType["ENEMY_COUNT_CHANGE"] = 14] = "ENEMY_COUNT_CHANGE";
+        EventType[EventType["PLAYER_POSITION_CHANGE"] = 15] = "PLAYER_POSITION_CHANGE";
+        EventType[EventType["SURFACE_CHANGE"] = 16] = "SURFACE_CHANGE";
+        EventType[EventType["WORKSTATION_CHANGE"] = 17] = "WORKSTATION_CHANGE";
+        EventType[EventType["WORKSTATION_UNREACHABLE"] = 18] = "WORKSTATION_UNREACHABLE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

@@ -51,7 +51,9 @@ namespace Lich {
         render: Render;
         hero: Hero;
 
+        enemiesCount = 0;
         enemies = new Array<AbstractEnemy>();
+        spawnPool = new SpawnPool();
 
         constructor(public game: Game, public tilesMap: TilesMap) {
             super();
@@ -92,8 +94,10 @@ namespace Lich {
                 .to({
                     alpha: 0
                 }, 5000).call(function () {
-                    self.enemies.splice(enemy.id, 1);
+                    self.enemies[enemy.id] = undefined;
                     self.removeChild(enemy);
+                    self.enemiesCount--;
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
                 });
         }
 
@@ -238,7 +242,8 @@ namespace Lich {
 
             // AI Enemies
             self.enemies.forEach(function (enemy) {
-                enemy.runAI(self, delta);
+                if (enemy)
+                    enemy.runAI(self, delta);
             });
 
             // Dle kláves nastav rychlosti
@@ -274,7 +279,8 @@ namespace Lich {
                         item.x += rndDst;
                     });
                     self.enemies.forEach(function (enemy) {
-                        enemy.x += rndDst;
+                        if (enemy)
+                            enemy.x += rndDst;
                     });
                 } else {
                     // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
@@ -303,7 +309,8 @@ namespace Lich {
                         item.y += rndDst;
                     });
                     self.enemies.forEach(function (enemy) {
-                        enemy.y += rndDst;
+                        if (enemy)
+                            enemy.y += rndDst;
                     });
                 } else {
                     // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
@@ -324,16 +331,18 @@ namespace Lich {
             EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
 
             self.enemies.forEach(function (enemy) {
-                // update nepřátel
-                self.updateObject(sDelta, enemy,
-                    function (dst) {
-                        var rndDst = Utils.floor(dst);
-                        enemy.x -= rndDst;
-                    },
-                    function (dst) {
-                        var rndDst = Utils.floor(dst);
-                        enemy.y -= rndDst;
-                    });
+                if (enemy) {
+                    // update nepřátel
+                    self.updateObject(sDelta, enemy,
+                        function (dst) {
+                            var rndDst = Utils.floor(dst);
+                            enemy.x -= rndDst;
+                        },
+                        function (dst) {
+                            var rndDst = Utils.floor(dst);
+                            enemy.y -= rndDst;
+                        });
+                }
             });
 
             // update projektilů
@@ -589,7 +598,8 @@ namespace Lich {
             self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
-                enemy.handleTick(delta);
+                if (enemy)
+                    enemy.handleTick(delta);
             });
 
             // TODO cooldown - delta pro všechny položky spell v hráčovi a všech nepřátel
@@ -602,6 +612,9 @@ namespace Lich {
                 // Sniž dle delay
                 self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
+
+            // Spawn
+            self.spawnPool.update(delta, self);
         };
     }
 
