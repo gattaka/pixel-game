@@ -11,7 +11,7 @@ var Lich;
             _super.call(this, 56, // WIDTH
             80, // HEIGHT 
             16, // COLLXOFFSET
-            16, // COLLYOFFSET
+            12, // COLLYOFFSET
             Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 30, // frames
             Lich.MovementType.WALK, 300, // HERO_HORIZONTAL_SPEED
             500, // HERO_VERTICAL_SPEED
