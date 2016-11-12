@@ -1,4 +1,9 @@
 namespace Lich {
+    export enum MovementType {
+        WALK,
+        FLY,
+        FLY_NO_COLLISION
+    }
     export abstract class Character extends AbstractWorldObject {
 
         protected HEALTH_REGEN_TIME = 1000;
@@ -18,6 +23,9 @@ namespace Lich {
             animationKey: AnimationKey,
             initState: CharacterState,
             frames: number,
+            public type : MovementType,
+            public accelerationX: number,
+            public accelerationY: number,
             animations: Animations) {
             super(width, height, new createjs.SpriteSheet({
                 framerate: 10,

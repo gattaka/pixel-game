@@ -10,15 +10,15 @@ var Lich;
         var Hellhound = (function (_super) {
             __extends(Hellhound, _super);
             function Hellhound() {
-                _super.call(this, 600, // HORIZONTAL_SPEED
-                500, // VERTICAL_SPEED
-                10, // DAMAGE
+                _super.call(this, 10, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 128, // WIDTH
                 86, // HEIGHT 
                 16, // COLLXOFFSET
                 12, // COLLYOFFSET
                 Lich.AnimationKey.HELLHOUND_ANIMATION_KEY, Lich.CharacterState.IDLE, 25, // frames
+                Lich.MovementType.WALK, 600, // HERO_HORIZONTAL_SPEED
+                500, // HERO_VERTICAL_SPEED
                 new Lich.Animations()
                     .add(Lich.CharacterState.IDLE, 22, 24, Lich.CharacterState.IDLE, 0.1)
                     .add(Lich.CharacterState.WALKR, 5, 9, Lich.CharacterState.WALKR, 0.2)

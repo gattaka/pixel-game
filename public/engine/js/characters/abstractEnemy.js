@@ -7,10 +7,8 @@ var Lich;
 (function (Lich) {
     var AbstractEnemy = (function (_super) {
         __extends(AbstractEnemy, _super);
-        function AbstractEnemy(maxHorizontalSpeed, maxVerticalSpeed, damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, animations) {
-            _super.call(this, width, height, collXOffset, collYOffset, animationKey, initState, frames, animations);
-            this.maxHorizontalSpeed = maxHorizontalSpeed;
-            this.maxVerticalSpeed = maxVerticalSpeed;
+        function AbstractEnemy(damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, type, accelerationX, accelerationY, animations) {
+            _super.call(this, width, height, collXOffset, collYOffset, animationKey, initState, frames, type, accelerationX, accelerationY, animations);
             this.damage = damage;
             this.attackCooldown = attackCooldown;
             this.currentAttackCooldown = 0;
@@ -37,7 +35,7 @@ var Lich;
                 else {
                     if (world.hero.x > this.x) {
                         // hráč je vpravo od nepřítele - jdi doprava           
-                        this.speedx = -this.maxHorizontalSpeed / 1.5;
+                        this.speedx = -this.accelerationX / 1.5;
                         // pokud už není ve skoku 
                         if (this.speedy == 0) {
                             var nextX = this.x + this.width - this.collXOffset + Lich.Resources.TILE_SIZE;
@@ -46,13 +44,13 @@ var Lich;
                             if (world.isCollision(nextX, this.y + this.height + Lich.Resources.TILE_SIZE).hit == false
                                 && world.hero.y + world.hero.height <= this.y + this.height
                                 || world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE).hit) {
-                                this.speedy = this.maxVerticalSpeed;
+                                this.speedy = this.accelerationY;
                             }
                         }
                     }
                     else {
                         // hráč je vlevo od nepřítele - jdi doleva
-                        this.speedx = this.maxHorizontalSpeed / 1.5;
+                        this.speedx = this.accelerationX / 1.5;
                         // pokud už není ve skoku 
                         if (this.speedy == 0) {
                             var nextX = this.x + this.collXOffset - Lich.Resources.TILE_SIZE;
@@ -61,7 +59,7 @@ var Lich;
                             if (world.isCollision(nextX, this.y + this.height + Lich.Resources.TILE_SIZE).hit == false
                                 && world.hero.y + world.hero.height <= this.y + this.height
                                 || world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE).hit) {
-                                this.speedy = this.maxVerticalSpeed;
+                                this.speedy = this.accelerationY;
                             }
                         }
                     }

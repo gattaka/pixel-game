@@ -3,8 +3,7 @@ namespace Lich {
         export class Hellhound extends AbstractEnemy {
 
             constructor() {
-                super(600, // HORIZONTAL_SPEED
-                    500, // VERTICAL_SPEED
+                super(
                     10, // DAMAGE
                     1000,// ATTACK_COOLDOWN
                     128, // WIDTH
@@ -14,6 +13,9 @@ namespace Lich {
                     AnimationKey.HELLHOUND_ANIMATION_KEY,
                     CharacterState.IDLE,
                     25, // frames
+                    MovementType.WALK,
+                    600, // HERO_HORIZONTAL_SPEED
+                    500, // HERO_VERTICAL_SPEED
                     new Animations()
                         .add(CharacterState.IDLE, 22, 24, CharacterState.IDLE, 0.1)
                         .add(CharacterState.WALKR, 5, 9, CharacterState.WALKR, 0.2)

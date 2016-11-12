@@ -3,17 +3,19 @@ namespace Lich {
         export class Redskull extends AbstractEnemy {
 
             constructor() {
-                super(200, // HORIZONTAL_SPEED
-                    500, // VERTICAL_SPEED
+                super(
                     5, // DAMAGE
                     1000,// ATTACK_COOLDOWN
                     56, // WIDTH
                     80, // HEIGHT 
-                    14, // COLLXOFFSET
-                    10, // COLLYOFFSET
+                    16, // COLLXOFFSET
+                    16, // COLLYOFFSET
                     AnimationKey.CORPSE_ANIMATION_KEY,
                     CharacterState.IDLE,
                     30, // frames
+                    MovementType.WALK,
+                    200, // HERO_HORIZONTAL_SPEED
+                    500, // HERO_VERTICAL_SPEED
                     new Animations()
                         .add(CharacterState.IDLE, 0, 0, CharacterState.BREATH, 0.005)
                         .add(CharacterState.BREATH, 1, 1, CharacterState.IDLE, 0.04)

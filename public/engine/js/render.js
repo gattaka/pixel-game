@@ -659,20 +659,23 @@ var Lich;
             var self = this;
             self.onDigSurfaceListeners.push(f);
         };
+        // Math.ceil(x)-1 není to samé jako Math.floor(x)
         Render.prototype.pixelsDistanceToTiles = function (x) {
-            return Math.ceil(x / Lich.Resources.TILE_SIZE) - 1;
+            return Math.floor(x / Lich.Resources.TILE_SIZE);
+        };
+        Render.prototype.pixelsDistanceToEvenTiles = function (x) {
+            return Lich.Utils.even(this.pixelsDistanceToTiles(x));
         };
         Render.prototype.pixelsToTiles = function (x, y) {
-            var self = this;
-            var tileX = Math.ceil((x - self.screenOffsetX) / Lich.Resources.TILE_SIZE) - 1;
-            var tileY = Math.ceil((y - self.screenOffsetY) / Lich.Resources.TILE_SIZE) - 1;
+            var tileX = Math.floor((x - this.screenOffsetX) / Lich.Resources.TILE_SIZE);
+            var tileY = Math.floor((y - this.screenOffsetY) / Lich.Resources.TILE_SIZE);
             return new Lich.Coord2D(tileX, tileY);
         };
         Render.prototype.pixelsToEvenTiles = function (x, y) {
-            var self = this;
-            var tileX = Lich.Utils.even(Math.ceil((x - self.screenOffsetX) / Lich.Resources.TILE_SIZE) - 1);
-            var tileY = Lich.Utils.even(Math.ceil((y - self.screenOffsetY) / Lich.Resources.TILE_SIZE) - 1);
-            return new Lich.Coord2D(tileX, tileY);
+            var coord = this.pixelsToTiles(x, y);
+            coord.x = Lich.Utils.even(coord.x);
+            coord.y = Lich.Utils.even(coord.y);
+            return coord;
         };
         Render.prototype.tilesToPixel = function (x, y) {
             var self = this;

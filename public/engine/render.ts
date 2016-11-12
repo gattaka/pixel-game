@@ -799,22 +799,26 @@ namespace Lich {
             self.onDigSurfaceListeners.push(f);
         }
 
+        // Math.ceil(x)-1 není to samé jako Math.floor(x)
         pixelsDistanceToTiles(x: number): number {
-            return Math.ceil(x / Resources.TILE_SIZE) - 1;
+            return Math.floor(x / Resources.TILE_SIZE);
+        }
+
+        pixelsDistanceToEvenTiles(x: number): number {
+            return Utils.even(this.pixelsDistanceToTiles(x));
         }
 
         pixelsToTiles(x: number, y: number): Coord2D {
-            var self = this;
-            var tileX = Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1;
-            var tileY = Math.ceil((y - self.screenOffsetY) / Resources.TILE_SIZE) - 1;
+            var tileX = Math.floor((x - this.screenOffsetX) / Resources.TILE_SIZE);
+            var tileY = Math.floor((y - this.screenOffsetY) / Resources.TILE_SIZE);
             return new Coord2D(tileX, tileY);
         }
 
         pixelsToEvenTiles(x: number, y: number): Coord2D {
-            var self = this;
-            var tileX = Utils.even(Math.ceil((x - self.screenOffsetX) / Resources.TILE_SIZE) - 1);
-            var tileY = Utils.even(Math.ceil((y - self.screenOffsetY) / Resources.TILE_SIZE) - 1);
-            return new Coord2D(tileX, tileY);
+            let coord = this.pixelsToTiles(x, y);
+            coord.x = Utils.even(coord.x);
+            coord.y = Utils.even(coord.y);
+            return coord;
         }
 
         tilesToPixel(x: number, y: number): Coord2D {

@@ -388,6 +388,7 @@ namespace Lich {
             Mixer.playSound(SoundKey.SND_SPAWN_KEY);
 
             // SpawnPool !
+            SpawnPool.getInstance().spawn(Enemy.Redskull, context.game.getWorld())
 
             return true;
         }

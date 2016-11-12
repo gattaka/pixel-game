@@ -5,9 +5,15 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
+    (function (MovementType) {
+        MovementType[MovementType["WALK"] = 0] = "WALK";
+        MovementType[MovementType["FLY"] = 1] = "FLY";
+        MovementType[MovementType["FLY_NO_COLLISION"] = 2] = "FLY_NO_COLLISION";
+    })(Lich.MovementType || (Lich.MovementType = {}));
+    var MovementType = Lich.MovementType;
     var Character = (function (_super) {
         __extends(Character, _super);
-        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, animations) {
+        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, type, accelerationX, accelerationY, animations) {
             _super.call(this, width, height, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[animationKey])],
@@ -20,6 +26,9 @@ var Lich;
                 },
                 "animations": animations.serialize()
             }), Lich.CharacterState[initState], collXOffset, collYOffset);
+            this.type = type;
+            this.accelerationX = accelerationX;
+            this.accelerationY = accelerationY;
             this.HEALTH_REGEN_TIME = 1000;
             this.maxHealth = 100;
             this.currentHealth = this.maxHealth;

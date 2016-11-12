@@ -10,15 +10,15 @@ var Lich;
         var Redskull = (function (_super) {
             __extends(Redskull, _super);
             function Redskull() {
-                _super.call(this, 200, // HORIZONTAL_SPEED
-                500, // VERTICAL_SPEED
-                5, // DAMAGE
+                _super.call(this, 5, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 56, // WIDTH
                 80, // HEIGHT 
-                14, // COLLXOFFSET
-                10, // COLLYOFFSET
+                16, // COLLXOFFSET
+                16, // COLLYOFFSET
                 Lich.AnimationKey.CORPSE_ANIMATION_KEY, Lich.CharacterState.IDLE, 30, // frames
+                Lich.MovementType.WALK, 200, // HERO_HORIZONTAL_SPEED
+                500, // HERO_VERTICAL_SPEED
                 new Lich.Animations()
                     .add(Lich.CharacterState.IDLE, 0, 0, Lich.CharacterState.BREATH, 0.005)
                     .add(Lich.CharacterState.BREATH, 1, 1, Lich.CharacterState.IDLE, 0.04)

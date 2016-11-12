@@ -33,10 +33,6 @@ namespace Lich {
         static OBJECT_PICKUP_FORCE_DISTANCE = 100;
         static OBJECT_PICKUP_FORCE_TIME = 150;
 
-        // Pixel/s
-        static HERO_HORIZONTAL_SPEED = 300;
-        static HERO_VERTICAL_SPEED = 500;
-
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
         static MAX_FREEFALL_SPEED = -1200;
@@ -53,7 +49,6 @@ namespace Lich {
 
         enemiesCount = 0;
         enemies = new Array<AbstractEnemy>();
-        spawnPool = new SpawnPool();
 
         constructor(public game: Game, public tilesMap: TilesMap) {
             super();
@@ -161,7 +156,7 @@ namespace Lich {
                     object.height - object.collYOffset * 2,
                     0,
                     distanceY,
-                    function (x: number, y: number) { return self.isCollision(x, y); }
+                    self.isCollision.bind(self)
                 );
                 if (clsnTest.hit === false) {
                     makeShiftY(distanceY);
@@ -169,15 +164,14 @@ namespace Lich {
                     // zastavil jsem se při stoupání? Začni hned padat
                     if (distanceY > 0) {
                         object.speedy = 0;
+                        // TODO doskoč do stropu, jinak se někdy nebude dá "vskočit" do úzkých oken apod.
                     }
                     // zastavil jsem se při pádu? Konec skoku
                     else {
-
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
                         clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
                         makeShiftY(-1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
-
                         object.speedy = 0;
                     }
                 }
@@ -188,18 +182,20 @@ namespace Lich {
                 var distanceX = Utils.floor(sDelta * object.speedx);
 
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset,
+                clsnTest = self.isBoundsInCollision(
+                    object.x + object.collXOffset,
                     object.y + object.collYOffset,
                     object.width - object.collXOffset * 2,
                     object.height - object.collYOffset * 2,
                     distanceX,
                     0,
-                    function (x: number, y: number) { return self.isCollision(x, y); }
+                    self.isCollision.bind(self)
                 );
+                // bez kolize, proveď posun
                 if (clsnTest.hit === false) {
                     makeShiftX(distanceX);
                 }
-                // zkus zmenšit posun, aby nebyla kolize
+                // kolize, zkus zmenšit posun
                 else {
                     // získej pozici kolizního bloku
                     clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
@@ -213,7 +209,7 @@ namespace Lich {
                 }
             }
 
-            // pokud nejsem zrovna uprostřed skoku...
+            // pokud nejsem zrovna uprostřed skoku 
             if (object.speedy === 0) {
                 // ...a mám kam padat
                 clsnTest = self.isBoundsInCollision(
@@ -223,7 +219,7 @@ namespace Lich {
                     object.height - object.collYOffset * 2,
                     0,
                     -1,
-                    function (x: number, y: number) { return self.isCollision(x, y); }
+                    self.isCollision.bind(this)
                 );
                 if (clsnTest.hit === false) {
                     object.speedy = -1;
@@ -250,16 +246,16 @@ namespace Lich {
             // Nelze akcelerovat nahoru, když už 
             // rychlost mám (nemůžu skákat ve vzduchu)
             if (directions.up && self.hero.speedy === 0) {
-                self.hero.speedy = World.HERO_VERTICAL_SPEED;
+                self.hero.speedy = self.hero.accelerationY;
             } else if (directions.down) {
-                self.hero.speedy = World.HERO_VERTICAL_SPEED;
+                self.hero.speedy = self.hero.accelerationY;
             }
 
             // Horizontální akcelerace
             if (directions.left) {
-                self.hero.speedx = World.HERO_HORIZONTAL_SPEED;
+                self.hero.speedx = self.hero.accelerationX;
             } else if (directions.right) {
-                self.hero.speedx = -World.HERO_HORIZONTAL_SPEED;
+                self.hero.speedx = -self.hero.accelerationX;
             } else {
                 self.hero.speedx = 0;
             }
@@ -430,46 +426,63 @@ namespace Lich {
          * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje, 
          * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem. 
          */
-        isBoundsInCollision(x: number, y: number, fullWidth: number, fullHeight: number, fullXShift: number, fullYShift: number,
+        isBoundsInCollision(x: number, y: number, objectWidth: number, objectHeight: number, objectXShift: number, objectYShift: number,
             collisionTester: (x: number, y: number) => CollisionTestResult): CollisionTestResult {
             var self = this;
             var tx;
             var ty;
 
+            // korekce překlenutí -- při kontrole rozměrů dochází k přeskoku na další tile, který
+            // může vyhodit kolizi, ačkoliv v něm objekt není. Důvod je, že objekt o šířce 1 tile
+            // usazená na nějaké tile x má součet x+1 jako další tile. Nejde fixně ignorovat 1 tile
+            // rozměru objektu, protože se počítá s collisionOffset, takže výslená šířka není násobek
+            // tiles. Řešením tak je odebrat 1px, aby se nepřeklenulo do dalšího tile mapy.
+            let TILE_FIX = 1;
+
             // kolize se musí dělat iterativně pro každý bod v TILE_SIZE podél hran objektu
-            var xShift = 0;
-            var yShift = 0;
-            var width = 0;
-            var height = 0;
-            var xSign = Utils.sign(fullXShift);
-            var ySign = Utils.sign(fullYShift);
+            var xShift = 0; // iterace posuvu (+/-)
+            var yShift = 0; // iterace posuvu (+/-)
+            var width = 0; // iterace šířky posouvaného objetku
+            var height = 0; // iterace výšky posouvaného objetku
+            var xSign = Utils.sign(objectXShift);
+            var ySign = Utils.sign(objectYShift);
 
             // pokud bude zadán fullXShift i fullYShift, udělá to diagonální posuv
-            while (xShift !== fullXShift || yShift !== fullYShift) {
-                if (xSign * (xShift + xSign * Resources.TILE_SIZE) > xSign * fullXShift) {
-                    xShift = fullXShift;
+            // Iteruj v kontrolách posuvu po Resources.TILE_SIZE přírůstcích, dokud nebude
+            // docíleno celého posunu (zabraňuje "teleportaci" )
+            while (xShift !== objectXShift || yShift !== objectYShift) {
+                // kontrola velikosti iterace posuvu X (zapsaná v kladných číslech)
+                if (xSign * xShift + Resources.TILE_SIZE > xSign * objectXShift) {
+                    xShift = objectXShift;
                 } else {
                     xShift += xSign * Resources.TILE_SIZE;
                 }
-
-                if (ySign * (yShift + ySign * Resources.TILE_SIZE) > ySign * fullYShift) {
-                    yShift = fullYShift;
+                // kontrola velikosti iterace posuvu Y (zapsaná v kladných číslech)
+                if (ySign * (yShift + ySign * Resources.TILE_SIZE) > ySign * objectYShift) {
+                    yShift = objectYShift;
                 } else {
                     yShift += ySign * Resources.TILE_SIZE;
                 }
 
+                // iterativní kontroly ve výšce a šířce posouvaného objektu 
+                // zabraňuje "napíchnutní" posouvaného objektu na kolizní objekt)
+                // v případě, že posouvaný objekt je například širší než kolizní plocha 
+                // na kterou padá -- jeho krají body tak v kolizi nebudou, ale střed ano
                 width = 0;
-                while (width !== fullWidth) {
-                    if (width + Resources.TILE_SIZE > fullWidth) {
-                        width = fullWidth;
+                // Musím iterovat s "dorazem" (nakonec se přičte zbytek do celku) aby 
+                // fungoval collisionOffset -- ten totiž je v pixels nikoliv v tiles
+                // bez collisionOffset by nebylo možné dělt sprite přesahy
+                while (width !== objectWidth) {
+                    if (width + Resources.TILE_SIZE > objectWidth) {
+                        width = objectWidth;
                     } else {
                         width += Resources.TILE_SIZE;
                     }
 
                     height = 0;
-                    while (height !== fullHeight) {
-                        if (height + Resources.TILE_SIZE > fullHeight) {
-                            height = fullHeight;
+                    while (height !== objectHeight) {
+                        if (height + Resources.TILE_SIZE > objectHeight) {
+                            height = objectHeight;
                         } else {
                             height += Resources.TILE_SIZE;
                         }
@@ -483,7 +496,7 @@ namespace Lich {
                         }
 
                         if (xShift < 0 || yShift > 0) {
-                            tx = x + width - xShift;
+                            tx = x + width - TILE_FIX - xShift;
                             ty = y - yShift;
                             var RT = collisionTester(tx, ty);
                             if (RT.hit)
@@ -492,21 +505,21 @@ namespace Lich {
 
                         if (xShift > 0 || yShift < 0) {
                             tx = x - xShift;
-                            ty = y + height - yShift;
+                            ty = y + height - TILE_FIX - yShift;
                             var LB = collisionTester(tx, ty);
                             if (LB.hit)
                                 return LB;
                         }
 
                         if (xShift < 0 || yShift < 0) {
-                            tx = x + width - xShift;
-                            ty = y + height - yShift;
+                            tx = x + width - TILE_FIX - xShift;
+                            ty = y + height - TILE_FIX - yShift;
                             var RB = collisionTester(tx, ty);
                             if (RB.hit)
                                 return RB;
                         }
 
-                        if (xShift === fullXShift && yShift === fullYShift && width === fullWidth && height === fullHeight) {
+                        if (xShift === objectXShift && yShift === objectYShift && width === objectWidth && height === objectHeight) {
                             return new CollisionTestResult(false);
                         }
 
@@ -613,8 +626,8 @@ namespace Lich {
                 self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
 
-            // Spawn
-            self.spawnPool.update(delta, self);
+            // Spawn TODO
+            //SpawnPool.getInstance().update(delta, self);
         };
     }
 
