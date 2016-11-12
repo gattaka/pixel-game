@@ -23,7 +23,7 @@ namespace Lich {
             animationKey: AnimationKey,
             initState: CharacterState,
             frames: number,
-            public type : MovementType,
+            public type: MovementType,
             public accelerationX: number,
             public accelerationY: number,
             animations: Animations) {
@@ -85,7 +85,7 @@ namespace Lich {
          * Health metody
          */
 
-        hit(damage: number, world: World) {
+        hit(damage: number, world: World): number {
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
                 this.currentHealth -= damage;
@@ -95,6 +95,8 @@ namespace Lich {
                 }
             }
             this.onHealthChange(this.currentHealth - oldValue);
+            // TODO zatím nemá armor, takže se aplikuje vše
+            return damage;
         }
 
         fillHealth(amount: number) {

@@ -84,6 +84,8 @@ var Lich;
                 }
             }
             this.onHealthChange(this.currentHealth - oldValue);
+            // TODO zatím nemá armor, takže se aplikuje vše
+            return damage;
         };
         Character.prototype.fillHealth = function (amount) {
             if (this.currentHealth < this.maxHealth) {

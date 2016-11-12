@@ -39,13 +39,14 @@ var Lich;
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SKELETON_DIE_KEY);
                 world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
-                world.scheduleEnemyToFade(this);
+                world.fadeEnemy(this);
             };
             Hellhound.prototype.hit = function (damage, world) {
                 if (this.currentHealth > 0) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_BONECRACK_KEY);
                 }
                 _super.prototype.hit.call(this, damage, world);
+                return damage;
             };
             return Hellhound;
         }(Lich.AbstractEnemy));

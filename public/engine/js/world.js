@@ -39,6 +39,7 @@ var Lich;
             /*-----------*/
             this.freeObjects = Array();
             this.bulletObjects = Array();
+            this.labelObjects = new Array();
             this.enemiesCount = 0;
             this.enemies = new Array();
             var self = this;
@@ -64,7 +65,7 @@ var Lich;
             self.render.addOnDigObjectListener(listener);
             console.log("earth ready");
         }
-        World.prototype.scheduleEnemyToFade = function (enemy) {
+        World.prototype.fadeEnemy = function (enemy) {
             var self = this;
             createjs.Tween.get(enemy)
                 .to({
@@ -74,6 +75,35 @@ var Lich;
                 self.removeChild(enemy);
                 self.enemiesCount--;
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
+            });
+        };
+        World.prototype.fadeText = function (text, x, y, size, color, outlineColor) {
+            if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
+            if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
+            if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
+            var self = this;
+            var label = new Lich.Label(text, size + "px " + Lich.Resources.FONT, color, true, outlineColor, 1);
+            self.addChild(label);
+            label.x = x;
+            label.y = y;
+            label["tweenY"] = 0;
+            label["virtualY"] = y;
+            var id = 0;
+            for (id = 0; id < self.labelObjects.length; id++) {
+                // buď najdi volné místo...
+                if (!self.labelObjects[id]) {
+                    break;
+                }
+            }
+            // ...nebo vlož položku na konec pole
+            self.labelObjects[id] = label;
+            createjs.Tween.get(label)
+                .to({
+                alpha: 0,
+                tweenY: -100
+            }, 1000).call(function () {
+                self.labelObjects[id] = undefined;
+                self.removeChild(label);
             });
         };
         World.prototype.spawnObject = function (invItem, x, y, inTiles) {
@@ -200,6 +230,11 @@ var Lich;
             else {
                 self.hero.speedx = 0;
             }
+            self.labelObjects.forEach(function (item) {
+                if (item) {
+                    item.y = item["virtualY"] + item["tweenY"];
+                }
+            });
             var makeShiftX = function (dst) {
                 var rndDst = Lich.Utils.floor(dst);
                 var canvasCenterX = self.game.getCanvas().width / 2;
@@ -208,6 +243,10 @@ var Lich;
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftX(rndDst);
                     self.game.getBackground().shift(rndDst, 0);
+                    self.labelObjects.forEach(function (item) {
+                        if (item)
+                            item.x += rndDst;
+                    });
                     self.freeObjects.forEach(function (item) {
                         item.x += rndDst;
                     });
@@ -239,6 +278,10 @@ var Lich;
                     // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
                     self.render.shiftY(rndDst);
                     self.game.getBackground().shift(0, rndDst);
+                    self.labelObjects.forEach(function (item) {
+                        if (item)
+                            item["virtualY"] += rndDst;
+                    });
                     self.freeObjects.forEach(function (item) {
                         item.y += rndDst;
                     });

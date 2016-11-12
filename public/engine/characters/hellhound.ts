@@ -41,14 +41,15 @@ namespace Lich {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_SKELETON_DIE_KEY);
                 world.spawnObject(new DugObjDefinition(InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
-                world.scheduleEnemyToFade(this);
+                world.fadeEnemy(this);
             }
 
-            hit(damage: number, world: World) {
+            hit(damage: number, world: World): number {
                 if (this.currentHealth > 0) {
                     Mixer.playSound(SoundKey.SND_BONECRACK_KEY);
                 }
                 super.hit(damage, world);
+                return damage;
             }
 
         }

@@ -100,7 +100,8 @@ var Lich;
                             && x > enemy.x && x < enemy.x + enemy.width
                             && y > enemy.y && y < enemy.y + enemy.height) {
                             enemyRet = new Lich.CollisionTestResult(true, x, y);
-                            enemy.hit(self.damage, game.getWorld());
+                            var effectiveDamage = enemy.hit(self.damage, game.getWorld());
+                            game.getWorld().fadeText("-" + effectiveDamage, enemy.x + enemy.width * Math.random(), enemy.y, 25, "#E30", "#500");
                             if (self.piercing == false) {
                                 break;
                             }
