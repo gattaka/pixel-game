@@ -46,5 +46,8 @@ namespace Lich {
         [[InventoryKey.INV_IRON_FENCE_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY],
+        [[InventoryKey.INV_PLATFORM_KEY, 1], [
+            [InventoryKey.INV_IRON_INGOT_KEY, 1],
+        ], MapObjectKey.MAP_ANVIL_KEY]
     ]
 }

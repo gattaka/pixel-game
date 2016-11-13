@@ -28,6 +28,7 @@ var Lich;
         ["images/ui/inventory/inv_anvil.png", Lich.InventoryKey.INV_ANVIL_KEY],
         ["images/ui/inventory/inv_smelter.png", Lich.InventoryKey.INV_SMELTER_KEY],
         ["images/ui/inventory/inv_iron_ingot.png", Lich.InventoryKey.INV_IRON_INGOT_KEY],
-        ["images/ui/inventory/inv_iron_fence.png", Lich.InventoryKey.INV_IRON_FENCE_KEY]
+        ["images/ui/inventory/inv_iron_fence.png", Lich.InventoryKey.INV_IRON_FENCE_KEY],
+        ["images/ui/inventory/inv_platform.png", Lich.InventoryKey.INV_PLATFORM_KEY]
     ];
 })(Lich || (Lich = {}));

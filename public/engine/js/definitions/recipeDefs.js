@@ -46,5 +46,8 @@ var Lich;
         [[Lich.InventoryKey.INV_IRON_FENCE_KEY, 5], [
                 [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
             ], Lich.MapObjectKey.MAP_ANVIL_KEY],
+        [[Lich.InventoryKey.INV_PLATFORM_KEY, 1], [
+                [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
+            ], Lich.MapObjectKey.MAP_ANVIL_KEY]
     ];
 })(Lich || (Lich = {}));

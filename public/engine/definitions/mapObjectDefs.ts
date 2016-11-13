@@ -47,6 +47,7 @@ namespace Lich {
             }).setFrames(3),
         new MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
+        new MapObjDefinition(MapObjectKey.MAP_PLATFORM_KEY, 4, 2, InventoryKey.INV_PLATFORM_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
             function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {

@@ -46,6 +46,7 @@ var Lich;
         }).setFrames(3),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, Lich.InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, Lich.InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLATFORM_KEY, 4, 2, Lich.InventoryKey.INV_PLATFORM_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TORCH_KEY, 2, 2, Lich.InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, Lich.InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
             game.getWorld().render.digObject(rx, ry, false);

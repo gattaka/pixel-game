@@ -16,6 +16,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_SMELTER_KEY, res.mapObjectDefs[MapObjectKey.MAP_SMELTER_KEY]),
             new InvObjDefinition(InventoryKey.INV_IRON_INGOT_KEY, res.mapObjectDefs[MapObjectKey.MAP_IRON_INGOT_KEY]),
             new InvObjDefinition(InventoryKey.INV_IRON_FENCE_KEY, res.mapObjectDefs[MapObjectKey.MAP_IRON_FENCE_KEY]),
+            new InvObjDefinition(InventoryKey.INV_PLATFORM_KEY, res.mapObjectDefs[MapObjectKey.MAP_PLATFORM_KEY]),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
 

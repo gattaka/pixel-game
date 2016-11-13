@@ -27,6 +27,7 @@ namespace Lich {
         ["images/parts/anvil.png", MapObjectKey.MAP_ANVIL_KEY],
         ["images/parts/smelter.png", MapObjectKey.MAP_SMELTER_KEY],
         ["images/parts/iron_ingot.png", MapObjectKey.MAP_IRON_INGOT_KEY],
-         ["images/parts/iron_fence.png", MapObjectKey.MAP_IRON_FENCE_KEY],
+        ["images/parts/iron_fence.png", MapObjectKey.MAP_IRON_FENCE_KEY],
+        ["images/parts/platform.png", MapObjectKey.MAP_PLATFORM_KEY]
     ];
 }
