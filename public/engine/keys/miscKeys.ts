@@ -31,6 +31,7 @@ namespace Lich {
         PLAYER_ICON_KEY,
         // misc.
         SKULL_KEY,
+        GAME_OVER_KEY,
         HELMET_KEY,
         TORSO_KEY,
         GAUNTLET_KEY,
@@ -79,7 +80,12 @@ namespace Lich {
         SND_DOOR_CLOSE_KEY,
         SND_CRAFT_KEY,
         SND_CLICK_KEY,
-        SND_TELEPORT_KEY
+        SND_TELEPORT_KEY,
+        SND_GHOUL_SPAWN_KEY,
+        SND_PUNCH_1_KEY,
+        SND_PUNCH_2_KEY,
+        SND_PUNCH_3_KEY,
+        SND_PUNCH_4_KEY
     }
 
     export enum MusicKey {

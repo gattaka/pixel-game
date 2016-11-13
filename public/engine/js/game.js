@@ -7,6 +7,7 @@ var Lich;
             this.keys = {};
             this.mouse = new Lich.Mouse();
             var self = this;
+            Game.CURRENT_GAME = self;
             /*------------*/
             /* Stage init */
             /*------------*/

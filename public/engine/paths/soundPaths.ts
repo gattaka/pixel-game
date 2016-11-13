@@ -17,6 +17,11 @@ namespace Lich {
         ["sound/click.ogg", SoundKey.SND_CLICK_KEY],
         ["sound/meteor_fall.ogg", SoundKey.SND_METEOR_FALL_KEY],
         ["sound/meteor_hit.ogg", SoundKey.SND_METEOR_HIT_KEY],
-        ["sound/teleport.ogg", SoundKey.SND_TELEPORT_KEY]
+        ["sound/teleport.ogg", SoundKey.SND_TELEPORT_KEY],
+        ["sound/ghoul_spawn.ogg", SoundKey.SND_GHOUL_SPAWN_KEY],
+        ["sound/punch1.ogg", SoundKey.SND_PUNCH_1_KEY],
+        ["sound/punch2.ogg", SoundKey.SND_PUNCH_2_KEY],
+        ["sound/punch3.ogg", SoundKey.SND_PUNCH_3_KEY],
+        ["sound/punch4.ogg", SoundKey.SND_PUNCH_4_KEY]
     ]
 }

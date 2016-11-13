@@ -3,6 +3,7 @@ namespace Lich {
         // misc
         ["images/characters/player_icon.png", UIGFXKey.PLAYER_ICON_KEY],
         ["images/ui/skull.png", UIGFXKey.SKULL_KEY],
+        ["images/ui/dead_again.png", UIGFXKey.GAME_OVER_KEY],
         ["images/ui/sound.png", UIGFXKey.UI_SOUND_KEY],
         ["images/ui/up.png", UIGFXKey.UI_UP_KEY],
         ["images/ui/down.png", UIGFXKey.UI_DOWN_KEY],

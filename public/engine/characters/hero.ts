@@ -51,7 +51,6 @@ namespace Lich {
         die(world: World) {
             super.die;
             world.showDeadInfo();
-            world.resetPlayer();
         }
 
     }

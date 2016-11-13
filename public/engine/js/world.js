@@ -80,26 +80,41 @@ var Lich;
         World.prototype.resetPlayer = function () {
             this.hero.x = this.game.getCanvas().width / 2;
             this.hero.y = this.game.getCanvas().height / 2;
+            this.hero.fillHealth(this.hero.getMaxHealth());
+            this.hero.fillWill(this.hero.getMaxWill());
+            this.hero.idle();
             // TODO dle waypointu hráče
             this.shiftWorldTo(0, 0);
         };
         World.prototype.showDeadInfo = function () {
+            var self = this;
+            var deadInfo = new createjs.Container();
+            this.addChild(deadInfo);
             var shape = new createjs.Shape();
             shape.width = this.game.getCanvas().width;
             shape.height = this.game.getCanvas().height;
-            shape.graphics.beginFill("rgba(10,50,10,0.2)");
+            shape.graphics.beginFill("rgba(10,10,10,0.9)");
             shape.graphics.drawRect(0, 0, shape.width, shape.height);
             shape.x = 0;
             shape.y = 0;
-            this.addChild(shape);
-            var label = new Lich.Label("R.I.P.", 50 + "px " + Lich.Resources.FONT, "#F55", true, "#A55", 2);
-            label.x = shape.width / 2;
-            label.y = shape.height / 2;
-            this.addChild(label);
-            var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey.SKULL_KEY[Lich.UIGFXKey.SKULL_KEY]);
-            bitmap.x = label.x + 50;
-            bitmap.y = label.y;
-            this.addChild(bitmap);
+            deadInfo.addChild(shape);
+            var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.GAME_OVER_KEY]);
+            var bounds = bitmap.getBounds();
+            bitmap.x = shape.width / 2 - bounds.width / 2;
+            bitmap.y = shape.height / 2 - bounds.height / 2;
+            deadInfo.addChild(bitmap);
+            deadInfo.alpha = 0;
+            createjs.Tween.get(deadInfo)
+                .to({
+                alpha: 1
+            }, 200).wait(3000).call(function () {
+                self.resetPlayer();
+                Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
+            }).to({
+                alpha: 0
+            }, 200).call(function () {
+                self.removeChild(deadInfo);
+            });
         };
         World.prototype.fadeText = function (text, x, y, size, color, outlineColor) {
             if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
@@ -291,24 +306,27 @@ var Lich;
                 if (enemy)
                     enemy.runAI(self, delta);
             });
-            // Dle kláves nastav rychlosti
-            // Nelze akcelerovat nahoru, když už 
-            // rychlost mám (nemůžu skákat ve vzduchu)
-            if (directions.up && self.hero.speedy === 0) {
-                self.hero.speedy = self.hero.accelerationY;
-            }
-            else if (directions.down) {
-                self.hero.speedy = self.hero.accelerationY;
-            }
-            // Horizontální akcelerace
-            if (directions.left) {
-                self.hero.speedx = self.hero.accelerationX;
-            }
-            else if (directions.right) {
-                self.hero.speedx = -self.hero.accelerationX;
-            }
-            else {
-                self.hero.speedx = 0;
+            // Je-li hráč naživu, vnímej ovládání
+            if (self.hero.getCurrentHealth() > 0) {
+                // Dle kláves nastav rychlosti
+                // Nelze akcelerovat nahoru, když už 
+                // rychlost mám (nemůžu skákat ve vzduchu)
+                if (directions.up && self.hero.speedy === 0) {
+                    self.hero.speedy = self.hero.accelerationY;
+                }
+                else if (directions.down) {
+                    self.hero.speedy = self.hero.accelerationY;
+                }
+                // Horizontální akcelerace
+                if (directions.left) {
+                    self.hero.speedx = self.hero.accelerationX;
+                }
+                else if (directions.right) {
+                    self.hero.speedx = -self.hero.accelerationX;
+                }
+                else {
+                    self.hero.speedx = 0;
+                }
             }
             self.labelObjects.forEach(function (item) {
                 if (item) {
@@ -352,24 +370,26 @@ var Lich;
                         object.x -= rndX;
                         object.y -= rndY;
                     });
-                    var heroCenterX = self.hero.x + self.hero.width / 2;
-                    var heroCenterY = self.hero.y + self.hero.height / 2;
-                    var itemCenterX = object.x + object.width / 2;
-                    var itemCenterY = object.y + object.height / 2;
                     // zjisti, zda hráč objekt nesebral
-                    if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                        self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
-                        self.freeObjects.splice(i, 1);
-                        self.removeChild(object);
-                        Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, false, 0.2);
-                        object = null;
-                    }
-                    if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
-                        createjs.Tween.get(object)
-                            .to({
-                            x: heroCenterX - object.width / 2,
-                            y: heroCenterY - object.height / 2
-                        }, World.OBJECT_PICKUP_FORCE_TIME);
+                    if (self.hero.getCurrentHealth() > 0) {
+                        var heroCenterX = self.hero.x + self.hero.width / 2;
+                        var heroCenterY = self.hero.y + self.hero.height / 2;
+                        var itemCenterX = object.x + object.width / 2;
+                        var itemCenterY = object.y + object.height / 2;
+                        if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
+                            self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
+                            self.freeObjects.splice(i, 1);
+                            self.removeChild(object);
+                            Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, false, 0.2);
+                            object = null;
+                        }
+                        if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
+                            createjs.Tween.get(object)
+                                .to({
+                                x: heroCenterX - object.width / 2,
+                                y: heroCenterY - object.height / 2
+                            }, World.OBJECT_PICKUP_FORCE_TIME);
+                        }
                     }
                 }
             })();
@@ -508,44 +528,46 @@ var Lich;
         ;
         World.prototype.handleMouse = function (mouse, delta) {
             var self = this;
-            // je prováděna interakce s objektem?
-            if (mouse.rightDown) {
-                var rmbSpellDef = Lich.Resources.getInstance().interactSpellDef;
-                // Může se provést (cooldown je pryč)?
-                var rmbCooldown = self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY];
-                if (!rmbCooldown || rmbCooldown <= 0) {
-                    var heroCenterX = self.hero.x + self.hero.width / 2;
-                    var heroCenterY = self.hero.y + self.hero.height / 4;
-                    // zkus cast
-                    if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
-                        // ok, cast se provedl, nastav nový cooldown 
-                        self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
+            if (self.hero.getCurrentHealth() > 0) {
+                // je prováděna interakce s objektem?
+                if (mouse.rightDown) {
+                    var rmbSpellDef = Lich.Resources.getInstance().interactSpellDef;
+                    // Může se provést (cooldown je pryč)?
+                    var rmbCooldown = self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY];
+                    if (!rmbCooldown || rmbCooldown <= 0) {
+                        var heroCenterX = self.hero.x + self.hero.width / 2;
+                        var heroCenterY = self.hero.y + self.hero.height / 4;
+                        // zkus cast
+                        if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                            // ok, cast se provedl, nastav nový cooldown 
+                            self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
+                        }
                     }
                 }
-            }
-            // je vybrán spell?
-            // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
-            var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
-            if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
-                var spellDef = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[choosenSpell]);
-                // provádím spell za hráče, takže kontroluji jeho cooldown
-                var cooldown = self.hero.spellCooldowns[choosenSpell];
-                // ještě nebyl použit? Takže je v pořádku a může se provést
-                if (typeof cooldown === "undefined") {
-                    cooldown = 0;
-                    self.hero.spellCooldowns[choosenSpell] = 0;
-                }
-                // Sniž dle delay
-                self.hero.spellCooldowns[choosenSpell] -= delta;
-                // Může se provést (cooldown je pryč, mám will a chci cast) ?
-                if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                    var heroCenterX_1 = self.hero.x + self.hero.width / 2;
-                    var heroCenterY_1 = self.hero.y + self.hero.height / 4;
-                    // zkus cast
-                    if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
-                        // ok, cast se provedl, nastav nový cooldown a odeber will
-                        self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
-                        self.hero.decreseWill(spellDef.cost);
+                // je vybrán spell?
+                // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
+                var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
+                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                    var spellDef = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[choosenSpell]);
+                    // provádím spell za hráče, takže kontroluji jeho cooldown
+                    var cooldown = self.hero.spellCooldowns[choosenSpell];
+                    // ještě nebyl použit? Takže je v pořádku a může se provést
+                    if (typeof cooldown === "undefined") {
+                        cooldown = 0;
+                        self.hero.spellCooldowns[choosenSpell] = 0;
+                    }
+                    // Sniž dle delay
+                    self.hero.spellCooldowns[choosenSpell] -= delta;
+                    // Může se provést (cooldown je pryč, mám will a chci cast) ?
+                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
+                        var heroCenterX_1 = self.hero.x + self.hero.width / 2;
+                        var heroCenterY_1 = self.hero.y + self.hero.height / 4;
+                        // zkus cast
+                        if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
+                            // ok, cast se provedl, nastav nový cooldown a odeber will
+                            self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                            self.hero.decreseWill(spellDef.cost);
+                        }
                     }
                 }
             }

@@ -347,7 +347,7 @@ var Lich;
             _super.call(this, Lich.SpellKey.SPELL_ENEMY_KEY, 0, 200);
         }
         EnemySpellDef.prototype.cast = function (context) {
-            Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
+            Lich.Mixer.playSound(Lich.SoundKey.SND_GHOUL_SPAWN_KEY);
             // SpawnPool !
             Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Redskull, context.game.getWorld());
             return true;

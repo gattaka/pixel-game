@@ -3,6 +3,8 @@
 namespace Lich {
     export class Game {
 
+        static CURRENT_GAME: Game;
+
         private canvas: HTMLCanvasElement;
         private stage: createjs.Stage;
         private content: createjs.Container;
@@ -26,6 +28,8 @@ namespace Lich {
         constructor(canvasId: string) {
 
             var self = this;
+
+            Game.CURRENT_GAME = self;
 
             /*------------*/
             /* Stage init */
@@ -281,7 +285,7 @@ namespace Lich {
                         } else if (self.ui.minimapUI.parent) {
                             self.ui.minimapUI.hide();
                             self.ui.splashScreenUI.suppressToggle();
-                        }else {
+                        } else {
                             self.ui.splashScreenUI.toggle();
                         }
                     } else {

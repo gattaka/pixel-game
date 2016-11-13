@@ -18,6 +18,11 @@ var Lich;
         ["sound/click.ogg", Lich.SoundKey.SND_CLICK_KEY],
         ["sound/meteor_fall.ogg", Lich.SoundKey.SND_METEOR_FALL_KEY],
         ["sound/meteor_hit.ogg", Lich.SoundKey.SND_METEOR_HIT_KEY],
-        ["sound/teleport.ogg", Lich.SoundKey.SND_TELEPORT_KEY]
+        ["sound/teleport.ogg", Lich.SoundKey.SND_TELEPORT_KEY],
+        ["sound/ghoul_spawn.ogg", Lich.SoundKey.SND_GHOUL_SPAWN_KEY],
+        ["sound/punch1.ogg", Lich.SoundKey.SND_PUNCH_1_KEY],
+        ["sound/punch2.ogg", Lich.SoundKey.SND_PUNCH_2_KEY],
+        ["sound/punch3.ogg", Lich.SoundKey.SND_PUNCH_3_KEY],
+        ["sound/punch4.ogg", Lich.SoundKey.SND_PUNCH_4_KEY]
     ];
 })(Lich || (Lich = {}));

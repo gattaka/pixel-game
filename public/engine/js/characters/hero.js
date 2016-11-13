@@ -43,7 +43,6 @@ var Lich;
         Hero.prototype.die = function (world) {
             _super.prototype.die;
             world.showDeadInfo();
-            world.resetPlayer();
         };
         /*-----------*/
         /* CONSTANTS */

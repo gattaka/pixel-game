@@ -32,19 +32,20 @@ var Lich;
         UIGFXKey[UIGFXKey["PLAYER_ICON_KEY"] = 0] = "PLAYER_ICON_KEY";
         // misc.
         UIGFXKey[UIGFXKey["SKULL_KEY"] = 1] = "SKULL_KEY";
-        UIGFXKey[UIGFXKey["HELMET_KEY"] = 2] = "HELMET_KEY";
-        UIGFXKey[UIGFXKey["TORSO_KEY"] = 3] = "TORSO_KEY";
-        UIGFXKey[UIGFXKey["GAUNTLET_KEY"] = 4] = "GAUNTLET_KEY";
+        UIGFXKey[UIGFXKey["GAME_OVER_KEY"] = 2] = "GAME_OVER_KEY";
+        UIGFXKey[UIGFXKey["HELMET_KEY"] = 3] = "HELMET_KEY";
+        UIGFXKey[UIGFXKey["TORSO_KEY"] = 4] = "TORSO_KEY";
+        UIGFXKey[UIGFXKey["GAUNTLET_KEY"] = 5] = "GAUNTLET_KEY";
         // buttons
-        UIGFXKey[UIGFXKey["UI_SOUND_KEY"] = 5] = "UI_SOUND_KEY";
-        UIGFXKey[UIGFXKey["UI_UP_KEY"] = 6] = "UI_UP_KEY";
-        UIGFXKey[UIGFXKey["UI_DOWN_KEY"] = 7] = "UI_DOWN_KEY";
-        UIGFXKey[UIGFXKey["UI_LEFT_KEY"] = 8] = "UI_LEFT_KEY";
-        UIGFXKey[UIGFXKey["UI_RIGHT_KEY"] = 9] = "UI_RIGHT_KEY";
-        UIGFXKey[UIGFXKey["UI_CRAFT_KEY"] = 10] = "UI_CRAFT_KEY";
-        UIGFXKey[UIGFXKey["UI_SAVE_KEY"] = 11] = "UI_SAVE_KEY";
-        UIGFXKey[UIGFXKey["UI_LOAD_KEY"] = 12] = "UI_LOAD_KEY";
-        UIGFXKey[UIGFXKey["UI_NEW_WORLD_KEY"] = 13] = "UI_NEW_WORLD_KEY";
+        UIGFXKey[UIGFXKey["UI_SOUND_KEY"] = 6] = "UI_SOUND_KEY";
+        UIGFXKey[UIGFXKey["UI_UP_KEY"] = 7] = "UI_UP_KEY";
+        UIGFXKey[UIGFXKey["UI_DOWN_KEY"] = 8] = "UI_DOWN_KEY";
+        UIGFXKey[UIGFXKey["UI_LEFT_KEY"] = 9] = "UI_LEFT_KEY";
+        UIGFXKey[UIGFXKey["UI_RIGHT_KEY"] = 10] = "UI_RIGHT_KEY";
+        UIGFXKey[UIGFXKey["UI_CRAFT_KEY"] = 11] = "UI_CRAFT_KEY";
+        UIGFXKey[UIGFXKey["UI_SAVE_KEY"] = 12] = "UI_SAVE_KEY";
+        UIGFXKey[UIGFXKey["UI_LOAD_KEY"] = 13] = "UI_LOAD_KEY";
+        UIGFXKey[UIGFXKey["UI_NEW_WORLD_KEY"] = 14] = "UI_NEW_WORLD_KEY";
     })(Lich.UIGFXKey || (Lich.UIGFXKey = {}));
     var UIGFXKey = Lich.UIGFXKey;
     (function (SpellKey) {
@@ -80,6 +81,11 @@ var Lich;
         SoundKey[SoundKey["SND_CRAFT_KEY"] = 15] = "SND_CRAFT_KEY";
         SoundKey[SoundKey["SND_CLICK_KEY"] = 16] = "SND_CLICK_KEY";
         SoundKey[SoundKey["SND_TELEPORT_KEY"] = 17] = "SND_TELEPORT_KEY";
+        SoundKey[SoundKey["SND_GHOUL_SPAWN_KEY"] = 18] = "SND_GHOUL_SPAWN_KEY";
+        SoundKey[SoundKey["SND_PUNCH_1_KEY"] = 19] = "SND_PUNCH_1_KEY";
+        SoundKey[SoundKey["SND_PUNCH_2_KEY"] = 20] = "SND_PUNCH_2_KEY";
+        SoundKey[SoundKey["SND_PUNCH_3_KEY"] = 21] = "SND_PUNCH_3_KEY";
+        SoundKey[SoundKey["SND_PUNCH_4_KEY"] = 22] = "SND_PUNCH_4_KEY";
     })(Lich.SoundKey || (Lich.SoundKey = {}));
     var SoundKey = Lich.SoundKey;
     (function (MusicKey) {

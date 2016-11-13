@@ -78,6 +78,20 @@ var Lich;
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
                 this.currentHealth -= damage;
+                switch (Math.floor(Math.random() * 4)) {
+                    case 0:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_1_KEY);
+                        break;
+                    case 1:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_2_KEY);
+                        break;
+                    case 2:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_3_KEY);
+                        break;
+                    case 3:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_4_KEY);
+                        break;
+                }
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
                     this.die(world);

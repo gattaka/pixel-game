@@ -4,6 +4,7 @@ var Lich;
         // misc
         ["images/characters/player_icon.png", Lich.UIGFXKey.PLAYER_ICON_KEY],
         ["images/ui/skull.png", Lich.UIGFXKey.SKULL_KEY],
+        ["images/ui/dead_again.png", Lich.UIGFXKey.GAME_OVER_KEY],
         ["images/ui/sound.png", Lich.UIGFXKey.UI_SOUND_KEY],
         ["images/ui/up.png", Lich.UIGFXKey.UI_UP_KEY],
         ["images/ui/down.png", Lich.UIGFXKey.UI_DOWN_KEY],

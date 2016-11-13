@@ -26,6 +26,9 @@ namespace Lich {
             version = new Version("0.9");
             version.addChange("Enemy AI improved");
             version.addChange("Enemy spawning fixed");
+            version.addChange("Enemy loot");
+            version.addChange("Enemies can kill");
+            version.addChange("Teleport spell introduced");
             version.addChange("Sprites light improved");
             version.addChange("New background");
             this.addVersion(version);
