@@ -264,6 +264,26 @@ namespace Lich {
     }
 
     /**
+     * Předek všech spell definic, které jsou závislé na dosahovém rádiusu od hráče
+     */
+    export class TeleportSpellDef extends SpellDefinition {
+
+        static COOLDOWN = 200;
+        static COST = 20;
+
+        constructor() {
+            super(SpellKey.SPELL_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
+        }
+
+        public cast(context: SpellContext): boolean {
+            let world = context.game.getWorld();
+            world.shiftWorldTo(0, 0);
+            Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
+            return false;
+        }
+    }
+
+    /**
      * Spell pro interakci objektů a povrchů z mapy
      */
     export class MapObjectsInteractionSpellDef extends HeroReachSpellDef {

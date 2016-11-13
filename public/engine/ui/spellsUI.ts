@@ -2,7 +2,7 @@ namespace Lich {
 
     export class SpellsUI extends PartsUI {
 
-        static N = 6;
+        static N = 7;
         static M = 1;
 
         toggleFlag = false;
@@ -27,6 +27,7 @@ namespace Lich {
             self.spellInsert(SpellKey.SPELL_METEOR_KEY);
             self.spellInsert(SpellKey.SPELL_BOLT_KEY);
             self.spellInsert(SpellKey.SPELL_ENEMY_KEY);
+            self.spellInsert(SpellKey.SPELL_TELEPORT_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Highlight();

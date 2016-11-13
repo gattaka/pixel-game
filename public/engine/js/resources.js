@@ -191,7 +191,8 @@ var Lich;
                 new Lich.PlaceSpellDef(),
                 new Lich.PlaceBgrSpellDef(),
                 new Lich.BoltSpellDef(),
-                new Lich.EnemySpellDef()
+                new Lich.EnemySpellDef(),
+                new Lich.TeleportSpellDef()
             ];
             SPELL_DEFS.forEach(function (definition) {
                 self.spellDefs.insert(Lich.SpellKey[definition.key], definition);

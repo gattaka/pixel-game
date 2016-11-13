@@ -242,7 +242,8 @@ namespace Lich {
                 new PlaceSpellDef(),
                 new PlaceBgrSpellDef(),
                 new BoltSpellDef(),
-                new EnemySpellDef()
+                new EnemySpellDef(),
+                new TeleportSpellDef()
             ];
             SPELL_DEFS.forEach((definition) => {
                 self.spellDefs.insert(SpellKey[definition.key], definition);

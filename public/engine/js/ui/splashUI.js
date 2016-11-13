@@ -21,6 +21,12 @@ var Lich;
         function Changelog() {
             this.versions = new Lich.Table();
             var version;
+            version = new Version("0.9");
+            version.addChange("Enemy AI improved");
+            version.addChange("Enemy spawning fixed");
+            version.addChange("Sprites light improved");
+            version.addChange("New background");
+            this.addVersion(version);
             version = new Version("0.8");
             version.addChange("Iron fence introduced");
             version.addChange("Workstations");

@@ -48,5 +48,11 @@ namespace Lich {
             EventBus.getInstance().fireEvent(new WillChangeEventPayload(this.maxWill, this.currentWill));
         };
 
+        die(world: World) {
+            super.die;
+            world.showDeadInfo();
+            world.resetPlayer();
+        }
+
     }
 }

@@ -16,6 +16,7 @@ namespace Lich {
         ["sound/craft.ogg", SoundKey.SND_CRAFT_KEY],
         ["sound/click.ogg", SoundKey.SND_CLICK_KEY],
         ["sound/meteor_fall.ogg", SoundKey.SND_METEOR_FALL_KEY],
-        ["sound/meteor_hit.ogg", SoundKey.SND_METEOR_HIT_KEY]
+        ["sound/meteor_hit.ogg", SoundKey.SND_METEOR_HIT_KEY],
+        ["sound/teleport.ogg", SoundKey.SND_TELEPORT_KEY]
     ]
 }

@@ -55,6 +55,7 @@ namespace Lich {
         SPELL_METEOR_KEY,
         SPELL_BOLT_KEY,
         SPELL_ENEMY_KEY,
+        SPELL_TELEPORT_KEY,
 
         // RMB click interakce s objekty
         SPELL_INTERACT_KEY
@@ -77,7 +78,8 @@ namespace Lich {
         SND_DOOR_OPEN_KEY,
         SND_DOOR_CLOSE_KEY,
         SND_CRAFT_KEY,
-        SND_CLICK_KEY
+        SND_CLICK_KEY,
+        SND_TELEPORT_KEY
     }
 
     export enum MusicKey {

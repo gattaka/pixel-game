@@ -77,6 +77,30 @@ var Lich;
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
             });
         };
+        World.prototype.resetPlayer = function () {
+            this.hero.x = this.game.getCanvas().width / 2;
+            this.hero.y = this.game.getCanvas().height / 2;
+            // TODO dle waypointu hráče
+            this.shiftWorldTo(0, 0);
+        };
+        World.prototype.showDeadInfo = function () {
+            var shape = new createjs.Shape();
+            shape.width = this.game.getCanvas().width;
+            shape.height = this.game.getCanvas().height;
+            shape.graphics.beginFill("rgba(10,50,10,0.2)");
+            shape.graphics.drawRect(0, 0, shape.width, shape.height);
+            shape.x = 0;
+            shape.y = 0;
+            this.addChild(shape);
+            var label = new Lich.Label("R.I.P.", 50 + "px " + Lich.Resources.FONT, "#F55", true, "#A55", 2);
+            label.x = shape.width / 2;
+            label.y = shape.height / 2;
+            this.addChild(label);
+            var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey.SKULL_KEY[Lich.UIGFXKey.SKULL_KEY]);
+            bitmap.x = label.x + 50;
+            bitmap.y = label.y;
+            this.addChild(bitmap);
+        };
         World.prototype.fadeText = function (text, x, y, size, color, outlineColor) {
             if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
             if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
@@ -135,7 +159,7 @@ var Lich;
             self.addChild(object);
         };
         ;
-        World.prototype.updateObject = function (sDelta, object, makeShiftX, makeShiftY) {
+        World.prototype.updateObject = function (sDelta, object, makeShift) {
             var self = this;
             var clsnTest;
             var clsnPosition;
@@ -153,7 +177,7 @@ var Lich;
                 // Nenarazím na překážku?
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self));
                 if (clsnTest.hit === false) {
-                    makeShiftY(distanceY);
+                    makeShift(0, distanceY);
                 }
                 else {
                     // zastavil jsem se při stoupání? Začni hned padat
@@ -164,7 +188,7 @@ var Lich;
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
                         clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
-                        makeShiftY(-1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
+                        makeShift(0, -1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
                         object.speedy = 0;
                     }
                 }
@@ -175,18 +199,18 @@ var Lich;
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self));
                 // bez kolize, proveď posun
                 if (clsnTest.hit === false) {
-                    makeShiftX(distanceX);
+                    makeShift(distanceX, 0);
                 }
                 else {
                     // získej pozici kolizního bloku
                     clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
                     if (distanceX > 0) {
                         // narazil jsem do něj zprava
-                        makeShiftX(object.x + object.collXOffset - (clsnPosition.x + Lich.Resources.TILE_SIZE) - 1);
+                        makeShift(object.x + object.collXOffset - (clsnPosition.x + Lich.Resources.TILE_SIZE) - 1, 0);
                     }
                     else {
                         // narazil jsem do něj zleva
-                        makeShiftX(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1));
+                        makeShift(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1), 0);
                     }
                 }
             }
@@ -203,6 +227,62 @@ var Lich;
             }
         };
         ;
+        World.prototype.shiftWorldBy = function (shiftX, shiftY) {
+            var self = this;
+            var rndDstX = Lich.Utils.floor(shiftX);
+            var rndDstY = Lich.Utils.floor(shiftY);
+            var canvasCenterX = self.game.getCanvas().width / 2;
+            var canvasCenterY = self.game.getCanvas().height / 2;
+            var willShiftX = self.render.canShiftX(rndDstX) && self.hero.x == canvasCenterX;
+            var willShiftY = self.render.canShiftY(rndDstY) && self.hero.y == canvasCenterY;
+            self.render.shiftSectorsBy(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
+            self.game.getBackground().shift(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
+            var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
+            self.labelObjects.forEach(function (item) {
+                if (item) {
+                    if (willShiftX)
+                        item.x += rndDstX;
+                    if (willShiftY)
+                        item["virtualY"] += rndDstY;
+                }
+            });
+            toShift.forEach(function (items) {
+                items.forEach(function (item) {
+                    if (item) {
+                        if (willShiftX)
+                            item.x += rndDstX;
+                        if (willShiftY)
+                            item.y += rndDstY;
+                    }
+                });
+            });
+            if (!willShiftX) {
+                // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
+                // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
+                if (self.hero.x > canvasCenterX && self.hero.x - rndDstX < canvasCenterX
+                    || self.hero.x < canvasCenterX && self.hero.x - rndDstX > canvasCenterX) {
+                    self.hero.x = canvasCenterX;
+                }
+                else {
+                    self.hero.x -= rndDstX;
+                }
+            }
+            if (!willShiftY) {
+                if (self.hero.y > canvasCenterY && self.hero.y - rndDstY < canvasCenterY
+                    || self.hero.y < canvasCenterY && self.hero.y - rndDstY > canvasCenterY) {
+                    self.hero.y = canvasCenterY;
+                }
+                else {
+                    self.hero.y -= rndDstY;
+                }
+            }
+        };
+        ;
+        World.prototype.shiftWorldTo = function (x, y) {
+            var shiftX = x - this.render.getScreenOffsetX();
+            var shiftY = y - this.render.getScreenOffsetY();
+            this.shiftWorldBy(shiftX, shiftY);
+        };
         World.prototype.update = function (delta, directions) {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
@@ -235,89 +315,18 @@ var Lich;
                     item.y = item["virtualY"] + item["tweenY"];
                 }
             });
-            var makeShiftX = function (dst) {
-                var rndDst = Lich.Utils.floor(dst);
-                var canvasCenterX = self.game.getCanvas().width / 2;
-                if (self.render.canShiftX(rndDst) && self.hero.x == canvasCenterX) {
-                    // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
-                    // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
-                    self.render.shiftX(rndDst);
-                    self.game.getBackground().shift(rndDst, 0);
-                    self.labelObjects.forEach(function (item) {
-                        if (item)
-                            item.x += rndDst;
-                    });
-                    self.freeObjects.forEach(function (item) {
-                        item.x += rndDst;
-                    });
-                    self.bulletObjects.forEach(function (item) {
-                        item.x += rndDst;
-                    });
-                    self.enemies.forEach(function (enemy) {
-                        if (enemy)
-                            enemy.x += rndDst;
-                    });
-                }
-                else {
-                    // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
-                    // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
-                    if (self.hero.x > canvasCenterX && self.hero.x - rndDst < canvasCenterX
-                        || self.hero.x < canvasCenterX && self.hero.x - rndDst > canvasCenterX) {
-                        self.hero.x = canvasCenterX;
-                    }
-                    else {
-                        self.hero.x -= rndDst;
-                    }
-                }
-            };
-            var makeShiftY = function (dst) {
-                var rndDst = Lich.Utils.floor(dst);
-                var canvasCenterY = self.game.getCanvas().height / 2;
-                if (self.render.canShiftY(rndDst) && self.hero.y == canvasCenterY) {
-                    // pokud je možné scénu posunout a hráč je uprostřed obrazovky, 
-                    // posuň všechno co na ní je až na hráče (ten zůstává uprostřed)               
-                    self.render.shiftY(rndDst);
-                    self.game.getBackground().shift(0, rndDst);
-                    self.labelObjects.forEach(function (item) {
-                        if (item)
-                            item["virtualY"] += rndDst;
-                    });
-                    self.freeObjects.forEach(function (item) {
-                        item.y += rndDst;
-                    });
-                    self.bulletObjects.forEach(function (item) {
-                        item.y += rndDst;
-                    });
-                    self.enemies.forEach(function (enemy) {
-                        if (enemy)
-                            enemy.y += rndDst;
-                    });
-                }
-                else {
-                    // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
-                    // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
-                    if (self.hero.y > canvasCenterY && self.hero.y - rndDst < canvasCenterY
-                        || self.hero.y < canvasCenterY && self.hero.y - rndDst > canvasCenterY) {
-                        self.hero.y = canvasCenterY;
-                    }
-                    else {
-                        self.hero.y -= rndDst;
-                    }
-                }
-            };
             // update hráče
-            self.updateObject(sDelta, self.hero, makeShiftX, makeShiftY);
+            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self));
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
+            // update nepřátel
             self.enemies.forEach(function (enemy) {
                 if (enemy) {
-                    // update nepřátel
-                    self.updateObject(sDelta, enemy, function (dst) {
-                        var rndDst = Lich.Utils.floor(dst);
-                        enemy.x -= rndDst;
-                    }, function (dst) {
-                        var rndDst = Lich.Utils.floor(dst);
-                        enemy.y -= rndDst;
+                    self.updateObject(sDelta, enemy, function (x, y) {
+                        var rndX = Lich.Utils.floor(x);
+                        var rndY = Lich.Utils.floor(y);
+                        enemy.x -= rndX;
+                        enemy.y -= rndY;
                     });
                 }
             });
@@ -337,10 +346,11 @@ var Lich;
                 for (var i = 0; i < self.freeObjects.length; i++) {
                     var object = self.freeObjects[i];
                     // pohni objekty
-                    self.updateObject(sDelta, object, function (x) {
-                        object.x -= x;
-                    }, function (y) {
-                        object.y -= y;
+                    self.updateObject(sDelta, object, function (x, y) {
+                        var rndX = Lich.Utils.floor(x);
+                        var rndY = Lich.Utils.floor(y);
+                        object.x -= rndX;
+                        object.y -= rndY;
                     });
                     var heroCenterX = self.hero.x + self.hero.width / 2;
                     var heroCenterY = self.hero.y + self.hero.height / 2;

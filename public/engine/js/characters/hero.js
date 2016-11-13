@@ -40,6 +40,11 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.WillChangeEventPayload(this.maxWill, this.currentWill));
         };
         ;
+        Hero.prototype.die = function (world) {
+            _super.prototype.die;
+            world.showDeadInfo();
+            world.resetPlayer();
+        };
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/

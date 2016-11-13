@@ -47,6 +47,12 @@ var Lich;
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();
         }
+        Render.prototype.getScreenOffsetX = function () {
+            return this.screenOffsetX;
+        };
+        Render.prototype.getScreenOffsetY = function () {
+            return this.screenOffsetY;
+        };
         // zkoumá, zda je potřeba přealokovat sektory 
         Render.prototype.updateSectors = function () {
             var self = this;
@@ -218,15 +224,6 @@ var Lich;
             var self = this;
             return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.tilesMap.width * Lich.Resources.TILE_SIZE + self.game.getCanvas().width;
         };
-        Render.prototype.shiftSectorsX = function (dst) {
-            var self = this;
-            self.screenOffsetX += dst;
-            self.sectorsCont.children.forEach(function (sector) {
-                sector.x += dst;
-            });
-            self.updateSectors();
-            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_X, self.screenOffsetX));
-        };
         /**
          * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
          */
@@ -234,13 +231,16 @@ var Lich;
             var self = this;
             return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.tilesMap.height * Lich.Resources.TILE_SIZE + self.game.getCanvas().height;
         };
-        Render.prototype.shiftSectorsY = function (dst) {
+        Render.prototype.shiftSectorsBy = function (shiftX, shiftY) {
             var self = this;
-            self.screenOffsetY += dst;
+            self.screenOffsetX += shiftX;
+            self.screenOffsetY += shiftY;
             self.sectorsCont.children.forEach(function (sector) {
-                sector.y += dst;
+                sector.x += shiftX;
+                sector.y += shiftY;
             });
             self.updateSectors();
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_X, self.screenOffsetX));
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_Y, self.screenOffsetY));
         };
         Render.prototype.markSector = function (sector) {
@@ -633,14 +633,6 @@ var Lich;
                 }
             }
             return false;
-        };
-        Render.prototype.shiftX = function (dst) {
-            var self = this;
-            self.shiftSectorsX(dst);
-        };
-        Render.prototype.shiftY = function (dst) {
-            var self = this;
-            self.shiftSectorsY(dst);
         };
         Render.prototype.handleTick = function () {
             var self = this;

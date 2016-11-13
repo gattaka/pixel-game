@@ -204,6 +204,25 @@ var Lich;
     }(SpellDefinition));
     Lich.HeroReachSpellDef = HeroReachSpellDef;
     /**
+     * Předek všech spell definic, které jsou závislé na dosahovém rádiusu od hráče
+     */
+    var TeleportSpellDef = (function (_super) {
+        __extends(TeleportSpellDef, _super);
+        function TeleportSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
+        }
+        TeleportSpellDef.prototype.cast = function (context) {
+            var world = context.game.getWorld();
+            world.shiftWorldTo(0, 0);
+            Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
+            return false;
+        };
+        TeleportSpellDef.COOLDOWN = 200;
+        TeleportSpellDef.COST = 20;
+        return TeleportSpellDef;
+    }(SpellDefinition));
+    Lich.TeleportSpellDef = TeleportSpellDef;
+    /**
      * Spell pro interakci objektů a povrchů z mapy
      */
     var MapObjectsInteractionSpellDef = (function (_super) {

@@ -17,6 +17,7 @@ var Lich;
         ["sound/craft.ogg", Lich.SoundKey.SND_CRAFT_KEY],
         ["sound/click.ogg", Lich.SoundKey.SND_CLICK_KEY],
         ["sound/meteor_fall.ogg", Lich.SoundKey.SND_METEOR_FALL_KEY],
-        ["sound/meteor_hit.ogg", Lich.SoundKey.SND_METEOR_HIT_KEY]
+        ["sound/meteor_hit.ogg", Lich.SoundKey.SND_METEOR_HIT_KEY],
+        ["sound/teleport.ogg", Lich.SoundKey.SND_TELEPORT_KEY]
     ];
 })(Lich || (Lich = {}));

@@ -108,7 +108,7 @@ var Lich;
                         }
                     }
                 }
-                if (enemyRet == null) {
+                if (enemyRet == null || self.piercing) {
                     return game.getWorld().isCollision(x, y);
                 }
                 else {

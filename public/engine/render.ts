@@ -69,6 +69,14 @@ namespace Lich {
             self.updateSectors();
         }
 
+        getScreenOffsetX() {
+            return this.screenOffsetX;
+        }
+
+        getScreenOffsetY() {
+            return this.screenOffsetY;
+        }
+
         // zkoumá, zda je potřeba přealokovat sektory 
         updateSectors() {
             var self = this;
@@ -289,16 +297,6 @@ namespace Lich {
             return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.tilesMap.width * Resources.TILE_SIZE + self.game.getCanvas().width;
         }
 
-        shiftSectorsX(dst: number) {
-            var self = this;
-            self.screenOffsetX += dst;
-            self.sectorsCont.children.forEach(function (sector) {
-                sector.x += dst;
-            });
-            self.updateSectors();
-            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_X, self.screenOffsetX));
-        }
-
         /**
          * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
          */
@@ -307,13 +305,16 @@ namespace Lich {
             return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.tilesMap.height * Resources.TILE_SIZE + self.game.getCanvas().height;
         }
 
-        shiftSectorsY(dst: number) {
+        shiftSectorsBy(shiftX: number, shiftY: number) {
             var self = this;
-            self.screenOffsetY += dst;
+            self.screenOffsetX += shiftX;
+            self.screenOffsetY += shiftY;
             self.sectorsCont.children.forEach(function (sector) {
-                sector.y += dst;
+                sector.x += shiftX;
+                sector.y += shiftY;
             });
             self.updateSectors();
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_X, self.screenOffsetX));
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_Y, self.screenOffsetY));
         }
 
@@ -767,16 +768,6 @@ namespace Lich {
                 }
             }
             return false;
-        }
-
-        shiftX(dst) {
-            var self = this;
-            self.shiftSectorsX(dst);
-        }
-
-        shiftY(dst) {
-            var self = this;
-            self.shiftSectorsY(dst);
         }
 
         handleTick() {
