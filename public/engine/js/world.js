@@ -412,7 +412,7 @@ var Lich;
             // kolize s povrchem/hranicí mapy
             var val = self.tilesMap.mapRecord.getValue(x, y);
             if (val == null || val != 0) {
-                return new Lich.CollisionTestResult(true, x, y);
+                return new Lich.CollisionTestResult(true, x, y, val);
             }
             // kolize s kolizními objekty
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
@@ -435,6 +435,7 @@ var Lich;
             var self = this;
             var tx;
             var ty;
+            var res = Lich.Resources.getInstance();
             // korekce překlenutí -- při kontrole rozměrů dochází k přeskoku na další tile, který
             // může vyhodit kolizi, ačkoliv v něm objekt není. Důvod je, že objekt o šířce 1 tile
             // usazená na nějaké tile x má součet x+1 jako další tile. Nejde fixně ignorovat 1 tile
@@ -493,15 +494,27 @@ var Lich;
                             tx = x - xShift;
                             ty = y - yShift;
                             var LT = collisionTester(tx, ty);
-                            if (LT.hit)
-                                return LT;
+                            if (LT.hit) {
+                                if (ySign > 0 && (LT.surfaceType || LT.surfaceType == 0)
+                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
+                                }
+                                else {
+                                    return LT;
+                                }
+                            }
                         }
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y - yShift;
                             var RT = collisionTester(tx, ty);
-                            if (RT.hit)
-                                return RT;
+                            if (RT.hit) {
+                                if (ySign > 0 && (RT.surfaceType || RT.surfaceType == 0)
+                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RT.surfaceType)].oneWay) {
+                                }
+                                else {
+                                    return RT;
+                                }
+                            }
                         }
                         if (xShift > 0 || yShift < 0) {
                             tx = x - xShift;

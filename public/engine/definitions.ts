@@ -151,7 +151,9 @@ namespace Lich {
             // kolik INV objektů vznikne po vytěření
             public quant: number,
             // jak často takový povrch v mapě je 
-            public cooldown: number) {
+            public cooldown: number,
+            // jde o jednostranně průchozí povrch?
+            public oneWay = false) {
             super(mapKey, invObj, quant);
         }
 

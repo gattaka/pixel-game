@@ -5,7 +5,7 @@ namespace Lich {
     }
 
     export class CollisionTestResult {
-        constructor(public hit: boolean, public x?: number, public y?: number) { }
+        constructor(public hit: boolean, public x?: number, public y?: number, public surfaceType?: SurfaceKey) { }
     }
 
     export class Coord2D {

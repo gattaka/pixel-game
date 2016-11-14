@@ -158,12 +158,16 @@ var Lich;
             // kolik INV objektů vznikne po vytěření
             quant, 
             // jak často takový povrch v mapě je 
-            cooldown) {
+            cooldown, 
+            // jde o jednostranně průchozí povrch?
+            oneWay) {
+            if (oneWay === void 0) { oneWay = false; }
             _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.invObj = invObj;
             this.quant = quant;
             this.cooldown = cooldown;
+            this.oneWay = oneWay;
             this.minSize = 1;
             this.maxSize = 3;
             this.minDepth = 10;

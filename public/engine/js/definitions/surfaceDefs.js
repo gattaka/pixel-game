@@ -14,6 +14,6 @@ var Lich;
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_IRON_KEY, Lich.InventoryKey.INV_IRON_KEY, 1, 5).setDepth(5, 100),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_COAL_KEY, Lich.InventoryKey.INV_COAL_KEY, 1, 10).setDepth(10, 100),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.InventoryKey.INV_ROCK_KEY, 1, 1).setDepth(0, 100).setSize(2, 5),
-        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_PLATFORM_KEY, Lich.InventoryKey.INV_PLATFORM_KEY, 1, 1).setDepth(-1, -1)
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_PLATFORM_KEY, Lich.InventoryKey.INV_PLATFORM_KEY, 1, 1, true).setDepth(-1, -1)
     ];
 })(Lich || (Lich = {}));

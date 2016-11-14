@@ -489,7 +489,7 @@ namespace Lich {
             // kolize s povrchem/hranicí mapy
             var val = self.tilesMap.mapRecord.getValue(x, y);
             if (val == null || val != 0) {
-                return new CollisionTestResult(true, x, y);
+                return new CollisionTestResult(true, x, y, val);
             }
 
             // kolize s kolizními objekty
@@ -515,6 +515,8 @@ namespace Lich {
             var self = this;
             var tx;
             var ty;
+
+            let res = Resources.getInstance();
 
             // korekce překlenutí -- při kontrole rozměrů dochází k přeskoku na další tile, který
             // může vyhodit kolizi, ačkoliv v něm objekt není. Důvod je, že objekt o šířce 1 tile
@@ -574,23 +576,35 @@ namespace Lich {
                         if (xShift > 0 || yShift > 0) {
                             tx = x - xShift;
                             ty = y - yShift;
-                            var LT = collisionTester(tx, ty);
-                            if (LT.hit)
-                                return LT;
+                            let LT = collisionTester(tx, ty);
+                            if (LT.hit) {
+                                if (ySign > 0 && (LT.surfaceType || LT.surfaceType == 0)
+                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
+                                    // cestou nahoru se oneWay kolize nepočítají 
+                                } else {
+                                    return LT;
+                                }
+                            }
                         }
 
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y - yShift;
-                            var RT = collisionTester(tx, ty);
-                            if (RT.hit)
-                                return RT;
+                            let RT = collisionTester(tx, ty);
+                            if (RT.hit) {
+                                if (ySign > 0 && (RT.surfaceType || RT.surfaceType == 0)
+                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RT.surfaceType)].oneWay) {
+                                    // cestou nahoru se oneWay kolize nepočítají 
+                                } else {
+                                    return RT;
+                                }
+                            }
                         }
 
                         if (xShift > 0 || yShift < 0) {
                             tx = x - xShift;
                             ty = y + height - TILE_FIX - yShift;
-                            var LB = collisionTester(tx, ty);
+                            let LB = collisionTester(tx, ty);
                             if (LB.hit)
                                 return LB;
                         }
@@ -598,7 +612,7 @@ namespace Lich {
                         if (xShift < 0 || yShift < 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y + height - TILE_FIX - yShift;
-                            var RB = collisionTester(tx, ty);
+                            let RB = collisionTester(tx, ty);
                             if (RB.hit)
                                 return RB;
                         }
