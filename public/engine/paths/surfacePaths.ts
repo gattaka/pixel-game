@@ -10,6 +10,7 @@ namespace Lich {
         ["images/surfaces/iron.png", SurfaceKey.SRFC_IRON_KEY],
         ["images/surfaces/coal.png", SurfaceKey.SRFC_COAL_KEY],
         ["images/surfaces/rock.png", SurfaceKey.SRFC_ROCK_KEY],
-        ["images/surfaces/rock_brick.png", SurfaceKey.SRFC_ROCK_BRICK_KEY]
+        ["images/surfaces/rock_brick.png", SurfaceKey.SRFC_ROCK_BRICK_KEY],
+        ["images/surfaces/platform.png", SurfaceKey.SRFC_PLATFORM_KEY]
     ]
 }

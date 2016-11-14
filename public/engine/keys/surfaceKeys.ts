@@ -10,7 +10,8 @@ namespace Lich {
         SRFC_IRON_KEY,
         SRFC_COAL_KEY,
         SRFC_ROCK_KEY,
-        SRFC_ROCK_BRICK_KEY
+        SRFC_ROCK_BRICK_KEY,
+        SRFC_PLATFORM_KEY
     }
 
     export enum SurfaceBgrKey {

@@ -2,16 +2,18 @@ namespace Lich {
 
     export enum SurfacePositionKey {
         VOID,
-        TL, T1, T2, T3, TR, I_TR,
-        L1, M1, M2, M3, R1, I_BR,
-        L2, M4, M5, M6, R2, I_TL,
-        L3, M7, M8, M9, R3, I_BL,
-        BL, B1, B2, B3, BR
+        TL, T1, T2, T3, T4, TR, I_TR,
+        L1, M0, M1, M2, M3, R1, I_BR,
+        L2, M4, M5, M6, M7, R2, I_TL,
+        L3, M8, M9, MA, MB, R3, I_BL,
+        L4, MC, MD, ME, MF, R4, RESERVED1,
+        BL, B1, B2, B3, B4, BR, RESERVED2,
     }
 
     export class SurfaceIndex {
 
-        static SPRITE_SIDE = 6;
+        static SPRITE_SIDE = 7;
+        static PATTER_LENGTH = 4;
 
         // počet pozic a typů
         private positionsCount = 0;
@@ -39,8 +41,8 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getMiddlePositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
-            let col = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite 
-            let row = y % 3 + 1; // +1 za předcházející dílky ve sprite 
+            let col = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite 
+            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite 
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -50,7 +52,7 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getTopPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
-            let key = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let key = x % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
@@ -60,7 +62,7 @@ namespace Lich {
          */
         getLeftPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
             let col = 1; // +1 za VOID
-            let row = y % 3 + 1; // +1 za předcházející dílky ve sprite
+            let row = y % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -70,8 +72,8 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getRightPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
-            let col = 1 + 4; // +1 za VOID +4 za předcházející dílky ve sprite
-            let row = y % 3 + 1; // +1 za předcházející dílky ve sprite
+            let col = 1 + SurfaceIndex.PATTER_LENGTH + 1; // +1 za VOID, PATTER_LENGTH + 1 za předcházející dílky ve sprite
+            let row = y % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -81,8 +83,8 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getBottomPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
-            let col = x % 3 + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
-            let row = 4; // +4 za předcházející dílky ve sprite
+            let col = x % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -131,7 +133,8 @@ namespace Lich {
          */
         isMiddlePosition(index: number) {
             var reducedIndex = this.getPosition(index);
-            return reducedIndex == SurfacePositionKey.M1
+            return reducedIndex == SurfacePositionKey.M0
+                || reducedIndex == SurfacePositionKey.M1
                 || reducedIndex == SurfacePositionKey.M2
                 || reducedIndex == SurfacePositionKey.M3
                 || reducedIndex == SurfacePositionKey.M4
@@ -139,7 +142,13 @@ namespace Lich {
                 || reducedIndex == SurfacePositionKey.M6
                 || reducedIndex == SurfacePositionKey.M7
                 || reducedIndex == SurfacePositionKey.M8
-                || reducedIndex == SurfacePositionKey.M9;
+                || reducedIndex == SurfacePositionKey.M9
+                || reducedIndex == SurfacePositionKey.MA
+                || reducedIndex == SurfacePositionKey.MB
+                || reducedIndex == SurfacePositionKey.MC
+                || reducedIndex == SurfacePositionKey.MD
+                || reducedIndex == SurfacePositionKey.ME
+                || reducedIndex == SurfacePositionKey.MF;
         }
 
         /**
@@ -149,7 +158,8 @@ namespace Lich {
             var reducedIndex = this.getPosition(index);
             return reducedIndex == SurfacePositionKey.T1
                 || reducedIndex == SurfacePositionKey.T2
-                || reducedIndex == SurfacePositionKey.T3;
+                || reducedIndex == SurfacePositionKey.T3
+                || reducedIndex == SurfacePositionKey.T4;
         }
 
         /**
@@ -159,7 +169,8 @@ namespace Lich {
             var reducedIndex = this.getPosition(index);
             return reducedIndex == SurfacePositionKey.L1
                 || reducedIndex == SurfacePositionKey.L2
-                || reducedIndex == SurfacePositionKey.L3;
+                || reducedIndex == SurfacePositionKey.L3
+                || reducedIndex == SurfacePositionKey.L4;
         }
 
         /**
@@ -169,7 +180,8 @@ namespace Lich {
             var reducedIndex = this.getPosition(index);
             return reducedIndex == SurfacePositionKey.R1
                 || reducedIndex == SurfacePositionKey.R2
-                || reducedIndex == SurfacePositionKey.R3;
+                || reducedIndex == SurfacePositionKey.R3
+                || reducedIndex == SurfacePositionKey.R4;
         }
 
         /**
@@ -179,7 +191,8 @@ namespace Lich {
             var reducedIndex = this.getPosition(index);
             return reducedIndex == SurfacePositionKey.B1
                 || reducedIndex == SurfacePositionKey.B2
-                || reducedIndex == SurfacePositionKey.B3;
+                || reducedIndex == SurfacePositionKey.B3
+                || reducedIndex == SurfacePositionKey.B4;
         }
 
         /**

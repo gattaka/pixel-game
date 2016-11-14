@@ -12,6 +12,7 @@ namespace Lich {
         new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_KEY, InventoryKey.INV_ROOF_KEY, 1, 0),
         new MapSurfaceDefinition(SurfaceKey.SRFC_IRON_KEY, InventoryKey.INV_IRON_KEY, 1, 5).setDepth(5, 100),
         new MapSurfaceDefinition(SurfaceKey.SRFC_COAL_KEY, InventoryKey.INV_COAL_KEY, 1, 10).setDepth(10, 100),
-        new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 1).setDepth(0, 100).setSize(2, 5)
+        new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_KEY, InventoryKey.INV_ROCK_KEY, 1, 1).setDepth(0, 100).setSize(2, 5),
+        new MapSurfaceDefinition(SurfaceKey.SRFC_PLATFORM_KEY, InventoryKey.INV_PLATFORM_KEY, 1, 1).setDepth(-1, -1)
     ]
 }
