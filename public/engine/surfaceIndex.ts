@@ -52,7 +52,7 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getTopPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
-            let key = x % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let key = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
@@ -62,7 +62,7 @@ namespace Lich {
          */
         getLeftPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
             let col = 1; // +1 za VOID
-            let row = y % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
+            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -73,7 +73,7 @@ namespace Lich {
          */
         getRightPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
             let col = 1 + SurfaceIndex.PATTER_LENGTH + 1; // +1 za VOID, PATTER_LENGTH + 1 za předcházející dílky ve sprite
-            let row = y % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
+            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -83,7 +83,7 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getBottomPositionIndexByCoordPattern(x: number, y: number, type: SurfaceKey): SurfacePositionKey {
-            let col = x % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let col = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             let row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);

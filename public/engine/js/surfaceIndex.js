@@ -82,7 +82,7 @@ var Lich;
          * který se opakuje, aby mapa byla pestřejší
          */
         SurfaceIndex.prototype.getTopPositionIndexByCoordPattern = function (x, y, type) {
-            var key = x % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            var key = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
         /**
@@ -91,7 +91,7 @@ var Lich;
          */
         SurfaceIndex.prototype.getLeftPositionIndexByCoordPattern = function (x, y, type) {
             var col = 1; // +1 za VOID
-            var row = y % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
+            var row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
@@ -101,7 +101,7 @@ var Lich;
          */
         SurfaceIndex.prototype.getRightPositionIndexByCoordPattern = function (x, y, type) {
             var col = 1 + SurfaceIndex.PATTER_LENGTH + 1; // +1 za VOID, PATTER_LENGTH + 1 za předcházející dílky ve sprite
-            var row = y % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
+            var row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
@@ -110,7 +110,7 @@ var Lich;
          * který se opakuje, aby mapa byla pestřejší
          */
         SurfaceIndex.prototype.getBottomPositionIndexByCoordPattern = function (x, y, type) {
-            var col = x % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            var col = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             var row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
