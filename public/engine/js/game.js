@@ -1,6 +1,18 @@
 ///<reference path='lib/createjs/createjs.d.ts'/>
 var Lich;
 (function (Lich) {
+    var Controls = (function () {
+        function Controls() {
+            this.up = false;
+            this.down = false;
+            this.left = false;
+            this.right = false;
+            this.levitate = false;
+        }
+        return Controls;
+    }());
+    Lich.Controls = Controls;
+    ;
     var Game = (function () {
         function Game(canvasId) {
             this.initialized = false;
@@ -194,28 +206,25 @@ var Lich;
                     // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
                     // už nedrží např. šipku -- holt "LAG" :)
                     // Controls
-                    var directions = {
-                        up: false,
-                        down: false,
-                        left: false,
-                        right: false
-                    };
+                    var controls = new Controls();
+                    if (self.keys[32])
+                        controls.levitate = true;
                     if (self.keys[37])
-                        directions.left = true;
+                        controls.left = true;
                     if (self.keys[38])
-                        directions.up = true;
+                        controls.up = true;
                     if (self.keys[39])
-                        directions.right = true;
+                        controls.right = true;
                     if (self.keys[40])
-                        directions.down = true;
+                        controls.down = true;
                     if (self.keys[65])
-                        directions.left = true;
+                        controls.left = true;
                     if (self.keys[87])
-                        directions.up = true;
+                        controls.up = true;
                     if (self.keys[68])
-                        directions.right = true;
+                        controls.right = true;
                     if (self.keys[83])
-                        directions.down = true;
+                        controls.down = true;
                     if (self.keys[67]) {
                         self.ui.craftingUI.toggle();
                     }
@@ -261,7 +270,7 @@ var Lich;
                             self.ui.spellsUI.selectSpell(i);
                         }
                     }
-                    self.getWorld().update(delta, directions);
+                    self.getWorld().update(delta, controls);
                 }
                 self.stage.update();
             }

@@ -31,6 +31,9 @@ namespace Lich {
             version.addChange("Teleport spell introduced");
             version.addChange("Sprites light improved");
             version.addChange("New background");
+            version.addChange("Tiles layout changed");
+            version.addChange("DEV levitation control changed");
+            version.addChange("Platforms introduced");
             this.addVersion(version);
 
             version = new Version("0.8");

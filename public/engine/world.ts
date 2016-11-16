@@ -208,16 +208,13 @@ namespace Lich {
             // jsem aktuálně nad oneWay objektem a padám? 
             let ignoreOneWay = true;
             if (distanceY < 0) {
-                // aby isBoundsInCollision vůbec něco kontroloval,
-                // musím simulovat PADÁNÍ aspoň od 1 krok
-                let dummyShift = -1;
                 let preClsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
-                    object.y + object.collYOffset + dummyShift,
+                    object.y + object.collYOffset,
                     object.width - object.collXOffset * 2,
                     object.height - object.collYOffset * 2,
                     0,
-                    dummyShift,
+                    0,
                     self.isCollision.bind(self),
                     // nepropadávej oneWay kolizemi 
                     false
@@ -231,7 +228,7 @@ namespace Lich {
             return ignoreOneWay;
         }
 
-        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any) {
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceIgnoreOneWay = false) {
             var self = this;
             var clsnTest: CollisionTestResult;
             var clsnPosition;
@@ -243,14 +240,19 @@ namespace Lich {
                 // které na něj za daný časový úsek působilo:
                 // s_t = vt + 1/2.at^2
                 var distanceY = Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
+                if (distanceY == 0 && object.speedy != 0)
+                    distanceY = object.speedy > 0 ? 1 : -1;
                 // uprav rychlost objektu, která se dá spočítat jako: 
                 // v = v_0 + at
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
                 if (object.speedy < World.MAX_FREEFALL_SPEED)
                     object.speedy = World.MAX_FREEFALL_SPEED;
+                if (object.speedy < 0 && object.speedy > -1) {
+                    object.speedy = -1;
+                }
 
                 // Nenarazím na překážku?
-                let ignoreOneWay = self.shouldIgnoreOneWayColls(distanceY, object);
+                let ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
                 clsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
                     object.y + object.collYOffset,
@@ -261,12 +263,14 @@ namespace Lich {
                     self.isCollision.bind(self),
                     ignoreOneWay
                 );
+                console.log("distanceY: " + distanceY);
+
                 if (clsnTest.hit === false) {
                     makeShift(0, distanceY);
                 } else {
                     // zastavil jsem se při stoupání? Začni hned padat
                     if (distanceY > 0) {
-                        object.speedy = 0;
+                        object.speedy = -1;
                         // TODO doskoč do stropu, jinak se někdy nebude dá "vskočit" do úzkých oken apod.
                     }
                     // zastavil jsem se při pádu? Konec skoku
@@ -294,7 +298,8 @@ namespace Lich {
                     -1,
                     self.isCollision.bind(this),
                     // pád z klidu se vždy musí zaseknout o oneWay kolize 
-                    false
+                    // výjimkou je, když hráč chce propadnou níž
+                    forceIgnoreOneWay
                 );
                 if (clsnTest.hit === false) {
                     object.speedy = -1;
@@ -400,7 +405,7 @@ namespace Lich {
             this.shiftWorldBy(shiftX, shiftY);
         }
 
-        update(delta, directions) {
+        update(delta, controls: Controls) {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
 
@@ -415,16 +420,16 @@ namespace Lich {
                 // Dle kláves nastav rychlosti
                 // Nelze akcelerovat nahoru, když už 
                 // rychlost mám (nemůžu skákat ve vzduchu)
-                if (directions.up && self.hero.speedy === 0) {
+                if (controls.up && self.hero.speedy === 0) {
                     self.hero.speedy = self.hero.accelerationY;
-                } else if (directions.down) {
+                } else if (controls.levitate) {
                     self.hero.speedy = self.hero.accelerationY;
                 }
 
                 // Horizontální akcelerace
-                if (directions.left) {
+                if (controls.left) {
                     self.hero.speedx = self.hero.accelerationX;
-                } else if (directions.right) {
+                } else if (controls.right) {
                     self.hero.speedx = -self.hero.accelerationX;
                 } else {
                     self.hero.speedx = 0;
@@ -438,7 +443,7 @@ namespace Lich {
             });
 
             // update hráče
-            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self));
+            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down);
 
             EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
             EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
@@ -571,18 +576,18 @@ namespace Lich {
             // pokud bude zadán fullXShift i fullYShift, udělá to diagonální posuv
             // Iteruj v kontrolách posuvu po Resources.TILE_SIZE přírůstcích, dokud nebude
             // docíleno celého posunu (zabraňuje "teleportaci" )
-            while (xShift !== objectXShift || yShift !== objectYShift) {
+            do {
                 // kontrola velikosti iterace posuvu X (zapsaná v kladných číslech)
-                if (xSign * xShift + Resources.TILE_SIZE > xSign * objectXShift) {
+                if (xSign * xShift + Resources.TILE_SIZE / 2 > xSign * objectXShift) {
                     xShift = objectXShift;
                 } else {
-                    xShift += xSign * Resources.TILE_SIZE;
+                    xShift += xSign * Resources.TILE_SIZE / 2;
                 }
                 // kontrola velikosti iterace posuvu Y (zapsaná v kladných číslech)
-                if (ySign * (yShift + ySign * Resources.TILE_SIZE) > ySign * objectYShift) {
+                if (ySign * (yShift + ySign * Resources.TILE_SIZE / 2) > ySign * objectYShift) {
                     yShift = objectYShift;
                 } else {
-                    yShift += ySign * Resources.TILE_SIZE;
+                    yShift += ySign * Resources.TILE_SIZE / 2;
                 }
 
                 if (xShift > 0 || yShift > 0) {
@@ -592,7 +597,7 @@ namespace Lich {
                     if (LT.hit) {
                         if (ignoreOneWay && (LT.surfaceType || LT.surfaceType == 0)
                             && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
-                            // horní okraj nemůže být nikdy v oneWay kolizi 
+                            // kolize je ignorována
                         } else {
                             return LT;
                         }
@@ -609,19 +614,20 @@ namespace Lich {
                 // bez collisionOffset by nebylo možné dělt sprite přesahy
                 while (width !== objectWidth) {
                     // pokud jde o posuv doprava, zkoumej rovnou pravu hranu, tou se narazí jako první 
-                    if (xShift < 0 || (width + Resources.TILE_SIZE > objectWidth)) {
+                    if (xShift < 0 || (width + Resources.TILE_SIZE / 2 > objectWidth)) {
                         width = objectWidth;
                     } else {
-                        width += Resources.TILE_SIZE;
+                        width += Resources.TILE_SIZE / 2;
                     }
 
                     height = 0;
                     while (height !== objectHeight) {
-                        // pokud jde o posuv dolů, zkoumej rovnou spodní hranu, tou se narazí jako první 
-                        if (yShift < 0 || (height + Resources.TILE_SIZE > objectHeight)) {
+                        // pokud jde o posuv dolů nebo statický stav (=0), 
+                        // zkoumej rovnou spodní hranu, tou se narazí jako první 
+                        if (yShift <= 0 || (height + Resources.TILE_SIZE / 2 > objectHeight)) {
                             height = objectHeight;
                         } else {
-                            height += Resources.TILE_SIZE;
+                            height += Resources.TILE_SIZE / 2;
                         }
 
                         if (xShift < 0 || yShift > 0) {
@@ -631,35 +637,41 @@ namespace Lich {
                             if (RT.hit) {
                                 if (ignoreOneWay && (RT.surfaceType || RT.surfaceType == 0)
                                     && res.mapSurfaceDefs[res.surfaceIndex.getType(RT.surfaceType)].oneWay) {
-                                    // horní okraj nemůže být nikdy v oneWay kolizi 
+                                    // kolize je ignorována
                                 } else {
                                     return RT;
                                 }
                             }
                         }
 
-                        if (xShift > 0 || yShift < 0) {
+                        if (xShift > 0 || yShift <= 0) {
                             tx = x - xShift;
                             ty = y + height - TILE_FIX - yShift;
                             let LB = collisionTester(tx, ty);
                             if (LB.hit) {
-                                if (ignoreOneWay && (LB.surfaceType || LB.surfaceType == 0)
+                                // OneWay kolize se ignorují pouze pokud se to chce, 
+                                // nebo je to jejich spodní tile -- to je proto, aby 
+                                // fungovali kolize u těsně nad sebou položených tiles 
+                                if ((ignoreOneWay || Utils.isEven(LB.y) == false) && (LB.surfaceType || LB.surfaceType == 0)
                                     && res.mapSurfaceDefs[res.surfaceIndex.getType(LB.surfaceType)].oneWay) {
-                                    // cestou nahoru se spodní okraj kolize nepočítá 
+                                    // kolize je ignorována
                                 } else {
                                     return LB;
                                 }
                             }
                         }
 
-                        if (xShift < 0 || yShift < 0) {
+                        if (xShift < 0 || yShift <= 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y + height - TILE_FIX - yShift;
                             let RB = collisionTester(tx, ty);
                             if (RB.hit) {
-                                if (ignoreOneWay && (RB.surfaceType || RB.surfaceType == 0)
+                                // OneWay kolize se ignorují pouze pokud se to chce, 
+                                // nebo je to jejich spodní tile -- to je proto, aby 
+                                // fungovali kolize u těsně nad sebou položených tiles 
+                                if ((ignoreOneWay || Utils.isEven(RB.y) == false) && (RB.surfaceType || RB.surfaceType == 0)
                                     && res.mapSurfaceDefs[res.surfaceIndex.getType(RB.surfaceType)].oneWay) {
-                                    // cestou nahoru se spodní okraj kolize nepočítá 
+                                    // kolize je ignorována
                                 } else {
                                     return RB;
                                 }
@@ -672,7 +684,7 @@ namespace Lich {
 
                     }
                 }
-            }
+            } while (xShift !== objectXShift || yShift !== objectYShift)
 
             return new CollisionTestResult(false);
 

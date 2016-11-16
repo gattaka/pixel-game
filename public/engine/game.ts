@@ -1,6 +1,15 @@
 ///<reference path='lib/createjs/createjs.d.ts'/>
 
 namespace Lich {
+
+    export class Controls {
+        public up = false;
+        public down = false;
+        public left = false;
+        public right = false;
+        public levitate = false;
+    };
+
     export class Game {
 
         static CURRENT_GAME: Game;
@@ -251,28 +260,25 @@ namespace Lich {
                     // už nedrží např. šipku -- holt "LAG" :)
 
                     // Controls
-                    var directions = {
-                        up: false,
-                        down: false,
-                        left: false,
-                        right: false,
-                    };
+                    var controls = new Controls();
+                    if (self.keys[32])
+                        controls.levitate = true;
                     if (self.keys[37])
-                        directions.left = true;
+                        controls.left = true;
                     if (self.keys[38])
-                        directions.up = true;
+                        controls.up = true;
                     if (self.keys[39])
-                        directions.right = true;
+                        controls.right = true;
                     if (self.keys[40])
-                        directions.down = true;
+                        controls.down = true;
                     if (self.keys[65])
-                        directions.left = true;
+                        controls.left = true;
                     if (self.keys[87])
-                        directions.up = true;
+                        controls.up = true;
                     if (self.keys[68])
-                        directions.right = true;
+                        controls.right = true;
                     if (self.keys[83])
-                        directions.down = true;
+                        controls.down = true;
                     if (self.keys[67]) {
                         self.ui.craftingUI.toggle();
                     } else {
@@ -312,7 +318,7 @@ namespace Lich {
                         }
                     }
 
-                    self.getWorld().update(delta, directions);
+                    self.getWorld().update(delta, controls);
                 }
 
                 self.stage.update();
