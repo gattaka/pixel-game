@@ -141,7 +141,7 @@ var Lich;
             if (self.speedy !== 0) {
                 var distanceY = self.speedy * sDelta;
                 // Nenarazím na překážku?
-                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, 0, distanceY, function (x, y) { return hitEnemyOrCollide(x, y); });
+                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, 0, distanceY, function (x, y) { return hitEnemyOrCollide(x, y); }, true);
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
                     if (self.y > game.getCanvas().height * 2 || self.y < -game.getCanvas().height) {
@@ -157,7 +157,7 @@ var Lich;
             if (self.speedx !== 0) {
                 var distanceX = sDelta * self.speedx;
                 // Nenarazím na překážku?
-                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, distanceX, 0, function (x, y) { return hitEnemyOrCollide(x, y); });
+                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, distanceX, 0, function (x, y) { return hitEnemyOrCollide(x, y); }, true);
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;
                     if (self.x > game.getCanvas().width * 2 || self.x < -game.getCanvas().width)

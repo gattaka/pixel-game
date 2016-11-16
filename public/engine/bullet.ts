@@ -157,7 +157,8 @@ namespace Lich {
                     self.height - self.collYOffset * 2,
                     0,
                     distanceY,
-                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); }
+                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); },
+                    true
                 );
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
@@ -182,7 +183,8 @@ namespace Lich {
                     self.height - self.collYOffset * 2,
                     distanceX,
                     0,
-                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); }
+                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); },
+                    true
                 );
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;

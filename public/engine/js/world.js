@@ -174,6 +174,25 @@ var Lich;
             self.addChild(object);
         };
         ;
+        World.prototype.shouldIgnoreOneWayColls = function (distanceY, object) {
+            var self = this;
+            // jsem aktuálně nad oneWay objektem a padám? 
+            var ignoreOneWay = true;
+            if (distanceY < 0) {
+                // aby isBoundsInCollision vůbec něco kontroloval,
+                // musím simulovat PADÁNÍ aspoň od 1 krok
+                var dummyShift = -1;
+                var preClsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset + dummyShift, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, dummyShift, self.isCollision.bind(self), 
+                // nepropadávej oneWay kolizemi 
+                false);
+                // pokud hit, pak právě jsem ve oneWay kolizi, 
+                // takže bych měl volně padat. V opačném případě 
+                // jsem ve volném prostoru a cokoliv oneWay, co 
+                // potkám po cestě dolů musí fungovat jako kolize
+                ignoreOneWay = preClsnTest.hit;
+            }
+            return ignoreOneWay;
+        };
         World.prototype.updateObject = function (sDelta, object, makeShift) {
             var self = this;
             var clsnTest;
@@ -190,7 +209,8 @@ var Lich;
                 if (object.speedy < World.MAX_FREEFALL_SPEED)
                     object.speedy = World.MAX_FREEFALL_SPEED;
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self));
+                var ignoreOneWay = self.shouldIgnoreOneWayColls(distanceY, object);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), ignoreOneWay);
                 if (clsnTest.hit === false) {
                     makeShift(0, distanceY);
                 }
@@ -208,10 +228,22 @@ var Lich;
                     }
                 }
             }
+            // pokud nejsem zrovna uprostřed skoku 
+            if (object.speedy === 0) {
+                // ...a mám kam padat
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
+                // pád z klidu se vždy musí zaseknout o oneWay kolize 
+                false);
+                if (clsnTest.hit === false) {
+                    object.speedy = -1;
+                }
+            }
             if (object.speedx !== 0) {
                 var distanceX = Lich.Utils.floor(sDelta * object.speedx);
                 // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self));
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self), 
+                // horizontální pohyb vždy ignoruje oneWay kolize
+                true);
                 // bez kolize, proveď posun
                 if (clsnTest.hit === false) {
                     makeShift(distanceX, 0);
@@ -227,14 +259,6 @@ var Lich;
                         // narazil jsem do něj zleva
                         makeShift(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1), 0);
                     }
-                }
-            }
-            // pokud nejsem zrovna uprostřed skoku 
-            if (object.speedy === 0) {
-                // ...a mám kam padat
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this));
-                if (clsnTest.hit === false) {
-                    object.speedy = -1;
                 }
             }
             if (typeof object.updateAnimations !== "undefined") {
@@ -431,7 +455,7 @@ var Lich;
          * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje,
          * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem.
          */
-        World.prototype.isBoundsInCollision = function (x, y, objectWidth, objectHeight, objectXShift, objectYShift, collisionTester) {
+        World.prototype.isBoundsInCollision = function (x, y, objectWidth, objectHeight, objectXShift, objectYShift, collisionTester, ignoreOneWay) {
             var self = this;
             var tx;
             var ty;
@@ -467,6 +491,19 @@ var Lich;
                 else {
                     yShift += ySign * Lich.Resources.TILE_SIZE;
                 }
+                if (xShift > 0 || yShift > 0) {
+                    tx = x - xShift;
+                    ty = y - yShift;
+                    var LT = collisionTester(tx, ty);
+                    if (LT.hit) {
+                        if (ignoreOneWay && (LT.surfaceType || LT.surfaceType == 0)
+                            && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
+                        }
+                        else {
+                            return LT;
+                        }
+                    }
+                }
                 // iterativní kontroly ve výšce a šířce posouvaného objektu 
                 // zabraňuje "napíchnutní" posouvaného objektu na kolizní objekt)
                 // v případě, že posouvaný objekt je například širší než kolizní plocha 
@@ -476,7 +513,8 @@ var Lich;
                 // fungoval collisionOffset -- ten totiž je v pixels nikoliv v tiles
                 // bez collisionOffset by nebylo možné dělt sprite přesahy
                 while (width !== objectWidth) {
-                    if (width + Lich.Resources.TILE_SIZE > objectWidth) {
+                    // pokud jde o posuv doprava, zkoumej rovnou pravu hranu, tou se narazí jako první 
+                    if (xShift < 0 || (width + Lich.Resources.TILE_SIZE > objectWidth)) {
                         width = objectWidth;
                     }
                     else {
@@ -484,31 +522,19 @@ var Lich;
                     }
                     height = 0;
                     while (height !== objectHeight) {
-                        if (height + Lich.Resources.TILE_SIZE > objectHeight) {
+                        // pokud jde o posuv dolů, zkoumej rovnou spodní hranu, tou se narazí jako první 
+                        if (yShift < 0 || (height + Lich.Resources.TILE_SIZE > objectHeight)) {
                             height = objectHeight;
                         }
                         else {
                             height += Lich.Resources.TILE_SIZE;
-                        }
-                        if (xShift > 0 || yShift > 0) {
-                            tx = x - xShift;
-                            ty = y - yShift;
-                            var LT = collisionTester(tx, ty);
-                            if (LT.hit) {
-                                if (ySign > 0 && (LT.surfaceType || LT.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
-                                }
-                                else {
-                                    return LT;
-                                }
-                            }
                         }
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y - yShift;
                             var RT = collisionTester(tx, ty);
                             if (RT.hit) {
-                                if (ySign > 0 && (RT.surfaceType || RT.surfaceType == 0)
+                                if (ignoreOneWay && (RT.surfaceType || RT.surfaceType == 0)
                                     && res.mapSurfaceDefs[res.surfaceIndex.getType(RT.surfaceType)].oneWay) {
                                 }
                                 else {
@@ -520,15 +546,27 @@ var Lich;
                             tx = x - xShift;
                             ty = y + height - TILE_FIX - yShift;
                             var LB = collisionTester(tx, ty);
-                            if (LB.hit)
-                                return LB;
+                            if (LB.hit) {
+                                if (ignoreOneWay && (LB.surfaceType || LB.surfaceType == 0)
+                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(LB.surfaceType)].oneWay) {
+                                }
+                                else {
+                                    return LB;
+                                }
+                            }
                         }
                         if (xShift < 0 || yShift < 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y + height - TILE_FIX - yShift;
                             var RB = collisionTester(tx, ty);
-                            if (RB.hit)
-                                return RB;
+                            if (RB.hit) {
+                                if (ignoreOneWay && (RB.surfaceType || RB.surfaceType == 0)
+                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RB.surfaceType)].oneWay) {
+                                }
+                                else {
+                                    return RB;
+                                }
+                            }
                         }
                         if (xShift === objectXShift && yShift === objectYShift && width === objectWidth && height === objectHeight) {
                             return new Lich.CollisionTestResult(false);

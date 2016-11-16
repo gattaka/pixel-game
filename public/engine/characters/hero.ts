@@ -17,7 +17,7 @@ namespace Lich {
                 CharacterState.IDLE,
                 30, // frames
                 MovementType.WALK,
-                300, // HERO_HORIZONTAL_SPEED
+                330, // HERO_HORIZONTAL_SPEED
                 500, // HERO_VERTICAL_SPEED
                 new Animations()
                     .add(CharacterState.IDLE, 0, 0, CharacterState.BREATH, 0.005)
