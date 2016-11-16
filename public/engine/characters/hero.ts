@@ -17,13 +17,13 @@ namespace Lich {
                 CharacterState.IDLE,
                 30, // frames
                 MovementType.WALK,
-                330, // HERO_HORIZONTAL_SPEED
-                500, // HERO_VERTICAL_SPEED
+                300, // HERO_HORIZONTAL_SPEED
+                520, // HERO_VERTICAL_SPEED
                 new Animations()
                     .add(CharacterState.IDLE, 0, 0, CharacterState.BREATH, 0.005)
                     .add(CharacterState.BREATH, 1, 1, CharacterState.IDLE, 0.04)
-                    .add(CharacterState.WALKR, 2, 9, CharacterState.WALKR, 0.2)
-                    .add(CharacterState.WALKL, 10, 17, CharacterState.WALKL, 0.2)
+                    .add(CharacterState.WALKR, 2, 9, CharacterState.WALKR, 0.3)
+                    .add(CharacterState.WALKL, 10, 17, CharacterState.WALKL, 0.3)
                     .add(CharacterState.JUMP, 18, 19, CharacterState.MIDAIR, 0.2)
                     .add(CharacterState.MIDAIR, 19, 19, CharacterState.MIDAIR, 0.2)
                     .add(CharacterState.FALL, 19, 23, CharacterState.IDLE, 0.2)

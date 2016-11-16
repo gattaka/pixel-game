@@ -13,13 +13,13 @@ var Lich;
             16, // COLLXOFFSET
             12, // COLLYOFFSET
             Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 30, // frames
-            Lich.MovementType.WALK, 330, // HERO_HORIZONTAL_SPEED
-            500, // HERO_VERTICAL_SPEED
+            Lich.MovementType.WALK, 300, // HERO_HORIZONTAL_SPEED
+            520, // HERO_VERTICAL_SPEED
             new Lich.Animations()
                 .add(Lich.CharacterState.IDLE, 0, 0, Lich.CharacterState.BREATH, 0.005)
                 .add(Lich.CharacterState.BREATH, 1, 1, Lich.CharacterState.IDLE, 0.04)
-                .add(Lich.CharacterState.WALKR, 2, 9, Lich.CharacterState.WALKR, 0.2)
-                .add(Lich.CharacterState.WALKL, 10, 17, Lich.CharacterState.WALKL, 0.2)
+                .add(Lich.CharacterState.WALKR, 2, 9, Lich.CharacterState.WALKR, 0.3)
+                .add(Lich.CharacterState.WALKL, 10, 17, Lich.CharacterState.WALKL, 0.3)
                 .add(Lich.CharacterState.JUMP, 18, 19, Lich.CharacterState.MIDAIR, 0.2)
                 .add(Lich.CharacterState.MIDAIR, 19, 19, Lich.CharacterState.MIDAIR, 0.2)
                 .add(Lich.CharacterState.FALL, 19, 23, Lich.CharacterState.IDLE, 0.2)
