@@ -174,103 +174,6 @@ var Lich;
             self.addChild(object);
         };
         ;
-        World.prototype.shouldIgnoreOneWayColls = function (distanceY, object) {
-            var self = this;
-            // jsem aktuálně nad oneWay objektem a padám? 
-            var ignoreOneWay = true;
-            if (distanceY < 0) {
-                var preClsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, 0, self.isCollision.bind(self), 
-                // nepropadávej oneWay kolizemi 
-                false);
-                // pokud hit, pak právě jsem ve oneWay kolizi, 
-                // takže bych měl volně padat. V opačném případě 
-                // jsem ve volném prostoru a cokoliv oneWay, co 
-                // potkám po cestě dolů musí fungovat jako kolize
-                ignoreOneWay = preClsnTest.hit;
-            }
-            return ignoreOneWay;
-        };
-        World.prototype.updateObject = function (sDelta, object, makeShift, forceIgnoreOneWay) {
-            if (forceIgnoreOneWay === void 0) { forceIgnoreOneWay = false; }
-            var self = this;
-            var clsnTest;
-            var clsnPosition;
-            if (object.speedy !== 0) {
-                // dráha, kterou objekt urazil za daný časový úsek, 
-                // kdy je známa jeho poslední rychlost a zrychlení, 
-                // které na něj za daný časový úsek působilo:
-                // s_t = vt + 1/2.at^2
-                var distanceY = Lich.Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
-                if (distanceY == 0 && object.speedy != 0)
-                    distanceY = object.speedy > 0 ? 1 : -1;
-                // uprav rychlost objektu, která se dá spočítat jako: 
-                // v = v_0 + at
-                object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
-                if (object.speedy < World.MAX_FREEFALL_SPEED)
-                    object.speedy = World.MAX_FREEFALL_SPEED;
-                if (object.speedy < 0 && object.speedy > -1) {
-                    object.speedy = -1;
-                }
-                // Nenarazím na překážku?
-                var ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), ignoreOneWay);
-                console.log("distanceY: " + distanceY);
-                if (clsnTest.hit === false) {
-                    makeShift(0, distanceY);
-                }
-                else {
-                    // zastavil jsem se při stoupání? Začni hned padat
-                    if (distanceY > 0) {
-                        object.speedy = -1;
-                    }
-                    else {
-                        // "doskoč" až na zem
-                        // získej pozici kolizního bloku
-                        clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
-                        makeShift(0, -1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
-                        object.speedy = 0;
-                    }
-                }
-            }
-            // pokud nejsem zrovna uprostřed skoku 
-            if (object.speedy === 0) {
-                // ...a mám kam padat
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
-                // pád z klidu se vždy musí zaseknout o oneWay kolize 
-                // výjimkou je, když hráč chce propadnou níž
-                forceIgnoreOneWay);
-                if (clsnTest.hit === false) {
-                    object.speedy = -1;
-                }
-            }
-            if (object.speedx !== 0) {
-                var distanceX = Lich.Utils.floor(sDelta * object.speedx);
-                // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self), 
-                // horizontální pohyb vždy ignoruje oneWay kolize
-                true);
-                // bez kolize, proveď posun
-                if (clsnTest.hit === false) {
-                    makeShift(distanceX, 0);
-                }
-                else {
-                    // získej pozici kolizního bloku
-                    clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
-                    if (distanceX > 0) {
-                        // narazil jsem do něj zprava
-                        makeShift(object.x + object.collXOffset - (clsnPosition.x + Lich.Resources.TILE_SIZE) - 1, 0);
-                    }
-                    else {
-                        // narazil jsem do něj zleva
-                        makeShift(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1), 0);
-                    }
-                }
-            }
-            if (typeof object.updateAnimations !== "undefined") {
-                object.updateAnimations();
-            }
-        };
-        ;
         World.prototype.shiftWorldBy = function (shiftX, shiftY) {
             var self = this;
             var rndDstX = Lich.Utils.floor(shiftX);
@@ -327,6 +230,97 @@ var Lich;
             var shiftY = y - this.render.getScreenOffsetY();
             this.shiftWorldBy(shiftX, shiftY);
         };
+        World.prototype.shouldIgnoreOneWayColls = function (distanceY, object) {
+            var self = this;
+            // jsem aktuálně nad oneWay objektem a padám? 
+            var ignoreOneWay = true;
+            if (distanceY < 0) {
+                var preClsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, 0, self.isCollision.bind(self), 
+                // nepropadávej oneWay kolizemi 
+                false);
+                // pokud hit, pak právě jsem ve oneWay kolizi, 
+                // takže bych měl volně padat. V opačném případě 
+                // jsem ve volném prostoru a cokoliv oneWay, co 
+                // potkám po cestě dolů musí fungovat jako kolize
+                ignoreOneWay = preClsnTest.hit;
+            }
+            return ignoreOneWay;
+        };
+        World.prototype.updateObject = function (sDelta, object, makeShift, forceIgnoreOneWay) {
+            if (forceIgnoreOneWay === void 0) { forceIgnoreOneWay = false; }
+            var self = this;
+            var clsnTest;
+            var clsnPosition;
+            if (object.speedy !== 0) {
+                // dráha, kterou objekt urazil za daný časový úsek, 
+                // kdy je známa jeho poslední rychlost a zrychlení, 
+                // které na něj za daný časový úsek působilo:
+                // s_t = vt + 1/2.at^2
+                var distanceY = Lich.Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
+                // uprav rychlost objektu, která se dá spočítat jako: 
+                // v = v_0 + at
+                object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
+                if (object.speedy < World.MAX_FREEFALL_SPEED)
+                    object.speedy = World.MAX_FREEFALL_SPEED;
+                // Nenarazím na překážku?
+                var ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), ignoreOneWay);
+                console.log("distanceY: " + distanceY);
+                if (clsnTest.hit === false) {
+                    makeShift(0, distanceY);
+                }
+                else {
+                    if (distanceY > 0) {
+                    }
+                    else {
+                        // zastavil jsem se při pádu? Konec skoku
+                        // "doskoč" až na zem
+                        // získej pozici kolizního bloku
+                        clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
+                        makeShift(0, -1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
+                    }
+                    object.speedy = 0;
+                }
+            }
+            // pokud nejsem zrovna uprostřed skoku 
+            if (object.speedy === 0) {
+                // ...a mám kam padat
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
+                // pád z klidu se vždy musí zaseknout o oneWay kolize 
+                // výjimkou je, když hráč chce propadnou níž
+                forceIgnoreOneWay);
+                if (clsnTest.hit === false) {
+                    object.speedy = -1;
+                }
+            }
+            if (object.speedx !== 0) {
+                var distanceX = Lich.Utils.floor(sDelta * object.speedx);
+                // Nenarazím na překážku?
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self), 
+                // horizontální pohyb vždy ignoruje oneWay kolize
+                true);
+                // bez kolize, proveď posun
+                if (clsnTest.hit === false) {
+                    makeShift(distanceX, 0);
+                }
+                else {
+                    // získej pozici kolizního bloku
+                    clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
+                    if (distanceX > 0) {
+                        // narazil jsem do něj zprava
+                        makeShift(object.x + object.collXOffset - (clsnPosition.x + Lich.Resources.TILE_SIZE) - 1, 0);
+                    }
+                    else {
+                        // narazil jsem do něj zleva
+                        makeShift(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1), 0);
+                    }
+                }
+            }
+            if (typeof object.updateAnimations !== "undefined") {
+                object.updateAnimations();
+            }
+        };
+        ;
         World.prototype.update = function (delta, controls) {
             var self = this;
             var sDelta = delta / 1000; // ms -> s
@@ -483,18 +477,18 @@ var Lich;
             // docíleno celého posunu (zabraňuje "teleportaci" )
             do {
                 // kontrola velikosti iterace posuvu X (zapsaná v kladných číslech)
-                if (xSign * xShift + Lich.Resources.TILE_SIZE / 2 > xSign * objectXShift) {
+                if (xSign * xShift + Lich.Resources.TILE_SIZE > xSign * objectXShift) {
                     xShift = objectXShift;
                 }
                 else {
-                    xShift += xSign * Lich.Resources.TILE_SIZE / 2;
+                    xShift += xSign * Lich.Resources.TILE_SIZE;
                 }
                 // kontrola velikosti iterace posuvu Y (zapsaná v kladných číslech)
-                if (ySign * (yShift + ySign * Lich.Resources.TILE_SIZE / 2) > ySign * objectYShift) {
+                if (ySign * (yShift + ySign * Lich.Resources.TILE_SIZE) > ySign * objectYShift) {
                     yShift = objectYShift;
                 }
                 else {
-                    yShift += ySign * Lich.Resources.TILE_SIZE / 2;
+                    yShift += ySign * Lich.Resources.TILE_SIZE;
                 }
                 if (xShift > 0 || yShift > 0) {
                     tx = x - xShift;
@@ -519,21 +513,21 @@ var Lich;
                 // bez collisionOffset by nebylo možné dělt sprite přesahy
                 while (width !== objectWidth) {
                     // pokud jde o posuv doprava, zkoumej rovnou pravu hranu, tou se narazí jako první 
-                    if (xShift < 0 || (width + Lich.Resources.TILE_SIZE / 2 > objectWidth)) {
+                    if (xShift < 0 || (width + Lich.Resources.TILE_SIZE > objectWidth)) {
                         width = objectWidth;
                     }
                     else {
-                        width += Lich.Resources.TILE_SIZE / 2;
+                        width += Lich.Resources.TILE_SIZE;
                     }
                     height = 0;
                     while (height !== objectHeight) {
                         // pokud jde o posuv dolů nebo statický stav (=0), 
                         // zkoumej rovnou spodní hranu, tou se narazí jako první 
-                        if (yShift <= 0 || (height + Lich.Resources.TILE_SIZE / 2 > objectHeight)) {
+                        if (yShift <= 0 || (height + Lich.Resources.TILE_SIZE > objectHeight)) {
                             height = objectHeight;
                         }
                         else {
-                            height += Lich.Resources.TILE_SIZE / 2;
+                            height += Lich.Resources.TILE_SIZE;
                         }
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - TILE_FIX - xShift;

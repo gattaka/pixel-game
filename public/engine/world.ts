@@ -203,6 +203,67 @@ namespace Lich {
             self.addChild(object);
         };
 
+        shiftWorldBy(shiftX: number, shiftY: number) {
+            let self = this;
+            let rndDstX = Utils.floor(shiftX);
+            let rndDstY = Utils.floor(shiftY);
+            let canvasCenterX = self.game.getCanvas().width / 2;
+            let canvasCenterY = self.game.getCanvas().height / 2;
+            let willShiftX = self.render.canShiftX(rndDstX) && self.hero.x == canvasCenterX;
+            let willShiftY = self.render.canShiftY(rndDstY) && self.hero.y == canvasCenterY;
+
+            self.render.shiftSectorsBy(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
+            self.game.getBackground().shift(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
+
+            let toShift = [self.freeObjects, self.bulletObjects, self.enemies];
+
+            self.labelObjects.forEach(function (item) {
+                if (item) {
+                    if (willShiftX)
+                        item.x += rndDstX;
+                    if (willShiftY)
+                        item["virtualY"] += rndDstY;
+                }
+            });
+
+            toShift.forEach((items: Array<WorldObject>) => {
+                items.forEach((item) => {
+                    if (item) {
+                        if (willShiftX)
+                            item.x += rndDstX;
+                        if (willShiftY)
+                            item.y += rndDstY;
+                    }
+                });
+            });
+
+            if (!willShiftX) {
+                // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
+                // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
+                if (self.hero.x > canvasCenterX && self.hero.x - rndDstX < canvasCenterX
+                    || self.hero.x < canvasCenterX && self.hero.x - rndDstX > canvasCenterX) {
+                    self.hero.x = canvasCenterX;
+                } else {
+                    self.hero.x -= rndDstX;
+                }
+            }
+            if (!willShiftY) {
+                if (self.hero.y > canvasCenterY && self.hero.y - rndDstY < canvasCenterY
+                    || self.hero.y < canvasCenterY && self.hero.y - rndDstY > canvasCenterY) {
+                    self.hero.y = canvasCenterY;
+                } else {
+                    self.hero.y -= rndDstY;
+                }
+            }
+        };
+
+        shiftWorldTo(x: number, y: number) {
+            let shiftX = x - this.render.getScreenOffsetX();
+            let shiftY = y - this.render.getScreenOffsetY();
+            this.shiftWorldBy(shiftX, shiftY);
+        }
+
+
         private shouldIgnoreOneWayColls(distanceY: number, object: AbstractWorldObject) {
             let self = this;
             // jsem aktuálně nad oneWay objektem a padám? 
@@ -240,16 +301,11 @@ namespace Lich {
                 // které na něj za daný časový úsek působilo:
                 // s_t = vt + 1/2.at^2
                 var distanceY = Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
-                if (distanceY == 0 && object.speedy != 0)
-                    distanceY = object.speedy > 0 ? 1 : -1;
                 // uprav rychlost objektu, která se dá spočítat jako: 
                 // v = v_0 + at
                 object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
                 if (object.speedy < World.MAX_FREEFALL_SPEED)
                     object.speedy = World.MAX_FREEFALL_SPEED;
-                if (object.speedy < 0 && object.speedy > -1) {
-                    object.speedy = -1;
-                }
 
                 // Nenarazím na překážku?
                 let ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
@@ -268,19 +324,18 @@ namespace Lich {
                 if (clsnTest.hit === false) {
                     makeShift(0, distanceY);
                 } else {
-                    // zastavil jsem se při stoupání? Začni hned padat
                     if (distanceY > 0) {
-                        object.speedy = -1;
+                        // zastavil jsem se při stoupání? Začni hned padat
                         // TODO doskoč do stropu, jinak se někdy nebude dá "vskočit" do úzkých oken apod.
                     }
-                    // zastavil jsem se při pádu? Konec skoku
                     else {
+                        // zastavil jsem se při pádu? Konec skoku
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
                         clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
                         makeShift(0, -1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
-                        object.speedy = 0;
                     }
+                    object.speedy = 0;
                 }
 
             }
@@ -344,66 +399,6 @@ namespace Lich {
             }
 
         };
-
-        shiftWorldBy(shiftX: number, shiftY: number) {
-            let self = this;
-            let rndDstX = Utils.floor(shiftX);
-            let rndDstY = Utils.floor(shiftY);
-            let canvasCenterX = self.game.getCanvas().width / 2;
-            let canvasCenterY = self.game.getCanvas().height / 2;
-            let willShiftX = self.render.canShiftX(rndDstX) && self.hero.x == canvasCenterX;
-            let willShiftY = self.render.canShiftY(rndDstY) && self.hero.y == canvasCenterY;
-
-            self.render.shiftSectorsBy(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
-            self.game.getBackground().shift(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
-
-            let toShift = [self.freeObjects, self.bulletObjects, self.enemies];
-
-            self.labelObjects.forEach(function (item) {
-                if (item) {
-                    if (willShiftX)
-                        item.x += rndDstX;
-                    if (willShiftY)
-                        item["virtualY"] += rndDstY;
-                }
-            });
-
-            toShift.forEach((items: Array<WorldObject>) => {
-                items.forEach((item) => {
-                    if (item) {
-                        if (willShiftX)
-                            item.x += rndDstX;
-                        if (willShiftY)
-                            item.y += rndDstY;
-                    }
-                });
-            });
-
-            if (!willShiftX) {
-                // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
-                // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
-                if (self.hero.x > canvasCenterX && self.hero.x - rndDstX < canvasCenterX
-                    || self.hero.x < canvasCenterX && self.hero.x - rndDstX > canvasCenterX) {
-                    self.hero.x = canvasCenterX;
-                } else {
-                    self.hero.x -= rndDstX;
-                }
-            }
-            if (!willShiftY) {
-                if (self.hero.y > canvasCenterY && self.hero.y - rndDstY < canvasCenterY
-                    || self.hero.y < canvasCenterY && self.hero.y - rndDstY > canvasCenterY) {
-                    self.hero.y = canvasCenterY;
-                } else {
-                    self.hero.y -= rndDstY;
-                }
-            }
-        };
-
-        shiftWorldTo(x: number, y: number) {
-            let shiftX = x - this.render.getScreenOffsetX();
-            let shiftY = y - this.render.getScreenOffsetY();
-            this.shiftWorldBy(shiftX, shiftY);
-        }
 
         update(delta, controls: Controls) {
             var self = this;
@@ -578,16 +573,16 @@ namespace Lich {
             // docíleno celého posunu (zabraňuje "teleportaci" )
             do {
                 // kontrola velikosti iterace posuvu X (zapsaná v kladných číslech)
-                if (xSign * xShift + Resources.TILE_SIZE / 2 > xSign * objectXShift) {
+                if (xSign * xShift + Resources.TILE_SIZE > xSign * objectXShift) {
                     xShift = objectXShift;
                 } else {
-                    xShift += xSign * Resources.TILE_SIZE / 2;
+                    xShift += xSign * Resources.TILE_SIZE;
                 }
                 // kontrola velikosti iterace posuvu Y (zapsaná v kladných číslech)
-                if (ySign * (yShift + ySign * Resources.TILE_SIZE / 2) > ySign * objectYShift) {
+                if (ySign * (yShift + ySign * Resources.TILE_SIZE) > ySign * objectYShift) {
                     yShift = objectYShift;
                 } else {
-                    yShift += ySign * Resources.TILE_SIZE / 2;
+                    yShift += ySign * Resources.TILE_SIZE;
                 }
 
                 if (xShift > 0 || yShift > 0) {
@@ -614,20 +609,20 @@ namespace Lich {
                 // bez collisionOffset by nebylo možné dělt sprite přesahy
                 while (width !== objectWidth) {
                     // pokud jde o posuv doprava, zkoumej rovnou pravu hranu, tou se narazí jako první 
-                    if (xShift < 0 || (width + Resources.TILE_SIZE / 2 > objectWidth)) {
+                    if (xShift < 0 || (width + Resources.TILE_SIZE > objectWidth)) {
                         width = objectWidth;
                     } else {
-                        width += Resources.TILE_SIZE / 2;
+                        width += Resources.TILE_SIZE;
                     }
 
                     height = 0;
                     while (height !== objectHeight) {
                         // pokud jde o posuv dolů nebo statický stav (=0), 
                         // zkoumej rovnou spodní hranu, tou se narazí jako první 
-                        if (yShift <= 0 || (height + Resources.TILE_SIZE / 2 > objectHeight)) {
+                        if (yShift <= 0 || (height + Resources.TILE_SIZE > objectHeight)) {
                             height = objectHeight;
                         } else {
-                            height += Resources.TILE_SIZE / 2;
+                            height += Resources.TILE_SIZE;
                         }
 
                         if (xShift < 0 || yShift > 0) {
