@@ -189,7 +189,8 @@ namespace Lich {
 
         performState(desiredState) {
             var self = this;
-            if (self.state !== desiredState) {
+            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == CharacterState.DIE)
+                && self.currentAnimation != CharacterState[CharacterState.TELEPORT]) {
                 self.gotoAndPlay(CharacterState[desiredState]);
                 self.state = desiredState;
             }

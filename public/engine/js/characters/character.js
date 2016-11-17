@@ -169,7 +169,8 @@ var Lich;
         };
         Character.prototype.performState = function (desiredState) {
             var self = this;
-            if (self.state !== desiredState) {
+            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == Lich.CharacterState.DIE)
+                && self.currentAnimation != Lich.CharacterState[Lich.CharacterState.TELEPORT]) {
                 self.gotoAndPlay(Lich.CharacterState[desiredState]);
                 self.state = desiredState;
             }

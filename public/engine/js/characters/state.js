@@ -12,6 +12,7 @@ var Lich;
         CharacterState[CharacterState["FALL"] = 8] = "FALL";
         CharacterState[CharacterState["DIE"] = 9] = "DIE";
         CharacterState[CharacterState["DEAD"] = 10] = "DEAD";
+        CharacterState[CharacterState["TELEPORT"] = 11] = "TELEPORT";
     })(Lich.CharacterState || (Lich.CharacterState = {}));
     var CharacterState = Lich.CharacterState;
 })(Lich || (Lich = {}));

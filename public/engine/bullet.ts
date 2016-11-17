@@ -2,7 +2,7 @@ namespace Lich {
 
     export abstract class AbstractWorldObject extends createjs.Sprite {
 
-        state: string;
+        state: CharacterState;
         public speedx: number = 0;
         public speedy: number = 0;
 
@@ -16,7 +16,7 @@ namespace Lich {
             super(spriteSheet, initState);
         }
 
-        performState(desiredState: string) {
+        performState(desiredState: CharacterState) {
             var self = this;
             if (self.state !== desiredState) {
                 self.gotoAndPlay(desiredState);

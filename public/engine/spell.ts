@@ -277,8 +277,12 @@ namespace Lich {
 
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
-            world.placePlayerOnSpawnPoint();
             Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
+            world.hero.performState(CharacterState.TELEPORT);
+            // world.placePlayerOnSpawnPoint();
+            setTimeout(() => {
+                world.placePlayerOnSpawnPoint();
+            }, 100)
             return false;
         }
     }

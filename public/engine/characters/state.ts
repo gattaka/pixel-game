@@ -10,6 +10,7 @@ namespace Lich {
         MIDAIR,
         FALL,
         DIE,
-        DEAD
+        DEAD,
+        TELEPORT,
     }
 }

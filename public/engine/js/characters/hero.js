@@ -12,7 +12,7 @@ var Lich;
             80, // HEIGHT 
             16, // COLLXOFFSET
             12, // COLLYOFFSET
-            Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 30, // frames
+            Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 37, // frames
             Lich.MovementType.WALK, 300, // HERO_HORIZONTAL_SPEED
             520, // HERO_VERTICAL_SPEED
             new Lich.Animations()
@@ -26,7 +26,8 @@ var Lich;
                 .add(Lich.CharacterState.JUMPR, 25, 25, Lich.CharacterState.JUMPR, 0.2)
                 .add(Lich.CharacterState.JUMPL, 27, 27, Lich.CharacterState.JUMPL, 0.2)
                 .add(Lich.CharacterState.DIE, 28, 28, Lich.CharacterState.DEAD, 0.2)
-                .add(Lich.CharacterState.DEAD, 29, 29, Lich.CharacterState.DEAD, 0.2));
+                .add(Lich.CharacterState.DEAD, 29, 29, Lich.CharacterState.DEAD, 0.2)
+                .add(Lich.CharacterState.TELEPORT, 30, 36, Lich.CharacterState.IDLE, 1.0));
             this.willRegen = 10;
             this.healthRegen = 1;
             this.onHealthChange(this.currentHealth);
@@ -62,7 +63,7 @@ var Lich;
             return damage;
         };
         Hero.prototype.die = function (world) {
-            _super.prototype.die;
+            _super.prototype.die.call(this, world);
             world.showDeadInfo();
         };
         /*-----------*/
