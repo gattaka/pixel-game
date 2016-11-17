@@ -89,20 +89,7 @@ namespace Lich {
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
                 this.currentHealth -= damage;
-                switch (Math.floor(Math.random() * 4)) {
-                    case 0:
-                        Mixer.playSound(SoundKey.SND_PUNCH_1_KEY);
-                        break;
-                    case 1:
-                        Mixer.playSound(SoundKey.SND_PUNCH_2_KEY);
-                        break;
-                    case 2:
-                        Mixer.playSound(SoundKey.SND_PUNCH_3_KEY);
-                        break;
-                    case 3:
-                        Mixer.playSound(SoundKey.SND_PUNCH_4_KEY);
-                        break;
-                }
+                // TODO armor
 
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;

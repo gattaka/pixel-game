@@ -319,7 +319,6 @@ namespace Lich {
                     self.isCollision.bind(self),
                     ignoreOneWay
                 );
-                console.log("distanceY: " + distanceY);
 
                 if (clsnTest.hit === false) {
                     makeShift(0, distanceY);
@@ -438,7 +437,15 @@ namespace Lich {
             });
 
             // update hráče
+            let oldSpeedY = self.hero.speedy;
             self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down);
+            if (self.hero.speedy == 0 && oldSpeedY < 0) {
+                let threshold = World.MAX_FREEFALL_SPEED / 1.5;
+                oldSpeedY -= threshold;
+                if (oldSpeedY < 0) {
+                    self.hero.hit(Math.floor(self.hero.getMaxHealth() * oldSpeedY / (World.MAX_FREEFALL_SPEED - threshold)), this);
+                }
+            }
 
             EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
             EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));

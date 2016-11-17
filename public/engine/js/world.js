@@ -265,7 +265,6 @@ var Lich;
                 // Nenarazím na překážku?
                 var ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), ignoreOneWay);
-                console.log("distanceY: " + distanceY);
                 if (clsnTest.hit === false) {
                     makeShift(0, distanceY);
                 }
@@ -357,7 +356,15 @@ var Lich;
                 }
             });
             // update hráče
+            var oldSpeedY = self.hero.speedy;
             self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down);
+            if (self.hero.speedy == 0 && oldSpeedY < 0) {
+                var threshold = World.MAX_FREEFALL_SPEED / 1.5;
+                oldSpeedY -= threshold;
+                if (oldSpeedY < 0) {
+                    self.hero.hit(Math.floor(self.hero.getMaxHealth() * oldSpeedY / (World.MAX_FREEFALL_SPEED - threshold)), this);
+                }
+            }
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
             // update nepřátel

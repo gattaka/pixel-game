@@ -40,6 +40,27 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.WillChangeEventPayload(this.maxWill, this.currentWill));
         };
         ;
+        Hero.prototype.hit = function (damage, world) {
+            if (this.currentHealth > 0) {
+                world.fadeText("-" + damage, this.x + this.width * Math.random(), this.y, 25, "#E30", "#300");
+                switch (Math.floor(Math.random() * 4)) {
+                    case 0:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_1_KEY);
+                        break;
+                    case 1:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_2_KEY);
+                        break;
+                    case 2:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_3_KEY);
+                        break;
+                    case 3:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_PUNCH_4_KEY);
+                        break;
+                }
+            }
+            _super.prototype.hit.call(this, damage, world);
+            return damage;
+        };
         Hero.prototype.die = function (world) {
             _super.prototype.die;
             world.showDeadInfo();
