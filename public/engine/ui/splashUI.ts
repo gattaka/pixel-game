@@ -172,6 +172,7 @@ namespace Lich {
             btn.on("click", function (evt) {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                self.hide();
             }, null, false);
             return btn;
         }

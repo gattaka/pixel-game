@@ -208,6 +208,7 @@ var Lich;
             btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                self.hide();
             }, null, false);
             return btn;
         };

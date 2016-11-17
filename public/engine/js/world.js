@@ -612,9 +612,10 @@ var Lich;
                     }
                     height = 0;
                     while (height !== objectHeight) {
-                        // pokud jde o posuv dolů nebo statický stav (=0), 
+                        // pokud se nehýbu do stran (xShift == 0, nedojde ke kolize stranou)  
+                        // a pokud jde o posuv dolů nebo statický stav (=0), 
                         // zkoumej rovnou spodní hranu, tou se narazí jako první 
-                        if (yShift <= 0 || (height + Lich.Resources.TILE_SIZE > objectHeight)) {
+                        if ((yShift <= 0 && xShift == 0) || (height + Lich.Resources.TILE_SIZE > objectHeight)) {
                             height = objectHeight;
                         }
                         else {

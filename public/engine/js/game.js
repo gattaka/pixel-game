@@ -120,6 +120,7 @@ var Lich;
                                 inv: self.ui.inventoryUI.serialize()
                             };
                             idb.saveData(JSON.stringify(data));
+                            self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
                         }, 1);
                         return true;
                     });
