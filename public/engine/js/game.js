@@ -108,8 +108,8 @@ var Lich;
                     Lich.Mixer.stopAll();
                     // (re)-init
                     self.ui = new Lich.UI(self.canvas, tilesMap);
-                    self.world = new Lich.World(self, tilesMap);
                     self.background = new Lich.Background(self);
+                    self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {

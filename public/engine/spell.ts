@@ -277,7 +277,7 @@ namespace Lich {
 
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
-            world.shiftWorldTo(0, 0);
+            world.placePlayerOnSpawnPoint();
             Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
             return false;
         }

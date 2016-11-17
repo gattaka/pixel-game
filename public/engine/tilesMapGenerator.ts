@@ -7,6 +7,8 @@
 namespace Lich {
 
     export interface SaveStructure {
+        spwx: number,
+        spwy: number,
         w: number,
         h: number,
         srf: Array<any>,
@@ -25,6 +27,8 @@ namespace Lich {
 
         public static serialize(tilesMap: TilesMap): SaveStructure {
             let data: SaveStructure = {
+                spwx: tilesMap.spawnPoint ? tilesMap.spawnPoint.x : undefined,
+                spwy: tilesMap.spawnPoint ? tilesMap.spawnPoint.y : undefined,
                 w: tilesMap.width,
                 h: tilesMap.height,
                 srf: [],
@@ -88,6 +92,8 @@ namespace Lich {
             let progress = 0;
 
             let tilesMap = new TilesMap(data.w, data.h);
+            if (data.spwx && data.spwy)
+                tilesMap.spawnPoint = new Coord2D(data.spwx, data.spwy);
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Surface"));
 

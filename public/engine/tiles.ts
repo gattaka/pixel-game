@@ -26,6 +26,9 @@ namespace Lich {
         // 2D pole dílků objektů na mapě
         public mapObjectsTiles: Array2D<MapObjectTile>;
 
+        // spawnPoint pro hráče
+        public spawnPoint: Coord2D;
+
         // předpis rozmístění objektů (celých, nikoliv dílků)
         // hra se bez tohohle přehledu obejde, ale značně to 
         // urychluje save/load

@@ -423,18 +423,18 @@ var Lich;
             }
             return false;
         };
-        Render.prototype.interact = function (x, y) {
+        Render.prototype.interact = function (px, py) {
             var self = this;
-            var coord = self.pixelsToTiles(x, y);
-            var rx = Lich.Utils.even(coord.x);
-            var ry = Lich.Utils.even(coord.y);
-            var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
+            var coord = self.pixelsToTiles(px, py);
+            var tx = Lich.Utils.even(coord.x);
+            var ty = Lich.Utils.even(coord.y);
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(tx, ty);
             if (objectElement !== null) {
                 var objType = Lich.Resources.getInstance().mapObjectDefs[objectElement.mapKey];
                 if (objType.rmbAction) {
-                    objType.rmbAction(self.game, rx - objectElement.objTileX, 
+                    objType.rmbAction(self.game, tx - objectElement.objTileX, 
                     // aby se to bralo/usazovalo za spodní řadu
-                    ry - objectElement.objTileY + objType.mapSpriteHeight - 2, objectElement, objType);
+                    ty - objectElement.objTileY + objType.mapSpriteHeight - 2, objectElement, objType);
                     return true;
                 }
             }

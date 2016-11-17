@@ -34,6 +34,7 @@ namespace Lich {
             version.addChange("Tiles layout changed");
             version.addChange("DEV levitation control changed");
             version.addChange("Platforms introduced");
+            version.addChange("Player spawning point");
             this.addVersion(version);
 
             version = new Version("0.8");

@@ -529,20 +529,20 @@ namespace Lich {
             return false;
         }
 
-        interact(x: number, y: number): boolean {
+        interact(px: number, py: number): boolean {
             var self = this;
-            var coord = self.pixelsToTiles(x, y);
-            var rx = Utils.even(coord.x);
-            var ry = Utils.even(coord.y);
+            var coord = self.pixelsToTiles(px, py);
+            var tx = Utils.even(coord.x);
+            var ty = Utils.even(coord.y);
 
-            var objectElement = self.tilesMap.mapObjectsTiles.getValue(rx, ry);
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(tx, ty);
             if (objectElement !== null) {
                 var objType: MapObjDefinition = Resources.getInstance().mapObjectDefs[objectElement.mapKey];
                 if (objType.rmbAction) {
                     objType.rmbAction(self.game,
-                        rx - objectElement.objTileX,
+                        tx - objectElement.objTileX,
                         // aby se to bralo/usazovalo za spodní řadu
-                        ry - objectElement.objTileY + objType.mapSpriteHeight - 2,
+                        ty - objectElement.objTileY + objType.mapSpriteHeight - 2,
                         objectElement, objType);
                     return true;
                 }

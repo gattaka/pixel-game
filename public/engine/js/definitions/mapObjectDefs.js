@@ -1,7 +1,15 @@
 var Lich;
 (function (Lich) {
     Lich.MAP_OBJECT_DEFS = [
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRAVE_KEY, 6, 3, Lich.InventoryKey.INV_BONES_KEY, 5, 160).setDepth(0, 5),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRAVE_KEY, 6, 3, Lich.InventoryKey.INV_GRAVE_KEY, 1, 160, function (game, tx, ty, obj, objType) {
+            var pCoord = game.getWorld().render.tilesToPixel(tx, ty);
+            if (game.getWorld().setSpawnPoint(tx, ty)) {
+                game.getWorld().fadeText("Spawn point created", pCoord.x, pCoord.y, 25, "#0B0", "#030");
+            }
+            else {
+                game.getWorld().fadeText("Invalid spawn point", pCoord.x, pCoord.y, 25, "#B00", "#300");
+            }
+        }).setDepth(0, 5),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BERRY_KEY, 2, 2, Lich.InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
@@ -46,7 +54,6 @@ var Lich;
         }).setFrames(3),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, Lich.InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, Lich.InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLATFORM_KEY, 4, 2, Lich.InventoryKey.INV_PLATFORM_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TORCH_KEY, 2, 2, Lich.InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, Lich.InventoryKey.INV_DOOR_KEY, 1, 0, function (game, rx, ry, obj, objType) {
             game.getWorld().render.digObject(rx, ry, false);

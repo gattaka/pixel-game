@@ -104,7 +104,7 @@ namespace Lich {
             // jak často takový objekt v mapě je 
             public cooldown: number,
             // akce na RMB kliknutí
-            public rmbAction?: (game: Game, x: number, y: number, obj: MapObjectTile, objType: MapObjDefinition) => any) {
+            public rmbAction?: (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) => any) {
             super(mapKey, invObj, quant);
         }
 

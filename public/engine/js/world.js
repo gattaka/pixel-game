@@ -49,8 +49,7 @@ var Lich;
             /* Characters */
             /*------------*/
             self.addChild(self.hero);
-            self.hero.x = game.getCanvas().width / 2;
-            self.hero.y = game.getCanvas().height / 2;
+            self.placePlayerOnSpawnPoint();
             /*------------*/
             /* Dig events */
             /*------------*/
@@ -78,13 +77,10 @@ var Lich;
             });
         };
         World.prototype.resetPlayer = function () {
-            this.hero.x = this.game.getCanvas().width / 2;
-            this.hero.y = this.game.getCanvas().height / 2;
             this.hero.fillHealth(this.hero.getMaxHealth());
             this.hero.fillWill(this.hero.getMaxWill());
             this.hero.idle();
-            // TODO dle waypointu hráče
-            this.shiftWorldTo(0, 0);
+            this.placePlayerOnSpawnPoint();
         };
         World.prototype.showDeadInfo = function () {
             var self = this;
@@ -116,17 +112,17 @@ var Lich;
                 self.removeChild(deadInfo);
             });
         };
-        World.prototype.fadeText = function (text, x, y, size, color, outlineColor) {
+        World.prototype.fadeText = function (text, px, py, size, color, outlineColor) {
             if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
             if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
             if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
             var self = this;
             var label = new Lich.Label(text, size + "px " + Lich.Resources.FONT, color, true, outlineColor, 1);
             self.addChild(label);
-            label.x = x;
-            label.y = y;
+            label.x = px;
+            label.y = py;
             label["tweenY"] = 0;
-            label["virtualY"] = y;
+            label["virtualY"] = py;
             var id = 0;
             for (id = 0; id < self.labelObjects.length; id++) {
                 // buď najdi volné místo...
@@ -174,6 +170,94 @@ var Lich;
             self.addChild(object);
         };
         ;
+        World.prototype.setSpawnPoint = function (tx, ty) {
+            var self = this;
+            var hero = self.hero;
+            var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
+            var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            // posuv nahoru o výšku hráče, aby u spawn pointu stál nohama
+            ty -= heroHeight - 2;
+            // je hráče kam umístit?
+            var fits = true;
+            (function () {
+                for (var hyt = 0; hyt < heroHeight; hyt++) {
+                    for (var hxt = 0; hxt < heroWidth; hxt++) {
+                        var result = self.isCollisionByTiles(tx + hxt, ty + hyt);
+                        if (result.hit) {
+                            fits = false;
+                            return;
+                        }
+                    }
+                }
+            })();
+            if (fits) {
+                this.tilesMap.spawnPoint = new Lich.Coord2D(tx, ty - 1);
+            }
+            return fits;
+        };
+        World.prototype.placePlayerOnSpawnPoint = function () {
+            var self = this;
+            var game = self.game;
+            var tilesMap = self.tilesMap;
+            self.hero.x = game.getCanvas().width / 2;
+            self.hero.y = game.getCanvas().height / 2;
+            var hero = self.hero;
+            // Tohle je potřeba udělat, jinak se při více teleportech hráči
+            // nastřádá rychlost a například směrem dolů se při opakovaném
+            // teleportování 1px nad zemí pak dokáže i zabít :)  
+            hero.speedx = 0;
+            hero.speedy = 0;
+            var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
+            var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            var pCoord;
+            if (tilesMap.spawnPoint) {
+                pCoord = self.render.tilesToPixel(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y);
+            }
+            else {
+                var xt_1 = tilesMap.width / 2;
+                var _loop_1 = function(yt) {
+                    // je hráče kam umístit?
+                    var fits = true;
+                    (function () {
+                        for (var hyt = 0; hyt < heroHeight; hyt++) {
+                            for (var hxt = 0; hxt < heroWidth; hxt++) {
+                                var result = self.isCollisionByTiles(xt_1 + hxt, yt + hyt);
+                                if (result.hit) {
+                                    fits = false;
+                                    return;
+                                }
+                            }
+                        }
+                    })();
+                    if (fits) {
+                        // je hráče na co umístit?
+                        var sits_1 = false;
+                        (function () {
+                            for (var hxt = 0; hxt < heroWidth; hxt++) {
+                                var result = self.isCollisionByTiles(xt_1 + hxt, yt + heroHeight + 1);
+                                if (result.hit) {
+                                    sits_1 = true;
+                                    return;
+                                }
+                            }
+                        })();
+                        if (sits_1) {
+                            pCoord = self.render.tilesToPixel(xt_1, yt);
+                            return "break";
+                        }
+                    }
+                };
+                for (var yt = 0; yt < tilesMap.height; yt++) {
+                    var state_1 = _loop_1(yt);
+                    if (state_1 === "break") break;
+                }
+            }
+            self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+        };
+        /**
+         * Udává, o kolik se má ve scéně posunout svět, záporné shiftX tedy posouvá
+         * fyzicky svět doleva, takže je to jako kdyby hráč šel doprava
+         */
         World.prototype.shiftWorldBy = function (shiftX, shiftY) {
             var self = this;
             var rndDstX = Lich.Utils.floor(shiftX);

@@ -213,7 +213,7 @@ var Lich;
         }
         TeleportSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
-            world.shiftWorldTo(0, 0);
+            world.placePlayerOnSpawnPoint();
             Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
             return false;
         };

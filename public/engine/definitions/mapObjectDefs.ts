@@ -1,6 +1,14 @@
 namespace Lich {
     export let MAP_OBJECT_DEFS = [
-        new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 6, 3, InventoryKey.INV_BONES_KEY, 5, 160).setDepth(0, 5),
+        new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 6, 3, InventoryKey.INV_GRAVE_KEY, 1, 160,
+            function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {
+                let pCoord = game.getWorld().render.tilesToPixel(tx, ty);
+                if (game.getWorld().setSpawnPoint(tx, ty)) {
+                    game.getWorld().fadeText("Spawn point created", pCoord.x, pCoord.y, 25, "#0B0", "#030");
+                } else {
+                    game.getWorld().fadeText("Invalid spawn point", pCoord.x, pCoord.y, 25, "#B00", "#300");
+                }
+            }).setDepth(0, 5),
         new MapObjDefinition(MapObjectKey.MAP_BERRY_KEY, 2, 2, InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
@@ -47,7 +55,6 @@ namespace Lich {
             }).setFrames(3),
         new MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
-        new MapObjDefinition(MapObjectKey.MAP_PLATFORM_KEY, 4, 2, InventoryKey.INV_PLATFORM_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
             function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {

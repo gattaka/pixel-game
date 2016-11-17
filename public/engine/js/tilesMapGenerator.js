@@ -11,6 +11,8 @@ var Lich;
         }
         TilesMapGenerator.serialize = function (tilesMap) {
             var data = {
+                spwx: tilesMap.spawnPoint ? tilesMap.spawnPoint.x : undefined,
+                spwy: tilesMap.spawnPoint ? tilesMap.spawnPoint.y : undefined,
                 w: tilesMap.width,
                 h: tilesMap.height,
                 srf: [],
@@ -69,6 +71,8 @@ var Lich;
             var total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
             var progress = 0;
             var tilesMap = new Lich.TilesMap(data.w, data.h);
+            if (data.spwx && data.spwy)
+                tilesMap.spawnPoint = new Lich.Coord2D(data.spwx, data.spwy);
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Surface"));
             var count = 0;
             for (var v = 0; v < data.srf.length; v += 2) {

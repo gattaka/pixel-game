@@ -63,8 +63,7 @@ namespace Lich {
             /* Characters */
             /*------------*/
             self.addChild(self.hero);
-            self.hero.x = game.getCanvas().width / 2;
-            self.hero.y = game.getCanvas().height / 2;
+            self.placePlayerOnSpawnPoint();
 
             /*------------*/
             /* Dig events */
@@ -98,13 +97,10 @@ namespace Lich {
         }
 
         resetPlayer() {
-            this.hero.x = this.game.getCanvas().width / 2;
-            this.hero.y = this.game.getCanvas().height / 2;
             this.hero.fillHealth(this.hero.getMaxHealth());
             this.hero.fillWill(this.hero.getMaxWill());
             this.hero.idle();
-            // TODO dle waypointu hráče
-            this.shiftWorldTo(0, 0);
+            this.placePlayerOnSpawnPoint();
         }
 
         showDeadInfo() {
@@ -142,14 +138,14 @@ namespace Lich {
                 })
         }
 
-        fadeText(text: string, x: number, y: number, size = PartsUI.TEXT_SIZE, color = Resources.TEXT_COLOR, outlineColor = Resources.OUTLINE_COLOR) {
+        fadeText(text: string, px: number, py: number, size = PartsUI.TEXT_SIZE, color = Resources.TEXT_COLOR, outlineColor = Resources.OUTLINE_COLOR) {
             let self = this;
             let label = new Label(text, size + "px " + Resources.FONT, color, true, outlineColor, 1);
             self.addChild(label);
-            label.x = x;
-            label.y = y;
+            label.x = px;
+            label.y = py;
             label["tweenY"] = 0;
-            label["virtualY"] = y;
+            label["virtualY"] = py;
             let id = 0;
             for (id = 0; id < self.labelObjects.length; id++) {
                 // buď najdi volné místo...
@@ -203,6 +199,91 @@ namespace Lich {
             self.addChild(object);
         };
 
+        setSpawnPoint(tx: number, ty: number): boolean {
+            var self = this;
+            let hero = self.hero;
+            let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
+            let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            // posuv nahoru o výšku hráče, aby u spawn pointu stál nohama
+            ty -= heroHeight - 2;
+            // je hráče kam umístit?
+            let fits = true;
+            (() => {
+                for (let hyt = 0; hyt < heroHeight; hyt++) {
+                    for (let hxt = 0; hxt < heroWidth; hxt++) {
+                        let result = self.isCollisionByTiles(tx + hxt, ty + hyt);
+                        if (result.hit) {
+                            fits = false;
+                            return;
+                        }
+                    }
+                }
+            })();
+            if (fits) {
+                this.tilesMap.spawnPoint = new Coord2D(tx, ty - 1);
+            }
+            return fits;
+        }
+
+        placePlayerOnSpawnPoint() {
+            var self = this;
+            let game = self.game;
+            let tilesMap = self.tilesMap;
+            self.hero.x = game.getCanvas().width / 2;
+            self.hero.y = game.getCanvas().height / 2;
+            let hero = self.hero;
+            // Tohle je potřeba udělat, jinak se při více teleportech hráči
+            // nastřádá rychlost a například směrem dolů se při opakovaném
+            // teleportování 1px nad zemí pak dokáže i zabít :)  
+            hero.speedx = 0;
+            hero.speedy = 0;
+            let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
+            let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            let pCoord;
+            if (tilesMap.spawnPoint) {
+                pCoord = self.render.tilesToPixel(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y);
+            } else {
+                let xt = tilesMap.width / 2;
+                for (let yt = 0; yt < tilesMap.height; yt++) {
+                    // je hráče kam umístit?
+                    let fits = true;
+                    (() => {
+                        for (let hyt = 0; hyt < heroHeight; hyt++) {
+                            for (let hxt = 0; hxt < heroWidth; hxt++) {
+                                let result = self.isCollisionByTiles(xt + hxt, yt + hyt);
+                                if (result.hit) {
+                                    fits = false;
+                                    return;
+                                }
+                            }
+                        }
+                    })();
+                    if (fits) {
+                        // je hráče na co umístit?
+                        let sits = false;
+                        (() => {
+                            for (let hxt = 0; hxt < heroWidth; hxt++) {
+                                let result = self.isCollisionByTiles(xt + hxt, yt + heroHeight + 1);
+                                if (result.hit) {
+                                    sits = true;
+                                    return;
+                                }
+                            }
+                        })();
+                        if (sits) {
+                            pCoord = self.render.tilesToPixel(xt, yt);
+                            break;
+                        }
+                    }
+                }
+            }
+            self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+        }
+
+        /**
+         * Udává, o kolik se má ve scéně posunout svět, záporné shiftX tedy posouvá 
+         * fyzicky svět doleva, takže je to jako kdyby hráč šel doprava 
+         */
         shiftWorldBy(shiftX: number, shiftY: number) {
             let self = this;
             let rndDstX = Utils.floor(shiftX);
@@ -262,7 +343,6 @@ namespace Lich {
             let shiftY = y - this.render.getScreenOffsetY();
             this.shiftWorldBy(shiftX, shiftY);
         }
-
 
         private shouldIgnoreOneWayColls(distanceY: number, object: AbstractWorldObject) {
             let self = this;
