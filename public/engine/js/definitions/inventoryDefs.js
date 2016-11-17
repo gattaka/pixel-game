@@ -35,7 +35,8 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_IRON_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_COAL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_COAL_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLATFORM_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_PLATFORM_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_PLATFORM_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_IRON_PLATFORM_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_WOOD_PLATFORM_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROOF_KEY])
                 .setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROOF_KEY]),
         ];

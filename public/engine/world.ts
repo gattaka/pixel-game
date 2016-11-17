@@ -128,7 +128,7 @@ namespace Lich {
             createjs.Tween.get(deadInfo)
                 .to({
                     alpha: 1
-                }, 200).wait(3000).call(() => {
+                }, 2000).wait(3000).call(() => {
                     self.resetPlayer();
                     Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
                 }).to({

@@ -103,7 +103,7 @@ var Lich;
             createjs.Tween.get(deadInfo)
                 .to({
                 alpha: 1
-            }, 200).wait(3000).call(function () {
+            }, 2000).wait(3000).call(function () {
                 self.resetPlayer();
                 Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
             }).to({

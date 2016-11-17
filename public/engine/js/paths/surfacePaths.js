@@ -12,6 +12,7 @@ var Lich;
         ["images/surfaces/coal.png", Lich.SurfaceKey.SRFC_COAL_KEY],
         ["images/surfaces/rock.png", Lich.SurfaceKey.SRFC_ROCK_KEY],
         ["images/surfaces/rock_brick.png", Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY],
-        ["images/surfaces/platform.png", Lich.SurfaceKey.SRFC_PLATFORM_KEY]
+        ["images/surfaces/iron_platform.png", Lich.SurfaceKey.SRFC_IRON_PLATFORM_KEY],
+        ["images/surfaces/wood_platform.png", Lich.SurfaceKey.SRFC_WOOD_PLATFORM_KEY]
     ];
 })(Lich || (Lich = {}));

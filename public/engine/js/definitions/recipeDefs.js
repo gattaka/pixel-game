@@ -4,6 +4,7 @@ var Lich;
     Lich.WORKSTATIONS_ICONS[Lich.MapObjectKey.MAP_ANVIL_KEY] = Lich.InventoryKey.INV_ANVIL_KEY;
     Lich.WORKSTATIONS_ICONS[Lich.MapObjectKey.MAP_SMELTER_KEY] = Lich.InventoryKey.INV_SMELTER_KEY;
     Lich.RECIPE_DEFS = [
+        // By hand recipes
         [[Lich.InventoryKey.INV_DOOR_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 2]
             ]],
@@ -22,6 +23,9 @@ var Lich;
                 [Lich.InventoryKey.INV_ROCK_KEY, 1]
             ]],
         [[Lich.InventoryKey.INV_WOODWALL_KEY, 5], [
+                [Lich.InventoryKey.INV_WOOD_KEY, 1]
+            ]],
+        [[Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, 5], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],
         [[Lich.InventoryKey.INV_ROOF_KEY, 5], [
@@ -46,7 +50,7 @@ var Lich;
         [[Lich.InventoryKey.INV_IRON_FENCE_KEY, 5], [
                 [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
             ], Lich.MapObjectKey.MAP_ANVIL_KEY],
-        [[Lich.InventoryKey.INV_PLATFORM_KEY, 1], [
+        [[Lich.InventoryKey.INV_IRON_PLATFORM_KEY, 5], [
                 [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
             ], Lich.MapObjectKey.MAP_ANVIL_KEY]
     ];

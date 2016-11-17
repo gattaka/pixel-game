@@ -28,7 +28,8 @@ namespace Lich {
         INV_SMELTER_KEY,
         INV_IRON_INGOT_KEY,
         INV_IRON_FENCE_KEY,
-        INV_PLATFORM_KEY,
+        INV_IRON_PLATFORM_KEY,
+        INV_WOOD_PLATFORM_KEY,
         INV_GRAVE_KEY
     }
 }

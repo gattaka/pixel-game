@@ -35,7 +35,8 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_IRON_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_IRON_KEY]),
             new InvObjDefinition(InventoryKey.INV_COAL_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_COAL_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_KEY]),
-            new InvObjDefinition(InventoryKey.INV_PLATFORM_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_PLATFORM_KEY]),
+            new InvObjDefinition(InventoryKey.INV_IRON_PLATFORM_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_IRON_PLATFORM_KEY]),
+            new InvObjDefinition(InventoryKey.INV_WOOD_PLATFORM_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_WOOD_PLATFORM_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROOF_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROOF_KEY])
                 .setBackground(res.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROOF_KEY]),
         ];

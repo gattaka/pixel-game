@@ -4,6 +4,7 @@ namespace Lich {
     WORKSTATIONS_ICONS[MapObjectKey.MAP_SMELTER_KEY] = InventoryKey.INV_SMELTER_KEY;
 
     export let RECIPE_DEFS = [
+        // By hand recipes
         [[InventoryKey.INV_DOOR_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 2]
         ]],
@@ -22,6 +23,9 @@ namespace Lich {
             [InventoryKey.INV_ROCK_KEY, 1]
         ]],
         [[InventoryKey.INV_WOODWALL_KEY, 5], [
+            [InventoryKey.INV_WOOD_KEY, 1]
+        ]],
+        [[InventoryKey.INV_WOOD_PLATFORM_KEY, 5], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],
         [[InventoryKey.INV_ROOF_KEY, 5], [
@@ -46,7 +50,7 @@ namespace Lich {
         [[InventoryKey.INV_IRON_FENCE_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY],
-        [[InventoryKey.INV_PLATFORM_KEY, 1], [
+        [[InventoryKey.INV_IRON_PLATFORM_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY]
     ]
