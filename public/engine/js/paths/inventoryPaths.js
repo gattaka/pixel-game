@@ -31,6 +31,7 @@ var Lich;
         ["images/ui/inventory/inv_iron_fence.png", Lich.InventoryKey.INV_IRON_FENCE_KEY],
         ["images/ui/inventory/inv_iron_platform.png", Lich.InventoryKey.INV_IRON_PLATFORM_KEY],
         ["images/ui/inventory/inv_wood_platform.png", Lich.InventoryKey.INV_WOOD_PLATFORM_KEY],
-        ["images/ui/inventory/inv_grave.png", Lich.InventoryKey.INV_GRAVE_KEY]
+        ["images/ui/inventory/inv_grave.png", Lich.InventoryKey.INV_GRAVE_KEY],
+        ["images/ui/inventory/inv_wood_ladder.png", Lich.InventoryKey.INV_WOOD_LADDER_KEY]
     ];
 })(Lich || (Lich = {}));

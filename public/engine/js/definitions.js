@@ -83,6 +83,20 @@ var Lich;
     }());
     Lich.InvObjDefinition = InvObjDefinition;
     /**
+     * Typ kolize objektů/povrchů
+     */
+    (function (CollisionType) {
+        // Nelze procházet žádným směrem
+        CollisionType[CollisionType["SOLID"] = 0] = "SOLID";
+        // Lze procházet cestou nahoru a lze skrz 
+        // něj propadnout vynucením směru dolů 
+        CollisionType[CollisionType["PLATFORM"] = 1] = "PLATFORM";
+        // Nekoliduje vůbec, umožňuje volný pohyb
+        // u které zabraňuje pádu
+        CollisionType[CollisionType["LADDER"] = 2] = "LADDER";
+    })(Lich.CollisionType || (Lich.CollisionType = {}));
+    var CollisionType = Lich.CollisionType;
+    /**
      * Objekty jsou ve 4 formách:
      *
      * 1. Umístěn na mapě (eviduje se počet v případě vykopnutí)
@@ -159,15 +173,15 @@ var Lich;
             quant, 
             // jak často takový povrch v mapě je 
             cooldown, 
-            // jde o jednostranně průchozí povrch?
-            oneWay) {
-            if (oneWay === void 0) { oneWay = false; }
+            // jaký typ kolizí povrch má?
+            collisionType) {
+            if (collisionType === void 0) { collisionType = CollisionType.SOLID; }
             _super.call(this, mapKey, invObj, quant);
             this.mapKey = mapKey;
             this.invObj = invObj;
             this.quant = quant;
             this.cooldown = cooldown;
-            this.oneWay = oneWay;
+            this.collisionType = collisionType;
             this.minSize = 1;
             this.maxSize = 3;
             this.minDepth = 10;

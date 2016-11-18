@@ -7,11 +7,12 @@ var Lich;
     }());
     Lich.HashMap = HashMap;
     var CollisionTestResult = (function () {
-        function CollisionTestResult(hit, x, y, surfaceType) {
+        function CollisionTestResult(hit, x, y, collisionType) {
+            if (collisionType === void 0) { collisionType = Lich.CollisionType.SOLID; }
             this.hit = hit;
             this.x = x;
             this.y = y;
-            this.surfaceType = surfaceType;
+            this.collisionType = collisionType;
         }
         return CollisionTestResult;
     }());

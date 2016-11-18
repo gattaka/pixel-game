@@ -35,6 +35,7 @@ namespace Lich {
 
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
+        static CLIMBING_SPEED = -200;
         static MAX_FREEFALL_SPEED = -1200;
 
         /*-----------*/
@@ -369,7 +370,7 @@ namespace Lich {
             return ignoreOneWay;
         }
 
-        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceIgnoreOneWay = false) {
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false) {
             var self = this;
             var clsnTest: CollisionTestResult;
             var clsnPosition;
@@ -388,7 +389,7 @@ namespace Lich {
                     object.speedy = World.MAX_FREEFALL_SPEED;
 
                 // Nenarazím na překážku?
-                let ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
+                let ignoreOneWay = forceFall ? true : self.shouldIgnoreOneWayColls(distanceY, object);
                 clsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
                     object.y + object.collYOffset,
@@ -401,7 +402,18 @@ namespace Lich {
                 );
 
                 if (clsnTest.hit === false) {
-                    makeShift(0, distanceY);
+                    // pokud není kolize a stoupám
+                    // pokud klesám, pak klesám po jiném povrchu, než je žebřík
+                    // pokud klesám po žebříku, pak to musí být vynucené
+                    if (distanceY > 0 || clsnTest.collisionType != CollisionType.LADDER || forceFall) {
+                        makeShift(0, distanceY);
+                        // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
+                        if (clsnTest.collisionType == CollisionType.LADDER && (forceFall || distanceY > 0)) {
+                            object.speedy = World.CLIMBING_SPEED;
+                        }
+                    } else {
+                        object.speedy = 0;
+                    }
                 } else {
                     if (distanceY > 0) {
                         // zastavil jsem se při stoupání? Začni hned padat
@@ -433,10 +445,17 @@ namespace Lich {
                     self.isCollision.bind(this),
                     // pád z klidu se vždy musí zaseknout o oneWay kolize 
                     // výjimkou je, když hráč chce propadnou níž
-                    forceIgnoreOneWay
+                    forceFall
                 );
                 if (clsnTest.hit === false) {
-                    object.speedy = -1;
+                    if (clsnTest.collisionType != CollisionType.LADDER) {
+                        // pokud klesám, pak klesám po jiném povrchu, než je žebřík
+                        object.speedy = -1;
+                    } else if (forceFall) {
+                        // pokud klesám po žebříku, pak to musí být vynucené
+                        // a pak klesám konstantní rychlostí
+                        object.speedy = World.CLIMBING_SPEED;
+                    }
                 }
             }
 
@@ -610,8 +629,14 @@ namespace Lich {
             var self = this;
             // kolize s povrchem/hranicí mapy
             var val = self.tilesMap.mapRecord.getValue(x, y);
-            if (val == null || val != 0) {
-                return new CollisionTestResult(true, x, y, val);
+            if (val != null && val != 0) {
+                let res = Resources.getInstance();
+                let collisionType = res.mapSurfaceDefs[res.surfaceIndex.getType(val)].collisionType;
+                return new CollisionTestResult(true, x, y, collisionType);
+            }
+            // kolize "mimo mapu"
+            if (val == null) {
+                return new CollisionTestResult(true, x, y);
             }
 
             // kolize s kolizními objekty
@@ -638,7 +663,7 @@ namespace Lich {
             var tx;
             var ty;
 
-            let res = Resources.getInstance();
+            let lastResult = new CollisionTestResult(false);
 
             // korekce překlenutí -- při kontrole rozměrů dochází k přeskoku na další tile, který
             // může vyhodit kolizi, ačkoliv v něm objekt není. Důvod je, že objekt o šířce 1 tile
@@ -677,9 +702,12 @@ namespace Lich {
                     ty = y - yShift;
                     let LT = collisionTester(tx, ty);
                     if (LT.hit) {
-                        if (ignoreOneWay && (LT.surfaceType || LT.surfaceType == 0)
-                            && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
+                        if (ignoreOneWay && (LT.collisionType == CollisionType.PLATFORM)) {
                             // kolize je ignorována
+                        } else if (LT.collisionType == CollisionType.LADDER) {
+                            // žebříková kolize se vrací pouze jako info
+                            lastResult = LT;
+                            lastResult.hit = false;
                         } else {
                             return LT;
                         }
@@ -718,9 +746,12 @@ namespace Lich {
                             ty = y - yShift;
                             let RT = collisionTester(tx, ty);
                             if (RT.hit) {
-                                if (ignoreOneWay && (RT.surfaceType || RT.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RT.surfaceType)].oneWay) {
+                                if (ignoreOneWay && (RT.collisionType == CollisionType.PLATFORM)) {
                                     // kolize je ignorována
+                                } else if (RT.collisionType == CollisionType.LADDER) {
+                                    // žebříková kolize se vrací pouze jako info
+                                    lastResult = RT;
+                                    lastResult.hit = false;
                                 } else {
                                     return RT;
                                 }
@@ -735,9 +766,12 @@ namespace Lich {
                                 // OneWay kolize se ignorují pouze pokud se to chce, 
                                 // nebo je to jejich spodní tile -- to je proto, aby 
                                 // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Utils.isEven(LB.y) == false) && (LB.surfaceType || LB.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(LB.surfaceType)].oneWay) {
+                                if ((ignoreOneWay || Utils.isEven(LB.y) == false) && (LB.collisionType == CollisionType.PLATFORM)) {
                                     // kolize je ignorována
+                                } else if (LB.collisionType == CollisionType.LADDER) {
+                                    // žebříková kolize se vrací pouze jako info
+                                    lastResult = LB;
+                                    lastResult.hit = false;
                                 } else {
                                     return LB;
                                 }
@@ -752,9 +786,12 @@ namespace Lich {
                                 // OneWay kolize se ignorují pouze pokud se to chce, 
                                 // nebo je to jejich spodní tile -- to je proto, aby 
                                 // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Utils.isEven(RB.y) == false) && (RB.surfaceType || RB.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RB.surfaceType)].oneWay) {
+                                if ((ignoreOneWay || Utils.isEven(RB.y) == false) && (RB.collisionType == CollisionType.PLATFORM)) {
                                     // kolize je ignorována
+                                } else if (RB.collisionType == CollisionType.LADDER) {
+                                    // žebříková kolize se vrací pouze jako info
+                                    lastResult = RB;
+                                    lastResult.hit = false;
                                 } else {
                                     return RB;
                                 }
@@ -762,14 +799,14 @@ namespace Lich {
                         }
 
                         if (xShift === objectXShift && yShift === objectYShift && width === objectWidth && height === objectHeight) {
-                            return new CollisionTestResult(false);
+                            return lastResult;
                         }
 
                     }
                 }
             } while (xShift !== objectXShift || yShift !== objectYShift)
 
-            return new CollisionTestResult(false);
+            return lastResult;
 
         };
 

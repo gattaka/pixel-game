@@ -73,6 +73,20 @@ namespace Lich {
     }
 
     /**
+     * Typ kolize objektů/povrchů
+     */
+    export enum CollisionType {
+        // Nelze procházet žádným směrem
+        SOLID,
+        // Lze procházet cestou nahoru a lze skrz 
+        // něj propadnout vynucením směru dolů 
+        PLATFORM,
+        // Nekoliduje vůbec, umožňuje volný pohyb
+        // u které zabraňuje pádu
+        LADDER
+    }
+
+    /**
      * Objekty jsou ve 4 formách:
      * 
      * 1. Umístěn na mapě (eviduje se počet v případě vykopnutí)
@@ -152,8 +166,8 @@ namespace Lich {
             public quant: number,
             // jak často takový povrch v mapě je 
             public cooldown: number,
-            // jde o jednostranně průchozí povrch?
-            public oneWay = false) {
+            // jaký typ kolizí povrch má?
+            public collisionType = CollisionType.SOLID) {
             super(mapKey, invObj, quant);
         }
 

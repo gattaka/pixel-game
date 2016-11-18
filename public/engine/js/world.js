@@ -330,8 +330,8 @@ var Lich;
             }
             return ignoreOneWay;
         };
-        World.prototype.updateObject = function (sDelta, object, makeShift, forceIgnoreOneWay) {
-            if (forceIgnoreOneWay === void 0) { forceIgnoreOneWay = false; }
+        World.prototype.updateObject = function (sDelta, object, makeShift, forceFall) {
+            if (forceFall === void 0) { forceFall = false; }
             var self = this;
             var clsnTest;
             var clsnPosition;
@@ -347,10 +347,22 @@ var Lich;
                 if (object.speedy < World.MAX_FREEFALL_SPEED)
                     object.speedy = World.MAX_FREEFALL_SPEED;
                 // Nenarazím na překážku?
-                var ignoreOneWay = forceIgnoreOneWay ? true : self.shouldIgnoreOneWayColls(distanceY, object);
+                var ignoreOneWay = forceFall ? true : self.shouldIgnoreOneWayColls(distanceY, object);
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), ignoreOneWay);
                 if (clsnTest.hit === false) {
-                    makeShift(0, distanceY);
+                    // pokud není kolize a stoupám
+                    // pokud klesám, pak klesám po jiném povrchu, než je žebřík
+                    // pokud klesám po žebříku, pak to musí být vynucené
+                    if (distanceY > 0 || clsnTest.collisionType != Lich.CollisionType.LADDER || forceFall) {
+                        makeShift(0, distanceY);
+                        // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
+                        if (clsnTest.collisionType == Lich.CollisionType.LADDER && (forceFall || distanceY > 0)) {
+                            object.speedy = World.CLIMBING_SPEED;
+                        }
+                    }
+                    else {
+                        object.speedy = 0;
+                    }
                 }
                 else {
                     if (distanceY > 0) {
@@ -371,9 +383,17 @@ var Lich;
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
                 // pád z klidu se vždy musí zaseknout o oneWay kolize 
                 // výjimkou je, když hráč chce propadnou níž
-                forceIgnoreOneWay);
+                forceFall);
                 if (clsnTest.hit === false) {
-                    object.speedy = -1;
+                    if (clsnTest.collisionType != Lich.CollisionType.LADDER) {
+                        // pokud klesám, pak klesám po jiném povrchu, než je žebřík
+                        object.speedy = -1;
+                    }
+                    else if (forceFall) {
+                        // pokud klesám po žebříku, pak to musí být vynucené
+                        // a pak klesám konstantní rychlostí
+                        object.speedy = World.CLIMBING_SPEED;
+                    }
                 }
             }
             if (object.speedx !== 0) {
@@ -525,8 +545,14 @@ var Lich;
             var self = this;
             // kolize s povrchem/hranicí mapy
             var val = self.tilesMap.mapRecord.getValue(x, y);
-            if (val == null || val != 0) {
-                return new Lich.CollisionTestResult(true, x, y, val);
+            if (val != null && val != 0) {
+                var res = Lich.Resources.getInstance();
+                var collisionType = res.mapSurfaceDefs[res.surfaceIndex.getType(val)].collisionType;
+                return new Lich.CollisionTestResult(true, x, y, collisionType);
+            }
+            // kolize "mimo mapu"
+            if (val == null) {
+                return new Lich.CollisionTestResult(true, x, y);
             }
             // kolize s kolizními objekty
             var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
@@ -549,7 +575,7 @@ var Lich;
             var self = this;
             var tx;
             var ty;
-            var res = Lich.Resources.getInstance();
+            var lastResult = new Lich.CollisionTestResult(false);
             // korekce překlenutí -- při kontrole rozměrů dochází k přeskoku na další tile, který
             // může vyhodit kolizi, ačkoliv v něm objekt není. Důvod je, že objekt o šířce 1 tile
             // usazená na nějaké tile x má součet x+1 jako další tile. Nejde fixně ignorovat 1 tile
@@ -586,8 +612,12 @@ var Lich;
                     ty = y - yShift;
                     var LT = collisionTester(tx, ty);
                     if (LT.hit) {
-                        if (ignoreOneWay && (LT.surfaceType || LT.surfaceType == 0)
-                            && res.mapSurfaceDefs[res.surfaceIndex.getType(LT.surfaceType)].oneWay) {
+                        if (ignoreOneWay && (LT.collisionType == Lich.CollisionType.PLATFORM)) {
+                        }
+                        else if (LT.collisionType == Lich.CollisionType.LADDER) {
+                            // žebříková kolize se vrací pouze jako info
+                            lastResult = LT;
+                            lastResult.hit = false;
                         }
                         else {
                             return LT;
@@ -626,8 +656,12 @@ var Lich;
                             ty = y - yShift;
                             var RT = collisionTester(tx, ty);
                             if (RT.hit) {
-                                if (ignoreOneWay && (RT.surfaceType || RT.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RT.surfaceType)].oneWay) {
+                                if (ignoreOneWay && (RT.collisionType == Lich.CollisionType.PLATFORM)) {
+                                }
+                                else if (RT.collisionType == Lich.CollisionType.LADDER) {
+                                    // žebříková kolize se vrací pouze jako info
+                                    lastResult = RT;
+                                    lastResult.hit = false;
                                 }
                                 else {
                                     return RT;
@@ -642,8 +676,12 @@ var Lich;
                                 // OneWay kolize se ignorují pouze pokud se to chce, 
                                 // nebo je to jejich spodní tile -- to je proto, aby 
                                 // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Lich.Utils.isEven(LB.y) == false) && (LB.surfaceType || LB.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(LB.surfaceType)].oneWay) {
+                                if ((ignoreOneWay || Lich.Utils.isEven(LB.y) == false) && (LB.collisionType == Lich.CollisionType.PLATFORM)) {
+                                }
+                                else if (LB.collisionType == Lich.CollisionType.LADDER) {
+                                    // žebříková kolize se vrací pouze jako info
+                                    lastResult = LB;
+                                    lastResult.hit = false;
                                 }
                                 else {
                                     return LB;
@@ -658,8 +696,12 @@ var Lich;
                                 // OneWay kolize se ignorují pouze pokud se to chce, 
                                 // nebo je to jejich spodní tile -- to je proto, aby 
                                 // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Lich.Utils.isEven(RB.y) == false) && (RB.surfaceType || RB.surfaceType == 0)
-                                    && res.mapSurfaceDefs[res.surfaceIndex.getType(RB.surfaceType)].oneWay) {
+                                if ((ignoreOneWay || Lich.Utils.isEven(RB.y) == false) && (RB.collisionType == Lich.CollisionType.PLATFORM)) {
+                                }
+                                else if (RB.collisionType == Lich.CollisionType.LADDER) {
+                                    // žebříková kolize se vrací pouze jako info
+                                    lastResult = RB;
+                                    lastResult.hit = false;
                                 }
                                 else {
                                     return RB;
@@ -667,12 +709,12 @@ var Lich;
                             }
                         }
                         if (xShift === objectXShift && yShift === objectYShift && width === objectWidth && height === objectHeight) {
-                            return new Lich.CollisionTestResult(false);
+                            return lastResult;
                         }
                     }
                 }
             } while (xShift !== objectXShift || yShift !== objectYShift);
-            return new Lich.CollisionTestResult(false);
+            return lastResult;
         };
         ;
         World.prototype.handleMouse = function (mouse, delta) {
@@ -777,6 +819,7 @@ var Lich;
         World.OBJECT_PICKUP_FORCE_TIME = 150;
         // Pixel/s2
         World.WORLD_GRAVITY = -1200;
+        World.CLIMBING_SPEED = -200;
         World.MAX_FREEFALL_SPEED = -1200;
         return World;
     }(createjs.Container));

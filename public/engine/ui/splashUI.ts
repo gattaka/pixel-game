@@ -23,6 +23,16 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.10");
+            version.addChange("Tiles layout changed");
+            version.addChange("DEV levitation control changed to <SPACE>");
+            version.addChange("Platforms introduced");
+            version.addChange("Player spawning point");
+            version.addChange("Gravity kills");
+            version.addChange("Teleport animation");
+            version.addChange("Ladders introduced");
+            this.addVersion(version);
+
             version = new Version("0.9");
             version.addChange("Enemy AI improved");
             version.addChange("Enemy spawning fixed");
@@ -31,10 +41,6 @@ namespace Lich {
             version.addChange("Teleport spell introduced");
             version.addChange("Sprites light improved");
             version.addChange("New background");
-            version.addChange("Tiles layout changed");
-            version.addChange("DEV levitation control changed");
-            version.addChange("Platforms introduced");
-            version.addChange("Player spawning point");
             this.addVersion(version);
 
             version = new Version("0.8");
