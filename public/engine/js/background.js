@@ -65,27 +65,18 @@ var Lich;
                 part.y += distanceY / dividerY;
             });
             // Dirt back
-            self.dirt_back.x = ((self.dirt_back.x + distanceX / 1.1) % self.dirt_backImg.width) - self.dirt_backImg.width;
-            self.dirt_back.y = self.dirt_back.y + distanceY / 1.1;
-            // při překonání hraničního posunu začni vertikálně opakovat podklad
-            if (self.offsetY < Background.REPEAT_POINT) {
-                if (self.dirt_back.y < -self.dirt_backImg.height && distanceY < 0) {
-                    self.dirt_back.y += self.dirt_backImg.height;
-                }
-                if (self.dirt_back.y > -self.dirt_backImg.height && distanceY > 0) {
-                    self.dirt_back.y -= self.dirt_backImg.height;
-                }
+            self.dirt_back.x = ((self.offsetX / Background.DIRT_DIVIDER_X) % self.dirt_backImg.width) - self.dirt_backImg.width;
+            var tillRepeatPointY = self.offsetY + Background.DIRT_START * Background.DIRT_DIVIDER_Y;
+            self.dirt_back.y = self.offsetY / Background.DIRT_DIVIDER_Y;
+            self.dirt_back.y += Background.DIRT_START * Background.DIRT_DIVIDER_Y;
+            if (tillRepeatPointY < 0) {
+                self.dirt_back.y = self.dirt_back.y % self.dirt_backImg.height;
             }
-            else {
-                // Při návratu se musí zrušit opakování a nastavit koncovým podkladem
-                // proto se musí odebrat výška 2x
-                if (self.dirt_back.y < -self.dirt_backImg.height) {
-                    self.dirt_back.y += self.dirt_backImg.height * 2;
-                }
-            }
+            self.dirt_back.y -= self.dirt_backImg.height;
+            // Start pozadí hlíny kopíruje hlavní část pozadí
+            // navíc je přilepen před počátek hlavní části
             self.dirt_back_start.x = self.dirt_back.x;
             self.dirt_back_start.y = self.dirt_back.y - self.dirt_back_startImg.height + 4;
-            //self.dirt_back_start.y = self.dirt_back_start.y + distanceY / 1.1;
             // Clouds
             for (var i = 0; i < self.clouds.length; i++) {
                 var item = self.clouds[i];
@@ -138,8 +129,9 @@ var Lich;
         Background.BGR_STARTS = [50, 200, 400, 450, 560, 620];
         Background.BGR_DIVIDERS_X = [5, 4, 3.8, 3.6, 3.4, 3];
         Background.BGR_DIVIDERS_Y = [10, 8, 6, 5.5, 5, 4];
-        Background.DIRT_START = 1500;
-        Background.REPEAT_POINT = -Background.DIRT_START - 300;
+        Background.DIRT_DIVIDER_X = 1.1;
+        Background.DIRT_DIVIDER_Y = 1.1;
+        Background.DIRT_START = 1800;
         return Background;
     }());
     Lich.Background = Background;
