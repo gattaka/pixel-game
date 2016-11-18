@@ -330,8 +330,9 @@ var Lich;
             }
             return ignoreOneWay;
         };
-        World.prototype.updateObject = function (sDelta, object, makeShift, forceFall) {
+        World.prototype.updateObject = function (sDelta, object, makeShift, forceFall, forceJump) {
             if (forceFall === void 0) { forceFall = false; }
+            if (forceJump === void 0) { forceJump = false; }
             var self = this;
             var clsnTest;
             var clsnPosition;
@@ -356,8 +357,13 @@ var Lich;
                     if (distanceY > 0 || clsnTest.collisionType != Lich.CollisionType.LADDER || forceFall) {
                         makeShift(0, distanceY);
                         // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
-                        if (clsnTest.collisionType == Lich.CollisionType.LADDER && (forceFall || distanceY > 0)) {
-                            object.speedy = World.CLIMBING_SPEED;
+                        if (clsnTest.collisionType == Lich.CollisionType.LADDER) {
+                            if (forceFall) {
+                                object.speedy = -World.CLIMBING_SPEED;
+                            }
+                            else if (forceJump) {
+                                object.speedy = World.CLIMBING_SPEED;
+                            }
                         }
                     }
                     else {
@@ -392,7 +398,7 @@ var Lich;
                     else if (forceFall) {
                         // pokud klesám po žebříku, pak to musí být vynucené
                         // a pak klesám konstantní rychlostí
-                        object.speedy = World.CLIMBING_SPEED;
+                        object.speedy = -World.CLIMBING_SPEED;
                     }
                 }
             }
@@ -461,7 +467,7 @@ var Lich;
             });
             // update hráče
             var oldSpeedY = self.hero.speedy;
-            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down);
+            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down, controls.up);
             if (self.hero.speedy == 0 && oldSpeedY < 0) {
                 var threshold = World.MAX_FREEFALL_SPEED / 1.5;
                 oldSpeedY -= threshold;
@@ -819,7 +825,7 @@ var Lich;
         World.OBJECT_PICKUP_FORCE_TIME = 150;
         // Pixel/s2
         World.WORLD_GRAVITY = -1200;
-        World.CLIMBING_SPEED = -200;
+        World.CLIMBING_SPEED = 300;
         World.MAX_FREEFALL_SPEED = -1200;
         return World;
     }(createjs.Container));

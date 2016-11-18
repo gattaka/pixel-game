@@ -28,6 +28,12 @@ var Lich;
         [[Lich.InventoryKey.INV_WOOD_LADDER_KEY, 5], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],
+        [[Lich.InventoryKey.INV_WOOD_LADDER_KEY, 1], [
+                [Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, 1]
+            ]],
+        [[Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, 1], [
+                [Lich.InventoryKey.INV_WOOD_LADDER_KEY, 1]
+            ]],
         [[Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, 5], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],

@@ -28,6 +28,12 @@ namespace Lich {
         [[InventoryKey.INV_WOOD_LADDER_KEY, 5], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],
+        [[InventoryKey.INV_WOOD_LADDER_KEY, 1], [
+            [InventoryKey.INV_WOOD_PLATFORM_KEY, 1]
+        ]],
+        [[InventoryKey.INV_WOOD_PLATFORM_KEY, 1], [
+            [InventoryKey.INV_WOOD_LADDER_KEY, 1]
+        ]],
         [[InventoryKey.INV_WOOD_PLATFORM_KEY, 5], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],

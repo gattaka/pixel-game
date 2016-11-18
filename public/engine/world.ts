@@ -35,7 +35,7 @@ namespace Lich {
 
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
-        static CLIMBING_SPEED = -200;
+        static CLIMBING_SPEED = 300;
         static MAX_FREEFALL_SPEED = -1200;
 
         /*-----------*/
@@ -370,7 +370,7 @@ namespace Lich {
             return ignoreOneWay;
         }
 
-        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false) {
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false, forceJump = false) {
             var self = this;
             var clsnTest: CollisionTestResult;
             var clsnPosition;
@@ -408,8 +408,12 @@ namespace Lich {
                     if (distanceY > 0 || clsnTest.collisionType != CollisionType.LADDER || forceFall) {
                         makeShift(0, distanceY);
                         // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
-                        if (clsnTest.collisionType == CollisionType.LADDER && (forceFall || distanceY > 0)) {
-                            object.speedy = World.CLIMBING_SPEED;
+                        if (clsnTest.collisionType == CollisionType.LADDER) {
+                            if (forceFall) {
+                                object.speedy = -World.CLIMBING_SPEED;
+                            } else if (forceJump) {
+                                object.speedy = World.CLIMBING_SPEED;
+                            }
                         }
                     } else {
                         object.speedy = 0;
@@ -454,7 +458,7 @@ namespace Lich {
                     } else if (forceFall) {
                         // pokud klesám po žebříku, pak to musí být vynucené
                         // a pak klesám konstantní rychlostí
-                        object.speedy = World.CLIMBING_SPEED;
+                        object.speedy = -World.CLIMBING_SPEED;
                     }
                 }
             }
@@ -537,7 +541,7 @@ namespace Lich {
 
             // update hráče
             let oldSpeedY = self.hero.speedy;
-            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down);
+            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down, controls.up);
             if (self.hero.speedy == 0 && oldSpeedY < 0) {
                 let threshold = World.MAX_FREEFALL_SPEED / 1.5;
                 oldSpeedY -= threshold;
