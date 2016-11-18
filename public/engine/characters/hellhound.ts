@@ -46,7 +46,7 @@ namespace Lich {
 
             hit(damage: number, world: World): number {
                 if (this.currentHealth > 0) {
-                    Mixer.playSound(SoundKey.SND_BONECRACK_KEY);
+                    Mixer.playSound(SoundKey.SND_BONE_CRACK_KEY);
                 }
                 super.hit(damage, world);
                 return damage;

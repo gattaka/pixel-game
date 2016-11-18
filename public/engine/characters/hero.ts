@@ -73,6 +73,7 @@ namespace Lich {
 
         die(world: World) {
             super.die(world);
+            Mixer.playSound(SoundKey.SND_BONE_CRUSH_KEY);
             world.showDeadInfo();
         }
 

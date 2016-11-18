@@ -9,7 +9,7 @@ var Lich;
         ["sound/pick_axe1.ogg", Lich.SoundKey.SND_PICK_AXE_1_KEY],
         ["sound/pick_axe2.ogg", Lich.SoundKey.SND_PICK_AXE_2_KEY],
         ["sound/pick_axe3.ogg", Lich.SoundKey.SND_PICK_AXE_3_KEY],
-        ["sound/bonecrack.ogg", Lich.SoundKey.SND_BONECRACK_KEY],
+        ["sound/bonecrack.ogg", Lich.SoundKey.SND_BONE_CRACK_KEY],
         ["sound/skeleton_die.ogg", Lich.SoundKey.SND_SKELETON_DIE_KEY],
         ["sound/252083__pepingrillin__spawn.ogg", Lich.SoundKey.SND_SPAWN_KEY],
         ["sound/door_open.ogg", Lich.SoundKey.SND_DOOR_OPEN_KEY],
@@ -23,6 +23,7 @@ var Lich;
         ["sound/punch1.ogg", Lich.SoundKey.SND_PUNCH_1_KEY],
         ["sound/punch2.ogg", Lich.SoundKey.SND_PUNCH_2_KEY],
         ["sound/punch3.ogg", Lich.SoundKey.SND_PUNCH_3_KEY],
-        ["sound/punch4.ogg", Lich.SoundKey.SND_PUNCH_4_KEY]
+        ["sound/punch4.ogg", Lich.SoundKey.SND_PUNCH_4_KEY],
+        ["sound/bone_crush.ogg", Lich.SoundKey.SND_BONE_CRUSH_KEY]
     ];
 })(Lich || (Lich = {}));

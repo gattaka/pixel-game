@@ -64,6 +64,7 @@ var Lich;
         };
         Hero.prototype.die = function (world) {
             _super.prototype.die.call(this, world);
+            Lich.Mixer.playSound(Lich.SoundKey.SND_BONE_CRUSH_KEY);
             world.showDeadInfo();
         };
         /*-----------*/

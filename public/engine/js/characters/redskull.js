@@ -40,7 +40,7 @@ var Lich;
             };
             Redskull.prototype.hit = function (damage, world) {
                 if (this.currentHealth > 0) {
-                    Lich.Mixer.playSound(Lich.SoundKey.SND_BONECRACK_KEY);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_BONE_CRACK_KEY);
                 }
                 _super.prototype.hit.call(this, damage, world);
                 return damage;

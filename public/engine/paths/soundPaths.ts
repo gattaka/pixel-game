@@ -8,7 +8,7 @@ namespace Lich {
         ["sound/pick_axe1.ogg", SoundKey.SND_PICK_AXE_1_KEY],
         ["sound/pick_axe2.ogg", SoundKey.SND_PICK_AXE_2_KEY],
         ["sound/pick_axe3.ogg", SoundKey.SND_PICK_AXE_3_KEY],
-        ["sound/bonecrack.ogg", SoundKey.SND_BONECRACK_KEY],
+        ["sound/bonecrack.ogg", SoundKey.SND_BONE_CRACK_KEY],
         ["sound/skeleton_die.ogg", SoundKey.SND_SKELETON_DIE_KEY],
         ["sound/252083__pepingrillin__spawn.ogg", SoundKey.SND_SPAWN_KEY],
         ["sound/door_open.ogg", SoundKey.SND_DOOR_OPEN_KEY],
@@ -22,6 +22,7 @@ namespace Lich {
         ["sound/punch1.ogg", SoundKey.SND_PUNCH_1_KEY],
         ["sound/punch2.ogg", SoundKey.SND_PUNCH_2_KEY],
         ["sound/punch3.ogg", SoundKey.SND_PUNCH_3_KEY],
-        ["sound/punch4.ogg", SoundKey.SND_PUNCH_4_KEY]
+        ["sound/punch4.ogg", SoundKey.SND_PUNCH_4_KEY],
+        ["sound/bone_crush.ogg", SoundKey.SND_BONE_CRUSH_KEY]
     ]
 }
