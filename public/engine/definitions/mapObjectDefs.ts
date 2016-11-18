@@ -1,6 +1,6 @@
 namespace Lich {
     export let MAP_OBJECT_DEFS = [
-        new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 6, 3, InventoryKey.INV_GRAVE_KEY, 1, 160,
+        new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 2, 2, InventoryKey.INV_GRAVE_KEY, 1, 160,
             function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {
                 let pCoord = game.getWorld().render.tilesToPixel(tx, ty);
                 if (game.getWorld().setSpawnPoint(tx, ty)) {

@@ -1,7 +1,7 @@
 var Lich;
 (function (Lich) {
     Lich.MAP_OBJECT_DEFS = [
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRAVE_KEY, 6, 3, Lich.InventoryKey.INV_GRAVE_KEY, 1, 160, function (game, tx, ty, obj, objType) {
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRAVE_KEY, 2, 2, Lich.InventoryKey.INV_GRAVE_KEY, 1, 160, function (game, tx, ty, obj, objType) {
             var pCoord = game.getWorld().render.tilesToPixel(tx, ty);
             if (game.getWorld().setSpawnPoint(tx, ty)) {
                 game.getWorld().fadeText("Spawn point created", pCoord.x, pCoord.y, 25, "#0B0", "#030");

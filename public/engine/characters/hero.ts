@@ -50,7 +50,7 @@ namespace Lich {
         };
 
         hit(damage: number, world: World): number {
-            if (this.currentHealth > 0) {
+            if (this.currentHealth > 0 && damage > 0) {
                 world.fadeText("-" + damage, this.x + this.width * Math.random(), this.y, 25, "#E30", "#300");
                 switch (Math.floor(Math.random() * 4)) {
                     case 0:
