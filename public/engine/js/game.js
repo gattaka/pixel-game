@@ -17,6 +17,8 @@ var Lich;
         function Game(canvasId) {
             this.initialized = false;
             this.keys = {};
+            this.playerReadyToAutosave = true;
+            this.timerReadyToAutosave = false;
             this.mouse = new Lich.Mouse();
             var self = this;
             Game.CURRENT_GAME = self;
@@ -138,6 +140,14 @@ var Lich;
                         }, 1);
                         return true;
                     });
+                    Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_SPEED_CHANGE, function (data) {
+                        self.playerReadyToAutosave = data.x == 0 && data.y == 0;
+                        if (self.timerReadyToAutosave && self.playerReadyToAutosave) {
+                            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
+                            self.timerReadyToAutosave = false;
+                        }
+                        return false;
+                    });
                     createjs.Tween.get(self.loadUI)
                         .to({
                         alpha: 0
@@ -146,7 +156,15 @@ var Lich;
                     });
                     self.initialized = true;
                 };
-                setInterval(function () { Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD)); }, 60 * 1000);
+                setInterval(function () {
+                    if (self.playerReadyToAutosave) {
+                        Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
+                        self.timerReadyToAutosave = false;
+                    }
+                    else {
+                        self.timerReadyToAutosave = true;
+                    }
+                }, 60 * 1000);
                 loadWorld();
             };
             self.content = new createjs.Container();

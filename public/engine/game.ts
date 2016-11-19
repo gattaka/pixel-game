@@ -26,6 +26,9 @@ namespace Lich {
         private initialized = false;
         private keys = {};
 
+        private playerReadyToAutosave = true;
+        private timerReadyToAutosave = false;
+
         mouse = new Mouse();
 
         public getCanvas(): HTMLCanvasElement { return this.canvas; }
@@ -179,6 +182,15 @@ namespace Lich {
                         return true;
                     });
 
+                    EventBus.getInstance().registerConsumer(EventType.PLAYER_SPEED_CHANGE, (data: TupleEventPayload) => {
+                        self.playerReadyToAutosave = data.x == 0 && data.y == 0;
+                        if (self.timerReadyToAutosave && self.playerReadyToAutosave) {
+                            EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD))
+                            self.timerReadyToAutosave = false;
+                        }
+                        return false;
+                    });
+
                     createjs.Tween.get(self.loadUI)
                         .to({
                             alpha: 0
@@ -189,7 +201,14 @@ namespace Lich {
                     self.initialized = true;
                 };
 
-                setInterval(() => { EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD)) }, 60 * 1000);
+                setInterval(() => {
+                    if (self.playerReadyToAutosave) {
+                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
+                        self.timerReadyToAutosave = false;
+                    } else {
+                        self.timerReadyToAutosave = true;
+                    }
+                }, 60 * 1000);
 
                 loadWorld();
             }
