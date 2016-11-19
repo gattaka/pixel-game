@@ -12,5 +12,6 @@ namespace Lich {
         DIE,
         DEAD,
         TELEPORT,
+        CLIMB
     }
 }

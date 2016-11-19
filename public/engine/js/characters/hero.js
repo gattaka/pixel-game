@@ -12,7 +12,7 @@ var Lich;
             80, // HEIGHT 
             16, // COLLXOFFSET
             12, // COLLYOFFSET
-            Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 37, // frames
+            Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 40, // frames
             Lich.MovementType.WALK, 300, // HERO_HORIZONTAL_SPEED
             520, // HERO_VERTICAL_SPEED
             new Lich.Animations()
@@ -27,7 +27,8 @@ var Lich;
                 .add(Lich.CharacterState.JUMPL, 27, 27, Lich.CharacterState.JUMPL, 0.2)
                 .add(Lich.CharacterState.DIE, 28, 28, Lich.CharacterState.DEAD, 0.2)
                 .add(Lich.CharacterState.DEAD, 29, 29, Lich.CharacterState.DEAD, 0.2)
-                .add(Lich.CharacterState.TELEPORT, 30, 36, Lich.CharacterState.IDLE, 1.0));
+                .add(Lich.CharacterState.TELEPORT, 30, 36, Lich.CharacterState.IDLE, 1.0)
+                .add(Lich.CharacterState.CLIMB, 37, 39, Lich.CharacterState.CLIMB, 0.3));
             this.willRegen = 10;
             this.healthRegen = 1;
             this.onHealthChange(this.currentHealth);

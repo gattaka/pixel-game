@@ -16,6 +16,8 @@ namespace Lich {
         protected currentWill = this.maxWill;
         protected willRegen = 0;
 
+        public isClimbing = false;
+
         public spellCooldowns = new Table<number>();
 
         constructor(width: number, height: number,
@@ -54,6 +56,10 @@ namespace Lich {
 
         idle() {
             this.performState(CharacterState.IDLE);
+        }
+
+        climb() {
+            this.performState(CharacterState.CLIMB);
         }
 
         jump() {
@@ -166,10 +172,17 @@ namespace Lich {
         updateAnimations() {
             var self = this;
             if (this.getCurrentHealth() > 0) {
-                if (self.speedx === 0 && self.speedy === 0) {
+                if (self.isClimbing) {
+                    self.climb();
+                    if (self.speedx == 0 && self.speedy == 0) {
+                        self.stop();
+                    } else {
+                        self.play();
+                    }
+                } else if (self.speedx == 0 && self.speedy == 0) {
                     self.idle();
-                } else if (self.speedy !== 0) {
-                    if (self.speedx === 0) {
+                } else if (self.speedy != 0) {
+                    if (self.speedx == 0) {
                         self.jump();
                     } else if (self.speedx > 0) {
                         self.jumpL();

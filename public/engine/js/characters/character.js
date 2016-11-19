@@ -37,6 +37,7 @@ var Lich;
             this.maxWill = 50;
             this.currentWill = this.maxWill;
             this.willRegen = 0;
+            this.isClimbing = false;
             this.spellCooldowns = new Lich.Table();
         }
         Character.prototype.onHealthChange = function (difference) { };
@@ -51,6 +52,9 @@ var Lich;
         };
         Character.prototype.idle = function () {
             this.performState(Lich.CharacterState.IDLE);
+        };
+        Character.prototype.climb = function () {
+            this.performState(Lich.CharacterState.CLIMB);
         };
         Character.prototype.jump = function () {
             this.performState(Lich.CharacterState.JUMP);
@@ -143,11 +147,20 @@ var Lich;
         Character.prototype.updateAnimations = function () {
             var self = this;
             if (this.getCurrentHealth() > 0) {
-                if (self.speedx === 0 && self.speedy === 0) {
+                if (self.isClimbing) {
+                    self.climb();
+                    if (self.speedx == 0 && self.speedy == 0) {
+                        self.stop();
+                    }
+                    else {
+                        self.play();
+                    }
+                }
+                else if (self.speedx == 0 && self.speedy == 0) {
                     self.idle();
                 }
-                else if (self.speedy !== 0) {
-                    if (self.speedx === 0) {
+                else if (self.speedy != 0) {
+                    if (self.speedx == 0) {
                         self.jump();
                     }
                     else if (self.speedx > 0) {

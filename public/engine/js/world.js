@@ -336,6 +336,7 @@ var Lich;
             var self = this;
             var clsnTest;
             var clsnPosition;
+            var isClimbing = false;
             if (object.speedy !== 0) {
                 // dráha, kterou objekt urazil za daný časový úsek, 
                 // kdy je známa jeho poslední rychlost a zrychlení, 
@@ -358,6 +359,7 @@ var Lich;
                         makeShift(0, distanceY);
                         // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
                         if (clsnTest.collisionType == Lich.CollisionType.LADDER) {
+                            isClimbing = true;
                             if (forceFall) {
                                 object.speedy = -World.CLIMBING_SPEED;
                             }
@@ -395,10 +397,13 @@ var Lich;
                         // pokud klesám, pak klesám po jiném povrchu, než je žebřík
                         object.speedy = -1;
                     }
-                    else if (forceFall) {
-                        // pokud klesám po žebříku, pak to musí být vynucené
-                        // a pak klesám konstantní rychlostí
-                        object.speedy = -World.CLIMBING_SPEED;
+                    else {
+                        isClimbing = true;
+                        if (forceFall) {
+                            // pokud klesám po žebříku, pak to musí být vynucené
+                            // a pak klesám konstantní rychlostí
+                            object.speedy = -World.CLIMBING_SPEED;
+                        }
                     }
                 }
             }
@@ -428,6 +433,7 @@ var Lich;
             if (typeof object.updateAnimations !== "undefined") {
                 object.updateAnimations();
             }
+            return isClimbing;
         };
         ;
         World.prototype.update = function (delta, controls) {
@@ -467,7 +473,7 @@ var Lich;
             });
             // update hráče
             var oldSpeedY = self.hero.speedy;
-            self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down, controls.up);
+            self.hero.isClimbing = self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down, controls.up);
             if (self.hero.speedy == 0 && oldSpeedY < 0) {
                 var threshold = World.MAX_FREEFALL_SPEED / 1.5;
                 oldSpeedY -= threshold;
