@@ -16,7 +16,6 @@ namespace Lich {
                 AnimationKey.LICH_ANIMATION_KEY,
                 CharacterState.IDLE,
                 40, // frames
-                MovementType.WALK,
                 300, // HERO_HORIZONTAL_SPEED
                 520, // HERO_VERTICAL_SPEED
                 new Animations()
@@ -32,7 +31,7 @@ namespace Lich {
                     .add(CharacterState.DIE, 28, 28, CharacterState.DEAD, 0.2)
                     .add(CharacterState.DEAD, 29, 29, CharacterState.DEAD, 0.2)
                     .add(CharacterState.TELEPORT, 30, 36, CharacterState.IDLE, 1.0)
-                    .add(CharacterState.CLIMB, 37, 39, CharacterState.CLIMB, 0.3),
+                    .add(CharacterState.CLIMB, 37, 39, CharacterState.CLIMB, 0.3)
             );
 
             this.willRegen = 10;

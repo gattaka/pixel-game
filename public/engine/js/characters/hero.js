@@ -13,7 +13,7 @@ var Lich;
             16, // COLLXOFFSET
             12, // COLLYOFFSET
             Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 40, // frames
-            Lich.MovementType.WALK, 300, // HERO_HORIZONTAL_SPEED
+            300, // HERO_HORIZONTAL_SPEED
             520, // HERO_VERTICAL_SPEED
             new Lich.Animations()
                 .add(Lich.CharacterState.IDLE, 0, 0, Lich.CharacterState.BREATH, 0.005)

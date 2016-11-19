@@ -16,8 +16,8 @@ var Lich;
                 80, // HEIGHT 
                 14, // COLLXOFFSET
                 12, // COLLYOFFSET
-                Lich.AnimationKey.CORPSE_ANIMATION_KEY, Lich.CharacterState.IDLE, 30, // frames
-                Lich.MovementType.WALK, 200, // HERO_HORIZONTAL_SPEED
+                Lich.AnimationKey.CORPSE_ANIMATION_KEY, Lich.CharacterState.IDLE, 40, // frames
+                200, // HERO_HORIZONTAL_SPEED
                 500, // HERO_VERTICAL_SPEED
                 new Lich.Animations()
                     .add(Lich.CharacterState.IDLE, 0, 0, Lich.CharacterState.BREATH, 0.005)
@@ -30,7 +30,8 @@ var Lich;
                     .add(Lich.CharacterState.JUMPR, 25, 25, Lich.CharacterState.JUMPR, 0.2)
                     .add(Lich.CharacterState.JUMPL, 27, 27, Lich.CharacterState.JUMPL, 0.2)
                     .add(Lich.CharacterState.DIE, 28, 28, Lich.CharacterState.DEAD, 0.2)
-                    .add(Lich.CharacterState.DEAD, 29, 29, Lich.CharacterState.DEAD, 0.2));
+                    .add(Lich.CharacterState.DEAD, 29, 29, Lich.CharacterState.DEAD, 0.2)
+                    .add(Lich.CharacterState.CLIMB, 37, 39, Lich.CharacterState.CLIMB, 0.3));
             }
             Redskull.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);

@@ -444,36 +444,74 @@ var Lich;
                 if (enemy)
                     enemy.runAI(self, delta);
             });
-            // Je-li hráč naživu, vnímej ovládání
-            if (self.hero.getCurrentHealth() > 0) {
-                // Dle kláves nastav rychlosti
-                // Nelze akcelerovat nahoru, když už 
-                // rychlost mám (nemůžu skákat ve vzduchu)
-                if (controls.up && self.hero.speedy === 0) {
-                    self.hero.speedy = self.hero.accelerationY;
+            var updateCharacter = function (character, makeShift) {
+                var forceDown = false;
+                var forceUp = false;
+                // Je-li postava naživu, vnímej její ovládání
+                if (character.getCurrentHealth() > 0) {
+                    switch (character.movementTypeY) {
+                        case Lich.MovementTypeY.NONE: break;
+                        case Lich.MovementTypeY.JUMP_OR_CLIMB:
+                            forceUp = true;
+                            if (character.speedy == 0) {
+                                character.speedy = character.accelerationY;
+                            }
+                            break;
+                        case Lich.MovementTypeY.DESCENT:
+                            forceDown = true;
+                            break;
+                        case Lich.MovementTypeY.ASCENT:
+                            forceUp = true;
+                            character.speedy = character.accelerationY;
+                            break;
+                        case Lich.MovementTypeY.HOVER_UP: break;
+                        case Lich.MovementTypeY.HOVER_DOWN: break;
+                    }
+                    switch (character.movementTypeX) {
+                        case Lich.MovementTypeX.NONE:
+                            character.speedx = 0;
+                            break;
+                        case Lich.MovementTypeX.WALK_LEFT:
+                            character.speedx = character.accelerationX;
+                            break;
+                        case Lich.MovementTypeX.WALK_RIGHT:
+                            character.speedx = -character.accelerationX;
+                            break;
+                        case Lich.MovementTypeX.HOVER_LEFT: break;
+                        case Lich.MovementTypeX.HOVER_RIGHT: break;
+                    }
                 }
-                else if (controls.levitate) {
-                    self.hero.speedy = self.hero.accelerationY;
-                }
-                // Horizontální akcelerace
-                if (controls.left) {
-                    self.hero.speedx = self.hero.accelerationX;
-                }
-                else if (controls.right) {
-                    self.hero.speedx = -self.hero.accelerationX;
-                }
-                else {
-                    self.hero.speedx = 0;
-                }
+                // update postavy
+                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp);
+            };
+            // Dle kláves nastav směry pohybu
+            if (controls.up && self.hero.speedy === 0) {
+                self.hero.movementTypeY = Lich.MovementTypeY.JUMP_OR_CLIMB;
             }
-            self.labelObjects.forEach(function (item) {
-                if (item) {
-                    item.y = item["virtualY"] + item["tweenY"];
-                }
-            });
-            // update hráče
+            else if (controls.levitate) {
+                self.hero.movementTypeY = Lich.MovementTypeY.ASCENT;
+            }
+            else if (controls.down) {
+                self.hero.movementTypeY = Lich.MovementTypeY.DESCENT;
+            }
+            else {
+                self.hero.movementTypeY = Lich.MovementTypeY.NONE;
+            }
+            // Horizontální akcelerace
+            if (controls.left) {
+                self.hero.movementTypeX = Lich.MovementTypeX.WALK_LEFT;
+            }
+            else if (controls.right) {
+                self.hero.movementTypeX = Lich.MovementTypeX.WALK_RIGHT;
+            }
+            else {
+                self.hero.movementTypeX = Lich.MovementTypeX.NONE;
+            }
+            // ulož starou vertikální rychlost 
             var oldSpeedY = self.hero.speedy;
-            self.hero.isClimbing = self.updateObject(sDelta, self.hero, self.shiftWorldBy.bind(self), controls.down, controls.up);
+            // update pohybu hráče
+            updateCharacter(self.hero, self.shiftWorldBy.bind(self));
+            // kontrola zranění z pádu
             if (self.hero.speedy == 0 && oldSpeedY < 0) {
                 var threshold = World.MAX_FREEFALL_SPEED / 1.5;
                 oldSpeedY -= threshold;
@@ -486,12 +524,18 @@ var Lich;
             // update nepřátel
             self.enemies.forEach(function (enemy) {
                 if (enemy) {
-                    self.updateObject(sDelta, enemy, function (x, y) {
+                    updateCharacter(enemy, function (x, y) {
                         var rndX = Lich.Utils.floor(x);
                         var rndY = Lich.Utils.floor(y);
                         enemy.x -= rndX;
                         enemy.y -= rndY;
                     });
+                }
+            });
+            // Update virtuálního posuvu float-textů
+            self.labelObjects.forEach(function (item) {
+                if (item) {
+                    item.y = item["virtualY"] + item["tweenY"];
                 }
             });
             // update projektilů

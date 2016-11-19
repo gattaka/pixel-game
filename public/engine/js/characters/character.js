@@ -5,15 +5,35 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
-    (function (MovementType) {
-        MovementType[MovementType["WALK"] = 0] = "WALK";
-        MovementType[MovementType["FLY"] = 1] = "FLY";
-        MovementType[MovementType["FLY_NO_COLLISION"] = 2] = "FLY_NO_COLLISION";
-    })(Lich.MovementType || (Lich.MovementType = {}));
-    var MovementType = Lich.MovementType;
+    (function (MovementTypeX) {
+        // Nic nedělá
+        MovementTypeX[MovementTypeX["NONE"] = 0] = "NONE";
+        // Jde doleva (respektuje kolize)
+        MovementTypeX[MovementTypeX["WALK_LEFT"] = 1] = "WALK_LEFT";
+        // Jde doprava (respektuje kolize)
+        MovementTypeX[MovementTypeX["WALK_RIGHT"] = 2] = "WALK_RIGHT";
+        // Vznáší se (nerespektuje gravitaci ani kolize)
+        MovementTypeX[MovementTypeX["HOVER_LEFT"] = 3] = "HOVER_LEFT";
+        MovementTypeX[MovementTypeX["HOVER_RIGHT"] = 4] = "HOVER_RIGHT";
+    })(Lich.MovementTypeX || (Lich.MovementTypeX = {}));
+    var MovementTypeX = Lich.MovementTypeX;
+    (function (MovementTypeY) {
+        // Nic nedělá
+        MovementTypeY[MovementTypeY["NONE"] = 0] = "NONE";
+        // Skáče (respektuje gravitaci a kolize)
+        MovementTypeY[MovementTypeY["JUMP_OR_CLIMB"] = 1] = "JUMP_OR_CLIMB";
+        // Sestupuje (jde vstříc gravitaci a kolize)
+        MovementTypeY[MovementTypeY["DESCENT"] = 2] = "DESCENT";
+        // Letí (nerespektuje gravitaci, ale kolize ano)
+        MovementTypeY[MovementTypeY["ASCENT"] = 3] = "ASCENT";
+        // Vznáší se (nerespektuje gravitaci ani kolize)
+        MovementTypeY[MovementTypeY["HOVER_UP"] = 4] = "HOVER_UP";
+        MovementTypeY[MovementTypeY["HOVER_DOWN"] = 5] = "HOVER_DOWN";
+    })(Lich.MovementTypeY || (Lich.MovementTypeY = {}));
+    var MovementTypeY = Lich.MovementTypeY;
     var Character = (function (_super) {
         __extends(Character, _super);
-        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, type, accelerationX, accelerationY, animations) {
+        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations) {
             _super.call(this, width, height, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[animationKey])],
@@ -26,7 +46,6 @@ var Lich;
                 },
                 "animations": animations.serialize()
             }), Lich.CharacterState[initState], collXOffset, collYOffset);
-            this.type = type;
             this.accelerationX = accelerationX;
             this.accelerationY = accelerationY;
             this.HEALTH_REGEN_TIME = 1000;
@@ -37,6 +56,10 @@ var Lich;
             this.maxWill = 50;
             this.currentWill = this.maxWill;
             this.willRegen = 0;
+            // Typy pohybu, u hráče odpovídá stisku klávesy, 
+            // u nepřítele jeho AI nasměrování
+            this.movementTypeX = MovementTypeX.NONE;
+            this.movementTypeY = MovementTypeY.NONE;
             this.isClimbing = false;
             this.spellCooldowns = new Lich.Table();
         }

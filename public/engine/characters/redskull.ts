@@ -12,8 +12,7 @@ namespace Lich {
                     12, // COLLYOFFSET
                     AnimationKey.CORPSE_ANIMATION_KEY,
                     CharacterState.IDLE,
-                    30, // frames
-                    MovementType.WALK,
+                    40, // frames
                     200, // HERO_HORIZONTAL_SPEED
                     500, // HERO_VERTICAL_SPEED
                     new Animations()
@@ -28,6 +27,7 @@ namespace Lich {
                         .add(CharacterState.JUMPL, 27, 27, CharacterState.JUMPL, 0.2)
                         .add(CharacterState.DIE, 28, 28, CharacterState.DEAD, 0.2)
                         .add(CharacterState.DEAD, 29, 29, CharacterState.DEAD, 0.2)
+                        .add(CharacterState.CLIMB, 37, 39, CharacterState.CLIMB, 0.3)
                 );
             }
 

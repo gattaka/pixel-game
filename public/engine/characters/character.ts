@@ -1,8 +1,27 @@
 namespace Lich {
-    export enum MovementType {
-        WALK,
-        FLY,
-        FLY_NO_COLLISION
+    export enum MovementTypeX {
+        // Nic nedělá
+        NONE,
+        // Jde doleva (respektuje kolize)
+        WALK_LEFT,
+        // Jde doprava (respektuje kolize)
+        WALK_RIGHT,
+        // Vznáší se (nerespektuje gravitaci ani kolize)
+        HOVER_LEFT,
+        HOVER_RIGHT
+    }
+    export enum MovementTypeY {
+        // Nic nedělá
+        NONE,
+        // Skáče (respektuje gravitaci a kolize)
+        JUMP_OR_CLIMB,
+        // Sestupuje (jde vstříc gravitaci a kolize)
+        DESCENT,
+        // Letí (nerespektuje gravitaci, ale kolize ano)
+        ASCENT,
+        // Vznáší se (nerespektuje gravitaci ani kolize)
+        HOVER_UP,
+        HOVER_DOWN
     }
     export abstract class Character extends AbstractWorldObject {
 
@@ -16,6 +35,11 @@ namespace Lich {
         protected currentWill = this.maxWill;
         protected willRegen = 0;
 
+        // Typy pohybu, u hráče odpovídá stisku klávesy, 
+        // u nepřítele jeho AI nasměrování
+        public movementTypeX = MovementTypeX.NONE;
+        public movementTypeY = MovementTypeY.NONE;
+
         public isClimbing = false;
 
         public spellCooldowns = new Table<number>();
@@ -25,7 +49,6 @@ namespace Lich {
             animationKey: AnimationKey,
             initState: CharacterState,
             frames: number,
-            public type: MovementType,
             public accelerationX: number,
             public accelerationY: number,
             animations: Animations) {

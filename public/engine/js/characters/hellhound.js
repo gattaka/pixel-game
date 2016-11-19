@@ -17,7 +17,7 @@ var Lich;
                 16, // COLLXOFFSET
                 12, // COLLYOFFSET
                 Lich.AnimationKey.HELLHOUND_ANIMATION_KEY, Lich.CharacterState.IDLE, 25, // frames
-                Lich.MovementType.WALK, 600, // HERO_HORIZONTAL_SPEED
+                600, // HERO_HORIZONTAL_SPEED
                 500, // HERO_VERTICAL_SPEED
                 new Lich.Animations()
                     .add(Lich.CharacterState.IDLE, 22, 24, Lich.CharacterState.IDLE, 0.1)

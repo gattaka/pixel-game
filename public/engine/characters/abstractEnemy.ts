@@ -13,19 +13,19 @@ namespace Lich {
             animationKey: AnimationKey,
             initState: CharacterState,
             frames: number,
-            type: MovementType,
             accelerationX: number,
             accelerationY: number,
             animations: Animations) {
-            super(width, height, collXOffset, collYOffset, animationKey, initState, frames, type, accelerationX, accelerationY, animations);
+            super(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations);
         }
 
         runAI(world: World, delta: number) {
             if (this.getCurrentHealth() > 0) {
                 if (this.currentAttackCooldown < this.attackCooldown)
                     this.currentAttackCooldown += delta;
+                let reach = false;
                 if (this.x > world.hero.x && this.x < world.hero.x + world.hero.width - world.hero.collXOffset) {
-                    this.speedx = 0;
+                    this.movementTypeX = MovementTypeX.NONE;
                     // zásah hráče?
                     let heroHead = world.hero.y + world.hero.collYOffset;
                     let heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
@@ -36,38 +36,55 @@ namespace Lich {
                         if (this.currentAttackCooldown > this.attackCooldown) {
                             this.currentAttackCooldown = 0;
                             world.hero.hit(this.damage, world);
+                            reach = true;
                         }
                     }
-                } else {
-                    if (world.hero.x > this.x) {
+                }
+                if (!reach) {
+                    let verticalStrategy = (nextX: number) => {
+                        if ((world.hero.y + world.hero.height) > (this.y + this.height)) {
+                            // pokud je hráč níž než já (vzdálenost je obrácená)
+                            if (nextX != 0 && world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit) {
+                                // pokud je přede mnou překážka a hráč už není přímo podemnou, přeskoč     
+                                this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
+                            } else {
+                                // jinak padej
+                                this.movementTypeY = MovementTypeY.DESCENT;
+                            }
+                        } else {
+                            // hráč je výš nebo stejně jako já
+                            if (nextX != 0 && (world.isCollision(nextX, this.y + this.height + Resources.TILE_SIZE).hit == false
+                                || world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit)) {
+                                // pokud bych spadl nebo je přede mnou překážka a hráč už 
+                                // není přímo podemnou, přeskoč, zkus vyskočit
+                                this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
+                            } else {
+                                // nepadám, nemám překážky
+                                if ((world.hero.y + world.hero.height) == (this.y + this.height)) {
+                                    // hráč je stejně jako já, nic nedělej
+                                    this.movementTypeY = MovementTypeY.NONE;
+                                } else {
+                                    // hráč je výš než já, skákej
+                                    this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
+                                }
+                            }
+                        }
+                    };
+
+                    let nextX = 0;
+                    let xJitter = Math.random() * Resources.TILE_SIZE * 2;
+                    if (world.hero.x > this.x + this.width / 2 - xJitter) {
                         // hráč je vpravo od nepřítele - jdi doprava           
-                        this.speedx = -this.accelerationX / 1.5;
-                        // pokud už není ve skoku 
-                        if (this.speedy == 0) {
-                            let nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
-                            // pokud bych spadl nebo je přede mnou překážka, zkus vyskočit
-                            // pokud je hráč níž než já, klidně spadni (vzdálenost je obrácená)
-                            if (world.isCollision(nextX, this.y + this.height + Resources.TILE_SIZE).hit == false
-                                && world.hero.y + world.hero.height <= this.y + this.height
-                                || world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit) {
-                                this.speedy = this.accelerationY;
-                            }
-                        }
-                    } else {
+                        this.movementTypeX = MovementTypeX.WALK_RIGHT;
+                        nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
+                    } else if (world.hero.x + world.hero.width < this.x + this.width / 2 + xJitter) {
                         // hráč je vlevo od nepřítele - jdi doleva
-                        this.speedx = this.accelerationX / 1.5;
-                        // pokud už není ve skoku 
-                        if (this.speedy == 0) {
-                            let nextX = this.x + this.collXOffset - Resources.TILE_SIZE;
-                            // pokud bych spadl nebo je přede mnou překážka, zkus vyskočit
-                            // pokud je hráč níž než já, klidně spadni (vzdálenost je obrácená)
-                            if (world.isCollision(nextX, this.y + this.height + Resources.TILE_SIZE).hit == false
-                                && world.hero.y + world.hero.height <= this.y + this.height
-                                || world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit) {
-                                this.speedy = this.accelerationY;
-                            }
-                        }
+                        this.movementTypeX = MovementTypeX.WALK_LEFT;
+                        nextX = this.x + this.collXOffset - Resources.TILE_SIZE;
+                    } else {
+                        // jsem někde uprostřed šířky hráče
                     }
+                    verticalStrategy(nextX);
                 }
             }
         }

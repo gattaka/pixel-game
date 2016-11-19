@@ -13,7 +13,6 @@ namespace Lich {
                     AnimationKey.HELLHOUND_ANIMATION_KEY,
                     CharacterState.IDLE,
                     25, // frames
-                    MovementType.WALK,
                     600, // HERO_HORIZONTAL_SPEED
                     500, // HERO_VERTICAL_SPEED
                     new Animations()
