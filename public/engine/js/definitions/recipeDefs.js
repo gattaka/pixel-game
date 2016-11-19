@@ -12,6 +12,14 @@ var Lich;
                 [Lich.InventoryKey.INV_WOOD_KEY, 2],
                 [Lich.InventoryKey.INV_STRAW_KEY, 1]
             ]],
+        [[Lich.InventoryKey.INV_FIREPLACE_KEY, 1], [
+                [Lich.InventoryKey.INV_CAMPFIRE_KEY, 1],
+                [Lich.InventoryKey.INV_BRICK_KEY, 1]
+            ]],
+        [[Lich.InventoryKey.INV_FIREPLACE_KEY, 1], [
+                [Lich.InventoryKey.INV_CAMPFIRE_KEY, 1],
+                [Lich.InventoryKey.INV_ROCK_BRICK_KEY, 1]
+            ]],
         [[Lich.InventoryKey.INV_TORCH_KEY, 5], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1],
                 [Lich.InventoryKey.INV_STRAW_KEY, 1]

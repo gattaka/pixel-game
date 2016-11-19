@@ -29,6 +29,7 @@ var Lich;
             version.addChange("Gravity kills");
             version.addChange("Teleport animation");
             version.addChange("Ladders introduced");
+            version.addChange("Fireplace introduced");
             this.addVersion(version);
             version = new Version("0.9");
             version.addChange("Enemy AI improved");

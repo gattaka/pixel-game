@@ -31,6 +31,7 @@ namespace Lich {
         INV_IRON_PLATFORM_KEY,
         INV_WOOD_PLATFORM_KEY,
         INV_GRAVE_KEY,
-        INV_WOOD_LADDER_KEY
+        INV_WOOD_LADDER_KEY,
+        INV_FIREPLACE_KEY
     }
 }

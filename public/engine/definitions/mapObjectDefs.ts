@@ -27,6 +27,7 @@ namespace Lich {
         new MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100),
         new MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4),
+        new MapObjDefinition(MapObjectKey.MAP_FIREPLACE_KEY, 4, 2, InventoryKey.INV_FIREPLACE_KEY, 1, 0).setFrames(4),
         new MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0,
             function (game: Game, rx: number, ry: number, obj: MapObjectTile, objType: MapObjDefinition) {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, MapObjectKey.MAP_ANVIL_KEY));

@@ -216,7 +216,7 @@ var Lich;
             return btm;
         };
         ;
-        Resources.prototype.getSpritePart = function (key, tileX, tileY, count, height, width) {
+        Resources.prototype.getSpritePart = function (key, tileX, tileY, count, width, height) {
             var frames = [];
             for (var i = 0; i < count; i++) {
                 frames.push([

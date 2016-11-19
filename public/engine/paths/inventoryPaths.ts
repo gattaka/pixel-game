@@ -31,6 +31,7 @@ namespace Lich {
         ["images/ui/inventory/inv_iron_platform.png", InventoryKey.INV_IRON_PLATFORM_KEY],
         ["images/ui/inventory/inv_wood_platform.png", InventoryKey.INV_WOOD_PLATFORM_KEY],
         ["images/ui/inventory/inv_grave.png", InventoryKey.INV_GRAVE_KEY],
-        ["images/ui/inventory/inv_wood_ladder.png", InventoryKey.INV_WOOD_LADDER_KEY]
+        ["images/ui/inventory/inv_wood_ladder.png", InventoryKey.INV_WOOD_LADDER_KEY],
+        ["images/ui/inventory/inv_fireplace.png", InventoryKey.INV_FIREPLACE_KEY]
     ]
 }

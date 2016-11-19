@@ -12,6 +12,7 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLANT3_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PLANT3_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLANT4_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PLANT4_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAMPFIRE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAMPFIRE_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_FIREPLACE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FIREPLACE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_TORCH_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_TORCH_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ANVIL_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_ANVIL_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_SMELTER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_SMELTER_KEY]),

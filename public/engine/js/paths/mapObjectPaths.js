@@ -28,6 +28,7 @@ var Lich;
         ["images/parts/anvil.png", Lich.MapObjectKey.MAP_ANVIL_KEY],
         ["images/parts/smelter.png", Lich.MapObjectKey.MAP_SMELTER_KEY],
         ["images/parts/iron_ingot.png", Lich.MapObjectKey.MAP_IRON_INGOT_KEY],
-        ["images/parts/iron_fence.png", Lich.MapObjectKey.MAP_IRON_FENCE_KEY]
+        ["images/parts/iron_fence.png", Lich.MapObjectKey.MAP_IRON_FENCE_KEY],
+        ["images/parts/fireplace.png", Lich.MapObjectKey.MAP_FIREPLACE_KEY]
     ];
 })(Lich || (Lich = {}));

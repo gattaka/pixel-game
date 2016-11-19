@@ -260,7 +260,7 @@ namespace Lich {
             return btm;
         };
 
-        getSpritePart(key: string, tileX: number, tileY: number, count: number, height: number, width: number) {
+        getSpritePart(key: string, tileX: number, tileY: number, count: number, width: number, height: number) {
             var frames = [];
             for (var i = 0; i < count; i++) {
                 frames.push([

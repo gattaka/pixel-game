@@ -28,6 +28,7 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLANT4_KEY, 2, 2, Lich.InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FLORITE_KEY, 2, 2, Lich.InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, Lich.InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FIREPLACE_KEY, 4, 2, Lich.InventoryKey.INV_FIREPLACE_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_ANVIL_KEY, 2, 2, Lich.InventoryKey.INV_ANVIL_KEY, 1, 0, function (game, rx, ry, obj, objType) {
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, Lich.MapObjectKey.MAP_ANVIL_KEY));
             var listener = function (payload) {

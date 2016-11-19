@@ -11,6 +11,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_PLANT3_KEY, res.mapObjectDefs[MapObjectKey.MAP_PLANT3_KEY]),
             new InvObjDefinition(InventoryKey.INV_PLANT4_KEY, res.mapObjectDefs[MapObjectKey.MAP_PLANT4_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAMPFIRE_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAMPFIRE_KEY]),
+            new InvObjDefinition(InventoryKey.INV_FIREPLACE_KEY, res.mapObjectDefs[MapObjectKey.MAP_FIREPLACE_KEY]),
             new InvObjDefinition(InventoryKey.INV_TORCH_KEY, res.mapObjectDefs[MapObjectKey.MAP_TORCH_KEY]),
             new InvObjDefinition(InventoryKey.INV_ANVIL_KEY, res.mapObjectDefs[MapObjectKey.MAP_ANVIL_KEY]),
             new InvObjDefinition(InventoryKey.INV_SMELTER_KEY, res.mapObjectDefs[MapObjectKey.MAP_SMELTER_KEY]),
