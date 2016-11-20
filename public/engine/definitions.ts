@@ -78,6 +78,12 @@ namespace Lich {
     export enum CollisionType {
         // Nelze procházet žádným směrem
         SOLID,
+        // Má kolizní plochu jenom na nějaké části
+        // dle toho, o které zkosení se jedná
+        SOLID_TL,
+        SOLID_TR,
+        SOLID_BL,
+        SOLID_BR,
         // Lze procházet cestou nahoru a lze skrz 
         // něj propadnout vynucením směru dolů 
         PLATFORM,

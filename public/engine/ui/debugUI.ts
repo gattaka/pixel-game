@@ -34,7 +34,11 @@ namespace Lich {
             this.sectorLabel = new Label("SECTOR: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.sectorLabel);
             EventBus.getInstance().registerConsumer(EventType.POINTED_AREA_CHANGE, (data: PointedAreaEventPayload) => {
-                self.tilesLabel.setText("TILES x: " + data.clsnx + " y: " + data.clsny + " clsn: " + data.clsnHit + " type: " + data.tileType);
+                self.tilesLabel.setText("TILES x: " + data.clsnx + " y: " + data.clsny
+                    + " pOfx: " + (data.partsOffsetX == undefined ? "-" : data.partsOffsetX)
+                    + " pOfy: " + (data.partsOffsetY == undefined ? "-" : data.partsOffsetY)
+                    + " clsn: " + data.clsnHit
+                    + " type: " + (data.tileType == undefined ? "-" : data.tileType));
                 if (data.secx) {
                     self.sectorLabel.setText("SECTOR: x: " + data.secx + " y: " + data.secy);
                 } else {

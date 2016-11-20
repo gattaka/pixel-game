@@ -11,8 +11,10 @@ namespace Lich {
             super(
                 56, // WIDTH
                 80, // HEIGHT 
-                16, // COLLXOFFSET
-                12, // COLLYOFFSET
+                // 16, // COLLXOFFSET
+                // 12, // COLLYOFFSET
+                0,
+                0,
                 AnimationKey.LICH_ANIMATION_KEY,
                 CharacterState.IDLE,
                 40, // frames

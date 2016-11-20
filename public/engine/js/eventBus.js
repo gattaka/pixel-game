@@ -71,11 +71,13 @@ var Lich;
     Lich.TupleEventPayload = TupleEventPayload;
     var PointedAreaEventPayload = (function (_super) {
         __extends(PointedAreaEventPayload, _super);
-        function PointedAreaEventPayload(clsnx, clsny, clsnHit, tileType, secx, secy) {
+        function PointedAreaEventPayload(clsnx, clsny, clsnHit, partsOffsetX, partsOffsetY, tileType, secx, secy) {
             _super.call(this, EventType.POINTED_AREA_CHANGE);
             this.clsnx = clsnx;
             this.clsny = clsny;
             this.clsnHit = clsnHit;
+            this.partsOffsetX = partsOffsetX;
+            this.partsOffsetY = partsOffsetY;
             this.tileType = tileType;
             this.secx = secx;
             this.secy = secy;

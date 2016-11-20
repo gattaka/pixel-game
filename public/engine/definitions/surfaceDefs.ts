@@ -16,7 +16,7 @@ namespace Lich {
         new MapSurfaceDefinition(SurfaceKey.SRFC_IRON_PLATFORM_KEY, InventoryKey.INV_IRON_PLATFORM_KEY, 1, 1, CollisionType.PLATFORM).setDepth(-1, -1),
         new MapSurfaceDefinition(SurfaceKey.SRFC_WOOD_PLATFORM_KEY, InventoryKey.INV_WOOD_PLATFORM_KEY, 1, 1, CollisionType.PLATFORM).setDepth(-1, -1),
         new MapSurfaceDefinition(SurfaceKey.SRFC_WOOD_LADDER_KEY, InventoryKey.INV_WOOD_LADDER_KEY, 1, 1, CollisionType.LADDER).setDepth(-1, -1),
-        new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_TL_KEY, InventoryKey.INV_ROOF_TL_KEY, 1, 0),
-        new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_TR_KEY, InventoryKey.INV_ROOF_TR_KEY, 1, 0)
+        new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_TL_KEY, InventoryKey.INV_ROOF_TL_KEY, 1, 0, CollisionType.SOLID_TL),
+        new MapSurfaceDefinition(SurfaceKey.SRFC_ROOF_TR_KEY, InventoryKey.INV_ROOF_TR_KEY, 1, 0, CollisionType.SOLID_TR)
     ]
 }

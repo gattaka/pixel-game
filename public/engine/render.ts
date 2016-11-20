@@ -800,9 +800,13 @@ namespace Lich {
         }
 
         pixelsToTiles(x: number, y: number): Coord2D {
-            var tileX = Math.floor((x - this.screenOffsetX) / Resources.TILE_SIZE);
-            var tileY = Math.floor((y - this.screenOffsetY) / Resources.TILE_SIZE);
-            return new Coord2D(tileX, tileY);
+            // tiles souřadnice z pixel souřadnic
+            let tileX = Math.floor((x + -this.screenOffsetX) / Resources.TILE_SIZE);
+            let tileY = Math.floor((y + -this.screenOffsetY) / Resources.TILE_SIZE);
+            // offset v rámci part
+            let partOffsetX = Math.floor((x + -this.screenOffsetX) % Resources.PARTS_SIZE);
+            let partOffsetY = Math.floor((y + -this.screenOffsetY) % Resources.PARTS_SIZE);
+            return new Coord2D(tileX, tileY, partOffsetX, partOffsetY);
         }
 
         pixelsToEvenTiles(x: number, y: number): Coord2D {

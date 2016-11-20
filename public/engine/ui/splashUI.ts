@@ -32,6 +32,7 @@ namespace Lich {
             version.addChange("Teleport animation");
             version.addChange("Ladders introduced");
             version.addChange("Fireplace introduced");
+            version.addChange("Skewed roof surface");
             this.addVersion(version);
 
             version = new Version("0.9");

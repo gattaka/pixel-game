@@ -5,11 +5,12 @@ namespace Lich {
     }
 
     export class CollisionTestResult {
-        constructor(public hit: boolean, public x?: number, public y?: number, public collisionType = CollisionType.SOLID) { }
+        constructor(public hit: boolean, public x?: number, public y?: number,
+            public collisionType = CollisionType.SOLID, public partOffsetX?, public partOffsetY?) { }
     }
 
     export class Coord2D {
-        constructor(public x: number, public y: number) { }
+        constructor(public x: number, public y: number, public partOffsetX?, public partOffsetY?) { }
     }
 
     export class Array2D<T> {

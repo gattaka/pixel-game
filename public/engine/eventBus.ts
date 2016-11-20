@@ -44,6 +44,8 @@ namespace Lich {
 
     export class PointedAreaEventPayload extends EventPayload {
         constructor(public clsnx: number, public clsny: number, public clsnHit: boolean,
+            public partsOffsetX: number,
+            public partsOffsetY: number,
             public tileType: number,
             public secx: number, public secy: number) { super(EventType.POINTED_AREA_CHANGE); }
     }

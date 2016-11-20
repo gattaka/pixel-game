@@ -7,20 +7,24 @@ var Lich;
     }());
     Lich.HashMap = HashMap;
     var CollisionTestResult = (function () {
-        function CollisionTestResult(hit, x, y, collisionType) {
+        function CollisionTestResult(hit, x, y, collisionType, partOffsetX, partOffsetY) {
             if (collisionType === void 0) { collisionType = Lich.CollisionType.SOLID; }
             this.hit = hit;
             this.x = x;
             this.y = y;
             this.collisionType = collisionType;
+            this.partOffsetX = partOffsetX;
+            this.partOffsetY = partOffsetY;
         }
         return CollisionTestResult;
     }());
     Lich.CollisionTestResult = CollisionTestResult;
     var Coord2D = (function () {
-        function Coord2D(x, y) {
+        function Coord2D(x, y, partOffsetX, partOffsetY) {
             this.x = x;
             this.y = y;
+            this.partOffsetX = partOffsetX;
+            this.partOffsetY = partOffsetY;
         }
         return Coord2D;
     }());

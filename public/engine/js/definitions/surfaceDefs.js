@@ -17,7 +17,7 @@ var Lich;
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_IRON_PLATFORM_KEY, Lich.InventoryKey.INV_IRON_PLATFORM_KEY, 1, 1, Lich.CollisionType.PLATFORM).setDepth(-1, -1),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_WOOD_PLATFORM_KEY, Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, 1, 1, Lich.CollisionType.PLATFORM).setDepth(-1, -1),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY, Lich.InventoryKey.INV_WOOD_LADDER_KEY, 1, 1, Lich.CollisionType.LADDER).setDepth(-1, -1),
-        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TL_KEY, Lich.InventoryKey.INV_ROOF_TL_KEY, 1, 0),
-        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TR_KEY, Lich.InventoryKey.INV_ROOF_TR_KEY, 1, 0)
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TL_KEY, Lich.InventoryKey.INV_ROOF_TL_KEY, 1, 0, Lich.CollisionType.SOLID_TL),
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TR_KEY, Lich.InventoryKey.INV_ROOF_TR_KEY, 1, 0, Lich.CollisionType.SOLID_TR)
     ];
 })(Lich || (Lich = {}));

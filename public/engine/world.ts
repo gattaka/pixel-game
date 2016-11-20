@@ -430,8 +430,13 @@ namespace Lich {
                         // zastavil jsem se při pádu? Konec skoku
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
-                        clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
-                        makeShift(0, -1 * (clsnPosition.y - (object.y + object.height - object.collYOffset)));
+                        let firstTileOfPartY = Utils.even(clsnTest.y);
+                        let firstTileOfPartX = Utils.even(clsnTest.x);
+                        // Doskakování využívá partOffsetY, které se ale uvádí od počátku
+                        // PART nikoliv TILE (kvůli koliznímu profilu celé PART), proto je
+                        // potřeba před přičtením partOffsetY zaokrouhlit na počáteční TILE
+                        clsnPosition = self.render.tilesToPixel(firstTileOfPartX, firstTileOfPartY);
+                        makeShift(0, -1 * (clsnPosition.y + clsnTest.partOffsetY - (object.y + object.height - object.collYOffset)));
                     }
                     object.speedy = 0;
                 }
@@ -671,39 +676,84 @@ namespace Lich {
         /**
          * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi 
          */
-        isCollision(x: number, y: number): CollisionTestResult {
+        isCollision(px: number, py: number): CollisionTestResult {
             var self = this;
-            var result = self.render.pixelsToTiles(x, y);
-            return self.isCollisionByTiles(result.x, result.y);
+            var result = self.render.pixelsToTiles(px, py);
+            return self.isCollisionByTiles(result.x, result.y, result.partOffsetX, result.partOffsetY);
         };
 
         /**
          * Zjistí zda na daných tile-souřadnicích dochází ke kolizi 
          */
-        isCollisionByTiles(x: number, y: number): CollisionTestResult {
+        isCollisionByTiles(tx: number, ty: number, partOffsetX?: number, partOffsetY?: number): CollisionTestResult {
             var self = this;
             // kolize s povrchem/hranicí mapy
-            var val = self.tilesMap.mapRecord.getValue(x, y);
+            var val = self.tilesMap.mapRecord.getValue(tx, ty);
             if (val != null && val != 0) {
                 let res = Resources.getInstance();
                 let collisionType = res.mapSurfaceDefs[res.surfaceIndex.getType(val)].collisionType;
-                return new CollisionTestResult(true, x, y, collisionType);
+                let lx, ly, n;
+                let finalOffsetX = 0;
+                let finalOffsetY = 0;
+                // if (partOffsetX == undefined || partOffsetY == undefined) {
+                // kolize se zjišťuje přímo z tilesMap, nemám k dispozici 
+                // pixel souřadnice, PART můžu rozložit akorát na 2 tiles  
+                lx = tx % 2;
+                ly = ty % 2;
+                n = 1;
+                finalOffsetX = lx * Resources.TILE_SIZE;
+                finalOffsetY = ly * Resources.TILE_SIZE;
+                // } else {
+                //     // kolize se zjišťuje z pixel souřadnic, které byly převedeny
+                //     // na tiles souřadnice, znám vnitřní offset, který si ještě 
+                //     // zmenším na poloviční rozlišení, protože pixel-art je kreslen
+                //     // s dvojnásobným zvětšením, takže zuby na diagonále mají 2px 
+                //     lx = Math.abs(partOffsetX / 2);
+                //     ly = Math.abs(partOffsetY / 2);
+                //     n = Resources.TILE_SIZE - 1;
+                // }
+                let srfcCol = false;
+                switch (collisionType) {
+                    case CollisionType.SOLID_TL:
+                        if (lx + ly >= n) srfcCol = true;
+                        break;
+                    case CollisionType.SOLID_TR:
+                        if (n - lx + ly >= n) srfcCol = true;
+                        break;
+                    case CollisionType.SOLID_BL:
+                        if (n - lx + ly <= n) srfcCol = true;
+                        break;
+                    case CollisionType.SOLID_BR:
+                        if (lx + ly <= n) srfcCol = true;
+                        break;
+                    case CollisionType.SOLID:
+                    case CollisionType.PLATFORM:
+                    case CollisionType.LADDER:
+                    default:
+                        srfcCol = true;
+                        finalOffsetX = 0;
+                        finalOffsetY = 0;
+                        break;
+                }
+                if (srfcCol) {
+                    return new CollisionTestResult(true, tx, ty, collisionType, finalOffsetX, finalOffsetY);
+                }
             }
             // kolize "mimo mapu"
             if (val == null) {
-                return new CollisionTestResult(true, x, y);
+                return new CollisionTestResult(true, tx, ty);
             }
 
             // kolize s kolizními objekty
-            var objectElement = self.tilesMap.mapObjectsTiles.getValue(x, y);
+            var objectElement = self.tilesMap.mapObjectsTiles.getValue(tx, ty);
             if (objectElement !== null) {
                 var objType: MapObjDefinition = Resources.getInstance().mapObjectDefs[objectElement.mapKey];
                 if (objType.collision)
-                    return new CollisionTestResult(true, x, y);
+                    return new CollisionTestResult(true, tx, ty);
             }
 
             // bez kolize
-            return new CollisionTestResult(false, x, y);
+            return new CollisionTestResult(false, tx, ty);
         };
 
         /**
@@ -727,6 +777,10 @@ namespace Lich {
             // tiles. Řešením tak je odebrat 1px, aby se nepřeklenulo do dalšího tile mapy.
             let TILE_FIX = 1;
 
+            // Inkrement při procházení šířky/délky 
+            // stačil by Resources.TILE_SIZE, pokud by se nehlídaly i zkosené povrchy 
+            let STEP = 2;//Resources.TILE_SIZE;
+
             // kolize se musí dělat iterativně pro každý bod v TILE_SIZE podél hran objektu
             var xShift = 0; // iterace posuvu (+/-)
             var yShift = 0; // iterace posuvu (+/-)
@@ -736,20 +790,20 @@ namespace Lich {
             var ySign = Utils.sign(objectYShift);
 
             // pokud bude zadán fullXShift i fullYShift, udělá to diagonální posuv
-            // Iteruj v kontrolách posuvu po Resources.TILE_SIZE přírůstcích, dokud nebude
+            // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
             // docíleno celého posunu (zabraňuje "teleportaci" )
             do {
                 // kontrola velikosti iterace posuvu X (zapsaná v kladných číslech)
-                if (xSign * xShift + Resources.TILE_SIZE > xSign * objectXShift) {
+                if (xSign * xShift + STEP > xSign * objectXShift) {
                     xShift = objectXShift;
                 } else {
-                    xShift += xSign * Resources.TILE_SIZE;
+                    xShift += xSign * STEP;
                 }
                 // kontrola velikosti iterace posuvu Y (zapsaná v kladných číslech)
-                if (ySign * (yShift + ySign * Resources.TILE_SIZE) > ySign * objectYShift) {
+                if (ySign * (yShift + ySign * STEP) > ySign * objectYShift) {
                     yShift = objectYShift;
                 } else {
-                    yShift += ySign * Resources.TILE_SIZE;
+                    yShift += ySign * STEP;
                 }
 
                 if (xShift > 0 || yShift > 0) {
@@ -779,10 +833,10 @@ namespace Lich {
                 // bez collisionOffset by nebylo možné dělt sprite přesahy
                 while (width !== objectWidth) {
                     // pokud jde o posuv doprava, zkoumej rovnou pravu hranu, tou se narazí jako první 
-                    if (xShift < 0 || (width + Resources.TILE_SIZE > objectWidth)) {
+                    if (xShift < 0 || (width + STEP > objectWidth)) {
                         width = objectWidth;
                     } else {
-                        width += Resources.TILE_SIZE;
+                        width += STEP;
                     }
 
                     height = 0;
@@ -790,10 +844,10 @@ namespace Lich {
                         // pokud se nehýbu do stran (xShift == 0, nedojde ke kolize stranou)  
                         // a pokud jde o posuv dolů nebo statický stav (=0), 
                         // zkoumej rovnou spodní hranu, tou se narazí jako první 
-                        if ((yShift <= 0 && xShift == 0) || (height + Resources.TILE_SIZE > objectHeight)) {
+                        if ((yShift <= 0 && xShift == 0) || (height + STEP > objectHeight)) {
                             height = objectHeight;
                         } else {
-                            height += Resources.TILE_SIZE;
+                            height += STEP;
                         }
 
                         if (xShift < 0 || yShift > 0) {
@@ -917,11 +971,11 @@ namespace Lich {
             }
 
             let coord = self.render.pixelsToTiles(mouse.x, mouse.y);
-            let clsn = self.isCollisionByTiles(coord.x, coord.y);
+            let clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY);
             let typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
             let sector = self.render.getSectorByTiles(coord.x, coord.y);
             EventBus.getInstance().fireEvent(new PointedAreaEventPayload(
-                clsn.x, clsn.y, clsn.hit, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
+                clsn.x, clsn.y, clsn.hit, clsn.partOffsetX, clsn.partOffsetY, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
 
         };
 

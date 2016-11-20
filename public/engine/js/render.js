@@ -659,9 +659,13 @@ var Lich;
             return Lich.Utils.even(this.pixelsDistanceToTiles(x));
         };
         Render.prototype.pixelsToTiles = function (x, y) {
-            var tileX = Math.floor((x - this.screenOffsetX) / Lich.Resources.TILE_SIZE);
-            var tileY = Math.floor((y - this.screenOffsetY) / Lich.Resources.TILE_SIZE);
-            return new Lich.Coord2D(tileX, tileY);
+            // tiles souřadnice z pixel souřadnic
+            var tileX = Math.floor((x + -this.screenOffsetX) / Lich.Resources.TILE_SIZE);
+            var tileY = Math.floor((y + -this.screenOffsetY) / Lich.Resources.TILE_SIZE);
+            // offset v rámci part
+            var partOffsetX = Math.floor((x + -this.screenOffsetX) % Lich.Resources.PARTS_SIZE);
+            var partOffsetY = Math.floor((y + -this.screenOffsetY) % Lich.Resources.PARTS_SIZE);
+            return new Lich.Coord2D(tileX, tileY, partOffsetX, partOffsetY);
         };
         Render.prototype.pixelsToEvenTiles = function (x, y) {
             var coord = this.pixelsToTiles(x, y);

@@ -88,12 +88,18 @@ var Lich;
     (function (CollisionType) {
         // Nelze procházet žádným směrem
         CollisionType[CollisionType["SOLID"] = 0] = "SOLID";
+        // Má kolizní plochu jenom na nějaké části
+        // dle toho, o které zkosení se jedná
+        CollisionType[CollisionType["SOLID_TL"] = 1] = "SOLID_TL";
+        CollisionType[CollisionType["SOLID_TR"] = 2] = "SOLID_TR";
+        CollisionType[CollisionType["SOLID_BL"] = 3] = "SOLID_BL";
+        CollisionType[CollisionType["SOLID_BR"] = 4] = "SOLID_BR";
         // Lze procházet cestou nahoru a lze skrz 
         // něj propadnout vynucením směru dolů 
-        CollisionType[CollisionType["PLATFORM"] = 1] = "PLATFORM";
+        CollisionType[CollisionType["PLATFORM"] = 5] = "PLATFORM";
         // Nekoliduje vůbec, umožňuje volný pohyb
         // u které zabraňuje pádu
-        CollisionType[CollisionType["LADDER"] = 2] = "LADDER";
+        CollisionType[CollisionType["LADDER"] = 6] = "LADDER";
     })(Lich.CollisionType || (Lich.CollisionType = {}));
     var CollisionType = Lich.CollisionType;
     /**
