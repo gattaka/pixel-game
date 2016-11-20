@@ -695,23 +695,25 @@ namespace Lich {
                 let lx, ly, n;
                 let finalOffsetX = 0;
                 let finalOffsetY = 0;
-                // if (partOffsetX == undefined || partOffsetY == undefined) {
-                // kolize se zjišťuje přímo z tilesMap, nemám k dispozici 
-                // pixel souřadnice, PART můžu rozložit akorát na 2 tiles  
-                lx = tx % 2;
-                ly = ty % 2;
-                n = 1;
-                finalOffsetX = lx * Resources.TILE_SIZE;
-                finalOffsetY = ly * Resources.TILE_SIZE;
-                // } else {
-                //     // kolize se zjišťuje z pixel souřadnic, které byly převedeny
-                //     // na tiles souřadnice, znám vnitřní offset, který si ještě 
-                //     // zmenším na poloviční rozlišení, protože pixel-art je kreslen
-                //     // s dvojnásobným zvětšením, takže zuby na diagonále mají 2px 
-                //     lx = Math.abs(partOffsetX / 2);
-                //     ly = Math.abs(partOffsetY / 2);
-                //     n = Resources.TILE_SIZE - 1;
-                // }
+                if (partOffsetX == undefined || partOffsetY == undefined) {
+                    // kolize se zjišťuje přímo z tilesMap, nemám k dispozici 
+                    // pixel souřadnice, PART můžu rozložit akorát na 2 tiles  
+                    lx = tx % 2;
+                    ly = ty % 2;
+                    n = 1;
+                    finalOffsetX = lx * Resources.TILE_SIZE;
+                    finalOffsetY = ly * Resources.TILE_SIZE;
+                } else {
+                    // kolize se zjišťuje z pixel souřadnic, které byly převedeny
+                    // na tiles souřadnice, znám vnitřní offset, který si ještě 
+                    // zmenším na poloviční rozlišení, protože pixel-art je kreslen
+                    // s dvojnásobným zvětšením, takže zuby na diagonále mají 2px 
+                    lx = Math.abs(partOffsetX / 2);
+                    ly = Math.abs(partOffsetY / 2);
+                    n = Resources.TILE_SIZE - 1;
+                    finalOffsetX = lx * 2;
+                    finalOffsetY = ly * 2;
+                }
                 let srfcCol = false;
                 switch (collisionType) {
                     case CollisionType.SOLID_TL:
@@ -779,7 +781,7 @@ namespace Lich {
 
             // Inkrement při procházení šířky/délky 
             // stačil by Resources.TILE_SIZE, pokud by se nehlídaly i zkosené povrchy 
-            let STEP = 2;//Resources.TILE_SIZE;
+            let STEP = 1;//Resources.TILE_SIZE;
 
             // kolize se musí dělat iterativně pro každý bod v TILE_SIZE podél hran objektu
             var xShift = 0; // iterace posuvu (+/-)
@@ -788,6 +790,7 @@ namespace Lich {
             var height = 0; // iterace výšky posouvaného objetku
             var xSign = Utils.sign(objectXShift);
             var ySign = Utils.sign(objectYShift);
+
 
             // pokud bude zadán fullXShift i fullYShift, udělá to diagonální posuv
             // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
