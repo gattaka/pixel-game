@@ -33,6 +33,8 @@ var Lich;
         ["images/ui/inventory/inv_wood_platform.png", Lich.InventoryKey.INV_WOOD_PLATFORM_KEY],
         ["images/ui/inventory/inv_grave.png", Lich.InventoryKey.INV_GRAVE_KEY],
         ["images/ui/inventory/inv_wood_ladder.png", Lich.InventoryKey.INV_WOOD_LADDER_KEY],
-        ["images/ui/inventory/inv_fireplace.png", Lich.InventoryKey.INV_FIREPLACE_KEY]
+        ["images/ui/inventory/inv_fireplace.png", Lich.InventoryKey.INV_FIREPLACE_KEY],
+        ["images/ui/inventory/inv_roof_tl.png", Lich.InventoryKey.INV_ROOF_TL_KEY],
+        ["images/ui/inventory/inv_roof_tr.png", Lich.InventoryKey.INV_ROOF_TR_KEY]
     ];
 })(Lich || (Lich = {}));

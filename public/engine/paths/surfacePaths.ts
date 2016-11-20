@@ -13,6 +13,8 @@ namespace Lich {
         ["images/surfaces/rock_brick.png", SurfaceKey.SRFC_ROCK_BRICK_KEY],
         ["images/surfaces/iron_platform.png", SurfaceKey.SRFC_IRON_PLATFORM_KEY],
         ["images/surfaces/wood_platform.png", SurfaceKey.SRFC_WOOD_PLATFORM_KEY],
-        ["images/surfaces/wood_ladder.png", SurfaceKey.SRFC_WOOD_LADDER_KEY]
+        ["images/surfaces/wood_ladder.png", SurfaceKey.SRFC_WOOD_LADDER_KEY],
+        ["images/surfaces/roof_tl.png", SurfaceKey.SRFC_ROOF_TL_KEY],
+        ["images/surfaces/roof_tr.png", SurfaceKey.SRFC_ROOF_TR_KEY]
     ]
 }

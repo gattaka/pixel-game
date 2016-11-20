@@ -237,7 +237,10 @@ namespace Lich {
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_ROCK_BRICK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_BRICK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_WOODWALL_KEY)) return true;
-            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_ROCK_BRICK_KEY)) return true;            
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_ROCK_BRICK_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROOF_KEY, SurfaceKey.SRFC_ROOF_TL_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROOF_KEY, SurfaceKey.SRFC_ROOF_TR_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROOF_TL_KEY, SurfaceKey.SRFC_ROOF_TR_KEY)) return true;
             return type == type2;
         }
 

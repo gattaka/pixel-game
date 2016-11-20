@@ -49,6 +49,18 @@ namespace Lich {
             [InventoryKey.INV_WOOD_KEY, 1],
             [InventoryKey.INV_DIRT_KEY, 1]
         ]],
+        [[InventoryKey.INV_ROOF_TL_KEY, 1], [
+            [InventoryKey.INV_ROOF_KEY, 1]
+        ]],
+        [[InventoryKey.INV_ROOF_KEY, 1], [
+            [InventoryKey.INV_ROOF_TL_KEY, 1]
+        ]],
+        [[InventoryKey.INV_ROOF_TR_KEY, 1], [
+            [InventoryKey.INV_ROOF_KEY, 1]
+        ]],
+        [[InventoryKey.INV_ROOF_KEY, 1], [
+            [InventoryKey.INV_ROOF_TR_KEY, 1]
+        ]],
         [[InventoryKey.INV_SMELTER_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 5],
             [InventoryKey.INV_DIRT_KEY, 5],

@@ -256,6 +256,12 @@ var Lich;
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY))
                 return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROOF_KEY, Lich.SurfaceKey.SRFC_ROOF_TL_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROOF_KEY, Lich.SurfaceKey.SRFC_ROOF_TR_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROOF_TL_KEY, Lich.SurfaceKey.SRFC_ROOF_TR_KEY))
+                return true;
             return type == type2;
         };
         SurfaceIndex.SPRITE_SIDE = 7;

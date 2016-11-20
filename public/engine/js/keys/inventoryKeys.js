@@ -34,6 +34,8 @@ var Lich;
         InventoryKey[InventoryKey["INV_GRAVE_KEY"] = 30] = "INV_GRAVE_KEY";
         InventoryKey[InventoryKey["INV_WOOD_LADDER_KEY"] = 31] = "INV_WOOD_LADDER_KEY";
         InventoryKey[InventoryKey["INV_FIREPLACE_KEY"] = 32] = "INV_FIREPLACE_KEY";
+        InventoryKey[InventoryKey["INV_ROOF_TL_KEY"] = 33] = "INV_ROOF_TL_KEY";
+        InventoryKey[InventoryKey["INV_ROOF_TR_KEY"] = 34] = "INV_ROOF_TR_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));
