@@ -379,13 +379,8 @@ var Lich;
                         // zastavil jsem se při pádu? Konec skoku
                         // "doskoč" až na zem
                         // získej pozici kolizního bloku
-                        var firstTileOfPartY = Lich.Utils.even(clsnTest.y);
-                        var firstTileOfPartX = Lich.Utils.even(clsnTest.x);
-                        // Doskakování využívá partOffsetY, které se ale uvádí od počátku
-                        // PART nikoliv TILE (kvůli koliznímu profilu celé PART), proto je
-                        // potřeba před přičtením partOffsetY zaokrouhlit na počáteční TILE
-                        clsnPosition = self.render.tilesToPixel(firstTileOfPartX, firstTileOfPartY);
-                        makeShift(0, -1 * (clsnPosition.y + clsnTest.partOffsetY - (object.y + object.height - object.collYOffset)));
+                        var clsnPosition_1 = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
+                        makeShift(0, -1 * (clsnPosition_1.y + clsnTest.partOffsetY - (object.y + object.height - object.collYOffset)));
                     }
                     object.speedy = 0;
                 }
@@ -423,16 +418,18 @@ var Lich;
                     makeShift(distanceX, 0);
                 }
                 else {
+                    // kolize, konec posunu, dojdi až ke koliznímu místu
                     // získej pozici kolizního bloku
-                    clsnPosition = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
+                    var clsnPosition_2 = self.render.tilesToPixel(clsnTest.x, clsnTest.y);
                     if (distanceX > 0) {
                         // narazil jsem do něj zprava
-                        makeShift(object.x + object.collXOffset - (clsnPosition.x + Lich.Resources.TILE_SIZE) - 1, 0);
+                        makeShift(object.x + object.collXOffset - (clsnPosition_2.x + clsnTest.partOffsetX + 1), 0);
                     }
                     else {
                         // narazil jsem do něj zleva
-                        makeShift(-1 * (clsnPosition.x - (object.x + object.width - object.collXOffset) - 1), 0);
+                        makeShift(-1 * (clsnPosition_2.x + clsnTest.partOffsetX - 1 - (object.x + object.width - object.collXOffset)), 0);
                     }
+                    object.speedx = 0;
                 }
             }
             if (typeof object.updateAnimations !== "undefined") {
@@ -609,58 +606,63 @@ var Lich;
             if (val != null && val != 0) {
                 var res = Lich.Resources.getInstance();
                 var collisionType = res.mapSurfaceDefs[res.surfaceIndex.getType(val)].collisionType;
-                var lx = void 0, ly = void 0, n = void 0;
-                var finalOffsetX = 0;
-                var finalOffsetY = 0;
+                // souřadnice uvnitř PART
+                var lx = void 0, ly = void 0;
+                // délka PART -- všechno je po 2px, takže
+                // stačí poloviční délka, tedy TILE
+                var n = Lich.Resources.TILE_SIZE - 1;
                 if (partOffsetX == undefined || partOffsetY == undefined) {
                     // kolize se zjišťuje přímo z tilesMap, nemám k dispozici 
                     // pixel souřadnice, PART můžu rozložit akorát na 2 tiles  
-                    lx = tx % 2;
-                    ly = ty % 2;
-                    n = 1;
-                    finalOffsetX = lx * Lich.Resources.TILE_SIZE;
-                    finalOffsetY = ly * Lich.Resources.TILE_SIZE;
+                    lx = (tx % 2) * Lich.Resources.TILE_SIZE;
+                    ly = (ty % 2) * Lich.Resources.TILE_SIZE;
                 }
                 else {
                     // kolize se zjišťuje z pixel souřadnic, které byly převedeny
                     // na tiles souřadnice, znám vnitřní offset, který si ještě 
-                    // zmenším na poloviční rozlišení, protože pixel-art je kreslen
-                    // s dvojnásobným zvětšením, takže zuby na diagonále mají 2px 
+                    // zmenším na poloviční rozlišení, protože všechno je po 2px
                     lx = Math.abs(partOffsetX / 2);
                     ly = Math.abs(partOffsetY / 2);
-                    n = Lich.Resources.TILE_SIZE - 1;
-                    finalOffsetX = lx * 2;
-                    finalOffsetY = ly * 2;
                 }
-                var srfcCol = false;
+                var hit = false;
+                var tileOffsetX = 0;
+                var tileOffsetY = 0;
                 switch (collisionType) {
                     case Lich.CollisionType.SOLID_TL:
                         if (lx + ly >= n)
-                            srfcCol = true;
+                            hit = true;
                         break;
                     case Lich.CollisionType.SOLID_TR:
                         if (n - lx + ly >= n)
-                            srfcCol = true;
+                            hit = true;
                         break;
                     case Lich.CollisionType.SOLID_BL:
                         if (n - lx + ly <= n)
-                            srfcCol = true;
+                            hit = true;
                         break;
                     case Lich.CollisionType.SOLID_BR:
                         if (lx + ly <= n)
-                            srfcCol = true;
+                            hit = true;
                         break;
                     case Lich.CollisionType.SOLID:
                     case Lich.CollisionType.PLATFORM:
                     case Lich.CollisionType.LADDER:
                     default:
-                        srfcCol = true;
-                        finalOffsetX = 0;
-                        finalOffsetY = 0;
+                        hit = true;
                         break;
                 }
-                if (srfcCol) {
-                    return new Lich.CollisionTestResult(true, tx, ty, collisionType, finalOffsetX, finalOffsetY);
+                if (hit) {
+                    // převod na TILE offset (pro doposuny apod.)
+                    // z půl-souřadnic se musí stát normální, ale 
+                    // jenom v půlce PART, tedy TILE :)
+                    // Například při délce PART=8, tedy TILE=4 je
+                    // 1 v půlsouřadnicích rovna 2 v celých a tedy 2 
+                    // v TILE-offset souřadnicích. Z druhé TILE je pak
+                    // 3 v půlsouřadnicích rovna 6 v celých a tedy 
+                    // opět 2 v TILE-offset souřadnicích.
+                    tileOffsetX = (lx * 2) % Lich.Resources.TILE_SIZE;
+                    tileOffsetY = (ly * 2) % Lich.Resources.TILE_SIZE;
+                    return new Lich.CollisionTestResult(true, tx, ty, collisionType, tileOffsetX, tileOffsetY);
                 }
             }
             // kolize "mimo mapu"
