@@ -456,17 +456,18 @@ var Lich;
                         // narazil jsem do něj zleva
                         makeShift(-1 * (clsnPosition_2.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset)), 0);
                     }
-                    if (clsnTest.collisionType == Lich.CollisionType.SOLID_TR || clsnTest.collisionType == Lich.CollisionType.SOLID_TL) {
-                        // Nenarazím na překážku?
-                        var pushClsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, 2, self.isCollision.bind(self), true);
-                        if (pushClsnTest.hit == false) {
-                            if (distanceX > 0) {
-                                makeShift(4, 4);
-                            }
-                            else {
-                                makeShift(-4, 4);
-                            }
-                        }
+                    // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
+                    var baseDist = object.y + object.height - object.collYOffset - clsnPosition_2.y;
+                    // automatické stoupání při chůzí po zkosené rampě
+                    if (distanceX > 0 &&
+                        ((clsnTest.collisionType == Lich.CollisionType.SOLID_TR && baseDist <= Lich.Resources.PARTS_SIZE)
+                            || baseDist <= Lich.Resources.TILE_SIZE)) {
+                        makeShift(4, 6);
+                    }
+                    else if (distanceX < 0 &&
+                        ((clsnTest.collisionType == Lich.CollisionType.SOLID_TL && baseDist <= Lich.Resources.PARTS_SIZE)
+                            || baseDist <= Lich.Resources.TILE_SIZE)) {
+                        makeShift(-4, 6);
                     }
                 }
             }

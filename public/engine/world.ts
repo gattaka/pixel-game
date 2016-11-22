@@ -513,26 +513,20 @@ namespace Lich {
                         makeShift(-1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset)), 0);
                     }
 
-                    if (clsnTest.collisionType == CollisionType.SOLID_TR || clsnTest.collisionType == CollisionType.SOLID_TL) {
-                        // Nenarazím na překážku?
-                        let pushClsnTest = self.isBoundsInCollision(
-                            object.x + object.collXOffset,
-                            object.y + object.collYOffset,
-                            object.width - object.collXOffset * 2,
-                            object.height - object.collYOffset * 2,
-                            0,
-                            2,
-                            self.isCollision.bind(self),
-                            true
-                        );
-                        if (pushClsnTest.hit == false) {
-                            if (distanceX > 0) {
-                                makeShift(4, 4);
-                            } else {
-                                makeShift(-4, 4);
-                            }
-                        }
+                    // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
+                    let baseDist = object.y + object.height - object.collYOffset - clsnPosition.y;
+
+                    // automatické stoupání při chůzí po zkosené rampě
+                    if (distanceX > 0 &&
+                        ((clsnTest.collisionType == CollisionType.SOLID_TR && baseDist <= Resources.PARTS_SIZE)
+                            || baseDist <= Resources.TILE_SIZE)) {
+                        makeShift(4, 6);
+                    } else if (distanceX < 0 &&
+                        ((clsnTest.collisionType == CollisionType.SOLID_TL && baseDist <= Resources.PARTS_SIZE)
+                            || baseDist <= Resources.TILE_SIZE)) {
+                        makeShift(-4, 6);
                     }
+
                 }
             }
 
