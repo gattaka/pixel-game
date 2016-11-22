@@ -512,7 +512,27 @@ namespace Lich {
                         // narazil jsem do něj zleva
                         makeShift(-1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset)), 0);
                     }
-                    object.speedx = 0;
+
+                    if (clsnTest.collisionType == CollisionType.SOLID_TR || clsnTest.collisionType == CollisionType.SOLID_TL) {
+                        // Nenarazím na překážku?
+                        let pushClsnTest = self.isBoundsInCollision(
+                            object.x + object.collXOffset,
+                            object.y + object.collYOffset,
+                            object.width - object.collXOffset * 2,
+                            object.height - object.collYOffset * 2,
+                            0,
+                            2,
+                            self.isCollision.bind(self),
+                            true
+                        );
+                        if (pushClsnTest.hit == false) {
+                            if (distanceX > 0) {
+                                makeShift(4, 4);
+                            } else {
+                                makeShift(-4, 4);
+                            }
+                        }
+                    }
                 }
             }
 
