@@ -340,22 +340,6 @@ var Lich;
             var shiftY = y - this.render.getScreenOffsetY();
             this.shiftWorldBy(shiftX, shiftY);
         };
-        World.prototype.shouldIgnoreOneWayColls = function (distanceY, object) {
-            var self = this;
-            // jsem aktuálně nad oneWay objektem a padám? 
-            var ignoreOneWay = true;
-            if (distanceY < 0) {
-                var preClsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, 0, self.isCollision.bind(self), 
-                // nepropadávej oneWay kolizemi 
-                false);
-                // pokud hit, pak právě jsem ve oneWay kolizi, 
-                // takže bych měl volně padat. V opačném případě 
-                // jsem ve volném prostoru a cokoliv oneWay, co 
-                // potkám po cestě dolů musí fungovat jako kolize
-                ignoreOneWay = preClsnTest.hit;
-            }
-            return ignoreOneWay;
-        };
         World.prototype.updateObject = function (sDelta, object, makeShift, forceFall, forceJump) {
             if (forceFall === void 0) { forceFall = false; }
             if (forceJump === void 0) { forceJump = false; }
@@ -375,8 +359,7 @@ var Lich;
                 if (object.speedy < World.MAX_FREEFALL_SPEED)
                     object.speedy = World.MAX_FREEFALL_SPEED;
                 // Nenarazím na překážku?
-                var ignoreOneWay = forceFall ? true : self.shouldIgnoreOneWayColls(distanceY, object);
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), ignoreOneWay);
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, distanceY, self.isCollision.bind(self), forceFall);
                 if (clsnTest.hit === false) {
                     // pokud není kolize a stoupám
                     // pokud klesám, pak klesám po jiném povrchu, než je žebřík
@@ -417,8 +400,17 @@ var Lich;
             }
             // pokud nejsem zrovna uprostřed skoku 
             if (object.speedy === 0) {
+                var fallSpeed = void 0;
+                if (forceFall) {
+                    // padám vynuceně
+                    fallSpeed = World.DESCENT_SPEED;
+                }
+                else {
+                    // normálně padám
+                    fallSpeed = -1;
+                }
                 // ...a mám kam padat
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, fallSpeed, self.isCollision.bind(this), 
                 // pád z klidu se vždy musí zaseknout o oneWay kolize 
                 // výjimkou je, když hráč chce propadnou níž
                 forceFall);
@@ -877,16 +869,20 @@ var Lich;
             var ySign = yFullShift > 0 ? -1 : 1;
             // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
             // docíleno celého posunu (zabraňuje "teleportaci")
-            for (var xStep = 0; xStep < reqFreeWidth;) {
-                var xShift = xStep * xSign;
-                var xp = xStart + xShift;
-                for (var yStep = 0; yStep < reqFreeHeight;) {
-                    var yShift = yStep * ySign;
-                    var yp = yStart + yShift;
-                    // console.log("CHECK shift %d:%d TILE: %d:%d", xFullShift, yFullShift, xp, yp);
+            for (var yStep = 0; yStep < reqFreeHeight;) {
+                var yShift = yStep * ySign;
+                var yp = yStart + yShift;
+                for (var xStep = 0; xStep < reqFreeWidth;) {
+                    var xShift = xStep * xSign;
+                    var xp = xStart + xShift;
                     var result = collisionTester(xp, yp, new CollisionTestContext(xFullShift, yFullShift, xStep, reqFreeWidth - xStep, yStep, reqFreeHeight - yStep));
                     if (result.hit) {
-                        if (ignoreOneWay && (result.collisionType == Lich.CollisionType.PLATFORM)) {
+                        if (result.collisionType == Lich.CollisionType.PLATFORM) {
+                            if (ignoreOneWay || xFullShift != 0 || yFullShift >= 0 || Lich.Utils.isEven(result.y) == false) {
+                            }
+                            else {
+                                return result;
+                            }
                         }
                         else if (result.collisionType == Lich.CollisionType.LADDER) {
                             // žebříková kolize se vrací pouze jako info
@@ -906,18 +902,18 @@ var Lich;
                                 lastResult = result;
                         }
                     }
-                    if (yStep == reqFreeHeight - 1) {
+                    if (xStep == reqFreeWidth - 1) {
                         break;
                     }
                     else {
-                        yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
+                        xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
                     }
                 }
-                if (xStep == reqFreeWidth - 1) {
+                if (yStep == reqFreeHeight - 1) {
                     break;
                 }
                 else {
-                    xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
+                    yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
                 }
             }
             return lastResult;
@@ -1026,6 +1022,7 @@ var Lich;
         // Pixel/s2
         World.WORLD_GRAVITY = -1200;
         World.CLIMBING_SPEED = 300;
+        World.DESCENT_SPEED = -10;
         World.MAX_FREEFALL_SPEED = -1200;
         return World;
     }(createjs.Container));

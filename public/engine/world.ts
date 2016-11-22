@@ -56,6 +56,7 @@ namespace Lich {
         // Pixel/s2
         static WORLD_GRAVITY = -1200;
         static CLIMBING_SPEED = 300;
+        static DESCENT_SPEED = -10;
         static MAX_FREEFALL_SPEED = -1200;
 
         /*-----------*/
@@ -365,31 +366,6 @@ namespace Lich {
             this.shiftWorldBy(shiftX, shiftY);
         }
 
-        private shouldIgnoreOneWayColls(distanceY: number, object: AbstractWorldObject) {
-            let self = this;
-            // jsem aktuálně nad oneWay objektem a padám? 
-            let ignoreOneWay = true;
-            if (distanceY < 0) {
-                let preClsnTest = self.isBoundsInCollision(
-                    object.x + object.collXOffset,
-                    object.y + object.collYOffset,
-                    object.width - object.collXOffset * 2,
-                    object.height - object.collYOffset * 2,
-                    0,
-                    0,
-                    self.isCollision.bind(self),
-                    // nepropadávej oneWay kolizemi 
-                    false
-                );
-                // pokud hit, pak právě jsem ve oneWay kolizi, 
-                // takže bych měl volně padat. V opačném případě 
-                // jsem ve volném prostoru a cokoliv oneWay, co 
-                // potkám po cestě dolů musí fungovat jako kolize
-                ignoreOneWay = preClsnTest.hit;
-            }
-            return ignoreOneWay;
-        }
-
         updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false, forceJump = false): boolean {
             var self = this;
             var clsnTest: CollisionTestResult;
@@ -411,7 +387,6 @@ namespace Lich {
                     object.speedy = World.MAX_FREEFALL_SPEED;
 
                 // Nenarazím na překážku?
-                let ignoreOneWay = forceFall ? true : self.shouldIgnoreOneWayColls(distanceY, object);
                 clsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
                     object.y + object.collYOffset,
@@ -420,7 +395,7 @@ namespace Lich {
                     0,
                     distanceY,
                     self.isCollision.bind(self),
-                    ignoreOneWay
+                    forceFall
                 );
 
                 if (clsnTest.hit === false) {
@@ -465,6 +440,15 @@ namespace Lich {
             // pokud nejsem zrovna uprostřed skoku 
             if (object.speedy === 0) {
 
+                let fallSpeed;
+                if (forceFall) {
+                    // padám vynuceně
+                    fallSpeed = World.DESCENT_SPEED;
+                } else {
+                    // normálně padám
+                    fallSpeed = -1;
+                }
+
                 // ...a mám kam padat
                 clsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
@@ -472,7 +456,7 @@ namespace Lich {
                     object.width - object.collXOffset * 2,
                     object.height - object.collYOffset * 2,
                     0,
-                    -1,
+                    fallSpeed,
                     self.isCollision.bind(this),
                     // pád z klidu se vždy musí zaseknout o oneWay kolize 
                     // výjimkou je, když hráč chce propadnou níž
@@ -927,21 +911,27 @@ namespace Lich {
 
             // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
             // docíleno celého posunu (zabraňuje "teleportaci")
-            for (let xStep = 0; xStep < reqFreeWidth;) {
-                let xShift = xStep * xSign;
-                let xp = xStart + xShift;
+            for (let yStep = 0; yStep < reqFreeHeight;) {
+                let yShift = yStep * ySign;
+                let yp = yStart + yShift;
 
-                for (let yStep = 0; yStep < reqFreeHeight;) {
-                    let yShift = yStep * ySign;
-                    let yp = yStart + yShift;
-
-                    // console.log("CHECK shift %d:%d TILE: %d:%d", xFullShift, yFullShift, xp, yp);
+                for (let xStep = 0; xStep < reqFreeWidth;) {
+                    let xShift = xStep * xSign;
+                    let xp = xStart + xShift;
 
                     let result = collisionTester(xp, yp,
                         new CollisionTestContext(xFullShift, yFullShift, xStep, reqFreeWidth - xStep, yStep, reqFreeHeight - yStep));
                     if (result.hit) {
-                        if (ignoreOneWay && (result.collisionType == CollisionType.PLATFORM)) {
-                            // kolize je ignorována
+                        if (result.collisionType == CollisionType.PLATFORM) {
+                            if (ignoreOneWay || xFullShift != 0 || yFullShift >= 0 || Utils.isEven(result.y) == false) {
+                                // ignoruj kolizi
+                                // - je vynuceno procházení 
+                                // - nebo se jedná o horizontální pohyb
+                                // - nebo stoupám
+                                // - nebo jde o kolizi s druhou půlkou platformy
+                            } else {
+                                return result;
+                            }
                         } else if (result.collisionType == CollisionType.LADDER) {
                             // žebříková kolize se vrací pouze jako info
                             lastResult = result;
@@ -963,17 +953,17 @@ namespace Lich {
                         }
                     }
 
-                    if (yStep == reqFreeHeight - 1) {
+                    if (xStep == reqFreeWidth - 1) {
                         break;
                     } else {
-                        yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
+                        xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
                     }
                 }
 
-                if (xStep == reqFreeWidth - 1) {
+                if (yStep == reqFreeHeight - 1) {
                     break;
                 } else {
-                    xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
+                    yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
                 }
             }
 
