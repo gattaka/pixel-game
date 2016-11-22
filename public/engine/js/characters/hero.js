@@ -10,9 +10,11 @@ var Lich;
         function Hero() {
             _super.call(this, 56, // WIDTH
             80, // HEIGHT 
-            // 16, // COLLXOFFSET
-            // 12, // COLLYOFFSET
-            0, 0, Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 40, // frames
+            16, // COLLXOFFSET
+            12, // COLLYOFFSET
+            // 0,
+            // 0,
+            Lich.AnimationKey.LICH_ANIMATION_KEY, Lich.CharacterState.IDLE, 40, // frames
             300, // HERO_HORIZONTAL_SPEED
             520, // HERO_VERTICAL_SPEED
             new Lich.Animations()

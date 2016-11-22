@@ -2,8 +2,8 @@ var Lich;
 (function (Lich) {
     Lich.ANIMATION_PATHS = [
         // characters
-        // ["images/characters/lich_animation.png", AnimationKey.LICH_ANIMATION_KEY],
-        ["images/characters/lich_animation_debug.png", Lich.AnimationKey.LICH_ANIMATION_KEY],
+        ["images/characters/lich_animation.png", Lich.AnimationKey.LICH_ANIMATION_KEY],
+        // ["images/characters/lich_animation_debug.png", AnimationKey.LICH_ANIMATION_KEY],
         ["images/characters/corpse_animation.png", Lich.AnimationKey.CORPSE_ANIMATION_KEY],
         ["images/characters/hellhound.png", Lich.AnimationKey.HELLHOUND_ANIMATION_KEY],
         // gfx animations
