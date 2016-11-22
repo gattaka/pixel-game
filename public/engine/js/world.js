@@ -340,9 +340,10 @@ var Lich;
             var shiftY = y - this.render.getScreenOffsetY();
             this.shiftWorldBy(shiftX, shiftY);
         };
-        World.prototype.updateObject = function (sDelta, object, makeShift, forceFall, forceJump) {
+        World.prototype.updateObject = function (sDelta, object, makeShift, forceFall, forceJump, collisionSteps) {
             if (forceFall === void 0) { forceFall = false; }
             if (forceJump === void 0) { forceJump = false; }
+            if (collisionSteps === void 0) { collisionSteps = false; }
             var self = this;
             var clsnTest;
             var clsnPosition;
@@ -400,17 +401,8 @@ var Lich;
             }
             // pokud nejsem zrovna uprostřed skoku 
             if (object.speedy === 0) {
-                var fallSpeed = void 0;
-                if (forceFall) {
-                    // padám vynuceně
-                    fallSpeed = World.DESCENT_SPEED;
-                }
-                else {
-                    // normálně padám
-                    fallSpeed = -1;
-                }
                 // ...a mám kam padat
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, fallSpeed, self.isCollision.bind(this), 
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
                 // pád z klidu se vždy musí zaseknout o oneWay kolize 
                 // výjimkou je, když hráč chce propadnou níž
                 forceFall);
@@ -456,18 +448,20 @@ var Lich;
                         // narazil jsem do něj zleva
                         makeShift(-1 * (clsnPosition_2.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset)), 0);
                     }
-                    // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
-                    var baseDist = object.y + object.height - object.collYOffset - clsnPosition_2.y;
-                    // automatické stoupání při chůzí po zkosené rampě
-                    if (distanceX > 0 &&
-                        ((clsnTest.collisionType == Lich.CollisionType.SOLID_TR && baseDist <= Lich.Resources.PARTS_SIZE)
-                            || baseDist <= Lich.Resources.TILE_SIZE)) {
-                        makeShift(4, 6);
-                    }
-                    else if (distanceX < 0 &&
-                        ((clsnTest.collisionType == Lich.CollisionType.SOLID_TL && baseDist <= Lich.Resources.PARTS_SIZE)
-                            || baseDist <= Lich.Resources.TILE_SIZE)) {
-                        makeShift(-4, 6);
+                    if (collisionSteps) {
+                        // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
+                        var baseDist = object.y + object.height - object.collYOffset - clsnPosition_2.y;
+                        // automatické stoupání při chůzí po zkosené rampě
+                        if (distanceX > 0 &&
+                            ((clsnTest.collisionType == Lich.CollisionType.SOLID_TR && baseDist <= Lich.Resources.PARTS_SIZE)
+                                || baseDist <= Lich.Resources.TILE_SIZE)) {
+                            makeShift(4, 6);
+                        }
+                        else if (distanceX < 0 &&
+                            ((clsnTest.collisionType == Lich.CollisionType.SOLID_TL && baseDist <= Lich.Resources.PARTS_SIZE)
+                                || baseDist <= Lich.Resources.TILE_SIZE)) {
+                            makeShift(-4, 6);
+                        }
                     }
                 }
             }
@@ -523,7 +517,7 @@ var Lich;
                     }
                 }
                 // update postavy
-                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp);
+                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp, true);
             };
             // Dle kláves nastav směry pohybu
             if (controls.up && self.hero.speedy === 0) {
@@ -600,7 +594,7 @@ var Lich;
                         var rndY = Lich.Utils.floor(y);
                         object.x -= rndX;
                         object.y -= rndY;
-                    });
+                    }, false, false, false);
                     // zjisti, zda hráč objekt nesebral
                     if (self.hero.getCurrentHealth() > 0) {
                         var heroCenterX = self.hero.x + self.hero.width / 2;

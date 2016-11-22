@@ -366,7 +366,7 @@ namespace Lich {
             this.shiftWorldBy(shiftX, shiftY);
         }
 
-        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false, forceJump = false): boolean {
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false, forceJump = false, collisionSteps = false): boolean {
             var self = this;
             var clsnTest: CollisionTestResult;
             var clsnPosition;
@@ -440,15 +440,6 @@ namespace Lich {
             // pokud nejsem zrovna uprostřed skoku 
             if (object.speedy === 0) {
 
-                let fallSpeed;
-                if (forceFall) {
-                    // padám vynuceně
-                    fallSpeed = World.DESCENT_SPEED;
-                } else {
-                    // normálně padám
-                    fallSpeed = -1;
-                }
-
                 // ...a mám kam padat
                 clsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
@@ -456,7 +447,7 @@ namespace Lich {
                     object.width - object.collXOffset * 2,
                     object.height - object.collYOffset * 2,
                     0,
-                    fallSpeed,
+                    -1,
                     self.isCollision.bind(this),
                     // pád z klidu se vždy musí zaseknout o oneWay kolize 
                     // výjimkou je, když hráč chce propadnou níž
@@ -513,18 +504,20 @@ namespace Lich {
                         makeShift(-1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset)), 0);
                     }
 
-                    // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
-                    let baseDist = object.y + object.height - object.collYOffset - clsnPosition.y;
+                    if (collisionSteps) {
+                        // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
+                        let baseDist = object.y + object.height - object.collYOffset - clsnPosition.y;
 
-                    // automatické stoupání při chůzí po zkosené rampě
-                    if (distanceX > 0 &&
-                        ((clsnTest.collisionType == CollisionType.SOLID_TR && baseDist <= Resources.PARTS_SIZE)
-                            || baseDist <= Resources.TILE_SIZE)) {
-                        makeShift(4, 6);
-                    } else if (distanceX < 0 &&
-                        ((clsnTest.collisionType == CollisionType.SOLID_TL && baseDist <= Resources.PARTS_SIZE)
-                            || baseDist <= Resources.TILE_SIZE)) {
-                        makeShift(-4, 6);
+                        // automatické stoupání při chůzí po zkosené rampě
+                        if (distanceX > 0 &&
+                            ((clsnTest.collisionType == CollisionType.SOLID_TR && baseDist <= Resources.PARTS_SIZE)
+                                || baseDist <= Resources.TILE_SIZE)) {
+                            makeShift(4, 6);
+                        } else if (distanceX < 0 &&
+                            ((clsnTest.collisionType == CollisionType.SOLID_TL && baseDist <= Resources.PARTS_SIZE)
+                                || baseDist <= Resources.TILE_SIZE)) {
+                            makeShift(-4, 6);
+                        }
                     }
 
                 }
@@ -585,7 +578,7 @@ namespace Lich {
                 }
 
                 // update postavy
-                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp);
+                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp, true);
             };
 
             // Dle kláves nastav směry pohybu
@@ -667,7 +660,7 @@ namespace Lich {
                         var rndY = Utils.floor(y);
                         object.x -= rndX;
                         object.y -= rndY;
-                    });
+                    }, false, false, false);
 
                     // zjisti, zda hráč objekt nesebral
                     if (self.hero.getCurrentHealth() > 0) {
