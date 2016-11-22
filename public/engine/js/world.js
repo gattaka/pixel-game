@@ -34,9 +34,9 @@ var Lich;
     var CollisionTestContext = (function () {
         function CollisionTestContext(
             // aktuální směr v ose X
-            xShift, 
+            xSign, 
             // aktuální směr v ose Y
-            yShift, 
+            ySign, 
             // délka části vodorovné hrany před kontrolovaným bodem kolize 
             preEdgeWidth, 
             // délka části vodorovné hrany za kontrolovaným bodem kolize
@@ -45,8 +45,8 @@ var Lich;
             preEdgeHeight, 
             // délka části svislé hrany za kontrolovaným bodem kolize
             postEdgeHeight) {
-            this.xShift = xShift;
-            this.yShift = yShift;
+            this.xSign = xSign;
+            this.ySign = ySign;
             this.preEdgeWidth = preEdgeWidth;
             this.postEdgeWidth = postEdgeWidth;
             this.preEdgeHeight = preEdgeHeight;
@@ -633,6 +633,32 @@ var Lich;
         ;
         /**
          * Zjistí zda na daných tile-souřadnicích dochází ke kolizi
+         *
+         * Zároveň umí dle kontextu kontroly kolize zjistit, zda nedojde ke kolizi
+         * na dřívějším místě ve směru pohybu a na délce hrany na které leží právě
+         * kontrolovaný bod.
+         *
+         * Celý systém kontroly kolizí tak vlastně sestává ze dvou fází:
+         *
+         * 1. Hrubá kontrola
+         * Při té se krokuje po TILEs a zjišťuje se jenom do jaké TILE jsem se
+         * trefil.
+         *
+         * 2. Detailní kontrola (uvnitř-PART kontrola)
+         * Pokud je hrubou kontrolou zasáhnutá TILE součástí polo-kolizního povrchu,
+         * jakým jsou například zkosené povrchy, které mají část povrchu jako kolizi
+         * a část ne, řeší se předpisem křivky, zda je souřadnice relaivně vůči
+         * počátku takového povrchu v kolizi nebo ne.
+         *
+         * Protože se u detailní kontroly nekrokuje (mám jeden zásah z hrubé kontroly
+         * a relativní souřadnice vůči počátku PART) je potřeba z hrany a směru posuvu
+         * zjistit, kde by už předtím, než dojdu k tomuto bodu, mělo dojít ke kolizi.
+         *
+         * Tím se zamezí "napíchnutí" pohybovaného objektu na "hrot" polo-kolizního
+         * povrchu v důsledku přeskočeného první kolize ve směru pohybu.
+         *
+         * Kdyby se u hrubé kontroly krokovalo po 1px, bylo by možné detailní kontrolu
+         * vynechat, ale kontrola kolizí by tak byla neskutečně pomalá.
          */
         World.prototype.isCollisionByTiles = function (tx, ty, partOffsetX, partOffsetY, clsCtx) {
             var self = this;
@@ -657,7 +683,7 @@ var Lich;
                     lx = Math.abs(partOffsetX);
                     ly = Math.abs(partOffsetY);
                     // pokud je kontrola kolizního bodu součástí kontroly kolize 
-                    // objektu upra dle směru a délky hran souřadnice tak, aby se 
+                    // objektu uprav dle směru a délky hran souřadnice tak, aby se 
                     // braly první kolize ve směru kontroly, nikoliv v daném bodě
                     if (clsCtx) {
                         var partTrim = function (d) {
@@ -704,23 +730,23 @@ var Lich;
                 // v daném SMĚRU, ve kterém provádím pohyb? 
                 var fixOffsetX = 0;
                 var fixOffsetY = 0;
-                var xShift = void 0, yShift = void 0;
+                var xSign = void 0, ySign = void 0;
                 if (clsCtx) {
-                    xShift = clsCtx.xShift;
-                    yShift = clsCtx.yShift;
+                    xSign = clsCtx.xSign;
+                    ySign = clsCtx.ySign;
                 }
                 switch (collisionType) {
                     case Lich.CollisionType.SOLID_TL:
                         // kontrola tvaru nebo směru
                         if (lx + ly >= n_1) {
                             hit = true;
-                            if (xShift < 0)
+                            if (xSign < 0)
                                 fixOffsetX = n_1 - ly; // jdu zleva
-                            if (xShift > 0)
+                            if (xSign > 0)
                                 fixOffsetX = n_1 + 1; // jdu zprava
-                            if (yShift < 0)
+                            if (ySign < 0)
                                 fixOffsetY = n_1 - lx; // jdu shora
-                            if (yShift > 0)
+                            if (ySign > 0)
                                 fixOffsetY = n_1 + 1; // jdu zdola
                         }
                         break;
@@ -728,13 +754,13 @@ var Lich;
                         // kontrola tvaru nebo směru (zleva a zespoda se musí vždy narazit)
                         if (n_1 - lx + ly >= n_1) {
                             hit = true;
-                            if (xShift < 0)
+                            if (xSign < 0)
                                 fixOffsetX = 0; // jdu zleva
-                            if (xShift > 0)
+                            if (xSign > 0)
                                 fixOffsetX = ly + 1; // jdu zprava
-                            if (yShift < 0)
+                            if (ySign < 0)
                                 fixOffsetY = lx; // jdu shora
-                            if (yShift > 0)
+                            if (ySign > 0)
                                 fixOffsetY = n_1 + 1; // jdu zdola
                         }
                         break;
@@ -742,13 +768,13 @@ var Lich;
                         // kontrola tvaru nebo směru (zprava a shora se musí vždy narazit)
                         if (n_1 - lx + ly <= n_1) {
                             hit = true;
-                            if (xShift < 0)
+                            if (xSign < 0)
                                 fixOffsetX = ly; // jdu zleva
-                            if (xShift > 0)
+                            if (xSign > 0)
                                 fixOffsetX = n_1 + 1; // jdu zprava
-                            if (yShift < 0)
+                            if (ySign < 0)
                                 fixOffsetY = 0; // jdu shora
-                            if (yShift > 0)
+                            if (ySign > 0)
                                 fixOffsetY = lx + 1; // jdu zdola
                         }
                         break;
@@ -756,13 +782,13 @@ var Lich;
                         // kontrola tvaru nebo směru (zleva a shora se musí vždy narazit)
                         if (lx + ly <= n_1) {
                             hit = true;
-                            if (xShift < 0)
+                            if (xSign < 0)
                                 fixOffsetX = 0; // jdu zleva
-                            if (xShift > 0)
+                            if (xSign > 0)
                                 fixOffsetX = n_1 + ly + 1; // jdu zprava
-                            if (yShift < 0)
+                            if (ySign < 0)
                                 fixOffsetY = 0; // jdu shora
-                            if (yShift > 0)
+                            if (ySign > 0)
                                 fixOffsetY = n_1 + lx + 1; // jdu zdola
                         }
                         break;
@@ -771,13 +797,13 @@ var Lich;
                     case Lich.CollisionType.LADDER:
                     default:
                         hit = true;
-                        if (xShift < 0)
+                        if (xSign < 0)
                             fixOffsetX = 0; // jdu zleva
-                        if (xShift > 0)
+                        if (xSign > 0)
                             fixOffsetX = n_1 + 1; // jdu zprava
-                        if (yShift < 0)
+                        if (ySign < 0)
                             fixOffsetY = 0; // jdu shora
-                        if (yShift > 0)
+                        if (ySign > 0)
                             fixOffsetY = n_1 + 1; // jdu zdola
                         break;
                 }
@@ -806,148 +832,94 @@ var Lich;
          * jeho hrana. Bere v potaz, že se při posunu o danou vzdálenost objekt neteleportuje,
          * ale postupně posouvá, takže kontroluje celý interval mezi aktuální polohou a cílem.
          */
-        World.prototype.isBoundsInCollision = function (x, y, objectWidth, objectHeight, objectXShift, objectYShift, collisionTester, ignoreOneWay) {
+        World.prototype.isBoundsInCollision = function (xObj, yObj, objectWidth, objectHeight, xFullShift, yFullShift, collisionTester, ignoreOneWay) {
             var self = this;
             var tx;
             var ty;
             var lastResult = new Lich.CollisionTestResult(false);
-            // korekce překlenutí -- při kontrole rozměrů dochází k přeskoku na další tile, který
-            // může vyhodit kolizi, ačkoliv v něm objekt není. Důvod je, že objekt o šířce 1 tile
-            // usazený na nějaké tile x má součet x+1 jako další tile. Nejde fixně ignorovat 1 tile
-            // rozměru objektu, protože se počítá s collisionOffset, takže výslená šířka není násobek
-            // tiles. Řešením tak je odebrat 1px, aby se nepřeklenulo do dalšího tile mapy.
-            var TILE_FIX = 1;
             // Inkrement při procházení šířky/délky 
             var STEP = Lich.Resources.TILE_SIZE;
-            // kolize se musí dělat iterativně pro každý bod v STEP podél hran objektu
-            var xShift = 0; // iterace posuvu (+/-)
-            var yShift = 0; // iterace posuvu (+/-)
-            var width = 0; // iterace šířky posouvaného objetku
-            var height = 0; // iterace výšky posouvaného objetku
-            var xSign = Lich.Utils.sign(objectXShift);
-            var ySign = Lich.Utils.sign(objectYShift);
-            // pokud bude zadán fullXShift i fullYShift, udělá to diagonální posuv
+            // celková plocha, která nesmí být kolizní pro tento posun (+)
+            var reqFreeWidth = xFullShift != 0 ? Math.abs(xFullShift) : objectWidth;
+            var reqFreeHeight = yFullShift != 0 ? Math.abs(yFullShift) : objectHeight;
+            // startovací pozice (+)
+            var xStart, yStart;
+            if (xFullShift < 0) {
+                xStart = xObj + objectWidth;
+                yStart = yObj;
+            } // doprava
+            if (xFullShift > 0) {
+                xStart = xObj - 1;
+                yStart = yObj;
+            } // doleva
+            if (yFullShift < 0) {
+                yStart = yObj + objectHeight;
+                xStart = xObj;
+            } // dolů
+            if (yFullShift > 0) {
+                yStart = yObj - 1;
+                xStart = xObj;
+            } // nahoru
+            // výjimka: statická kontrola 
+            // Jsem teď v kolizi? Normálně se do tohoto stavu nedostanu,
+            // ale žebříky a platformy umožňují projít kolizí a ocitnout se 
+            // v ní až cestou zpět, aniž bych se vlastně pohnul
+            if (xFullShift == 0 && yFullShift == 0) {
+                // v takovém případě projdi moje aktuální pokrytí, 
+                // jako kdybych padal ze svého počátku na svůj konec
+                // a měl jednotkovou výšku
+                reqFreeWidth = objectWidth;
+                reqFreeHeight = objectHeight;
+                xStart = xObj;
+                yStart = yObj;
+            }
+            var xSign = xFullShift > 0 ? -1 : 1;
+            var ySign = yFullShift > 0 ? -1 : 1;
             // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
-            // docíleno celého posunu (zabraňuje "teleportaci" )
-            do {
-                // kontrola velikosti iterace posuvu X (zapsaná v kladných číslech)
-                if (xSign * xShift + STEP > xSign * objectXShift) {
-                    xShift = objectXShift;
-                }
-                else {
-                    xShift += xSign * STEP;
-                }
-                // kontrola velikosti iterace posuvu Y (zapsaná v kladných číslech)
-                if (ySign * (yShift + ySign * STEP) > ySign * objectYShift) {
-                    yShift = objectYShift;
-                }
-                else {
-                    yShift += ySign * STEP;
-                }
-                if (xShift > 0 || yShift > 0) {
-                    tx = x - xShift;
-                    ty = y - yShift;
-                    var TL = collisionTester(tx, ty, new CollisionTestContext(xShift, yShift, 0, objectWidth, 0, objectHeight));
-                    if (TL.hit) {
-                        if (ignoreOneWay && (TL.collisionType == Lich.CollisionType.PLATFORM)) {
+            // docíleno celého posunu (zabraňuje "teleportaci")
+            for (var xStep = 0; xStep < reqFreeWidth;) {
+                var xShift = xStep * xSign;
+                var xp = xStart + xShift;
+                for (var yStep = 0; yStep < reqFreeHeight;) {
+                    var yShift = yStep * ySign;
+                    var yp = yStart + yShift;
+                    // console.log("CHECK shift %d:%d TILE: %d:%d", xFullShift, yFullShift, xp, yp);
+                    var result = collisionTester(xp, yp, new CollisionTestContext(xFullShift, yFullShift, xStep, reqFreeWidth - xStep, yStep, reqFreeHeight - yStep));
+                    if (result.hit) {
+                        if (ignoreOneWay && (result.collisionType == Lich.CollisionType.PLATFORM)) {
                         }
-                        else if (TL.collisionType == Lich.CollisionType.LADDER) {
+                        else if (result.collisionType == Lich.CollisionType.LADDER) {
                             // žebříková kolize se vrací pouze jako info
-                            lastResult = TL;
+                            lastResult = result;
                             lastResult.hit = false;
                         }
+                        else if (result.collisionType == Lich.CollisionType.SOLID) {
+                            return result;
+                        }
                         else {
-                            return TL;
+                            // Získání nejbližší kolize
+                            if (lastResult.partOffsetX == undefined || lastResult.partOffsetY == undefined
+                                || xFullShift < 0 && result.x * Lich.Resources.PARTS_SIZE + result.partOffsetX < lastResult.x * Lich.Resources.PARTS_SIZE + lastResult.partOffsetX
+                                || xFullShift > 0 && result.x * Lich.Resources.PARTS_SIZE + result.partOffsetX > lastResult.x * Lich.Resources.PARTS_SIZE + lastResult.partOffsetX
+                                || yFullShift < 0 && result.y * Lich.Resources.PARTS_SIZE + result.partOffsetY < lastResult.y * Lich.Resources.PARTS_SIZE + lastResult.partOffsetY
+                                || yFullShift > 0 && result.y * Lich.Resources.PARTS_SIZE + result.partOffsetY > lastResult.y * Lich.Resources.PARTS_SIZE + lastResult.partOffsetY)
+                                lastResult = result;
                         }
                     }
-                }
-                // iterativní kontroly ve výšce a šířce posouvaného objektu 
-                // zabraňuje "napíchnutní" posouvaného objektu na kolizní objekt)
-                // v případě, že posouvaný objekt je například širší než kolizní plocha 
-                // na kterou padá -- jeho krají body tak v kolizi nebudou, ale střed ano
-                width = 0;
-                // Musím iterovat s "dorazem" (nakonec se přičte zbytek do celku) aby 
-                // fungoval collisionOffset -- ten totiž je v pixels nikoliv v tiles
-                // bez collisionOffset by nebylo možné dělt sprite přesahy
-                while (width !== objectWidth) {
-                    // pokud jde o posuv doprava, zkoumej rovnou pravu hranu, tou se narazí jako první 
-                    if (xShift < 0 || (width + STEP > objectWidth)) {
-                        width = objectWidth;
+                    if (yStep == reqFreeHeight - 1) {
+                        break;
                     }
                     else {
-                        width += STEP;
-                    }
-                    height = 0;
-                    while (height !== objectHeight) {
-                        // pokud se nehýbu do stran (xShift == 0, nedojde ke kolize stranou)  
-                        // a pokud jde o posuv dolů nebo statický stav (=0), 
-                        // zkoumej rovnou spodní hranu, tou se narazí jako první 
-                        if ((yShift <= 0 && xShift == 0) || (height + STEP > objectHeight)) {
-                            height = objectHeight;
-                        }
-                        else {
-                            height += STEP;
-                        }
-                        if (xShift < 0 || yShift > 0) {
-                            tx = x + width - TILE_FIX - xShift;
-                            ty = y - yShift;
-                            var TR = collisionTester(tx, ty, new CollisionTestContext(xShift, yShift, width, objectWidth - width, height, objectHeight - height));
-                            if (TR.hit) {
-                                if (ignoreOneWay && (TR.collisionType == Lich.CollisionType.PLATFORM)) {
-                                }
-                                else if (TR.collisionType == Lich.CollisionType.LADDER) {
-                                    // žebříková kolize se vrací pouze jako info
-                                    lastResult = TR;
-                                    lastResult.hit = false;
-                                }
-                                else {
-                                    return TR;
-                                }
-                            }
-                        }
-                        if (xShift > 0 || yShift <= 0) {
-                            tx = x - xShift;
-                            ty = y + height - TILE_FIX - yShift;
-                            var BL = collisionTester(tx, ty, new CollisionTestContext(xShift, yShift, width, objectWidth - width, height, objectHeight - height));
-                            if (BL.hit) {
-                                // OneWay kolize se ignorují pouze pokud se to chce, 
-                                // nebo je to jejich spodní tile -- to je proto, aby 
-                                // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Lich.Utils.isEven(BL.y) == false) && (BL.collisionType == Lich.CollisionType.PLATFORM)) {
-                                }
-                                else if (BL.collisionType == Lich.CollisionType.LADDER) {
-                                    // žebříková kolize se vrací pouze jako info
-                                    lastResult = BL;
-                                    lastResult.hit = false;
-                                }
-                                else {
-                                    return BL;
-                                }
-                            }
-                        }
-                        if (xShift < 0 || yShift <= 0) {
-                            tx = x + width - TILE_FIX - xShift;
-                            ty = y + height - TILE_FIX - yShift;
-                            var BR = collisionTester(tx, ty, new CollisionTestContext(xShift, yShift, width, objectWidth - width, height, objectHeight - height));
-                            if (BR.hit) {
-                                // OneWay kolize se ignorují pouze pokud se to chce, 
-                                // nebo je to jejich spodní tile -- to je proto, aby 
-                                // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Lich.Utils.isEven(BR.y) == false) && (BR.collisionType == Lich.CollisionType.PLATFORM)) {
-                                }
-                                else if (BR.collisionType == Lich.CollisionType.LADDER) {
-                                    // žebříková kolize se vrací pouze jako info
-                                    lastResult = BR;
-                                    lastResult.hit = false;
-                                }
-                                else {
-                                    return BR;
-                                }
-                            }
-                        }
+                        yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
                     }
                 }
-            } while (xShift !== objectXShift || yShift !== objectYShift);
+                if (xStep == reqFreeWidth - 1) {
+                    break;
+                }
+                else {
+                    xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
+                }
+            }
             return lastResult;
         };
         ;
