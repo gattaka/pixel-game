@@ -770,8 +770,8 @@ namespace Lich {
                         break;
                 }
                 if (hit) {
-                    if (xShift > 0 || xShift < 0 || yShift > 0 || yShift < 0)
-                        console.log("HIT! tile: %d:%d, pOffs: %d:%d, fix: %d:%d", tx, ty, partOffsetX, partOffsetY, fixOffsetX, fixOffsetY);
+                    // if (xShift > 0 || xShift < 0 || yShift > 0 || yShift < 0)
+                    // console.log("HIT! tile: %d:%d, pOffs: %d:%d, fix: %d:%d", tx, ty, partOffsetX, partOffsetY, fixOffsetX, fixOffsetY);
                     return new CollisionTestResult(true, tx, ty, collisionType, fixOffsetX, fixOffsetY);
                 }
             }
@@ -844,16 +844,21 @@ namespace Lich {
                 if (xShift > 0 || yShift > 0) {
                     tx = x - xShift;
                     ty = y - yShift;
-                    let LT = collisionTester(tx, ty, xShift, yShift);
-                    if (LT.hit) {
-                        if (ignoreOneWay && (LT.collisionType == CollisionType.PLATFORM)) {
+                    let TL = collisionTester(tx, ty, xShift, yShift);
+                    if (TL.hit) {
+                        if (ignoreOneWay && (TL.collisionType == CollisionType.PLATFORM)) {
                             // kolize je ignorována
-                        } else if (LT.collisionType == CollisionType.LADDER) {
+                        } else if (TL.collisionType == CollisionType.LADDER) {
                             // žebříková kolize se vrací pouze jako info
-                            lastResult = LT;
+                            lastResult = TL;
                             lastResult.hit = false;
+                        } else if (TL.collisionType == CollisionType.SOLID) {
+                            return TL;
                         } else {
-                            return LT;
+                            // zprava a zdola směr má blíž kolizi s větším partOffset
+                            if (lastResult.partOffsetX == undefined || lastResult.partOffsetY == undefined
+                                || TL.partOffsetX > lastResult.partOffsetX || TL.partOffsetY > lastResult.partOffsetY)
+                                lastResult = TL;
                         }
                     }
                 }
@@ -888,16 +893,23 @@ namespace Lich {
                         if (xShift < 0 || yShift > 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y - yShift;
-                            let RT = collisionTester(tx, ty, xShift, yShift);
-                            if (RT.hit) {
-                                if (ignoreOneWay && (RT.collisionType == CollisionType.PLATFORM)) {
+                            let TR = collisionTester(tx, ty, xShift, yShift);
+                            if (TR.hit) {
+                                if (ignoreOneWay && (TR.collisionType == CollisionType.PLATFORM)) {
                                     // kolize je ignorována
-                                } else if (RT.collisionType == CollisionType.LADDER) {
+                                } else if (TR.collisionType == CollisionType.LADDER) {
                                     // žebříková kolize se vrací pouze jako info
-                                    lastResult = RT;
+                                    lastResult = TR;
                                     lastResult.hit = false;
+                                } else if (TR.collisionType == CollisionType.SOLID) {
+                                    return TR;
                                 } else {
-                                    return RT;
+                                    lastResult = TR;
+                                    // zleva směr má blíž kolizi s menším partOffsetX
+                                    // zdola směr má blíž kolizi s větším partOffsetY
+                                    if (lastResult.partOffsetX == undefined || lastResult.partOffsetY == undefined
+                                        || TR.partOffsetX < lastResult.partOffsetX || TR.partOffsetY > lastResult.partOffsetY)
+                                        lastResult = TR;
                                 }
                             }
                         }
@@ -905,19 +917,26 @@ namespace Lich {
                         if (xShift > 0 || yShift <= 0) {
                             tx = x - xShift;
                             ty = y + height - TILE_FIX - yShift;
-                            let LB = collisionTester(tx, ty, xShift, yShift);
-                            if (LB.hit) {
+                            let BL = collisionTester(tx, ty, xShift, yShift);
+                            if (BL.hit) {
                                 // OneWay kolize se ignorují pouze pokud se to chce, 
                                 // nebo je to jejich spodní tile -- to je proto, aby 
                                 // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Utils.isEven(LB.y) == false) && (LB.collisionType == CollisionType.PLATFORM)) {
+                                if ((ignoreOneWay || Utils.isEven(BL.y) == false) && (BL.collisionType == CollisionType.PLATFORM)) {
                                     // kolize je ignorována
-                                } else if (LB.collisionType == CollisionType.LADDER) {
+                                } else if (BL.collisionType == CollisionType.LADDER) {
                                     // žebříková kolize se vrací pouze jako info
-                                    lastResult = LB;
+                                    lastResult = BL;
                                     lastResult.hit = false;
+                                } else if (BL.collisionType == CollisionType.SOLID) {
+                                    return BL;
                                 } else {
-                                    return LB;
+                                    lastResult = BL;
+                                    // zprava směr má blíž kolizi s větším partOffsetX 
+                                    // shora směr má blíž kolizi s menším partOffsetY 
+                                    if (lastResult.partOffsetX == undefined || lastResult.partOffsetY == undefined
+                                        || BL.partOffsetX > lastResult.partOffsetX || BL.partOffsetY < lastResult.partOffsetY)
+                                        lastResult = BL;
                                 }
                             }
                         }
@@ -925,26 +944,32 @@ namespace Lich {
                         if (xShift < 0 || yShift <= 0) {
                             tx = x + width - TILE_FIX - xShift;
                             ty = y + height - TILE_FIX - yShift;
-                            let RB = collisionTester(tx, ty, xShift, yShift);
-                            if (RB.hit) {
+                            let BR = collisionTester(tx, ty, xShift, yShift);
+                            if (BR.hit) {
                                 // OneWay kolize se ignorují pouze pokud se to chce, 
                                 // nebo je to jejich spodní tile -- to je proto, aby 
                                 // fungovali kolize u těsně nad sebou položených tiles 
-                                if ((ignoreOneWay || Utils.isEven(RB.y) == false) && (RB.collisionType == CollisionType.PLATFORM)) {
+                                if ((ignoreOneWay || Utils.isEven(BR.y) == false) && (BR.collisionType == CollisionType.PLATFORM)) {
                                     // kolize je ignorována
-                                } else if (RB.collisionType == CollisionType.LADDER) {
+                                } else if (BR.collisionType == CollisionType.LADDER) {
                                     // žebříková kolize se vrací pouze jako info
-                                    lastResult = RB;
+                                    lastResult = BR;
                                     lastResult.hit = false;
+                                } else if (BR.collisionType == CollisionType.SOLID) {
+                                    return BR;
                                 } else {
-                                    return RB;
+                                    lastResult = BR;
+                                    // zleva a shora směr má blíž kolizi s menším partOffset
+                                    if (lastResult.partOffsetX == undefined || lastResult.partOffsetY == undefined
+                                        || BR.partOffsetX < lastResult.partOffsetX || BR.partOffsetY < lastResult.partOffsetY)
+                                        lastResult = BR;
                                 }
                             }
                         }
 
-                        if (xShift === objectXShift && yShift === objectYShift && width === objectWidth && height === objectHeight) {
-                            return lastResult;
-                        }
+                        // if (xShift === objectXShift && yShift === objectYShift && width === objectWidth && height === objectHeight) {
+                        //     return lastResult;
+                        // }
 
                     }
                 }
@@ -1006,7 +1031,7 @@ namespace Lich {
             }
 
             let coord = self.render.pixelsToTiles(mouse.x, mouse.y);
-            let clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY);
+            let clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY, 0, -1);
             let typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
             let sector = self.render.getSectorByTiles(coord.x, coord.y);
             EventBus.getInstance().fireEvent(new PointedAreaEventPayload(
