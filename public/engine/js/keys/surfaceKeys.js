@@ -17,6 +17,10 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_WOOD_LADDER_KEY"] = 13] = "SRFC_WOOD_LADDER_KEY";
         SurfaceKey[SurfaceKey["SRFC_ROOF_TL_KEY"] = 14] = "SRFC_ROOF_TL_KEY";
         SurfaceKey[SurfaceKey["SRFC_ROOF_TR_KEY"] = 15] = "SRFC_ROOF_TR_KEY";
+        SurfaceKey[SurfaceKey["SRFC_ROCK_BRICK_TL_KEY"] = 16] = "SRFC_ROCK_BRICK_TL_KEY";
+        SurfaceKey[SurfaceKey["SRFC_ROCK_BRICK_TR_KEY"] = 17] = "SRFC_ROCK_BRICK_TR_KEY";
+        SurfaceKey[SurfaceKey["SRFC_ROCK_BRICK_BL_KEY"] = 18] = "SRFC_ROCK_BRICK_BL_KEY";
+        SurfaceKey[SurfaceKey["SRFC_ROCK_BRICK_BR_KEY"] = 19] = "SRFC_ROCK_BRICK_BR_KEY";
     })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
     var SurfaceKey = Lich.SurfaceKey;
     (function (SurfaceBgrKey) {

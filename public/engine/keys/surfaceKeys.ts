@@ -15,7 +15,11 @@ namespace Lich {
         SRFC_WOOD_PLATFORM_KEY,
         SRFC_WOOD_LADDER_KEY,
         SRFC_ROOF_TL_KEY,
-        SRFC_ROOF_TR_KEY
+        SRFC_ROOF_TR_KEY,
+        SRFC_ROCK_BRICK_TL_KEY,
+        SRFC_ROCK_BRICK_TR_KEY,
+        SRFC_ROCK_BRICK_BL_KEY,
+        SRFC_ROCK_BRICK_BR_KEY
     }
 
     export enum SurfaceBgrKey {

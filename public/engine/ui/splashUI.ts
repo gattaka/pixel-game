@@ -23,6 +23,12 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.11");
+            version.addChange("Skewed surfaces movement");
+            version.addChange("Skewed roof surface");
+            version.addChange("Skewed rock brick surface");
+            this.addVersion(version);
+
             version = new Version("0.10");
             version.addChange("Tiles layout changed");
             version.addChange("DEV levitation control changed to <SPACE>");
@@ -32,7 +38,6 @@ namespace Lich {
             version.addChange("Teleport animation");
             version.addChange("Ladders introduced");
             version.addChange("Fireplace introduced");
-            version.addChange("Skewed roof surface");
             this.addVersion(version);
 
             version = new Version("0.9");

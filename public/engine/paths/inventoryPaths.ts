@@ -34,6 +34,10 @@ namespace Lich {
         ["images/ui/inventory/inv_wood_ladder.png", InventoryKey.INV_WOOD_LADDER_KEY],
         ["images/ui/inventory/inv_fireplace.png", InventoryKey.INV_FIREPLACE_KEY],
         ["images/ui/inventory/inv_roof_tl.png", InventoryKey.INV_ROOF_TL_KEY],
-        ["images/ui/inventory/inv_roof_tr.png", InventoryKey.INV_ROOF_TR_KEY]
+        ["images/ui/inventory/inv_roof_tr.png", InventoryKey.INV_ROOF_TR_KEY],
+        ["images/ui/inventory/inv_rock_brick_tl.png", InventoryKey.INV_ROCK_BRICK_TL_KEY],
+        ["images/ui/inventory/inv_rock_brick_tr.png", InventoryKey.INV_ROCK_BRICK_TR_KEY],
+        ["images/ui/inventory/inv_rock_brick_bl.png", InventoryKey.INV_ROCK_BRICK_BL_KEY],
+        ["images/ui/inventory/inv_rock_brick_br.png", InventoryKey.INV_ROCK_BRICK_BR_KEY]
     ]
 }

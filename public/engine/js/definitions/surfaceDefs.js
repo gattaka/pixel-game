@@ -18,6 +18,10 @@ var Lich;
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_WOOD_PLATFORM_KEY, Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, 1, 1, Lich.CollisionType.PLATFORM).setDepth(-1, -1),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY, Lich.InventoryKey.INV_WOOD_LADDER_KEY, 1, 1, Lich.CollisionType.LADDER).setDepth(-1, -1),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TL_KEY, Lich.InventoryKey.INV_ROOF_TL_KEY, 1, 0, Lich.CollisionType.SOLID_TL),
-        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TR_KEY, Lich.InventoryKey.INV_ROOF_TR_KEY, 1, 0, Lich.CollisionType.SOLID_TR)
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROOF_TR_KEY, Lich.InventoryKey.INV_ROOF_TR_KEY, 1, 0, Lich.CollisionType.SOLID_TR),
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_TL_KEY, Lich.InventoryKey.INV_ROCK_BRICK_TL_KEY, 1, 0, Lich.CollisionType.SOLID_TL),
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_TR_KEY, Lich.InventoryKey.INV_ROCK_BRICK_TR_KEY, 1, 0, Lich.CollisionType.SOLID_TR),
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY, Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, 1, 0, Lich.CollisionType.SOLID_BL),
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY, Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, 1, 0, Lich.CollisionType.SOLID_BR)
     ];
 })(Lich || (Lich = {}));

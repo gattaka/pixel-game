@@ -241,6 +241,20 @@ namespace Lich {
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROOF_KEY, SurfaceKey.SRFC_ROOF_TL_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROOF_KEY, SurfaceKey.SRFC_ROOF_TR_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROOF_TL_KEY, SurfaceKey.SRFC_ROOF_TR_KEY)) return true;
+            // SRFC_ROCK_BRICK_KEY
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_KEY, SurfaceKey.SRFC_ROCK_BRICK_TL_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_KEY, SurfaceKey.SRFC_ROCK_BRICK_TR_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_KEY, SurfaceKey.SRFC_ROCK_BRICK_BL_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_KEY, SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
+            // SRFC_ROCK_BRICK_TL_KEY
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_TL_KEY, SurfaceKey.SRFC_ROCK_BRICK_TR_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_TL_KEY, SurfaceKey.SRFC_ROCK_BRICK_BL_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_TL_KEY, SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
+            // SRFC_ROCK_BRICK_TR_KEY
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_TR_KEY, SurfaceKey.SRFC_ROCK_BRICK_BL_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_TR_KEY, SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
+            // SRFC_ROCK_BRICK_BL_KEY
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_BL_KEY, SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
             return type == type2;
         }
 
