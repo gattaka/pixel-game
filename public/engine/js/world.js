@@ -789,11 +789,11 @@ var Lich;
                             if (xSign < 0)
                                 fixOffsetX = 0; // jdu zleva
                             if (xSign > 0)
-                                fixOffsetX = n + ly + 1; // jdu zprava
+                                fixOffsetX = n - ly + 1; // jdu zprava
                             if (ySign < 0)
                                 fixOffsetY = 0; // jdu shora
                             if (ySign > 0)
-                                fixOffsetY = n + lx + 1; // jdu zdola
+                                fixOffsetY = n - lx + 1; // jdu zdola
                         }
                         break;
                     case Lich.CollisionType.SOLID:

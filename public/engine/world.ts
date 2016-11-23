@@ -844,9 +844,9 @@ namespace Lich {
                         if (lx + ly <= n) {
                             hit = true;
                             if (xSign < 0) fixOffsetX = 0; // jdu zleva
-                            if (xSign > 0) fixOffsetX = n + ly + 1; // jdu zprava
+                            if (xSign > 0) fixOffsetX = n - ly + 1; // jdu zprava
                             if (ySign < 0) fixOffsetY = 0; // jdu shora
-                            if (ySign > 0) fixOffsetY = n + lx + 1; // jdu zdola
+                            if (ySign > 0) fixOffsetY = n - lx + 1; // jdu zdola
                         }
                         break;
                     case CollisionType.SOLID:
