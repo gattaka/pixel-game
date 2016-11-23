@@ -11,6 +11,7 @@ var Lich;
         }
         TilesMapGenerator.serialize = function (tilesMap) {
             var data = {
+                version: TilesMapGenerator.WORLD_FORMAT_VERSION,
                 spwx: tilesMap.spawnPoint ? tilesMap.spawnPoint.x : undefined,
                 spwy: tilesMap.spawnPoint ? tilesMap.spawnPoint.y : undefined,
                 w: tilesMap.width,
@@ -68,6 +69,7 @@ var Lich;
             return data;
         };
         TilesMapGenerator.deserialize = function (data) {
+            console.log("Loading world version: " + (data.version ? data.version : "<1.3"));
             var total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
             var progress = 0;
             var tilesMap = new Lich.TilesMap(data.w, data.h);
@@ -85,15 +87,20 @@ var Lich;
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
             }
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Background"));
-            count = 0;
-            for (var v = 0; v < data.bgr.length; v += 2) {
-                var amount = data.bgr[v];
-                var key = data.bgr[v + 1];
-                for (var i = 0; i < amount; i++) {
-                    tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    count++;
+            if (!data.version || data.version < 1.3) {
+                tilesMap.mapBgrRecord = new Lich.Array2D(tilesMap.mapRecord.width, tilesMap.mapRecord.height);
+            }
+            else {
+                count = 0;
+                for (var v = 0; v < data.bgr.length; v += 2) {
+                    var amount = data.bgr[v];
+                    var key = data.bgr[v + 1];
+                    for (var i = 0; i < amount; i++) {
+                        tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                        count++;
+                    }
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
-                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
             }
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Objects"));
             for (var v = 0; v < data.obj.length; v += 3) {
@@ -299,7 +306,7 @@ var Lich;
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        Lich.TilesMapTools.generateEdge(tilesMap, x, y);
+                        Lich.TilesMapTools.generateEdge(tilesMap.mapRecord, x, y, false);
                     }
                     Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
@@ -309,7 +316,7 @@ var Lich;
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        Lich.TilesMapTools.generateCorner(tilesMap, x, y);
+                        Lich.TilesMapTools.generateCorner(tilesMap.mapRecord, x, y, false);
                     }
                     Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
@@ -355,6 +362,7 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             return tilesMap;
         };
+        TilesMapGenerator.WORLD_FORMAT_VERSION = 1.3;
         // musí být sudé
         TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
         TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;

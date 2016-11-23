@@ -9,74 +9,88 @@ var Lich;
     var TilesMapTools = (function () {
         function TilesMapTools() {
         }
-        TilesMapTools.generateEdge = function (tilesMap, x, y) {
-            var val = tilesMap.mapRecord.getValue(x, y);
+        TilesMapTools.generateEdge = function (record, x, y, bgr) {
+            var val = record.getValue(x, y);
             if (!val || val == Lich.SurfacePositionKey.VOID)
                 return;
-            var valT = tilesMap.mapRecord.getValue(x, y - 1);
-            var valR = tilesMap.mapRecord.getValue(x + 1, y);
-            var valB = tilesMap.mapRecord.getValue(x, y + 1);
-            var valL = tilesMap.mapRecord.getValue(x - 1, y);
-            var srfi = Lich.Resources.getInstance().surfaceIndex;
-            var srfcType = srfi.getType(val);
-            if (!valT || valT === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getTopPositionIndexByCoordPattern(x, y, srfcType));
+            var rsc = Lich.Resources.getInstance();
+            var index;
+            if (bgr) {
+                index = rsc.surfaceBgrIndex;
             }
-            if (!valR || valR === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valR, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getRightPositionIndexByCoordPattern(x, y, srfcType));
+            else {
+                index = rsc.surfaceIndex;
             }
-            if (!valB || valB === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valB, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getBottomPositionIndexByCoordPattern(x, y, srfcType));
+            var valT = record.getValue(x, y - 1);
+            var valR = record.getValue(x + 1, y);
+            var valB = record.getValue(x, y + 1);
+            var valL = record.getValue(x - 1, y);
+            var srfcType = index.getType(val);
+            if (!valT || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false) {
+                record.setValue(x, y, index.getTopPositionIndexByCoordPattern(x, y, srfcType));
             }
-            if (!valL || valL === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valL, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getLeftPositionIndexByCoordPattern(x, y, srfcType));
+            if (!valR || valR === Lich.SurfacePositionKey.VOID || index.isSeamless(valR, srfcType) == false) {
+                record.setValue(x, y, index.getRightPositionIndexByCoordPattern(x, y, srfcType));
+            }
+            if (!valB || valB === Lich.SurfacePositionKey.VOID || index.isSeamless(valB, srfcType) == false) {
+                record.setValue(x, y, index.getBottomPositionIndexByCoordPattern(x, y, srfcType));
+            }
+            if (!valL || valL === Lich.SurfacePositionKey.VOID || index.isSeamless(valL, srfcType) == false) {
+                record.setValue(x, y, index.getLeftPositionIndexByCoordPattern(x, y, srfcType));
             }
         };
-        TilesMapTools.generateCorner = function (tilesMap, x, y) {
-            var val = tilesMap.mapRecord.getValue(x, y);
+        TilesMapTools.generateCorner = function (record, x, y, bgr) {
+            var rsc = Lich.Resources.getInstance();
+            var index;
+            if (bgr) {
+                index = rsc.surfaceBgrIndex;
+            }
+            else {
+                index = rsc.surfaceIndex;
+            }
+            var val = record.getValue(x, y);
             if (!val || val == Lich.SurfacePositionKey.VOID)
                 return;
-            var valT = tilesMap.mapRecord.getValue(x, y - 1);
-            var valR = tilesMap.mapRecord.getValue(x + 1, y);
-            var valB = tilesMap.mapRecord.getValue(x, y + 1);
-            var valL = tilesMap.mapRecord.getValue(x - 1, y);
-            var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
-            var isMiddle = Lich.Resources.getInstance().surfaceIndex.isMiddlePosition(val);
-            var srfi = Lich.Resources.getInstance().surfaceIndex;
+            var valT = record.getValue(x, y - 1);
+            var valR = record.getValue(x + 1, y);
+            var valB = record.getValue(x, y + 1);
+            var valL = record.getValue(x - 1, y);
+            var srfcType = index.getType(val);
+            var isMiddle = index.isMiddlePosition(val);
             // změny prostředních kusů
             if (isMiddle) {
                 // jsem pravý horní roh díry
-                if (srfi.isRightPosition(valB) && srfi.isBottomPosition(valR)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_TL));
+                if (index.isRightPosition(valB) && index.isBottomPosition(valR)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_TL));
                 }
                 // jsem levý horní roh díry
-                if (srfi.isBottomPosition(valL) && srfi.isLeftPosition(valB)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_TR));
+                if (index.isBottomPosition(valL) && index.isLeftPosition(valB)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_TR));
                 }
                 // levý spodní roh díry
-                if (srfi.isRightPosition(valT) && srfi.isTopPosition(valR)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_BL));
+                if (index.isRightPosition(valT) && index.isTopPosition(valR)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_BL));
                 }
                 // pravý spodní roh díry
-                if (srfi.isLeftPosition(valT) && srfi.isTopPosition(valL)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_BR));
+                if (index.isLeftPosition(valT) && index.isTopPosition(valL)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.I_BR));
                 }
             }
             // jsem levý horní roh
-            if (srfi.isLeftPosition(val) && (srfi.isTopPosition(val) || valT === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false)) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.TL));
+            if (index.isLeftPosition(val) && (index.isTopPosition(val) || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.TL));
             }
             // jsem levý dolní roh
-            if (srfi.isLeftPosition(val) && (srfi.isBottomPosition(valR) || srfi.isBottomRightPosition(valR))) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.BL));
+            if (index.isLeftPosition(val) && (index.isBottomPosition(valR) || index.isBottomRightPosition(valR))) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.BL));
             }
             // jsem pravý dolní roh
-            if (srfi.isBottomPosition(val) && (srfi.isRightPosition(valT) || srfi.isTopRightPosition(valT))) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.BR));
+            if (index.isBottomPosition(val) && (index.isRightPosition(valT) || index.isTopRightPosition(valT))) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.BR));
             }
             // jsem pravý horní roh
-            if (srfi.isRightPosition(val) && (srfi.isTopPosition(valL) || valT === Lich.SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false)) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, Lich.SurfacePositionKey.TR));
+            if (index.isRightPosition(val) && (index.isTopPosition(valL) || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.TR));
             }
         };
         TilesMapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {

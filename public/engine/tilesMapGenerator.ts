@@ -7,6 +7,7 @@
 namespace Lich {
 
     export interface SaveStructure {
+        version: number,
         spwx: number,
         spwy: number,
         w: number,
@@ -18,6 +19,8 @@ namespace Lich {
 
     export class TilesMapGenerator {
 
+        public static WORLD_FORMAT_VERSION: number = 1.3
+
         // musí být sudé
         static DEFAULT_MAP_WIDTH = 2000;
         static DEFAULT_MAP_HEIGHT = 1000;
@@ -27,6 +30,7 @@ namespace Lich {
 
         public static serialize(tilesMap: TilesMap): SaveStructure {
             let data: SaveStructure = {
+                version: TilesMapGenerator.WORLD_FORMAT_VERSION,
                 spwx: tilesMap.spawnPoint ? tilesMap.spawnPoint.x : undefined,
                 spwy: tilesMap.spawnPoint ? tilesMap.spawnPoint.y : undefined,
                 w: tilesMap.width,
@@ -88,6 +92,8 @@ namespace Lich {
 
         public static deserialize(data: SaveStructure): TilesMap {
 
+            console.log("Loading world version: " + (data.version ? data.version : "<1.3"));
+
             let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
             let progress = 0;
 
@@ -110,15 +116,19 @@ namespace Lich {
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Background"));
 
-            count = 0;
-            for (let v = 0; v < data.bgr.length; v += 2) {
-                let amount = data.bgr[v];
-                let key = data.bgr[v + 1];
-                for (let i = 0; i < amount; i++) {
-                    tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    count++;
+            if (!data.version || data.version < 1.3) {
+                tilesMap.mapBgrRecord = new Array2D<number>(tilesMap.mapRecord.width, tilesMap.mapRecord.height);
+            } else {
+                count = 0;
+                for (let v = 0; v < data.bgr.length; v += 2) {
+                    let amount = data.bgr[v];
+                    let key = data.bgr[v + 1];
+                    for (let i = 0; i < amount; i++) {
+                        tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                        count++;
+                    }
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
-                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
             }
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Objects"));
@@ -345,7 +355,7 @@ namespace Lich {
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        TilesMapTools.generateEdge(tilesMap, x, y);
+                        TilesMapTools.generateEdge(tilesMap.mapRecord, x, y, false);
                     }
                     EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
@@ -357,7 +367,7 @@ namespace Lich {
             (function () {
                 for (var y = 0; y < tilesMap.height; y++) {
                     for (var x = 0; x < tilesMap.width; x++) {
-                        TilesMapTools.generateCorner(tilesMap, x, y);
+                        TilesMapTools.generateCorner(tilesMap.mapRecord, x, y, false);
                     }
                     EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }

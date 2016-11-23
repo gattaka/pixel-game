@@ -95,7 +95,7 @@ var Lich;
                                     var bgrElement = self.tilesMap.mapBgrRecord.getValue(mx, my);
                                     if (bgrElement > 0) {
                                         // vytvoř dílek
-                                        var tile = self.createBgrTile(bgrElement);
+                                        var tile = self.createTile(bgrElement, true);
                                         // přidej dílek do sektoru
                                         sector.addBackgroundChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
@@ -107,7 +107,7 @@ var Lich;
                                     var tileElement = self.tilesMap.mapRecord.getValue(mx, my);
                                     if (tileElement > 0) {
                                         // vytvoř dílek
-                                        var tile = self.createTile(tileElement);
+                                        var tile = self.createTile(tileElement, false);
                                         // přidej dílek do sektoru
                                         sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
@@ -175,12 +175,14 @@ var Lich;
                 }
             }
         };
-        Render.prototype.setSurfaceBgrSourceRect = function (tile, positionIndex) {
-            var v = Lich.Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
-            this.setSourceRect(tile, v);
-        };
-        Render.prototype.setSurfaceSourceRect = function (tile, positionIndex) {
-            var v = Lich.Resources.getInstance().surfaceIndex.getPosition(positionIndex);
+        Render.prototype.setSurfaceSourceRect = function (tile, positionIndex, bgr) {
+            var v;
+            if (bgr) {
+                v = Lich.Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
+            }
+            else {
+                v = Lich.Resources.getInstance().surfaceIndex.getPosition(positionIndex);
+            }
             this.setSourceRect(tile, v);
         };
         Render.prototype.setSourceRect = function (tile, v) {
@@ -188,18 +190,19 @@ var Lich;
             // Otestováno: tohle je rychlejší než extract ze Spritesheet
             tile.sourceRect = new createjs.Rectangle(((v - 1) % tileCols) * Lich.Resources.TILE_SIZE, Math.floor((v - 1) / tileCols) * Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE, Lich.Resources.TILE_SIZE);
         };
-        Render.prototype.createBgrTile = function (positionIndex) {
+        Render.prototype.createTile = function (positionIndex, bgr) {
             var self = this;
-            var typ = Lich.Resources.getInstance().surfaceBgrIndex.getType(positionIndex);
-            var tile = Lich.Resources.getInstance().getBitmap(Lich.SurfaceBgrKey[typ]);
-            this.setSurfaceBgrSourceRect(tile, positionIndex);
-            return tile;
-        };
-        Render.prototype.createTile = function (positionIndex) {
-            var self = this;
-            var surfaceType = Lich.Resources.getInstance().surfaceIndex.getType(positionIndex);
-            var tile = Lich.Resources.getInstance().getBitmap(Lich.SurfaceKey[surfaceType]);
-            this.setSurfaceSourceRect(tile, positionIndex);
+            var rsc = Lich.Resources.getInstance();
+            var typ, tile;
+            if (bgr) {
+                typ = rsc.surfaceBgrIndex.getType(positionIndex);
+                tile = rsc.getBitmap(Lich.SurfaceBgrKey[typ]);
+            }
+            else {
+                typ = rsc.surfaceIndex.getType(positionIndex);
+                tile = rsc.getBitmap(Lich.SurfaceKey[typ]);
+            }
+            this.setSurfaceSourceRect(tile, positionIndex, bgr);
             return tile;
         };
         Render.prototype.createObject = function (objectTile) {
@@ -250,60 +253,42 @@ var Lich;
             }
         };
         ;
-        Render.prototype.digSurfaceBgr = function (rx, ry) {
-            var self = this;
-            var dugIndex = self.tilesMap.mapBgrRecord.getValue(rx, ry);
-            if (dugIndex != null && dugIndex > -1) {
-                var surfaceType = Lich.Resources.getInstance().surfaceBgrIndex.getType(dugIndex);
-                var objType = Lich.Resources.getInstance().mapSurfacesBgrDefs[surfaceType];
-                self.onDigSurfaceListeners.forEach(function (fce) {
-                    fce(objType, rx, ry);
-                });
-                (function () {
-                    for (var x = rx; x <= rx + 1; x++) {
-                        for (var y = ry; y <= ry + 1; y++) {
-                            var val = self.tilesMap.mapBgrRecord.getValue(x, y);
-                            if (val != null) {
-                                var sector = self.getSectorByTiles(x, y);
-                                var srfcType = Lich.Resources.getInstance().surfaceBgrIndex.getType(val);
-                                var indx = Lich.Resources.getInstance().surfaceBgrIndex;
-                                self.tilesMap.mapBgrRecord.setValue(x, y, null);
-                                if (sector) {
-                                    var child = self.sceneBgrTilesMap.getValue(x, y);
-                                    sector.removeBackgroundChild(child);
-                                    self.markSector(sector);
-                                }
-                            }
-                        }
-                    }
-                })();
-                return true;
-            }
-            return false;
-        };
-        Render.prototype.digSurface = function (rx, ry) {
+        Render.prototype.digSurface = function (rx, ry, bgr) {
             var self = this;
             var tilesToReset = [];
-            var dugIndex = self.tilesMap.mapRecord.getValue(rx, ry);
+            var rsc = Lich.Resources.getInstance();
+            var index, record, defs, sceneMap;
+            if (bgr) {
+                index = rsc.surfaceBgrIndex;
+                record = self.tilesMap.mapBgrRecord;
+                defs = rsc.mapSurfacesBgrDefs;
+                sceneMap = self.sceneBgrTilesMap;
+            }
+            else {
+                index = rsc.surfaceIndex;
+                record = self.tilesMap.mapRecord;
+                defs = rsc.mapSurfaceDefs;
+                sceneMap = self.sceneTilesMap;
+            }
+            var dugIndex = record.getValue(rx, ry);
             if (dugIndex != null && dugIndex > -1) {
-                var surfaceType = Lich.Resources.getInstance().surfaceIndex.getType(dugIndex);
-                var objType = Lich.Resources.getInstance().mapSurfaceDefs[surfaceType];
+                var surfaceType = index.getType(dugIndex);
+                var objType = defs[surfaceType];
                 self.onDigSurfaceListeners.forEach(function (fce) {
                     fce(objType, rx, ry);
                 });
                 (function () {
                     for (var x = rx - 1; x <= rx + 2; x++) {
                         for (var y = ry - 1; y <= ry + 2; y++) {
-                            var val = self.tilesMap.mapRecord.getValue(x, y);
+                            var val = record.getValue(x, y);
                             if (val != null) {
                                 var sector = self.getSectorByTiles(x, y);
-                                var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
-                                var indx = Lich.Resources.getInstance().surfaceIndex;
+                                var srfcType = index.getType(val);
                                 // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                                 if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
                                     // okraje vyresetuj
                                     if (val !== Lich.SurfacePositionKey.VOID) {
-                                        self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getPositionIndex(srfcType, Lich.SurfacePositionKey.M1));
+                                        record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);
                                         // zjisti sektor dílku, aby byl přidán do fronty 
                                         // ke cache update (postačí to udělat dle tilesToReset,
@@ -315,21 +300,28 @@ var Lich;
                                 }
                                 else {
                                     // pokud jsem horní díl, pak zkus odkopnout i objekty, které na dílu stojí
-                                    if (y === ry &&
-                                        (indx.isTopPosition(self.tilesMap.mapRecord.getValue(x, y)) ||
-                                            indx.isTopLeftPosition(self.tilesMap.mapRecord.getValue(x, y)) ||
-                                            indx.isTopRightPosition(self.tilesMap.mapRecord.getValue(x, y)))) {
-                                        self.digObject(x, y - 1);
+                                    if (!bgr) {
+                                        if (y === ry &&
+                                            (index.isTopPosition(record.getValue(x, y)) ||
+                                                index.isTopLeftPosition(record.getValue(x, y)) ||
+                                                index.isTopRightPosition(record.getValue(x, y)))) {
+                                            self.digObject(x, y - 1);
+                                        }
                                     }
-                                    self.tilesMap.mapRecord.setValue(x, y, Lich.SurfacePositionKey.VOID);
+                                    record.setValue(x, y, Lich.SurfacePositionKey.VOID);
                                     var targetSector = self.getSectorByTiles(x, y);
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
-                                        var child = self.sceneTilesMap.getValue(x, y);
-                                        if (child instanceof createjs.Sprite) {
-                                            targetSector.removeAnimatedChild(child);
+                                        var child = sceneMap.getValue(x, y);
+                                        if (!bgr) {
+                                            if (child instanceof createjs.Sprite) {
+                                                targetSector.removeAnimatedChild(child);
+                                            }
+                                            else {
+                                                targetSector.removeCacheableChild(child);
+                                            }
                                         }
                                         else {
-                                            targetSector.removeCacheableChild(child);
+                                            targetSector.removeBackgroundChild(child);
                                         }
                                     }
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -343,20 +335,30 @@ var Lich;
                         }
                     }
                 })();
-                this.mapReshape(tilesToReset);
+                this.mapReshape(tilesToReset, bgr);
                 Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_CHANGE, rx, ry));
                 return true;
             }
             return false;
         };
-        Render.prototype.mapReshape = function (tilesToReset) {
+        Render.prototype.mapReshape = function (tilesToReset, bgr) {
             var self = this;
+            var rsc = Lich.Resources.getInstance();
+            var record, sceneMap;
+            if (bgr) {
+                record = self.tilesMap.mapBgrRecord;
+                sceneMap = self.sceneBgrTilesMap;
+            }
+            else {
+                record = self.tilesMap.mapRecord;
+                sceneMap = self.sceneTilesMap;
+            }
             // Přegeneruj hrany
             (function () {
                 tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
-                    Lich.TilesMapTools.generateEdge(self.tilesMap, x, y);
+                    Lich.TilesMapTools.generateEdge(record, x, y, bgr);
                 });
             })();
             // Přegeneruj rohy
@@ -364,7 +366,7 @@ var Lich;
                 tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
-                    Lich.TilesMapTools.generateCorner(self.tilesMap, x, y);
+                    Lich.TilesMapTools.generateCorner(record, x, y, bgr);
                 });
             })();
             // Překresli dílky
@@ -373,10 +375,10 @@ var Lich;
                     var x = item[0];
                     var y = item[1];
                     // pokud už je alokován dílek na obrazovce, rovnou ho uprav
-                    var tile = self.sceneTilesMap.getValue(x, y);
+                    var tile = sceneMap.getValue(x, y);
                     if (tile !== null) {
-                        var v = self.tilesMap.mapRecord.getValue(x, y);
-                        self.setSurfaceSourceRect(tile, v);
+                        var v = record.getValue(x, y);
+                        self.setSurfaceSourceRect(tile, v, bgr);
                     }
                 });
             })();
@@ -440,20 +442,20 @@ var Lich;
             }
             return false;
         };
-        Render.prototype.dig = function (x, y, asBackground) {
+        Render.prototype.dig = function (x, y, bgr) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             var rx = Lich.Utils.even(coord.x);
             var ry = Lich.Utils.even(coord.y);
             // kopl jsem do nějakého povrchu?
-            if (asBackground) {
+            if (bgr) {
                 if (self.tilesMap.mapBgrRecord.getValue(rx, ry) != null) {
-                    return self.digSurfaceBgr(rx, ry);
+                    return self.digSurface(rx, ry, bgr);
                 }
             }
             else {
                 if (self.tilesMap.mapRecord.getValue(rx, ry) !== Lich.SurfacePositionKey.VOID) {
-                    return self.digSurface(rx, ry);
+                    return self.digSurface(rx, ry, bgr);
                 }
                 else {
                     // kopl jsem do objektu?
@@ -462,51 +464,37 @@ var Lich;
             }
             return false;
         };
-        Render.prototype.placeSurfaceBgr = function (rx, ry, surfaceBgrType) {
-            var self = this;
-            (function () {
-                for (var x = rx; x <= rx + 1; x++) {
-                    for (var y = ry; y <= ry + 1; y++) {
-                        var sector = self.getSectorByTiles(x, y);
-                        var pos = Lich.Resources.getInstance().surfaceBgrIndex.getSurfaceBgrPositionByCoordPattern(x, y);
-                        // vytvoř nové dílky
-                        var posIndex = Lich.Resources.getInstance().surfaceBgrIndex.getPositionIndex(surfaceBgrType, pos);
-                        self.tilesMap.mapBgrRecord.setValue(x, y, posIndex);
-                        var targetSector = self.getSectorByTiles(x, y);
-                        // vytvoř dílek
-                        var tile = self.createBgrTile(posIndex);
-                        // přidej dílek do sektoru
-                        sector.addBackgroundChild(tile);
-                        tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
-                        tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
-                        // přidej dílek do globální mapy
-                        self.sceneBgrTilesMap.setValue(x, y, tile);
-                        // zjisti sektor dílku, aby byl přidán do fronty 
-                        // ke cache update (postačí to udělat dle tilesToReset,
-                        // protože to jsou okrajové dílky z oblasti změn)
-                        if (typeof sector !== "undefined" && sector !== null) {
-                            self.markSector(sector);
-                        }
-                    }
-                }
-            })();
-        };
-        Render.prototype.placeSurface = function (rx, ry, surfaceType) {
+        Render.prototype.placeSurface = function (rx, ry, surfaceType, bgr) {
             var self = this;
             var tilesToReset = [];
+            var rsc = Lich.Resources.getInstance();
+            var index, record, defs, sceneMap;
+            if (bgr) {
+                index = rsc.surfaceBgrIndex;
+                record = self.tilesMap.mapBgrRecord;
+                defs = rsc.mapSurfacesBgrDefs;
+                sceneMap = self.sceneBgrTilesMap;
+            }
+            else {
+                index = rsc.surfaceIndex;
+                record = self.tilesMap.mapRecord;
+                defs = rsc.mapSurfaceDefs;
+                sceneMap = self.sceneTilesMap;
+            }
             (function () {
                 for (var x = rx - 1; x <= rx + 2; x++) {
                     for (var y = ry - 1; y <= ry + 2; y++) {
-                        var val = self.tilesMap.mapRecord.getValue(x, y);
-                        if (val != null) {
+                        var val = record.getValue(x, y);
+                        if (val != null ||
+                            (bgr && x > 0 && x < Lich.TilesMapGenerator.DEFAULT_MAP_WIDTH
+                                && y > 0 && y < Lich.TilesMapGenerator.DEFAULT_MAP_HEIGHT)) {
                             var sector = self.getSectorByTiles(x, y);
                             // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                             if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
-                                var indx = Lich.Resources.getInstance().surfaceIndex;
-                                var srfcType = Lich.Resources.getInstance().surfaceIndex.getType(val);
+                                var srfcType = index.getType(val);
                                 // okraje vyresetuj (pokud nejsou středy
-                                if (val !== Lich.SurfacePositionKey.VOID) {
-                                    self.tilesMap.mapRecord.setValue(x, y, Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
+                                if (val !== Lich.SurfacePositionKey.VOID && val != null) {
+                                    record.setValue(x, y, index.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
                                     tilesToReset.push([x, y]);
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -517,18 +505,23 @@ var Lich;
                                 }
                             }
                             else {
-                                var posIndex = Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(x, y, surfaceType);
-                                self.tilesMap.mapRecord.setValue(x, y, posIndex);
+                                var posIndex = index.getMiddlePositionIndexByCoordPattern(x, y, surfaceType);
+                                record.setValue(x, y, posIndex);
                                 var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);
                                 // vytvoř dílek
-                                var tile = self.createTile(posIndex);
+                                var tile = self.createTile(posIndex, bgr);
                                 // přidej dílek do sektoru
-                                sector.addCacheableChild(tile);
+                                if (bgr) {
+                                    sector.addBackgroundChild(tile);
+                                }
+                                else {
+                                    sector.addCacheableChild(tile);
+                                }
                                 tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 // přidej dílek do globální mapy
-                                self.sceneTilesMap.setValue(x, y, tile);
+                                sceneMap.setValue(x, y, tile);
                                 // zjisti sektor dílku, aby byl přidán do fronty 
                                 // ke cache update (postačí to udělat dle tilesToReset,
                                 // protože to jsou okrajové dílky z oblasti změn)
@@ -540,7 +533,7 @@ var Lich;
                     }
                 }
             })();
-            this.mapReshape(tilesToReset);
+            this.mapReshape(tilesToReset, bgr);
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_CHANGE, rx, ry));
         };
         Render.prototype.placeObject = function (rx, ry, mapObj) {
@@ -619,7 +612,7 @@ var Lich;
                 if (object.mapSurface != null && alternative == false) {
                     // pokud je místo prázdné a bez objektu, lze vkládat povrchy
                     if (self.isForegroundFree(rx, ry)) {
-                        this.placeSurface(rx, ry, object.mapSurface.mapKey);
+                        this.placeSurface(rx, ry, object.mapSurface.mapKey, false);
                         return true;
                     }
                 }
@@ -627,7 +620,7 @@ var Lich;
                 if (object.mapSurfaceBgr != null && alternative) {
                     // pokud je místo bez pozadí, lze vkládat pozadí povrchu
                     if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
-                        this.placeSurfaceBgr(rx, ry, object.mapSurfaceBgr.mapKey);
+                        this.placeSurface(rx, ry, object.mapSurfaceBgr.mapKey, true);
                         return true;
                     }
                 }

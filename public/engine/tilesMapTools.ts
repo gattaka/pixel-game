@@ -9,87 +9,100 @@ namespace Lich {
 
         private constructor() { }
 
-        static generateEdge(tilesMap: TilesMap, x: number, y: number) {
-            let val = tilesMap.mapRecord.getValue(x, y);
+        static generateEdge(record: Array2D<number>, x: number, y: number, bgr: boolean) {
+            let val = record.getValue(x, y);
             if (!val || val == SurfacePositionKey.VOID)
                 return;
 
-            let valT = tilesMap.mapRecord.getValue(x, y - 1);
-            let valR = tilesMap.mapRecord.getValue(x + 1, y);
-            let valB = tilesMap.mapRecord.getValue(x, y + 1);
-            let valL = tilesMap.mapRecord.getValue(x - 1, y);
-
-            let srfi = Resources.getInstance().surfaceIndex;
-
-            let srfcType = srfi.getType(val);
-
-            if (!valT || valT === SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getTopPositionIndexByCoordPattern(x, y, srfcType));
+            let rsc = Resources.getInstance();
+            let index;
+            if (bgr) {
+                index = rsc.surfaceBgrIndex;
+            } else {
+                index = rsc.surfaceIndex;
             }
 
-            if (!valR || valR === SurfacePositionKey.VOID || srfi.isSeamless(valR, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getRightPositionIndexByCoordPattern(x, y, srfcType));
+            let valT = record.getValue(x, y - 1);
+            let valR = record.getValue(x + 1, y);
+            let valB = record.getValue(x, y + 1);
+            let valL = record.getValue(x - 1, y);
+
+            let srfcType = index.getType(val);
+
+            if (!valT || valT === SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false) {
+                record.setValue(x, y, index.getTopPositionIndexByCoordPattern(x, y, srfcType));
             }
 
-            if (!valB || valB === SurfacePositionKey.VOID || srfi.isSeamless(valB, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getBottomPositionIndexByCoordPattern(x, y, srfcType));
+            if (!valR || valR === SurfacePositionKey.VOID || index.isSeamless(valR, srfcType) == false) {
+                record.setValue(x, y, index.getRightPositionIndexByCoordPattern(x, y, srfcType));
             }
 
-            if (!valL || valL === SurfacePositionKey.VOID || srfi.isSeamless(valL, srfcType) == false) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getLeftPositionIndexByCoordPattern(x, y, srfcType));
+            if (!valB || valB === SurfacePositionKey.VOID || index.isSeamless(valB, srfcType) == false) {
+                record.setValue(x, y, index.getBottomPositionIndexByCoordPattern(x, y, srfcType));
+            }
+
+            if (!valL || valL === SurfacePositionKey.VOID || index.isSeamless(valL, srfcType) == false) {
+                record.setValue(x, y, index.getLeftPositionIndexByCoordPattern(x, y, srfcType));
             }
         }
 
-        static generateCorner(tilesMap: TilesMap, x: number, y: number) {
-            var val = tilesMap.mapRecord.getValue(x, y);
+        static generateCorner(record: Array2D<number>, x: number, y: number, bgr: boolean) {
+
+            let rsc = Resources.getInstance();
+            let index;
+            if (bgr) {
+                index = rsc.surfaceBgrIndex;
+            } else {
+                index = rsc.surfaceIndex;
+            }
+
+            var val = record.getValue(x, y);
             if (!val || val == SurfacePositionKey.VOID)
                 return;
 
-            var valT = tilesMap.mapRecord.getValue(x, y - 1);
-            var valR = tilesMap.mapRecord.getValue(x + 1, y);
-            var valB = tilesMap.mapRecord.getValue(x, y + 1);
-            var valL = tilesMap.mapRecord.getValue(x - 1, y);
+            var valT = record.getValue(x, y - 1);
+            var valR = record.getValue(x + 1, y);
+            var valB = record.getValue(x, y + 1);
+            var valL = record.getValue(x - 1, y);
 
-            var srfcType = Resources.getInstance().surfaceIndex.getType(val);
-            var isMiddle = Resources.getInstance().surfaceIndex.isMiddlePosition(val);
-            var srfi = Resources.getInstance().surfaceIndex;
+            var srfcType = index.getType(val);
+            var isMiddle = index.isMiddlePosition(val);
 
             // změny prostředních kusů
             if (isMiddle) {
                 // jsem pravý horní roh díry
-                if (srfi.isRightPosition(valB) && srfi.isBottomPosition(valR)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.I_TL));
+                if (index.isRightPosition(valB) && index.isBottomPosition(valR)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.I_TL));
                 }
                 // jsem levý horní roh díry
-                if (srfi.isBottomPosition(valL) && srfi.isLeftPosition(valB)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.I_TR));
+                if (index.isBottomPosition(valL) && index.isLeftPosition(valB)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.I_TR));
                 }
                 // levý spodní roh díry
-                if (srfi.isRightPosition(valT) && srfi.isTopPosition(valR)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.I_BL));
+                if (index.isRightPosition(valT) && index.isTopPosition(valR)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.I_BL));
                 }
                 // pravý spodní roh díry
-                if (srfi.isLeftPosition(valT) && srfi.isTopPosition(valL)) {
-                    tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.I_BR));
+                if (index.isLeftPosition(valT) && index.isTopPosition(valL)) {
+                    record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.I_BR));
                 }
-
             }
 
             // jsem levý horní roh
-            if (srfi.isLeftPosition(val) && (srfi.isTopPosition(val) || valT === SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false)) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.TL));
+            if (index.isLeftPosition(val) && (index.isTopPosition(val) || valT === SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.TL));
             }
             // jsem levý dolní roh
-            if (srfi.isLeftPosition(val) && (srfi.isBottomPosition(valR) || srfi.isBottomRightPosition(valR))) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.BL));
+            if (index.isLeftPosition(val) && (index.isBottomPosition(valR) || index.isBottomRightPosition(valR))) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.BL));
             }
             // jsem pravý dolní roh
-            if (srfi.isBottomPosition(val) && (srfi.isRightPosition(valT) || srfi.isTopRightPosition(valT))) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.BR));
+            if (index.isBottomPosition(val) && (index.isRightPosition(valT) || index.isTopRightPosition(valT))) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.BR));
             }
             // jsem pravý horní roh
-            if (srfi.isRightPosition(val) && (srfi.isTopPosition(valL) || valT === SurfacePositionKey.VOID || srfi.isSeamless(valT, srfcType) == false)) {
-                tilesMap.mapRecord.setValue(x, y, srfi.getPositionIndex(srfcType, SurfacePositionKey.TR));
+            if (index.isRightPosition(val) && (index.isTopPosition(valL) || valT === SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+                record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.TR));
             }
         }
 

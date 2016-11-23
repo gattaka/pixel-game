@@ -27,6 +27,7 @@ namespace Lich {
             version.addChange("Skewed surfaces movement");
             version.addChange("Skewed roof surface");
             version.addChange("Skewed rock brick surface");
+            version.addChange("Minor collision bugfixes");
             this.addVersion(version);
 
             version = new Version("0.10");
