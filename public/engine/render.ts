@@ -550,7 +550,7 @@ namespace Lich {
 
             // kopl jsem do nějakého povrchu?
             if (bgr) {
-                if (self.tilesMap.mapBgrRecord.getValue(rx, ry) != null) {
+                if (self.tilesMap.mapBgrRecord.getValue(rx, ry)) {
                     return self.digSurface(rx, ry, bgr);
                 }
             } else {
@@ -693,7 +693,7 @@ namespace Lich {
                 }
                 return true;
             } else {
-                return this.tilesMap.mapRecord.getValue(rx, ry) === SurfacePositionKey.VOID && this.tilesMap.mapObjectsTiles.getValue(rx, ry) === null;
+                return this.tilesMap.mapRecord.getValue(rx, ry) == SurfacePositionKey.VOID && this.tilesMap.mapObjectsTiles.getValue(rx, ry) === null;
             }
         }
 
@@ -735,7 +735,7 @@ namespace Lich {
                 // jde o pozadí povrchu 
                 if (object.mapSurfaceBgr != null && alternative) {
                     // pokud je místo bez pozadí, lze vkládat pozadí povrchu
-                    if (self.tilesMap.mapBgrRecord.getValue(rx, ry) == null) {
+                    if (!self.tilesMap.mapBgrRecord.getValue(rx, ry)) {
                         this.placeSurface(rx, ry, object.mapSurfaceBgr.mapKey, true);
                         return true;
                     }
