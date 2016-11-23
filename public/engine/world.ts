@@ -305,6 +305,14 @@ namespace Lich {
          * fyzicky svět doleva, takže je to jako kdyby hráč šel doprava 
          */
         shiftWorldBy(shiftX: number, shiftY: number) {
+
+            if (isNaN(shiftX)) {
+                console.log("Ou.. shiftX je Nan");
+            }
+            if (isNaN(shiftY)) {
+                console.log("Ou.. shiftY je Nan");
+            }
+
             let self = this;
             let rndDstX = Utils.floor(shiftX);
             let rndDstY = Utils.floor(shiftY);
@@ -364,7 +372,9 @@ namespace Lich {
             this.shiftWorldBy(shiftX, shiftY);
         }
 
-        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any, forceFall = false, forceJump = false, collisionSteps = false): boolean {
+        updateObject(sDelta: number, object: AbstractWorldObject, makeShift: (x: number, y: number) => any,
+            forceFall = false, forceJump = false, collisionSteps = false, isCurrentlyClimbing = false): boolean {
+
             var self = this;
             var clsnTest: CollisionTestResult;
             var clsnPosition;
@@ -373,25 +383,35 @@ namespace Lich {
 
             if (object.speedy !== 0) {
 
-                // dráha, kterou objekt urazil za daný časový úsek, 
-                // kdy je známa jeho poslední rychlost a zrychlení, 
-                // které na něj za daný časový úsek působilo:
-                // s_t = vt + 1/2.at^2
-                var distanceY = Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
-                // uprav rychlost objektu, která se dá spočítat jako: 
-                // v = v_0 + at
-                object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
-                if (object.speedy < World.MAX_FREEFALL_SPEED)
-                    object.speedy = World.MAX_FREEFALL_SPEED;
+                let distanceY;
+                let boundsX = object.x + object.collXOffset;
+                let boundsY = object.y + object.collYOffset;
+                let boundsWidth = object.width - object.collXOffset * 2;
+                let boundsHeight = object.height - object.collYOffset * 2;
+                if (isCurrentlyClimbing && forceJump) {
+                    // ignoruj gravitaci
+                    distanceY = object.speedy * sDelta;
+                } else {
+                    // dráha, kterou objekt urazil za daný časový úsek, 
+                    // kdy je známa jeho poslední rychlost a zrychlení, 
+                    // které na něj za daný časový úsek působilo:
+                    // s_t = vt + 1/2.at^2
+                    distanceY = Utils.floor(object.speedy * sDelta + World.WORLD_GRAVITY * Math.pow(sDelta, 2) / 2);
+                    // uprav rychlost objektu, která se dá spočítat jako: 
+                    // v = v_0 + at
+                    object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
+                    if (object.speedy < World.MAX_FREEFALL_SPEED)
+                        object.speedy = World.MAX_FREEFALL_SPEED;
+                }
 
                 if (distanceY != 0) {
 
                     // Nenarazím na překážku?
                     clsnTest = self.isBoundsInCollision(
-                        object.x + object.collXOffset,
-                        object.y + object.collYOffset,
-                        object.width - object.collXOffset * 2,
-                        object.height - object.collYOffset * 2,
+                        boundsX,
+                        boundsY,
+                        boundsWidth,
+                        boundsHeight,
                         0,
                         distanceY,
                         self.isCollision.bind(self),
@@ -399,38 +419,59 @@ namespace Lich {
                     );
 
                     if (clsnTest.hit === false) {
-                        // pokud není kolize a stoupám
-                        // pokud klesám, pak klesám po jiném povrchu, než je žebřík
-                        // pokud klesám po žebříku, pak to musí být vynucené
+                        // pokud není kolize a 
+                        // - stoupám
+                        // - klesám po jiném povrchu, než je žebřík
+                        // - klesám po žebříku, pak to musí být vynucené
                         if (distanceY > 0 || clsnTest.collisionType != CollisionType.LADDER || forceFall) {
                             makeShift(0, distanceY);
-                            // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
                             if (clsnTest.collisionType == CollisionType.LADDER) {
+                                // pokud padám na žebříku, udržuj rychlost na CLIMBING_SPEED
                                 isClimbing = true;
                                 if (forceFall) {
                                     object.speedy = -World.CLIMBING_SPEED;
                                 } else if (forceJump) {
                                     object.speedy = World.CLIMBING_SPEED;
                                 }
+                            } else if (distanceY > 0 && isCurrentlyClimbing) {
+                                // pokud stoupám do povrchu, který není žebříkem
+                                // a jsem v režimu lezení po žebříku, zkontroluj,
+                                // zda ještě na něm jsem, pokud ano, ponech režim
+                                let clsnTest = self.isBoundsInCollision(
+                                    boundsX,
+                                    boundsY,
+                                    boundsWidth,
+                                    boundsHeight,
+                                    0,
+                                    0,
+                                    self.isCollision.bind(self),
+                                    forceFall
+                                );
+                                if (clsnTest.collisionType == CollisionType.LADDER) {
+                                    isClimbing = true;
+                                }
                             }
                         } else {
+                            isClimbing = clsnTest.collisionType == CollisionType.LADDER;
                             object.speedy = 0;
                         }
                     } else {
+                        let evenTileX = Utils.even(clsnTest.x);
+                        let evenTileY = Utils.even(clsnTest.y);
+                        let clsnPosition = self.render.tilesToPixel(evenTileX, evenTileY);
+                        let y;
+                        // zastavil jsem se při pádu/skoku? Konec a "doskoč" až k překážce
+                        // Získej pozici kolizního bloku (kvůli zkoseným povrchům, 
+                        // které mají kolizní masky na PART se musí brát počátek od PART 
+                        // nikoliv TILE, takže pouze sudé) a přičti k němu zbývající 
+                        // vzdálenost (od počátku PART) do kolize
                         if (distanceY > 0) {
                             // zastavil jsem se při stoupání? Začni hned padat
-                            // TODO doskoč do stropu, jinak se někdy nebude dá "vskočit" do úzkých oken apod.
-                        }
-                        else {
-                            // zastavil jsem se při pádu? Konec skoku a "doskoč" až na zem
-                            // Získej pozici kolizního bloku (kvůli zkoseným povrchům, 
-                            // které mají kolizní masky na PART se musí brát počátek od PART 
-                            // nikoliv TILE, takže pouze sudé) a přičti k němu zbývající 
-                            // vzdálenost (od počátku PART) do kolize
-                            let evenTileX = Utils.even(clsnTest.x);
-                            let evenTileY = Utils.even(clsnTest.y);
-                            let clsnPosition = self.render.tilesToPixel(evenTileX, evenTileY);
-                            let y = -1 * (clsnPosition.y + clsnTest.partOffsetY - (object.y + object.height - object.collYOffset));
+                            //y = clsnPosition.y + clsnTest.partOffsetY - (object.y + object.collYOffset);
+                            // makeShift(0, y);
+                        } else {
+                            // záporné, budu dopadat dolů
+                            y = object.y + object.height - object.collYOffset - (clsnPosition.y + clsnTest.partOffsetY);
                             makeShift(0, y);
                         }
                         object.speedy = 0;
@@ -440,7 +481,7 @@ namespace Lich {
             }
 
             // pokud nejsem zrovna uprostřed skoku 
-            if (object.speedy === 0) {
+            if (object.speedy == 0) {
 
                 // ...a mám kam padat
                 clsnTest = self.isBoundsInCollision(
@@ -459,6 +500,7 @@ namespace Lich {
                     if (clsnTest.collisionType != CollisionType.LADDER) {
                         // pokud klesám, pak klesám po jiném povrchu, než je žebřík
                         object.speedy = -1;
+                        isClimbing = false;
                     } else {
                         isClimbing = true;
                         if (forceFall) {
@@ -527,10 +569,6 @@ namespace Lich {
                 }
             }
 
-            if (typeof object.updateAnimations !== "undefined") {
-                object.updateAnimations();
-            }
-
             return isClimbing;
 
         };
@@ -582,11 +620,13 @@ namespace Lich {
                 }
 
                 // update postavy
-                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp, true);
+                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp, true, character.isClimbing);
+
+                character.updateAnimations();
             };
 
             // Dle kláves nastav směry pohybu
-            if (controls.up && self.hero.speedy === 0) {
+            if (controls.up) {
                 self.hero.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
             } else if (controls.levitate) {
                 self.hero.movementTypeY = MovementTypeY.ASCENT;
@@ -665,6 +705,8 @@ namespace Lich {
                         object.x -= rndX;
                         object.y -= rndY;
                     }, false, false, false);
+
+                    object.updateAnimations();
 
                     // zjisti, zda hráč objekt nesebral
                     if (self.hero.getCurrentHealth() > 0) {
