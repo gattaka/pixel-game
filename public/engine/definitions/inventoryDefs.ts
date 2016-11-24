@@ -46,7 +46,8 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_TL_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_TL_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_TR_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_TR_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
-            new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BR_KEY])
+            new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
+            new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY])
         ];
     }
 }

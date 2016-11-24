@@ -46,7 +46,8 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_TL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_TL_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_TR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_TR_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY])
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY])
         ];
     };
 })(Lich || (Lich = {}));

@@ -38,6 +38,7 @@ namespace Lich {
         INV_ROCK_BRICK_TL_KEY,
         INV_ROCK_BRICK_TR_KEY,
         INV_ROCK_BRICK_BL_KEY,
-        INV_ROCK_BRICK_BR_KEY
+        INV_ROCK_BRICK_BR_KEY,
+        INV_ROCK_BRICK_WINDOW_KEY
     }
 }

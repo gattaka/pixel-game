@@ -27,6 +27,7 @@ namespace Lich {
         SRFC_BGR_WOODWALL_KEY,
         SRFC_BGR_STRAW_KEY,
         SRFC_BGR_ROOF_KEY,
-        SRFC_BGR_ROCK_BRICK_KEY
+        SRFC_BGR_ROCK_BRICK_KEY,
+        SRFC_BGR_ROCK_BRICK_WINDOW_KEY
     }
 }

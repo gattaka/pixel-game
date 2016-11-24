@@ -28,8 +28,8 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getMiddlePositionIndexByCoordPattern(x: number, y: number, type: SurfaceBgrKey): SurfacePositionKey {
-            let col = (x + 1) % SurfaceIndex.PATTER_LENGTH  + 2; // +1 za VOID a +1 za předcházející dílky ve sprite 
-            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH  + 1; // +1 za předcházející dílky ve sprite 
+            let col = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite 
+            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite 
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -39,7 +39,7 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getTopPositionIndexByCoordPattern(x: number, y: number, type: SurfaceBgrKey): SurfacePositionKey {
-            let key = (x + 1) % SurfaceIndex.PATTER_LENGTH  + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let key = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
@@ -49,7 +49,7 @@ namespace Lich {
          */
         getLeftPositionIndexByCoordPattern(x: number, y: number, type: SurfaceBgrKey): SurfacePositionKey {
             let col = 1; // +1 za VOID
-            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH  + 1; // +1 za předcházející dílky ve sprite
+            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -59,8 +59,8 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getRightPositionIndexByCoordPattern(x: number, y: number, type: SurfaceBgrKey): SurfacePositionKey {
-            let col = 1 + SurfaceIndex.PATTER_LENGTH  + 1; // +1 za VOID, PATTER_LENGTH + 1 za předcházející dílky ve sprite
-            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH  + 1; // +1 za předcházející dílky ve sprite
+            let col = 1 + SurfaceIndex.PATTER_LENGTH + 1; // +1 za VOID, PATTER_LENGTH + 1 za předcházející dílky ve sprite
+            let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -70,8 +70,8 @@ namespace Lich {
          * který se opakuje, aby mapa byla pestřejší
          */
         getBottomPositionIndexByCoordPattern(x: number, y: number, type: SurfaceBgrKey): SurfacePositionKey {
-            let col = (x + 1) % SurfaceIndex.PATTER_LENGTH  + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
-            let row = SurfaceIndex.PATTER_LENGTH  + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
+            let col = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
+            let row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
@@ -219,7 +219,7 @@ namespace Lich {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
             };
             // TODO exportovat do definic
-            // if (seamCheck(type, type2, SurfaceBgrKey.SRFC_ROCK_BRICK_BL_KEY, SurfaceBgrKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
+            // if (seamCheck(type, type2, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY)) return true;
             return type == type2;
         }
 

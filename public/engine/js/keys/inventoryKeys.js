@@ -40,6 +40,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_ROCK_BRICK_TR_KEY"] = 36] = "INV_ROCK_BRICK_TR_KEY";
         InventoryKey[InventoryKey["INV_ROCK_BRICK_BL_KEY"] = 37] = "INV_ROCK_BRICK_BL_KEY";
         InventoryKey[InventoryKey["INV_ROCK_BRICK_BR_KEY"] = 38] = "INV_ROCK_BRICK_BR_KEY";
+        InventoryKey[InventoryKey["INV_ROCK_BRICK_WINDOW_KEY"] = 39] = "INV_ROCK_BRICK_WINDOW_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));

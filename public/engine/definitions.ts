@@ -47,7 +47,7 @@ namespace Lich {
         // případně jako pozadí
         public mapSurfaceBgr: MapSurfaceBgrDefinition = null;
 
-        constructor(public invKey: InventoryKey, target: MapObjDefinition | MapSurfaceDefinition) {
+        constructor(public invKey: InventoryKey, target?: MapObjDefinition | MapSurfaceDefinition) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
             }

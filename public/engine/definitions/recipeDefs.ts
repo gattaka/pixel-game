@@ -54,6 +54,10 @@ namespace Lich {
         [[InventoryKey.INV_ROCK_BRICK_KEY, 1], [
             [InventoryKey.INV_ROCK_BRICK_BR_KEY, 1]
         ]],
+        [[InventoryKey.INV_ROCK_BRICK_WINDOW_KEY, 1], [
+            [InventoryKey.INV_ROCK_BRICK_KEY, 1],
+            [InventoryKey.INV_WOOD_KEY, 1]
+        ]],
         [[InventoryKey.INV_WOODWALL_KEY, 5], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],

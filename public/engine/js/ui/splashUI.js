@@ -26,6 +26,7 @@ var Lich;
             version.addChange("Skewed roof surface");
             version.addChange("Skewed rock brick surface");
             version.addChange("Minor collision bugfixes");
+            version.addChange("Background corners");
             this.addVersion(version);
             version = new Version("0.10");
             version.addChange("Tiles layout changed");

@@ -5,5 +5,6 @@ namespace Lich {
         ["images/surfaces/straw_bgr.png", SurfaceBgrKey.SRFC_BGR_STRAW_KEY],
         ["images/surfaces/roof_bgr.png", SurfaceBgrKey.SRFC_BGR_ROOF_KEY],
         ["images/surfaces/rock_brick_bgr.png", SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY],
+        ["images/surfaces/_rock_brick_window_bgr.png", SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY],
     ]
 }

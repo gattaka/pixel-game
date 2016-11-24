@@ -198,7 +198,7 @@ var Lich;
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2;
             };
             // TODO exportovat do definic
-            // if (seamCheck(type, type2, SurfaceBgrKey.SRFC_ROCK_BRICK_BL_KEY, SurfaceBgrKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
+            // if (seamCheck(type, type2, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY)) return true;
             return type == type2;
         };
         return SurfaceBgrIndex;
