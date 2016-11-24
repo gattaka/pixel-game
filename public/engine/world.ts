@@ -558,11 +558,11 @@ namespace Lich {
                         if (distanceX > 0 &&
                             ((clsnTest.collisionType == CollisionType.SOLID_TR && baseDist <= Resources.PARTS_SIZE)
                                 || baseDist <= Resources.TILE_SIZE)) {
-                            makeShift(4, 6);
+                            makeShift(4, 4);
                         } else if (distanceX < 0 &&
                             ((clsnTest.collisionType == CollisionType.SOLID_TL && baseDist <= Resources.PARTS_SIZE)
                                 || baseDist <= Resources.TILE_SIZE)) {
-                            makeShift(-4, 6);
+                            makeShift(-4, 4);
                         }
                     }
 

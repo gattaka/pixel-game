@@ -76,5 +76,6 @@ var Lich;
             game.getWorld().render.placeObject(rx, ry, Lich.Resources.getInstance().mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]);
             Lich.Mixer.playSound(Lich.SoundKey.SND_DOOR_OPEN_KEY);
         }).setCollision(true),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY, 4, 5, Lich.InventoryKey.INV_KNIGHT_STATUE_KEY, 1, 0),
     ];
 })(Lich || (Lich = {}));

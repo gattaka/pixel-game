@@ -30,6 +30,9 @@ namespace Lich {
         [[InventoryKey.INV_ROCK_BRICK_KEY, 5], [
             [InventoryKey.INV_ROCK_KEY, 1]
         ]],
+        [[InventoryKey.INV_KNIGHT_STATUE_KEY, 1], [
+            [InventoryKey.INV_ROCK_KEY, 5]
+        ]],
         [[InventoryKey.INV_ROCK_BRICK_TL_KEY, 1], [
             [InventoryKey.INV_ROCK_BRICK_KEY, 1]
         ]],
@@ -108,6 +111,9 @@ namespace Lich {
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY],
         [[InventoryKey.INV_IRON_PLATFORM_KEY, 5], [
+            [InventoryKey.INV_IRON_INGOT_KEY, 1],
+        ], MapObjectKey.MAP_ANVIL_KEY]
+        [[InventoryKey.INV_CHAIN_LADDER_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY]
     ]

@@ -21,6 +21,7 @@ namespace Lich {
         new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_TL_KEY, InventoryKey.INV_ROCK_BRICK_TL_KEY, 1, 0, CollisionType.SOLID_TL),
         new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_TR_KEY, InventoryKey.INV_ROCK_BRICK_TR_KEY, 1, 0, CollisionType.SOLID_TR),
         new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_BL_KEY, InventoryKey.INV_ROCK_BRICK_BL_KEY, 1, 0, CollisionType.SOLID_BL),
-        new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_BR_KEY, InventoryKey.INV_ROCK_BRICK_BR_KEY, 1, 0, CollisionType.SOLID_BR)
+        new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_BR_KEY, InventoryKey.INV_ROCK_BRICK_BR_KEY, 1, 0, CollisionType.SOLID_BR),
+        new MapSurfaceDefinition(SurfaceKey.SRFC_CHAIN_LADDER_KEY, InventoryKey.INV_CHAIN_LADDER_KEY, 1, 0, CollisionType.LADDER)
     ]
 }

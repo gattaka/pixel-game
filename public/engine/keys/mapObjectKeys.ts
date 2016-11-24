@@ -29,5 +29,6 @@ namespace Lich {
         MAP_IRON_INGOT_KEY,
         MAP_IRON_FENCE_KEY,
         MAP_FIREPLACE_KEY,
+        MAP_KNIGHT_STATUE_KEY
     }
 }

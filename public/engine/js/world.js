@@ -491,12 +491,12 @@ var Lich;
                         if (distanceX > 0 &&
                             ((clsnTest.collisionType == Lich.CollisionType.SOLID_TR && baseDist <= Lich.Resources.PARTS_SIZE)
                                 || baseDist <= Lich.Resources.TILE_SIZE)) {
-                            makeShift(4, 6);
+                            makeShift(4, 4);
                         }
                         else if (distanceX < 0 &&
                             ((clsnTest.collisionType == Lich.CollisionType.SOLID_TL && baseDist <= Lich.Resources.PARTS_SIZE)
                                 || baseDist <= Lich.Resources.TILE_SIZE)) {
-                            makeShift(-4, 6);
+                            makeShift(-4, 4);
                         }
                     }
                 }

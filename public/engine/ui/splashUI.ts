@@ -29,6 +29,7 @@ namespace Lich {
             version.addChange("Skewed rock brick surface");
             version.addChange("Minor collision bugfixes");
             version.addChange("Background corners");
+            version.addChange("Rock brick wall windows introduced");
             this.addVersion(version);
 
             version = new Version("0.10");

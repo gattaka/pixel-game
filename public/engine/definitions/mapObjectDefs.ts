@@ -81,5 +81,6 @@ namespace Lich {
                 game.getWorld().render.placeObject(rx, ry, Resources.getInstance().mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]);
                 Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
             }).setCollision(true),
+        new MapObjDefinition(MapObjectKey.MAP_KNIGHT_STATUE_KEY, 4, 5, InventoryKey.INV_KNIGHT_STATUE_KEY, 1, 0),
     ]
 }

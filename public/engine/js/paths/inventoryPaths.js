@@ -40,6 +40,8 @@ var Lich;
         ["images/ui/inventory/inv_rock_brick_tr.png", Lich.InventoryKey.INV_ROCK_BRICK_TR_KEY],
         ["images/ui/inventory/inv_rock_brick_bl.png", Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY],
         ["images/ui/inventory/inv_rock_brick_br.png", Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY],
-        ["images/ui/inventory/inv_rock_brick_window.png", Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY]
+        ["images/ui/inventory/inv_rock_brick_window.png", Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY],
+        ["images/ui/inventory/inv_knight_statue.png", Lich.InventoryKey.INV_KNIGHT_STATUE_KEY],
+        ["images/ui/inventory/inv_chain_ladder.png", Lich.InventoryKey.INV_CHAIN_LADDER_KEY]
     ];
 })(Lich || (Lich = {}));

@@ -22,6 +22,7 @@ var Lich;
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_TL_KEY, Lich.InventoryKey.INV_ROCK_BRICK_TL_KEY, 1, 0, Lich.CollisionType.SOLID_TL),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_TR_KEY, Lich.InventoryKey.INV_ROCK_BRICK_TR_KEY, 1, 0, Lich.CollisionType.SOLID_TR),
         new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY, Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, 1, 0, Lich.CollisionType.SOLID_BL),
-        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY, Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, 1, 0, Lich.CollisionType.SOLID_BR)
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY, Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, 1, 0, Lich.CollisionType.SOLID_BR),
+        new Lich.MapSurfaceDefinition(Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY, Lich.InventoryKey.INV_CHAIN_LADDER_KEY, 1, 0, Lich.CollisionType.LADDER)
     ];
 })(Lich || (Lich = {}));

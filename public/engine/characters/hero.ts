@@ -11,7 +11,7 @@ namespace Lich {
             super(
                 56, // WIDTH
                 80, // HEIGHT 
-                16, // COLLXOFFSET
+                18, // COLLXOFFSET
                 12, // COLLYOFFSET
                 // 0,
                 // 0,
