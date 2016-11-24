@@ -112,7 +112,7 @@ namespace Lich {
         ], MapObjectKey.MAP_ANVIL_KEY],
         [[InventoryKey.INV_IRON_PLATFORM_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
-        ], MapObjectKey.MAP_ANVIL_KEY]
+        ], MapObjectKey.MAP_ANVIL_KEY],
         [[InventoryKey.INV_CHAIN_LADDER_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY]

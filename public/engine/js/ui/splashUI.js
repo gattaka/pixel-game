@@ -28,6 +28,8 @@ var Lich;
             version.addChange("Minor collision bugfixes");
             version.addChange("Background corners");
             version.addChange("Rock brick wall windows introduced");
+            version.addChange("Knight statue introduced");
+            version.addChange("Chain ladder introduced");
             this.addVersion(version);
             version = new Version("0.10");
             version.addChange("Tiles layout changed");

@@ -112,8 +112,9 @@ var Lich;
             ], Lich.MapObjectKey.MAP_ANVIL_KEY],
         [[Lich.InventoryKey.INV_IRON_PLATFORM_KEY, 5], [
                 [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
-            ], Lich.MapObjectKey.MAP_ANVIL_KEY][[Lich.InventoryKey.INV_CHAIN_LADDER_KEY, 5], [
-            [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
-        ], Lich.MapObjectKey.MAP_ANVIL_KEY]
+            ], Lich.MapObjectKey.MAP_ANVIL_KEY],
+        [[Lich.InventoryKey.INV_CHAIN_LADDER_KEY, 5], [
+                [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
+            ], Lich.MapObjectKey.MAP_ANVIL_KEY]
     ];
 })(Lich || (Lich = {}));
