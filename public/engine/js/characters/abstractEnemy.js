@@ -39,7 +39,8 @@ var Lich;
                     var verticalStrategy = function (nextX) {
                         if ((world.hero.y + world.hero.height) > (_this.y + _this.height)) {
                             // pokud je hráč níž než já (vzdálenost je obrácená)
-                            if (nextX != 0 && world.isCollision(nextX, _this.y + _this.height - Lich.Resources.TILE_SIZE).hit) {
+                            var col = world.isCollision(nextX, _this.y + _this.height - Lich.Resources.TILE_SIZE);
+                            if (nextX != 0 && col.hit && col.collisionType != Lich.CollisionType.LADDER && col.collisionType != Lich.CollisionType.PLATFORM) {
                                 // pokud je přede mnou překážka a hráč už není přímo podemnou, přeskoč     
                                 _this.movementTypeY = Lich.MovementTypeY.JUMP_OR_CLIMB;
                             }

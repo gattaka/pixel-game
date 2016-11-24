@@ -44,7 +44,8 @@ namespace Lich {
                     let verticalStrategy = (nextX: number) => {
                         if ((world.hero.y + world.hero.height) > (this.y + this.height)) {
                             // pokud je hráč níž než já (vzdálenost je obrácená)
-                            if (nextX != 0 && world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit) {
+                            let col = world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE);
+                            if (nextX != 0 && col.hit && col.collisionType != CollisionType.LADDER && col.collisionType != CollisionType.PLATFORM) {
                                 // pokud je přede mnou překážka a hráč už není přímo podemnou, přeskoč     
                                 this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
                             } else {
