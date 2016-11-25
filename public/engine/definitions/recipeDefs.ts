@@ -97,6 +97,10 @@ namespace Lich {
             [InventoryKey.INV_DIRT_KEY, 5],
             [InventoryKey.INV_ROCK_BRICK_KEY, 10]
         ]],
+        [[InventoryKey.INV_BANNER_KEY, 1], [
+            [InventoryKey.INV_PLANT_KEY, 1],
+            [InventoryKey.INV_STRAW_KEY, 1]
+        ]],
         // Smelter recipes
         [[InventoryKey.INV_ANVIL_KEY, 1], [
             [InventoryKey.INV_IRON_KEY, 5],

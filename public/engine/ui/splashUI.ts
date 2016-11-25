@@ -32,6 +32,8 @@ namespace Lich {
             version.addChange("Rock brick wall windows introduced");
             version.addChange("Knight statue introduced");
             version.addChange("Chain ladder introduced");
+            version.addChange("Nature grow");
+            version.addChange("Banners introduced");
             this.addVersion(version);
 
             version = new Version("0.10");

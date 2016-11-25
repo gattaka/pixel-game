@@ -77,5 +77,6 @@ var Lich;
             Lich.Mixer.playSound(Lich.SoundKey.SND_DOOR_OPEN_KEY);
         }).setCollision(true),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY, 4, 5, Lich.InventoryKey.INV_KNIGHT_STATUE_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BANNER_KEY, 2, 4, Lich.InventoryKey.INV_BANNER_KEY, 1, 0)
     ];
 })(Lich || (Lich = {}));

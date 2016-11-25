@@ -43,7 +43,7 @@ var Lich;
                                 else {
                                     // nic tam není, dej tam trávu
                                     var grassKey = void 0;
-                                    switch (Math.floor(Math.random() * 3)) {
+                                    switch (Math.floor(Math.random() * 9)) {
                                         case 0:
                                             grassKey = Lich.MapObjectKey.MAP_GRASS1_KEY;
                                             break;
@@ -53,17 +53,35 @@ var Lich;
                                         case 2:
                                             grassKey = Lich.MapObjectKey.MAP_GRASS3_KEY;
                                             break;
+                                        case 3:
+                                            grassKey = Lich.MapObjectKey.MAP_BUSH_KEY;
+                                            break;
+                                        case 4:
+                                            grassKey = Lich.MapObjectKey.MAP_BUSH2_KEY;
+                                            break;
+                                        case 5:
+                                            grassKey = Lich.MapObjectKey.MAP_PLANT_KEY;
+                                            break;
+                                        case 6:
+                                            grassKey = Lich.MapObjectKey.MAP_PLANT2_KEY;
+                                            break;
+                                        case 7:
+                                            grassKey = Lich.MapObjectKey.MAP_PLANT3_KEY;
+                                            break;
+                                        case 8:
+                                            grassKey = Lich.MapObjectKey.MAP_PLANT4_KEY;
+                                            break;
                                     }
                                     // self.render.placeObject(xt, yt - 1, Resources.getInstance().mapObjectDefs[grassKey]);
                                     // pokládání se dává na souřadnici povrchu, nikoliv objektu (takže to není -2)
                                     Lich.TilesMapTools.writeObjectRecord(tilesMap, this.xt, this.yt, Lich.Resources.getInstance().mapObjectDefs[grassKey]);
-                                    console.log("Grass created on %d:%d", this.xt, this.yt);
                                 }
                             }
                         }
-                        // už jsem pod nějakým povrchem
-                        this.aboveSurface = false;
-                        this.aboveTopSurface = false;
+                        // TODO zatím se nebude procházet prostor pod povrchem
+                        this.xt += 2;
+                        this.yt = 0;
+                        continue;
                     }
                     else {
                         // nějaké prázdno

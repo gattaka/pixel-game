@@ -20,6 +20,7 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_FENCE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_IRON_FENCE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GRAVE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_GRAVE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_KNIGHT_STATUE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_BANNER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BANNER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]),
             // usaditelných jako povrch

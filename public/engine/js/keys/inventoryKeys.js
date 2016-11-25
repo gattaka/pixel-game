@@ -43,6 +43,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_ROCK_BRICK_WINDOW_KEY"] = 39] = "INV_ROCK_BRICK_WINDOW_KEY";
         InventoryKey[InventoryKey["INV_KNIGHT_STATUE_KEY"] = 40] = "INV_KNIGHT_STATUE_KEY";
         InventoryKey[InventoryKey["INV_CHAIN_LADDER_KEY"] = 41] = "INV_CHAIN_LADDER_KEY";
+        InventoryKey[InventoryKey["INV_BANNER_KEY"] = 42] = "INV_BANNER_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));
