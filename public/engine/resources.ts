@@ -11,7 +11,7 @@ namespace Lich {
     }
 
     export interface HasCooldown {
-        cooldown: number;
+        seedCooldown: number;
     }
 
     export class FreqPool<T extends HasCooldown> {
@@ -36,7 +36,7 @@ namespace Lich {
                     // pokud je položka připravena, zkus ji použít
                     let it = this.palette[idx];
                     if (accept(it)) {
-                        this.cooldowns[idx] = it.cooldown;
+                        this.cooldowns[idx] = it.seedCooldown;
                         return;
                     }
                 }
@@ -60,7 +60,7 @@ namespace Lich {
         }
         insert(item: T) {
             this.palette.push(item);
-            this.cooldowns.push(item.cooldown);
+            this.cooldowns.push(item.seedCooldown);
         }
     }
 
@@ -209,21 +209,21 @@ namespace Lich {
 
             // Definice mapových povrchů
             SURFACE_DEFS.forEach((definition: MapSurfaceDefinition) => {
-                self.mapSurfaceDefs[definition.mapKey] = definition;
-                if (definition.cooldown > 0) {
+                self.mapSurfaceDefs[definition.srfcKey] = definition;
+                if (definition.seedCooldown > 0) {
                     self.mapSurfacesFreqPool.insert(definition);
                 }
             });
 
             // Definice pozadí mapových povrchů
             SURFACE_BGR_DEFS.forEach((definition: MapSurfaceBgrDefinition) => {
-                self.mapSurfacesBgrDefs[definition.mapKey] = definition;
+                self.mapSurfacesBgrDefs[definition.srfcKey] = definition;
             });
 
             // Definice mapových objektů
             MAP_OBJECT_DEFS.forEach((definition: MapObjDefinition) => {
-                self.mapObjectDefs[definition.mapKey] = definition;
-                if (definition.cooldown > 0) {
+                self.mapObjectDefs[definition.srfcKey] = definition;
+                if (definition.seedCooldown > 0) {
                     self.mapObjectDefsFreqPool.insert(definition);
                 }
             });

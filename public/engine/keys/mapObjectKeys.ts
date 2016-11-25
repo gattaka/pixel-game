@@ -3,7 +3,7 @@ namespace Lich {
         MAP_BERRY_KEY,
         MAP_BUSH_KEY,
         MAP_BUSH2_KEY,
-        MAP_GRASS_KEY,
+        MAP_GRASS1_KEY,
         MAP_GRASS2_KEY,
         MAP_GRASS3_KEY,
         MAP_GRAVE_KEY,

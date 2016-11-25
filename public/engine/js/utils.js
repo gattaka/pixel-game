@@ -7,7 +7,7 @@ var Lich;
     }());
     Lich.HashMap = HashMap;
     var CollisionTestResult = (function () {
-        function CollisionTestResult(hit, x, y, collisionType, partOffsetX, partOffsetY) {
+        function CollisionTestResult(hit, x, y, collisionType, partOffsetX, partOffsetY, srfcDef) {
             if (collisionType === void 0) { collisionType = Lich.CollisionType.SOLID; }
             this.hit = hit;
             this.x = x;
@@ -15,6 +15,7 @@ var Lich;
             this.collisionType = collisionType;
             this.partOffsetX = partOffsetX;
             this.partOffsetY = partOffsetY;
+            this.srfcDef = srfcDef;
         }
         return CollisionTestResult;
     }());

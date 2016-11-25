@@ -3,7 +3,7 @@ namespace Lich {
         ["images/parts/berry.png", MapObjectKey.MAP_BERRY_KEY],
         ["images/parts/bush.png", MapObjectKey.MAP_BUSH_KEY],
         ["images/parts/bush2.png", MapObjectKey.MAP_BUSH2_KEY],
-        ["images/parts/grass.png", MapObjectKey.MAP_GRASS_KEY],
+        ["images/parts/grass.png", MapObjectKey.MAP_GRASS1_KEY],
         ["images/parts/grass2.png", MapObjectKey.MAP_GRASS2_KEY],
         ["images/parts/grass3.png", MapObjectKey.MAP_GRASS3_KEY],
         ["images/parts/grave.png", MapObjectKey.MAP_GRAVE_KEY],

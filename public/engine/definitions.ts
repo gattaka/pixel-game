@@ -20,7 +20,7 @@ namespace Lich {
         public item: DugObjDefinition;
         constructor(
             // klíč
-            public mapKey: SurfaceKey | SurfaceBgrKey | MapObjectKey,
+            public srfcKey: SurfaceKey | SurfaceBgrKey | MapObjectKey,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
@@ -114,7 +114,7 @@ namespace Lich {
 
         constructor(
             // údaje o objektu na mapě
-            public mapKey: MapObjectKey,
+            public srfcKey: MapObjectKey,
             public mapSpriteWidth: number,
             public mapSpriteHeight: number,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
@@ -122,10 +122,10 @@ namespace Lich {
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             public quant: number,
             // jak často takový objekt v mapě je 
-            public cooldown: number,
+            public seedCooldown: number,
             // akce na RMB kliknutí
             public rmbAction?: (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) => any) {
-            super(mapKey, invObj, quant);
+            super(srfcKey, invObj, quant);
         }
 
         public setFrames(frames: number): MapObjDefinition {
@@ -165,16 +165,16 @@ namespace Lich {
         public maxDepth = 100;
         constructor(
             // údaje o povrchu na mapě
-            public mapKey: SurfaceKey,
+            public srfcKey: SurfaceKey,
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
             public quant: number,
             // jak často takový povrch v mapě je 
-            public cooldown: number,
+            public seedCooldown: number,
             // jaký typ kolizí povrch má?
             public collisionType = CollisionType.SOLID) {
-            super(mapKey, invObj, quant);
+            super(srfcKey, invObj, quant);
         }
 
         public setSize(minSize: number, maxSize: number): MapSurfaceDefinition {
@@ -206,12 +206,12 @@ namespace Lich {
     export class MapSurfaceBgrDefinition extends Diggable {
         constructor(
             // údaje o povrchu na mapě
-            public mapKey: SurfaceBgrKey,
+            public srfcKey: SurfaceBgrKey,
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
             public quant: number) {
-            super(mapKey, invObj, quant);
+            super(srfcKey, invObj, quant);
         }
     }
 

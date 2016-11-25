@@ -210,7 +210,7 @@ var Lich;
             var objDef = Lich.Resources.getInstance().mapObjectDefs[objectTile.mapKey];
             var object;
             if (objDef.frames > 1) {
-                object = Lich.Resources.getInstance().getSpritePart(Lich.MapObjectKey[objDef.mapKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                object = Lich.Resources.getInstance().getSpritePart(Lich.MapObjectKey[objDef.srfcKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
                 return object;
             }
             else {
@@ -536,21 +536,21 @@ var Lich;
             this.mapReshape(tilesToReset, bgr);
             Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_CHANGE, rx, ry));
         };
-        Render.prototype.placeObject = function (rx, ry, mapObj) {
+        Render.prototype.placeObject = function (tx0, ty0, mapObj) {
             var self = this;
             // musí se posunout dolů o object.mapObj.mapSpriteHeight,
             // protože objekty se počítají počátkem levého SPODNÍHO rohu 
-            Lich.TilesMapTools.writeObjectRecord(self.tilesMap, rx, ry + 2, mapObj);
+            Lich.TilesMapTools.writeObjectRecord(self.tilesMap, tx0, ty0 + 2, mapObj);
             // objekty se "pokládají", takže se počítá posuv o výšku
             // stále ale musí být na poklik dostupné poslední spodní 
             // řádkou dílků (vše je po dvou kostkách), takže +2
-            ry = ry - mapObj.mapSpriteHeight + 2;
+            ty0 = ty0 - mapObj.mapSpriteHeight + 2;
             // Sheet index dílku objektu
             for (var tx = 0; tx < mapObj.mapSpriteWidth; tx++) {
                 for (var ty = 0; ty < mapObj.mapSpriteHeight; ty++) {
-                    var objectTile = new Lich.MapObjectTile(mapObj.mapKey, tx, ty);
+                    var objectTile = new Lich.MapObjectTile(mapObj.srfcKey, tx, ty);
                     var tile = self.createObject(objectTile);
-                    var sector = self.getSectorByTiles(rx + tx, ry + ty);
+                    var sector = self.getSectorByTiles(tx0 + tx, ty0 + ty);
                     // přidej dílek do sektoru
                     if (tile instanceof createjs.Sprite) {
                         sector.addAnimatedChild(tile);
@@ -558,10 +558,10 @@ var Lich;
                     else {
                         sector.addCacheableChild(tile);
                     }
-                    tile.x = ((rx + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
-                    tile.y = ((ry + ty) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
+                    tile.x = ((tx0 + tx) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
+                    tile.y = ((ty0 + ty) % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                     // Přidej objekt do globální mapy objektů
-                    self.sceneObjectsMap.setValue(rx + tx, ry + ty, tile);
+                    self.sceneObjectsMap.setValue(tx0 + tx, ty0 + ty, tile);
                     self.markSector(sector);
                 }
             }
@@ -612,7 +612,7 @@ var Lich;
                 if (object.mapSurface != null && alternative == false) {
                     // pokud je místo prázdné a bez objektu, lze vkládat povrchy
                     if (self.isForegroundFree(rx, ry)) {
-                        this.placeSurface(rx, ry, object.mapSurface.mapKey, false);
+                        this.placeSurface(rx, ry, object.mapSurface.srfcKey, false);
                         return true;
                     }
                 }
@@ -620,7 +620,7 @@ var Lich;
                 if (object.mapSurfaceBgr != null && alternative) {
                     // pokud je místo bez pozadí, lze vkládat pozadí povrchu
                     if (!self.tilesMap.mapBgrRecord.getValue(rx, ry)) {
-                        this.placeSurface(rx, ry, object.mapSurfaceBgr.mapKey, true);
+                        this.placeSurface(rx, ry, object.mapSurfaceBgr.srfcKey, true);
                         return true;
                     }
                 }

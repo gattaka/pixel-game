@@ -4,7 +4,7 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_BERRY_KEY"] = 0] = "MAP_BERRY_KEY";
         MapObjectKey[MapObjectKey["MAP_BUSH_KEY"] = 1] = "MAP_BUSH_KEY";
         MapObjectKey[MapObjectKey["MAP_BUSH2_KEY"] = 2] = "MAP_BUSH2_KEY";
-        MapObjectKey[MapObjectKey["MAP_GRASS_KEY"] = 3] = "MAP_GRASS_KEY";
+        MapObjectKey[MapObjectKey["MAP_GRASS1_KEY"] = 3] = "MAP_GRASS1_KEY";
         MapObjectKey[MapObjectKey["MAP_GRASS2_KEY"] = 4] = "MAP_GRASS2_KEY";
         MapObjectKey[MapObjectKey["MAP_GRASS3_KEY"] = 5] = "MAP_GRASS3_KEY";
         MapObjectKey[MapObjectKey["MAP_GRAVE_KEY"] = 6] = "MAP_GRAVE_KEY";

@@ -290,7 +290,7 @@ var Lich;
                         if ((depositY / tilesMap.height) > (definition.minDepth / 100)
                             && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
                             var dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                            createDeposit(depositX, depositY, dia, definition.mapKey);
+                            createDeposit(depositX, depositY, dia, definition.srfcKey);
                             return true;
                         }
                         return false;

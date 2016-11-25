@@ -263,6 +263,7 @@ namespace Lich {
             if (tilesMap.spawnPoint) {
                 pCoord = self.render.tilesToPixel(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y);
             } else {
+                // TODO xt by se mělo střídavě od středu vzdalovat 
                 let xt = tilesMap.width / 2;
                 for (let yt = 0; yt < tilesMap.height; yt++) {
                     // je hráče kam umístit?
@@ -782,6 +783,7 @@ namespace Lich {
             // v daném SMĚRU, ve kterém provádím pohyb? 
             let fixOffsetX: number;
             let fixOffsetY: number;
+            let srfcDef: MapSurfaceDefinition;
             // délka PART
             let n = Resources.PARTS_SIZE - 1;
             // Směr posuvu
@@ -792,10 +794,11 @@ namespace Lich {
             }
 
             // kolize s povrchem/hranicí mapy
-            var val = self.tilesMap.mapRecord.getValue(tx, ty);
-            if (val != null && val != 0) {
+            let surfaceVal = self.tilesMap.mapRecord.getValue(tx, ty);
+            if (surfaceVal != null && surfaceVal != 0) {
                 let res = Resources.getInstance();
-                collisionType = res.mapSurfaceDefs[res.surfaceIndex.getType(val)].collisionType;
+                srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
+                collisionType = srfcDef.collisionType;
                 // souřadnice uvnitř PART
                 let lx, ly;
                 if (partOffsetX == undefined || partOffsetY == undefined) {
@@ -898,7 +901,7 @@ namespace Lich {
                         hit = true;
                         break;
                 }
-            } else if (val == null) {
+            } else if (surfaceVal == null) {
                 // kolize "mimo mapu"
                 hit = true;
                 collisionType = CollisionType.SOLID;
@@ -921,7 +924,7 @@ namespace Lich {
                     if (ySign < 0) fixOffsetY = 0; // jdu shora
                     if (ySign > 0) fixOffsetY = n + 1; // jdu zdola
                 }
-                return new CollisionTestResult(true, tx, ty, collisionType, fixOffsetX, fixOffsetY);
+                return new CollisionTestResult(true, tx, ty, collisionType, fixOffsetX, fixOffsetY, srfcDef);
             } else {
                 // bez kolize
                 return new CollisionTestResult(false, tx, ty);
@@ -1132,7 +1135,9 @@ namespace Lich {
                 self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
 
-            // Spawn TODO
+            Nature.getInstance().handleTick(delta, self);
+
+            // Spawn 
             //SpawnPool.getInstance().update(delta, self);
         };
     }

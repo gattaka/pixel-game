@@ -96,13 +96,13 @@ var Lich;
         TilesMapTools.writeObjectRecord = function (tilesMap, cx, cy, object) {
             var self = this;
             // zapiš objekt 
-            tilesMap.mapObjRecord.setValue(cx, cy, object.mapKey);
+            tilesMap.mapObjRecord.setValue(cx, cy, object.srfcKey);
             // zapiš obsazení jednotlivými dílky objektu
             for (var x = 0; x < object.mapSpriteWidth; x++) {
                 for (var y = 0; y < object.mapSpriteHeight; y++) {
                     // musí se posunout o object.mapSpriteHeight, protože 
                     // objekty se počítají počátkem levého SPODNÍHO rohu 
-                    tilesMap.mapObjectsTiles.setValue(x + cx, y + cy - object.mapSpriteHeight, new Lich.MapObjectTile(object.mapKey, x, y));
+                    tilesMap.mapObjectsTiles.setValue(x + cx, y + cy - object.mapSpriteHeight, new Lich.MapObjectTile(object.srfcKey, x, y));
                 }
             }
         };

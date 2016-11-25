@@ -39,7 +39,7 @@ var Lich;
                     // pokud je položka připravena, zkus ji použít
                     var it = this.palette[idx];
                     if (accept(it)) {
-                        this.cooldowns[idx] = it.cooldown;
+                        this.cooldowns[idx] = it.seedCooldown;
                         return;
                     }
                 }
@@ -62,7 +62,7 @@ var Lich;
         };
         FreqPool.prototype.insert = function (item) {
             this.palette.push(item);
-            this.cooldowns.push(item.cooldown);
+            this.cooldowns.push(item.seedCooldown);
         };
         return FreqPool;
     }());
@@ -162,19 +162,19 @@ var Lich;
             self.loader.loadManifest(manifest, true);
             // Definice mapových povrchů
             Lich.SURFACE_DEFS.forEach(function (definition) {
-                self.mapSurfaceDefs[definition.mapKey] = definition;
-                if (definition.cooldown > 0) {
+                self.mapSurfaceDefs[definition.srfcKey] = definition;
+                if (definition.seedCooldown > 0) {
                     self.mapSurfacesFreqPool.insert(definition);
                 }
             });
             // Definice pozadí mapových povrchů
             Lich.SURFACE_BGR_DEFS.forEach(function (definition) {
-                self.mapSurfacesBgrDefs[definition.mapKey] = definition;
+                self.mapSurfacesBgrDefs[definition.srfcKey] = definition;
             });
             // Definice mapových objektů
             Lich.MAP_OBJECT_DEFS.forEach(function (definition) {
-                self.mapObjectDefs[definition.mapKey] = definition;
-                if (definition.cooldown > 0) {
+                self.mapObjectDefs[definition.srfcKey] = definition;
+                if (definition.seedCooldown > 0) {
                     self.mapObjectDefsFreqPool.insert(definition);
                 }
             });

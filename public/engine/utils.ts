@@ -6,7 +6,7 @@ namespace Lich {
 
     export class CollisionTestResult {
         constructor(public hit: boolean, public x?: number, public y?: number,
-            public collisionType = CollisionType.SOLID, public partOffsetX?, public partOffsetY?) { }
+            public collisionType = CollisionType.SOLID, public partOffsetX?, public partOffsetY?, public srfcDef?: MapSurfaceDefinition) { }
     }
 
     export class Coord2D {
