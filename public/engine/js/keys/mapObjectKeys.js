@@ -33,6 +33,7 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_KNIGHT_STATUE_KEY"] = 29] = "MAP_KNIGHT_STATUE_KEY";
         MapObjectKey[MapObjectKey["MAP_BANNER_KEY"] = 30] = "MAP_BANNER_KEY";
         MapObjectKey[MapObjectKey["MAP_TREE4_KEY"] = 31] = "MAP_TREE4_KEY";
+        MapObjectKey[MapObjectKey["MAP_FLOWER_POT_KEY"] = 32] = "MAP_FLOWER_POT_KEY";
     })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
     var MapObjectKey = Lich.MapObjectKey;
 })(Lich || (Lich = {}));

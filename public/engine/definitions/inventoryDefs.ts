@@ -20,6 +20,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_GRAVE_KEY, res.mapObjectDefs[MapObjectKey.MAP_GRAVE_KEY]),
             new InvObjDefinition(InventoryKey.INV_KNIGHT_STATUE_KEY, res.mapObjectDefs[MapObjectKey.MAP_KNIGHT_STATUE_KEY]),
             new InvObjDefinition(InventoryKey.INV_BANNER_KEY, res.mapObjectDefs[MapObjectKey.MAP_BANNER_KEY]),
+            new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
 

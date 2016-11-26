@@ -101,6 +101,13 @@ var Lich;
                 [Lich.InventoryKey.INV_PLANT_KEY, 1],
                 [Lich.InventoryKey.INV_STRAW_KEY, 1]
             ]],
+        [[Lich.InventoryKey.INV_FLOWER_POT_KEY, 1], [
+                [Lich.InventoryKey.INV_PLANT_KEY, 1],
+                [Lich.InventoryKey.INV_PLANT2_KEY, 1],
+                [Lich.InventoryKey.INV_PLANT3_KEY, 1],
+                [Lich.InventoryKey.INV_PLANT4_KEY, 1],
+                [Lich.InventoryKey.INV_DIRT_KEY, 1]
+            ]],
         // Smelter recipes
         [[Lich.InventoryKey.INV_ANVIL_KEY, 1], [
                 [Lich.InventoryKey.INV_IRON_KEY, 5],

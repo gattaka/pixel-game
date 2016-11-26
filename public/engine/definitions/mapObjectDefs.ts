@@ -83,6 +83,7 @@ namespace Lich {
                 Mixer.playSound(SoundKey.SND_DOOR_OPEN_KEY);
             }).setCollision(true),
         new MapObjDefinition(MapObjectKey.MAP_KNIGHT_STATUE_KEY, 4, 5, InventoryKey.INV_KNIGHT_STATUE_KEY, 1, 0),
-        new MapObjDefinition(MapObjectKey.MAP_BANNER_KEY, 2, 4, InventoryKey.INV_BANNER_KEY, 1, 0)
+        new MapObjDefinition(MapObjectKey.MAP_BANNER_KEY, 2, 4, InventoryKey.INV_BANNER_KEY, 1, 0),
+        new MapObjDefinition(MapObjectKey.MAP_FLOWER_POT_KEY, 2, 2, InventoryKey.INV_FLOWER_POT_KEY, 1, 0)
     ]
 }

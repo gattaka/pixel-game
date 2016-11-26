@@ -42,6 +42,7 @@ namespace Lich {
         INV_ROCK_BRICK_WINDOW_KEY,
         INV_KNIGHT_STATUE_KEY,
         INV_CHAIN_LADDER_KEY,
-        INV_BANNER_KEY
+        INV_BANNER_KEY,
+        INV_FLOWER_POT_KEY
     }
 }
