@@ -109,7 +109,8 @@ var Lich;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.on("mousedown", function (evt) {
                 if (self.choosenItem) {
-                    var index = self.itemsTypeIndexMap[self.choosenItem];
+                    var oldItem = self.choosenItem;
+                    var index = self.itemsTypeIndexMap[oldItem];
                     var recipe = self.itemsTypeArray[index];
                     for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
                         var ingred = _a[_i];
@@ -224,6 +225,16 @@ var Lich;
                         // ...nebo vlož položku na konec pole
                         self.itemsTypeArray[i] = recipe;
                         self.itemsTypeIndexMap[key] = i;
+                    }
+                    else {
+                        // Pokud tento recept zmizel a byl přitom vybrán,
+                        // zajisti, aby se odebral z výběru a zmizel pak
+                        // i přehled jeho ingrediencí
+                        self.itemsTypeIndexMap[key] = undefined;
+                        if (self.choosenItem == key) {
+                            self.ingredientsCont.itemsCont.removeAllChildren();
+                            self.choosenItem = undefined;
+                        }
                     }
                 });
                 self.render();

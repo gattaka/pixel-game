@@ -161,10 +161,17 @@ var Lich;
                     self.itemHighlight.visible = false;
                     self.itemsQuantityMap[item] = null;
                     self.itemsUIMap[item] = null;
-                    self.itemsTypeArray[self.itemsTypeIndexMap[item]] = null;
+                    var index = self.itemsTypeIndexMap[item];
+                    self.itemsTypeArray.splice(index, 1);
                     self.itemsTypeIndexMap[item] = null;
+                    for (var i = index; i < self.itemsTypeArray.length; i++) {
+                        self.itemsTypeIndexMap[self.itemsTypeArray[i]]--;
+                    }
+                    self.render();
                 }
-                self.updateCache();
+                else {
+                    self.updateCache();
+                }
             }
         };
         InventoryUI.prototype.invInsert = function (item, quantChange) {
@@ -186,15 +193,7 @@ var Lich;
                 }
             }
             else {
-                // pokud neexistuje založ novou
-                var i = 0;
-                for (i = 0; i < self.itemsTypeArray.length; i++) {
-                    // buď najdi volné místo...
-                    if (self.itemsTypeArray[i] != 0 && !self.itemsTypeArray[i]) {
-                        break;
-                    }
-                }
-                // ...nebo vlož položku na konec pole
+                var i = self.itemsTypeArray.length;
                 self.itemsTypeArray[i] = item;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
@@ -241,7 +240,7 @@ var Lich;
                 }, null, false);
             })();
         };
-        InventoryUI.N = 6;
+        InventoryUI.N = 4;
         InventoryUI.M = 8;
         InventoryUI.INV_SIZE = InventoryUI.N * InventoryUI.M;
         return InventoryUI;

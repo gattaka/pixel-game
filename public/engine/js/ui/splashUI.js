@@ -33,6 +33,7 @@ var Lich;
             version.addChange("Nature grow");
             version.addChange("Banners introduced");
             version.addChange("Krystal and florite sprites improved");
+            version.addChange("Flower pot introduced");
             this.addVersion(version);
             version = new Version("0.10");
             version.addChange("Tiles layout changed");

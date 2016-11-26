@@ -163,7 +163,8 @@ namespace Lich {
             craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
             craftBtn.on("mousedown", function (evt) {
                 if (self.choosenItem) {
-                    let index = self.itemsTypeIndexMap[self.choosenItem];
+                    let oldItem = self.choosenItem;
+                    let index = self.itemsTypeIndexMap[oldItem];
                     let recipe = self.itemsTypeArray[index];
                     for (let ingred of recipe.ingredients) {
                         self.inventoryUI.invRemove(ingred.key, ingred.quant);
@@ -265,6 +266,15 @@ namespace Lich {
                         // ...nebo vlož položku na konec pole
                         self.itemsTypeArray[i] = recipe;
                         self.itemsTypeIndexMap[key] = i;
+                    } else {
+                        // Pokud tento recept zmizel a byl přitom vybrán,
+                        // zajisti, aby se odebral z výběru a zmizel pak
+                        // i přehled jeho ingrediencí
+                        self.itemsTypeIndexMap[key] = undefined;
+                        if (self.choosenItem == key) {
+                            self.ingredientsCont.itemsCont.removeAllChildren();
+                            self.choosenItem = undefined;
+                        }
                     }
                 });
                 self.render();

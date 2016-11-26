@@ -2,7 +2,7 @@ namespace Lich {
 
     export class InventoryUI extends PartsUI {
 
-        static N = 6;
+        static N = 4;
         static M = 8;
         static INV_SIZE = InventoryUI.N * InventoryUI.M;
 
@@ -187,10 +187,17 @@ namespace Lich {
                     self.itemHighlight.visible = false;
                     self.itemsQuantityMap[item] = null;
                     self.itemsUIMap[item] = null
-                    self.itemsTypeArray[self.itemsTypeIndexMap[item]] = null;
+                    let index = self.itemsTypeIndexMap[item];
+                    self.itemsTypeArray.splice(index, 1);
                     self.itemsTypeIndexMap[item] = null;
+                    for (let i = index; i < self.itemsTypeArray.length; i++) {
+                        self.itemsTypeIndexMap[self.itemsTypeArray[i]]--;
+                    }
+
+                    self.render();
+                } else {
+                    self.updateCache();
                 }
-                self.updateCache();
             }
         }
 
@@ -212,15 +219,7 @@ namespace Lich {
                     }
                 }
             } else {
-                // pokud neexistuje založ novou
-                let i = 0;
-                for (i = 0; i < self.itemsTypeArray.length; i++) {
-                    // buď najdi volné místo...
-                    if (self.itemsTypeArray[i] != 0 && !self.itemsTypeArray[i]) {
-                        break;
-                    }
-                }
-                // ...nebo vlož položku na konec pole
+                let i = self.itemsTypeArray.length;
                 self.itemsTypeArray[i] = item;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
