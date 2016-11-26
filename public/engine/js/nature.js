@@ -33,7 +33,7 @@ var Lich;
                     if (surfaceVal) {
                         // narazil jsem na povrch, pokud jsem doposud měl prázdno, 
                         // pokus se spustit nějaké přírodní pochody
-                        if (this.aboveSurface && this.yt > 0) {
+                        if (this.aboveSurface && this.yt > 2) {
                             var srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
                             // hlína?
                             if (srfcDef.srfcKey == Lich.SurfaceKey.SRFC_DIRT_KEY) {
@@ -42,39 +42,45 @@ var Lich;
                                 }
                                 else {
                                     // nic tam není, dej tam trávu
-                                    var grassKey = void 0;
-                                    switch (Math.floor(Math.random() * 9)) {
+                                    var key = void 0;
+                                    switch (Math.floor(Math.random() * 11)) {
                                         case 0:
-                                            grassKey = Lich.MapObjectKey.MAP_GRASS1_KEY;
+                                            key = Lich.MapObjectKey.MAP_GRASS1_KEY;
                                             break;
                                         case 1:
-                                            grassKey = Lich.MapObjectKey.MAP_GRASS2_KEY;
+                                            key = Lich.MapObjectKey.MAP_GRASS2_KEY;
                                             break;
                                         case 2:
-                                            grassKey = Lich.MapObjectKey.MAP_GRASS3_KEY;
+                                            key = Lich.MapObjectKey.MAP_GRASS3_KEY;
                                             break;
                                         case 3:
-                                            grassKey = Lich.MapObjectKey.MAP_BUSH_KEY;
+                                            key = Lich.MapObjectKey.MAP_BUSH_KEY;
                                             break;
                                         case 4:
-                                            grassKey = Lich.MapObjectKey.MAP_BUSH2_KEY;
+                                            key = Lich.MapObjectKey.MAP_BUSH2_KEY;
                                             break;
                                         case 5:
-                                            grassKey = Lich.MapObjectKey.MAP_PLANT_KEY;
+                                            key = Lich.MapObjectKey.MAP_PLANT_KEY;
                                             break;
                                         case 6:
-                                            grassKey = Lich.MapObjectKey.MAP_PLANT2_KEY;
+                                            key = Lich.MapObjectKey.MAP_PLANT2_KEY;
                                             break;
                                         case 7:
-                                            grassKey = Lich.MapObjectKey.MAP_PLANT3_KEY;
+                                            key = Lich.MapObjectKey.MAP_PLANT3_KEY;
                                             break;
                                         case 8:
-                                            grassKey = Lich.MapObjectKey.MAP_PLANT4_KEY;
+                                            key = Lich.MapObjectKey.MAP_PLANT4_KEY;
+                                            break;
+                                        case 9:
+                                            key = Lich.MapObjectKey.MAP_TREE3_KEY;
+                                            break;
+                                        case 10:
+                                            key = Lich.MapObjectKey.MAP_TREE4_KEY;
                                             break;
                                     }
                                     // self.render.placeObject(xt, yt - 1, Resources.getInstance().mapObjectDefs[grassKey]);
                                     // pokládání se dává na souřadnici povrchu, nikoliv objektu (takže to není -2)
-                                    Lich.TilesMapTools.writeObjectRecord(tilesMap, this.xt, this.yt, Lich.Resources.getInstance().mapObjectDefs[grassKey]);
+                                    Lich.TilesMapTools.writeObjectRecord(tilesMap, this.xt, this.yt, Lich.Resources.getInstance().mapObjectDefs[key]);
                                 }
                             }
                         }

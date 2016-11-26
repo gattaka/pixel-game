@@ -30,6 +30,7 @@ namespace Lich {
         ["images/parts/iron_fence.png", MapObjectKey.MAP_IRON_FENCE_KEY],
         ["images/parts/fireplace.png", MapObjectKey.MAP_FIREPLACE_KEY],
         ["images/parts/knight_statue_small.png", MapObjectKey.MAP_KNIGHT_STATUE_KEY],
-        ["images/parts/banner.png", MapObjectKey.MAP_BANNER_KEY]
+        ["images/parts/banner.png", MapObjectKey.MAP_BANNER_KEY],
+        ["images/parts/tree4.png", MapObjectKey.MAP_TREE4_KEY]
     ];
 }

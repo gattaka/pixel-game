@@ -30,6 +30,7 @@ namespace Lich {
         MAP_IRON_FENCE_KEY,
         MAP_FIREPLACE_KEY,
         MAP_KNIGHT_STATUE_KEY,
-        MAP_BANNER_KEY
+        MAP_BANNER_KEY,
+        MAP_TREE4_KEY
     }
 }

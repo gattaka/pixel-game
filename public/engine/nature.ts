@@ -46,7 +46,7 @@ namespace Lich {
                     if (surfaceVal) {
                         // narazil jsem na povrch, pokud jsem doposud měl prázdno, 
                         // pokus se spustit nějaké přírodní pochody
-                        if (this.aboveSurface && this.yt > 0) {
+                        if (this.aboveSurface && this.yt > 2) {
                             let srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
                             // hlína?
                             if (srfcDef.srfcKey == SurfaceKey.SRFC_DIRT_KEY) {
@@ -55,21 +55,23 @@ namespace Lich {
                                     // TODO Stromy
                                 } else {
                                     // nic tam není, dej tam trávu
-                                    let grassKey;
-                                    switch (Math.floor(Math.random() * 9)) {
-                                        case 0: grassKey = MapObjectKey.MAP_GRASS1_KEY; break;
-                                        case 1: grassKey = MapObjectKey.MAP_GRASS2_KEY; break;
-                                        case 2: grassKey = MapObjectKey.MAP_GRASS3_KEY; break;
-                                        case 3: grassKey = MapObjectKey.MAP_BUSH_KEY; break;
-                                        case 4: grassKey = MapObjectKey.MAP_BUSH2_KEY; break;
-                                        case 5: grassKey = MapObjectKey.MAP_PLANT_KEY; break;
-                                        case 6: grassKey = MapObjectKey.MAP_PLANT2_KEY; break;
-                                        case 7: grassKey = MapObjectKey.MAP_PLANT3_KEY; break;
-                                        case 8: grassKey = MapObjectKey.MAP_PLANT4_KEY; break;
+                                    let key;
+                                    switch (Math.floor(Math.random() * 11)) {
+                                        case 0: key = MapObjectKey.MAP_GRASS1_KEY; break;
+                                        case 1: key = MapObjectKey.MAP_GRASS2_KEY; break;
+                                        case 2: key = MapObjectKey.MAP_GRASS3_KEY; break;
+                                        case 3: key = MapObjectKey.MAP_BUSH_KEY; break;
+                                        case 4: key = MapObjectKey.MAP_BUSH2_KEY; break;
+                                        case 5: key = MapObjectKey.MAP_PLANT_KEY; break;
+                                        case 6: key = MapObjectKey.MAP_PLANT2_KEY; break;
+                                        case 7: key = MapObjectKey.MAP_PLANT3_KEY; break;
+                                        case 8: key = MapObjectKey.MAP_PLANT4_KEY; break;
+                                        case 9: key = MapObjectKey.MAP_TREE3_KEY; break;
+                                        case 10: key = MapObjectKey.MAP_TREE4_KEY; break;
                                     }
                                     // self.render.placeObject(xt, yt - 1, Resources.getInstance().mapObjectDefs[grassKey]);
                                     // pokládání se dává na souřadnici povrchu, nikoliv objektu (takže to není -2)
-                                    TilesMapTools.writeObjectRecord(tilesMap, this.xt, this.yt, Resources.getInstance().mapObjectDefs[grassKey]);
+                                    TilesMapTools.writeObjectRecord(tilesMap, this.xt, this.yt, Resources.getInstance().mapObjectDefs[key]);
                                     // console.log("Grass created on %d:%d", this.xt, this.yt);
                                 }
                             }

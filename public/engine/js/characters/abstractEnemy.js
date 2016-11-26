@@ -69,6 +69,9 @@ var Lich;
                                 }
                             }
                         }
+                        if (Math.random() * 10 > 8) {
+                            _this.movementTypeY = Lich.MovementTypeY.NONE;
+                        }
                     };
                     var nextX = 0;
                     var xJitter = Math.random() * Lich.Resources.TILE_SIZE * 2;

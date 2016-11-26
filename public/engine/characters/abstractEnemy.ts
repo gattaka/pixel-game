@@ -70,6 +70,9 @@ namespace Lich {
                                 }
                             }
                         }
+                        if (Math.random() * 10 > 8) {
+                            this.movementTypeY = MovementTypeY.NONE;
+                        }
                     };
 
                     let nextX = 0;
