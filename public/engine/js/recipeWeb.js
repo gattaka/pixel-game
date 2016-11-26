@@ -8,6 +8,20 @@ var Lich;
             Lich.INVENTORY_PATHS.forEach(function (path) {
                 _this.imgMap[path[1]] = path[0];
             });
+            this.printFullList(mainDiv);
+        }
+        RecipeWeb.prototype.createDiv = function (text) {
+            var div = document.createElement("div");
+            div.innerText = text;
+            return div;
+        };
+        RecipeWeb.prototype.createImage = function (item) {
+            var img = document.createElement("img");
+            img.src = this.imgMap[item];
+            return img;
+        };
+        RecipeWeb.prototype.printFullList = function (mainDiv) {
+            var _this = this;
             var lastWorkstation;
             var buildRecipe = function (json) {
                 var outerDiv = document.createElement("div");
@@ -36,16 +50,6 @@ var Lich;
             Lich.RECIPE_DEFS.forEach(function (recipe) {
                 buildRecipe(recipe);
             });
-        }
-        RecipeWeb.prototype.createDiv = function (text) {
-            var div = document.createElement("div");
-            div.innerText = text;
-            return div;
-        };
-        RecipeWeb.prototype.createImage = function (item) {
-            var img = document.createElement("img");
-            img.src = this.imgMap[item];
-            return img;
         };
         return RecipeWeb;
     }());

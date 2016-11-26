@@ -23,6 +23,10 @@ namespace Lich {
                 this.imgMap[path[1]] = path[0];
             });
 
+            this.printFullList(mainDiv);
+        }
+
+        private printFullList(mainDiv: HTMLDivElement) {
             let lastWorkstation: InventoryKey;
 
             let buildRecipe = (json) => {
