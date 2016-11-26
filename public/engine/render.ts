@@ -685,8 +685,8 @@ namespace Lich {
 
         private isForegroundFree(rx: number, ry: number, mapObj?: MapObjDefinition): boolean {
             if (mapObj) {
-                for (let x = 0; x < mapObj.mapSpriteWidth / 2; x++) {
-                    for (let y = 0; y < mapObj.mapSpriteHeight / 2; y++) {
+                for (let x = 0; x < mapObj.mapSpriteWidth; x += 2) {
+                    for (let y = 0; y < mapObj.mapSpriteHeight; y += 2) {
                         // je vkládáno odspoda
                         if (this.isForegroundFree(rx + x, ry - y) == false) return false;
                     }
