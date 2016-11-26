@@ -30,7 +30,7 @@ var Lich;
         ["images/parts/iron_ingot.png", Lich.MapObjectKey.MAP_IRON_INGOT_KEY],
         ["images/parts/iron_fence.png", Lich.MapObjectKey.MAP_IRON_FENCE_KEY],
         ["images/parts/fireplace.png", Lich.MapObjectKey.MAP_FIREPLACE_KEY],
-        ["images/parts/knight_statue_small.png", Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY],
+        ["images/parts/knight_statue.png", Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY],
         ["images/parts/banner.png", Lich.MapObjectKey.MAP_BANNER_KEY],
         ["images/parts/tree4.png", Lich.MapObjectKey.MAP_TREE4_KEY],
         ["images/parts/flower_pot.png", Lich.MapObjectKey.MAP_FLOWER_POT_KEY]
