@@ -975,15 +975,52 @@ namespace Lich {
             let xSign = xFullShift > 0 ? -1 : 1;
             let ySign = yFullShift > 0 ? -1 : 1;
 
+            let aSize, bSize;
+            let aSign, bSign;
+
+            if (xFullShift != 0) {
+                // pohybuju se po ose X
+                // vnější iterace A=X, vnitřní B=Y
+                aSize = reqFreeWidth;
+                bSize = reqFreeHeight;
+                aSign = xSign;
+                bSign = ySign;
+            } else {
+                // pohybuju se po ose Y, nebo je to stacionární kontrola 
+                // vnější iterace A=Y, vnitřní B=X
+                aSize = reqFreeHeight;
+                bSize = reqFreeWidth;
+                aSign = ySign;
+                bSign = xSign;
+            }
+
             // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
             // docíleno celého posunu (zabraňuje "teleportaci")
-            for (let yStep = 0; yStep < reqFreeHeight;) {
-                let yShift = yStep * ySign;
-                let yp = yStart + yShift;
+            // Mám osy A a B protože se jestli se iteruje po X,Y nebo Y,X
+            // záleží na ose směru
+            for (let aStep = 0; aStep < aSize;) {
+                let aShift = aStep * aSign;
 
-                for (let xStep = 0; xStep < reqFreeWidth;) {
-                    let xShift = xStep * xSign;
-                    let xp = xStart + xShift;
+                for (let bStep = 0; bStep < bSize;) {
+                    let bShift = bStep * bSign;
+
+                    let xStep, yStep;
+                    let xp, yp;
+                    if (xFullShift != 0) {
+                        // pohybuju se po ose X
+                        // vnější iterace A=X, vnitřní B=Y
+                        xStep = aStep;
+                        yStep = bStep;
+                        xp = xStart + aShift;
+                        yp = yStart + bShift;
+                    } else {
+                        // pohybuju se po ose Y, nebo je to stacionární kontrola 
+                        // vnější iterace A=Y, vnitřní B=X
+                        xStep = bStep;
+                        yStep = aStep;
+                        xp = xStart + bShift;
+                        yp = yStart + aShift;
+                    }
 
                     let result = collisionTester(xp, yp,
                         new CollisionTestContext(xFullShift, yFullShift, xStep, reqFreeWidth - xStep, yStep, reqFreeHeight - yStep));
@@ -1019,17 +1056,17 @@ namespace Lich {
                         }
                     }
 
-                    if (xStep == reqFreeWidth - 1) {
+                    if (bStep == bSize - 1) {
                         break;
                     } else {
-                        xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
+                        bStep = bStep + STEP >= bSize ? bSize - 1 : bStep + STEP;
                     }
                 }
 
-                if (yStep == reqFreeHeight - 1) {
+                if (aStep == aSize - 1) {
                     break;
                 } else {
-                    yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
+                    aStep = aStep + STEP >= aSize ? aSize - 1 : aStep + STEP;
                 }
             }
 

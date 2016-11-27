@@ -922,14 +922,50 @@ var Lich;
             }
             var xSign = xFullShift > 0 ? -1 : 1;
             var ySign = yFullShift > 0 ? -1 : 1;
+            var aSize, bSize;
+            var aSign, bSign;
+            if (xFullShift != 0) {
+                // pohybuju se po ose X
+                // vnější iterace A=X, vnitřní B=Y
+                aSize = reqFreeWidth;
+                bSize = reqFreeHeight;
+                aSign = xSign;
+                bSign = ySign;
+            }
+            else {
+                // pohybuju se po ose Y, nebo je to stacionární kontrola 
+                // vnější iterace A=Y, vnitřní B=X
+                aSize = reqFreeHeight;
+                bSize = reqFreeWidth;
+                aSign = ySign;
+                bSign = xSign;
+            }
             // Iteruj v kontrolách posuvu po STEP přírůstcích, dokud nebude
             // docíleno celého posunu (zabraňuje "teleportaci")
-            for (var yStep = 0; yStep < reqFreeHeight;) {
-                var yShift = yStep * ySign;
-                var yp = yStart + yShift;
-                for (var xStep = 0; xStep < reqFreeWidth;) {
-                    var xShift = xStep * xSign;
-                    var xp = xStart + xShift;
+            // Mám osy A a B protože se jestli se iteruje po X,Y nebo Y,X
+            // záleží na ose směru
+            for (var aStep = 0; aStep < aSize;) {
+                var aShift = aStep * aSign;
+                for (var bStep = 0; bStep < bSize;) {
+                    var bShift = bStep * bSign;
+                    var xStep = void 0, yStep = void 0;
+                    var xp = void 0, yp = void 0;
+                    if (xFullShift != 0) {
+                        // pohybuju se po ose X
+                        // vnější iterace A=X, vnitřní B=Y
+                        xStep = aStep;
+                        yStep = bStep;
+                        xp = xStart + aShift;
+                        yp = yStart + bShift;
+                    }
+                    else {
+                        // pohybuju se po ose Y, nebo je to stacionární kontrola 
+                        // vnější iterace A=Y, vnitřní B=X
+                        xStep = bStep;
+                        yStep = aStep;
+                        xp = xStart + bShift;
+                        yp = yStart + aShift;
+                    }
                     var result = collisionTester(xp, yp, new CollisionTestContext(xFullShift, yFullShift, xStep, reqFreeWidth - xStep, yStep, reqFreeHeight - yStep));
                     if (result.hit) {
                         if (result.collisionType == Lich.CollisionType.PLATFORM) {
@@ -957,18 +993,18 @@ var Lich;
                                 lastResult = result;
                         }
                     }
-                    if (xStep == reqFreeWidth - 1) {
+                    if (bStep == bSize - 1) {
                         break;
                     }
                     else {
-                        xStep = xStep + STEP >= reqFreeWidth ? reqFreeWidth - 1 : xStep + STEP;
+                        bStep = bStep + STEP >= bSize ? bSize - 1 : bStep + STEP;
                     }
                 }
-                if (yStep == reqFreeHeight - 1) {
+                if (aStep == aSize - 1) {
                     break;
                 }
                 else {
-                    yStep = yStep + STEP >= reqFreeHeight ? reqFreeHeight - 1 : yStep + STEP;
+                    aStep = aStep + STEP >= aSize ? aSize - 1 : aStep + STEP;
                 }
             }
             return lastResult;
