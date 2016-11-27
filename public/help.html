@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta charset="utf-8" />
+	<title>Lich Help</title>
+	<link rel="stylesheet" href="css/fonts.css" type="text/css" />
+	<link rel="stylesheet" href="css/help.css" type="text/css" />
+	<link rel="icon" href="favicon.png" />
+	<script src="engine/js/keys/inventoryKeys.js"></script>
+	<script src="engine/js/keys/miscKeys.js"></script>
+	<script src="engine/js/keys/mapObjectKeys.js"></script>
+	<script src="engine/js/paths/inventoryPaths.js"></script>
+	<script src="engine/js/paths/uiPaths.js"></script>
+	<script src="engine/js/definitions/recipeDefs.js"></script>
+	<script src="engine/js/recipeWeb.js"></script>
+</head>
+
+<body onload="new Lich.RecipeWeb();">
+
+	<div id="main-div">
+		<h1>Lich Help</h1>
+		<h2>Instructions</h2>
+		<table>
+			<thead>
+				<th>Key</th>
+				<th>Function</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td>ESC</td>
+					<td>Toggles main menu window</td>
+				</tr>
+				<tr>
+					<td>W or &#8593;</td>
+					<td>Jump or climb</td>
+				</tr>
+				<tr>
+					<td>A or &#8592;</td>
+					<td>Walk left</td>
+				</tr>
+				<tr>
+					<td>S or &#8594;</td>
+					<td>Walk right</td>
+				</tr>
+				<tr>
+					<td>D or &#8595;</td>
+					<td>Climb down</td>
+				</tr>
+				<tr>
+					<td>I</td>
+					<td>Toggle minimize inventory</td>
+				</tr>
+				<tr>
+					<td>C</td>
+					<td>Toggle crafting window</td>
+				</tr>
+				<tr>
+					<td>M</td>
+					<td>Toggle map</td>
+				</tr>
+				<tr>
+					<td>Left Mouse Button</td>
+					<td>Select item/spell</td>
+				</tr>
+				<tr>
+					<td>Left Mouse Button</td>
+					<td>Fire selected spell</td>
+				</tr>
+				<tr>
+					<td>Left Mouse Button</td>
+					<td>Place item</td>
+				</tr>
+				<tr>
+					<td>Left Mouse Button + SHIFT</td>
+					<td>Place item as background (surface)</td>
+				</tr>
+				<tr>
+					<td>Left Mouse Button + SHIFT</td>
+					<td>Place item as flipped variant (object)</td>
+				</tr>
+				<tr>
+					<td>Right Mouse Button</td>
+					<td>Interact with an object or open workstation</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2>Recipes</h2>
+		<div id="recipes-div" />
+	</div>
+</body>
+
+</html>

@@ -36,6 +36,7 @@ namespace Lich {
             version.addChange("Banners introduced");
             version.addChange("Krystal and florite sprites improved");
             version.addChange("Flower pot introduced");
+            version.addChange("Help file created ('?' Button)");
             this.addVersion(version);
 
             version = new Version("0.10");
@@ -236,19 +237,6 @@ namespace Lich {
             super.addChild(this.cont);
 
             // Instrukce
-            self.lines.push("== INSTRUCTIONS ==");
-            self.lines.push(" ");
-            self.lines.push("- Press <ESC> to toggle this window");
-            self.lines.push("- Press <W>, <A>, <S>, <D> or arrow keys to move");
-            self.lines.push("- Press <I> to minimize inventory");
-            self.lines.push("- Press <C> to toggle crafting window");
-            self.lines.push("- Press <M> to toggle map");
-            self.lines.push("- Select item from inventory by <LMB> and hand skill to place on map");
-            self.lines.push("- Press <LMB> to dig, place or attack");
-            self.lines.push("- Press <RMB> to interact with an object or workstation");
-            self.lines.push("- Hold <SHIFT> to toggle between surface and wall digging/placing");
-            self.lines.push("- Hold <SHIFT> to toggle between object alternatives placing");
-            self.lines.push(" ");
             self.lines.push("== CHANGELOG ==");
             self.lines.push(" ");
 

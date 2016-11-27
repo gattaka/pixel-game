@@ -1,0 +1,58 @@
+html, body {
+	/*width: 100%;*/
+	height: 100%;
+}
+
+body {
+	font-family: expressway, sans-serif;
+	padding: 20px 10px;
+	background-image: url(../helpBgr.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-attachment: fixed;
+}
+
+table {
+	width: 100%;
+}
+
+table tr >td:first-child {
+	text-align: center;
+}
+
+h1 {
+	text-align: center;
+}
+
+#main-div {
+	margin-left: auto;
+	margin-right: auto;
+	width: 810px;
+	background: rgba(200,200,200,0.8);
+	padding: 2px 15px;
+}
+
+#recipes-div {
+	padding: 10px;
+}
+
+.outer-recipe-div {
+	margin-bottom: 5px;
+}
+
+.recipe-div {
+	display: table-row;
+}
+
+.recipe-div > div, .recipe-div > img {
+    vertical-align: middle;
+	margin: 0 5px;
+}
+
+.recipe-div > div {
+	font-size: 22px;
+    font-weight: bold;
+	display: table-cell;
+    width: 20px;
+    text-align: center;
+}

@@ -13,6 +13,7 @@ namespace Lich {
         ["images/ui/load.png", UIGFXKey.UI_LOAD_KEY],
         ["images/ui/save.png", UIGFXKey.UI_SAVE_KEY],
         ["images/ui/new_world.png", UIGFXKey.UI_NEW_WORLD_KEY],
+        ["images/ui/help.png", UIGFXKey.UI_HELP_KEY],
         // armor
         ["images/armor/helmet.png", UIGFXKey.HELMET_KEY],
         ["images/armor/torso.png", UIGFXKey.TORSO_KEY],

@@ -14,6 +14,7 @@ var Lich;
         ["images/ui/load.png", Lich.UIGFXKey.UI_LOAD_KEY],
         ["images/ui/save.png", Lich.UIGFXKey.UI_SAVE_KEY],
         ["images/ui/new_world.png", Lich.UIGFXKey.UI_NEW_WORLD_KEY],
+        ["images/ui/help.png", Lich.UIGFXKey.UI_HELP_KEY],
         // armor
         ["images/armor/helmet.png", Lich.UIGFXKey.HELMET_KEY],
         ["images/armor/torso.png", Lich.UIGFXKey.TORSO_KEY],

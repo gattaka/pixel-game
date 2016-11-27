@@ -44,7 +44,8 @@ namespace Lich {
         UI_CRAFT_KEY,
         UI_SAVE_KEY,
         UI_LOAD_KEY,
-        UI_NEW_WORLD_KEY
+        UI_NEW_WORLD_KEY,
+        UI_HELP_KEY
     }
 
     export enum SpellKey {

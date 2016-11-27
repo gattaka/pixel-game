@@ -4,7 +4,7 @@ var Lich;
         function RecipeWeb() {
             var _this = this;
             this.imgMap = {};
-            var mainDiv = document.getElementById("main-div");
+            var mainDiv = document.getElementById("recipes-div");
             Lich.INVENTORY_PATHS.forEach(function (path) {
                 _this.imgMap[path[1]] = path[0];
             });

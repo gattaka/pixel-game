@@ -46,6 +46,7 @@ var Lich;
         UIGFXKey[UIGFXKey["UI_SAVE_KEY"] = 12] = "UI_SAVE_KEY";
         UIGFXKey[UIGFXKey["UI_LOAD_KEY"] = 13] = "UI_LOAD_KEY";
         UIGFXKey[UIGFXKey["UI_NEW_WORLD_KEY"] = 14] = "UI_NEW_WORLD_KEY";
+        UIGFXKey[UIGFXKey["UI_HELP_KEY"] = 15] = "UI_HELP_KEY";
     })(Lich.UIGFXKey || (Lich.UIGFXKey = {}));
     var UIGFXKey = Lich.UIGFXKey;
     (function (SpellKey) {

@@ -11,6 +11,15 @@ var Lich;
             _super.call(this);
             this.canvas = canvas;
             var self = this;
+            // Help btn
+            var helpBtn = new Button(Lich.UIGFXKey.UI_HELP_KEY);
+            self.addChild(helpBtn);
+            helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+            helpBtn.y = UI.SCREEN_SPACING;
+            helpBtn.on("mousedown", function (evt) {
+                window.open("help.html", "_blank");
+            }, null, false);
+            self.helpBtn = helpBtn;
             // Debug and loging
             self.debugUI = new Lich.DebugLogUI(400, 0);
             self.debugUI.x = UI.SCREEN_SPACING;

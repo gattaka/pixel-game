@@ -16,10 +16,22 @@ namespace Lich {
 
         splashScreenUI: SplashScreenUI;
 
+        helpBtn: Button;
+
         constructor(public canvas: HTMLCanvasElement, tilesMap: TilesMap) {
             super();
 
             let self = this;
+
+            // Help btn
+            let helpBtn = new Button(UIGFXKey.UI_HELP_KEY);
+            self.addChild(helpBtn);
+            helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+            helpBtn.y = UI.SCREEN_SPACING;
+            helpBtn.on("mousedown", function (evt) {
+                window.open("help.html", "_blank");
+            }, null, false);
+            self.helpBtn = helpBtn;
 
             // Debug and loging
             self.debugUI = new DebugLogUI(400, 0);

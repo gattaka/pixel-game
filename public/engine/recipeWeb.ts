@@ -17,7 +17,7 @@ namespace Lich {
         }
 
         constructor() {
-            let mainDiv = <HTMLDivElement>document.getElementById("main-div");
+            let mainDiv = <HTMLDivElement>document.getElementById("recipes-div");
 
             INVENTORY_PATHS.forEach((path) => {
                 this.imgMap[path[1]] = path[0];
