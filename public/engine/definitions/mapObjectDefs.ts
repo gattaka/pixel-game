@@ -84,6 +84,7 @@ namespace Lich {
             }).setCollision(true),
         new MapObjDefinition(MapObjectKey.MAP_KNIGHT_STATUE_KEY, 4, 6, InventoryKey.INV_KNIGHT_STATUE_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_BANNER_KEY, 2, 4, InventoryKey.INV_BANNER_KEY, 1, 0),
-        new MapObjDefinition(MapObjectKey.MAP_FLOWER_POT_KEY, 2, 2, InventoryKey.INV_FLOWER_POT_KEY, 1, 0)
+        new MapObjDefinition(MapObjectKey.MAP_FLOWER_POT_KEY, 2, 2, InventoryKey.INV_FLOWER_POT_KEY, 1, 0),
+        new MapObjDefinition(MapObjectKey.MAP_CHANDELIER_KEY, 4, 2, InventoryKey.INV_CHANDELIER_KEY, 1, 0)
     ]
 }
