@@ -411,8 +411,8 @@ namespace Lich {
         public cast(context: SpellContext): boolean {
             Mixer.playSound(SoundKey.SND_GHOUL_SPAWN_KEY);
 
-            // SpawnPool !
-            SpawnPool.getInstance().spawn(Enemy.Redskull, context.game.getWorld())
+            // SpawnPool.getInstance().spawn(Enemy.Redskull, context.game.getWorld())
+            SpawnPool.getInstance().spawn(Enemy.Chicken, context.game.getWorld())
 
             return true;
         }

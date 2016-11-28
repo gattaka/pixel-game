@@ -24,7 +24,8 @@ namespace Lich {
         LICH_ANIMATION_KEY,
         CORPSE_ANIMATION_KEY,
         HELLHOUND_ANIMATION_KEY,
-        BOLT_ANIMATION_KEY
+        BOLT_ANIMATION_KEY,
+        CHICKEN_ANIMATION_KEY
     }
 
     export enum UIGFXKey {

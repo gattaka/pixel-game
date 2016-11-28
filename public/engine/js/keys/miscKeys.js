@@ -26,6 +26,7 @@ var Lich;
         AnimationKey[AnimationKey["CORPSE_ANIMATION_KEY"] = 3] = "CORPSE_ANIMATION_KEY";
         AnimationKey[AnimationKey["HELLHOUND_ANIMATION_KEY"] = 4] = "HELLHOUND_ANIMATION_KEY";
         AnimationKey[AnimationKey["BOLT_ANIMATION_KEY"] = 5] = "BOLT_ANIMATION_KEY";
+        AnimationKey[AnimationKey["CHICKEN_ANIMATION_KEY"] = 6] = "CHICKEN_ANIMATION_KEY";
     })(Lich.AnimationKey || (Lich.AnimationKey = {}));
     var AnimationKey = Lich.AnimationKey;
     (function (UIGFXKey) {

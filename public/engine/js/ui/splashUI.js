@@ -24,6 +24,7 @@ var Lich;
             version = new Version("0.12");
             version.addChange("Gold introduced");
             version.addChange("Chandelier introduced");
+            version.addChange("Chickens!");
             this.addVersion(version);
             version = new Version("0.11");
             version.addChange("Skewed surfaces movement");
