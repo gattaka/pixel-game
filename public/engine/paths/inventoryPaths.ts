@@ -43,6 +43,8 @@ namespace Lich {
         ["images/ui/inventory/inv_knight_statue.png", InventoryKey.INV_KNIGHT_STATUE_KEY],
         ["images/ui/inventory/inv_chain_ladder.png", InventoryKey.INV_CHAIN_LADDER_KEY],
         ["images/ui/inventory/inv_banner.png", InventoryKey.INV_BANNER_KEY],
-        ["images/ui/inventory/inv_flower_pot.png", InventoryKey.INV_FLOWER_POT_KEY]
+        ["images/ui/inventory/inv_flower_pot.png", InventoryKey.INV_FLOWER_POT_KEY],
+        ["images/ui/inventory/inv_chandelier.png", InventoryKey.INV_CHANDELIER_KEY],
+        ["images/ui/inventory/inv_gold.png", InventoryKey.INV_GOLD_ORE_KEY]
     ]
 }

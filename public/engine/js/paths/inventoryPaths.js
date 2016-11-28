@@ -44,6 +44,8 @@ var Lich;
         ["images/ui/inventory/inv_knight_statue.png", Lich.InventoryKey.INV_KNIGHT_STATUE_KEY],
         ["images/ui/inventory/inv_chain_ladder.png", Lich.InventoryKey.INV_CHAIN_LADDER_KEY],
         ["images/ui/inventory/inv_banner.png", Lich.InventoryKey.INV_BANNER_KEY],
-        ["images/ui/inventory/inv_flower_pot.png", Lich.InventoryKey.INV_FLOWER_POT_KEY]
+        ["images/ui/inventory/inv_flower_pot.png", Lich.InventoryKey.INV_FLOWER_POT_KEY],
+        ["images/ui/inventory/inv_chandelier.png", Lich.InventoryKey.INV_CHANDELIER_KEY],
+        ["images/ui/inventory/inv_gold.png", Lich.InventoryKey.INV_GOLD_ORE_KEY]
     ];
 })(Lich || (Lich = {}));

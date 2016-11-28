@@ -19,7 +19,7 @@ namespace Lich {
 
     export class TilesMapGenerator {
 
-        public static WORLD_FORMAT_VERSION: number = 1.3
+        public static WORLD_FORMAT_VERSION: number = 1.4;
 
         // musí být sudé
         static DEFAULT_MAP_WIDTH = 2000;
@@ -131,6 +131,11 @@ namespace Lich {
                 }
             }
 
+            if (!data.version || data.version < 1.4) {
+                TilesMapGenerator.seedSurface(tilesMap, Resources.getInstance().mapSurfaceDefs[SurfaceKey.SRFC_GOLD_ORE_KEY]);
+                TilesMapGenerator.sealMap(tilesMap);
+            }
+
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Objects"));
 
             for (let v = 0; v < data.obj.length; v += 3) {
@@ -147,6 +152,97 @@ namespace Lich {
             return tilesMap;
         }
 
+        private static seedSurface(tilesMap: TilesMap, definition: MapSurfaceDefinition) {
+            let depositP = tilesMap.width * tilesMap.height * 0.005;
+            let cooldown = definition.seedCooldown;
+            for (let i = 0; i < depositP; i++) {
+                if (cooldown-- <= 0) {
+                    let depositX = Math.floor(Math.random() * tilesMap.width);
+                    let depositY = Math.floor(Math.random() * tilesMap.height);
+                    if ((depositY / tilesMap.height) > (definition.minDepth / 100)
+                        && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
+                        let dia = Math.floor(Math.random() * definition.maxSize) + 2;
+                        TilesMapGenerator.createDeposit(tilesMap, depositX, depositY, dia, definition.srfcKey);
+                        cooldown = definition.seedCooldown;
+                    }
+                }
+            }
+        }
+
+        private static createDeposit(tilesMap: TilesMap, x0: number, y0: number, d0: number, oreKey: SurfaceKey) {
+            let d = Utils.even(d0);
+            let x = Utils.even(x0);
+            let y = Utils.even(y0);
+            // musí skákat po dvou, aby se zabránilo zubatosti
+            for (let _y = y - d; _y <= y + d; _y += 2) {
+                for (let _x = x - d; _x <= x + d; _x += 2) {
+
+                    // osazuj v kruzích
+                    let r2 = Math.pow(x - _x, 2) + Math.pow(y - _y, 2);
+                    let d2 = Math.pow(d, 2);
+                    if (r2 <= d2) {
+                        let posIndex = tilesMap.mapRecord.getValue(_x, _y);
+                        if (posIndex != SurfacePositionKey.VOID) {
+                            // protože skáču po dvou, musím udělat vždy v každé
+                            // ose dva zápisy, jinak by vznikla mřížka
+                            for (let __x = _x; __x <= _x + 1; __x++) {
+                                for (let __y = _y; __y <= _y + 1; __y++) {
+                                    // nahradí aktuální dílek dílkem daného minerálu
+                                    // přičemž zachová pozici dílku
+                                    tilesMap.mapRecord.setValue(__x, __y, Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(__x, __y, oreKey));
+                                }
+                            }
+
+                            for (let __x = _x - 1; __x <= _x + 2; __x++) {
+                                for (let __y = _y - 1; __y <= _y + 2; __y++) {
+                                    let val = tilesMap.mapRecord.getValue(__x, __y);
+                                    if (val != null) {
+                                        if (val !== SurfacePositionKey.VOID) {
+                                            let srfcType = Resources.getInstance().surfaceIndex.getType(val);
+                                            // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
+                                            if (__x === _x - 1 || __x === _x + 2 || __y === _y - 1 || __y === _y + 2) {
+                                                // okraje vyresetuj
+                                                tilesMap.mapRecord.setValue(__x, __y,
+                                                    Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(__x, __y, srfcType));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // občas udělej na okraji ložiska... ložisko
+                    if (_x === x + d || _x === x - d || _y === y + d || _y === y - d) {
+                        if (Math.random() > 0.5) {
+                            let auxX = _x;
+                            let auxY = _y;
+                            if (_x === x + d)
+                                auxX -= 2;
+                            if (_y === y + d)
+                                auxY -= 2;
+                            TilesMapGenerator.createDeposit(tilesMap, auxX, auxY, d - 2, oreKey);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static sealMap(tilesMap: TilesMap) {
+            // hrany
+            for (let y = 0; y < tilesMap.height; y++) {
+                for (let x = 0; x < tilesMap.width; x++) {
+                    TilesMapTools.generateEdge(tilesMap.mapRecord, x, y, false);
+                }
+            }
+
+            // rohy
+            for (let y = 0; y < tilesMap.height; y++) {
+                for (let x = 0; x < tilesMap.width; x++) {
+                    TilesMapTools.generateCorner(tilesMap.mapRecord, x, y, false);
+                }
+            }
+        }
+
         public static createNew(
             width = TilesMapGenerator.DEFAULT_MAP_WIDTH,
             height = TilesMapGenerator.DEFAULT_MAP_HEIGHT,
@@ -154,16 +250,6 @@ namespace Lich {
 
             var tilesMap = new TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             let mass = tilesMap.height * tilesMap.width;
-
-            let progress = 0;
-            let total = tilesMap.height // ground 
-                + mass * 0.001 // holes
-                + mass * 0.005 // ore
-                + tilesMap.height // edges
-                + tilesMap.height // corners
-                + tilesMap.height; // objects
-
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Surface prepare"));
 
             // hills profile
             let hills = new Array<number>();
@@ -212,10 +298,7 @@ namespace Lich {
                         );
                     });
                 }
-                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, (progress += 2) / total));
             }
-
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating holes"));
 
             // Holes
             (function () {
@@ -261,75 +344,12 @@ namespace Lich {
                     let holeX = Math.floor(Math.random() * tilesMap.width);
                     let holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
 
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Seeding ore"));
 
             // Minerály 
             (function () {
-                let createDeposit = function (x0: number, y0: number, d0: number, oreKey: SurfaceKey) {
-                    let tilesToReset = new Array<[number, number]>();
-                    let d = Utils.even(d0);
-                    let x = Utils.even(x0);
-                    let y = Utils.even(y0);
-                    // musí skákat po dvou, aby se zabránilo zubatosti
-                    for (let _y = y - d; _y <= y + d; _y += 2) {
-                        for (let _x = x - d; _x <= x + d; _x += 2) {
-
-                            // osazuj v kruzích
-                            let r2 = Math.pow(x - _x, 2) + Math.pow(y - _y, 2);
-                            let d2 = Math.pow(d, 2);
-                            if (r2 <= d2) {
-                                let posIndex = tilesMap.mapRecord.getValue(_x, _y);
-                                if (posIndex != SurfacePositionKey.VOID) {
-                                    // protože skáču po dvou, musím udělat vždy v každé
-                                    // ose dva zápisy, jinak by vznikla mřížka
-                                    for (let __x = _x; __x <= _x + 1; __x++) {
-                                        for (let __y = _y; __y <= _y + 1; __y++) {
-                                            // nahradí aktuální dílek dílkem daného minerálu
-                                            // přičemž zachová pozici dílku
-                                            tilesMap.mapRecord.setValue(__x, __y, Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(__x, __y, oreKey));
-                                        }
-                                    }
-
-                                    for (let __x = _x - 1; __x <= _x + 2; __x++) {
-                                        for (let __y = _y - 1; __y <= _y + 2; __y++) {
-                                            let val = tilesMap.mapRecord.getValue(__x, __y);
-                                            if (val != null) {
-                                                if (val !== SurfacePositionKey.VOID) {
-                                                    let srfcType = Resources.getInstance().surfaceIndex.getType(val);
-                                                    // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
-                                                    if (__x === _x - 1 || __x === _x + 2 || __y === _y - 1 || __y === _y + 2) {
-                                                        // okraje vyresetuj
-                                                        tilesMap.mapRecord.setValue(__x, __y,
-                                                            Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(__x, __y, srfcType));
-                                                    }
-                                                    tilesToReset.push([__x, __y]);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            // občas udělej na okraji ložiska... ložisko
-                            if (_x === x + d || _x === x - d || _y === y + d || _y === y - d) {
-                                if (Math.random() > 0.5) {
-                                    let auxX = _x;
-                                    let auxY = _y;
-                                    if (_x === x + d)
-                                        auxX -= 2;
-                                    if (_y === y + d)
-                                        auxY -= 2;
-                                    createDeposit(auxX, auxY, d - 2, oreKey);
-                                }
-                            }
-                        }
-                    }
-
-                };
-
                 // random deposit
                 let depositP = mass * 0.005;
                 for (let i = 0; i < depositP; i++) {
@@ -340,40 +360,15 @@ namespace Lich {
                         if ((depositY / tilesMap.height) > (definition.minDepth / 100)
                             && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
                             let dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                            createDeposit(depositX, depositY, dia, definition.srfcKey);
+                            TilesMapGenerator.createDeposit(tilesMap, depositX, depositY, dia, definition.srfcKey);
                             return true;
                         }
                         return false;
                     });
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
             })();
 
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating surface edges"));
-
-            // hrany
-            (function () {
-                for (var y = 0; y < tilesMap.height; y++) {
-                    for (var x = 0; x < tilesMap.width; x++) {
-                        TilesMapTools.generateEdge(tilesMap.mapRecord, x, y, false);
-                    }
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
-                }
-            })();
-
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating surface corners"));
-
-            // rohy
-            (function () {
-                for (var y = 0; y < tilesMap.height; y++) {
-                    for (var x = 0; x < tilesMap.width; x++) {
-                        TilesMapTools.generateCorner(tilesMap.mapRecord, x, y, false);
-                    }
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
-                }
-            })();
-
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating objects"));
+            TilesMapGenerator.sealMap(tilesMap);
 
             // objekty 
             (function () {
@@ -411,11 +406,8 @@ namespace Lich {
                             });
                         }
                     }
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, (progress += 2) / total));
                 }
             })();
-
-            EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
 
             return tilesMap;
 

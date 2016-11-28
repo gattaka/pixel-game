@@ -43,6 +43,8 @@ namespace Lich {
         INV_KNIGHT_STATUE_KEY,
         INV_CHAIN_LADDER_KEY,
         INV_BANNER_KEY,
-        INV_FLOWER_POT_KEY
+        INV_FLOWER_POT_KEY,
+        INV_CHANDELIER_KEY,
+        INV_GOLD_ORE_KEY
     }
 }

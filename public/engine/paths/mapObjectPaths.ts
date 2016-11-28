@@ -32,6 +32,7 @@ namespace Lich {
         ["images/parts/knight_statue.png", MapObjectKey.MAP_KNIGHT_STATUE_KEY],
         ["images/parts/banner.png", MapObjectKey.MAP_BANNER_KEY],
         ["images/parts/tree4.png", MapObjectKey.MAP_TREE4_KEY],
-        ["images/parts/flower_pot.png", MapObjectKey.MAP_FLOWER_POT_KEY]
+        ["images/parts/flower_pot.png", MapObjectKey.MAP_FLOWER_POT_KEY],
+        ["images/parts/chandelier.png", MapObjectKey.MAP_CHANDELIER_KEY]
     ];
 }

@@ -21,6 +21,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_KNIGHT_STATUE_KEY, res.mapObjectDefs[MapObjectKey.MAP_KNIGHT_STATUE_KEY]),
             new InvObjDefinition(InventoryKey.INV_BANNER_KEY, res.mapObjectDefs[MapObjectKey.MAP_BANNER_KEY]),
             new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
+            new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
 
@@ -51,7 +52,8 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY]),
-            new InvObjDefinition(InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_CHAIN_LADDER_KEY])
+            new InvObjDefinition(InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_CHAIN_LADDER_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_ORE_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_GOLD_ORE_KEY])
         ];
     }
 }

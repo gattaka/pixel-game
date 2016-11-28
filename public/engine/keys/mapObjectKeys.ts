@@ -32,6 +32,7 @@ namespace Lich {
         MAP_KNIGHT_STATUE_KEY,
         MAP_BANNER_KEY,
         MAP_TREE4_KEY,
-        MAP_FLOWER_POT_KEY
+        MAP_FLOWER_POT_KEY,
+        MAP_CHANDELIER_KEY
     }
 }

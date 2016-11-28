@@ -5,6 +5,7 @@ namespace Lich {
         new MapSurfaceDefinition(SurfaceKey.SRFC_DIRT_KEY, InventoryKey.INV_DIRT_KEY, 1, 0),
         new MapSurfaceDefinition(SurfaceKey.SRFC_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1, 0),
         new MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 10).setDepth(50, 100),
+        new MapSurfaceDefinition(SurfaceKey.SRFC_GOLD_ORE_KEY, InventoryKey.INV_GOLD_ORE_KEY, 1, 40).setDepth(20, 80),
         new MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 10).setDepth(70, 100),
         new MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICK_KEY, 1, 0),
         new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_KEY, InventoryKey.INV_ROCK_BRICK_KEY, 1, 0),

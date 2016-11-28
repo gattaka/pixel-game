@@ -23,6 +23,11 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.12");
+            version.addChange("Gold introduced");
+            version.addChange("Chandelier introduced");
+            this.addVersion(version);
+
             version = new Version("0.11");
             version.addChange("Skewed surfaces movement");
             version.addChange("Skewed roof surface");
@@ -36,7 +41,7 @@ namespace Lich {
             version.addChange("Banners introduced");
             version.addChange("Krystal and florite sprites improved");
             version.addChange("Flower pot introduced");
-            version.addChange("Help file created ('?' Button)");
+            version.addChange("Help file created (? Button)");
             this.addVersion(version);
 
             version = new Version("0.10");

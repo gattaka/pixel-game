@@ -21,6 +21,7 @@ var Lich;
         ["images/surfaces/rock_brick_tr.png", Lich.SurfaceKey.SRFC_ROCK_BRICK_TR_KEY],
         ["images/surfaces/rock_brick_bl.png", Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY],
         ["images/surfaces/rock_brick_br.png", Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY],
-        ["images/surfaces/chain_ladder.png", Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY]
+        ["images/surfaces/chain_ladder.png", Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY],
+        ["images/surfaces/gold.png", Lich.SurfaceKey.SRFC_GOLD_ORE_KEY]
     ];
 })(Lich || (Lich = {}));

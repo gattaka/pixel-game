@@ -22,6 +22,7 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_KNIGHT_STATUE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_BANNER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BANNER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]),
             // usaditelných jako povrch
@@ -51,7 +52,8 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY])
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_ORE_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_GOLD_ORE_KEY])
         ];
     };
 })(Lich || (Lich = {}));
