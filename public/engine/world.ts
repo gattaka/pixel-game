@@ -116,13 +116,6 @@ namespace Lich {
                 });
         }
 
-        resetPlayer() {
-            this.hero.fillHealth(this.hero.getMaxHealth());
-            this.hero.fillWill(this.hero.getMaxWill());
-            this.hero.idle();
-            this.placePlayerOnSpawnPoint();
-        }
-
         showDeadInfo() {
             let self = this;
 
@@ -257,6 +250,8 @@ namespace Lich {
             // teleportování 1px nad zemí pak dokáže i zabít :)  
             hero.speedx = 0;
             hero.speedy = 0;
+            this.hero.isClimbing = false;
+            this.hero.play();
             let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
             let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
             let pCoord;
@@ -299,6 +294,13 @@ namespace Lich {
                 }
             }
             self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+        }
+
+        resetPlayer() {
+            this.hero.fillHealth(this.hero.getMaxHealth());
+            this.hero.fillWill(this.hero.getMaxWill());
+            this.hero.idle();
+            this.placePlayerOnSpawnPoint();
         }
 
         /**

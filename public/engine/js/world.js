@@ -101,12 +101,6 @@ var Lich;
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
             });
         };
-        World.prototype.resetPlayer = function () {
-            this.hero.fillHealth(this.hero.getMaxHealth());
-            this.hero.fillWill(this.hero.getMaxWill());
-            this.hero.idle();
-            this.placePlayerOnSpawnPoint();
-        };
         World.prototype.showDeadInfo = function () {
             var self = this;
             var deadInfo = new createjs.Container();
@@ -232,6 +226,8 @@ var Lich;
             // teleportování 1px nad zemí pak dokáže i zabít :)  
             hero.speedx = 0;
             hero.speedy = 0;
+            this.hero.isClimbing = false;
+            this.hero.play();
             var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
             var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
             var pCoord;
@@ -279,6 +275,12 @@ var Lich;
                 }
             }
             self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+        };
+        World.prototype.resetPlayer = function () {
+            this.hero.fillHealth(this.hero.getMaxHealth());
+            this.hero.fillWill(this.hero.getMaxWill());
+            this.hero.idle();
+            this.placePlayerOnSpawnPoint();
         };
         /**
          * Udává, o kolik se má ve scéně posunout svět, záporné shiftX tedy posouvá
