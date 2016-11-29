@@ -45,6 +45,7 @@ namespace Lich {
         INV_BANNER_KEY,
         INV_FLOWER_POT_KEY,
         INV_CHANDELIER_KEY,
-        INV_GOLD_ORE_KEY
+        INV_GOLD_ORE_KEY,
+        INV_CHICKEN_MEAT_KEY
     }
 }

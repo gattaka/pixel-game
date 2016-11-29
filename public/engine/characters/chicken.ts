@@ -115,8 +115,7 @@ namespace Lich {
                     case 1: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_2); break;
                     case 2: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_3); break;
                 }
-                // TODO meat
-                world.spawnObject(new DugObjDefinition(InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
+                world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 2), this.x, this.y, false);
                 world.fadeEnemy(this);
             }
 

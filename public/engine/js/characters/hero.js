@@ -10,7 +10,7 @@ var Lich;
         function Hero() {
             _super.call(this, 56, // WIDTH
             80, // HEIGHT 
-            18, // COLLXOFFSET
+            20, // COLLXOFFSET
             12, // COLLYOFFSET
             // 0,
             // 0,

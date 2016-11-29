@@ -123,8 +123,7 @@ var Lich;
                         Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_DEAD_3);
                         break;
                 }
-                // TODO meat
-                world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
+                world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, 2), this.x, this.y, false);
                 world.fadeEnemy(this);
             };
             Chicken.prototype.hit = function (damage, world) {
