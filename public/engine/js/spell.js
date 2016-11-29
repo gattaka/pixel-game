@@ -214,7 +214,7 @@ var Lich;
         TeleportSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
             Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
-            world.hero.performState(Lich.CharacterState.TELEPORT);
+            world.hero.performState(Lich.Hero.TELEPORT);
             // world.placePlayerOnSpawnPoint();
             setTimeout(function () {
                 world.placePlayerOnSpawnPoint();

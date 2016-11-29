@@ -16,23 +16,44 @@ var Lich;
                 80, // HEIGHT 
                 14, // COLLXOFFSET
                 12, // COLLYOFFSET
-                Lich.AnimationKey.CORPSE_ANIMATION_KEY, Lich.CharacterState.IDLE, 40, // frames
-                200, // HERO_HORIZONTAL_SPEED
-                500, // HERO_VERTICAL_SPEED
+                Lich.AnimationKey.CORPSE_ANIMATION_KEY, Redskull.IDLE, 40, // frames
+                200, // Redskull_HORIZONTAL_SPEED
+                500, // Redskull_VERTICAL_SPEED
                 new Lich.Animations()
-                    .add(Lich.CharacterState.IDLE, 0, 0, Lich.CharacterState.BREATH, 0.005)
-                    .add(Lich.CharacterState.BREATH, 1, 1, Lich.CharacterState.IDLE, 0.04)
-                    .add(Lich.CharacterState.WALKR, 2, 9, Lich.CharacterState.WALKR, 0.2)
-                    .add(Lich.CharacterState.WALKL, 10, 17, Lich.CharacterState.WALKL, 0.2)
-                    .add(Lich.CharacterState.JUMP, 18, 19, Lich.CharacterState.MIDAIR, 0.2)
-                    .add(Lich.CharacterState.MIDAIR, 19, 19, Lich.CharacterState.MIDAIR, 0.2)
-                    .add(Lich.CharacterState.FALL, 19, 23, Lich.CharacterState.IDLE, 0.2)
-                    .add(Lich.CharacterState.JUMPR, 25, 25, Lich.CharacterState.JUMPR, 0.2)
-                    .add(Lich.CharacterState.JUMPL, 27, 27, Lich.CharacterState.JUMPL, 0.2)
-                    .add(Lich.CharacterState.DIE, 28, 28, Lich.CharacterState.DEAD, 0.2)
-                    .add(Lich.CharacterState.DEAD, 29, 29, Lich.CharacterState.DEAD, 0.2)
-                    .add(Lich.CharacterState.CLIMB, 37, 39, Lich.CharacterState.CLIMB, 0.3));
+                    .add(Redskull.IDLE, 0, 0, Redskull.BREATH, 0.005)
+                    .add(Redskull.BREATH, 1, 1, Redskull.IDLE, 0.04)
+                    .add(Redskull.WALKR, 2, 9, Redskull.WALKR, 0.3)
+                    .add(Redskull.WALKL, 10, 17, Redskull.WALKL, 0.3)
+                    .add(Redskull.JUMP, 18, 19, Redskull.MIDAIR, 0.2)
+                    .add(Redskull.MIDAIR, 19, 19, Redskull.MIDAIR, 0.2)
+                    .add(Redskull.FALL, 19, 23, Redskull.IDLE, 0.2)
+                    .add(Redskull.JUMPR, 25, 25, Redskull.JUMPR, 0.2)
+                    .add(Redskull.JUMPL, 27, 27, Redskull.JUMPL, 0.2)
+                    .add(Redskull.DIE, 28, 28, Redskull.DEAD, 0.2)
+                    .add(Redskull.DEAD, 29, 29, Redskull.DEAD, 0.2)
+                    .add(Redskull.TELEPORT, 30, 36, Redskull.IDLE, 1.0)
+                    .add(Redskull.CLIMB, 37, 39, Redskull.CLIMB, 0.3));
             }
+            Redskull.prototype.walkL = function () { this.performState(Redskull.WALKL); };
+            ;
+            Redskull.prototype.walkR = function () { this.performState(Redskull.WALKR); };
+            ;
+            Redskull.prototype.idle = function () { this.performState(Redskull.IDLE); };
+            ;
+            Redskull.prototype.climb = function () { this.performState(Redskull.CLIMB); };
+            ;
+            Redskull.prototype.jump = function () { this.performState(Redskull.JUMP); };
+            ;
+            Redskull.prototype.jumpR = function () { this.performState(Redskull.JUMPR); };
+            ;
+            Redskull.prototype.jumpL = function () { this.performState(Redskull.JUMPL); };
+            ;
+            Redskull.prototype.midair = function () { this.performState(Redskull.MIDAIR); };
+            ;
+            Redskull.prototype.fall = function () { this.performState(Redskull.FALL); };
+            ;
+            Redskull.prototype.death = function () { this.performState(Redskull.DIE); };
+            ;
             Redskull.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SKELETON_DIE_KEY);
@@ -46,6 +67,19 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
+            Redskull.IDLE = "IDLE";
+            Redskull.BREATH = "BREATH";
+            Redskull.WALKR = "WALKR";
+            Redskull.WALKL = "WALKL";
+            Redskull.JUMP = "JUMP";
+            Redskull.MIDAIR = "MIDAIR";
+            Redskull.FALL = "FALL";
+            Redskull.JUMPR = "JUMPR";
+            Redskull.JUMPL = "JUMPL";
+            Redskull.DIE = "DIE";
+            Redskull.DEAD = "DEAD";
+            Redskull.TELEPORT = "TELEPORT";
+            Redskull.CLIMB = "CLIMB";
             return Redskull;
         }(Lich.AbstractEnemy));
         Enemy.Redskull = Redskull;

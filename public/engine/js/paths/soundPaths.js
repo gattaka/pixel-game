@@ -1,9 +1,9 @@
 var Lich;
 (function (Lich) {
     Lich.SOUND_PATHS = [
-        ["sound/334234__liamg-sfx__fireball-cast-1.ogg", Lich.SoundKey.SND_FIREBALL_KEY],
-        ["sound/113111__satrebor__pick.ogg", Lich.SoundKey.SND_PICK_KEY],
-        ["sound/248116__robinhood76__05224-fireball-whoosh.ogg", Lich.SoundKey.SND_BURN_KEY],
+        ["sound/fireball_cast.ogg", Lich.SoundKey.SND_FIREBALL_KEY],
+        ["sound/pick.ogg", Lich.SoundKey.SND_PICK_KEY],
+        ["sound/fireball_hit.ogg", Lich.SoundKey.SND_BURN_KEY],
         ["sound/bolt_cast.ogg", Lich.SoundKey.SND_BOLT_CAST],
         ["sound/place.ogg", Lich.SoundKey.SND_PLACE_KEY],
         ["sound/pick_axe1.ogg", Lich.SoundKey.SND_PICK_AXE_1_KEY],
@@ -11,7 +11,7 @@ var Lich;
         ["sound/pick_axe3.ogg", Lich.SoundKey.SND_PICK_AXE_3_KEY],
         ["sound/bonecrack.ogg", Lich.SoundKey.SND_BONE_CRACK_KEY],
         ["sound/skeleton_die.ogg", Lich.SoundKey.SND_SKELETON_DIE_KEY],
-        ["sound/252083__pepingrillin__spawn.ogg", Lich.SoundKey.SND_SPAWN_KEY],
+        ["sound/spawn.ogg", Lich.SoundKey.SND_SPAWN_KEY],
         ["sound/door_open.ogg", Lich.SoundKey.SND_DOOR_OPEN_KEY],
         ["sound/door_close.ogg", Lich.SoundKey.SND_DOOR_CLOSE_KEY],
         ["sound/craft.ogg", Lich.SoundKey.SND_CRAFT_KEY],
@@ -24,6 +24,13 @@ var Lich;
         ["sound/punch2.ogg", Lich.SoundKey.SND_PUNCH_2_KEY],
         ["sound/punch3.ogg", Lich.SoundKey.SND_PUNCH_3_KEY],
         ["sound/punch4.ogg", Lich.SoundKey.SND_PUNCH_4_KEY],
-        ["sound/bone_crush.ogg", Lich.SoundKey.SND_BONE_CRUSH_KEY]
+        ["sound/bone_crush.ogg", Lich.SoundKey.SND_SQUASHED_KEY],
+        ["sound/chicken_hit1.ogg", Lich.SoundKey.SND_CHICKEN_HIT_1],
+        ["sound/chicken_hit2.ogg", Lich.SoundKey.SND_CHICKEN_HIT_2],
+        ["sound/chicken_hit3.ogg", Lich.SoundKey.SND_CHICKEN_HIT_3],
+        ["sound/chicken_dead1.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_1],
+        ["sound/chicken_dead2.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_2],
+        ["sound/chicken_dead3.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_3],
+        ["sound/chicken_idle.ogg", Lich.SoundKey.SND_CHICKEN_IDLE]
     ];
 })(Lich || (Lich = {}));

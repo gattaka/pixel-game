@@ -2,6 +2,20 @@ namespace Lich {
     export namespace Enemy {
         export class Redskull extends AbstractEnemy {
 
+            static IDLE = "IDLE";
+            static BREATH = "BREATH";
+            static WALKR = "WALKR";
+            static WALKL = "WALKL";
+            static JUMP = "JUMP";
+            static MIDAIR = "MIDAIR";
+            static FALL = "FALL";
+            static JUMPR = "JUMPR";
+            static JUMPL = "JUMPL";
+            static DIE = "DIE";
+            static DEAD = "DEAD";
+            static TELEPORT = "TELEPORT";
+            static CLIMB = "CLIMB";
+
             constructor() {
                 super(
                     5, // DAMAGE
@@ -11,25 +25,37 @@ namespace Lich {
                     14, // COLLXOFFSET
                     12, // COLLYOFFSET
                     AnimationKey.CORPSE_ANIMATION_KEY,
-                    CharacterState.IDLE,
+                    Redskull.IDLE,
                     40, // frames
-                    200, // HERO_HORIZONTAL_SPEED
-                    500, // HERO_VERTICAL_SPEED
+                    200, // Redskull_HORIZONTAL_SPEED
+                    500, // Redskull_VERTICAL_SPEED
                     new Animations()
-                        .add(CharacterState.IDLE, 0, 0, CharacterState.BREATH, 0.005)
-                        .add(CharacterState.BREATH, 1, 1, CharacterState.IDLE, 0.04)
-                        .add(CharacterState.WALKR, 2, 9, CharacterState.WALKR, 0.2)
-                        .add(CharacterState.WALKL, 10, 17, CharacterState.WALKL, 0.2)
-                        .add(CharacterState.JUMP, 18, 19, CharacterState.MIDAIR, 0.2)
-                        .add(CharacterState.MIDAIR, 19, 19, CharacterState.MIDAIR, 0.2)
-                        .add(CharacterState.FALL, 19, 23, CharacterState.IDLE, 0.2)
-                        .add(CharacterState.JUMPR, 25, 25, CharacterState.JUMPR, 0.2)
-                        .add(CharacterState.JUMPL, 27, 27, CharacterState.JUMPL, 0.2)
-                        .add(CharacterState.DIE, 28, 28, CharacterState.DEAD, 0.2)
-                        .add(CharacterState.DEAD, 29, 29, CharacterState.DEAD, 0.2)
-                        .add(CharacterState.CLIMB, 37, 39, CharacterState.CLIMB, 0.3)
+                        .add(Redskull.IDLE, 0, 0, Redskull.BREATH, 0.005)
+                        .add(Redskull.BREATH, 1, 1, Redskull.IDLE, 0.04)
+                        .add(Redskull.WALKR, 2, 9, Redskull.WALKR, 0.3)
+                        .add(Redskull.WALKL, 10, 17, Redskull.WALKL, 0.3)
+                        .add(Redskull.JUMP, 18, 19, Redskull.MIDAIR, 0.2)
+                        .add(Redskull.MIDAIR, 19, 19, Redskull.MIDAIR, 0.2)
+                        .add(Redskull.FALL, 19, 23, Redskull.IDLE, 0.2)
+                        .add(Redskull.JUMPR, 25, 25, Redskull.JUMPR, 0.2)
+                        .add(Redskull.JUMPL, 27, 27, Redskull.JUMPL, 0.2)
+                        .add(Redskull.DIE, 28, 28, Redskull.DEAD, 0.2)
+                        .add(Redskull.DEAD, 29, 29, Redskull.DEAD, 0.2)
+                        .add(Redskull.TELEPORT, 30, 36, Redskull.IDLE, 1.0)
+                        .add(Redskull.CLIMB, 37, 39, Redskull.CLIMB, 0.3)
                 );
             }
+
+            walkL() { this.performState(Redskull.WALKL) };
+            walkR() { this.performState(Redskull.WALKR) };
+            idle() { this.performState(Redskull.IDLE) };
+            climb() { this.performState(Redskull.CLIMB) };
+            jump() { this.performState(Redskull.JUMP) };
+            jumpR() { this.performState(Redskull.JUMPR) };
+            jumpL() { this.performState(Redskull.JUMPL) };
+            midair() { this.performState(Redskull.MIDAIR) };
+            fall() { this.performState(Redskull.FALL) };
+            death() { this.performState(Redskull.DIE) };
 
             die(world: World) {
                 super.die(world);

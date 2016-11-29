@@ -2,6 +2,12 @@ namespace Lich {
     export namespace Enemy {
         export class Hellhound extends AbstractEnemy {
 
+            static IDLE = "IDLE";
+            static WALKR = "WALKR";
+            static WALKL = "WALKL";
+            static JUMPR = "JUMPR";
+            static JUMPL = "JUMPL";
+
             constructor() {
                 super(
                     10, // DAMAGE
@@ -11,30 +17,29 @@ namespace Lich {
                     16, // COLLXOFFSET
                     12, // COLLYOFFSET
                     AnimationKey.HELLHOUND_ANIMATION_KEY,
-                    CharacterState.IDLE,
+                    Hellhound.IDLE,
                     25, // frames
                     600, // HERO_HORIZONTAL_SPEED
                     500, // HERO_VERTICAL_SPEED
                     new Animations()
-                        .add(CharacterState.IDLE, 22, 24, CharacterState.IDLE, 0.1)
-                        .add(CharacterState.WALKR, 5, 9, CharacterState.WALKR, 0.2)
-                        .add(CharacterState.WALKL, 0, 4, CharacterState.WALKL, 0.2)
-                        .add(CharacterState.JUMPR, 16, 21, CharacterState.WALKR, 0.2)
-                        .add(CharacterState.JUMPL, 10, 15, CharacterState.WALKL, 0.2)
+                        .add(Hellhound.IDLE, 22, 24, Hellhound.IDLE, 0.1)
+                        .add(Hellhound.WALKR, 5, 9, Hellhound.WALKR, 0.2)
+                        .add(Hellhound.WALKL, 0, 4, Hellhound.WALKL, 0.2)
+                        .add(Hellhound.JUMPR, 16, 21, Hellhound.WALKR, 0.2)
+                        .add(Hellhound.JUMPL, 10, 15, Hellhound.WALKL, 0.2)
                 );
             }
 
-            jump() {
-                this.performState(CharacterState.JUMPL);
-            }
-
-            midair() {
-                this.performState(CharacterState.JUMPL);
-            }
-
-            fall() {
-                this.performState(CharacterState.JUMPL);
-            }
+            walkL() { this.performState(Hellhound.WALKL) };
+            walkR() { this.performState(Hellhound.WALKR) };
+            idle() { this.performState(Hellhound.IDLE) };
+            climb() { /* TODO */ };
+            jump() { /* TODO */ };
+            jumpR() { this.performState(Hellhound.JUMPR) };
+            jumpL() { this.performState(Hellhound.JUMPL) };
+            midair() { /* TODO */ };
+            fall() { /* TODO */ };
+            death() { /* TODO */ };
 
             die(world: World) {
                 super.die(world);

@@ -11,7 +11,7 @@ namespace Lich {
             width: number, height: number,
             collXOffset: number, collYOffset: number,
             animationKey: AnimationKey,
-            initState: CharacterState,
+            initState: string,
             frames: number,
             accelerationX: number,
             accelerationY: number,

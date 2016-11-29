@@ -47,7 +47,7 @@ namespace Lich {
         constructor(width: number, height: number,
             collXOffset: number, collYOffset: number,
             animationKey: AnimationKey,
-            initState: CharacterState,
+            initState: string,
             frames: number,
             public accelerationX: number,
             public accelerationY: number,
@@ -63,51 +63,26 @@ namespace Lich {
                     "width": width,
                 },
                 "animations": animations.serialize()
-            }), CharacterState[initState], collXOffset, collYOffset);
+            }), initState, collXOffset, collYOffset);
         }
 
         onHealthChange(difference: number) { };
         onWillChange(difference: number) { };
 
-        walkL() {
-            this.performState(CharacterState.WALKL);
-        }
-
-        walkR() {
-            this.performState(CharacterState.WALKR);
-        }
-
-        idle() {
-            this.performState(CharacterState.IDLE);
-        }
-
-        climb() {
-            this.performState(CharacterState.CLIMB);
-        }
-
-        jump() {
-            this.performState(CharacterState.JUMP);
-        }
-
-        jumpR() {
-            this.performState(CharacterState.JUMPR);
-        }
-
-        jumpL() {
-            this.performState(CharacterState.JUMPL);
-        }
-
-        midair() {
-            this.performState(CharacterState.MIDAIR);
-        }
-
-        fall() {
-            this.performState(CharacterState.FALL);
-        }
+        abstract walkL();
+        abstract walkR();
+        abstract idle();
+        abstract climb();
+        abstract jump();
+        abstract jumpR();
+        abstract jumpL();
+        abstract midair();
+        abstract fall();
+        abstract death();
 
         die(world: World) {
             this.speedx = 0;
-            this.performState(CharacterState.DIE);
+            this.death();
         }
 
         /**
@@ -225,9 +200,8 @@ namespace Lich {
 
         performState(desiredState) {
             var self = this;
-            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == CharacterState.DIE)
-                && self.currentAnimation != CharacterState[CharacterState.TELEPORT]) {
-                self.gotoAndPlay(CharacterState[desiredState]);
+            if (self.state !== desiredState) {
+                self.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }
         }

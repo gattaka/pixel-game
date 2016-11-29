@@ -21,7 +21,7 @@ var Lich;
         Animations.prototype.serialize = function () {
             var obj = {};
             this.animations.forEach(function (ani) {
-                obj[Lich.CharacterState[ani.animation]] = [ani.startFrame, ani.endFrame, Lich.CharacterState[ani.nextAnimation], ani.time];
+                obj[ani.animation] = [ani.startFrame, ani.endFrame, ani.nextAnimation, ani.time];
             });
             return obj;
         };

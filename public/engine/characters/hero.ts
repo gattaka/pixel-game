@@ -7,6 +7,20 @@ namespace Lich {
 
         static OWNER_HERO_TAG = "OWNER_HERO_TAG";
 
+        static IDLE = "IDLE";
+        static BREATH = "BREATH";
+        static WALKR = "WALKR";
+        static WALKL = "WALKL";
+        static JUMP = "JUMP";
+        static MIDAIR = "MIDAIR";
+        static FALL = "FALL";
+        static JUMPR = "JUMPR";
+        static JUMPL = "JUMPL";
+        static DIE = "DIE";
+        static DEAD = "DEAD";
+        static TELEPORT = "TELEPORT";
+        static CLIMB = "CLIMB";
+
         constructor() {
             super(
                 56, // WIDTH
@@ -16,24 +30,24 @@ namespace Lich {
                 // 0,
                 // 0,
                 AnimationKey.LICH_ANIMATION_KEY,
-                CharacterState.IDLE,
+                Hero.IDLE,
                 40, // frames
                 300, // HERO_HORIZONTAL_SPEED
                 520, // HERO_VERTICAL_SPEED
                 new Animations()
-                    .add(CharacterState.IDLE, 0, 0, CharacterState.BREATH, 0.005)
-                    .add(CharacterState.BREATH, 1, 1, CharacterState.IDLE, 0.04)
-                    .add(CharacterState.WALKR, 2, 9, CharacterState.WALKR, 0.3)
-                    .add(CharacterState.WALKL, 10, 17, CharacterState.WALKL, 0.3)
-                    .add(CharacterState.JUMP, 18, 19, CharacterState.MIDAIR, 0.2)
-                    .add(CharacterState.MIDAIR, 19, 19, CharacterState.MIDAIR, 0.2)
-                    .add(CharacterState.FALL, 19, 23, CharacterState.IDLE, 0.2)
-                    .add(CharacterState.JUMPR, 25, 25, CharacterState.JUMPR, 0.2)
-                    .add(CharacterState.JUMPL, 27, 27, CharacterState.JUMPL, 0.2)
-                    .add(CharacterState.DIE, 28, 28, CharacterState.DEAD, 0.2)
-                    .add(CharacterState.DEAD, 29, 29, CharacterState.DEAD, 0.2)
-                    .add(CharacterState.TELEPORT, 30, 36, CharacterState.IDLE, 1.0)
-                    .add(CharacterState.CLIMB, 37, 39, CharacterState.CLIMB, 0.3)
+                    .add(Hero.IDLE, 0, 0, Hero.BREATH, 0.005)
+                    .add(Hero.BREATH, 1, 1, Hero.IDLE, 0.04)
+                    .add(Hero.WALKR, 2, 9, Hero.WALKR, 0.3)
+                    .add(Hero.WALKL, 10, 17, Hero.WALKL, 0.3)
+                    .add(Hero.JUMP, 18, 19, Hero.MIDAIR, 0.2)
+                    .add(Hero.MIDAIR, 19, 19, Hero.MIDAIR, 0.2)
+                    .add(Hero.FALL, 19, 23, Hero.IDLE, 0.2)
+                    .add(Hero.JUMPR, 25, 25, Hero.JUMPR, 0.2)
+                    .add(Hero.JUMPL, 27, 27, Hero.JUMPL, 0.2)
+                    .add(Hero.DIE, 28, 28, Hero.DEAD, 0.2)
+                    .add(Hero.DEAD, 29, 29, Hero.DEAD, 0.2)
+                    .add(Hero.TELEPORT, 30, 36, Hero.IDLE, 1.0)
+                    .add(Hero.CLIMB, 37, 39, Hero.CLIMB, 0.3)
             );
 
             this.willRegen = 10;
@@ -73,11 +87,31 @@ namespace Lich {
             return damage;
         }
 
+        performState(desiredState) {
+            var self = this;
+            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
+                && self.currentAnimation != Hero.TELEPORT) {
+                self.gotoAndPlay(desiredState);
+                self.state = desiredState;
+            }
+        }
+
         die(world: World) {
             super.die(world);
-            Mixer.playSound(SoundKey.SND_BONE_CRUSH_KEY);
+            Mixer.playSound(SoundKey.SND_SQUASHED_KEY);
             world.showDeadInfo();
         }
+
+        walkL() { this.performState(Hero.WALKL) };
+        walkR() { this.performState(Hero.WALKR) };
+        idle() { this.performState(Hero.IDLE) };
+        climb() { this.performState(Hero.CLIMB) };
+        jump() { this.performState(Hero.JUMP) };
+        jumpR() { this.performState(Hero.JUMPR) };
+        jumpL() { this.performState(Hero.JUMPL) };
+        midair() { this.performState(Hero.MIDAIR) };
+        fall() { this.performState(Hero.FALL) };
+        death() { this.performState(Hero.DIE) };
 
     }
 }

@@ -1,8 +1,8 @@
 namespace Lich {
     export let SOUND_PATHS: Array<[string, SoundKey]> = [
-        ["sound/334234__liamg-sfx__fireball-cast-1.ogg", SoundKey.SND_FIREBALL_KEY],
-        ["sound/113111__satrebor__pick.ogg", SoundKey.SND_PICK_KEY],
-        ["sound/248116__robinhood76__05224-fireball-whoosh.ogg", SoundKey.SND_BURN_KEY],
+        ["sound/fireball_cast.ogg", SoundKey.SND_FIREBALL_KEY],
+        ["sound/pick.ogg", SoundKey.SND_PICK_KEY],
+        ["sound/fireball_hit.ogg", SoundKey.SND_BURN_KEY],
         ["sound/bolt_cast.ogg", SoundKey.SND_BOLT_CAST],
         ["sound/place.ogg", SoundKey.SND_PLACE_KEY],
         ["sound/pick_axe1.ogg", SoundKey.SND_PICK_AXE_1_KEY],
@@ -10,7 +10,7 @@ namespace Lich {
         ["sound/pick_axe3.ogg", SoundKey.SND_PICK_AXE_3_KEY],
         ["sound/bonecrack.ogg", SoundKey.SND_BONE_CRACK_KEY],
         ["sound/skeleton_die.ogg", SoundKey.SND_SKELETON_DIE_KEY],
-        ["sound/252083__pepingrillin__spawn.ogg", SoundKey.SND_SPAWN_KEY],
+        ["sound/spawn.ogg", SoundKey.SND_SPAWN_KEY],
         ["sound/door_open.ogg", SoundKey.SND_DOOR_OPEN_KEY],
         ["sound/door_close.ogg", SoundKey.SND_DOOR_CLOSE_KEY],
         ["sound/craft.ogg", SoundKey.SND_CRAFT_KEY],
@@ -23,6 +23,13 @@ namespace Lich {
         ["sound/punch2.ogg", SoundKey.SND_PUNCH_2_KEY],
         ["sound/punch3.ogg", SoundKey.SND_PUNCH_3_KEY],
         ["sound/punch4.ogg", SoundKey.SND_PUNCH_4_KEY],
-        ["sound/bone_crush.ogg", SoundKey.SND_BONE_CRUSH_KEY]
+        ["sound/bone_crush.ogg", SoundKey.SND_SQUASHED_KEY],
+        ["sound/chicken_hit1.ogg", SoundKey.SND_CHICKEN_HIT_1],
+        ["sound/chicken_hit2.ogg", SoundKey.SND_CHICKEN_HIT_2],
+        ["sound/chicken_hit3.ogg", SoundKey.SND_CHICKEN_HIT_3],
+        ["sound/chicken_dead1.ogg", SoundKey.SND_CHICKEN_DEAD_1],
+        ["sound/chicken_dead2.ogg", SoundKey.SND_CHICKEN_DEAD_2],
+        ["sound/chicken_dead3.ogg", SoundKey.SND_CHICKEN_DEAD_3],
+        ["sound/chicken_idle.ogg", SoundKey.SND_CHICKEN_IDLE ]
     ]
 }

@@ -14,76 +14,145 @@ var Lich;
                 0, // ATTACK_COOLDOWN
                 26, // WIDTH
                 26, // HEIGHT 
-                2, // COLLXOFFSET
+                8, // COLLXOFFSET
                 2, // COLLYOFFSET
-                Lich.AnimationKey.CHICKEN_ANIMATION_KEY, Lich.CharacterState.IDLE, 14, // frames
+                Lich.AnimationKey.CHICKEN_ANIMATION_KEY, Chicken.IDLEL, 15, // frames
                 100, // HORIZONTAL_SPEED
-                20, // VERTICAL_SPEED
+                320, // VERTICAL_SPEED
                 new Lich.Animations()
-                    .add(Lich.CharacterState.IDLE, 2, 2, Lich.CharacterState.IDLE, 0.001)
-                    .add(Lich.CharacterState.BREATH, 0, 1, Lich.CharacterState.BREATH, 0.1)
-                    .add(Lich.CharacterState.WALKR, 7, 10, Lich.CharacterState.WALKR, 0.2)
-                    .add(Lich.CharacterState.WALKL, 3, 6, Lich.CharacterState.WALKL, 0.2)
-                    .add(Lich.CharacterState.JUMPR, 10, 10, Lich.CharacterState.WALKR, 0.2)
-                    .add(Lich.CharacterState.JUMPL, 3, 3, Lich.CharacterState.WALKL, 0.2));
+                    .add(Chicken.EATL, 0, 1, Chicken.EATL, 0.1)
+                    .add(Chicken.IDLEL, 2, 2, Chicken.IDLEL, 0.001)
+                    .add(Chicken.JUMPL, 3, 3, Chicken.WALKL, 0.2)
+                    .add(Chicken.WALKL, 3, 6, Chicken.WALKL, 0.2)
+                    .add(Chicken.WALKR, 7, 10, Chicken.WALKR, 0.2)
+                    .add(Chicken.JUMPR, 10, 10, Chicken.WALKR, 0.2)
+                    .add(Chicken.IDLER, 11, 11, Chicken.IDLER, 0.001)
+                    .add(Chicken.EATR, 12, 13, Chicken.EATR, 0.1)
+                    .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1));
                 this.wanderCooldown = 0;
+                this.lastOrientationLeft = true;
                 this.setNewMaxHealth(50);
             }
             Chicken.prototype.runAI = function (world, delta) {
-                this.wanderCooldown -= delta;
-                if (this.wanderCooldown <= 0) {
-                    this.wanderCooldown = Chicken.WANDER_COOLDOWN;
-                    var rnd = Math.floor(Math.random() * 3);
-                    if (rnd == 0) {
-                        this.performState(Lich.CharacterState.IDLE);
-                        this.movementTypeX = Lich.MovementTypeX.NONE;
-                        console.log("Chicken stopped");
-                    }
-                    else if (rnd == 1) {
-                        // let w = world.game.getCanvas().width;
-                        var direction = Math.random() * 2;
-                        if (direction > 1) {
-                            this.movementTypeX = Lich.MovementTypeX.WALK_LEFT;
-                            console.log("Chicken walk left");
+                if (this.currentHealth > 0) {
+                    this.wanderCooldown -= delta;
+                    if (this.wanderCooldown <= 0) {
+                        this.wanderCooldown = Chicken.WANDER_COOLDOWN;
+                        var rnd = Math.floor(Math.random() * 3);
+                        if (rnd == 0) {
+                            if (this.lastOrientationLeft) {
+                                this.performState(Chicken.IDLEL);
+                            }
+                            else {
+                                this.performState(Chicken.IDLER);
+                            }
+                            this.movementTypeX = Lich.MovementTypeX.NONE;
+                            Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_IDLE);
+                        }
+                        else if (rnd == 1) {
+                            var direction = Math.random() * 2;
+                            if (direction > 1) {
+                                this.movementTypeX = Lich.MovementTypeX.WALK_LEFT;
+                                this.lastOrientationLeft = true;
+                            }
+                            else {
+                                this.movementTypeX = Lich.MovementTypeX.WALK_RIGHT;
+                                this.lastOrientationLeft = false;
+                            }
                         }
                         else {
-                            this.movementTypeX = Lich.MovementTypeX.WALK_RIGHT;
-                            console.log("Chicken walk right");
+                            if (this.lastOrientationLeft) {
+                                this.performState(Chicken.EATL);
+                            }
+                            else {
+                                this.performState(Chicken.EATR);
+                            }
+                            this.movementTypeX = Lich.MovementTypeX.NONE;
                         }
                     }
                     else {
-                        this.performState(Lich.CharacterState.BREATH);
-                        this.movementTypeX = Lich.MovementTypeX.NONE;
-                        console.log("Chicken is digging");
+                        // udržuje aktuální stav, ale může skákat
+                        this.movementTypeY = Lich.MovementTypeY.NONE;
+                        if (this.speedx != 0) {
+                            var nextX = 0;
+                            if (this.lastOrientationLeft) {
+                                nextX = this.x + this.collXOffset - Lich.Resources.TILE_SIZE;
+                            }
+                            else {
+                                nextX = this.x + this.width - this.collXOffset + Lich.Resources.TILE_SIZE;
+                            }
+                            if (world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE - this.collYOffset).hit
+                                && world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
+                                // pokud je přede mnou překážka, kterou mám šanci přeskočit, zkus vyskočit
+                                this.movementTypeY = Lich.MovementTypeY.JUMP_OR_CLIMB;
+                            }
+                        }
                     }
                 }
-                // TODO jump
             };
-            Chicken.prototype.idle = function () {
-                // nic
-            };
-            Chicken.prototype.jump = function () {
-                this.performState(Lich.CharacterState.JUMPL);
-            };
-            Chicken.prototype.midair = function () {
-                this.performState(Lich.CharacterState.JUMPL);
-            };
-            Chicken.prototype.fall = function () {
-                this.performState(Lich.CharacterState.JUMPL);
-            };
+            Chicken.prototype.walkL = function () { this.performState(Chicken.WALKL); };
+            ;
+            Chicken.prototype.walkR = function () { this.performState(Chicken.WALKR); };
+            ;
+            Chicken.prototype.idle = function () { };
+            ;
+            Chicken.prototype.climb = function () { };
+            ;
+            Chicken.prototype.jump = function () { this.performState(Chicken.JUMPL); };
+            ;
+            Chicken.prototype.jumpR = function () { this.performState(Chicken.JUMPR); };
+            ;
+            Chicken.prototype.jumpL = function () { this.performState(Chicken.JUMPL); };
+            ;
+            Chicken.prototype.midair = function () { this.performState(Chicken.JUMPL); };
+            ;
+            Chicken.prototype.fall = function () { this.performState(Chicken.JUMPL); };
+            ;
+            Chicken.prototype.death = function () { this.performState(Chicken.DIE); };
+            ;
             Chicken.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
-                // Mixer.playSound(SoundKey.SND_SKELETON_DIE_KEY);
+                switch (Math.floor(Math.random() * 3)) {
+                    case 0:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_DEAD_1);
+                        break;
+                    case 1:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_DEAD_2);
+                        break;
+                    case 2:
+                        Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_DEAD_3);
+                        break;
+                }
+                // TODO meat
                 world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
                 world.fadeEnemy(this);
             };
             Chicken.prototype.hit = function (damage, world) {
-                if (this.currentHealth > 0) {
-                    Lich.Mixer.playSound(Lich.SoundKey.SND_BONE_CRACK_KEY);
+                if (this.getCurrentHealth() > 0) {
+                    switch (Math.floor(Math.random() * 3)) {
+                        case 0:
+                            Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_HIT_1);
+                            break;
+                        case 1:
+                            Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_HIT_2);
+                            break;
+                        case 2:
+                            Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_HIT_3);
+                            break;
+                    }
                 }
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
+            Chicken.IDLEL = "IDLEL";
+            Chicken.IDLER = "IDLER";
+            Chicken.EATL = "EATL";
+            Chicken.EATR = "EATR";
+            Chicken.WALKR = "WALKR";
+            Chicken.WALKL = "WALKL";
+            Chicken.JUMPR = "JUMPR";
+            Chicken.JUMPL = "JUMPL";
+            Chicken.DIE = "DIE";
             Chicken.WANDER_COOLDOWN = 3000;
             return Chicken;
         }(Lich.AbstractEnemy));

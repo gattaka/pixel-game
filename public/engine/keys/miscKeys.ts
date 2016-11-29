@@ -76,7 +76,7 @@ namespace Lich {
         SND_PICK_AXE_2_KEY,
         SND_PICK_AXE_3_KEY,
         SND_BONE_CRACK_KEY,
-        SND_BONE_CRUSH_KEY,
+        SND_SQUASHED_KEY,
         SND_SKELETON_DIE_KEY,
         SND_SPAWN_KEY,
         SND_DOOR_OPEN_KEY,
@@ -88,7 +88,14 @@ namespace Lich {
         SND_PUNCH_1_KEY,
         SND_PUNCH_2_KEY,
         SND_PUNCH_3_KEY,
-        SND_PUNCH_4_KEY       
+        SND_PUNCH_4_KEY,
+        SND_CHICKEN_HIT_1,
+        SND_CHICKEN_HIT_2,
+        SND_CHICKEN_HIT_3,
+        SND_CHICKEN_DEAD_1,
+        SND_CHICKEN_DEAD_2,
+        SND_CHICKEN_DEAD_3,
+        SND_CHICKEN_IDLE
     }
 
     export enum MusicKey {

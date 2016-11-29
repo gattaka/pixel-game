@@ -45,7 +45,7 @@ var Lich;
                     "width": width
                 },
                 "animations": animations.serialize()
-            }), Lich.CharacterState[initState], collXOffset, collYOffset);
+            }), initState, collXOffset, collYOffset);
             this.accelerationX = accelerationX;
             this.accelerationY = accelerationY;
             this.HEALTH_REGEN_TIME = 1000;
@@ -67,36 +67,9 @@ var Lich;
         ;
         Character.prototype.onWillChange = function (difference) { };
         ;
-        Character.prototype.walkL = function () {
-            this.performState(Lich.CharacterState.WALKL);
-        };
-        Character.prototype.walkR = function () {
-            this.performState(Lich.CharacterState.WALKR);
-        };
-        Character.prototype.idle = function () {
-            this.performState(Lich.CharacterState.IDLE);
-        };
-        Character.prototype.climb = function () {
-            this.performState(Lich.CharacterState.CLIMB);
-        };
-        Character.prototype.jump = function () {
-            this.performState(Lich.CharacterState.JUMP);
-        };
-        Character.prototype.jumpR = function () {
-            this.performState(Lich.CharacterState.JUMPR);
-        };
-        Character.prototype.jumpL = function () {
-            this.performState(Lich.CharacterState.JUMPL);
-        };
-        Character.prototype.midair = function () {
-            this.performState(Lich.CharacterState.MIDAIR);
-        };
-        Character.prototype.fall = function () {
-            this.performState(Lich.CharacterState.FALL);
-        };
         Character.prototype.die = function (world) {
             this.speedx = 0;
-            this.performState(Lich.CharacterState.DIE);
+            this.death();
         };
         /**
          * Health metody
@@ -205,9 +178,8 @@ var Lich;
         };
         Character.prototype.performState = function (desiredState) {
             var self = this;
-            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == Lich.CharacterState.DIE)
-                && self.currentAnimation != Lich.CharacterState[Lich.CharacterState.TELEPORT]) {
-                self.gotoAndPlay(Lich.CharacterState[desiredState]);
+            if (self.state !== desiredState) {
+                self.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }
         };
