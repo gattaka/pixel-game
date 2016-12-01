@@ -61,8 +61,8 @@ var Lich;
                     // Pak zkus najít prostor pro nepřítele
                     var fits = true;
                     (function () {
-                        for (var eyt = 0; eyt < enHeight; eyt++) {
-                            for (var ext = 0; ext < enWidth; ext++) {
+                        for (var eyt = 0; eyt <= enHeight; eyt++) {
+                            for (var ext = 0; ext <= enWidth; ext++) {
                                 var result = world.isCollisionByTiles(xt + ext, yt + eyt);
                                 if (result.hit) {
                                     fits = false;

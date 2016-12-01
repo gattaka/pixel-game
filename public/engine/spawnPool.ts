@@ -77,8 +77,8 @@ namespace Lich {
                     // Pak zkus najít prostor pro nepřítele
                     let fits = true;
                     (() => {
-                        for (let eyt = 0; eyt < enHeight; eyt++) {
-                            for (let ext = 0; ext < enWidth; ext++) {
+                        for (let eyt = 0; eyt <= enHeight; eyt++) {
+                            for (let ext = 0; ext <= enWidth; ext++) {
                                 let result = world.isCollisionByTiles(xt + ext, yt + eyt);
                                 if (result.hit) {
                                     fits = false;
