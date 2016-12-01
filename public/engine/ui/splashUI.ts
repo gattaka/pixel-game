@@ -23,13 +23,18 @@ namespace Lich {
 
             var version;
 
-            version = new Version("0.12");
+            version = new Version("0.13 - Dec 1, 2016");
+            version.addChange("New cursor");
+            version.addChange("Bunnies introduced");
+            this.addVersion(version);
+
+            version = new Version("0.12 - Nov 28, 2016");
             version.addChange("Gold introduced");
             version.addChange("Chandelier introduced");
             version.addChange("Chickens!");
             this.addVersion(version);
 
-            version = new Version("0.11");
+            version = new Version("0.11 - Nov 23, 2016");
             version.addChange("Skewed surfaces movement");
             version.addChange("Skewed roof surface");
             version.addChange("Skewed rock brick surface");
@@ -45,7 +50,7 @@ namespace Lich {
             version.addChange("Help file created (? Button)");
             this.addVersion(version);
 
-            version = new Version("0.10");
+            version = new Version("0.10 - Nov 19, 2016");
             version.addChange("Tiles layout changed");
             version.addChange("DEV levitation control changed to <SPACE>");
             version.addChange("Platforms introduced");
@@ -56,7 +61,7 @@ namespace Lich {
             version.addChange("Fireplace introduced");
             this.addVersion(version);
 
-            version = new Version("0.9");
+            version = new Version("0.9 - Nov 13, 2016");
             version.addChange("Enemy AI improved");
             version.addChange("Enemy spawning fixed");
             version.addChange("Enemy loot");
@@ -66,12 +71,12 @@ namespace Lich {
             version.addChange("New background");
             this.addVersion(version);
 
-            version = new Version("0.8");
+            version = new Version("0.8 - Oct 23, 2016");
             version.addChange("Iron fence introduced");
             version.addChange("Workstations");
             this.addVersion(version);
 
-            version = new Version("0.7");
+            version = new Version("0.7 - Oct 17, 2016");
             version.addChange("Optimization");
             version.addChange("Surface sprites and map format extended");
             version.addChange("Minor GFX changes");
@@ -90,12 +95,12 @@ namespace Lich {
             version.addChange("Minimap reimplemented");
             this.addVersion(version);
 
-            version = new Version("0.6");
+            version = new Version("0.6 - Oct 14, 2016");
             version.addChange("Save/Load/New-world buttons");
             version.addChange("Meteor spell");
             this.addVersion(version);
 
-            version = new Version("0.5");
+            version = new Version("0.5 - Sep 25, 2016");
             version.addChange("Crafting introduced");
             version.addChange("Doors added");
             version.addChange("Object <RMB> interacting (open/close doors)");
@@ -104,7 +109,7 @@ namespace Lich {
             version.addChange("Inventory paging");
             this.addVersion(version);
 
-            version = new Version("0.4");
+            version = new Version("0.4 - Jul 10, 2016");
             version.addChange("Grave and bones added");
             version.addChange("Surface background digging");
             version.addChange("<SHIFT> toggles surface/surface-background digging");
@@ -114,7 +119,7 @@ namespace Lich {
             version.addChange("Spells cost");
             this.addVersion(version);
 
-            version = new Version("0.3");
+            version = new Version("0.3 - Jul 7, 2016");
             version.addChange("Placing walls (surface background)");
             version.addChange("DEV FEATURE: multijump on <S> key");
             version.addChange("DEV FEATURE: enemies spawn spell");
@@ -123,14 +128,14 @@ namespace Lich {
             version.addChange("<SHIFT> toggles surface/surface-background placing");
             this.addVersion(version);
 
-            version = new Version("0.2");
+            version = new Version("0.2 - Jul 2, 2016");
             version.addChange("Animated objects");
             version.addChange("Placing surfaces and objects");
             version.addChange("Inventory collapsing");
             version.addChange("Dirt background");
             this.addVersion(version);
 
-            version = new Version("0.1");
+            version = new Version("0.1 - Feb 11, 2016");
             version.addChange("Initial version");
             this.addVersion(version);
 
