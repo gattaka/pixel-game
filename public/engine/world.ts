@@ -518,57 +518,58 @@ namespace Lich {
             if (object.speedx !== 0) {
                 var distanceX = Utils.floor(sDelta * object.speedx);
 
-                // Nenarazím na překážku?
-                clsnTest = self.isBoundsInCollision(
-                    object.x + object.collXOffset,
-                    object.y + object.collYOffset,
-                    object.width - object.collXOffset * 2,
-                    object.height - object.collYOffset * 2,
-                    distanceX,
-                    0,
-                    self.isCollision.bind(self),
-                    // horizontální pohyb vždy ignoruje oneWay kolize
-                    true
-                );
-                // bez kolize, proveď posun
-                if (clsnTest.hit === false) {
-                    makeShift(distanceX, 0);
-                }
-                else {
-                    // kolize, konec posunu, dojdi až ke koliznímu místu
-                    // Získej pozici kolizního bloku (kvůli zkoseným povrchům, 
-                    // které mají kolizní masky na PART se musí brát počátek od PART 
-                    // nikoliv TILE, takže pouze sudé) a přičti k němu zbývající 
-                    // vzdálenost (od počátku PART) do kolize
-                    let evenTileX = Utils.even(clsnTest.x);
-                    let evenTileY = Utils.even(clsnTest.y);
-                    let clsnPosition = self.render.tilesToPixel(evenTileX, evenTileY);
-                    if (distanceX > 0) {
-                        // narazil jsem do něj zprava
-                        let x = object.x + object.collXOffset - (clsnPosition.x + clsnTest.partOffsetX);
-                        makeShift(x, 0);
-                    } else {
-                        // narazil jsem do něj zleva
-                        let x = -1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset));
-                        makeShift(x, 0);
+                if (distanceX != 0) {
+                    // Nenarazím na překážku?
+                    clsnTest = self.isBoundsInCollision(
+                        object.x + object.collXOffset,
+                        object.y + object.collYOffset,
+                        object.width - object.collXOffset * 2,
+                        object.height - object.collYOffset * 2,
+                        distanceX,
+                        0,
+                        self.isCollision.bind(self),
+                        // horizontální pohyb vždy ignoruje oneWay kolize
+                        true
+                    );
+                    // bez kolize, proveď posun
+                    if (clsnTest.hit === false) {
+                        makeShift(distanceX, 0);
                     }
+                    else {
+                        // kolize, konec posunu, dojdi až ke koliznímu místu
+                        // Získej pozici kolizního bloku (kvůli zkoseným povrchům, 
+                        // které mají kolizní masky na PART se musí brát počátek od PART 
+                        // nikoliv TILE, takže pouze sudé) a přičti k němu zbývající 
+                        // vzdálenost (od počátku PART) do kolize
+                        let evenTileX = Utils.even(clsnTest.x);
+                        let evenTileY = Utils.even(clsnTest.y);
+                        let clsnPosition = self.render.tilesToPixel(evenTileX, evenTileY);
+                        if (distanceX > 0) {
+                            // narazil jsem do něj zprava
+                            let x = object.x + object.collXOffset - (clsnPosition.x + clsnTest.partOffsetX);
+                            makeShift(x, 0);
+                        } else {
+                            // narazil jsem do něj zleva
+                            let x = -1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset));
+                            makeShift(x, 0);
+                        }
 
-                    if (collisionSteps) {
-                        // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
-                        let baseDist = object.y + object.height - object.collYOffset - clsnPosition.y;
+                        if (collisionSteps) {
+                            // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
+                            let baseDist = object.y + object.height - object.collYOffset - clsnPosition.y;
 
-                        // automatické stoupání při chůzí po zkosené rampě
-                        if (distanceX > 0 &&
-                            ((clsnTest.collisionType == CollisionType.SOLID_TR && baseDist <= Resources.PARTS_SIZE)
-                                || baseDist <= Resources.TILE_SIZE)) {
-                            makeShift(4, 4);
-                        } else if (distanceX < 0 &&
-                            ((clsnTest.collisionType == CollisionType.SOLID_TL && baseDist <= Resources.PARTS_SIZE)
-                                || baseDist <= Resources.TILE_SIZE)) {
-                            makeShift(-4, 4);
+                            // automatické stoupání při chůzí po zkosené rampě
+                            if (distanceX > 0 &&
+                                ((clsnTest.collisionType == CollisionType.SOLID_TR && baseDist <= Resources.PARTS_SIZE)
+                                    || baseDist <= Resources.TILE_SIZE)) {
+                                makeShift(4, 4);
+                            } else if (distanceX < 0 &&
+                                ((clsnTest.collisionType == CollisionType.SOLID_TL && baseDist <= Resources.PARTS_SIZE)
+                                    || baseDist <= Resources.TILE_SIZE)) {
+                                makeShift(-4, 4);
+                            }
                         }
                     }
-
                 }
             }
 
@@ -669,9 +670,15 @@ namespace Lich {
             // update nepřátel
             self.enemies.forEach(function (enemy) {
                 if (enemy) {
-                    updateCharacter(enemy, function (x, y) {
-                        var rndX = Utils.floor(x);
-                        var rndY = Utils.floor(y);
+                    updateCharacter(enemy, function (shiftX, shiftY) {
+                        if (isNaN(shiftX)) {
+                            console.log("Ou.. enemy shiftX je Nan");
+                        }
+                        if (isNaN(shiftY)) {
+                            console.log("Ou.. enemy shiftY je Nan");
+                        }
+                        var rndX = Utils.floor(shiftX);
+                        var rndY = Utils.floor(shiftY);
                         enemy.x -= rndX;
                         enemy.y -= rndY;
                     });

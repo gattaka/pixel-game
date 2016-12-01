@@ -12,8 +12,9 @@ namespace Lich {
             static JUMPL = "JUMPL";
             static DIE = "DIE";
 
-            static WANDER_COOLDOWN = 3000;
-            wanderCooldown = 0;
+            static MODE_COOLDOWN = 3000;
+            modeCooldown = 0;
+            currentMode = 0;
 
             lastOrientationLeft = true;
 
@@ -46,20 +47,14 @@ namespace Lich {
 
             runAI(world: World, delta: number) {
                 if (this.currentHealth > 0) {
-                    this.wanderCooldown -= delta;
-                    if (this.wanderCooldown <= 0) {
-                        this.wanderCooldown = Chicken.WANDER_COOLDOWN;
-
-                        let rnd = Math.floor(Math.random() * 3);
-                        if (rnd == 0) {
-                            if (this.lastOrientationLeft) {
-                                this.performState(Chicken.IDLEL);
-                            } else {
-                                this.performState(Chicken.IDLER);
-                            }
+                    this.modeCooldown -= delta;
+                    if (this.modeCooldown <= 0) {
+                        this.modeCooldown = Chicken.MODE_COOLDOWN;
+                        this.currentMode = Math.floor(Math.random() * 3);
+                        if (this.currentMode == 0) {
                             this.movementTypeX = MovementTypeX.NONE;
                             Mixer.playSound(SoundKey.SND_CHICKEN_IDLE);
-                        } else if (rnd == 1) {
+                        } else if (this.currentMode == 1) {
                             let direction = Math.random() * 2;
                             if (direction > 1) {
                                 this.movementTypeX = MovementTypeX.WALK_LEFT;
@@ -69,28 +64,45 @@ namespace Lich {
                                 this.lastOrientationLeft = false;
                             }
                         } else {
+                            this.movementTypeX = MovementTypeX.NONE;
+                        }
+                    }
+
+                    // udržuje aktuální stav, ale může skákat
+                    if (this.movementTypeX != MovementTypeX.NONE) {
+                        let nextX = 0;
+                        if (this.lastOrientationLeft) {
+                            nextX = this.x + this.collXOffset - Resources.TILE_SIZE;
+                        } else {
+                            nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
+                        }
+
+                        if (world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE - this.collYOffset).hit) {
+                            // pokud je přede mnou překážka
+                            if (world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
+                                // kterou mám šanci přeskočit, zkus vyskočit
+                                this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
+                            } else {
+                                // pokud se přeskočit nedá, zastav se
+                                this.movementTypeX = MovementTypeX.NONE;
+                                this.movementTypeY = MovementTypeY.NONE;
+                            }
+                        } else {
+                            this.movementTypeY = MovementTypeY.NONE;
+                        }
+                    } else {
+                        this.movementTypeY = MovementTypeY.NONE;
+                        if (this.currentMode == 0) {
+                            if (this.lastOrientationLeft) {
+                                this.performState(Chicken.IDLEL);
+                            } else {
+                                this.performState(Chicken.IDLER);
+                            }
+                        } else {
                             if (this.lastOrientationLeft) {
                                 this.performState(Chicken.EATL);
                             } else {
                                 this.performState(Chicken.EATR);
-                            }
-                            this.movementTypeX = MovementTypeX.NONE;
-                        }
-                    } else {
-                        // udržuje aktuální stav, ale může skákat
-                        this.movementTypeY = MovementTypeY.NONE;
-                        if (this.speedx != 0) {
-                            let nextX = 0;
-                            if (this.lastOrientationLeft) {
-                                nextX = this.x + this.collXOffset - Resources.TILE_SIZE;
-                            } else {
-                                nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
-                            }
-
-                            if (world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE - this.collYOffset).hit
-                                && world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
-                                // pokud je přede mnou překážka, kterou mám šanci přeskočit, zkus vyskočit
-                                this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
                             }
                         }
                     }

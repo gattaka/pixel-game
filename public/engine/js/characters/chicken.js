@@ -29,27 +29,22 @@ var Lich;
                     .add(Chicken.IDLER, 11, 11, Chicken.IDLER, 0.001)
                     .add(Chicken.EATR, 12, 13, Chicken.EATR, 0.1)
                     .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1));
-                this.wanderCooldown = 0;
+                this.modeCooldown = 0;
+                this.currentMode = 0;
                 this.lastOrientationLeft = true;
                 this.setNewMaxHealth(50);
             }
             Chicken.prototype.runAI = function (world, delta) {
                 if (this.currentHealth > 0) {
-                    this.wanderCooldown -= delta;
-                    if (this.wanderCooldown <= 0) {
-                        this.wanderCooldown = Chicken.WANDER_COOLDOWN;
-                        var rnd = Math.floor(Math.random() * 3);
-                        if (rnd == 0) {
-                            if (this.lastOrientationLeft) {
-                                this.performState(Chicken.IDLEL);
-                            }
-                            else {
-                                this.performState(Chicken.IDLER);
-                            }
+                    this.modeCooldown -= delta;
+                    if (this.modeCooldown <= 0) {
+                        this.modeCooldown = Chicken.MODE_COOLDOWN;
+                        this.currentMode = Math.floor(Math.random() * 3);
+                        if (this.currentMode == 0) {
                             this.movementTypeX = Lich.MovementTypeX.NONE;
                             Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_IDLE);
                         }
-                        else if (rnd == 1) {
+                        else if (this.currentMode == 1) {
                             var direction = Math.random() * 2;
                             if (direction > 1) {
                                 this.movementTypeX = Lich.MovementTypeX.WALK_LEFT;
@@ -61,30 +56,50 @@ var Lich;
                             }
                         }
                         else {
+                            this.movementTypeX = Lich.MovementTypeX.NONE;
+                        }
+                    }
+                    // udržuje aktuální stav, ale může skákat
+                    if (this.movementTypeX != Lich.MovementTypeX.NONE) {
+                        var nextX = 0;
+                        if (this.lastOrientationLeft) {
+                            nextX = this.x + this.collXOffset - Lich.Resources.TILE_SIZE;
+                        }
+                        else {
+                            nextX = this.x + this.width - this.collXOffset + Lich.Resources.TILE_SIZE;
+                        }
+                        if (world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE - this.collYOffset).hit) {
+                            // pokud je přede mnou překážka
+                            if (world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
+                                // kterou mám šanci přeskočit, zkus vyskočit
+                                this.movementTypeY = Lich.MovementTypeY.JUMP_OR_CLIMB;
+                            }
+                            else {
+                                // pokud se přeskočit nedá, zastav se
+                                this.movementTypeX = Lich.MovementTypeX.NONE;
+                                this.movementTypeY = Lich.MovementTypeY.NONE;
+                            }
+                        }
+                        else {
+                            this.movementTypeY = Lich.MovementTypeY.NONE;
+                        }
+                    }
+                    else {
+                        this.movementTypeY = Lich.MovementTypeY.NONE;
+                        if (this.currentMode == 0) {
+                            if (this.lastOrientationLeft) {
+                                this.performState(Chicken.IDLEL);
+                            }
+                            else {
+                                this.performState(Chicken.IDLER);
+                            }
+                        }
+                        else {
                             if (this.lastOrientationLeft) {
                                 this.performState(Chicken.EATL);
                             }
                             else {
                                 this.performState(Chicken.EATR);
-                            }
-                            this.movementTypeX = Lich.MovementTypeX.NONE;
-                        }
-                    }
-                    else {
-                        // udržuje aktuální stav, ale může skákat
-                        this.movementTypeY = Lich.MovementTypeY.NONE;
-                        if (this.speedx != 0) {
-                            var nextX = 0;
-                            if (this.lastOrientationLeft) {
-                                nextX = this.x + this.collXOffset - Lich.Resources.TILE_SIZE;
-                            }
-                            else {
-                                nextX = this.x + this.width - this.collXOffset + Lich.Resources.TILE_SIZE;
-                            }
-                            if (world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE - this.collYOffset).hit
-                                && world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
-                                // pokud je přede mnou překážka, kterou mám šanci přeskočit, zkus vyskočit
-                                this.movementTypeY = Lich.MovementTypeY.JUMP_OR_CLIMB;
                             }
                         }
                     }
@@ -152,7 +167,7 @@ var Lich;
             Chicken.JUMPR = "JUMPR";
             Chicken.JUMPL = "JUMPL";
             Chicken.DIE = "DIE";
-            Chicken.WANDER_COOLDOWN = 3000;
+            Chicken.MODE_COOLDOWN = 3000;
             return Chicken;
         }(Lich.AbstractEnemy));
         Enemy.Chicken = Chicken;
