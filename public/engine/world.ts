@@ -90,7 +90,6 @@ namespace Lich {
             /*------------*/
             /* Dig events */
             /*------------*/
-
             let listener = function (objType: Diggable, x: number, y: number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
@@ -109,11 +108,16 @@ namespace Lich {
                 .to({
                     alpha: 0
                 }, 5000).call(function () {
-                    self.enemies[enemy.id] = undefined;
-                    self.removeChild(enemy);
-                    self.enemiesCount--;
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
+                    self.removeEnemy(enemy);
                 });
+        }
+
+        removeEnemy(enemy: AbstractEnemy) {
+            let self = this;
+            self.enemies[enemy.id] = undefined;
+            self.removeChild(enemy);
+            self.enemiesCount--;
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
         }
 
         showDeadInfo() {
@@ -681,6 +685,14 @@ namespace Lich {
                         var rndY = Utils.floor(shiftY);
                         enemy.x -= rndX;
                         enemy.y -= rndY;
+
+                        if (enemy.x < -self.game.getCanvas().width * 2
+                            || enemy.x > self.game.getCanvas().width * 2
+                            || enemy.y < -self.game.getCanvas().height * 2
+                            || enemy.y > self.game.getCanvas().height * 2) {
+                            // dealokace
+                            self.removeEnemy(enemy);
+                        }
                     });
                 }
             });
@@ -1184,7 +1196,7 @@ namespace Lich {
             Nature.getInstance().handleTick(delta, self);
 
             // Spawn 
-            //SpawnPool.getInstance().update(delta, self);
+            SpawnPool.getInstance().update(delta, self);
         };
     }
 

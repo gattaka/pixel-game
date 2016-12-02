@@ -95,11 +95,15 @@ var Lich;
                 .to({
                 alpha: 0
             }, 5000).call(function () {
-                self.enemies[enemy.id] = undefined;
-                self.removeChild(enemy);
-                self.enemiesCount--;
-                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
+                self.removeEnemy(enemy);
             });
+        };
+        World.prototype.removeEnemy = function (enemy) {
+            var self = this;
+            self.enemies[enemy.id] = undefined;
+            self.removeChild(enemy);
+            self.enemiesCount--;
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
         };
         World.prototype.showDeadInfo = function () {
             var self = this;
@@ -609,6 +613,13 @@ var Lich;
                         var rndY = Lich.Utils.floor(shiftY);
                         enemy.x -= rndX;
                         enemy.y -= rndY;
+                        if (enemy.x < -self.game.getCanvas().width * 2
+                            || enemy.x > self.game.getCanvas().width * 2
+                            || enemy.y < -self.game.getCanvas().height * 2
+                            || enemy.y > self.game.getCanvas().height * 2) {
+                            // dealokace
+                            self.removeEnemy(enemy);
+                        }
                     });
                 }
             });
@@ -1110,7 +1121,7 @@ var Lich;
             }
             Lich.Nature.getInstance().handleTick(delta, self);
             // Spawn 
-            //SpawnPool.getInstance().update(delta, self);
+            Lich.SpawnPool.getInstance().update(delta, self);
         };
         ;
         /*-----------*/

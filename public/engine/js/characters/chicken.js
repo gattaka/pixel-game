@@ -42,7 +42,6 @@ var Lich;
                         this.currentMode = Math.floor(Math.random() * 3);
                         if (this.currentMode == 0) {
                             this.movementTypeX = Lich.MovementTypeX.NONE;
-                            Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_IDLE);
                         }
                         else if (this.currentMode == 1) {
                             var direction = Math.random() * 2;

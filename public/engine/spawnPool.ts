@@ -12,11 +12,11 @@ namespace Lich {
         private static INSTANCE: SpawnPool;
 
         private static SPAWN_ZONE_SIZE = 20; // v tiles
-        private static MAX_ENEMIES = 4;
+        private static MAX_ENEMIES = 20;
 
-        private spawnCooldown = [10000];
-        private spawnCooldownState = [0];
-        private spawnFactory = [Enemy.Redskull];
+        private spawnCooldown = [2000, 2000];
+        private spawnCooldownState = [0, 0];
+        private spawnFactory = [Enemy.Bunny, Enemy.Chicken];
 
         public static getInstance() {
             if (!SpawnPool.INSTANCE) {

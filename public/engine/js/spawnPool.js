@@ -7,9 +7,9 @@ var Lich;
     }());
     var SpawnPool = (function () {
         function SpawnPool() {
-            this.spawnCooldown = [10000];
-            this.spawnCooldownState = [0];
-            this.spawnFactory = [Lich.Enemy.Redskull];
+            this.spawnCooldown = [2000, 2000];
+            this.spawnCooldownState = [0, 0];
+            this.spawnFactory = [Lich.Enemy.Bunny, Lich.Enemy.Chicken];
         }
         SpawnPool.getInstance = function () {
             if (!SpawnPool.INSTANCE) {
@@ -129,7 +129,7 @@ var Lich;
             });
         };
         SpawnPool.SPAWN_ZONE_SIZE = 20; // v tiles
-        SpawnPool.MAX_ENEMIES = 4;
+        SpawnPool.MAX_ENEMIES = 20;
         return SpawnPool;
     }());
     Lich.SpawnPool = SpawnPool;

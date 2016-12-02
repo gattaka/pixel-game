@@ -53,7 +53,7 @@ namespace Lich {
                         this.currentMode = Math.floor(Math.random() * 3);
                         if (this.currentMode == 0) {
                             this.movementTypeX = MovementTypeX.NONE;
-                            Mixer.playSound(SoundKey.SND_CHICKEN_IDLE);
+                            // Mixer.playSound(SoundKey.SND_CHICKEN_IDLE);
                         } else if (this.currentMode == 1) {
                             let direction = Math.random() * 2;
                             if (direction > 1) {
