@@ -28,6 +28,7 @@ namespace Lich {
             version.addChange("Bunnies introduced");
             version.addChange("Helpfile improved");
             version.addChange("Critters autospawn");
+            version.addChange("Chicken boss introduced");
             this.addVersion(version);
 
             version = new Version("0.12 - Nov 28, 2016");

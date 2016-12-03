@@ -2,6 +2,10 @@ namespace Lich {
     export namespace Enemy {
         export class ChickenBoss extends AbstractEnemy {
 
+            /**
+             * aka Murhun
+             */
+
             static IDLE = "IDLE";
             static ATTACK = "ATTACK";
             /**

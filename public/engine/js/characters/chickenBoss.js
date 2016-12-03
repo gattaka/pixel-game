@@ -166,6 +166,9 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
+            /**
+             * aka Murhun
+             */
             ChickenBoss.IDLE = "IDLE";
             ChickenBoss.ATTACK = "ATTACK";
             /**
