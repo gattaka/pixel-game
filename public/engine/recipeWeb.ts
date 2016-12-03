@@ -3,6 +3,9 @@ namespace Lich {
     export class RecipeWeb {
 
         private imgMap = {};
+        private recipes = {};
+        private itemsDiv: HTMLDivElement;
+        private recipesDiv: HTMLDivElement;
 
         private createDiv(text: string): HTMLDivElement {
             let div: HTMLDivElement = document.createElement("div");
@@ -11,22 +14,52 @@ namespace Lich {
         }
 
         private createImage(item: InventoryKey): HTMLImageElement {
+            let self = this;
             let img: HTMLImageElement = document.createElement("img");
             img.src = this.imgMap[item];
+            img.onclick = () => { self.printItemRecipesList(item) };
             return img;
         }
 
         constructor() {
-            let mainDiv = <HTMLDivElement>document.getElementById("recipes-div");
+            this.itemsDiv = <HTMLDivElement>document.getElementById("items-div");
+            this.recipesDiv = document.createElement("div");
+            this.recipesDiv.id = "recipes-list-div";
 
+            // URL grafiky položek
             INVENTORY_PATHS.forEach((path) => {
                 this.imgMap[path[1]] = path[0];
             });
 
-            this.printFullList(mainDiv);
+            // Přehled receptů dle položky
+            RECIPE_DEFS.forEach((recipe) => {
+                let itemRecipes = this.recipes[recipe[0][0]];
+                if (!itemRecipes) {
+                    itemRecipes = [];
+                    this.recipes[recipe[0][0]] = itemRecipes;
+                }
+                itemRecipes.push(recipe);
+            });
+
+            let items = {};
+
+            RECIPE_DEFS.forEach((recipe) => {
+                items[recipe[0][0]] = recipe[0][0];
+            });
+
+            let mainListDiv: HTMLDivElement = document.createElement("div");
+            mainListDiv.id = "items-list-div";
+            for (let key in items) {
+                mainListDiv.appendChild(this.createImage(items[key]));
+            }
+
+            this.itemsDiv.appendChild(mainListDiv);
+            this.itemsDiv.appendChild(this.recipesDiv);
+            this.recipesDiv.appendChild(this.createDiv("- choose item to show recipes -"));
         }
 
-        private printFullList(mainDiv: HTMLDivElement) {
+
+        private printItemRecipesList(item: InventoryKey) {
             let lastWorkstation: InventoryKey;
 
             let buildRecipe = (json) => {
@@ -56,12 +89,18 @@ namespace Lich {
                 // if (lastWorkstation != workstation) {
                 // }
 
-                mainDiv.appendChild(outerDiv);
+                this.recipesDiv.appendChild(outerDiv);
             }
 
-            RECIPE_DEFS.forEach((recipe) => {
-                buildRecipe(recipe);
-            });
+            this.recipesDiv.innerHTML = "";
+            if (this.recipes[item]) {
+                this.recipes[item].forEach((recipe) => {
+                    buildRecipe(recipe);
+                });
+            } else {
+                this.recipesDiv.appendChild(this.createImage(item));
+                this.recipesDiv.appendChild(this.createDiv("- non-craftable item -"));
+            }
         }
 
     }
