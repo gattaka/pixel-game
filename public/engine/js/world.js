@@ -367,7 +367,7 @@ var Lich;
                 var boundsY = object.y + object.collYOffset;
                 var boundsWidth = object.width - object.collXOffset * 2;
                 var boundsHeight = object.height - object.collYOffset * 2;
-                if (isCurrentlyClimbing && forceJump) {
+                if (isCurrentlyClimbing && forceJump || object.hovers) {
                     // ignoruj gravitaci
                     distanceY = object.speedy * sDelta;
                 }
@@ -383,7 +383,10 @@ var Lich;
                     if (object.speedy < World.MAX_FREEFALL_SPEED)
                         object.speedy = World.MAX_FREEFALL_SPEED;
                 }
-                if (distanceY != 0) {
+                if (object.hovers) {
+                    makeShift(0, distanceY);
+                }
+                if (distanceY != 0 && !object.hovers) {
                     // Nenarazím na překážku?
                     clsnTest = self.isBoundsInCollision(boundsX, boundsY, boundsWidth, boundsHeight, 0, distanceY, self.isCollision.bind(self), forceFall);
                     if (clsnTest.hit === false) {
@@ -440,7 +443,7 @@ var Lich;
                 }
             }
             // pokud nejsem zrovna uprostřed skoku 
-            if (object.speedy == 0) {
+            if (object.speedy == 0 && !object.hovers) {
                 // ...a mám kam padat
                 clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
                 // pád z klidu se vždy musí zaseknout o oneWay kolize 
@@ -464,7 +467,10 @@ var Lich;
             }
             if (object.speedx !== 0) {
                 var distanceX = Lich.Utils.floor(sDelta * object.speedx);
-                if (distanceX != 0) {
+                if (object.hovers) {
+                    makeShift(distanceX, 0);
+                }
+                if (distanceX != 0 && !object.hovers) {
                     // Nenarazím na překážku?
                     clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self), 
                     // horizontální pohyb vždy ignoruje oneWay kolize
@@ -527,7 +533,9 @@ var Lich;
                 // Je-li postava naživu, vnímej její ovládání
                 if (character.getCurrentHealth() > 0) {
                     switch (character.movementTypeY) {
-                        case Lich.MovementTypeY.NONE: break;
+                        case Lich.MovementTypeY.NONE:
+                        case Lich.MovementTypeY.HOVER:
+                            break;
                         case Lich.MovementTypeY.JUMP_OR_CLIMB:
                             forceUp = true;
                             if (character.speedy == 0) {
@@ -541,8 +549,6 @@ var Lich;
                             forceUp = true;
                             character.speedy = character.accelerationY;
                             break;
-                        case Lich.MovementTypeY.HOVER_UP: break;
-                        case Lich.MovementTypeY.HOVER_DOWN: break;
                     }
                     switch (character.movementTypeX) {
                         case Lich.MovementTypeX.NONE:
@@ -554,8 +560,8 @@ var Lich;
                         case Lich.MovementTypeX.WALK_RIGHT:
                             character.speedx = -character.accelerationX;
                             break;
-                        case Lich.MovementTypeX.HOVER_LEFT: break;
-                        case Lich.MovementTypeX.HOVER_RIGHT: break;
+                        case Lich.MovementTypeX.HOVER:
+                            break;
                     }
                 }
                 // update postavy
@@ -613,12 +619,14 @@ var Lich;
                         var rndY = Lich.Utils.floor(shiftY);
                         enemy.x -= rndX;
                         enemy.y -= rndY;
-                        if (enemy.x < -self.game.getCanvas().width * 2
-                            || enemy.x > self.game.getCanvas().width * 2
-                            || enemy.y < -self.game.getCanvas().height * 2
-                            || enemy.y > self.game.getCanvas().height * 2) {
-                            // dealokace
-                            self.removeEnemy(enemy);
+                        if (enemy.unspawns) {
+                            if (enemy.x < -self.game.getCanvas().width * 2
+                                || enemy.x > self.game.getCanvas().width * 2
+                                || enemy.y < -self.game.getCanvas().height * 2
+                                || enemy.y > self.game.getCanvas().height * 2) {
+                                // dealokace
+                                self.removeEnemy(enemy);
+                            }
                         }
                     });
                 }
@@ -662,7 +670,7 @@ var Lich;
                             self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
                             self.removeChild(object);
-                            Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, false, 0.2);
+                            Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, 0.2);
                             object = null;
                         }
                         if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {

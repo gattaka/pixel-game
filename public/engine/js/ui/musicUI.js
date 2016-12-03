@@ -60,9 +60,9 @@ var Lich;
             self.itemHighlightShape.y = bitmap.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
             self.choosenItem = track;
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
-                Lich.Mixer.stop(self.reversedTrackIndex[i]);
+                Lich.Mixer.stopMusic(self.reversedTrackIndex[i]);
             }
-            Lich.Mixer.playMusic(track, true);
+            Lich.Mixer.playMusic(track);
             self.updateCache();
         };
         MusicUI.N = 6;

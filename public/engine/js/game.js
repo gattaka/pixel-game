@@ -107,7 +107,7 @@ var Lich;
                     delete self.world;
                     delete self.background;
                     Lich.EventBus.getInstance().clear();
-                    Lich.Mixer.stopAll();
+                    Lich.Mixer.stopAllSounds();
                     // (re)-init
                     self.ui = new Lich.UI(self.canvas, tilesMap);
                     self.background = new Lich.Background(self);

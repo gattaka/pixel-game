@@ -144,7 +144,7 @@ namespace Lich {
                     delete self.world;
                     delete self.background;
                     EventBus.getInstance().clear();
-                    Mixer.stopAll();
+                    Mixer.stopAllSounds();
 
                     // (re)-init
                     self.ui = new UI(self.canvas, tilesMap);

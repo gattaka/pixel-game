@@ -1,6 +1,6 @@
 namespace Lich {
     export let MUSIC_PATHS: Array<[string, MusicKey]> = [
-        ["music/Dirt_2.ogg", MusicKey.MSC_DIRT_THEME_KEY]
+        ["music/Dirt_2.ogg", MusicKey.MSC_DIRT_THEME_KEY],
         // pro rychlejší nahrávání (v ostré verzi bude odkomentováno)
         /*
         ["music/Building In Progress.ogg", MusicKey.MSC_BUILD_THEME_KEY],
@@ -9,5 +9,6 @@ namespace Lich {
         ["music/Flood.ogg", MusicKey.MSC_FLOOD_THEME_KEY],
         ["music/Lava.ogg", MusicKey.MSC_LAVA_THEME_KEY]
         */
+        ["music/chickens.ogg", MusicKey.MSC_CHICKEN_BOSS_THEME_KEY]
     ]
 }

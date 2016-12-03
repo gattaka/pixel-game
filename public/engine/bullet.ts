@@ -12,7 +12,8 @@ namespace Lich {
             public spriteSheet: createjs.SpriteSheet,
             public initState: string,
             public collXOffset: number,
-            public collYOffset: number) {
+            public collYOffset: number,
+            public hovers = false) {
             super(spriteSheet, initState);
         }
 

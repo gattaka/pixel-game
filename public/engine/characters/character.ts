@@ -7,8 +7,7 @@ namespace Lich {
         // Jde doprava (respektuje kolize)
         WALK_RIGHT,
         // Vznáší se (nerespektuje gravitaci ani kolize)
-        HOVER_LEFT,
-        HOVER_RIGHT
+        HOVER
     }
     export enum MovementTypeY {
         // Nic nedělá
@@ -20,8 +19,7 @@ namespace Lich {
         // Letí (nerespektuje gravitaci, ale kolize ano)
         ASCENT,
         // Vznáší se (nerespektuje gravitaci ani kolize)
-        HOVER_UP,
-        HOVER_DOWN
+        HOVER
     }
     export abstract class Character extends AbstractWorldObject {
 
@@ -51,7 +49,8 @@ namespace Lich {
             frames: number,
             public accelerationX: number,
             public accelerationY: number,
-            animations: Animations) {
+            animations: Animations,
+            hovers = false) {
             super(width, height, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [Resources.getInstance().getImage(AnimationKey[animationKey])],
@@ -63,7 +62,7 @@ namespace Lich {
                     "width": width,
                 },
                 "animations": animations.serialize()
-            }), initState, collXOffset, collYOffset);
+            }), initState, collXOffset, collYOffset, hovers);
         }
 
         onHealthChange(difference: number) { };

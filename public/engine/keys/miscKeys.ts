@@ -26,7 +26,8 @@ namespace Lich {
         HELLHOUND_ANIMATION_KEY,
         BOLT_ANIMATION_KEY,
         CHICKEN_ANIMATION_KEY,
-        BUNNY_ANIMATION_KEY
+        BUNNY_ANIMATION_KEY,
+        CHICKEN_BOSS_ANIMATION_KEY
     }
 
     export enum UIGFXKey {
@@ -90,13 +91,16 @@ namespace Lich {
         SND_PUNCH_2_KEY,
         SND_PUNCH_3_KEY,
         SND_PUNCH_4_KEY,
-        SND_CHICKEN_HIT_1,
-        SND_CHICKEN_HIT_2,
-        SND_CHICKEN_HIT_3,
-        SND_CHICKEN_DEAD_1,
-        SND_CHICKEN_DEAD_2,
-        SND_CHICKEN_DEAD_3,
-        SND_CHICKEN_IDLE
+        SND_CHICKEN_HIT_1_KEY,
+        SND_CHICKEN_HIT_2_KEY,
+        SND_CHICKEN_HIT_3_KEY,
+        SND_CHICKEN_DEAD_1_KEY,
+        SND_CHICKEN_DEAD_2_KEY,
+        SND_CHICKEN_DEAD_3_KEY,
+        SND_CHICKEN_IDLE_KEY,
+        SND_CHICKEN_BOSS_HIT_KEY,
+        SND_CHICKEN_BOSS_DEAD_KEY,
+        SND_CHICKEN_BOSS_ATTACK_KEY
     }
 
     export enum MusicKey {
@@ -105,6 +109,7 @@ namespace Lich {
         MSC_BOSS_THEME_KEY,
         MSC_KRYSTAL_THEME_KEY,
         MSC_FLOOD_THEME_KEY,
-        MSC_LAVA_THEME_KEY
+        MSC_LAVA_THEME_KEY,
+        MSC_CHICKEN_BOSS_THEME_KEY
     }
 }

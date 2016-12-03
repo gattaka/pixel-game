@@ -115,6 +115,10 @@ namespace Lich {
             return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
         }
 
+        static toRad(angle: number): number {
+            return Math.PI * angle / 180;
+        }
+
         static sign(value: number): number {
             return value < 0 ? -1 : 1;
         }

@@ -395,7 +395,7 @@ namespace Lich {
                 let boundsY = object.y + object.collYOffset;
                 let boundsWidth = object.width - object.collXOffset * 2;
                 let boundsHeight = object.height - object.collYOffset * 2;
-                if (isCurrentlyClimbing && forceJump) {
+                if (isCurrentlyClimbing && forceJump || object.hovers) {
                     // ignoruj gravitaci
                     distanceY = object.speedy * sDelta;
                 } else {
@@ -411,7 +411,11 @@ namespace Lich {
                         object.speedy = World.MAX_FREEFALL_SPEED;
                 }
 
-                if (distanceY != 0) {
+                if (object.hovers) {
+                    makeShift(0, distanceY);
+                }
+
+                if (distanceY != 0 && !object.hovers) {
 
                     // Nenarazím na překážku?
                     clsnTest = self.isBoundsInCollision(
@@ -488,7 +492,7 @@ namespace Lich {
             }
 
             // pokud nejsem zrovna uprostřed skoku 
-            if (object.speedy == 0) {
+            if (object.speedy == 0 && !object.hovers) {
 
                 // ...a mám kam padat
                 clsnTest = self.isBoundsInCollision(
@@ -522,7 +526,11 @@ namespace Lich {
             if (object.speedx !== 0) {
                 var distanceX = Utils.floor(sDelta * object.speedx);
 
-                if (distanceX != 0) {
+                if (object.hovers) {
+                    makeShift(distanceX, 0);
+                }
+
+                if (distanceX != 0 && !object.hovers) {
                     // Nenarazím na překážku?
                     clsnTest = self.isBoundsInCollision(
                         object.x + object.collXOffset,
@@ -599,7 +607,9 @@ namespace Lich {
                 if (character.getCurrentHealth() > 0) {
 
                     switch (character.movementTypeY) {
-                        case MovementTypeY.NONE: break;
+                        case MovementTypeY.NONE:
+                        case MovementTypeY.HOVER:
+                            break;
                         case MovementTypeY.JUMP_OR_CLIMB:
                             forceUp = true;
                             if (character.speedy == 0) {
@@ -610,8 +620,6 @@ namespace Lich {
                         case MovementTypeY.ASCENT:
                             forceUp = true;
                             character.speedy = character.accelerationY; break;
-                        case MovementTypeY.HOVER_UP: break;
-                        case MovementTypeY.HOVER_DOWN: break;
                     }
 
                     switch (character.movementTypeX) {
@@ -621,9 +629,8 @@ namespace Lich {
                             character.speedx = character.accelerationX; break;
                         case MovementTypeX.WALK_RIGHT:
                             character.speedx = -character.accelerationX; break;
-                        case MovementTypeX.HOVER_LEFT: break;
-                        case MovementTypeX.HOVER_RIGHT: break;
-
+                        case MovementTypeX.HOVER:
+                            break;
                     }
                 }
 
@@ -686,12 +693,14 @@ namespace Lich {
                         enemy.x -= rndX;
                         enemy.y -= rndY;
 
-                        if (enemy.x < -self.game.getCanvas().width * 2
-                            || enemy.x > self.game.getCanvas().width * 2
-                            || enemy.y < -self.game.getCanvas().height * 2
-                            || enemy.y > self.game.getCanvas().height * 2) {
-                            // dealokace
-                            self.removeEnemy(enemy);
+                        if (enemy.unspawns) {
+                            if (enemy.x < -self.game.getCanvas().width * 2
+                                || enemy.x > self.game.getCanvas().width * 2
+                                || enemy.y < -self.game.getCanvas().height * 2
+                                || enemy.y > self.game.getCanvas().height * 2) {
+                                // dealokace
+                                self.removeEnemy(enemy);
+                            }
                         }
                     });
                 }
@@ -741,7 +750,7 @@ namespace Lich {
                             self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
                             self.removeChild(object);
-                            Mixer.playSound(SoundKey.SND_PICK_KEY, false, 0.2);
+                            Mixer.playSound(SoundKey.SND_PICK_KEY, 0.2);
                             object = null;
                         }
                         if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {

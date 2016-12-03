@@ -1,37 +1,52 @@
 namespace Lich {
     export class Mixer {
 
-        static instances = new Array<createjs.AbstractSoundInstance>();
+        static soundInstances = new Array<createjs.AbstractSoundInstance>();
+        static musicInstances = new Array<createjs.AbstractSoundInstance>();
 
-        static playMusic(id: MusicKey, loop: boolean = false, volume = 0.5) {
-            Mixer.play(MusicKey[id], loop, volume);
+        static playMusic(id: MusicKey, volume = 0.5) {
+            Mixer.musicInstances[id] = Mixer.play(MusicKey[id], true, volume);
         }
 
-        static playSound(id: SoundKey, loop: boolean = false, volume = 0.5) {
-            Mixer.play(SoundKey[id], loop, volume);
+        static playSound(id: SoundKey, volume = 0.5) {
+            Mixer.soundInstances[id] = Mixer.play(SoundKey[id], false, volume);
         }
 
-        private static play(id: string, loop: boolean, volume: number) {
+        private static play(id: string, loop: boolean, volume: number): createjs.AbstractSoundInstance {
             var instance: createjs.AbstractSoundInstance = createjs.Sound.play(id, {
                 loop: loop ? -1 : 0
             });
             instance.volume = volume;
-            Mixer.instances[id] = instance;
+            return instance;
         }
 
-        static stopAll() {
-            Mixer.instances.forEach((instance) => {
+        static stopAllMusic() {
+            Mixer.musicInstances.forEach((instance) => {
                 instance.stop();
             });
-            Mixer.instances = new Array();
-            createjs.Sound.stop();
+            Mixer.musicInstances = new Array();
         }
 
-        static stop(id: SoundKey) {
-            var instance = Mixer.instances[id];
+        static stopAllSounds() {
+            Mixer.soundInstances.forEach((instance) => {
+                instance.stop();
+            });
+            Mixer.soundInstances = new Array();
+        }
+
+        static stopMusic(id: MusicKey) {
+            var instance = Mixer.musicInstances[id];
             if (typeof instance !== "undefined" && instance != null) {
                 instance.stop();
-                Mixer.instances[id] == null;
+                Mixer.musicInstances[id] == null;
+            }
+        }
+
+        static stopSound(id: SoundKey) {
+            var instance = Mixer.soundInstances[id];
+            if (typeof instance !== "undefined" && instance != null) {
+                instance.stop();
+                Mixer.soundInstances[id] == null;
             }
         }
 

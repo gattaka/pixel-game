@@ -7,7 +7,8 @@ var Lich;
 (function (Lich) {
     var AbstractWorldObject = (function (_super) {
         __extends(AbstractWorldObject, _super);
-        function AbstractWorldObject(width, height, spriteSheet, initState, collXOffset, collYOffset) {
+        function AbstractWorldObject(width, height, spriteSheet, initState, collXOffset, collYOffset, hovers) {
+            if (hovers === void 0) { hovers = false; }
             _super.call(this, spriteSheet, initState);
             this.width = width;
             this.height = height;
@@ -15,6 +16,7 @@ var Lich;
             this.initState = initState;
             this.collXOffset = collXOffset;
             this.collYOffset = collYOffset;
+            this.hovers = hovers;
             this.speedx = 0;
             this.speedy = 0;
         }

@@ -127,7 +127,7 @@ namespace Lich {
             object.x = context.xCast - object.width / 2;
             object.y = context.yCast - object.height / 2;
 
-            Mixer.playSound(self.castSoundKey, false, 0.2);
+            Mixer.playSound(self.castSoundKey, 0.2);
             return true;
         }
     }
@@ -413,7 +413,7 @@ namespace Lich {
 
             // SpawnPool.getInstance().spawn(Enemy.Redskull, context.game.getWorld());
             // SpawnPool.getInstance().spawn(Enemy.Chicken, context.game.getWorld());
-            SpawnPool.getInstance().spawn(Enemy.Bunny, context.game.getWorld())
+            SpawnPool.getInstance().spawn(Enemy.ChickenBoss, context.game.getWorld())
 
             return true;
         }

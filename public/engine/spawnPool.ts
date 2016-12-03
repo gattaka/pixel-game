@@ -43,7 +43,7 @@ namespace Lich {
             return ctx;
         }
 
-        private makeSpawn(enemyClass, world: World): boolean {
+        public spawn(enemyClass, world: World): boolean {
             let self = this;
             let ctx = self.createContext(world);
             // TODO tohle by se mělo dělat až když je jisté, že je nepřítele kam usadit. 
@@ -61,11 +61,13 @@ namespace Lich {
             // Zároveň ale nespawnuj pod obrazovkou, aby mohli nepřátelé volně dojít k hráči
             // a nemuseli šplhat
 
-            let tryToSpawn = (xt): boolean => {
-                for (let yt = ctx.startTiles.y + ctx.borderHeightInTiles; yt > ctx.startTiles.y; yt--) {
+            let tryToSpawn = (yt): boolean => {
+                for (let xt = ctx.startTiles.x; xt < ctx.startTiles.x + ctx.borderWidthInTiles; xt++) {
                     // Pokud nejde o záporné souřadnice nebo mimo rámec
-                    if (xt < 0 || yt < 0 || xt >= ctx.map.width || yt >= ctx.map.height)
+                    if (yt < 0 || yt >= ctx.map.height)
                         return false;
+                    if (xt < 0 || xt >= ctx.map.width)
+                        continue;
 
                     // pokud nejde o nepovolenou výšku mapy
                     let percentY = (yt / ctx.map.height) * 100;
@@ -77,21 +79,23 @@ namespace Lich {
                         && xt < ctx.startTiles.x + ctx.borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE
                         && yt + enHeight > ctx.startTiles.y + SpawnPool.SPAWN_ZONE_SIZE
                         && yt < ctx.startTiles.y + ctx.borderHeightInTiles - SpawnPool.SPAWN_ZONE_SIZE)
-                        return false;
+                        continue;
 
                     // Pak zkus najít prostor pro nepřítele
                     let fits = true;
-                    (() => {
-                        for (let eyt = 0; eyt <= enHeight; eyt++) {
-                            for (let ext = 0; ext <= enWidth; ext++) {
-                                let result = world.isCollisionByTiles(xt + ext, yt + eyt);
-                                if (result.hit) {
-                                    fits = false;
-                                    return;
+                    if (!enemy.hovers) {
+                        (() => {
+                            for (let eyt = 0; eyt <= enHeight; eyt++) {
+                                for (let ext = 0; ext <= enWidth; ext++) {
+                                    let result = world.isCollisionByTiles(xt + ext, yt + eyt);
+                                    if (result.hit) {
+                                        fits = false;
+                                        return;
+                                    }
                                 }
                             }
-                        }
-                    })();
+                        })();
+                    }
 
                     // Ok, vejde se
                     if (fits) {
@@ -118,20 +122,16 @@ namespace Lich {
                 }
             }
 
-            // Jednou to zkus zleva, jednou zprava
+            // Jednou to zkus zdola, jednou shora
             if (Math.random() > 0.5) {
-                for (let x = ctx.startTiles.x; x < ctx.startTiles.x + ctx.borderWidthInTiles; x++)
-                    if (tryToSpawn(x)) return true;
+                for (let yt = ctx.startTiles.y + ctx.borderHeightInTiles - 1; yt >= ctx.startTiles.y; yt--)
+                    if (tryToSpawn(yt)) return true;
             } else {
-                for (let x = ctx.startTiles.x + ctx.borderWidthInTiles; x > ctx.startTiles.x; x--)
-                    if (tryToSpawn(x)) return true;
+                for (let yt = ctx.startTiles.y; yt < ctx.startTiles.y + ctx.borderHeightInTiles; yt++)
+                    if (tryToSpawn(yt)) return true;
             }
 
             return false;
-        }
-
-        spawn(enemyClass, world: World): boolean {
-            return this.makeSpawn(enemyClass, world);
         }
 
         update(delta: number, world: World) {
@@ -141,7 +141,7 @@ namespace Lich {
             this.spawnCooldown.forEach((v, i) => {
                 self.spawnCooldownState[i] -= delta;
                 if (self.spawnCooldownState[i] < 0) {
-                    if (self.makeSpawn(self.spawnFactory[i], world)) {
+                    if (self.spawn(self.spawnFactory[i], world)) {
                         // podařilo se vytvořit a usadit nepřítele, nastav jeho spawn-cooldown
                         self.spawnCooldownState[i] = self.spawnCooldown[i];
                     }

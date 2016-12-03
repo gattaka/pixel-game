@@ -25,12 +25,15 @@ var Lich;
         ["sound/punch3.ogg", Lich.SoundKey.SND_PUNCH_3_KEY],
         ["sound/punch4.ogg", Lich.SoundKey.SND_PUNCH_4_KEY],
         ["sound/bone_crush.ogg", Lich.SoundKey.SND_SQUASHED_KEY],
-        ["sound/chicken_hit1.ogg", Lich.SoundKey.SND_CHICKEN_HIT_1],
-        ["sound/chicken_hit2.ogg", Lich.SoundKey.SND_CHICKEN_HIT_2],
-        ["sound/chicken_hit3.ogg", Lich.SoundKey.SND_CHICKEN_HIT_3],
-        ["sound/chicken_dead1.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_1],
-        ["sound/chicken_dead2.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_2],
-        ["sound/chicken_dead3.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_3],
-        ["sound/chicken_idle.ogg", Lich.SoundKey.SND_CHICKEN_IDLE]
+        ["sound/chicken_hit1.ogg", Lich.SoundKey.SND_CHICKEN_HIT_1_KEY],
+        ["sound/chicken_hit2.ogg", Lich.SoundKey.SND_CHICKEN_HIT_2_KEY],
+        ["sound/chicken_hit3.ogg", Lich.SoundKey.SND_CHICKEN_HIT_3_KEY],
+        ["sound/chicken_dead1.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_1_KEY],
+        ["sound/chicken_dead2.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_2_KEY],
+        ["sound/chicken_dead3.ogg", Lich.SoundKey.SND_CHICKEN_DEAD_3_KEY],
+        ["sound/chicken_idle.ogg", Lich.SoundKey.SND_CHICKEN_IDLE_KEY],
+        ["sound/chicken_boss_die.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_DEAD_KEY],
+        ["sound/chicken_boss_hit.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_HIT_KEY],
+        ["sound/chicken_boss_attack.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY]
     ];
 })(Lich || (Lich = {}));

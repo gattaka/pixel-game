@@ -126,9 +126,9 @@ namespace Lich {
             die(world: World) {
                 super.die(world);
                 switch (Math.floor(Math.random() * 3)) {
-                    case 0: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_1); break;
-                    case 1: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_2); break;
-                    case 2: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_3); break;
+                    case 0: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_1_KEY); break;
+                    case 1: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_2_KEY); break;
+                    case 2: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_3_KEY); break;
                 }
                 world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 2), this.x, this.y, false);
                 world.fadeEnemy(this);
@@ -137,9 +137,9 @@ namespace Lich {
             hit(damage: number, world: World): number {
                 if (this.getCurrentHealth() > 0) {
                     switch (Math.floor(Math.random() * 3)) {
-                        case 0: Mixer.playSound(SoundKey.SND_CHICKEN_HIT_1); break;
-                        case 1: Mixer.playSound(SoundKey.SND_CHICKEN_HIT_2); break;
-                        case 2: Mixer.playSound(SoundKey.SND_CHICKEN_HIT_3); break;
+                        case 0: Mixer.playSound(SoundKey.SND_CHICKEN_HIT_1_KEY); break;
+                        case 1: Mixer.playSound(SoundKey.SND_CHICKEN_HIT_2_KEY); break;
+                        case 2: Mixer.playSound(SoundKey.SND_CHICKEN_HIT_3_KEY); break;
                     }
                 }
                 super.hit(damage, world);

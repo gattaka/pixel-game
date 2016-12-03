@@ -19,32 +19,50 @@ namespace Lich {
             animations: Animations,
             public unspawns: boolean,
             public minDepth: number,
-            public maxDepth: number) {
-            super(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations);
+            public maxDepth: number,
+            hovers = false) {
+            super(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers);
+        }
+
+        protected isPlayerInReach(world: World) {
+            // enemy
+            let ex1 = this.x + this.collXOffset;
+            let ex2 = this.x + this.width - this.collXOffset;
+            let ey1 = this.y + this.collYOffset;
+            let ey2 = this.y + this.height - this.collYOffset;
+            // player
+            let hero = world.hero;
+            let px1 = hero.x + hero.collXOffset;
+            let px2 = hero.x + hero.width - hero.collXOffset;
+            let py1 = hero.y + hero.collYOffset;
+            let py2 = hero.y + hero.height - hero.collYOffset;
+            // hráč a nepřítel jsou zaklesnuti v x a y 
+            if ((ex1 >= px1 && ex1 <= px2 || ex2 >= px1 && ex2 <= px2 || px1 >= ex1 && px1 <= ex2 || px2 >= ex1 && px2 <= ex2)
+                && (ey1 >= py1 && ey1 <= py2 || ey2 >= py1 && ey2 <= py2 || py1 >= ey1 && py1 <= ey2 || py2 >= ey1 && py2 <= ey2)) {
+                // zásah hráče?
+                let heroHead = world.hero.y + world.hero.collYOffset;
+                let heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
+                let enemyHead = this.y;
+                let enemyFeet = this.y + this.height;
+                if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
+                    || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         runAI(world: World, delta: number) {
             if (this.getCurrentHealth() > 0) {
                 if (this.currentAttackCooldown < this.attackCooldown)
                     this.currentAttackCooldown += delta;
-                let reach = false;
-                if (this.x > world.hero.x && this.x < world.hero.x + world.hero.width - world.hero.collXOffset) {
+                if (this.isPlayerInReach(world)) {
                     this.movementTypeX = MovementTypeX.NONE;
-                    // zásah hráče?
-                    let heroHead = world.hero.y + world.hero.collYOffset;
-                    let heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
-                    let enemyHead = this.y;
-                    let enemyFeet = this.y + this.height;
-                    if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
-                        || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
-                        if (this.currentAttackCooldown > this.attackCooldown) {
-                            this.currentAttackCooldown = 0;
-                            world.hero.hit(this.damage, world);
-                            reach = true;
-                        }
+                    if (this.currentAttackCooldown > this.attackCooldown) {
+                        this.currentAttackCooldown = 0;
+                        world.hero.hit(this.damage, world);
                     }
-                }
-                if (!reach) {
+                } else {
                     let verticalStrategy = (nextX: number) => {
                         if ((world.hero.y + world.hero.height) > (this.y + this.height)) {
                             // pokud je hráč níž než já (vzdálenost je obrácená)

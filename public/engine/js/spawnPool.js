@@ -31,7 +31,7 @@ var Lich;
             ctx.map = world.tilesMap;
             return ctx;
         };
-        SpawnPool.prototype.makeSpawn = function (enemyClass, world) {
+        SpawnPool.prototype.spawn = function (enemyClass, world) {
             var self = this;
             var ctx = self.createContext(world);
             // TODO tohle by se mělo dělat až když je jisté, že je nepřítele kam usadit. 
@@ -47,11 +47,13 @@ var Lich;
             // nepřátelé nespawnovaly ve vzduchu a nepadaly na hráče z rohů obrazovky.
             // Zároveň ale nespawnuj pod obrazovkou, aby mohli nepřátelé volně dojít k hráči
             // a nemuseli šplhat
-            var tryToSpawn = function (xt) {
-                var _loop_1 = function(yt) {
+            var tryToSpawn = function (yt) {
+                var _loop_1 = function(xt) {
                     // Pokud nejde o záporné souřadnice nebo mimo rámec
-                    if (xt < 0 || yt < 0 || xt >= ctx.map.width || yt >= ctx.map.height)
+                    if (yt < 0 || yt >= ctx.map.height)
                         return { value: false };
+                    if (xt < 0 || xt >= ctx.map.width)
+                        return "continue";
                     // pokud nejde o nepovolenou výšku mapy
                     var percentY = (yt / ctx.map.height) * 100;
                     if (percentY > enemy.maxDepth || percentY < enemy.minDepth)
@@ -61,20 +63,22 @@ var Lich;
                         && xt < ctx.startTiles.x + ctx.borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE
                         && yt + enHeight > ctx.startTiles.y + SpawnPool.SPAWN_ZONE_SIZE
                         && yt < ctx.startTiles.y + ctx.borderHeightInTiles - SpawnPool.SPAWN_ZONE_SIZE)
-                        return { value: false };
+                        return "continue";
                     // Pak zkus najít prostor pro nepřítele
                     var fits = true;
-                    (function () {
-                        for (var eyt = 0; eyt <= enHeight; eyt++) {
-                            for (var ext = 0; ext <= enWidth; ext++) {
-                                var result = world.isCollisionByTiles(xt + ext, yt + eyt);
-                                if (result.hit) {
-                                    fits = false;
-                                    return;
+                    if (!enemy.hovers) {
+                        (function () {
+                            for (var eyt = 0; eyt <= enHeight; eyt++) {
+                                for (var ext = 0; ext <= enWidth; ext++) {
+                                    var result = world.isCollisionByTiles(xt + ext, yt + eyt);
+                                    if (result.hit) {
+                                        fits = false;
+                                        return;
+                                    }
                                 }
                             }
-                        }
-                    })();
+                        })();
+                    }
                     // Ok, vejde se
                     if (fits) {
                         var ei = 0;
@@ -97,26 +101,23 @@ var Lich;
                         return { value: true };
                     }
                 };
-                for (var yt = ctx.startTiles.y + ctx.borderHeightInTiles; yt > ctx.startTiles.y; yt--) {
-                    var state_1 = _loop_1(yt);
+                for (var xt = ctx.startTiles.x; xt < ctx.startTiles.x + ctx.borderWidthInTiles; xt++) {
+                    var state_1 = _loop_1(xt);
                     if (typeof state_1 === "object") return state_1.value;
                 }
             };
-            // Jednou to zkus zleva, jednou zprava
+            // Jednou to zkus zdola, jednou shora
             if (Math.random() > 0.5) {
-                for (var x = ctx.startTiles.x; x < ctx.startTiles.x + ctx.borderWidthInTiles; x++)
-                    if (tryToSpawn(x))
+                for (var yt = ctx.startTiles.y + ctx.borderHeightInTiles - 1; yt >= ctx.startTiles.y; yt--)
+                    if (tryToSpawn(yt))
                         return true;
             }
             else {
-                for (var x = ctx.startTiles.x + ctx.borderWidthInTiles; x > ctx.startTiles.x; x--)
-                    if (tryToSpawn(x))
+                for (var yt = ctx.startTiles.y; yt < ctx.startTiles.y + ctx.borderHeightInTiles; yt++)
+                    if (tryToSpawn(yt))
                         return true;
             }
             return false;
-        };
-        SpawnPool.prototype.spawn = function (enemyClass, world) {
-            return this.makeSpawn(enemyClass, world);
         };
         SpawnPool.prototype.update = function (delta, world) {
             if (world.enemiesCount >= SpawnPool.MAX_ENEMIES)
@@ -125,7 +126,7 @@ var Lich;
             this.spawnCooldown.forEach(function (v, i) {
                 self.spawnCooldownState[i] -= delta;
                 if (self.spawnCooldownState[i] < 0) {
-                    if (self.makeSpawn(self.spawnFactory[i], world)) {
+                    if (self.spawn(self.spawnFactory[i], world)) {
                         // podařilo se vytvořit a usadit nepřítele, nastav jeho spawn-cooldown
                         self.spawnCooldownState[i] = self.spawnCooldown[i];
                     }

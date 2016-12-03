@@ -71,9 +71,9 @@ namespace Lich {
             self.choosenItem = track;
 
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
-                Mixer.stop(self.reversedTrackIndex[i]);
+                Mixer.stopMusic(self.reversedTrackIndex[i]);
             }
-            Mixer.playMusic(track, true);
+            Mixer.playMusic(track);
             self.updateCache();
         }
 

@@ -3,38 +3,49 @@ var Lich;
     var Mixer = (function () {
         function Mixer() {
         }
-        Mixer.playMusic = function (id, loop, volume) {
-            if (loop === void 0) { loop = false; }
+        Mixer.playMusic = function (id, volume) {
             if (volume === void 0) { volume = 0.5; }
-            Mixer.play(Lich.MusicKey[id], loop, volume);
+            Mixer.musicInstances[id] = Mixer.play(Lich.MusicKey[id], true, volume);
         };
-        Mixer.playSound = function (id, loop, volume) {
-            if (loop === void 0) { loop = false; }
+        Mixer.playSound = function (id, volume) {
             if (volume === void 0) { volume = 0.5; }
-            Mixer.play(Lich.SoundKey[id], loop, volume);
+            Mixer.soundInstances[id] = Mixer.play(Lich.SoundKey[id], false, volume);
         };
         Mixer.play = function (id, loop, volume) {
             var instance = createjs.Sound.play(id, {
                 loop: loop ? -1 : 0
             });
             instance.volume = volume;
-            Mixer.instances[id] = instance;
+            return instance;
         };
-        Mixer.stopAll = function () {
-            Mixer.instances.forEach(function (instance) {
+        Mixer.stopAllMusic = function () {
+            Mixer.musicInstances.forEach(function (instance) {
                 instance.stop();
             });
-            Mixer.instances = new Array();
-            createjs.Sound.stop();
+            Mixer.musicInstances = new Array();
         };
-        Mixer.stop = function (id) {
-            var instance = Mixer.instances[id];
+        Mixer.stopAllSounds = function () {
+            Mixer.soundInstances.forEach(function (instance) {
+                instance.stop();
+            });
+            Mixer.soundInstances = new Array();
+        };
+        Mixer.stopMusic = function (id) {
+            var instance = Mixer.musicInstances[id];
             if (typeof instance !== "undefined" && instance != null) {
                 instance.stop();
-                Mixer.instances[id] == null;
+                Mixer.musicInstances[id] == null;
             }
         };
-        Mixer.instances = new Array();
+        Mixer.stopSound = function (id) {
+            var instance = Mixer.soundInstances[id];
+            if (typeof instance !== "undefined" && instance != null) {
+                instance.stop();
+                Mixer.soundInstances[id] == null;
+            }
+        };
+        Mixer.soundInstances = new Array();
+        Mixer.musicInstances = new Array();
         return Mixer;
     }());
     Lich.Mixer = Mixer;

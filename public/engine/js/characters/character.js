@@ -13,8 +13,7 @@ var Lich;
         // Jde doprava (respektuje kolize)
         MovementTypeX[MovementTypeX["WALK_RIGHT"] = 2] = "WALK_RIGHT";
         // Vznáší se (nerespektuje gravitaci ani kolize)
-        MovementTypeX[MovementTypeX["HOVER_LEFT"] = 3] = "HOVER_LEFT";
-        MovementTypeX[MovementTypeX["HOVER_RIGHT"] = 4] = "HOVER_RIGHT";
+        MovementTypeX[MovementTypeX["HOVER"] = 3] = "HOVER";
     })(Lich.MovementTypeX || (Lich.MovementTypeX = {}));
     var MovementTypeX = Lich.MovementTypeX;
     (function (MovementTypeY) {
@@ -27,13 +26,13 @@ var Lich;
         // Letí (nerespektuje gravitaci, ale kolize ano)
         MovementTypeY[MovementTypeY["ASCENT"] = 3] = "ASCENT";
         // Vznáší se (nerespektuje gravitaci ani kolize)
-        MovementTypeY[MovementTypeY["HOVER_UP"] = 4] = "HOVER_UP";
-        MovementTypeY[MovementTypeY["HOVER_DOWN"] = 5] = "HOVER_DOWN";
+        MovementTypeY[MovementTypeY["HOVER"] = 4] = "HOVER";
     })(Lich.MovementTypeY || (Lich.MovementTypeY = {}));
     var MovementTypeY = Lich.MovementTypeY;
     var Character = (function (_super) {
         __extends(Character, _super);
-        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations) {
+        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers) {
+            if (hovers === void 0) { hovers = false; }
             _super.call(this, width, height, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[animationKey])],
@@ -45,7 +44,7 @@ var Lich;
                     "width": width
                 },
                 "animations": animations.serialize()
-            }), initState, collXOffset, collYOffset);
+            }), initState, collXOffset, collYOffset, hovers);
             this.accelerationX = accelerationX;
             this.accelerationY = accelerationY;
             this.HEALTH_REGEN_TIME = 1000;

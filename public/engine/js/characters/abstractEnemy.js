@@ -7,8 +7,9 @@ var Lich;
 (function (Lich) {
     var AbstractEnemy = (function (_super) {
         __extends(AbstractEnemy, _super);
-        function AbstractEnemy(damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, unspawns, minDepth, maxDepth) {
-            _super.call(this, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations);
+        function AbstractEnemy(damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, unspawns, minDepth, maxDepth, hovers) {
+            if (hovers === void 0) { hovers = false; }
+            _super.call(this, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers);
             this.damage = damage;
             this.attackCooldown = attackCooldown;
             this.unspawns = unspawns;
@@ -16,29 +17,46 @@ var Lich;
             this.maxDepth = maxDepth;
             this.currentAttackCooldown = 0;
         }
+        AbstractEnemy.prototype.isPlayerInReach = function (world) {
+            // enemy
+            var ex1 = this.x + this.collXOffset;
+            var ex2 = this.x + this.width - this.collXOffset;
+            var ey1 = this.y + this.collYOffset;
+            var ey2 = this.y + this.height - this.collYOffset;
+            // player
+            var hero = world.hero;
+            var px1 = hero.x + hero.collXOffset;
+            var px2 = hero.x + hero.width - hero.collXOffset;
+            var py1 = hero.y + hero.collYOffset;
+            var py2 = hero.y + hero.height - hero.collYOffset;
+            // hráč a nepřítel jsou zaklesnuti v x a y 
+            if ((ex1 >= px1 && ex1 <= px2 || ex2 >= px1 && ex2 <= px2 || px1 >= ex1 && px1 <= ex2 || px2 >= ex1 && px2 <= ex2)
+                && (ey1 >= py1 && ey1 <= py2 || ey2 >= py1 && ey2 <= py2 || py1 >= ey1 && py1 <= ey2 || py2 >= ey1 && py2 <= ey2)) {
+                // zásah hráče?
+                var heroHead = world.hero.y + world.hero.collYOffset;
+                var heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
+                var enemyHead = this.y;
+                var enemyFeet = this.y + this.height;
+                if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
+                    || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
+                    return true;
+                }
+            }
+            return false;
+        };
         AbstractEnemy.prototype.runAI = function (world, delta) {
             var _this = this;
             if (this.getCurrentHealth() > 0) {
                 if (this.currentAttackCooldown < this.attackCooldown)
                     this.currentAttackCooldown += delta;
-                var reach = false;
-                if (this.x > world.hero.x && this.x < world.hero.x + world.hero.width - world.hero.collXOffset) {
+                if (this.isPlayerInReach(world)) {
                     this.movementTypeX = Lich.MovementTypeX.NONE;
-                    // zásah hráče?
-                    var heroHead = world.hero.y + world.hero.collYOffset;
-                    var heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
-                    var enemyHead = this.y;
-                    var enemyFeet = this.y + this.height;
-                    if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
-                        || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
-                        if (this.currentAttackCooldown > this.attackCooldown) {
-                            this.currentAttackCooldown = 0;
-                            world.hero.hit(this.damage, world);
-                            reach = true;
-                        }
+                    if (this.currentAttackCooldown > this.attackCooldown) {
+                        this.currentAttackCooldown = 0;
+                        world.hero.hit(this.damage, world);
                     }
                 }
-                if (!reach) {
+                else {
                     var verticalStrategy = function (nextX) {
                         if ((world.hero.y + world.hero.height) > (_this.y + _this.height)) {
                             // pokud je hráč níž než já (vzdálenost je obrácená)
