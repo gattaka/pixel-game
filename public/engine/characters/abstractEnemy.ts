@@ -1,4 +1,5 @@
 namespace Lich {
+
     export abstract class AbstractEnemy extends Character {
 
         protected currentAttackCooldown = 0;
@@ -15,7 +16,10 @@ namespace Lich {
             frames: number,
             accelerationX: number,
             accelerationY: number,
-            animations: Animations) {
+            animations: Animations,
+            public unspawns: boolean,
+            public minDepth: number,
+            public maxDepth: number) {
             super(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations);
         }
 

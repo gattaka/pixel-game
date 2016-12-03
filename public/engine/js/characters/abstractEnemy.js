@@ -7,10 +7,13 @@ var Lich;
 (function (Lich) {
     var AbstractEnemy = (function (_super) {
         __extends(AbstractEnemy, _super);
-        function AbstractEnemy(damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations) {
+        function AbstractEnemy(damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, unspawns, minDepth, maxDepth) {
             _super.call(this, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations);
             this.damage = damage;
             this.attackCooldown = attackCooldown;
+            this.unspawns = unspawns;
+            this.minDepth = minDepth;
+            this.maxDepth = maxDepth;
             this.currentAttackCooldown = 0;
         }
         AbstractEnemy.prototype.runAI = function (world, delta) {

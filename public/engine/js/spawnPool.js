@@ -52,6 +52,10 @@ var Lich;
                     // Pokud nejde o záporné souřadnice nebo mimo rámec
                     if (xt < 0 || yt < 0 || xt >= ctx.map.width || yt >= ctx.map.height)
                         return { value: false };
+                    // pokud nejde o nepovolenou výšku mapy
+                    var percentY = (yt / ctx.map.height) * 100;
+                    if (percentY > enemy.maxDepth || percentY < enemy.minDepth)
+                        return { value: false };
                     // Pokud nejde o viditelnou část obrazovky
                     if (xt + enWidth > ctx.startTiles.x + SpawnPool.SPAWN_ZONE_SIZE
                         && xt < ctx.startTiles.x + ctx.borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE

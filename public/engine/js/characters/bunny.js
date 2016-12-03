@@ -28,7 +28,10 @@ var Lich;
                     .add(Bunny.JUMPR, 0, 3, Bunny.JUMPR, 0.2)
                     .add(Bunny.IDLER, 0, 0, Bunny.IDLER, 0.001)
                     .add(Bunny.EATR, 4, 5, Bunny.EATR, 0.1)
-                    .add(Bunny.DIE, 12, 12, Bunny.DIE, 0.1));
+                    .add(Bunny.DIE, 12, 12, Bunny.DIE, 0.1), true, // unspawns
+                0, // min depth 
+                20 // max depth
+                );
                 this.modeCooldown = 0;
                 this.currentMode = 0;
                 this.lastOrientationLeft = true;

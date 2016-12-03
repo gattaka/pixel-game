@@ -50,7 +50,7 @@ namespace Lich {
             // K tomu ale potřebuju jeho šířku a výšku a to je property kterou obecně nemůžu 
             // staticky adresovat (nemám abstract static property). Bude potřeba vytvořit
             // nějaký statický enemy-dimensions rejstřík
-            let enemy = new enemyClass();
+            let enemy: AbstractEnemy = new enemyClass();
             let enWidth = world.render.pixelsDistanceToTiles(enemy.width);
             let enHeight = world.render.pixelsDistanceToTiles(enemy.height);
 
@@ -66,8 +66,13 @@ namespace Lich {
                     // Pokud nejde o záporné souřadnice nebo mimo rámec
                     if (xt < 0 || yt < 0 || xt >= ctx.map.width || yt >= ctx.map.height)
                         return false;
-                    // Pokud nejde o viditelnou část obrazovky
 
+                    // pokud nejde o nepovolenou výšku mapy
+                    let percentY = (yt / ctx.map.height) * 100;
+                    if (percentY > enemy.maxDepth || percentY < enemy.minDepth)
+                        return false;
+
+                    // Pokud nejde o viditelnou část obrazovky
                     if (xt + enWidth > ctx.startTiles.x + SpawnPool.SPAWN_ZONE_SIZE
                         && xt < ctx.startTiles.x + ctx.borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE
                         && yt + enHeight > ctx.startTiles.y + SpawnPool.SPAWN_ZONE_SIZE

@@ -54,20 +54,23 @@ namespace Lich {
                                 if (obj) {
                                     // TODO Stromy
                                 } else {
-                                    // nic tam není, dej tam trávu
+                                    // nic tam není, dej tam trávu, kytky apod.
                                     let key;
-                                    switch (Math.floor(Math.random() * 11)) {
+                                    switch (Math.floor(Math.random() * 8)) {
                                         case 0: key = MapObjectKey.MAP_GRASS1_KEY; break;
                                         case 1: key = MapObjectKey.MAP_GRASS2_KEY; break;
                                         case 2: key = MapObjectKey.MAP_GRASS3_KEY; break;
                                         case 3: key = MapObjectKey.MAP_BUSH_KEY; break;
                                         case 4: key = MapObjectKey.MAP_BUSH2_KEY; break;
-                                        case 5: key = MapObjectKey.MAP_PLANT_KEY; break;
-                                        case 6: key = MapObjectKey.MAP_PLANT2_KEY; break;
-                                        case 7: key = MapObjectKey.MAP_PLANT3_KEY; break;
-                                        case 8: key = MapObjectKey.MAP_PLANT4_KEY; break;
-                                        case 9: key = MapObjectKey.MAP_TREE3_KEY; break;
-                                        case 10: key = MapObjectKey.MAP_TREE4_KEY; break;
+                                        case 5:
+                                            switch (Math.floor(Math.random() * 5)) {
+                                                case 0: key = MapObjectKey.MAP_PLANT_KEY; break;
+                                                case 1: key = MapObjectKey.MAP_PLANT2_KEY; break;
+                                                case 2: key = MapObjectKey.MAP_PLANT3_KEY; break;
+                                                case 3: key = MapObjectKey.MAP_PLANT4_KEY; break;
+                                            } break;
+                                        case 6: key = MapObjectKey.MAP_TREE3_KEY; break;
+                                        case 7: key = MapObjectKey.MAP_TREE4_KEY; break;
                                     }
                                     // self.render.placeObject(xt, yt - 1, Resources.getInstance().mapObjectDefs[grassKey]);
                                     // pokládání se dává na souřadnici povrchu, nikoliv objektu (takže to není -2)

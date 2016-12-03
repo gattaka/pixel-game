@@ -41,9 +41,9 @@ var Lich;
                                 if (obj) {
                                 }
                                 else {
-                                    // nic tam není, dej tam trávu
+                                    // nic tam není, dej tam trávu, kytky apod.
                                     var key = void 0;
-                                    switch (Math.floor(Math.random() * 11)) {
+                                    switch (Math.floor(Math.random() * 8)) {
                                         case 0:
                                             key = Lich.MapObjectKey.MAP_GRASS1_KEY;
                                             break;
@@ -60,21 +60,25 @@ var Lich;
                                             key = Lich.MapObjectKey.MAP_BUSH2_KEY;
                                             break;
                                         case 5:
-                                            key = Lich.MapObjectKey.MAP_PLANT_KEY;
+                                            switch (Math.floor(Math.random() * 5)) {
+                                                case 0:
+                                                    key = Lich.MapObjectKey.MAP_PLANT_KEY;
+                                                    break;
+                                                case 1:
+                                                    key = Lich.MapObjectKey.MAP_PLANT2_KEY;
+                                                    break;
+                                                case 2:
+                                                    key = Lich.MapObjectKey.MAP_PLANT3_KEY;
+                                                    break;
+                                                case 3:
+                                                    key = Lich.MapObjectKey.MAP_PLANT4_KEY;
+                                                    break;
+                                            }
                                             break;
                                         case 6:
-                                            key = Lich.MapObjectKey.MAP_PLANT2_KEY;
-                                            break;
-                                        case 7:
-                                            key = Lich.MapObjectKey.MAP_PLANT3_KEY;
-                                            break;
-                                        case 8:
-                                            key = Lich.MapObjectKey.MAP_PLANT4_KEY;
-                                            break;
-                                        case 9:
                                             key = Lich.MapObjectKey.MAP_TREE3_KEY;
                                             break;
-                                        case 10:
+                                        case 7:
                                             key = Lich.MapObjectKey.MAP_TREE4_KEY;
                                             break;
                                     }

@@ -24,6 +24,8 @@ var Lich;
             version = new Version("0.13 - Dec 1, 2016");
             version.addChange("New cursor");
             version.addChange("Bunnies introduced");
+            version.addChange("Helpfile improved");
+            version.addChange("Critters autospawn");
             this.addVersion(version);
             version = new Version("0.12 - Nov 28, 2016");
             version.addChange("Gold introduced");

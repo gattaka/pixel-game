@@ -32,7 +32,10 @@ var Lich;
                     .add(Redskull.DIE, 28, 28, Redskull.DEAD, 0.2)
                     .add(Redskull.DEAD, 29, 29, Redskull.DEAD, 0.2)
                     .add(Redskull.TELEPORT, 30, 36, Redskull.IDLE, 1.0)
-                    .add(Redskull.CLIMB, 37, 39, Redskull.CLIMB, 0.3));
+                    .add(Redskull.CLIMB, 37, 39, Redskull.CLIMB, 0.3), true, // unspawns
+                0, // min depth 
+                50 // max depth
+                );
             }
             Redskull.prototype.walkL = function () { this.performState(Redskull.WALKL); };
             ;

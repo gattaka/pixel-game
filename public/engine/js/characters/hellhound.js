@@ -24,7 +24,10 @@ var Lich;
                     .add(Hellhound.WALKR, 5, 9, Hellhound.WALKR, 0.2)
                     .add(Hellhound.WALKL, 0, 4, Hellhound.WALKL, 0.2)
                     .add(Hellhound.JUMPR, 16, 21, Hellhound.WALKR, 0.2)
-                    .add(Hellhound.JUMPL, 10, 15, Hellhound.WALKL, 0.2));
+                    .add(Hellhound.JUMPL, 10, 15, Hellhound.WALKL, 0.2), true, // unspawns
+                0, // min depth 
+                50 // max depth
+                );
             }
             Hellhound.prototype.walkL = function () { this.performState(Hellhound.WALKL); };
             ;

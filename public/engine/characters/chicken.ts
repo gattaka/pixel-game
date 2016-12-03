@@ -40,7 +40,10 @@ namespace Lich {
                         .add(Chicken.JUMPR, 10, 10, Chicken.WALKR, 0.2)
                         .add(Chicken.IDLER, 11, 11, Chicken.IDLER, 0.001)
                         .add(Chicken.EATR, 12, 13, Chicken.EATR, 0.1)
-                        .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1)
+                        .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1),
+                    true, // unspawns
+                    0, // min depth 
+                    25 // max depth
                 );
                 this.setNewMaxHealth(50);
             }
