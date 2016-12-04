@@ -1,10 +1,11 @@
 namespace Lich {
 
-    export abstract class AbstractWorldObject extends createjs.Sprite {
+    export abstract class AbstractWorldObject extends createjs.Container {
 
         state: string;
         public speedx: number = 0;
         public speedy: number = 0;
+        protected sprite: createjs.Sprite;
 
         constructor(
             public width: number,
@@ -14,13 +15,20 @@ namespace Lich {
             public collXOffset: number,
             public collYOffset: number,
             public hovers = false) {
-            super(spriteSheet, initState);
+            super();
+            this.sprite = new createjs.Sprite(spriteSheet, initState);
+            this.addChild(this.sprite);
         }
+
+        play() { this.sprite.play(); }
+        stop() { this.sprite.stop(); }
+        gotoAndPlay(desiredState: string) { this.sprite.gotoAndPlay(desiredState); }
+        getCurrentAnimation() { return this.sprite.currentAnimation; }
 
         performState(desiredState: string) {
             var self = this;
             if (self.state !== desiredState) {
-                self.gotoAndPlay(desiredState);
+                self.sprite.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }
         }
@@ -90,7 +98,7 @@ namespace Lich {
         public update(sDelta: number, game: Game) {
             var self: BasicBullet = this;
             if (self.ending) {
-                if (self.currentAnimation === self.endState) {
+                if (self.sprite.currentAnimation === self.endState) {
                     self.done = true;
                 }
                 return;
@@ -123,9 +131,9 @@ namespace Lich {
 
             var onCollision = function (clsn) {
                 if (self.ending === false) {
-                    Mixer.playSound(self.hitSound, false, 0.1);
+                    Mixer.playSound(self.hitSound, 0.1);
                     self.ending = true;
-                    self.gotoAndPlay("hit");
+                    self.sprite.gotoAndPlay("hit");
 
                     if (self.mapDestroy) {
                         var centX = self.x + self.width / 2;

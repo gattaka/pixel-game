@@ -9,7 +9,7 @@ var Lich;
         __extends(AbstractWorldObject, _super);
         function AbstractWorldObject(width, height, spriteSheet, initState, collXOffset, collYOffset, hovers) {
             if (hovers === void 0) { hovers = false; }
-            _super.call(this, spriteSheet, initState);
+            _super.call(this);
             this.width = width;
             this.height = height;
             this.spriteSheet = spriteSheet;
@@ -19,18 +19,24 @@ var Lich;
             this.hovers = hovers;
             this.speedx = 0;
             this.speedy = 0;
+            this.sprite = new createjs.Sprite(spriteSheet, initState);
+            this.addChild(this.sprite);
         }
+        AbstractWorldObject.prototype.play = function () { this.sprite.play(); };
+        AbstractWorldObject.prototype.stop = function () { this.sprite.stop(); };
+        AbstractWorldObject.prototype.gotoAndPlay = function (desiredState) { this.sprite.gotoAndPlay(desiredState); };
+        AbstractWorldObject.prototype.getCurrentAnimation = function () { return this.sprite.currentAnimation; };
         AbstractWorldObject.prototype.performState = function (desiredState) {
             var self = this;
             if (self.state !== desiredState) {
-                self.gotoAndPlay(desiredState);
+                self.sprite.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }
         };
         AbstractWorldObject.prototype.updateAnimations = function () { };
         ;
         return AbstractWorldObject;
-    }(createjs.Sprite));
+    }(createjs.Container));
     Lich.AbstractWorldObject = AbstractWorldObject;
     var BulletObject = (function (_super) {
         __extends(BulletObject, _super);
@@ -87,7 +93,7 @@ var Lich;
         BasicBullet.prototype.update = function (sDelta, game) {
             var self = this;
             if (self.ending) {
-                if (self.currentAnimation === self.endState) {
+                if (self.sprite.currentAnimation === self.endState) {
                     self.done = true;
                 }
                 return;
@@ -119,9 +125,9 @@ var Lich;
             };
             var onCollision = function (clsn) {
                 if (self.ending === false) {
-                    Lich.Mixer.playSound(self.hitSound, false, 0.1);
+                    Lich.Mixer.playSound(self.hitSound, 0.1);
                     self.ending = true;
-                    self.gotoAndPlay("hit");
+                    self.sprite.gotoAndPlay("hit");
                     if (self.mapDestroy) {
                         var centX = self.x + self.width / 2;
                         var centY = self.y + self.height / 2;

@@ -68,7 +68,7 @@ var Lich;
         Hero.prototype.performState = function (desiredState) {
             var self = this;
             if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
-                && self.currentAnimation != Hero.TELEPORT) {
+                && self.sprite.currentAnimation != Hero.TELEPORT) {
                 self.gotoAndPlay(desiredState);
                 self.state = desiredState;
             }

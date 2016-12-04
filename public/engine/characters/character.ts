@@ -33,6 +33,8 @@ namespace Lich {
         protected currentWill = this.maxWill;
         protected willRegen = 0;
 
+        protected healthBar: createjs.Shape;
+
         // Typy pohybu, u hráče odpovídá stisku klávesy, 
         // u nepřítele jeho AI nasměrování
         public movementTypeX = MovementTypeX.NONE;
@@ -63,9 +65,34 @@ namespace Lich {
                 },
                 "animations": animations.serialize()
             }), initState, collXOffset, collYOffset, hovers);
+
+            this.healthBar = new createjs.Shape();
+            this.healthBar.width = this.width;
+            this.healthBar.height = 4;
+            this.healthBar.x = 0;
+            this.healthBar.y = -this.healthBar.height;
+            this.healthBar.visible = false;
+            this.addChild(this.healthBar);
         }
 
-        onHealthChange(difference: number) { };
+        private updateHealthBar() {
+            if (this.currentHealth == this.maxHealth) {
+                this.healthBar.visible = false;
+            } else {
+                this.healthBar.visible = true;
+                this.healthBar.graphics.clear();
+                this.healthBar.graphics.beginFill("rgba(0,255,0,0.7)");
+                this.healthBar.graphics.drawRect(0, 0, this.width, this.healthBar.height);
+                var width = this.width * (1 - this.currentHealth / this.maxHealth);
+                this.healthBar.graphics.beginFill("rgba(255,0,0,0.7)");
+                this.healthBar.graphics.drawRect(0, 0, width, this.healthBar.height);
+            }
+        }
+
+        onHealthChange(difference: number) {
+            this.updateHealthBar();
+        };
+
         onWillChange(difference: number) { };
 
         abstract walkL();

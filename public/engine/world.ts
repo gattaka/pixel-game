@@ -718,7 +718,7 @@ namespace Lich {
                 for (var i = 0; i < self.bulletObjects.length; i++) {
                     var object = self.bulletObjects[i];
                     object.update(sDelta, self.game);
-                    if (object.isDone() || object.currentAnimation === "done") {
+                    if (object.isDone() || object.getCurrentAnimation() === "done") {
                         self.bulletObjects.splice(i, 1);
                         self.removeChild(object);
                     }
