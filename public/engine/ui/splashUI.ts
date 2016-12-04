@@ -29,6 +29,7 @@ namespace Lich {
             version.addChange("Helpfile improved");
             version.addChange("Critters autospawn");
             version.addChange("Chicken boss introduced");
+            version.addChange("Chicken talons introduced");
             version.addChange("Do not kill the chickens...");
             this.addVersion(version);
 

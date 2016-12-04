@@ -46,6 +46,7 @@ namespace Lich {
         ["images/ui/inventory/inv_flower_pot.png", InventoryKey.INV_FLOWER_POT_KEY],
         ["images/ui/inventory/inv_chandelier.png", InventoryKey.INV_CHANDELIER_KEY],
         ["images/ui/inventory/inv_gold.png", InventoryKey.INV_GOLD_ORE_KEY],
-        ["images/ui/inventory/inv_chicken_meat.png", InventoryKey.INV_CHICKEN_MEAT_KEY]
+        ["images/ui/inventory/inv_chicken_meat.png", InventoryKey.INV_CHICKEN_MEAT_KEY],
+        ["images/ui/inventory/inv_chicken_talon.png", InventoryKey.INV_CHICKEN_TALON_KEY]
     ]
 }

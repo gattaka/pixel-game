@@ -95,7 +95,9 @@ var Lich;
                         }
                         else {
                             // jsem připraven útočit, útoč
-                            if (this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN && !this.charging) {
+                            if ((this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN
+                                || this.frenzy && this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN / 2)
+                                && !this.charging) {
                                 this.performState(ChickenBoss.ATTACK);
                                 Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);
                                 this.lockedTime = 0;
@@ -166,6 +168,11 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_HIT_KEY, 0.1);
                 }
                 _super.prototype.hit.call(this, damage, world);
+                if (!this.frenzy && this.getCurrentHealth() < this.getMaxHealth() / 2) {
+                    this.accelerationX *= 1.5;
+                    this.accelerationY *= 1.5;
+                    this.frenzy = true;
+                }
                 return damage;
             };
             /**
@@ -190,8 +197,8 @@ var Lich;
             ChickenBoss.ANGLE_STEP_PER_SEC = 90;
             ChickenBoss.PULL_RADIUS = 500;
             ChickenBoss.RADIUS = 400;
-            ChickenBoss.CHARGE_COOLDOWN = 7000;
-            ChickenBoss.CHARGE_DURATION = 3000;
+            ChickenBoss.CHARGE_COOLDOWN = 6000;
+            ChickenBoss.CHARGE_DURATION = 2000;
             // každých ANGER_COOLDOWN se sníží chickenKills
             ChickenBoss.ANGER_COOLDOWN = 30000;
             ChickenBoss.ANGER_THRESHOLD = 10;

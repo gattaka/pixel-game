@@ -25,8 +25,8 @@ namespace Lich {
             static ANGLE_STEP_PER_SEC = 90;
             static PULL_RADIUS = 500;
             static RADIUS = 400;
-            static CHARGE_COOLDOWN = 7000;
-            static CHARGE_DURATION = 3000;
+            static CHARGE_COOLDOWN = 6000;
+            static CHARGE_DURATION = 2000;
 
             // každých ANGER_COOLDOWN se sníží chickenKills
             static ANGER_COOLDOWN = 30000;
@@ -34,6 +34,8 @@ namespace Lich {
             static currentAngerCooldown = 0;
             static chickenKills = 0;
             static spawned = false;
+
+            private frenzy: boolean;
 
             private angle = 0;
             private currentChargeCooldown = 0;
@@ -137,7 +139,9 @@ namespace Lich {
                             stopCharging();
                         } else {
                             // jsem připraven útočit, útoč
-                            if (this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN && !this.charging) {
+                            if ((this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN
+                                || this.frenzy && this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN / 2)
+                                && !this.charging) {
                                 this.performState(ChickenBoss.ATTACK);
                                 Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);
                                 this.lockedTime = 0;
@@ -201,6 +205,11 @@ namespace Lich {
                     Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_HIT_KEY, 0.1);
                 }
                 super.hit(damage, world);
+                if (!this.frenzy && this.getCurrentHealth() < this.getMaxHealth() / 2) {
+                    this.accelerationX *= 1.5;
+                    this.accelerationY *= 1.5;
+                    this.frenzy = true;
+                }
                 return damage;
             }
 

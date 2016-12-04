@@ -131,20 +131,24 @@ namespace Lich {
                     case 1: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_2_KEY); break;
                     case 2: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_3_KEY); break;
                 }
-                world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 2), this.x, this.y, false);
+                if (Math.random() > 0.5) {
+                    world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 1), this.x, this.y, false);
+                } else {
+                    world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_TALON_KEY, 1), this.x, this.y, false);
+                }
                 world.fadeEnemy(this);
                 ChickenBoss.chickenKills++;
                 if (ChickenBoss.chickenKills >= ChickenBoss.ANGER_THRESHOLD && ChickenBoss.spawned == false) {
-                    world.fadeText("Murhun spawned...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                    world.fadeText("Murhun spawned...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000", 2000);
                     SpawnPool.getInstance().spawn(Enemy.ChickenBoss, world);
                     ChickenBoss.chickenKills = 0;
                     ChickenBoss.currentAngerCooldown = 0;
                 } else if (ChickenBoss.chickenKills == Math.floor(ChickenBoss.ANGER_THRESHOLD / 2)) {
-                    world.fadeText("Not wise...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                    world.fadeText("Not wise...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000", 2000);
                 } else if (ChickenBoss.chickenKills == ChickenBoss.ANGER_THRESHOLD - 2) {
-                    world.fadeText("Poor chicken...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                    world.fadeText("Poor chicken...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000", 2000);
                 } else if (ChickenBoss.chickenKills == ChickenBoss.ANGER_THRESHOLD - 1) {
-                    world.fadeText("Poor you...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                    world.fadeText("Poor you...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000", 2000);
                 }
             }
 

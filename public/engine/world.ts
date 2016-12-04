@@ -155,7 +155,7 @@ namespace Lich {
                 })
         }
 
-        fadeText(text: string, px: number, py: number, size = PartsUI.TEXT_SIZE, color = Resources.TEXT_COLOR, outlineColor = Resources.OUTLINE_COLOR) {
+        fadeText(text: string, px: number, py: number, size = PartsUI.TEXT_SIZE, color = Resources.TEXT_COLOR, outlineColor = Resources.OUTLINE_COLOR, time = 1000) {
             let self = this;
             let label = new Label(text, size + "px " + Resources.FONT, color, true, outlineColor, 1);
             self.addChild(label);
@@ -176,7 +176,7 @@ namespace Lich {
                 .to({
                     alpha: 0,
                     tweenY: -100
-                }, 1000).call(function () {
+                }, time).call(function () {
                     self.labelObjects[id] = undefined;
                     self.removeChild(label);
                 });

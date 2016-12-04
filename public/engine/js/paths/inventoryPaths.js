@@ -47,6 +47,7 @@ var Lich;
         ["images/ui/inventory/inv_flower_pot.png", Lich.InventoryKey.INV_FLOWER_POT_KEY],
         ["images/ui/inventory/inv_chandelier.png", Lich.InventoryKey.INV_CHANDELIER_KEY],
         ["images/ui/inventory/inv_gold.png", Lich.InventoryKey.INV_GOLD_ORE_KEY],
-        ["images/ui/inventory/inv_chicken_meat.png", Lich.InventoryKey.INV_CHICKEN_MEAT_KEY]
+        ["images/ui/inventory/inv_chicken_meat.png", Lich.InventoryKey.INV_CHICKEN_MEAT_KEY],
+        ["images/ui/inventory/inv_chicken_talon.png", Lich.InventoryKey.INV_CHICKEN_TALON_KEY]
     ];
 })(Lich || (Lich = {}));

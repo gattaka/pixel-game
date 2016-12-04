@@ -48,6 +48,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_CHANDELIER_KEY"] = 44] = "INV_CHANDELIER_KEY";
         InventoryKey[InventoryKey["INV_GOLD_ORE_KEY"] = 45] = "INV_GOLD_ORE_KEY";
         InventoryKey[InventoryKey["INV_CHICKEN_MEAT_KEY"] = 46] = "INV_CHICKEN_MEAT_KEY";
+        InventoryKey[InventoryKey["INV_CHICKEN_TALON_KEY"] = 47] = "INV_CHICKEN_TALON_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));

@@ -135,10 +135,11 @@ var Lich;
                 self.removeChild(deadInfo);
             });
         };
-        World.prototype.fadeText = function (text, px, py, size, color, outlineColor) {
+        World.prototype.fadeText = function (text, px, py, size, color, outlineColor, time) {
             if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
             if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
             if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
+            if (time === void 0) { time = 1000; }
             var self = this;
             var label = new Lich.Label(text, size + "px " + Lich.Resources.FONT, color, true, outlineColor, 1);
             self.addChild(label);
@@ -159,7 +160,7 @@ var Lich;
                 .to({
                 alpha: 0,
                 tweenY: -100
-            }, 1000).call(function () {
+            }, time).call(function () {
                 self.labelObjects[id] = undefined;
                 self.removeChild(label);
             });
