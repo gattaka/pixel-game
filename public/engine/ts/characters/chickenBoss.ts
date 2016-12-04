@@ -69,6 +69,7 @@ namespace Lich {
                 );
                 this.maxHealth = this.currentHealth = 5000;
                 this.healthBar.height = 10;
+                this.healthBar.y = -this.healthBar.height;
 
                 // stále jsem v hover pohybu
                 this.movementTypeX = MovementTypeX.HOVER;

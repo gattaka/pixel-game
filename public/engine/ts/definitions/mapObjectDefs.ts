@@ -1,4 +1,19 @@
 namespace Lich {
+    let createWorkstationCallback = (key: MapObjectKey) => {
+        return (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) => {
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, key));
+            let listener = (payload: TupleEventPayload) => {
+                let info: ReachInfo = game.getWorld().checkReach(game.getWorld().hero, tx, ty, true)
+                if (!info.inReach) {
+                    EventBus.getInstance().unregisterConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
+                    EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.WORKSTATION_UNREACHABLE));
+                }
+                return false;
+            };
+            EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
+        };
+    }
+
     export let MAP_OBJECT_DEFS = [
         new MapObjDefinition(MapObjectKey.MAP_GRAVE_KEY, 2, 2, InventoryKey.INV_GRAVE_KEY, 1, 160,
             function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {
@@ -22,41 +37,19 @@ namespace Lich {
         new MapObjDefinition(MapObjectKey.MAP_MUSHROOM_KEY, 2, 2, InventoryKey.INV_MUSHROOM_KEY, 1, 100).setDepth(5, 40),
         new MapObjDefinition(MapObjectKey.MAP_MUSHROOM2_KEY, 2, 2, InventoryKey.INV_MUSHROOM2_KEY, 1, 100).setDepth(5, 100),
         new MapObjDefinition(MapObjectKey.MAP_MUSHROOM3_KEY, 2, 2, InventoryKey.INV_MUSHROOM3_KEY, 1, 140).setDepth(5, 100),
-        new MapObjDefinition(MapObjectKey.MAP_PLANT_KEY, 2, 2, InventoryKey.INV_PLANT_KEY, 1, 60).setDepth(0, 10),
-        new MapObjDefinition(MapObjectKey.MAP_PLANT2_KEY, 2, 2, InventoryKey.INV_PLANT2_KEY, 1, 60).setDepth(0, 10),
-        new MapObjDefinition(MapObjectKey.MAP_PLANT3_KEY, 2, 2, InventoryKey.INV_PLANT3_KEY, 1, 60).setDepth(0, 10),
-        new MapObjDefinition(MapObjectKey.MAP_PLANT4_KEY, 2, 2, InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10),
+        new MapObjDefinition(MapObjectKey.MAP_RED_PLANT_KEY, 2, 2, InventoryKey.INV_RED_PLANT_KEY, 1, 60).setDepth(0, 10),
+        new MapObjDefinition(MapObjectKey.MAP_MAGENTA_PLANT_KEY, 2, 2, InventoryKey.INV_MAGENTA_PLANT_KEY, 1, 60).setDepth(0, 10),
+        new MapObjDefinition(MapObjectKey.MAP_CYAN_PLANT_KEY, 2, 2, InventoryKey.INV_CYAN_PLANT_KEY, 1, 60).setDepth(0, 10),
+        new MapObjDefinition(MapObjectKey.MAP_YELLOW_PLANT_KEY, 2, 2, InventoryKey.INV_YELLOW_PLANT_KEY, 1, 60).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_FLORITE_KEY, 2, 2, InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100),
         new MapObjDefinition(MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4),
         new MapObjDefinition(MapObjectKey.MAP_FIREPLACE_KEY, 4, 2, InventoryKey.INV_FIREPLACE_KEY, 1, 0).setFrames(4),
-        new MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0,
-            function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {
-                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, MapObjectKey.MAP_ANVIL_KEY));
-                let listener = (payload: TupleEventPayload) => {
-                    let info: ReachInfo = game.getWorld().checkReach(game.getWorld().hero, tx, ty, true)
-                    if (!info.inReach) {
-                        EventBus.getInstance().unregisterConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
-                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.WORKSTATION_UNREACHABLE));
-                    }
-                    return false;
-                };
-                EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
-            }),
-        new MapObjDefinition(MapObjectKey.MAP_SMELTER_KEY, 4, 4, InventoryKey.INV_SMELTER_KEY, 1, 0,
-            function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {
-                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, MapObjectKey.MAP_SMELTER_KEY));
-                let listener = (payload: TupleEventPayload) => {
-                    let info: ReachInfo = game.getWorld().checkReach(game.getWorld().hero, tx, ty, true)
-                    if (!info.inReach) {
-                        EventBus.getInstance().unregisterConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
-                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.WORKSTATION_UNREACHABLE));
-                    }
-                    return false;
-                };
-                EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, listener);
-            }).setFrames(3),
+        new MapObjDefinition(MapObjectKey.MAP_ANVIL_KEY, 2, 2, InventoryKey.INV_ANVIL_KEY, 1, 0, createWorkstationCallback(MapObjectKey.MAP_ANVIL_KEY)),
+        new MapObjDefinition(MapObjectKey.MAP_CAULDRON_KEY, 2, 2, InventoryKey.INV_CAULDRON_KEY, 1, 0, createWorkstationCallback(MapObjectKey.MAP_CAULDRON_KEY)),
+        new MapObjDefinition(MapObjectKey.MAP_SMELTER_KEY, 4, 4, InventoryKey.INV_SMELTER_KEY, 1, 0, createWorkstationCallback(MapObjectKey.MAP_SMELTER_KEY)).setFrames(3),
         new MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
+        new MapObjDefinition(MapObjectKey.MAP_RED_FLASK_KEY, 2, 2, InventoryKey.INV_RED_FLASK_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
             function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {

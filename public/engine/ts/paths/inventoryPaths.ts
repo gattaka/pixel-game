@@ -5,10 +5,10 @@ namespace Lich {
         ["images/ui/inventory/inv_mushroom.png", InventoryKey.INV_MUSHROOM_KEY],
         ["images/ui/inventory/inv_mushroom2.png", InventoryKey.INV_MUSHROOM2_KEY],
         ["images/ui/inventory/inv_mushroom3.png", InventoryKey.INV_MUSHROOM3_KEY],
-        ["images/ui/inventory/inv_plant.png", InventoryKey.INV_PLANT_KEY],
-        ["images/ui/inventory/inv_plant2.png", InventoryKey.INV_PLANT2_KEY],
-        ["images/ui/inventory/inv_plant3.png", InventoryKey.INV_PLANT3_KEY],
-        ["images/ui/inventory/inv_plant4.png", InventoryKey.INV_PLANT4_KEY],
+        ["images/ui/inventory/inv_plant.png", InventoryKey.INV_RED_PLANT_KEY],
+        ["images/ui/inventory/inv_plant2.png", InventoryKey.INV_MAGENTA_PLANT_KEY],
+        ["images/ui/inventory/inv_plant3.png", InventoryKey.INV_CYAN_PLANT_KEY],
+        ["images/ui/inventory/inv_plant4.png", InventoryKey.INV_YELLOW_PLANT_KEY],
         ["images/ui/inventory/inv_straw.png", InventoryKey.INV_STRAW_KEY],
         ["images/ui/inventory/inv_wood.png", InventoryKey.INV_WOOD_KEY],
         ["images/ui/inventory/inv_dirt.png", InventoryKey.INV_DIRT_KEY],
@@ -47,6 +47,8 @@ namespace Lich {
         ["images/ui/inventory/inv_chandelier.png", InventoryKey.INV_CHANDELIER_KEY],
         ["images/ui/inventory/inv_gold.png", InventoryKey.INV_GOLD_ORE_KEY],
         ["images/ui/inventory/inv_chicken_meat.png", InventoryKey.INV_CHICKEN_MEAT_KEY],
-        ["images/ui/inventory/inv_chicken_talon.png", InventoryKey.INV_CHICKEN_TALON_KEY]
+        ["images/ui/inventory/inv_chicken_talon.png", InventoryKey.INV_CHICKEN_TALON_KEY],
+        ["images/ui/inventory/inv_cauldron.png", InventoryKey.INV_CAULDRON_KEY],
+        ["images/ui/inventory/inv_red_flask.png", InventoryKey.INV_RED_FLASK_KEY]
     ]
 }

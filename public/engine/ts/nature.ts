@@ -64,10 +64,10 @@ namespace Lich {
                                         case 4: key = MapObjectKey.MAP_BUSH2_KEY; break;
                                         case 5:
                                             switch (Math.floor(Math.random() * 5)) {
-                                                case 0: key = MapObjectKey.MAP_PLANT_KEY; break;
-                                                case 1: key = MapObjectKey.MAP_PLANT2_KEY; break;
-                                                case 2: key = MapObjectKey.MAP_PLANT3_KEY; break;
-                                                case 3: key = MapObjectKey.MAP_PLANT4_KEY; break;
+                                                case 0: key = MapObjectKey.MAP_RED_PLANT_KEY; break;
+                                                case 1: key = MapObjectKey.MAP_MAGENTA_PLANT_KEY; break;
+                                                case 2: key = MapObjectKey.MAP_CYAN_PLANT_KEY; break;
+                                                case 3: key = MapObjectKey.MAP_YELLOW_PLANT_KEY; break;
                                             } break;
                                         case 6: key = MapObjectKey.MAP_TREE3_KEY; break;
                                         case 7: key = MapObjectKey.MAP_TREE4_KEY; break;

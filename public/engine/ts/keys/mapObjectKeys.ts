@@ -10,10 +10,10 @@ namespace Lich {
         MAP_MUSHROOM_KEY,
         MAP_MUSHROOM2_KEY,
         MAP_MUSHROOM3_KEY,
-        MAP_PLANT_KEY,
-        MAP_PLANT2_KEY,
-        MAP_PLANT3_KEY,
-        MAP_PLANT4_KEY,
+        MAP_RED_PLANT_KEY,
+        MAP_MAGENTA_PLANT_KEY,
+        MAP_CYAN_PLANT_KEY,
+        MAP_YELLOW_PLANT_KEY,
         MAP_TREE_KEY,
         MAP_TREE2_KEY,
         MAP_TREE3_KEY,
@@ -33,6 +33,8 @@ namespace Lich {
         MAP_BANNER_KEY,
         MAP_TREE4_KEY,
         MAP_FLOWER_POT_KEY,
-        MAP_CHANDELIER_KEY
+        MAP_CHANDELIER_KEY,
+        MAP_CAULDRON_KEY,
+        MAP_RED_FLASK_KEY
     }
 }

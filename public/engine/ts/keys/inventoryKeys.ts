@@ -7,10 +7,10 @@ namespace Lich {
         INV_MUSHROOM_KEY,
         INV_MUSHROOM2_KEY,
         INV_MUSHROOM3_KEY,
-        INV_PLANT_KEY,
-        INV_PLANT2_KEY,
-        INV_PLANT3_KEY,
-        INV_PLANT4_KEY,
+        INV_RED_PLANT_KEY,
+        INV_MAGENTA_PLANT_KEY,
+        INV_CYAN_PLANT_KEY,
+        INV_YELLOW_PLANT_KEY,
         INV_DIRT_KEY,
         INV_KRYSTAL_KEY,
         INV_FLORITE_KEY,
@@ -47,6 +47,8 @@ namespace Lich {
         INV_CHANDELIER_KEY,
         INV_GOLD_ORE_KEY,
         INV_CHICKEN_MEAT_KEY,
-        INV_CHICKEN_TALON_KEY
+        INV_CHICKEN_TALON_KEY,
+        INV_CAULDRON_KEY,
+        INV_RED_FLASK_KEY
     }
 }

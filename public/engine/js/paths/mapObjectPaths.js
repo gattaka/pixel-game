@@ -11,10 +11,10 @@ var Lich;
         ["images/parts/mushroom.png", Lich.MapObjectKey.MAP_MUSHROOM_KEY],
         ["images/parts/mushroom2.png", Lich.MapObjectKey.MAP_MUSHROOM2_KEY],
         ["images/parts/mushroom3.png", Lich.MapObjectKey.MAP_MUSHROOM3_KEY],
-        ["images/parts/plant.png", Lich.MapObjectKey.MAP_PLANT_KEY],
-        ["images/parts/plant2.png", Lich.MapObjectKey.MAP_PLANT2_KEY],
-        ["images/parts/plant3.png", Lich.MapObjectKey.MAP_PLANT3_KEY],
-        ["images/parts/plant4.png", Lich.MapObjectKey.MAP_PLANT4_KEY],
+        ["images/parts/plant.png", Lich.MapObjectKey.MAP_RED_PLANT_KEY],
+        ["images/parts/plant2.png", Lich.MapObjectKey.MAP_MAGENTA_PLANT_KEY],
+        ["images/parts/plant3.png", Lich.MapObjectKey.MAP_CYAN_PLANT_KEY],
+        ["images/parts/plant4.png", Lich.MapObjectKey.MAP_YELLOW_PLANT_KEY],
         ["images/parts/tree.png", Lich.MapObjectKey.MAP_TREE_KEY],
         ["images/parts/tree2.png", Lich.MapObjectKey.MAP_TREE2_KEY],
         ["images/parts/tree3.png", Lich.MapObjectKey.MAP_TREE3_KEY],
@@ -34,6 +34,8 @@ var Lich;
         ["images/parts/banner.png", Lich.MapObjectKey.MAP_BANNER_KEY],
         ["images/parts/tree4.png", Lich.MapObjectKey.MAP_TREE4_KEY],
         ["images/parts/flower_pot.png", Lich.MapObjectKey.MAP_FLOWER_POT_KEY],
-        ["images/parts/chandelier.png", Lich.MapObjectKey.MAP_CHANDELIER_KEY]
+        ["images/parts/chandelier.png", Lich.MapObjectKey.MAP_CHANDELIER_KEY],
+        ["images/parts/cauldron.png", Lich.MapObjectKey.MAP_CAULDRON_KEY],
+        ["images/parts/red_flask.png", Lich.MapObjectKey.MAP_RED_FLASK_KEY]
     ];
 })(Lich || (Lich = {}));

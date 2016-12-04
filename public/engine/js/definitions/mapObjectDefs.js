@@ -1,5 +1,19 @@
 var Lich;
 (function (Lich) {
+    var createWorkstationCallback = function (key) {
+        return function (game, tx, ty, obj, objType) {
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, key));
+            var listener = function (payload) {
+                var info = game.getWorld().checkReach(game.getWorld().hero, tx, ty, true);
+                if (!info.inReach) {
+                    Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
+                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.WORKSTATION_UNREACHABLE));
+                }
+                return false;
+            };
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
+        };
+    };
     Lich.MAP_OBJECT_DEFS = [
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRAVE_KEY, 2, 2, Lich.InventoryKey.INV_GRAVE_KEY, 1, 160, function (game, tx, ty, obj, objType) {
             var pCoord = game.getWorld().render.tilesToPixel(tx, ty);
@@ -23,39 +37,19 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MUSHROOM_KEY, 2, 2, Lich.InventoryKey.INV_MUSHROOM_KEY, 1, 100).setDepth(5, 40),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MUSHROOM2_KEY, 2, 2, Lich.InventoryKey.INV_MUSHROOM2_KEY, 1, 100).setDepth(5, 100),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MUSHROOM3_KEY, 2, 2, Lich.InventoryKey.INV_MUSHROOM3_KEY, 1, 140).setDepth(5, 100),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLANT_KEY, 2, 2, Lich.InventoryKey.INV_PLANT_KEY, 1, 60).setDepth(0, 10),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLANT2_KEY, 2, 2, Lich.InventoryKey.INV_PLANT2_KEY, 1, 60).setDepth(0, 10),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLANT3_KEY, 2, 2, Lich.InventoryKey.INV_PLANT3_KEY, 1, 60).setDepth(0, 10),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_PLANT4_KEY, 2, 2, Lich.InventoryKey.INV_PLANT4_KEY, 1, 60).setDepth(0, 10),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_RED_PLANT_KEY, 2, 2, Lich.InventoryKey.INV_RED_PLANT_KEY, 1, 60).setDepth(0, 10),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MAGENTA_PLANT_KEY, 2, 2, Lich.InventoryKey.INV_MAGENTA_PLANT_KEY, 1, 60).setDepth(0, 10),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CYAN_PLANT_KEY, 2, 2, Lich.InventoryKey.INV_CYAN_PLANT_KEY, 1, 60).setDepth(0, 10),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_YELLOW_PLANT_KEY, 2, 2, Lich.InventoryKey.INV_YELLOW_PLANT_KEY, 1, 60).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FLORITE_KEY, 2, 2, Lich.InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CAMPFIRE_KEY, 2, 2, Lich.InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FIREPLACE_KEY, 4, 2, Lich.InventoryKey.INV_FIREPLACE_KEY, 1, 0).setFrames(4),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_ANVIL_KEY, 2, 2, Lich.InventoryKey.INV_ANVIL_KEY, 1, 0, function (game, tx, ty, obj, objType) {
-            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, Lich.MapObjectKey.MAP_ANVIL_KEY));
-            var listener = function (payload) {
-                var info = game.getWorld().checkReach(game.getWorld().hero, tx, ty, true);
-                if (!info.inReach) {
-                    Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
-                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.WORKSTATION_UNREACHABLE));
-                }
-                return false;
-            };
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
-        }),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_SMELTER_KEY, 4, 4, Lich.InventoryKey.INV_SMELTER_KEY, 1, 0, function (game, tx, ty, obj, objType) {
-            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, Lich.MapObjectKey.MAP_SMELTER_KEY));
-            var listener = function (payload) {
-                var info = game.getWorld().checkReach(game.getWorld().hero, tx, ty, true);
-                if (!info.inReach) {
-                    Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
-                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.WORKSTATION_UNREACHABLE));
-                }
-                return false;
-            };
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, listener);
-        }).setFrames(3),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_ANVIL_KEY, 2, 2, Lich.InventoryKey.INV_ANVIL_KEY, 1, 0, createWorkstationCallback(Lich.MapObjectKey.MAP_ANVIL_KEY)),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CAULDRON_KEY, 2, 2, Lich.InventoryKey.INV_CAULDRON_KEY, 1, 0, createWorkstationCallback(Lich.MapObjectKey.MAP_CAULDRON_KEY)),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_SMELTER_KEY, 4, 4, Lich.InventoryKey.INV_SMELTER_KEY, 1, 0, createWorkstationCallback(Lich.MapObjectKey.MAP_SMELTER_KEY)).setFrames(3),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, Lich.InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, Lich.InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_RED_FLASK_KEY, 2, 2, Lich.InventoryKey.INV_RED_FLASK_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TORCH_KEY, 2, 2, Lich.InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, Lich.InventoryKey.INV_DOOR_KEY, 1, 0, function (game, tx, ty, obj, objType) {
             game.getWorld().render.digObject(tx, ty, false);

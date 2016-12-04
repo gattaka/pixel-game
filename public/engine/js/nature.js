@@ -62,16 +62,16 @@ var Lich;
                                         case 5:
                                             switch (Math.floor(Math.random() * 5)) {
                                                 case 0:
-                                                    key = Lich.MapObjectKey.MAP_PLANT_KEY;
+                                                    key = Lich.MapObjectKey.MAP_RED_PLANT_KEY;
                                                     break;
                                                 case 1:
-                                                    key = Lich.MapObjectKey.MAP_PLANT2_KEY;
+                                                    key = Lich.MapObjectKey.MAP_MAGENTA_PLANT_KEY;
                                                     break;
                                                 case 2:
-                                                    key = Lich.MapObjectKey.MAP_PLANT3_KEY;
+                                                    key = Lich.MapObjectKey.MAP_CYAN_PLANT_KEY;
                                                     break;
                                                 case 3:
-                                                    key = Lich.MapObjectKey.MAP_PLANT4_KEY;
+                                                    key = Lich.MapObjectKey.MAP_YELLOW_PLANT_KEY;
                                                     break;
                                             }
                                             break;

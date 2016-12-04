@@ -35,6 +35,7 @@ var Lich;
                 this.lockedTime = 0;
                 this.maxHealth = this.currentHealth = 5000;
                 this.healthBar.height = 10;
+                this.healthBar.y = -this.healthBar.height;
                 // stále jsem v hover pohybu
                 this.movementTypeX = Lich.MovementTypeX.HOVER;
                 this.movementTypeY = Lich.MovementTypeY.HOVER;

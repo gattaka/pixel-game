@@ -2,6 +2,7 @@ namespace Lich {
     export let WORKSTATIONS_ICONS = {};
     WORKSTATIONS_ICONS[MapObjectKey.MAP_ANVIL_KEY] = InventoryKey.INV_ANVIL_KEY;
     WORKSTATIONS_ICONS[MapObjectKey.MAP_SMELTER_KEY] = InventoryKey.INV_SMELTER_KEY;
+    WORKSTATIONS_ICONS[MapObjectKey.MAP_CAULDRON_KEY] = InventoryKey.INV_CAULDRON_KEY;
 
     export let RECIPE_DEFS = [
         // By hand recipes
@@ -98,14 +99,14 @@ namespace Lich {
             [InventoryKey.INV_ROCK_BRICK_KEY, 10]
         ]],
         [[InventoryKey.INV_BANNER_KEY, 1], [
-            [InventoryKey.INV_PLANT_KEY, 1],
+            [InventoryKey.INV_RED_PLANT_KEY, 1],
             [InventoryKey.INV_STRAW_KEY, 1]
         ]],
         [[InventoryKey.INV_FLOWER_POT_KEY, 1], [
-            [InventoryKey.INV_PLANT_KEY, 1],
-            [InventoryKey.INV_PLANT2_KEY, 1],
-            [InventoryKey.INV_PLANT3_KEY, 1],
-            [InventoryKey.INV_PLANT4_KEY, 1],
+            [InventoryKey.INV_RED_PLANT_KEY, 1],
+            [InventoryKey.INV_MAGENTA_PLANT_KEY, 1],
+            [InventoryKey.INV_CYAN_PLANT_KEY, 1],
+            [InventoryKey.INV_YELLOW_PLANT_KEY, 1],
             [InventoryKey.INV_DIRT_KEY, 1]
         ]],
         // Smelter recipes
@@ -127,8 +128,16 @@ namespace Lich {
         [[InventoryKey.INV_CHAIN_LADDER_KEY, 5], [
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY],
+        [[InventoryKey.INV_CAULDRON_KEY, 1], [
+            [InventoryKey.INV_IRON_INGOT_KEY, 1],
+        ], MapObjectKey.MAP_ANVIL_KEY],
         [[InventoryKey.INV_CHANDELIER_KEY, 1], [
             [InventoryKey.INV_GOLD_ORE_KEY, 5],
-        ], MapObjectKey.MAP_ANVIL_KEY]
+        ], MapObjectKey.MAP_ANVIL_KEY],
+        // Cauldron recipes
+        [[InventoryKey.INV_RED_FLASK_KEY, 1], [
+            [InventoryKey.INV_CHICKEN_TALON_KEY, 1],
+            [InventoryKey.INV_RED_PLANT_KEY, 2],
+        ], MapObjectKey.MAP_CAULDRON_KEY]
     ]
 }

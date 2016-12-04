@@ -7,10 +7,10 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_MUSHROOM2_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_MUSHROOM2_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_MUSHROOM3_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_MUSHROOM3_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_BERRY_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BERRY_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLANT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PLANT_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLANT2_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PLANT2_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLANT3_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PLANT3_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_PLANT4_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PLANT4_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_RED_PLANT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_RED_PLANT_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_MAGENTA_PLANT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_MAGENTA_PLANT_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CYAN_PLANT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CYAN_PLANT_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_YELLOW_PLANT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_YELLOW_PLANT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAMPFIRE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAMPFIRE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FIREPLACE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FIREPLACE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_TORCH_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_TORCH_KEY]),
@@ -23,6 +23,8 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_BANNER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BANNER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_RED_FLASK_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]),
             // usaditelných jako povrch

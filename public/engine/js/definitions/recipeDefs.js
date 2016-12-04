@@ -3,6 +3,7 @@ var Lich;
     Lich.WORKSTATIONS_ICONS = {};
     Lich.WORKSTATIONS_ICONS[Lich.MapObjectKey.MAP_ANVIL_KEY] = Lich.InventoryKey.INV_ANVIL_KEY;
     Lich.WORKSTATIONS_ICONS[Lich.MapObjectKey.MAP_SMELTER_KEY] = Lich.InventoryKey.INV_SMELTER_KEY;
+    Lich.WORKSTATIONS_ICONS[Lich.MapObjectKey.MAP_CAULDRON_KEY] = Lich.InventoryKey.INV_CAULDRON_KEY;
     Lich.RECIPE_DEFS = [
         // By hand recipes
         [[Lich.InventoryKey.INV_DOOR_KEY, 1], [
@@ -98,14 +99,14 @@ var Lich;
                 [Lich.InventoryKey.INV_ROCK_BRICK_KEY, 10]
             ]],
         [[Lich.InventoryKey.INV_BANNER_KEY, 1], [
-                [Lich.InventoryKey.INV_PLANT_KEY, 1],
+                [Lich.InventoryKey.INV_RED_PLANT_KEY, 1],
                 [Lich.InventoryKey.INV_STRAW_KEY, 1]
             ]],
         [[Lich.InventoryKey.INV_FLOWER_POT_KEY, 1], [
-                [Lich.InventoryKey.INV_PLANT_KEY, 1],
-                [Lich.InventoryKey.INV_PLANT2_KEY, 1],
-                [Lich.InventoryKey.INV_PLANT3_KEY, 1],
-                [Lich.InventoryKey.INV_PLANT4_KEY, 1],
+                [Lich.InventoryKey.INV_RED_PLANT_KEY, 1],
+                [Lich.InventoryKey.INV_MAGENTA_PLANT_KEY, 1],
+                [Lich.InventoryKey.INV_CYAN_PLANT_KEY, 1],
+                [Lich.InventoryKey.INV_YELLOW_PLANT_KEY, 1],
                 [Lich.InventoryKey.INV_DIRT_KEY, 1]
             ]],
         // Smelter recipes
@@ -127,8 +128,16 @@ var Lich;
         [[Lich.InventoryKey.INV_CHAIN_LADDER_KEY, 5], [
                 [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
             ], Lich.MapObjectKey.MAP_ANVIL_KEY],
+        [[Lich.InventoryKey.INV_CAULDRON_KEY, 1], [
+                [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
+            ], Lich.MapObjectKey.MAP_ANVIL_KEY],
         [[Lich.InventoryKey.INV_CHANDELIER_KEY, 1], [
                 [Lich.InventoryKey.INV_GOLD_ORE_KEY, 5],
-            ], Lich.MapObjectKey.MAP_ANVIL_KEY]
+            ], Lich.MapObjectKey.MAP_ANVIL_KEY],
+        // Cauldron recipes
+        [[Lich.InventoryKey.INV_RED_FLASK_KEY, 1], [
+                [Lich.InventoryKey.INV_CHICKEN_TALON_KEY, 1],
+                [Lich.InventoryKey.INV_RED_PLANT_KEY, 2],
+            ], Lich.MapObjectKey.MAP_CAULDRON_KEY]
     ];
 })(Lich || (Lich = {}));
