@@ -23,7 +23,16 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAULDRON_KEY]),
-            new InvObjDefinition(InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[MapObjectKey.MAP_RED_FLASK_KEY]),
+            new InvObjDefinition(InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[MapObjectKey.MAP_RED_FLASK_KEY]).setConsumeAction((world: World): boolean => {
+                // TODO 
+                Mixer.playSound(SoundKey.SND_SPAWN_KEY);
+                if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
+                    world.hero.fillHealth(30);
+                    return true;
+                } else {
+                    return false;
+                }
+            }),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
 

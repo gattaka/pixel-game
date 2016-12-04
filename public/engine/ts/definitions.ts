@@ -46,6 +46,8 @@ namespace Lich {
         public mapSurface: MapSurfaceDefinition = null;
         // případně jako pozadí
         public mapSurfaceBgr: MapSurfaceBgrDefinition = null;
+        // konzumace, vrací, zda byl objekt opravdu zkonzumován
+        public consumeAction?: (world: World) => boolean;
 
         constructor(public invKey: InventoryKey, target?: MapObjDefinition | MapSurfaceDefinition) {
             if ((target instanceof MapObjDefinition)) {
@@ -55,6 +57,11 @@ namespace Lich {
                 this.mapSurface = <MapSurfaceDefinition>target;
             }
         };
+
+        public setConsumeAction(consumeAction: (world: World) => boolean): InvObjDefinition {
+            this.consumeAction = consumeAction;
+            return this;
+        }
 
         public setFrames(frames: number): InvObjDefinition {
             this.frames = frames;

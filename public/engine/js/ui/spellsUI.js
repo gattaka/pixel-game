@@ -24,6 +24,7 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_ENEMY_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_CONSUME_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;
@@ -98,7 +99,7 @@ var Lich;
                 self.selectSpell(index);
             }, null, false);
         };
-        SpellsUI.N = 7;
+        SpellsUI.N = 8;
         SpellsUI.M = 1;
         return SpellsUI;
     }(Lich.PartsUI));

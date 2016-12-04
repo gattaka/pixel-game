@@ -27,6 +27,8 @@ namespace Lich {
             version.addChange("Chicken boss AI improved");
             version.addChange("Enemies and critters healthbars");
             version.addChange("Background music changed");
+            version.addChange("Consume spell");
+            version.addChange("Consumable items");
             version.addChange("Cauldron workstation introduced");
             version.addChange("Health potion introduced");
             this.addVersion(version);

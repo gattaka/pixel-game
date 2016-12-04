@@ -115,7 +115,7 @@ namespace Lich {
                         let ePxCoord = world.render.tilesToPixel(xt, yt);
                         enemy.x = ePxCoord.x;
                         enemy.y = ePxCoord.y;
-                        console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
+                        // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
                         return true;
                     }
                 }
@@ -151,7 +151,7 @@ namespace Lich {
             if (Enemy.ChickenBoss.currentAngerCooldown > Enemy.ChickenBoss.ANGER_COOLDOWN) {
                 Enemy.ChickenBoss.currentAngerCooldown = 0;
                 if (Enemy.ChickenBoss.chickenKills > 0) Enemy.ChickenBoss.chickenKills--;
-                console.log("Enemy.ChickenBoss.chickenKills: %d", Enemy.ChickenBoss.chickenKills);
+                // console.log("Enemy.ChickenBoss.chickenKills: %d", Enemy.ChickenBoss.chickenKills);
             }
         }
     }

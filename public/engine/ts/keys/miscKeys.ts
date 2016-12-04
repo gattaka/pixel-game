@@ -61,7 +61,8 @@ namespace Lich {
         SPELL_BOLT_KEY,
         SPELL_ENEMY_KEY,
         SPELL_TELEPORT_KEY,
-
+        SPELL_CONSUME_KEY,
+        
         // RMB click interakce s objekty
         SPELL_INTERACT_KEY
     }

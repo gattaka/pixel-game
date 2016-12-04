@@ -264,7 +264,34 @@ namespace Lich {
     }
 
     /**
-     * Předek všech spell definic, které jsou závislé na dosahovém rádiusu od hráče
+     * Spell konzumace
+     */
+    export class ConsumeSpellDef extends SpellDefinition {
+
+        static COOLDOWN = 200;
+        static COST = 0;
+
+        constructor() {
+            super(SpellKey.SPELL_CONSUME_KEY, ConsumeSpellDef.COST, ConsumeSpellDef.COOLDOWN);
+        }
+
+        public cast(context: SpellContext): boolean {
+            let world = context.game.getWorld();
+            var uiItem = context.game.getUI().inventoryUI.choosenItem;
+            if (uiItem) {
+                var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
+                if (object.consumeAction) {
+                    if (object.consumeAction(world)) {
+                        context.game.getUI().inventoryUI.invRemove(uiItem, 1);
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Teleportační spell
      */
     export class TeleportSpellDef extends SpellDefinition {
 

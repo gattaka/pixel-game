@@ -67,6 +67,10 @@ var Lich;
             }
         }
         ;
+        InvObjDefinition.prototype.setConsumeAction = function (consumeAction) {
+            this.consumeAction = consumeAction;
+            return this;
+        };
         InvObjDefinition.prototype.setFrames = function (frames) {
             this.frames = frames;
             return this;

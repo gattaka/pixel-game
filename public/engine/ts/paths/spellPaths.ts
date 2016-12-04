@@ -9,5 +9,6 @@ namespace Lich {
         ["images/ui/bolt_spell.png", SpellKey.SPELL_BOLT_KEY],
         ["images/ui/enemy_spell.png", SpellKey.SPELL_ENEMY_KEY],
         ["images/ui/teleport_spell.png", SpellKey.SPELL_TELEPORT_KEY],
+        ["images/ui/consume_spell2.png", SpellKey.SPELL_CONSUME_KEY]
     ]
 }

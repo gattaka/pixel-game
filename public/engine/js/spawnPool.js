@@ -96,7 +96,7 @@ var Lich;
                         var ePxCoord = world.render.tilesToPixel(xt, yt);
                         enemy.x = ePxCoord.x;
                         enemy.y = ePxCoord.y;
-                        console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
+                        // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
                         return { value: true };
                     }
                 };
@@ -136,7 +136,6 @@ var Lich;
                 Lich.Enemy.ChickenBoss.currentAngerCooldown = 0;
                 if (Lich.Enemy.ChickenBoss.chickenKills > 0)
                     Lich.Enemy.ChickenBoss.chickenKills--;
-                console.log("Enemy.ChickenBoss.chickenKills: %d", Lich.Enemy.ChickenBoss.chickenKills);
             }
         };
         SpawnPool.SPAWN_ZONE_SIZE = 20; // v tiles

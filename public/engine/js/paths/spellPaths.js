@@ -10,5 +10,6 @@ var Lich;
         ["images/ui/bolt_spell.png", Lich.SpellKey.SPELL_BOLT_KEY],
         ["images/ui/enemy_spell.png", Lich.SpellKey.SPELL_ENEMY_KEY],
         ["images/ui/teleport_spell.png", Lich.SpellKey.SPELL_TELEPORT_KEY],
+        ["images/ui/consume_spell2.png", Lich.SpellKey.SPELL_CONSUME_KEY]
     ];
 })(Lich || (Lich = {}));

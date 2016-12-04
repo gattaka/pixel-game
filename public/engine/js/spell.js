@@ -204,7 +204,33 @@ var Lich;
     }(SpellDefinition));
     Lich.HeroReachSpellDef = HeroReachSpellDef;
     /**
-     * Předek všech spell definic, které jsou závislé na dosahovém rádiusu od hráče
+     * Spell konzumace
+     */
+    var ConsumeSpellDef = (function (_super) {
+        __extends(ConsumeSpellDef, _super);
+        function ConsumeSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_CONSUME_KEY, ConsumeSpellDef.COST, ConsumeSpellDef.COOLDOWN);
+        }
+        ConsumeSpellDef.prototype.cast = function (context) {
+            var world = context.game.getWorld();
+            var uiItem = context.game.getUI().inventoryUI.choosenItem;
+            if (uiItem) {
+                var object = Lich.Resources.getInstance().invObjectDefs[uiItem];
+                if (object.consumeAction) {
+                    if (object.consumeAction(world)) {
+                        context.game.getUI().inventoryUI.invRemove(uiItem, 1);
+                    }
+                }
+            }
+            return false;
+        };
+        ConsumeSpellDef.COOLDOWN = 200;
+        ConsumeSpellDef.COST = 0;
+        return ConsumeSpellDef;
+    }(SpellDefinition));
+    Lich.ConsumeSpellDef = ConsumeSpellDef;
+    /**
+     * Teleportační spell
      */
     var TeleportSpellDef = (function (_super) {
         __extends(TeleportSpellDef, _super);

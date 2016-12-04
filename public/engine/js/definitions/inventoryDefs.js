@@ -24,7 +24,17 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_RED_FLASK_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_RED_FLASK_KEY]).setConsumeAction(function (world) {
+                // TODO 
+                Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
+                if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
+                    world.hero.fillHealth(30);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]),
             // usaditelných jako povrch
