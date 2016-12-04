@@ -35,6 +35,7 @@ namespace Lich {
         MAP_FLOWER_POT_KEY,
         MAP_CHANDELIER_KEY,
         MAP_CAULDRON_KEY,
-        MAP_RED_FLASK_KEY
+        MAP_RED_FLASK_KEY,
+        MAP_CHICKEN_MEAT_KEY
     }
 }

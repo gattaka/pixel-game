@@ -24,11 +24,26 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction(function (world) {
+                // TODO 
+                Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
+                if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
+                    var health = 10;
+                    world.hero.fillHealth(health);
+                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y, 25, "#0E3", "#030");
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_RED_FLASK_KEY]).setConsumeAction(function (world) {
                 // TODO 
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
-                    world.hero.fillHealth(30);
+                    var health = 30;
+                    world.hero.fillHealth(health);
+                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y, 25, "#0E3", "#030");
                     return true;
                 }
                 else {

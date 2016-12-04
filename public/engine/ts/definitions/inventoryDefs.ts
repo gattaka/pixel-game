@@ -23,11 +23,25 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAULDRON_KEY]),
+            new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction((world: World): boolean => {
+                // TODO 
+                Mixer.playSound(SoundKey.SND_SPAWN_KEY);
+                if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
+                    let health = 10;
+                    world.hero.fillHealth(health);
+                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y, 25, "#0E3", "#030");
+                    return true;
+                } else {
+                    return false;
+                }
+            }),
             new InvObjDefinition(InventoryKey.INV_RED_FLASK_KEY, res.mapObjectDefs[MapObjectKey.MAP_RED_FLASK_KEY]).setConsumeAction((world: World): boolean => {
                 // TODO 
                 Mixer.playSound(SoundKey.SND_SPAWN_KEY);
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
-                    world.hero.fillHealth(30);
+                    let health = 30;
+                    world.hero.fillHealth(health);
+                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y, 25, "#0E3", "#030");
                     return true;
                 } else {
                     return false;

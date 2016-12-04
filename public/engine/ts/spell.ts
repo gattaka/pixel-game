@@ -268,7 +268,7 @@ namespace Lich {
      */
     export class ConsumeSpellDef extends SpellDefinition {
 
-        static COOLDOWN = 200;
+        static COOLDOWN = 1000;
         static COST = 0;
 
         constructor() {
@@ -283,6 +283,7 @@ namespace Lich {
                 if (object.consumeAction) {
                     if (object.consumeAction(world)) {
                         context.game.getUI().inventoryUI.invRemove(uiItem, 1);
+                        return true;
                     }
                 }
             }
@@ -310,7 +311,7 @@ namespace Lich {
             setTimeout(() => {
                 world.placePlayerOnSpawnPoint();
             }, 100)
-            return false;
+            return true;
         }
     }
 

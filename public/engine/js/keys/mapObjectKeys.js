@@ -37,6 +37,7 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_CHANDELIER_KEY"] = 33] = "MAP_CHANDELIER_KEY";
         MapObjectKey[MapObjectKey["MAP_CAULDRON_KEY"] = 34] = "MAP_CAULDRON_KEY";
         MapObjectKey[MapObjectKey["MAP_RED_FLASK_KEY"] = 35] = "MAP_RED_FLASK_KEY";
+        MapObjectKey[MapObjectKey["MAP_CHICKEN_MEAT_KEY"] = 36] = "MAP_CHICKEN_MEAT_KEY";
     })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
     var MapObjectKey = Lich.MapObjectKey;
 })(Lich || (Lich = {}));

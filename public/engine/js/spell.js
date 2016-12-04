@@ -219,12 +219,13 @@ var Lich;
                 if (object.consumeAction) {
                     if (object.consumeAction(world)) {
                         context.game.getUI().inventoryUI.invRemove(uiItem, 1);
+                        return true;
                     }
                 }
             }
             return false;
         };
-        ConsumeSpellDef.COOLDOWN = 200;
+        ConsumeSpellDef.COOLDOWN = 1000;
         ConsumeSpellDef.COST = 0;
         return ConsumeSpellDef;
     }(SpellDefinition));
@@ -245,7 +246,7 @@ var Lich;
             setTimeout(function () {
                 world.placePlayerOnSpawnPoint();
             }, 100);
-            return false;
+            return true;
         };
         TeleportSpellDef.COOLDOWN = 200;
         TeleportSpellDef.COST = 20;
