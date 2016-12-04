@@ -26,6 +26,7 @@ namespace Lich {
             version = new Version("0.14 - Dec 4, 2016");
             version.addChange("Chicken boss AI improved");
             version.addChange("Enemies and critters healthbars");
+            version.addChange("Background music changed");
             this.addVersion(version);
 
             version = new Version("0.13 - Dec 1, 2016");

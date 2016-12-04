@@ -13,9 +13,9 @@ var Lich;
         };
         Mixer.play = function (id, loop, volume) {
             var instance = createjs.Sound.play(id, {
-                loop: loop ? -1 : 0
+                loop: loop ? -1 : 0,
+                volume: volume
             });
-            instance.volume = volume;
             return instance;
         };
         Mixer.stopAllMusic = function () {

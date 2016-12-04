@@ -197,13 +197,13 @@ namespace Lich {
                 }
                 world.fadeEnemy(this);
                 Mixer.stopAllMusic();
-                Mixer.playMusic(MusicKey.MSC_DIRT_THEME_KEY);
+                Mixer.playMusic(MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 ChickenBoss.spawned = false;
             }
 
             hit(damage: number, world: World): number {
                 if (this.getCurrentHealth() > 0) {
-                    Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_HIT_KEY, 0.1);
+                    Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_HIT_KEY, 0.2);
                 }
                 super.hit(damage, world);
                 if (!this.frenzy && this.getCurrentHealth() < this.getMaxHealth() / 2) {

@@ -17,7 +17,7 @@ var Lich;
             this.itemsCont = new createjs.Container();
             this.itemHighlightShape = new createjs.Shape();
             var self = this;
-            var trackInsert = function (track) {
+            var trackInsert = function (track, volume) {
                 var self = _this;
                 var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.UI_SOUND_KEY]);
                 self.itemsCont.addChild(bitmap);
@@ -30,11 +30,11 @@ var Lich;
                 hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
                 bitmap.hitArea = hitArea;
                 bitmap.on("mousedown", function () {
-                    self.selectTrack(track);
+                    self.selectTrack(track, volume);
                 }, null, false);
             };
             // zatím rovnou:
-            trackInsert(Lich.MusicKey.MSC_DIRT_THEME_KEY);
+            trackInsert(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
             trackInsert(Lich.MusicKey.MSC_BUILD_THEME_KEY);
             trackInsert(Lich.MusicKey.MSC_BOSS_THEME_KEY);
             trackInsert(Lich.MusicKey.MSC_KRYSTAL_THEME_KEY);
@@ -50,9 +50,9 @@ var Lich;
             self.addChild(self.itemsCont);
             var offset = 5;
             self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
-            self.selectTrack(Lich.MusicKey.MSC_DIRT_THEME_KEY);
+            self.selectTrack(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
         }
-        MusicUI.prototype.selectTrack = function (track) {
+        MusicUI.prototype.selectTrack = function (track, volume) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
             self.itemHighlightShape.visible = true;
@@ -62,7 +62,7 @@ var Lich;
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
                 Lich.Mixer.stopMusic(self.reversedTrackIndex[i]);
             }
-            Lich.Mixer.playMusic(track);
+            Lich.Mixer.playMusic(track, volume);
             self.updateCache();
         };
         MusicUI.N = 6;

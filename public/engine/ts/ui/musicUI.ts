@@ -18,7 +18,7 @@ namespace Lich {
 
             var self = this;
 
-            let trackInsert = (track: MusicKey) => {
+            let trackInsert = (track: MusicKey, volume?: number) => {
                 var self = this;
                 var bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.UI_SOUND_KEY]);
                 self.itemsCont.addChild(bitmap);
@@ -33,12 +33,12 @@ namespace Lich {
                 bitmap.hitArea = hitArea;
 
                 bitmap.on("mousedown", function () {
-                    self.selectTrack(track);
+                    self.selectTrack(track, volume);
                 }, null, false);
             }
 
             // zatím rovnou:
-            trackInsert(MusicKey.MSC_DIRT_THEME_KEY);
+            trackInsert(MusicKey.MSC_DIRT_THEME_KEY, 0.3);
             trackInsert(MusicKey.MSC_BUILD_THEME_KEY);
             trackInsert(MusicKey.MSC_BOSS_THEME_KEY);
             trackInsert(MusicKey.MSC_KRYSTAL_THEME_KEY);
@@ -58,11 +58,11 @@ namespace Lich {
             let offset = 5;
             self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
 
-            self.selectTrack(MusicKey.MSC_DIRT_THEME_KEY);
+            self.selectTrack(MusicKey.MSC_DIRT_THEME_KEY, 0.3);
         }
 
 
-        selectTrack(track: MusicKey) {
+        selectTrack(track: MusicKey, volume?: number) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
             self.itemHighlightShape.visible = true;
@@ -73,7 +73,7 @@ namespace Lich {
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
                 Mixer.stopMusic(self.reversedTrackIndex[i]);
             }
-            Mixer.playMusic(track);
+            Mixer.playMusic(track, volume);
             self.updateCache();
         }
 

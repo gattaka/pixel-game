@@ -14,9 +14,9 @@ namespace Lich {
 
         private static play(id: string, loop: boolean, volume: number): createjs.AbstractSoundInstance {
             var instance: createjs.AbstractSoundInstance = createjs.Sound.play(id, {
-                loop: loop ? -1 : 0
+                loop: loop ? -1 : 0,
+                volume: volume
             });
-            instance.volume = volume;
             return instance;
         }
 

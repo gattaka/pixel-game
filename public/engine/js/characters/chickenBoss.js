@@ -161,12 +161,12 @@ var Lich;
                 }
                 world.fadeEnemy(this);
                 Lich.Mixer.stopAllMusic();
-                Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY);
+                Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 ChickenBoss.spawned = false;
             };
             ChickenBoss.prototype.hit = function (damage, world) {
                 if (this.getCurrentHealth() > 0) {
-                    Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_HIT_KEY, 0.1);
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_HIT_KEY, 0.2);
                 }
                 _super.prototype.hit.call(this, damage, world);
                 if (!this.frenzy && this.getCurrentHealth() < this.getMaxHealth() / 2) {
