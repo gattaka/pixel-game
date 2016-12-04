@@ -28,6 +28,13 @@ namespace Lich {
             static CHARGE_COOLDOWN = 7000;
             static CHARGE_DURATION = 3000;
 
+            // každých ANGER_COOLDOWN se sníží chickenKills
+            static ANGER_COOLDOWN = 30000;
+            static ANGER_THRESHOLD = 10;
+            static currentAngerCooldown = 0;
+            static chickenKills = 0;
+            static spawned = false;
+
             private angle = 0;
             private currentChargeCooldown = 0;
             private charging = false;
@@ -66,6 +73,8 @@ namespace Lich {
 
                 Mixer.stopAllMusic();
                 Mixer.playMusic(MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
+
+                ChickenBoss.spawned = true;
             }
 
             runAI(world: World, delta: number) {
@@ -184,6 +193,7 @@ namespace Lich {
                 world.fadeEnemy(this);
                 Mixer.stopAllMusic();
                 Mixer.playMusic(MusicKey.MSC_DIRT_THEME_KEY);
+                ChickenBoss.spawned = false;
             }
 
             hit(damage: number, world: World): number {

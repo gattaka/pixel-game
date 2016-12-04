@@ -33,11 +33,10 @@ namespace Lich {
             ctx.canvas = world.game.getCanvas();
             // délky
             ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
-            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
+            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;
             // počátek 
             ctx.startTiles = world.render.pixelsToTiles(0, 0);
             ctx.startTiles.x -= SpawnPool.SPAWN_ZONE_SIZE;
-            ctx.startTiles.y -= SpawnPool.SPAWN_ZONE_SIZE;
             // mapa
             ctx.map = world.tilesMap;
             return ctx;
@@ -77,7 +76,7 @@ namespace Lich {
                     // Pokud nejde o viditelnou část obrazovky
                     if (xt + enWidth > ctx.startTiles.x + SpawnPool.SPAWN_ZONE_SIZE
                         && xt < ctx.startTiles.x + ctx.borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE
-                        && yt + enHeight > ctx.startTiles.y + SpawnPool.SPAWN_ZONE_SIZE
+                        && yt + enHeight > ctx.startTiles.y
                         && yt < ctx.startTiles.y + ctx.borderHeightInTiles - SpawnPool.SPAWN_ZONE_SIZE)
                         continue;
 
@@ -147,6 +146,13 @@ namespace Lich {
                     }
                 }
             });
+
+            Enemy.ChickenBoss.currentAngerCooldown += delta;
+            if (Enemy.ChickenBoss.currentAngerCooldown > Enemy.ChickenBoss.ANGER_COOLDOWN) {
+                Enemy.ChickenBoss.currentAngerCooldown = 0;
+                if (Enemy.ChickenBoss.chickenKills > 0) Enemy.ChickenBoss.chickenKills--;
+                console.log("Enemy.ChickenBoss.chickenKills: %d", Enemy.ChickenBoss.chickenKills);
+            }
         }
     }
 }

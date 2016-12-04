@@ -22,11 +22,10 @@ var Lich;
             ctx.canvas = world.game.getCanvas();
             // délky
             ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
-            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
+            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;
             // počátek 
             ctx.startTiles = world.render.pixelsToTiles(0, 0);
             ctx.startTiles.x -= SpawnPool.SPAWN_ZONE_SIZE;
-            ctx.startTiles.y -= SpawnPool.SPAWN_ZONE_SIZE;
             // mapa
             ctx.map = world.tilesMap;
             return ctx;
@@ -61,7 +60,7 @@ var Lich;
                     // Pokud nejde o viditelnou část obrazovky
                     if (xt + enWidth > ctx.startTiles.x + SpawnPool.SPAWN_ZONE_SIZE
                         && xt < ctx.startTiles.x + ctx.borderWidthInTiles - SpawnPool.SPAWN_ZONE_SIZE
-                        && yt + enHeight > ctx.startTiles.y + SpawnPool.SPAWN_ZONE_SIZE
+                        && yt + enHeight > ctx.startTiles.y
                         && yt < ctx.startTiles.y + ctx.borderHeightInTiles - SpawnPool.SPAWN_ZONE_SIZE)
                         return "continue";
                     // Pak zkus najít prostor pro nepřítele
@@ -132,6 +131,13 @@ var Lich;
                     }
                 }
             });
+            Lich.Enemy.ChickenBoss.currentAngerCooldown += delta;
+            if (Lich.Enemy.ChickenBoss.currentAngerCooldown > Lich.Enemy.ChickenBoss.ANGER_COOLDOWN) {
+                Lich.Enemy.ChickenBoss.currentAngerCooldown = 0;
+                if (Lich.Enemy.ChickenBoss.chickenKills > 0)
+                    Lich.Enemy.ChickenBoss.chickenKills--;
+                console.log("Enemy.ChickenBoss.chickenKills: %d", Lich.Enemy.ChickenBoss.chickenKills);
+            }
         };
         SpawnPool.SPAWN_ZONE_SIZE = 20; // v tiles
         SpawnPool.MAX_ENEMIES = 20;

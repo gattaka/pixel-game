@@ -13,6 +13,7 @@ namespace Lich {
             static DIE = "DIE";
 
             static MODE_COOLDOWN = 3000;
+
             modeCooldown = 0;
             currentMode = 0;
 
@@ -132,6 +133,19 @@ namespace Lich {
                 }
                 world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 2), this.x, this.y, false);
                 world.fadeEnemy(this);
+                ChickenBoss.chickenKills++;
+                if (ChickenBoss.chickenKills >= ChickenBoss.ANGER_THRESHOLD && ChickenBoss.spawned == false) {
+                    world.fadeText("Murhun spawned...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                    SpawnPool.getInstance().spawn(Enemy.ChickenBoss, world);
+                    ChickenBoss.chickenKills = 0;
+                    ChickenBoss.currentAngerCooldown = 0;
+                } else if (ChickenBoss.chickenKills == Math.floor(ChickenBoss.ANGER_THRESHOLD / 2)) {
+                    world.fadeText("Not wise...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                } else if (ChickenBoss.chickenKills == ChickenBoss.ANGER_THRESHOLD - 2) {
+                    world.fadeText("Poor chicken...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                } else if (ChickenBoss.chickenKills == ChickenBoss.ANGER_THRESHOLD - 1) {
+                    world.fadeText("Poor you...", world.game.getCanvas().width / 2, world.game.getCanvas().height / 2, 30, "#E3E", "#000");
+                }
             }
 
             hit(damage: number, world: World): number {

@@ -39,6 +39,7 @@ var Lich;
                 this.movementTypeY = Lich.MovementTypeY.HOVER;
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
+                ChickenBoss.spawned = true;
             }
             ChickenBoss.prototype.runAI = function (world, delta) {
                 var _this = this;
@@ -158,6 +159,7 @@ var Lich;
                 world.fadeEnemy(this);
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY);
+                ChickenBoss.spawned = false;
             };
             ChickenBoss.prototype.hit = function (damage, world) {
                 if (this.getCurrentHealth() > 0) {
@@ -190,6 +192,12 @@ var Lich;
             ChickenBoss.RADIUS = 400;
             ChickenBoss.CHARGE_COOLDOWN = 7000;
             ChickenBoss.CHARGE_DURATION = 3000;
+            // každých ANGER_COOLDOWN se sníží chickenKills
+            ChickenBoss.ANGER_COOLDOWN = 30000;
+            ChickenBoss.ANGER_THRESHOLD = 10;
+            ChickenBoss.currentAngerCooldown = 0;
+            ChickenBoss.chickenKills = 0;
+            ChickenBoss.spawned = false;
             return ChickenBoss;
         }(Lich.AbstractEnemy));
         Enemy.ChickenBoss = ChickenBoss;

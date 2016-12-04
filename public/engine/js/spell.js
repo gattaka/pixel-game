@@ -352,9 +352,7 @@ var Lich;
         }
         EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_GHOUL_SPAWN_KEY);
-            // SpawnPool.getInstance().spawn(Enemy.Redskull, context.game.getWorld());
-            // SpawnPool.getInstance().spawn(Enemy.Chicken, context.game.getWorld());
-            Lich.SpawnPool.getInstance().spawn(Lich.Enemy.ChickenBoss, context.game.getWorld());
+            Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Redskull, context.game.getWorld());
             return true;
         };
         return EnemySpellDef;
