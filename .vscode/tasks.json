@@ -7,7 +7,7 @@
     "args": [
         "-w",
         "-p",
-        "public/engine",
+        "public/engine/ts",
         "--outDir",
         "public/engine/js",
         "--listFiles"
