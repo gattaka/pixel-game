@@ -23,6 +23,12 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.15 - Dec 12, 2016");
+            version.addChange("Christmas baubles introduced");
+            version.addChange("Christmas tree introduced");
+            version.addChange("Christmas holly introduced");
+            this.addVersion(version);
+
             version = new Version("0.14 - Dec 4, 2016");
             version.addChange("Chicken boss AI improved");
             version.addChange("Enemies and critters healthbars");
