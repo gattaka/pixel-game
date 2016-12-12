@@ -24,6 +24,14 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_RED_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_RED_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_TREE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction(function (world) {
                 // TODO 
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);

@@ -36,6 +36,14 @@ namespace Lich {
         ["images/parts/chandelier.png", MapObjectKey.MAP_CHANDELIER_KEY],
         ["images/parts/cauldron.png", MapObjectKey.MAP_CAULDRON_KEY],
         ["images/parts/red_flask.png", MapObjectKey.MAP_RED_FLASK_KEY],
-        ["images/parts/chicken_meat.png", MapObjectKey.MAP_CHICKEN_MEAT_KEY]
+        ["images/parts/chicken_meat.png", MapObjectKey.MAP_CHICKEN_MEAT_KEY],
+        ["images/parts/xmas_blue_bauble.png", MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY],
+        ["images/parts/xmas_green_bauble.png", MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY],
+        ["images/parts/xmas_purple_bauble.png", MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY],
+        ["images/parts/xmas_red_bauble.png", MapObjectKey.MAP_XMAS_RED_BAUBLE_KEY],
+        ["images/parts/xmas_yellow_bauble.png", MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY],
+        ["images/parts/xmas_holly.png", MapObjectKey.MAP_XMAS_HOLLY_KEY],
+        ["images/parts/xmas_chain.png", MapObjectKey.MAP_XMAS_CHAIN_KEY],
+        ["images/parts/xmas_tree.png", MapObjectKey.MAP_XMAS_TREE_KEY]
     ];
 }

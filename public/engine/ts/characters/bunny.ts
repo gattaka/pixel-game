@@ -125,7 +125,23 @@ namespace Lich {
             die(world: World) {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_SQUASHED_KEY);
-                world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 2), this.x, this.y, false);
+                let loot: InventoryKey;
+                let today = new Date();
+                let mm = today.getMonth() + 1; //January is 0!
+                if (mm == 12) {
+                    switch (Math.floor(Math.random() * 7)) {
+                        case 0: loot = InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY; break;
+                        case 1: loot = InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY; break;
+                        case 2: loot = InventoryKey.INV_XMAS_RED_BAUBLE_KEY; break;
+                        case 3: loot = InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY; break;
+                        case 4: loot = InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY; break;
+                        case 5: loot = InventoryKey.INV_XMAS_HOLLY_KEY; break;
+                        case 6: loot = InventoryKey.INV_XMAS_CHAIN_KEY; break;
+                    }
+                } else {
+                    loot = InventoryKey.INV_CHICKEN_MEAT_KEY;
+                }
+                world.spawnObject(new DugObjDefinition(loot, 1), this.x, this.y, false);
                 world.fadeEnemy(this);
             }
 

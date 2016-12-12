@@ -23,6 +23,14 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAULDRON_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_RED_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_RED_BAUBLE_KEY]),
+            // new InvObjDefinition(InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY]),
+            new InvObjDefinition(InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_HOLLY_KEY]),
+            new InvObjDefinition(InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_CHAIN_KEY]),
+            new InvObjDefinition(InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_TREE_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction((world: World): boolean => {
                 // TODO 
                 Mixer.playSound(SoundKey.SND_SPAWN_KEY);

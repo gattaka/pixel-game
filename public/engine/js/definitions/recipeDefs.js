@@ -6,6 +6,14 @@ var Lich;
     Lich.WORKSTATIONS_ICONS[Lich.MapObjectKey.MAP_CAULDRON_KEY] = Lich.InventoryKey.INV_CAULDRON_KEY;
     Lich.RECIPE_DEFS = [
         // By hand recipes
+        [[Lich.InventoryKey.INV_XMAS_TREE_KEY, 1], [
+                [Lich.InventoryKey.INV_WOOD_KEY, 5],
+                [Lich.InventoryKey.INV_XMAS_RED_BAUBLE_KEY, 4],
+                [Lich.InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, 4],
+                [Lich.InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, 4],
+                [Lich.InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, 4],
+                [Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4],
+            ]],
         [[Lich.InventoryKey.INV_DOOR_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 2]
             ]],

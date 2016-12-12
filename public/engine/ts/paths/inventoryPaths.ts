@@ -49,6 +49,14 @@ namespace Lich {
         ["images/ui/inventory/inv_chicken_meat.png", InventoryKey.INV_CHICKEN_MEAT_KEY],
         ["images/ui/inventory/inv_chicken_talon.png", InventoryKey.INV_CHICKEN_TALON_KEY],
         ["images/ui/inventory/inv_cauldron.png", InventoryKey.INV_CAULDRON_KEY],
-        ["images/ui/inventory/inv_red_flask.png", InventoryKey.INV_RED_FLASK_KEY]
+        ["images/ui/inventory/inv_red_flask.png", InventoryKey.INV_RED_FLASK_KEY],
+        ["images/ui/inventory/inv_xmas_blue_bauble.png", InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_green_bauble.png", InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_purple_bauble.png", InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_red_bauble.png", InventoryKey.INV_XMAS_RED_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_yellow_bauble.png", InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_holly.png", InventoryKey.INV_XMAS_HOLLY_KEY],
+        ["images/ui/inventory/inv_xmas_chain.png", InventoryKey.INV_XMAS_CHAIN_KEY],
+        ["images/ui/inventory/inv_xmas_tree.png", InventoryKey.INV_XMAS_TREE_KEY]
     ]
 }

@@ -74,6 +74,9 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_KNIGHT_STATUE_KEY, 4, 6, Lich.InventoryKey.INV_KNIGHT_STATUE_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BANNER_KEY, 2, 4, Lich.InventoryKey.INV_BANNER_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FLOWER_POT_KEY, 2, 2, Lich.InventoryKey.INV_FLOWER_POT_KEY, 1, 0),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CHANDELIER_KEY, 4, 2, Lich.InventoryKey.INV_CHANDELIER_KEY, 1, 0)
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CHANDELIER_KEY, 4, 2, Lich.InventoryKey.INV_CHANDELIER_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY, 2, 2, Lich.InventoryKey.INV_XMAS_CHAIN_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY, 4, 4, Lich.InventoryKey.INV_XMAS_HOLLY_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_XMAS_TREE_KEY, 4, 6, Lich.InventoryKey.INV_XMAS_TREE_KEY, 1, 0),
     ];
 })(Lich || (Lich = {}));

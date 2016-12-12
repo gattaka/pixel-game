@@ -37,6 +37,14 @@ var Lich;
         ["images/parts/chandelier.png", Lich.MapObjectKey.MAP_CHANDELIER_KEY],
         ["images/parts/cauldron.png", Lich.MapObjectKey.MAP_CAULDRON_KEY],
         ["images/parts/red_flask.png", Lich.MapObjectKey.MAP_RED_FLASK_KEY],
-        ["images/parts/chicken_meat.png", Lich.MapObjectKey.MAP_CHICKEN_MEAT_KEY]
+        ["images/parts/chicken_meat.png", Lich.MapObjectKey.MAP_CHICKEN_MEAT_KEY],
+        ["images/parts/xmas_blue_bauble.png", Lich.MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY],
+        ["images/parts/xmas_green_bauble.png", Lich.MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY],
+        ["images/parts/xmas_purple_bauble.png", Lich.MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY],
+        ["images/parts/xmas_red_bauble.png", Lich.MapObjectKey.MAP_XMAS_RED_BAUBLE_KEY],
+        ["images/parts/xmas_yellow_bauble.png", Lich.MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY],
+        ["images/parts/xmas_holly.png", Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY],
+        ["images/parts/xmas_chain.png", Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY],
+        ["images/parts/xmas_tree.png", Lich.MapObjectKey.MAP_XMAS_TREE_KEY]
     ];
 })(Lich || (Lich = {}));

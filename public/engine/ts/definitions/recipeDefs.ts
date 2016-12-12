@@ -6,6 +6,14 @@ namespace Lich {
 
     export let RECIPE_DEFS = [
         // By hand recipes
+        [[InventoryKey.INV_XMAS_TREE_KEY, 1], [
+            [InventoryKey.INV_WOOD_KEY, 5],
+            [InventoryKey.INV_XMAS_RED_BAUBLE_KEY, 4],
+            [InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, 4],
+            [InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, 4],
+            [InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, 4],
+            [InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4], 
+        ]],
         [[InventoryKey.INV_DOOR_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 2]
         ]],

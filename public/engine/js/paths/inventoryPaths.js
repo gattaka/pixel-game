@@ -50,6 +50,14 @@ var Lich;
         ["images/ui/inventory/inv_chicken_meat.png", Lich.InventoryKey.INV_CHICKEN_MEAT_KEY],
         ["images/ui/inventory/inv_chicken_talon.png", Lich.InventoryKey.INV_CHICKEN_TALON_KEY],
         ["images/ui/inventory/inv_cauldron.png", Lich.InventoryKey.INV_CAULDRON_KEY],
-        ["images/ui/inventory/inv_red_flask.png", Lich.InventoryKey.INV_RED_FLASK_KEY]
+        ["images/ui/inventory/inv_red_flask.png", Lich.InventoryKey.INV_RED_FLASK_KEY],
+        ["images/ui/inventory/inv_xmas_blue_bauble.png", Lich.InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_green_bauble.png", Lich.InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_purple_bauble.png", Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_red_bauble.png", Lich.InventoryKey.INV_XMAS_RED_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_yellow_bauble.png", Lich.InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY],
+        ["images/ui/inventory/inv_xmas_holly.png", Lich.InventoryKey.INV_XMAS_HOLLY_KEY],
+        ["images/ui/inventory/inv_xmas_chain.png", Lich.InventoryKey.INV_XMAS_CHAIN_KEY],
+        ["images/ui/inventory/inv_xmas_tree.png", Lich.InventoryKey.INV_XMAS_TREE_KEY]
     ];
 })(Lich || (Lich = {}));
