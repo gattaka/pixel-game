@@ -55,23 +55,45 @@ namespace Lich {
 
             // je možné nepřítele někam usadit?
             // projdi vnější okraj obrazovky (tam kde hráč nevidí) a pokud nadješ prostor, 
-            // kam se nepřítel vejde, proveď spawn. Procházej obrazovku zespoda, aby se 
-            // nepřátelé nespawnovaly ve vzduchu a nepadaly na hráče z rohů obrazovky.
-            // Zároveň ale nespawnuj pod obrazovkou, aby mohli nepřátelé volně dojít k hráči
-            // a nemuseli šplhat
+            // kam se nepřítel vejde, proveď spawn.
 
-            let tryToSpawn = (yt): boolean => {
-                for (let xt = ctx.startTiles.x; xt < ctx.startTiles.x + ctx.borderWidthInTiles; xt++) {
+            let xstart, xlimit, xstep;
+            let ystart, ylimit, ystep;
+            if (Math.random() > 0.5) {
+                xstart = ctx.startTiles.x;
+                xlimit = ctx.startTiles.x + ctx.borderWidthInTiles;
+                xstep = 1;
+            } else {
+                xstart = ctx.startTiles.x + ctx.borderWidthInTiles - 1;
+                xlimit = ctx.startTiles.x;
+                xstep = -1;
+            }
+
+            if (Math.random() > 0.5) {
+                ystart = ctx.startTiles.y;
+                ylimit = ctx.startTiles.y + ctx.borderHeightInTiles;
+                ystep = 1;
+            } else {
+                ystart = ctx.startTiles.y + ctx.borderHeightInTiles - 1;
+                ylimit = ctx.startTiles.y;
+                ystep = -1;
+            }
+
+            for (let yt = ystart; yt != ylimit; yt += ystep) {
+                // Pokud nejde o záporné souřadnice nebo mimo rámec
+                if (yt < 0 || yt >= ctx.map.height)
+                    continue;
+
+                // pokud nejde o nepovolenou výšku mapy
+                let percentY = (yt / ctx.map.height) * 100;
+                if (percentY > enemy.maxDepth || percentY < enemy.minDepth)
+                    continue;
+
+                for (let xt = xstart; xt != xlimit; xt += xstep) {
+
                     // Pokud nejde o záporné souřadnice nebo mimo rámec
-                    if (yt < 0 || yt >= ctx.map.height)
-                        return false;
                     if (xt < 0 || xt >= ctx.map.width)
                         continue;
-
-                    // pokud nejde o nepovolenou výšku mapy
-                    let percentY = (yt / ctx.map.height) * 100;
-                    if (percentY > enemy.maxDepth || percentY < enemy.minDepth)
-                        return false;
 
                     // Pokud nejde o viditelnou část obrazovky
                     if (xt + enWidth > ctx.startTiles.x + SpawnPool.SPAWN_ZONE_SIZE
@@ -119,15 +141,6 @@ namespace Lich {
                         return true;
                     }
                 }
-            }
-
-            // Jednou to zkus zdola, jednou shora
-            if (Math.random() > 0.5) {
-                for (let yt = ctx.startTiles.y + ctx.borderHeightInTiles - 1; yt >= ctx.startTiles.y; yt--)
-                    if (tryToSpawn(yt)) return true;
-            } else {
-                for (let yt = ctx.startTiles.y; yt < ctx.startTiles.y + ctx.borderHeightInTiles; yt++)
-                    if (tryToSpawn(yt)) return true;
             }
 
             return false;
