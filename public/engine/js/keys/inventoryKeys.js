@@ -59,6 +59,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_XMAS_HOLLY_KEY"] = 55] = "INV_XMAS_HOLLY_KEY";
         InventoryKey[InventoryKey["INV_XMAS_CHAIN_KEY"] = 56] = "INV_XMAS_CHAIN_KEY";
         InventoryKey[InventoryKey["INV_XMAS_TREE_KEY"] = 57] = "INV_XMAS_TREE_KEY";
+        InventoryKey[InventoryKey["INV_ADVENT_WREATH_KEY"] = 58] = "INV_ADVENT_WREATH_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));

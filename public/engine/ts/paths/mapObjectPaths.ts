@@ -44,6 +44,7 @@ namespace Lich {
         ["images/parts/xmas_yellow_bauble.png", MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY],
         ["images/parts/xmas_holly.png", MapObjectKey.MAP_XMAS_HOLLY_KEY],
         ["images/parts/xmas_chain.png", MapObjectKey.MAP_XMAS_CHAIN_KEY],
-        ["images/parts/xmas_tree.png", MapObjectKey.MAP_XMAS_TREE_KEY]
+        ["images/parts/xmas_tree.png", MapObjectKey.MAP_XMAS_TREE_KEY],
+        ["images/parts/advent_wreath.png", MapObjectKey.MAP_ADVENT_WREATH_KEY]
     ];
 }

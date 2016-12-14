@@ -82,5 +82,6 @@ namespace Lich {
         new MapObjDefinition(MapObjectKey.MAP_XMAS_CHAIN_KEY, 2, 2, InventoryKey.INV_XMAS_CHAIN_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_XMAS_HOLLY_KEY, 4, 4, InventoryKey.INV_XMAS_HOLLY_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_XMAS_TREE_KEY, 4, 6, InventoryKey.INV_XMAS_TREE_KEY, 1, 0),
+        new MapObjDefinition(MapObjectKey.MAP_ADVENT_WREATH_KEY, 4, 2, InventoryKey.INV_ADVENT_WREATH_KEY, 1, 0),
     ]
 }

@@ -27,6 +27,7 @@ namespace Lich {
             version.addChange("Christmas baubles introduced");
             version.addChange("Christmas tree introduced");
             version.addChange("Christmas holly introduced");
+            version.addChange("Christmas advent wreath introduced");
             this.addVersion(version);
 
             version = new Version("0.14 - Dec 4, 2016");

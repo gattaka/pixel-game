@@ -78,5 +78,6 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY, 2, 2, Lich.InventoryKey.INV_XMAS_CHAIN_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY, 4, 4, Lich.InventoryKey.INV_XMAS_HOLLY_KEY, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_XMAS_TREE_KEY, 4, 6, Lich.InventoryKey.INV_XMAS_TREE_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_ADVENT_WREATH_KEY, 4, 2, Lich.InventoryKey.INV_ADVENT_WREATH_KEY, 1, 0),
     ];
 })(Lich || (Lich = {}));

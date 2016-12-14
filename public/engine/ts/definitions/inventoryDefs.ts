@@ -31,6 +31,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_HOLLY_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_TREE_KEY]),
+            new InvObjDefinition(InventoryKey.INV_ADVENT_WREATH_KEY, res.mapObjectDefs[MapObjectKey.MAP_ADVENT_WREATH_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction((world: World): boolean => {
                 // TODO 
                 Mixer.playSound(SoundKey.SND_SPAWN_KEY);
