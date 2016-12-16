@@ -27,6 +27,7 @@ var Lich;
             version.addChange("Christmas holly introduced");
             version.addChange("Christmas advent wreath introduced");
             version.addChange("Winter themed sprites");
+            version.addChange("Weather (snow and rain) introduced");
             this.addVersion(version);
             version = new Version("0.14 - Dec 4, 2016");
             version.addChange("Chicken boss AI improved");

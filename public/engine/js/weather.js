@@ -28,7 +28,7 @@ var Lich;
             this.game = game;
             this.modeDurationTimer = 0;
             this.spawnBatchDelayTimer = 0;
-            this.particles = Array();
+            this.particles = new Array();
             this.windSpeed = 0;
             this.mode = WeatherMode.NONE;
             this.width = game.getCanvas().width;
@@ -38,11 +38,19 @@ var Lich;
         Weather.prototype.switchMode = function (mode) {
             this.mode = mode;
             console.log("New mode: " + WeatherMode[mode]);
+            if (mode == WeatherMode.NONE)
+                this.particles = new Array();
         };
         Weather.prototype.initParticle = function (p) {
             var z = Math.random() * 3 + 1;
-            p.graphics.clear().beginFill("#eee").drawCircle(0, 0, z);
-            p.acc = z * 10;
+            if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
+                p.graphics.clear().beginFill("#eee").drawCircle(0, 0, z);
+                p.acc = z * 10;
+            }
+            else {
+                p.graphics.clear().beginFill("#aaf").drawRect(0, 0, 1, z * 5);
+                p.acc = z * 100 + 100;
+            }
             p.x = Math.random() * this.width;
             p.y = -Math.random() * 200 - 200;
             p.speed = 0;

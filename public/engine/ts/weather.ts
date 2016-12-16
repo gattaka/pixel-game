@@ -22,7 +22,7 @@ namespace Lich {
 
         private modeDurationTimer = 0;
         private spawnBatchDelayTimer = 0;
-        private particles = Array<Particle>();
+        private particles = new Array<Particle>();
         private windSpeed = 0;
 
         private mode = WeatherMode.NONE;
@@ -38,12 +38,19 @@ namespace Lich {
         switchMode(mode: WeatherMode) {
             this.mode = mode;
             console.log("New mode: " + WeatherMode[mode]);
+            if (mode == WeatherMode.NONE)
+                this.particles = new Array<Particle>();
         }
 
         private initParticle(p: Particle) {
             let z = Math.random() * 3 + 1;
-            p.graphics.clear().beginFill("#eee").drawCircle(0, 0, z);
-            p.acc = z * 10;
+            if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
+                p.graphics.clear().beginFill("#eee").drawCircle(0, 0, z);
+                p.acc = z * 10;
+            } else {
+                p.graphics.clear().beginFill("#aaf").drawRect(0, 0, 1, z * 5);
+                p.acc = z * 100 + 100;
+            }
             p.x = Math.random() * this.width;
             p.y = -Math.random() * 200 - 200;
             p.speed = 0;

@@ -12,13 +12,13 @@ var Lich;
             var loot;
             var today = new Date();
             var mm = today.getMonth() + 1; // January is 0!
-            // return Theme.NORMAL;
-            switch (mm) {
-                case 12:
-                    return Theme.WINTER;
-                default:
-                    return Theme.NORMAL;
-            }
+            return Theme.NORMAL;
+            // switch (mm) {
+            //     case 12:
+            //         return Theme.WINTER;
+            //     default:
+            //         return Theme.NORMAL;
+            // }
         };
         ThemeWatch.getThemeSuffix = function () {
             switch (ThemeWatch.getCurrentTheme()) {
