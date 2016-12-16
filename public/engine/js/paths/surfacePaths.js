@@ -1,7 +1,8 @@
 var Lich;
 (function (Lich) {
+    var tsf = Lich.ThemeWatch.getThemeSuffix();
     Lich.SURFACE_PATHS = [
-        ["images/surfaces/dirt.png", Lich.SurfaceKey.SRFC_DIRT_KEY],
+        ["images/surfaces/dirt" + tsf + ".png", Lich.SurfaceKey.SRFC_DIRT_KEY],
         ["images/surfaces/woodwall.png", Lich.SurfaceKey.SRFC_WOODWALL_KEY],
         ["images/surfaces/krystals.png", Lich.SurfaceKey.SRFC_KRYSTAL_KEY],
         ["images/surfaces/florite.png", Lich.SurfaceKey.SRFC_FLORITE_KEY],

@@ -58,6 +58,9 @@ namespace Lich {
         INV_XMAS_HOLLY_KEY,
         INV_XMAS_CHAIN_KEY,
         INV_XMAS_TREE_KEY,
-        INV_ADVENT_WREATH_KEY
+        INV_ADVENT_WREATH_KEY,
+        INV_GIFT1_KEY,
+        INV_GIFT2_KEY,
+        INV_GIFT3_KEY
     }
 }

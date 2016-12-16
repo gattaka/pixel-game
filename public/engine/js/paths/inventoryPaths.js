@@ -59,6 +59,9 @@ var Lich;
         ["images/ui/inventory/inv_xmas_holly.png", Lich.InventoryKey.INV_XMAS_HOLLY_KEY],
         ["images/ui/inventory/inv_xmas_chain.png", Lich.InventoryKey.INV_XMAS_CHAIN_KEY],
         ["images/ui/inventory/inv_xmas_tree.png", Lich.InventoryKey.INV_XMAS_TREE_KEY],
-        ["images/ui/inventory/inv_advent_wreath.png", Lich.InventoryKey.INV_ADVENT_WREATH_KEY]
+        ["images/ui/inventory/inv_advent_wreath.png", Lich.InventoryKey.INV_ADVENT_WREATH_KEY],
+        ["images/ui/inventory/inv_gift1.png", Lich.InventoryKey.INV_GIFT1_KEY],
+        ["images/ui/inventory/inv_gift2.png", Lich.InventoryKey.INV_GIFT2_KEY],
+        ["images/ui/inventory/inv_gift3.png", Lich.InventoryKey.INV_GIFT3_KEY]
     ];
 })(Lich || (Lich = {}));
