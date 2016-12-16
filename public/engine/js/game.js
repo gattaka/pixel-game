@@ -112,7 +112,9 @@ var Lich;
                     self.ui = new Lich.UI(self.canvas, tilesMap);
                     self.background = new Lich.Background(self);
                     self.world = new Lich.World(self, tilesMap);
+                    self.weather = new Lich.Weather(self);
                     self.content.addChild(self.world);
+                    self.content.addChild(self.weather);
                     self.content.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         setTimeout(function () {
@@ -290,6 +292,7 @@ var Lich;
                         }
                     }
                     self.getWorld().update(delta, controls);
+                    self.weather.update(delta);
                 }
                 self.stage.update();
             }
