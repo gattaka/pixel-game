@@ -16,7 +16,7 @@ namespace Lich {
     export class Weather extends createjs.Container {
 
         private static SNOW_AMOUNT = 500;
-        private static SPAWN_BATCH_DELAY = 1000;
+        private static SPAWN_BATCH_DELAY = 10000;
         private static PARTICLE_LAYERS = 3;
         private static MODE_DURATION = 60000;
         private static MAX_WIND = 10;
@@ -61,7 +61,7 @@ namespace Lich {
                 let p = new createjs.Shape();
                 let z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
                 if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
-                    p.graphics.beginFill("#eee").drawCircle(0, 0, z + 2);
+                    p.graphics.beginFill("rgba(250,250,250,0.5)").drawCircle(0, 0, z + 2);
                 } else {
                     p.graphics.beginFill("#aaf").drawRect(0, 0, 1, z * 5 + 1);
                 }
@@ -132,6 +132,8 @@ namespace Lich {
                 for (let i = 0; i < this.particleLayers.length; i++) {
                     let p = this.particleLayers[i];
                     if (p) {
+                        if (!p.parent)
+                            continue;
                         p.y += Utils.floor(p.speed * sDelta);
                         p.x += Utils.floor(this.windSpeed * sDelta);
                         if (p.y > this.height) {

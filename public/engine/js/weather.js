@@ -60,7 +60,7 @@ var Lich;
                 var p = new createjs.Shape();
                 var z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
                 if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
-                    p.graphics.beginFill("#eee").drawCircle(0, 0, z + 2);
+                    p.graphics.beginFill("rgba(250,250,250,0.5)").drawCircle(0, 0, z + 2);
                 }
                 else {
                     p.graphics.beginFill("#aaf").drawRect(0, 0, 1, z * 5 + 1);
@@ -133,6 +133,8 @@ var Lich;
                 for (var i = 0; i < this.particleLayers.length; i++) {
                     var p = this.particleLayers[i];
                     if (p) {
+                        if (!p.parent)
+                            continue;
                         p.y += Lich.Utils.floor(p.speed * sDelta);
                         p.x += Lich.Utils.floor(this.windSpeed * sDelta);
                         if (p.y > this.height) {
@@ -159,7 +161,7 @@ var Lich;
             }
         };
         Weather.SNOW_AMOUNT = 500;
-        Weather.SPAWN_BATCH_DELAY = 1000;
+        Weather.SPAWN_BATCH_DELAY = 10000;
         Weather.PARTICLE_LAYERS = 3;
         Weather.MODE_DURATION = 60000;
         Weather.MAX_WIND = 10;

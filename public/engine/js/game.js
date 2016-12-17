@@ -27,7 +27,14 @@ var Lich;
             /*------------*/
             console.log("running");
             self.canvas = document.getElementById(canvasId);
-            self.canvas.style.backgroundColor = "#839e61";
+            switch (Lich.ThemeWatch.getCurrentTheme()) {
+                case Lich.Theme.WINTER:
+                    self.canvas.style.backgroundColor = "#cce1e8";
+                    break;
+                case Lich.Theme.NORMAL:
+                default:
+                    self.canvas.style.backgroundColor = "#839e61";
+            }
             // resize the canvas to fill browser window dynamically
             window.addEventListener('resize', resizeCanvas, false);
             function resizeCanvas() {
