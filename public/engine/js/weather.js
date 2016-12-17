@@ -5,15 +5,14 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
-    var Particle = (function (_super) {
-        __extends(Particle, _super);
-        function Particle() {
-            _super.apply(this, arguments);
-            this.speed = 0;
-            this.acc = 100;
+    var ParticleLayer = (function (_super) {
+        __extends(ParticleLayer, _super);
+        function ParticleLayer(speed) {
+            _super.call(this);
+            this.speed = speed;
         }
-        return Particle;
-    }(createjs.Shape));
+        return ParticleLayer;
+    }(createjs.Container));
     var WeatherMode;
     (function (WeatherMode) {
         WeatherMode[WeatherMode["NONE"] = 0] = "NONE";
@@ -26,34 +25,64 @@ var Lich;
         function Weather(game) {
             _super.call(this);
             this.game = game;
+            this.modeStartProgress = 0;
             this.modeDurationTimer = 0;
             this.spawnBatchDelayTimer = 0;
-            this.particles = new Array();
+            this.particleLayers = new Array();
             this.windSpeed = 0;
             this.mode = WeatherMode.NONE;
             this.width = game.getCanvas().width;
             this.height = game.getCanvas().height;
-            this.switchMode(WeatherMode.SNOW_START);
         }
         Weather.prototype.switchMode = function (mode) {
             this.mode = mode;
+            this.modeStartProgress = 0;
             console.log("New mode: " + WeatherMode[mode]);
             if (mode == WeatherMode.NONE)
-                this.particles = new Array();
+                this.particleLayers = new Array();
         };
-        Weather.prototype.initParticle = function (p) {
-            var z = Math.random() * 3 + 1;
-            if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
-                p.graphics.clear().beginFill("#eee").drawCircle(0, 0, z);
-                p.acc = z * 10;
+        Weather.prototype.initSnow = function () {
+            this.particleLayers = new Array();
+            for (var l = 0; l < Weather.PARTICLE_LAYERS * 2; l++) {
+                var speed = void 0, acc = void 0;
+                if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
+                    acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 150;
+                }
+                else {
+                    acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 100 + 100;
+                }
+                var layer = new ParticleLayer(acc);
+                layer.width = this.width;
+                layer.height = this.height;
+                this.particleLayers.push(layer);
             }
-            else {
-                p.graphics.clear().beginFill("#aaf").drawRect(0, 0, 1, z * 5);
-                p.acc = z * 100 + 100;
+            for (var i = 0; i < Weather.SNOW_AMOUNT * 2; i++) {
+                var p = new createjs.Shape();
+                var z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
+                if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
+                    p.graphics.beginFill("#eee").drawCircle(0, 0, z + 2);
+                }
+                else {
+                    p.graphics.beginFill("#aaf").drawRect(0, 0, 1, z * 5 + 1);
+                }
+                p.x = Math.random() * this.width;
+                p.y = Math.random() * this.height;
+                var x = z;
+                if (i >= Weather.SNOW_AMOUNT) {
+                    x += Weather.PARTICLE_LAYERS;
+                }
+                this.particleLayers[x].addChild(p);
             }
-            p.x = Math.random() * this.width;
-            p.y = -Math.random() * 200 - 200;
-            p.speed = 0;
+            for (var i = 0; i < this.particleLayers.length; i++) {
+                var l = this.particleLayers[i];
+                if (l) {
+                    l.cache(0, 0, l.width, l.height);
+                    l.y = -this.height;
+                    if (i >= Weather.PARTICLE_LAYERS) {
+                        l.y *= 2;
+                    }
+                }
+            }
         };
         Weather.prototype.update = function (delta) {
             var sDelta = delta / 1000;
@@ -87,37 +116,42 @@ var Lich;
                 this.spawnBatchDelayTimer += delta;
                 if (this.spawnBatchDelayTimer > Weather.SPAWN_BATCH_DELAY) {
                     this.spawnBatchDelayTimer = 0;
-                    var toSpawn = Math.ceil(Math.random() * Weather.SPAWN_BATCH_MAX_AMOUNT);
-                    if (this.particles.length + toSpawn >= Weather.SNOW_AMOUNT) {
-                        toSpawn = Weather.SNOW_AMOUNT - this.particles.length;
+                    if (this.modeStartProgress == 0) {
+                        this.initSnow();
+                    }
+                    if (this.modeStartProgress < Weather.PARTICLE_LAYERS) {
+                        this.addChild(this.particleLayers[this.modeStartProgress]);
+                        this.addChild(this.particleLayers[this.modeStartProgress + Weather.PARTICLE_LAYERS]);
+                    }
+                    else {
                         this.switchMode(WeatherMode.SNOW);
                     }
-                    for (var i = 0; i < toSpawn; i++) {
-                        var p = new Particle();
-                        this.initParticle(p);
-                        this.particles.push(p);
-                        this.addChild(p);
-                    }
+                    this.modeStartProgress++;
                 }
             }
             if (this.mode != WeatherMode.NONE) {
-                for (var i in this.particles) {
-                    var p = this.particles[i];
+                for (var i = 0; i < this.particleLayers.length; i++) {
+                    var p = this.particleLayers[i];
                     if (p) {
-                        p.y += Lich.Utils.floor(p.speed * sDelta + p.acc * Math.pow(sDelta, 2) / 2);
+                        p.y += Lich.Utils.floor(p.speed * sDelta);
                         p.x += Lich.Utils.floor(this.windSpeed * sDelta);
-                        p.speed += p.acc * sDelta;
-                        if (p.y > this.height + 20) {
-                            if (this.mode == WeatherMode.SNOW_STOP &&
-                                // některé particles se ještě jednou prolétnou i když se už končí
-                                Math.random() > 0.2) {
+                        if (p.y > this.height) {
+                            var partnerLayer = void 0;
+                            if (i < Weather.PARTICLE_LAYERS) {
+                                partnerLayer = this.particleLayers[i + Weather.PARTICLE_LAYERS];
+                            }
+                            else {
+                                partnerLayer = this.particleLayers[i - Weather.PARTICLE_LAYERS];
+                            }
+                            if (this.mode == WeatherMode.SNOW_STOP) {
                                 this.removeChild(p);
-                                this.particles[i] = null;
+                                this.particleLayers[i] = null;
                                 if (this.children.length == 0)
                                     this.switchMode(WeatherMode.NONE);
                             }
                             else {
-                                this.initParticle(p);
+                                p.y = partnerLayer.y - partnerLayer.height;
+                                p.x = 0;
                             }
                         }
                     }
@@ -125,8 +159,8 @@ var Lich;
             }
         };
         Weather.SNOW_AMOUNT = 500;
-        Weather.SPAWN_BATCH_MAX_AMOUNT = 50;
         Weather.SPAWN_BATCH_DELAY = 1000;
+        Weather.PARTICLE_LAYERS = 3;
         Weather.MODE_DURATION = 60000;
         Weather.MAX_WIND = 10;
         return Weather;

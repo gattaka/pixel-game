@@ -1,8 +1,9 @@
 namespace Lich {
 
-    class Particle extends createjs.Shape {
-        public speed = 0;
-        public acc = 100;
+    class ParticleLayer extends createjs.Container {
+        constructor(public speed: number) {
+            super();
+        }
     }
 
     enum WeatherMode {
@@ -15,14 +16,15 @@ namespace Lich {
     export class Weather extends createjs.Container {
 
         private static SNOW_AMOUNT = 500;
-        private static SPAWN_BATCH_MAX_AMOUNT = 50;
         private static SPAWN_BATCH_DELAY = 1000;
+        private static PARTICLE_LAYERS = 3;
         private static MODE_DURATION = 60000;
         private static MAX_WIND = 10;
 
+        private modeStartProgress = 0;
         private modeDurationTimer = 0;
         private spawnBatchDelayTimer = 0;
-        private particles = new Array<Particle>();
+        private particleLayers = new Array<ParticleLayer>();
         private windSpeed = 0;
 
         private mode = WeatherMode.NONE;
@@ -31,29 +33,56 @@ namespace Lich {
             super();
             this.width = game.getCanvas().width;
             this.height = game.getCanvas().height;
-
-            this.switchMode(WeatherMode.SNOW_START);
         }
 
         switchMode(mode: WeatherMode) {
             this.mode = mode;
+            this.modeStartProgress = 0;
             console.log("New mode: " + WeatherMode[mode]);
             if (mode == WeatherMode.NONE)
-                this.particles = new Array<Particle>();
+                this.particleLayers = new Array<ParticleLayer>();
         }
 
-        private initParticle(p: Particle) {
-            let z = Math.random() * 3 + 1;
-            if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
-                p.graphics.clear().beginFill("#eee").drawCircle(0, 0, z);
-                p.acc = z * 10;
-            } else {
-                p.graphics.clear().beginFill("#aaf").drawRect(0, 0, 1, z * 5);
-                p.acc = z * 100 + 100;
+        private initSnow() {
+            this.particleLayers = new Array<ParticleLayer>();
+            for (let l = 0; l < Weather.PARTICLE_LAYERS * 2; l++) {
+                let speed, acc;
+                if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
+                    acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 150;
+                } else {
+                    acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 100 + 100;
+                }
+                let layer = new ParticleLayer(acc);
+                layer.width = this.width;
+                layer.height = this.height;
+                this.particleLayers.push(layer);
             }
-            p.x = Math.random() * this.width;
-            p.y = -Math.random() * 200 - 200;
-            p.speed = 0;
+            for (let i = 0; i < Weather.SNOW_AMOUNT * 2; i++) {
+                let p = new createjs.Shape();
+                let z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
+                if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
+                    p.graphics.beginFill("#eee").drawCircle(0, 0, z + 2);
+                } else {
+                    p.graphics.beginFill("#aaf").drawRect(0, 0, 1, z * 5 + 1);
+                }
+                p.x = Math.random() * this.width;
+                p.y = Math.random() * this.height;
+                let x = z;
+                if (i >= Weather.SNOW_AMOUNT) {
+                    x += Weather.PARTICLE_LAYERS;
+                }
+                this.particleLayers[x].addChild(p);
+            }
+            for (let i = 0; i < this.particleLayers.length; i++) {
+                let l = this.particleLayers[i];
+                if (l) {
+                    l.cache(0, 0, l.width, l.height);
+                    l.y = -this.height;
+                    if (i >= Weather.PARTICLE_LAYERS) {
+                        l.y *= 2;
+                    }
+                }
+            }
         }
 
         update(delta) {
@@ -86,37 +115,40 @@ namespace Lich {
                 this.spawnBatchDelayTimer += delta;
                 if (this.spawnBatchDelayTimer > Weather.SPAWN_BATCH_DELAY) {
                     this.spawnBatchDelayTimer = 0;
-                    let toSpawn = Math.ceil(Math.random() * Weather.SPAWN_BATCH_MAX_AMOUNT);
-                    if (this.particles.length + toSpawn >= Weather.SNOW_AMOUNT) {
-                        toSpawn = Weather.SNOW_AMOUNT - this.particles.length;
+                    if (this.modeStartProgress == 0) {
+                        this.initSnow();
+                    }
+                    if (this.modeStartProgress < Weather.PARTICLE_LAYERS) {
+                        this.addChild(this.particleLayers[this.modeStartProgress]);
+                        this.addChild(this.particleLayers[this.modeStartProgress + Weather.PARTICLE_LAYERS]);
+                    } else {
                         this.switchMode(WeatherMode.SNOW);
                     }
-                    for (let i = 0; i < toSpawn; i++) {
-                        let p = new Particle();
-                        this.initParticle(p);
-                        this.particles.push(p);
-                        this.addChild(p);
-                    }
+                    this.modeStartProgress++;
                 }
             }
 
             if (this.mode != WeatherMode.NONE) {
-                for (let i in this.particles) {
-                    let p = this.particles[i];
+                for (let i = 0; i < this.particleLayers.length; i++) {
+                    let p = this.particleLayers[i];
                     if (p) {
-                        p.y += Utils.floor(p.speed * sDelta + p.acc * Math.pow(sDelta, 2) / 2);
+                        p.y += Utils.floor(p.speed * sDelta);
                         p.x += Utils.floor(this.windSpeed * sDelta);
-                        p.speed += p.acc * sDelta;
-                        if (p.y > this.height + 20) {
-                            if (this.mode == WeatherMode.SNOW_STOP &&
-                                // některé particles se ještě jednou prolétnou i když se už končí
-                                Math.random() > 0.2) {
+                        if (p.y > this.height) {
+                            let partnerLayer;
+                            if (i < Weather.PARTICLE_LAYERS) {
+                                partnerLayer = this.particleLayers[i + Weather.PARTICLE_LAYERS];
+                            } else {
+                                partnerLayer = this.particleLayers[i - Weather.PARTICLE_LAYERS];
+                            }
+                            if (this.mode == WeatherMode.SNOW_STOP) {
                                 this.removeChild(p);
-                                this.particles[i] = null;
+                                this.particleLayers[i] = null;
                                 if (this.children.length == 0)
                                     this.switchMode(WeatherMode.NONE);
                             } else {
-                                this.initParticle(p);
+                                p.y = partnerLayer.y - partnerLayer.height;
+                                p.x = 0;
                             }
                         }
                     }
