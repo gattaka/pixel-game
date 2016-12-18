@@ -50,7 +50,7 @@ namespace Lich {
         new MapObjDefinition(MapObjectKey.MAP_IRON_INGOT_KEY, 2, 2, InventoryKey.INV_IRON_INGOT_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_IRON_FENCE_KEY, 2, 2, InventoryKey.INV_IRON_FENCE_KEY, 1, 0),
         new MapObjDefinition(MapObjectKey.MAP_RED_FLASK_KEY, 2, 2, InventoryKey.INV_RED_FLASK_KEY, 1, 0),
-        new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 2, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
+        new MapObjDefinition(MapObjectKey.MAP_TORCH_KEY, 2, 4, InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new MapObjDefinition(MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, InventoryKey.INV_DOOR_KEY, 1, 0,
             function (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) {
                 game.getWorld().render.digObject(tx, ty, false);
