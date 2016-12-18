@@ -1,4 +1,20 @@
 namespace Lich {
+    let xmasGiftSpawn = (world: World): boolean => {
+        let inv;
+        switch (Math.floor(Math.random() * 8)) {
+            case 0: inv = InventoryKey.INV_XMAS_HOLLY_KEY; break;
+            case 1: inv = InventoryKey.INV_XMAS_CHAIN_KEY; break;
+            case 2: inv = InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY; break;
+            case 3: inv = InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY; break;
+            case 4: inv = InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY; break;
+            case 5: inv = InventoryKey.INV_XMAS_RED_BAUBLE_KEY; break;
+            case 6: inv = InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY; break;
+            case 7: inv = InventoryKey.INV_ADVENT_WREATH_KEY; break;
+        }
+        world.spawnObject(new DugObjDefinition(inv, 1), world.hero.x, world.hero.y, false);
+        return true;
+    };
+
     export let INVENTORY_DEFS = (res: Resources) => {
         return [
             // usaditelných jako objekt
@@ -23,6 +39,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAULDRON_KEY]),
+            new InvObjDefinition(InventoryKey.INV_SNOWMAN, res.mapObjectDefs[MapObjectKey.MAP_SNOWMAN_KEY]),
             // new InvObjDefinition(InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY]),
             // new InvObjDefinition(InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY]),
             // new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY]),
@@ -32,7 +49,10 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_TREE_KEY]),
             new InvObjDefinition(InventoryKey.INV_ADVENT_WREATH_KEY, res.mapObjectDefs[MapObjectKey.MAP_ADVENT_WREATH_KEY]),
-            new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction((world: World): boolean => {
+            new InvObjDefinition(InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
+            new InvObjDefinition(InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
+            new InvObjDefinition(InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
+            new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction((world: World): boolean => {
                 // TODO 
                 Mixer.playSound(SoundKey.SND_SPAWN_KEY);
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {

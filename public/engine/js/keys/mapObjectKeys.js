@@ -47,6 +47,7 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_XMAS_CHAIN_KEY"] = 43] = "MAP_XMAS_CHAIN_KEY";
         MapObjectKey[MapObjectKey["MAP_XMAS_TREE_KEY"] = 44] = "MAP_XMAS_TREE_KEY";
         MapObjectKey[MapObjectKey["MAP_ADVENT_WREATH_KEY"] = 45] = "MAP_ADVENT_WREATH_KEY";
+        MapObjectKey[MapObjectKey["MAP_SNOWMAN_KEY"] = 46] = "MAP_SNOWMAN_KEY";
     })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
     var MapObjectKey = Lich.MapObjectKey;
 })(Lich || (Lich = {}));

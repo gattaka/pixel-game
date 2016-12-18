@@ -20,7 +20,11 @@ namespace Lich {
         private static PARTICLE_LAYERS = 3;
         private static MODE_DURATION = 60000;
         private static MAX_WIND = 10;
+        private static SNOWFLAKE_SPAWN_PROP = 200;
+        private static GIFT_SPAWN_PROP = 500;
+        private static SNOWFLAKE_SPAWN_INTERVAL = 5000;
 
+        private snowflakeTryTimer = 0;
         private modeStartProgress = 0;
         private modeDurationTimer = 0;
         private spawnBatchDelayTimer = 0;
@@ -93,6 +97,25 @@ namespace Lich {
                 this.windSpeed = Weather.MAX_WIND;
             if (this.windSpeed < -Weather.MAX_WIND)
                 this.windSpeed = -Weather.MAX_WIND;
+
+            if (this.mode == WeatherMode.SNOW) {
+                this.snowflakeTryTimer += delta;
+                let world = this.game.getWorld();
+                for (let i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
+                    this.snowflakeTryTimer = 0;
+                    if (Math.random() * Weather.SNOWFLAKE_SPAWN_PROP < 1)
+                        world.spawnObject(new DugObjDefinition(InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                    if (ThemeWatch.getCurrentTheme() == Theme.WINTER && Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
+                        let gift;
+                        switch (Math.floor(Math.random() * 3)) {
+                            case 0: gift = InventoryKey.INV_GIFT1_KEY; break;
+                            case 1: gift = InventoryKey.INV_GIFT2_KEY; break;
+                            case 2: gift = InventoryKey.INV_GIFT3_KEY; break;
+                        }
+                        world.spawnObject(new DugObjDefinition(gift, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                    }
+                }
+            }
 
             if (this.mode == WeatherMode.SNOW || this.mode == WeatherMode.NONE) {
                 this.modeDurationTimer += delta;

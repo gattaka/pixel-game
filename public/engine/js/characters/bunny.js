@@ -130,40 +130,7 @@ var Lich;
             Bunny.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SQUASHED_KEY);
-                var loot;
-                var today = new Date();
-                var mm = today.getMonth() + 1; // January is 0!
-                if (mm == 12) {
-                    switch (Math.floor(Math.random() * 8)) {
-                        case 0:
-                            loot = Lich.InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY;
-                            break;
-                        case 1:
-                            loot = Lich.InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY;
-                            break;
-                        case 2:
-                            loot = Lich.InventoryKey.INV_XMAS_RED_BAUBLE_KEY;
-                            break;
-                        case 3:
-                            loot = Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY;
-                            break;
-                        case 4:
-                            loot = Lich.InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY;
-                            break;
-                        case 5:
-                            loot = Lich.InventoryKey.INV_XMAS_HOLLY_KEY;
-                            break;
-                        case 6:
-                            loot = Lich.InventoryKey.INV_XMAS_CHAIN_KEY;
-                            break;
-                        case 7:
-                            loot = Lich.InventoryKey.INV_ADVENT_WREATH_KEY;
-                            break;
-                    }
-                }
-                else {
-                    loot = Lich.InventoryKey.INV_CHICKEN_MEAT_KEY;
-                }
+                var loot = Lich.InventoryKey.INV_CHICKEN_MEAT_KEY;
                 world.spawnObject(new Lich.DugObjDefinition(loot, 1), this.x, this.y, false);
                 world.fadeEnemy(this);
             };

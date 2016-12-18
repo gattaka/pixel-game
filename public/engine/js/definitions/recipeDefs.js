@@ -14,6 +14,14 @@ var Lich;
                 [Lich.InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, 4],
                 [Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4],
             ]],
+        [[Lich.InventoryKey.INV_SNOWMAN, 1], [
+                [Lich.InventoryKey.INV_SNOWBALL, 4],
+                [Lich.InventoryKey.INV_COAL_KEY, 1],
+                [Lich.InventoryKey.INV_CAULDRON_KEY, 1]
+            ]],
+        [[Lich.InventoryKey.INV_SNOWBALL, 1], [
+                [Lich.InventoryKey.INV_SNOWFLAKE, 5]
+            ]],
         [[Lich.InventoryKey.INV_DOOR_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 2]
             ]],

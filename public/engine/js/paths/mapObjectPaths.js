@@ -47,6 +47,7 @@ var Lich;
         ["images/parts/xmas_holly.png", Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY],
         ["images/parts/xmas_chain.png", Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY],
         ["images/parts/xmas_tree.png", Lich.MapObjectKey.MAP_XMAS_TREE_KEY],
-        ["images/parts/advent_wreath.png", Lich.MapObjectKey.MAP_ADVENT_WREATH_KEY]
+        ["images/parts/advent_wreath.png", Lich.MapObjectKey.MAP_ADVENT_WREATH_KEY],
+        ["images/parts/snowman.png", Lich.MapObjectKey.MAP_SNOWMAN_KEY]
     ];
 })(Lich || (Lich = {}));

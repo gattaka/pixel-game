@@ -45,6 +45,7 @@ namespace Lich {
         MAP_XMAS_HOLLY_KEY,
         MAP_XMAS_CHAIN_KEY,
         MAP_XMAS_TREE_KEY,
-        MAP_ADVENT_WREATH_KEY
+        MAP_ADVENT_WREATH_KEY,
+        MAP_SNOWMAN_KEY
     }
 }

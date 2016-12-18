@@ -62,6 +62,9 @@ var Lich;
         ["images/ui/inventory/inv_advent_wreath.png", Lich.InventoryKey.INV_ADVENT_WREATH_KEY],
         ["images/ui/inventory/inv_gift1.png", Lich.InventoryKey.INV_GIFT1_KEY],
         ["images/ui/inventory/inv_gift2.png", Lich.InventoryKey.INV_GIFT2_KEY],
-        ["images/ui/inventory/inv_gift3.png", Lich.InventoryKey.INV_GIFT3_KEY]
+        ["images/ui/inventory/inv_gift3.png", Lich.InventoryKey.INV_GIFT3_KEY],
+        ["images/ui/inventory/inv_snowball.png", Lich.InventoryKey.INV_SNOWBALL],
+        ["images/ui/inventory/inv_snowman.png", Lich.InventoryKey.INV_SNOWMAN],
+        ["images/ui/inventory/inv_snowflake.png", Lich.InventoryKey.INV_SNOWFLAKE]
     ];
 })(Lich || (Lich = {}));

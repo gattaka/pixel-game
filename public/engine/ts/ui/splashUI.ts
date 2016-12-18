@@ -23,7 +23,7 @@ namespace Lich {
 
             var version;
 
-            version = new Version("0.15 - Dec 12, 2016");
+            version = new Version("0.15 - Dec 18, 2016"); 
             version.addChange("Christmas baubles introduced");
             version.addChange("Christmas tree introduced");
             version.addChange("Christmas holly introduced");
@@ -31,6 +31,8 @@ namespace Lich {
             version.addChange("Winter themed sprites");
             version.addChange("Weather (snow and rain) introduced");
             version.addChange("Collision bug fixed (ignoring skewed surface when high speed)");
+            version.addChange("Torch alignment changed");
+            version.addChange("Snowflake, snowball and snowman introduced");
             this.addVersion(version);
 
             version = new Version("0.14 - Dec 4, 2016");

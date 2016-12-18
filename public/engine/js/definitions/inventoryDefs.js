@@ -1,5 +1,36 @@
 var Lich;
 (function (Lich) {
+    var xmasGiftSpawn = function (world) {
+        var inv;
+        switch (Math.floor(Math.random() * 8)) {
+            case 0:
+                inv = Lich.InventoryKey.INV_XMAS_HOLLY_KEY;
+                break;
+            case 1:
+                inv = Lich.InventoryKey.INV_XMAS_CHAIN_KEY;
+                break;
+            case 2:
+                inv = Lich.InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY;
+                break;
+            case 3:
+                inv = Lich.InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY;
+                break;
+            case 4:
+                inv = Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY;
+                break;
+            case 5:
+                inv = Lich.InventoryKey.INV_XMAS_RED_BAUBLE_KEY;
+                break;
+            case 6:
+                inv = Lich.InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY;
+                break;
+            case 7:
+                inv = Lich.InventoryKey.INV_ADVENT_WREATH_KEY;
+                break;
+        }
+        world.spawnObject(new Lich.DugObjDefinition(inv, 1), world.hero.x, world.hero.y, false);
+        return true;
+    };
     Lich.INVENTORY_DEFS = function (res) {
         return [
             // usaditelných jako objekt
@@ -24,6 +55,7 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_SNOWMAN, res.mapObjectDefs[Lich.MapObjectKey.MAP_SNOWMAN_KEY]),
             // new InvObjDefinition(InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY]),
             // new InvObjDefinition(InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY]),
             // new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY]),
@@ -33,7 +65,10 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_TREE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ADVENT_WREATH_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_ADVENT_WREATH_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHICKEN_MEAT_KEY]).setConsumeAction(function (world) {
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction(function (world) {
                 // TODO 
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {

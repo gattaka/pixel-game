@@ -61,6 +61,9 @@ namespace Lich {
         INV_ADVENT_WREATH_KEY,
         INV_GIFT1_KEY,
         INV_GIFT2_KEY,
-        INV_GIFT3_KEY
+        INV_GIFT3_KEY,
+        INV_SNOWBALL,
+        INV_SNOWMAN,
+        INV_SNOWFLAKE
     }
 }

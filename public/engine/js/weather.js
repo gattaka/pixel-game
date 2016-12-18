@@ -25,6 +25,7 @@ var Lich;
         function Weather(game) {
             _super.call(this);
             this.game = game;
+            this.snowflakeTryTimer = 0;
             this.modeStartProgress = 0;
             this.modeDurationTimer = 0;
             this.spawnBatchDelayTimer = 0;
@@ -91,6 +92,30 @@ var Lich;
                 this.windSpeed = Weather.MAX_WIND;
             if (this.windSpeed < -Weather.MAX_WIND)
                 this.windSpeed = -Weather.MAX_WIND;
+            if (this.mode == WeatherMode.SNOW) {
+                this.snowflakeTryTimer += delta;
+                var world = this.game.getWorld();
+                for (var i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
+                    this.snowflakeTryTimer = 0;
+                    if (Math.random() * Weather.SNOWFLAKE_SPAWN_PROP < 1)
+                        world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                    if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER && Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
+                        var gift = void 0;
+                        switch (Math.floor(Math.random() * 3)) {
+                            case 0:
+                                gift = Lich.InventoryKey.INV_GIFT1_KEY;
+                                break;
+                            case 1:
+                                gift = Lich.InventoryKey.INV_GIFT2_KEY;
+                                break;
+                            case 2:
+                                gift = Lich.InventoryKey.INV_GIFT3_KEY;
+                                break;
+                        }
+                        world.spawnObject(new Lich.DugObjDefinition(gift, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                    }
+                }
+            }
             if (this.mode == WeatherMode.SNOW || this.mode == WeatherMode.NONE) {
                 this.modeDurationTimer += delta;
                 if (this.modeDurationTimer > Weather.MODE_DURATION) {
@@ -165,6 +190,9 @@ var Lich;
         Weather.PARTICLE_LAYERS = 3;
         Weather.MODE_DURATION = 60000;
         Weather.MAX_WIND = 10;
+        Weather.SNOWFLAKE_SPAWN_PROP = 200;
+        Weather.GIFT_SPAWN_PROP = 500;
+        Weather.SNOWFLAKE_SPAWN_INTERVAL = 5000;
         return Weather;
     }(createjs.Container));
     Lich.Weather = Weather;

@@ -12,7 +12,15 @@ namespace Lich {
             [InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, 4],
             [InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, 4],
             [InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, 4],
-            [InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4], 
+            [InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4],
+        ]],
+        [[InventoryKey.INV_SNOWMAN, 1], [
+            [InventoryKey.INV_SNOWBALL, 4],
+            [InventoryKey.INV_COAL_KEY, 1],
+            [InventoryKey.INV_CAULDRON_KEY, 1]
+        ]],
+        [[InventoryKey.INV_SNOWBALL, 1], [
+            [InventoryKey.INV_SNOWFLAKE, 5]
         ]],
         [[InventoryKey.INV_DOOR_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 2]
