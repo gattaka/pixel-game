@@ -81,6 +81,12 @@ var Lich;
         [[Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],
+        [[Lich.InventoryKey.INV_WOOD_CHAIR, 1], [
+                [Lich.InventoryKey.INV_WOOD_KEY, 2]
+            ]],
+        [[Lich.InventoryKey.INV_WOOD_TABLE, 1], [
+                [Lich.InventoryKey.INV_WOOD_KEY, 3]
+            ]],
         [[Lich.InventoryKey.INV_WOODWALL_KEY, 5], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],

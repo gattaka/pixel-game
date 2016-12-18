@@ -66,5 +66,7 @@ namespace Lich {
         INV_SNOWMAN,
         INV_SNOWFLAKE,
         INV_WOODWALL_WINDOW_KEY,
+        INV_WOOD_CHAIR,
+        INV_WOOD_TABLE
     }
 }

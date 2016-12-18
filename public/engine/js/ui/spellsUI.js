@@ -20,11 +20,11 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_PLACE_KEY, Lich.SpellKey.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_USE_ITEM_KEY);
-            self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
-            self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);
-            self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_ENEMY_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;

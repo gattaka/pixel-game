@@ -96,6 +96,9 @@ var Lich;
             }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_CHAIR, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_CHAIR])
+                .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_CHAIR2]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_TABLE]),
             // usaditelných jako povrch
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DIRT_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_DIRT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_WOODWALL_KEY])

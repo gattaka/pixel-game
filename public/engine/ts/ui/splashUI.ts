@@ -37,6 +37,8 @@ namespace Lich {
             version.addChange("New 'use item/consume' spell icon");
             version.addChange("Woodwall and straw wall sprites fixed");
             version.addChange("Woodwall window introduced");
+            version.addChange("Wood chair introduced");
+            version.addChange("Wood table introduced");
             this.addVersion(version);
 
             version = new Version("0.14 - Dec 4, 2016");

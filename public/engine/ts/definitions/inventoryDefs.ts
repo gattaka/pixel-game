@@ -78,6 +78,9 @@ namespace Lich {
             }),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
+            new InvObjDefinition(InventoryKey.INV_WOOD_CHAIR, res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR])
+                .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR2]),
+            new InvObjDefinition(InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[MapObjectKey.MAP_WOOD_TABLE]),
 
             // usaditelných jako povrch
             new InvObjDefinition(InventoryKey.INV_DIRT_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_DIRT_KEY]),

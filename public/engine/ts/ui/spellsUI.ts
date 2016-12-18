@@ -24,11 +24,11 @@ namespace Lich {
             self.spellInsert(SpellKey.SPELL_DIG_KEY, SpellKey.SPELL_DIG_BGR_KEY);
             self.spellInsert(SpellKey.SPELL_PLACE_KEY, SpellKey.SPELL_PLACE_BGR_KEY);
             self.spellInsert(SpellKey.SPELL_USE_ITEM_KEY);
-            self.spellInsert(SpellKey.SPELL_FIREBALL_KEY);
-            self.spellInsert(SpellKey.SPELL_METEOR_KEY);
-            self.spellInsert(SpellKey.SPELL_BOLT_KEY);
             self.spellInsert(SpellKey.SPELL_ENEMY_KEY);
+            self.spellInsert(SpellKey.SPELL_BOLT_KEY);
+            self.spellInsert(SpellKey.SPELL_FIREBALL_KEY);
             self.spellInsert(SpellKey.SPELL_TELEPORT_KEY);
+            self.spellInsert(SpellKey.SPELL_METEOR_KEY);
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Highlight();

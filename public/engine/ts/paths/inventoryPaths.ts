@@ -65,6 +65,8 @@ namespace Lich {
         ["images/ui/inventory/inv_gift3.png", InventoryKey.INV_GIFT3_KEY],
         ["images/ui/inventory/inv_snowball.png", InventoryKey.INV_SNOWBALL],
         ["images/ui/inventory/inv_snowman.png", InventoryKey.INV_SNOWMAN],
-        ["images/ui/inventory/inv_snowflake.png", InventoryKey.INV_SNOWFLAKE]
+        ["images/ui/inventory/inv_snowflake.png", InventoryKey.INV_SNOWFLAKE],
+        ["images/ui/inventory/inv_wood_chair.png", InventoryKey.INV_WOOD_CHAIR],
+        ["images/ui/inventory/inv_wood_table.png", InventoryKey.INV_WOOD_TABLE]
     ]
 }

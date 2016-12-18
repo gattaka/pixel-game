@@ -81,6 +81,12 @@ namespace Lich {
         [[InventoryKey.INV_WOODWALL_WINDOW_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],
+        [[InventoryKey.INV_WOOD_CHAIR, 1], [
+            [InventoryKey.INV_WOOD_KEY, 2]
+        ]],
+        [[InventoryKey.INV_WOOD_TABLE, 1], [
+            [InventoryKey.INV_WOOD_KEY, 3]
+        ]],
         [[InventoryKey.INV_WOODWALL_KEY, 5], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],
