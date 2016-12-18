@@ -219,7 +219,7 @@ namespace Lich {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
             };
             // TODO exportovat do definic
-            // if (seamCheck(type, type2, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY, SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY)) return true;
             return type == type2;
         }
 

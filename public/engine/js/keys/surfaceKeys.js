@@ -32,6 +32,7 @@ var Lich;
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROOF_KEY"] = 3] = "SRFC_BGR_ROOF_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROCK_BRICK_KEY"] = 4] = "SRFC_BGR_ROCK_BRICK_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROCK_BRICK_WINDOW_KEY"] = 5] = "SRFC_BGR_ROCK_BRICK_WINDOW_KEY";
+        SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_WOODWALL_WINDOW_KEY"] = 6] = "SRFC_BGR_WOODWALL_WINDOW_KEY";
     })(Lich.SurfaceBgrKey || (Lich.SurfaceBgrKey = {}));
     var SurfaceBgrKey = Lich.SurfaceBgrKey;
 })(Lich || (Lich = {}));

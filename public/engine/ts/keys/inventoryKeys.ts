@@ -64,6 +64,7 @@ namespace Lich {
         INV_GIFT3_KEY,
         INV_SNOWBALL,
         INV_SNOWMAN,
-        INV_SNOWFLAKE
+        INV_SNOWFLAKE,
+        INV_WOODWALL_WINDOW_KEY,
     }
 }

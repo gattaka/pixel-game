@@ -266,13 +266,13 @@ namespace Lich {
     /**
      * Spell konzumace
      */
-    export class ConsumeSpellDef extends SpellDefinition {
+    export class UseItemSpellDef extends SpellDefinition {
 
-        static COOLDOWN = 1000;
+        static COOLDOWN = 200;
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_CONSUME_KEY, ConsumeSpellDef.COST, ConsumeSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {

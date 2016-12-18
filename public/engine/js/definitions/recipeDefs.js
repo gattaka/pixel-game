@@ -78,6 +78,9 @@ var Lich;
                 [Lich.InventoryKey.INV_ROCK_BRICK_KEY, 1],
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],
+        [[Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY, 1], [
+                [Lich.InventoryKey.INV_WOOD_KEY, 1]
+            ]],
         [[Lich.InventoryKey.INV_WOODWALL_KEY, 5], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],

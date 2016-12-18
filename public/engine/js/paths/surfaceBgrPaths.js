@@ -7,5 +7,6 @@ var Lich;
         ["images/surfaces/roof_bgr.png", Lich.SurfaceBgrKey.SRFC_BGR_ROOF_KEY],
         ["images/surfaces/rock_brick_bgr.png", Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY],
         ["images/surfaces/_rock_brick_window_bgr.png", Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY],
+        ["images/surfaces/woodwall_window_bgr.png", Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY]
     ];
 })(Lich || (Lich = {}));

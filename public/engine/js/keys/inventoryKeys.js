@@ -66,6 +66,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_SNOWBALL"] = 62] = "INV_SNOWBALL";
         InventoryKey[InventoryKey["INV_SNOWMAN"] = 63] = "INV_SNOWMAN";
         InventoryKey[InventoryKey["INV_SNOWFLAKE"] = 64] = "INV_SNOWFLAKE";
+        InventoryKey[InventoryKey["INV_WOODWALL_WINDOW_KEY"] = 65] = "INV_WOODWALL_WINDOW_KEY";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));

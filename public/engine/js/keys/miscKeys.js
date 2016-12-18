@@ -62,7 +62,7 @@ var Lich;
         SpellKey[SpellKey["SPELL_BOLT_KEY"] = 6] = "SPELL_BOLT_KEY";
         SpellKey[SpellKey["SPELL_ENEMY_KEY"] = 7] = "SPELL_ENEMY_KEY";
         SpellKey[SpellKey["SPELL_TELEPORT_KEY"] = 8] = "SPELL_TELEPORT_KEY";
-        SpellKey[SpellKey["SPELL_CONSUME_KEY"] = 9] = "SPELL_CONSUME_KEY";
+        SpellKey[SpellKey["SPELL_USE_ITEM_KEY"] = 9] = "SPELL_USE_ITEM_KEY";
         // RMB click interakce s objekty
         SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 10] = "SPELL_INTERACT_KEY";
     })(Lich.SpellKey || (Lich.SpellKey = {}));

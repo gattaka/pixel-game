@@ -40,6 +40,7 @@ namespace Lich {
         ["images/ui/inventory/inv_rock_brick_bl.png", InventoryKey.INV_ROCK_BRICK_BL_KEY],
         ["images/ui/inventory/inv_rock_brick_br.png", InventoryKey.INV_ROCK_BRICK_BR_KEY],
         ["images/ui/inventory/inv_rock_brick_window.png", InventoryKey.INV_ROCK_BRICK_WINDOW_KEY],
+        ["images/ui/inventory/inv_woodwall_window.png", InventoryKey.INV_WOODWALL_WINDOW_KEY],
         ["images/ui/inventory/inv_knight_statue.png", InventoryKey.INV_KNIGHT_STATUE_KEY],
         ["images/ui/inventory/inv_chain_ladder.png", InventoryKey.INV_CHAIN_LADDER_KEY],
         ["images/ui/inventory/inv_banner.png", InventoryKey.INV_BANNER_KEY],

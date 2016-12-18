@@ -106,6 +106,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY]),
+            new InvObjDefinition(InventoryKey.INV_WOODWALL_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_CHAIN_LADDER_KEY]),
             new InvObjDefinition(InventoryKey.INV_GOLD_ORE_KEY, res.mapSurfaceDefs[SurfaceKey.SRFC_GOLD_ORE_KEY])
         ];

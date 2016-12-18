@@ -123,6 +123,7 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_ORE_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_GOLD_ORE_KEY])
         ];

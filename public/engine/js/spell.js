@@ -206,12 +206,12 @@ var Lich;
     /**
      * Spell konzumace
      */
-    var ConsumeSpellDef = (function (_super) {
-        __extends(ConsumeSpellDef, _super);
-        function ConsumeSpellDef() {
-            _super.call(this, Lich.SpellKey.SPELL_CONSUME_KEY, ConsumeSpellDef.COST, ConsumeSpellDef.COOLDOWN);
+    var UseItemSpellDef = (function (_super) {
+        __extends(UseItemSpellDef, _super);
+        function UseItemSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
         }
-        ConsumeSpellDef.prototype.cast = function (context) {
+        UseItemSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
             var uiItem = context.game.getUI().inventoryUI.choosenItem;
             if (uiItem) {
@@ -225,11 +225,11 @@ var Lich;
             }
             return false;
         };
-        ConsumeSpellDef.COOLDOWN = 1000;
-        ConsumeSpellDef.COST = 0;
-        return ConsumeSpellDef;
+        UseItemSpellDef.COOLDOWN = 200;
+        UseItemSpellDef.COST = 0;
+        return UseItemSpellDef;
     }(SpellDefinition));
-    Lich.ConsumeSpellDef = ConsumeSpellDef;
+    Lich.UseItemSpellDef = UseItemSpellDef;
     /**
      * Teleportační spell
      */
