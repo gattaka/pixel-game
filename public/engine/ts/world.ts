@@ -1087,6 +1087,9 @@ namespace Lich {
                     }
 
                     if (bStep == bSize - 1) {
+                        if (lastResult.hit) {
+                            return lastResult;
+                        }
                         break;
                     } else {
                         bStep = bStep + STEP >= bSize ? bSize - 1 : bStep + STEP;
