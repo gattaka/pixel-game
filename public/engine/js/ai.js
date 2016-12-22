@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var Lich;
 (function (Lich) {
     var NeuralNetwork = (function () {
@@ -5,7 +10,8 @@ var Lich;
             this.inputsCount = inputsCount;
             this.hiddenCount = hiddenCount;
             this.outputsCount = outputsCount;
-            this.activation = function (x) { return x > 0 ? 1 : 0; };
+            // activation = (x): number => { return x > 0 ? 1 : 0 };
+            this.activation = function (x) { return 1 / (1 + Math.pow(Math.E, -x)); };
             this.weights = new Array();
         }
         NeuralNetwork.prototype.solutionLength = function () {
@@ -36,7 +42,7 @@ var Lich;
                 }
                 // compare
                 // MSB je první
-                if (out == outputs[o])
+                if (Math.floor(out) == outputs[o])
                     fitness++;
             }
             return fitness;
@@ -80,6 +86,9 @@ var Lich;
             }
             gene.fitness = fitness;
         };
+        GA.prototype.getRand = function () {
+            return Math.random() - 0.5;
+        };
         GA.prototype.run = function () {
             // first generation
             // create genes
@@ -88,7 +97,7 @@ var Lich;
                 var gene = new Gene();
                 // create alleles
                 for (var a = 0; a < this.nn.solutionLength(); a++) {
-                    gene.value.push(Math.random() - 0.5);
+                    gene.value.push(this.getRand());
                 }
                 this.population.push(gene);
             }
@@ -100,44 +109,156 @@ var Lich;
                 }
                 // sort
                 this.population.sort(function (a, b) {
-                    return a.fitness > b.fitness ? 1 : 0;
+                    return a.fitness > b.fitness ? -1 : 1;
                 });
                 // vyber prvních 5 nejlepších a 1 outsidera
                 var genePool = this.population.slice(0, 4);
                 genePool.push(this.population[this.population.length - 1]);
-                this.population = [];
-                for (var g = 0; g < this.populationSize / 2; g++) {
-                    var a = genePool[Math.floor(Math.random() * genePool.length)];
-                    var b = genePool[Math.floor(Math.random() * genePool.length)];
-                    // křížení
-                    var pointcut = Math.floor(Math.random() * a.value.length);
-                    var abGene = new Gene();
-                    abGene.value = a.value.slice(0, pointcut).concat(b.value.slice(pointcut, b.value.length));
-                    var baGene = new Gene();
-                    baGene.value = b.value.slice(0, pointcut).concat(a.value.slice(pointcut, a.value.length));
-                    // mutace
-                    if (Math.random() > 0.5) {
-                        var mutation = Math.floor(Math.random() * abGene.value.length);
-                        abGene.value[mutation] = Math.random() - 0.5;
+                if (i < this.maxGenerations - 1) {
+                    this.population = [];
+                    for (var g = 0; g < this.populationSize / 2; g++) {
+                        var a = genePool[Math.floor(Math.random() * genePool.length)];
+                        var b = genePool[Math.floor(Math.random() * genePool.length)];
+                        // křížení
+                        var pointcut = Math.floor(Math.random() * a.value.length);
+                        var abGene = new Gene();
+                        abGene.value = a.value.slice(0, pointcut).concat(b.value.slice(pointcut, b.value.length));
+                        var baGene = new Gene();
+                        baGene.value = b.value.slice(0, pointcut).concat(a.value.slice(pointcut, a.value.length));
+                        // mutace
+                        if (Math.random() > 0.5) {
+                            var mutation = Math.floor(Math.random() * abGene.value.length);
+                            abGene.value[mutation] = this.getRand();
+                        }
+                        if (Math.random() > 0.5) {
+                            var mutation = Math.floor(Math.random() * baGene.value.length);
+                            baGene.value[mutation] = this.getRand();
+                        }
+                        this.population.push(abGene);
+                        this.population.push(baGene);
                     }
-                    if (Math.random() > 0.5) {
-                        var mutation = Math.floor(Math.random() * baGene.value.length);
-                        baGene.value[mutation] = Math.random() - 0.5;
-                    }
-                    this.population.push(abGene);
-                    this.population.push(baGene);
                 }
             }
             console.log("Best fitness %d", this.bestFitness);
+            console.log("Best possible fitness %d", this.bestPossibleFitness);
             console.log("Best gene: ", this.bestGene);
             console.log("Best gene evaluation: ");
             this.nn.configure(this.bestGene.value);
             for (var i = 0; i < this.testInput.length; i++) {
                 console.log("\t [%s] %d", this.testInput[i].toString(), this.nn.check(this.testInput[i], this.testOutput[i]));
             }
-            console.log("Best possible fitness %d", this.bestPossibleFitness);
+            console.log("Population: ", this.population);
         };
         return GA;
     }());
     Lich.GA = GA;
+    // ---------------------------
+    var GA2 = (function () {
+        function GA2(geneLength, populationSize, maxGenerations, bestPossibleFitness, bestPossibleGene) {
+            if (populationSize === void 0) { populationSize = 10; }
+            if (maxGenerations === void 0) { maxGenerations = 100; }
+            this.geneLength = geneLength;
+            this.populationSize = populationSize;
+            this.maxGenerations = maxGenerations;
+            this.bestPossibleFitness = bestPossibleFitness;
+            this.bestPossibleGene = bestPossibleGene;
+            this.bestFitness = 0;
+        }
+        GA2.prototype.run = function () {
+            // first generation
+            // create genes
+            this.population = [];
+            for (var g = 0; g < this.populationSize; g++) {
+                var gene = new Gene();
+                // create alleles
+                for (var a = 0; a < this.geneLength; a++) {
+                    gene.value.push(this.getRand());
+                }
+                this.population.push(gene);
+            }
+            for (var i = 0; i < this.maxGenerations; i++) {
+                console.log("Generation %d", i);
+                // evaluete fitness
+                for (var g = 0; g < this.populationSize; g++) {
+                    var gene = this.population[g];
+                    var fitness = this.evaluate(gene);
+                    if (this.bestFitness < fitness) {
+                        this.bestFitness = fitness;
+                        this.bestGene = gene;
+                        console.log("New best fitness %d", fitness);
+                    }
+                    gene.fitness = fitness;
+                }
+                // sort
+                this.population.sort(function (a, b) {
+                    return a.fitness > b.fitness ? -1 : 1;
+                });
+                // vyber prvních 5 nejlepších a 1 outsidera
+                var genePool = this.population.slice(0, 4);
+                // genePool.push(this.population[this.population.length - 1]);
+                if (i < this.maxGenerations - 1) {
+                    this.population = [];
+                    for (var g = 0; g < this.populationSize / 2; g++) {
+                        var a = genePool[Math.floor(Math.random() * genePool.length)];
+                        var b = genePool[Math.floor(Math.random() * genePool.length)];
+                        // křížení
+                        var pointcut = Math.floor(Math.random() * a.value.length);
+                        var abGene = new Gene();
+                        abGene.value = a.value.slice(0, pointcut).concat(b.value.slice(pointcut, b.value.length));
+                        var baGene = new Gene();
+                        baGene.value = b.value.slice(0, pointcut).concat(a.value.slice(pointcut, a.value.length));
+                        // mutace
+                        if (Math.random() > 0.5) {
+                            var mutation = Math.floor(Math.random() * abGene.value.length);
+                            abGene.value[mutation] = this.getRand();
+                        }
+                        if (Math.random() > 0.5) {
+                            var mutation = Math.floor(Math.random() * baGene.value.length);
+                            baGene.value[mutation] = this.getRand();
+                        }
+                        this.population.push(abGene);
+                        this.population.push(baGene);
+                    }
+                }
+            }
+            console.log("Best fitness %d", this.bestFitness);
+            console.log("Best gene: ", this.bestGene.value.toString());
+            if (this.bestPossibleFitness && this.bestPossibleGene) {
+                console.log("Best possible fitness %d", this.bestPossibleFitness);
+                console.log("Best possible gene: ", this.bestPossibleGene.toString());
+            }
+        };
+        return GA2;
+    }());
+    Lich.GA2 = GA2;
+    var BackpackGA = (function (_super) {
+        __extends(BackpackGA, _super);
+        function BackpackGA(populationSize, maxGenerations) {
+            if (populationSize === void 0) { populationSize = 10; }
+            if (maxGenerations === void 0) { maxGenerations = 200; }
+            _super.call(this, 6, populationSize, maxGenerations);
+            this.values = [15, 10, 9, 5, 12, 5];
+            this.weights = [1, 5, 3, 4, 7, 1];
+            this.maxWeight = 10;
+        }
+        BackpackGA.prototype.getRand = function () {
+            return Math.floor(Math.random() * 2);
+        };
+        BackpackGA.prototype.evaluate = function (gene) {
+            var fitness = 0;
+            var weight = 0;
+            for (var i = 0; i < gene.value.length; i++) {
+                if (gene.value[i] == 1) {
+                    fitness += this.values[i];
+                    weight += this.weights[i];
+                    if (weight > this.maxWeight) {
+                        return 0;
+                    }
+                }
+            }
+            return fitness;
+        };
+        return BackpackGA;
+    }(GA2));
+    Lich.BackpackGA = BackpackGA;
 })(Lich || (Lich = {}));

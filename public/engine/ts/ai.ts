@@ -2,7 +2,9 @@ namespace Lich {
 
     class NeuralNetwork {
 
-        activation = (x): number => { return x > 0 ? 1 : 0 };
+        // activation = (x): number => { return x > 0 ? 1 : 0 };
+        activation = (x): number => { return 1 / (1 + Math.pow(Math.E, -x)); };
+
         weights = new Array<number>();
         constructor(private inputsCount: number, private hiddenCount: number, private outputsCount: number) {
         }
@@ -40,7 +42,7 @@ namespace Lich {
                 }
                 // compare
                 // MSB je první
-                if (out == outputs[o])
+                if (Math.floor(out) == outputs[o])
                     fitness++;
             }
 
@@ -89,6 +91,11 @@ namespace Lich {
             this.bestPossibleFitness = inputsCount * testInput.length;
         }
 
+        getRand(): number {
+            return Math.random() - 0.5;
+        }
+
+
         run() {
 
             // first generation
@@ -98,7 +105,7 @@ namespace Lich {
                 let gene = new Gene();
                 // create alleles
                 for (let a = 0; a < this.nn.solutionLength(); a++) {
-                    gene.value.push(Math.random() - 0.5);
+                    gene.value.push(this.getRand());
                 }
                 this.population.push(gene);
             }
@@ -113,48 +120,181 @@ namespace Lich {
 
                 // sort
                 this.population.sort((a: Gene, b: Gene): number => {
-                    return a.fitness > b.fitness ? 1 : 0;
+                    return a.fitness > b.fitness ? -1 : 1;
                 });
 
                 // vyber prvních 5 nejlepších a 1 outsidera
                 let genePool = this.population.slice(0, 4);
                 genePool.push(this.population[this.population.length - 1]);
 
-                this.population = [];
-                for (let g = 0; g < this.populationSize / 2; g++) {
-                    let a: Gene = genePool[Math.floor(Math.random() * genePool.length)];
-                    let b: Gene = genePool[Math.floor(Math.random() * genePool.length)];
+                if (i < this.maxGenerations - 1) {
+                    this.population = [];
+                    for (let g = 0; g < this.populationSize / 2; g++) {
+                        let a: Gene = genePool[Math.floor(Math.random() * genePool.length)];
+                        let b: Gene = genePool[Math.floor(Math.random() * genePool.length)];
 
-                    // křížení
-                    let pointcut = Math.floor(Math.random() * a.value.length);
-                    let abGene = new Gene();
-                    abGene.value = a.value.slice(0, pointcut).concat(b.value.slice(pointcut, b.value.length));
-                    let baGene = new Gene();
-                    baGene.value = b.value.slice(0, pointcut).concat(a.value.slice(pointcut, a.value.length));
+                        // křížení
+                        let pointcut = Math.floor(Math.random() * a.value.length);
+                        let abGene = new Gene();
+                        abGene.value = a.value.slice(0, pointcut).concat(b.value.slice(pointcut, b.value.length));
+                        let baGene = new Gene();
+                        baGene.value = b.value.slice(0, pointcut).concat(a.value.slice(pointcut, a.value.length));
 
-                    // mutace
-                    if (Math.random() > 0.5) {
-                        let mutation = Math.floor(Math.random() * abGene.value.length);
-                        abGene.value[mutation] = Math.random() - 0.5;
+                        // mutace
+                        if (Math.random() > 0.5) {
+                            let mutation = Math.floor(Math.random() * abGene.value.length);
+                            abGene.value[mutation] = this.getRand();
+                        }
+                        if (Math.random() > 0.5) {
+                            let mutation = Math.floor(Math.random() * baGene.value.length);
+                            baGene.value[mutation] = this.getRand();
+                        }
+
+                        this.population.push(abGene);
+                        this.population.push(baGene);
                     }
-                    if (Math.random() > 0.5) {
-                        let mutation = Math.floor(Math.random() * baGene.value.length);
-                        baGene.value[mutation] = Math.random() - 0.5;
-                    }
-
-                    this.population.push(abGene);
-                    this.population.push(baGene);
                 }
             }
 
             console.log("Best fitness %d", this.bestFitness);
+            console.log("Best possible fitness %d", this.bestPossibleFitness);
             console.log("Best gene: ", this.bestGene);
             console.log("Best gene evaluation: ");
             this.nn.configure(this.bestGene.value);
             for (let i = 0; i < this.testInput.length; i++) {
                 console.log("\t [%s] %d", this.testInput[i].toString(), this.nn.check(this.testInput[i], this.testOutput[i]));
             }
-            console.log("Best possible fitness %d", this.bestPossibleFitness);
+            console.log("Population: ", this.population);
         }
+    }
+
+
+    // ---------------------------
+
+    export abstract class GA2 {
+
+        population: Array<Gene>;
+        generation: number;
+        bestFitness: number = 0;
+        bestGene: Gene;
+
+        protected abstract evaluate(gene: Gene): number;
+
+        protected abstract getRand();
+
+        constructor(
+            private geneLength: number,
+            private populationSize: number = 10,
+            private maxGenerations: number = 100,
+            private bestPossibleFitness?: number,
+            private bestPossibleGene?: Gene,
+        ) {
+        }
+
+        run() {
+
+            // first generation
+            // create genes
+            this.population = [];
+            for (let g = 0; g < this.populationSize; g++) {
+                let gene = new Gene();
+                // create alleles
+                for (let a = 0; a < this.geneLength; a++) {
+                    gene.value.push(this.getRand());
+                }
+                this.population.push(gene);
+            }
+
+            for (let i = 0; i < this.maxGenerations; i++) {
+                console.log("Generation %d", i);
+
+                // evaluete fitness
+                for (let g = 0; g < this.populationSize; g++) {
+                    let gene = this.population[g];
+                    let fitness = this.evaluate(gene);
+                    if (this.bestFitness < fitness) {
+                        this.bestFitness = fitness;
+                        this.bestGene = gene;
+                        console.log("New best fitness %d", fitness);
+                    }
+                    gene.fitness = fitness;
+                }
+
+                // sort
+                this.population.sort((a: Gene, b: Gene): number => {
+                    return a.fitness > b.fitness ? -1 : 1;
+                });
+
+                // vyber prvních 5 nejlepších a 1 outsidera
+                let genePool = this.population.slice(0, 4);
+                // genePool.push(this.population[this.population.length - 1]);
+
+                if (i < this.maxGenerations - 1) {
+                    this.population = [];
+                    for (let g = 0; g < this.populationSize / 2; g++) {
+                        let a: Gene = genePool[Math.floor(Math.random() * genePool.length)];
+                        let b: Gene = genePool[Math.floor(Math.random() * genePool.length)];
+
+                        // křížení
+                        let pointcut = Math.floor(Math.random() * a.value.length);
+                        let abGene = new Gene();
+                        abGene.value = a.value.slice(0, pointcut).concat(b.value.slice(pointcut, b.value.length));
+                        let baGene = new Gene();
+                        baGene.value = b.value.slice(0, pointcut).concat(a.value.slice(pointcut, a.value.length));
+
+                        // mutace
+                        if (Math.random() > 0.5) {
+                            let mutation = Math.floor(Math.random() * abGene.value.length);
+                            abGene.value[mutation] = this.getRand();
+                        }
+                        if (Math.random() > 0.5) {
+                            let mutation = Math.floor(Math.random() * baGene.value.length);
+                            baGene.value[mutation] = this.getRand();
+                        }
+
+                        this.population.push(abGene);
+                        this.population.push(baGene);
+                    }
+                }
+            }
+
+            console.log("Best fitness %d", this.bestFitness);
+            console.log("Best gene: ", this.bestGene.value.toString());
+            if (this.bestPossibleFitness && this.bestPossibleGene) {
+                console.log("Best possible fitness %d", this.bestPossibleFitness);
+                console.log("Best possible gene: ", this.bestPossibleGene.toString());
+            }
+        }
+    }
+
+    export class BackpackGA extends GA2 {
+
+        values = [15, 10, 9, 5, 12, 5];
+        weights = [1, 5, 3, 4, 7, 1];
+        maxWeight = 10;
+
+        protected getRand(): number {
+            return Math.floor(Math.random() * 2);
+        }
+
+        protected evaluate(gene: Gene): number {
+            let fitness = 0;
+            let weight = 0;
+            for (let i = 0; i < gene.value.length; i++) {
+                if (gene.value[i] == 1) {
+                    fitness += this.values[i];
+                    weight += this.weights[i];
+                    if (weight > this.maxWeight) {
+                        return 0;
+                    }
+                }
+            }
+            return fitness;
+        }
+
+        constructor(populationSize: number = 10, maxGenerations: number = 200) {
+            super(6, populationSize, maxGenerations);
+        }
+
     }
 }
