@@ -179,6 +179,8 @@ namespace Lich {
             public quant: number,
             // jak často takový povrch v mapě je 
             public seedCooldown: number,
+            // barva na minimapě
+            public minimapColor: Color,
             // jaký typ kolizí povrch má?
             public collisionType = CollisionType.SOLID) {
             super(srfcKey, invObj, quant);
@@ -217,9 +219,19 @@ namespace Lich {
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
-            public quant: number) {
+            public quant: number,
+            // barva na minimapě
+            public minimapColor: Color) {
             super(srfcKey, invObj, quant);
         }
+    }
+
+    export class Color {
+        constructor(
+            public r: number,
+            public g: number,
+            public b: number,
+            public a?: number) { }
     }
 
 }

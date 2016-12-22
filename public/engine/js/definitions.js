@@ -183,6 +183,8 @@ var Lich;
             quant, 
             // jak často takový povrch v mapě je 
             seedCooldown, 
+            // barva na minimapě
+            minimapColor, 
             // jaký typ kolizí povrch má?
             collisionType) {
             if (collisionType === void 0) { collisionType = CollisionType.SOLID; }
@@ -191,6 +193,7 @@ var Lich;
             this.invObj = invObj;
             this.quant = quant;
             this.seedCooldown = seedCooldown;
+            this.minimapColor = minimapColor;
             this.collisionType = collisionType;
             this.minSize = 1;
             this.maxSize = 3;
@@ -230,13 +233,26 @@ var Lich;
             // id objektu, který má vypadnout do světa po vytěžení
             invObj, 
             // kolik INV objektů vznikne po vytěření
-            quant) {
+            quant, 
+            // barva na minimapě
+            minimapColor) {
             _super.call(this, srfcKey, invObj, quant);
             this.srfcKey = srfcKey;
             this.invObj = invObj;
             this.quant = quant;
+            this.minimapColor = minimapColor;
         }
         return MapSurfaceBgrDefinition;
     }(Diggable));
     Lich.MapSurfaceBgrDefinition = MapSurfaceBgrDefinition;
+    var Color = (function () {
+        function Color(r, g, b, a) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+        return Color;
+    }());
+    Lich.Color = Color;
 })(Lich || (Lich = {}));

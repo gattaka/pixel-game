@@ -72,10 +72,10 @@ var Lich;
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, function (payload) {
                 var imgData = ctx.createImageData(1, 1);
                 var _loop_1 = function(i) {
-                    self.processFillBySurface(payload.x, payload.y, function (r, g, b) {
-                        imgData.data[i + 0] = r;
-                        imgData.data[i + 1] = g;
-                        imgData.data[i + 2] = b;
+                    self.processFillBySurface(payload.x, payload.y, function (color) {
+                        imgData.data[i + 0] = color.r;
+                        imgData.data[i + 1] = color.g;
+                        imgData.data[i + 2] = color.b;
                         imgData.data[i + 3] = 250;
                     });
                 };
@@ -89,58 +89,30 @@ var Lich;
         }
         MinimapUI.prototype.processFillBySurface = function (x, y, fill) {
             var item = this.tilesMap.mapRecord.getValue(x, y);
-            if (item != Lich.SurfacePositionKey.VOID) {
+            if (item && item != Lich.SurfacePositionKey.VOID) {
                 var key = Lich.Resources.getInstance().surfaceIndex.getType(item);
-                switch (key) {
-                    case Lich.SurfaceKey.SRFC_DIRT_KEY:
-                        fill(156, 108, 36);
-                        break;
-                    case Lich.SurfaceKey.SRFC_BRICK_KEY:
-                        fill(79, 39, 0);
-                        break;
-                    case Lich.SurfaceKey.SRFC_COAL_KEY:
-                        fill(37, 27, 27);
-                        break;
-                    case Lich.SurfaceKey.SRFC_WOODWALL_KEY:
-                        fill(181, 129, 28);
-                        break;
-                    case Lich.SurfaceKey.SRFC_ROOF_KEY:
-                        fill(156, 60, 28);
-                        break;
-                    case Lich.SurfaceKey.SRFC_ROCK_KEY:
-                        fill(82, 82, 82);
-                        break;
-                    case Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY:
-                        fill(62, 62, 62);
-                        break;
-                    case Lich.SurfaceKey.SRFC_STRAW_KEY:
-                        fill(219, 187, 39);
-                        break;
-                    case Lich.SurfaceKey.SRFC_KRYSTAL_KEY:
-                        fill(0, 201, 201);
-                        break;
-                    case Lich.SurfaceKey.SRFC_FLORITE_KEY:
-                        fill(159, 68, 181);
-                        break;
-                    case Lich.SurfaceKey.SRFC_IRON_KEY:
-                        fill(177, 88, 33);
-                        break;
-                    default: fill(209, 251, 255);
-                }
+                fill(Lich.Resources.getInstance().mapSurfaceDefs[key].minimapColor);
             }
             else {
-                fill(209, 251, 255);
+                var bgrItem = this.tilesMap.mapBgrRecord.getValue(x, y);
+                if (bgrItem && bgrItem != Lich.SurfacePositionKey.VOID) {
+                    var key = Lich.Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
+                    fill(Lich.Resources.getInstance().mapSurfacesBgrDefs[key].minimapColor);
+                }
+                else {
+                    fill(new Lich.Color(209, 251, 255));
+                }
             }
         };
         MinimapUI.prototype.drawMinimapTile = function (imgData, x, y) {
             var self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
-            var fill = function (r, g, b) {
-                imgData.data[imgData.counter++] = r; // R
-                imgData.data[imgData.counter++] = g; // G
-                imgData.data[imgData.counter++] = b; // B
-                imgData.data[imgData.counter++] = 250; // A
+            var fill = function (color) {
+                imgData.data[imgData.counter++] = color.r; // R
+                imgData.data[imgData.counter++] = color.g; // G
+                imgData.data[imgData.counter++] = color.b; // B
+                imgData.data[imgData.counter++] = color.a != undefined ? color.a : 250; // A
             };
             self.processFillBySurface(x, y, fill);
         };

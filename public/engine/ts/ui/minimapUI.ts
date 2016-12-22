@@ -91,10 +91,10 @@ namespace Lich {
             EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, (payload: TupleEventPayload) => {
                 let imgData = ctx.createImageData(1, 1);
                 for (let i = 0; i < imgData.data.length; i += 4) {
-                    self.processFillBySurface(payload.x, payload.y, (r: number, g: number, b: number) => {
-                        imgData.data[i + 0] = r;
-                        imgData.data[i + 1] = g;
-                        imgData.data[i + 2] = b;
+                    self.processFillBySurface(payload.x, payload.y, (color: Color) => {
+                        imgData.data[i + 0] = color.r;
+                        imgData.data[i + 1] = color.g;
+                        imgData.data[i + 2] = color.b;
                         imgData.data[i + 3] = 250;
                     });
                 };
@@ -103,26 +103,19 @@ namespace Lich {
             });
         }
 
-        private processFillBySurface(x: number, y: number, fill: (r: number, g: number, b: number) => any) {
+        private processFillBySurface(x: number, y: number, fill: (color: Color) => any) {
             let item: number = this.tilesMap.mapRecord.getValue(x, y);
-            if (item != SurfacePositionKey.VOID) {
+            if (item && item != SurfacePositionKey.VOID) {
                 let key: SurfaceKey = Resources.getInstance().surfaceIndex.getType(item);
-                switch (key) {
-                    case SurfaceKey.SRFC_DIRT_KEY: fill(156, 108, 36); break;
-                    case SurfaceKey.SRFC_BRICK_KEY: fill(79, 39, 0); break;
-                    case SurfaceKey.SRFC_COAL_KEY: fill(37, 27, 27); break;
-                    case SurfaceKey.SRFC_WOODWALL_KEY: fill(181, 129, 28); break;
-                    case SurfaceKey.SRFC_ROOF_KEY: fill(156, 60, 28); break;
-                    case SurfaceKey.SRFC_ROCK_KEY: fill(82, 82, 82); break;
-                    case SurfaceKey.SRFC_ROCK_BRICK_KEY: fill(62, 62, 62); break;
-                    case SurfaceKey.SRFC_STRAW_KEY: fill(219, 187, 39); break;
-                    case SurfaceKey.SRFC_KRYSTAL_KEY: fill(0, 201, 201); break;
-                    case SurfaceKey.SRFC_FLORITE_KEY: fill(159, 68, 181); break;
-                    case SurfaceKey.SRFC_IRON_KEY: fill(177, 88, 33); break;
-                    default: fill(209, 251, 255);
-                }
+                fill(Resources.getInstance().mapSurfaceDefs[key].minimapColor);
             } else {
-                fill(209, 251, 255);
+                let bgrItem: number = this.tilesMap.mapBgrRecord.getValue(x, y);
+                if (bgrItem && bgrItem != SurfacePositionKey.VOID) {
+                    let key: SurfaceBgrKey = Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
+                    fill(Resources.getInstance().mapSurfacesBgrDefs[key].minimapColor);
+                } else {
+                    fill(new Color(209, 251, 255));
+                }
             }
         }
 
@@ -130,11 +123,11 @@ namespace Lich {
             let self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
-            let fill = (r: number, g: number, b: number) => {
-                imgData.data[imgData.counter++] = r; // R
-                imgData.data[imgData.counter++] = g; // G
-                imgData.data[imgData.counter++] = b; // B
-                imgData.data[imgData.counter++] = 250; // A
+            let fill = (color: Color) => {
+                imgData.data[imgData.counter++] = color.r; // R
+                imgData.data[imgData.counter++] = color.g; // G
+                imgData.data[imgData.counter++] = color.b; // B
+                imgData.data[imgData.counter++] = color.a != undefined ? color.a : 250; // A
             };
             self.processFillBySurface(x, y, fill);
         };

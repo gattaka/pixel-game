@@ -21,6 +21,8 @@ var Lich;
         function Changelog() {
             this.versions = new Lich.Table();
             var version;
+            version = new Version("0.16 - Dec 22, 2016");
+            version.addChange("Minimap surface and backgroudn colors fixed");
             version = new Version("0.15 - Dec 18, 2016");
             version.addChange("Christmas baubles introduced");
             version.addChange("Christmas tree introduced");
