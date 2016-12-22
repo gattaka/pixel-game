@@ -52,7 +52,7 @@ namespace Lich {
             }
         }
 
-        constructor(private recipeManager: RecipeManager) {
+        constructor(private recipeManager: RecipeManager, private mobile: boolean) {
             super(InventoryUI.N, InventoryUI.M);
 
             var self = this;

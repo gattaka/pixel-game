@@ -14,6 +14,10 @@ var Lich;
             this.playerX = 0;
             this.playerY = 0;
             var self = this;
+            self.on("click", function (evt) {
+                Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                self.hide();
+            }, null, false);
             var border = new createjs.Shape();
             border.graphics.setStrokeStyle(1);
             border.graphics.beginStroke("rgba(0,0,0,255)");

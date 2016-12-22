@@ -20,6 +20,11 @@ namespace Lich {
             super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
             let self = this;
 
+            self.on("click", function (evt) {
+                Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                self.hide();
+            }, null, false);
+
             let border = new createjs.Shape();
             border.graphics.setStrokeStyle(1);
             border.graphics.beginStroke("rgba(0,0,0,255)");

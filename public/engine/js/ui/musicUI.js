@@ -50,7 +50,6 @@ var Lich;
             self.addChild(self.itemsCont);
             var offset = 5;
             self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
-            self.selectTrack(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
         }
         MusicUI.prototype.selectTrack = function (track, volume) {
             var self = this;

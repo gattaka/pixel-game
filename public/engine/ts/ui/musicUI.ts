@@ -57,8 +57,6 @@ namespace Lich {
 
             let offset = 5;
             self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
-
-            self.selectTrack(MusicKey.MSC_DIRT_THEME_KEY, 0.3);
         }
 
 

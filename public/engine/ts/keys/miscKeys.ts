@@ -44,11 +44,18 @@ namespace Lich {
         UI_DOWN_KEY,
         UI_LEFT_KEY,
         UI_RIGHT_KEY,
+        UI_LEFT_UP_KEY,
+        UI_RIGHT_UP_KEY,
+        UI_LEFT_DOWN_KEY,
+        UI_RIGHT_DOWN_KEY,
         UI_CRAFT_KEY,
         UI_SAVE_KEY,
         UI_LOAD_KEY,
         UI_NEW_WORLD_KEY,
-        UI_HELP_KEY
+        UI_HELP_KEY,
+        UI_BACKPACK_KEY,
+        UI_MENU_KEY,
+        UI_MINIMAP_KEY
     }
 
     export enum SpellKey {
@@ -62,7 +69,7 @@ namespace Lich {
         SPELL_ENEMY_KEY,
         SPELL_TELEPORT_KEY,
         SPELL_USE_ITEM_KEY,
-        
+
         // RMB click interakce s objekty
         SPELL_INTERACT_KEY
     }

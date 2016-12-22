@@ -7,9 +7,10 @@ var Lich;
 (function (Lich) {
     var InventoryUI = (function (_super) {
         __extends(InventoryUI, _super);
-        function InventoryUI(recipeManager) {
+        function InventoryUI(recipeManager, mobile) {
             _super.call(this, InventoryUI.N, InventoryUI.M);
             this.recipeManager = recipeManager;
+            this.mobile = mobile;
             this.choosenItem = null;
             this.lineOffset = 0;
             // --- Virtuální inventář ---

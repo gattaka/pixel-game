@@ -16,34 +16,88 @@ namespace Lich {
 
         splashScreenUI: SplashScreenUI;
 
-        helpBtn: Button;
+        // mobile
+        public controls = new Controls();
 
-        constructor(public canvas: HTMLCanvasElement, tilesMap: TilesMap) {
+        private createHelpButton() {
+            let helpBtn = new Button(UIGFXKey.UI_HELP_KEY);
+            helpBtn.on("mousedown", function (evt) {
+                window.open("help.html", "_blank");
+            }, null, false);
+            return helpBtn;
+        }
+
+        constructor(public canvas: HTMLCanvasElement, tilesMap: TilesMap, mobile: boolean) {
             super();
 
             let self = this;
 
             // Help btn
-            let helpBtn = new Button(UIGFXKey.UI_HELP_KEY);
-            self.addChild(helpBtn);
-            helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
-            helpBtn.y = UI.SCREEN_SPACING;
-            helpBtn.on("mousedown", function (evt) {
-                window.open("help.html", "_blank");
-            }, null, false);
-            self.helpBtn = helpBtn;
+            if (!mobile) {
+                let helpBtn = this.createHelpButton();
+                self.addChild(helpBtn);
+                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                helpBtn.y = UI.SCREEN_SPACING;
+            } else {
+                let menuCont = new createjs.Container;
+                menuCont.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                menuCont.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                menuCont.visible = false;
+                self.addChild(menuCont);
+
+                let saveBtn = new Button(UIGFXKey.UI_SAVE_KEY);
+                menuCont.addChild(saveBtn);
+                saveBtn.on("click", function (evt) {
+                    EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    menuCont.visible = false;
+                }, null, false);
+
+                let loadBtn = new Button(UIGFXKey.UI_LOAD_KEY);
+                loadBtn.y = Button.sideSize + PartsUI.SPACING;
+                menuCont.addChild(loadBtn);
+                loadBtn.on("click", function (evt) {
+                    EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                }, null, false);
+
+                let newbtn = new Button(UIGFXKey.UI_NEW_WORLD_KEY);
+                newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                menuCont.addChild(newbtn);
+                menuCont.on("click", function (evt) {
+                    EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                }, null, false);
+
+                let helpBtn = this.createHelpButton();
+                menuCont.addChild(helpBtn);
+                helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
+
+                let menuBtn = new Button(UIGFXKey.UI_MENU_KEY);
+                self.addChild(menuBtn);
+                menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                menuBtn.y = UI.SCREEN_SPACING;
+                menuBtn.on("click", function (evt) {
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    menuCont.visible = !menuCont.visible;
+                }, null, false);
+            }
 
             // Debug and loging
-            self.debugUI = new DebugLogUI(400, 0);
-            self.debugUI.x = UI.SCREEN_SPACING;
-            self.debugUI.y = UI.SCREEN_SPACING;
-            self.addChild(self.debugUI);
+            if (!mobile) {
+                self.debugUI = new DebugLogUI(400, 0);
+                self.debugUI.x = UI.SCREEN_SPACING;
+                self.debugUI.y = UI.SCREEN_SPACING;
+                self.addChild(self.debugUI);
+            }
 
             // SplashScreen
             self.splashScreenUI = new SplashScreenUI();
             self.splashScreenUI.x = canvas.width / 2 - self.splashScreenUI.width / 2;
             self.splashScreenUI.y = canvas.height / 2 - self.splashScreenUI.height / 2;
-            self.addChild(self.splashScreenUI);
+            if (!mobile) {
+                self.addChild(self.splashScreenUI);
+            }
 
             // Crafting
             let craftingUI = new CraftingUI();
@@ -54,11 +108,14 @@ namespace Lich {
             let recipeListener = new RecipeManager(craftingUI.createRecipeAvailChangeListener());
 
             // Inventář
-            let inventoryUI = new InventoryUI(recipeListener);
+            let inventoryUI = new InventoryUI(recipeListener, mobile);
             inventoryUI.x = UI.SCREEN_SPACING;
             inventoryUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
-            self.addChild(inventoryUI);
             self.inventoryUI = inventoryUI;
+            self.addChild(inventoryUI);
+            if (mobile) {
+                self.inventoryUI.toggle();
+            }
 
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
@@ -82,11 +139,11 @@ namespace Lich {
             self.conditionUI = conditionUI;
 
             // Hudba
-            let musicUI = new MusicUI();
-            musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
-            musicUI.y = canvas.height - UI.SCREEN_SPACING - conditionUI.height - UI.SCREEN_SPACING - musicUI.height;
-            self.addChild(musicUI);
-            self.musicUI = musicUI;
+            // let musicUI = new MusicUI();
+            // musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
+            // musicUI.y = canvas.height - UI.SCREEN_SPACING - conditionUI.height - UI.SCREEN_SPACING - musicUI.height;
+            // self.addChild(musicUI);
+            // self.musicUI = musicUI;
 
             // Minimapa
             let minimapUI = new MinimapUI(canvas.width, canvas.height, tilesMap);
@@ -97,6 +154,112 @@ namespace Lich {
             self.addChild(minimapUI);
             self.minimapUI = minimapUI;
             minimapUI.hide();
+
+            if (mobile) {
+                let invBtn = new Button(UIGFXKey.UI_BACKPACK_KEY);
+                invBtn.x = UI.SCREEN_SPACING;
+                invBtn.y = UI.SCREEN_SPACING;
+                self.addChild(invBtn);
+                invBtn.on("click", function (evt) {
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    self.inventoryUI.toggle();
+                }, null, false);
+
+                let craftBtn = new Button(UIGFXKey.UI_CRAFT_KEY);
+                craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                craftBtn.y = UI.SCREEN_SPACING;
+                self.addChild(craftBtn);
+                craftBtn.on("click", function (evt) {
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    self.craftingUI.toggle();
+                }, null, false);
+
+                let minimapBtn = new Button(UIGFXKey.UI_MINIMAP_KEY);
+                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
+                minimapBtn.y = UI.SCREEN_SPACING;
+                self.addChild(minimapBtn);
+                minimapBtn.on("click", function (evt) {
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    self.minimapUI.toggle();
+                }, null, false);
+            }
+
+            if (mobile) {
+                let movementCont = new createjs.Container;
+                movementCont.x = UI.SCREEN_SPACING;
+                movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
+                self.addChild(movementCont);
+
+                let leftUpBtn = new Button(UIGFXKey.UI_LEFT_UP_KEY);
+                movementCont.addChild(leftUpBtn);
+                leftUpBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.left = true;
+                    self.controls.up = true;
+                }, null, false);
+
+                let upBtn = new Button(UIGFXKey.UI_UP_KEY);
+                upBtn.x = Button.sideSize + PartsUI.SPACING;
+                movementCont.addChild(upBtn);
+                upBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.up = true;
+                }, null, false);
+
+                let rightUpBtn = new Button(UIGFXKey.UI_RIGHT_UP_KEY);
+                rightUpBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
+                movementCont.addChild(rightUpBtn);
+                rightUpBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.right = true;
+                    self.controls.up = true;
+                }, null, false);
+
+                let leftBtn = new Button(UIGFXKey.UI_LEFT_KEY);
+                leftBtn.y = Button.sideSize + PartsUI.SPACING;
+                movementCont.addChild(leftBtn);
+                leftBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.left = true;
+                }, null, false);
+
+                let rightBtn = new Button(UIGFXKey.UI_RIGHT_KEY);
+                rightBtn.y = Button.sideSize + PartsUI.SPACING;
+                rightBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
+                movementCont.addChild(rightBtn);
+                rightBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.right = true;
+                }, null, false);
+
+                let leftDownBtn = new Button(UIGFXKey.UI_LEFT_DOWN_KEY);
+                leftDownBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                movementCont.addChild(leftDownBtn);
+                leftDownBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.left = true;
+                    self.controls.down = true;
+                }, null, false);
+
+                let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
+                downBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                downBtn.x = Button.sideSize + PartsUI.SPACING;
+                movementCont.addChild(downBtn);
+                downBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.down = true;
+                }, null, false);
+
+                let rightDownBtn = new Button(UIGFXKey.UI_RIGHT_DOWN_KEY);
+                rightDownBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                rightDownBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
+                movementCont.addChild(rightDownBtn);
+                rightDownBtn.on("mousedown", function (evt) {
+                    self.controls = new Controls();
+                    self.controls.right = true;
+                    self.controls.down = true;
+                }, null, false);
+            }
 
         }
 
