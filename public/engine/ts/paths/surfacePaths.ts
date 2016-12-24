@@ -25,6 +25,8 @@ namespace Lich {
         ["images/surfaces/chain_ladder.png", SurfaceKey.SRFC_CHAIN_LADDER_KEY],
         ["images/surfaces/gold.png", SurfaceKey.SRFC_GOLD_ORE_KEY],
         // Transitions
-        ["images/surfaces/dirt_to_rock.png", SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY]
+        ["images/surfaces/dirt_to_rock.png", SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY],
+        ["images/surfaces/dirt_to_coal.png", SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY],
+        ["images/surfaces/dirt_to_iron.png", SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY]
     ]
 }

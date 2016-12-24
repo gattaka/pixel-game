@@ -22,8 +22,9 @@ namespace Lich {
         SRFC_ROCK_BRICK_BR_KEY,
         SRFC_CHAIN_LADDER_KEY,
         SRFC_GOLD_ORE_KEY,
-        // Transitions
-        SRFC_TRANS_DIRT_ROCK_KEY
+        SRFC_TRANS_DIRT_ROCK_KEY,
+        SRFC_TRANS_DIRT_COAL_KEY,
+        SRFC_TRANS_DIRT_IRON_KEY
     }
 
     export enum SurfaceBgrKey {

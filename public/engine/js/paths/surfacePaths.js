@@ -25,6 +25,8 @@ var Lich;
         ["images/surfaces/chain_ladder.png", Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY],
         ["images/surfaces/gold.png", Lich.SurfaceKey.SRFC_GOLD_ORE_KEY],
         // Transitions
-        ["images/surfaces/dirt_to_rock.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY]
+        ["images/surfaces/dirt_to_rock.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY],
+        ["images/surfaces/dirt_to_coal.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY],
+        ["images/surfaces/dirt_to_iron.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY]
     ];
 })(Lich || (Lich = {}));

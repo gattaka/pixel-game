@@ -251,9 +251,18 @@ namespace Lich {
             let seamCheck = (type: SurfaceKey, type2: SurfaceKey, ok1: SurfaceKey, ok2: SurfaceKey) => {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
             };
+            // Rock
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
+            // Coal
+            if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY)) return true;
+            // Iron
+            if (seamCheck(type, type2, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)) return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_BRICK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_WOODWALL_KEY)) return true;

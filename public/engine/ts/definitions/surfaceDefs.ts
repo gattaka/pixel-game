@@ -1,6 +1,8 @@
 namespace Lich {
     export let SURFACE_TRANSITION_DEFS: Array<MapSurfaceTransitionDefinition> = [
-        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)
+        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY),
+        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY),
+        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)
     ]
 
     export let SURFACE_DEFS: Array<MapSurfaceDefinition> = [
