@@ -199,6 +199,17 @@ namespace Lich {
         }
     }
 
+    export class MapSurfaceTransitionDefinition {
+        constructor(
+            // jaký typ povrchu se prolíná dovnitř
+            public invadingSrfc: SurfaceKey,
+            // jaký typ povrchu je prolínán a který se při výkopu měl vracet
+            public coveredSrfc: SurfaceKey,
+            // klíč přechodového povrchu
+            public transitionKey: SurfaceKey) {
+        }
+    }
+
     /**
      * Stěny povrchů (pozadí) jsou ve 4 formách:
      * 

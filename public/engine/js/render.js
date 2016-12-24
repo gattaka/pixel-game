@@ -261,19 +261,19 @@ var Lich;
             if (bgr) {
                 index = rsc.surfaceBgrIndex;
                 record = self.tilesMap.mapBgrRecord;
-                defs = rsc.mapSurfacesBgrDefs;
+                defs = rsc.getSurfaceBgrDef.bind(rsc);
                 sceneMap = self.sceneBgrTilesMap;
             }
             else {
                 index = rsc.surfaceIndex;
                 record = self.tilesMap.mapRecord;
-                defs = rsc.mapSurfaceDefs;
+                defs = rsc.getSurfaceDef.bind(rsc);
                 sceneMap = self.sceneTilesMap;
             }
             var dugIndex = record.getValue(rx, ry);
             if (dugIndex != null && dugIndex > -1) {
                 var surfaceType = index.getType(dugIndex);
-                var objType = defs[surfaceType];
+                var objType = defs(surfaceType);
                 self.onDigSurfaceListeners.forEach(function (fce) {
                     fce(objType, rx, ry);
                 });
@@ -344,14 +344,16 @@ var Lich;
         Render.prototype.mapReshape = function (tilesToReset, bgr) {
             var self = this;
             var rsc = Lich.Resources.getInstance();
-            var record, sceneMap;
+            var record, sceneMap, index;
             if (bgr) {
                 record = self.tilesMap.mapBgrRecord;
                 sceneMap = self.sceneBgrTilesMap;
+                index = rsc.surfaceBgrIndex;
             }
             else {
                 record = self.tilesMap.mapRecord;
                 sceneMap = self.sceneTilesMap;
+                index = rsc.surfaceIndex;
             }
             // Přegeneruj hrany
             (function () {
@@ -378,6 +380,13 @@ var Lich;
                     var tile = sceneMap.getValue(x, y);
                     if (tile !== null) {
                         var v = record.getValue(x, y);
+                        var type = index.getType(v);
+                        if (bgr) {
+                            tile.image = rsc.getImage(Lich.SurfaceBgrKey[type]);
+                        }
+                        else {
+                            tile.image = rsc.getImage(Lich.SurfaceKey[type]);
+                        }
                         self.setSurfaceSourceRect(tile, v, bgr);
                     }
                 });
@@ -472,13 +481,13 @@ var Lich;
             if (bgr) {
                 index = rsc.surfaceBgrIndex;
                 record = self.tilesMap.mapBgrRecord;
-                defs = rsc.mapSurfacesBgrDefs;
+                defs = rsc.getSurfaceBgrDef.bind(rsc);
                 sceneMap = self.sceneBgrTilesMap;
             }
             else {
                 index = rsc.surfaceIndex;
                 record = self.tilesMap.mapRecord;
-                defs = rsc.mapSurfaceDefs;
+                defs = rsc.getSurfaceDef.bind(rsc);
                 sceneMap = self.sceneTilesMap;
             }
             (function () {
@@ -507,8 +516,8 @@ var Lich;
                             else {
                                 var posIndex = index.getMiddlePositionIndexByCoordPattern(x, y, surfaceType);
                                 record.setValue(x, y, posIndex);
-                                var targetSector = self.getSectorByTiles(x, y);
                                 tilesToReset.push([x, y]);
+                                var targetSector = self.getSectorByTiles(x, y);
                                 // vytvoř dílek
                                 var tile = self.createTile(posIndex, bgr);
                                 // přidej dílek do sektoru

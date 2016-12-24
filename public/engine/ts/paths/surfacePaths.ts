@@ -1,5 +1,6 @@
 namespace Lich {
     let tsf = ThemeWatch.getThemeSuffix();
+
     export let SURFACE_PATHS: Array<[string, SurfaceKey]> = [
         ["images/surfaces/dirt" + tsf + ".png", SurfaceKey.SRFC_DIRT_KEY],
         ["images/surfaces/woodwall.png", SurfaceKey.SRFC_WOODWALL_KEY],
@@ -22,6 +23,8 @@ namespace Lich {
         ["images/surfaces/rock_brick_bl.png", SurfaceKey.SRFC_ROCK_BRICK_BL_KEY],
         ["images/surfaces/rock_brick_br.png", SurfaceKey.SRFC_ROCK_BRICK_BR_KEY],
         ["images/surfaces/chain_ladder.png", SurfaceKey.SRFC_CHAIN_LADDER_KEY],
-        ["images/surfaces/gold.png", SurfaceKey.SRFC_GOLD_ORE_KEY]
+        ["images/surfaces/gold.png", SurfaceKey.SRFC_GOLD_ORE_KEY],
+        // Transitions
+        ["images/surfaces/dirt_to_rock.png", SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY]
     ]
 }

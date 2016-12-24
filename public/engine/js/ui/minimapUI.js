@@ -95,13 +95,13 @@ var Lich;
             var item = this.tilesMap.mapRecord.getValue(x, y);
             if (item && item != Lich.SurfacePositionKey.VOID) {
                 var key = Lich.Resources.getInstance().surfaceIndex.getType(item);
-                fill(Lich.Resources.getInstance().mapSurfaceDefs[key].minimapColor);
+                fill(Lich.Resources.getInstance().getSurfaceDef(key).minimapColor);
             }
             else {
                 var bgrItem = this.tilesMap.mapBgrRecord.getValue(x, y);
                 if (bgrItem && bgrItem != Lich.SurfacePositionKey.VOID) {
                     var key = Lich.Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
-                    fill(Lich.Resources.getInstance().mapSurfacesBgrDefs[key].minimapColor);
+                    fill(Lich.Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
                 }
                 else {
                     fill(new Lich.Color(209, 251, 255));

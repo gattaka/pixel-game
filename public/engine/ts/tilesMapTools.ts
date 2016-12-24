@@ -29,21 +29,28 @@ namespace Lich {
 
             let srfcType = index.getType(val);
 
-            if (!valT || valT === SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false) {
-                record.setValue(x, y, index.getTopPositionIndexByCoordPattern(x, y, srfcType));
+            let processSeam = (otherVal: number, seamFc, seamLessFc) => {
+                if (!otherVal || otherVal === SurfacePositionKey.VOID) {
+                    record.setValue(x, y, seamFc(x, y, srfcType));
+                } else {
+                    let type = index.getType(otherVal);
+                    if (type != srfcType) {
+                        let seamless = index.isSeamless(type, srfcType);
+                        if (seamless) {
+                            let transition = seamLessFc(x, y, srfcType, type);
+                            if (transition)
+                                record.setValue(x, y, transition);
+                        } else {
+                            record.setValue(x, y, seamFc(x, y, srfcType));
+                        }
+                    }
+                }
             }
 
-            if (!valR || valR === SurfacePositionKey.VOID || index.isSeamless(valR, srfcType) == false) {
-                record.setValue(x, y, index.getRightPositionIndexByCoordPattern(x, y, srfcType));
-            }
-
-            if (!valB || valB === SurfacePositionKey.VOID || index.isSeamless(valB, srfcType) == false) {
-                record.setValue(x, y, index.getBottomPositionIndexByCoordPattern(x, y, srfcType));
-            }
-
-            if (!valL || valL === SurfacePositionKey.VOID || index.isSeamless(valL, srfcType) == false) {
-                record.setValue(x, y, index.getLeftPositionIndexByCoordPattern(x, y, srfcType));
-            }
+            processSeam(valT, index.getTopPositionIndexByCoordPattern.bind(index), index.getTopPositionIndexByCoordPatternOnTransition.bind(index));
+            processSeam(valR, index.getRightPositionIndexByCoordPattern.bind(index), index.getRightPositionIndexByCoordPatternOnTransition.bind(index));
+            processSeam(valB, index.getBottomPositionIndexByCoordPattern.bind(index), index.getBottomPositionIndexByCoordPatternOnTransition.bind(index));
+            processSeam(valL, index.getLeftPositionIndexByCoordPattern.bind(index), index.getLeftPositionIndexByCoordPatternOnTransition.bind(index));
         }
 
         static generateCorner(record: Array2D<number>, x: number, y: number, bgr: boolean) {
@@ -89,7 +96,7 @@ namespace Lich {
             }
 
             // jsem levý horní roh
-            if (index.isLeftPosition(val) && (index.isTopPosition(val) || valT === SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+            if (index.isLeftPosition(val) && (index.isTopPosition(val) || valT === SurfacePositionKey.VOID || index.isSeamless(index.getType(valT), srfcType) == false)) {
                 record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.TL));
             }
             // jsem levý dolní roh
@@ -101,7 +108,7 @@ namespace Lich {
                 record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.BR));
             }
             // jsem pravý horní roh
-            if (index.isRightPosition(val) && (index.isTopPosition(valL) || valT === SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+            if (index.isRightPosition(val) && (index.isTopPosition(valL) || valT === SurfacePositionKey.VOID || index.isSeamless(index.getType(valT), srfcType) == false)) {
                 record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.TR));
             }
         }

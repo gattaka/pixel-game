@@ -1,5 +1,9 @@
 namespace Lich {
-    export let SURFACE_DEFS = [
+    export let SURFACE_TRANSITION_DEFS: Array<MapSurfaceTransitionDefinition> = [
+        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)
+    ]
+
+    export let SURFACE_DEFS: Array<MapSurfaceDefinition> = [
         // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
         // jsou dle frekvence usazovány jiné povrchy
         new MapSurfaceDefinition(SurfaceKey.SRFC_DIRT_KEY, InventoryKey.INV_DIRT_KEY, 1, 0, new Color(156, 108, 36)),

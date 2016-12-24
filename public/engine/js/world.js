@@ -745,7 +745,7 @@ var Lich;
             var surfaceVal = self.tilesMap.mapRecord.getValue(tx, ty);
             if (surfaceVal != null && surfaceVal != 0) {
                 var res = Lich.Resources.getInstance();
-                srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
+                srfcDef = res.getSurfaceDef(res.surfaceIndex.getType(surfaceVal));
                 collisionType = srfcDef.collisionType;
                 // souřadnice uvnitř PART
                 var lx = void 0, ly = void 0;

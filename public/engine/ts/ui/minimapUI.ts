@@ -112,12 +112,12 @@ namespace Lich {
             let item: number = this.tilesMap.mapRecord.getValue(x, y);
             if (item && item != SurfacePositionKey.VOID) {
                 let key: SurfaceKey = Resources.getInstance().surfaceIndex.getType(item);
-                fill(Resources.getInstance().mapSurfaceDefs[key].minimapColor);
+                fill(Resources.getInstance().getSurfaceDef(key).minimapColor);
             } else {
                 let bgrItem: number = this.tilesMap.mapBgrRecord.getValue(x, y);
                 if (bgrItem && bgrItem != SurfacePositionKey.VOID) {
                     let key: SurfaceBgrKey = Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
-                    fill(Resources.getInstance().mapSurfacesBgrDefs[key].minimapColor);
+                    fill(Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
                 } else {
                     fill(new Color(209, 251, 255));
                 }

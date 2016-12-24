@@ -23,6 +23,8 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_ROCK_BRICK_BR_KEY"] = 19] = "SRFC_ROCK_BRICK_BR_KEY";
         SurfaceKey[SurfaceKey["SRFC_CHAIN_LADDER_KEY"] = 20] = "SRFC_CHAIN_LADDER_KEY";
         SurfaceKey[SurfaceKey["SRFC_GOLD_ORE_KEY"] = 21] = "SRFC_GOLD_ORE_KEY";
+        // Transitions
+        SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_ROCK_KEY"] = 22] = "SRFC_TRANS_DIRT_ROCK_KEY";
     })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
     var SurfaceKey = Lich.SurfaceKey;
     (function (SurfaceBgrKey) {

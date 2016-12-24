@@ -47,7 +47,7 @@ namespace Lich {
                         // narazil jsem na povrch, pokud jsem doposud měl prázdno, 
                         // pokus se spustit nějaké přírodní pochody
                         if (this.aboveSurface && this.yt > 2) {
-                            let srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
+                            let srfcDef = res.getSurfaceDef(res.surfaceIndex.getType(surfaceVal));
                             // hlína?
                             if (srfcDef.srfcKey == SurfaceKey.SRFC_DIRT_KEY) {
                                 let obj = tilesMap.mapObjectsTiles.getValue(this.xt, this.yt - 2);

@@ -56,6 +56,11 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
+        getTopPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getTopPositionIndexByCoordPattern(x, y, transitionType);
+        }
+
         /**
          * Získá výchozí levý dílek dle vzoru, 
          * který se opakuje, aby mapa byla pestřejší
@@ -65,6 +70,11 @@ namespace Lich {
             let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        getLeftPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getLeftPositionIndexByCoordPattern(x, y, transitionType);
         }
 
         /**
@@ -78,6 +88,11 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
+        getRightPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getRightPositionIndexByCoordPattern(x, y, transitionType);
+        }
+
         /**
          * Získá výchozí spodní dílek dle vzoru, 
          * který se opakuje, aby mapa byla pestřejší
@@ -87,6 +102,11 @@ namespace Lich {
             let row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        getBottomPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getBottomPositionIndexByCoordPattern(x, y, transitionType);
         }
 
         /**
@@ -226,11 +246,14 @@ namespace Lich {
         /**
          * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
          */
-        isSeamless(index: number, type: SurfaceKey) {
-            let type2 = this.getType(index);
+        isSeamless(type2: SurfaceKey, type: SurfaceKey) {
+            if (type2 == type) return true;
             let seamCheck = (type: SurfaceKey, type2: SurfaceKey, ok1: SurfaceKey, ok2: SurfaceKey) => {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
             };
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_BRICK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_WOODWALL_KEY)) return true;
@@ -255,7 +278,7 @@ namespace Lich {
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_TR_KEY, SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
             // SRFC_ROCK_BRICK_BL_KEY
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_BRICK_BL_KEY, SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)) return true;
-            return type == type2;
+            return false;
         }
 
     }

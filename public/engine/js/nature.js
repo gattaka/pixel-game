@@ -34,7 +34,7 @@ var Lich;
                         // narazil jsem na povrch, pokud jsem doposud měl prázdno, 
                         // pokus se spustit nějaké přírodní pochody
                         if (this.aboveSurface && this.yt > 2) {
-                            var srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
+                            var srfcDef = res.getSurfaceDef(res.surfaceIndex.getType(surfaceVal));
                             // hlína?
                             if (srfcDef.srfcKey == Lich.SurfaceKey.SRFC_DIRT_KEY) {
                                 var obj = tilesMap.mapObjectsTiles.getValue(this.xt, this.yt - 2);

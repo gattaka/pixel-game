@@ -1,5 +1,8 @@
 var Lich;
 (function (Lich) {
+    Lich.SURFACE_TRANSITION_DEFS = [
+        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)
+    ];
     Lich.SURFACE_DEFS = [
         // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
         // jsou dle frekvence usazovány jiné povrchy

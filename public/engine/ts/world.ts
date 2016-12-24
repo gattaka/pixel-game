@@ -827,7 +827,7 @@ namespace Lich {
             let surfaceVal = self.tilesMap.mapRecord.getValue(tx, ty);
             if (surfaceVal != null && surfaceVal != 0) {
                 let res = Resources.getInstance();
-                srfcDef = res.mapSurfaceDefs[res.surfaceIndex.getType(surfaceVal)];
+                srfcDef = res.getSurfaceDef(res.surfaceIndex.getType(surfaceVal));
                 collisionType = srfcDef.collisionType;
                 // souřadnice uvnitř PART
                 let lx, ly;

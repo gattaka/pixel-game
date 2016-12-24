@@ -85,6 +85,10 @@ var Lich;
             var key = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
+        SurfaceIndex.prototype.getTopPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getTopPositionIndexByCoordPattern(x, y, transitionType);
+        };
         /**
          * Získá výchozí levý dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
@@ -94,6 +98,10 @@ var Lich;
             var row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
+        SurfaceIndex.prototype.getLeftPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getLeftPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
          * Získá výchozí pravý dílek dle vzoru,
@@ -105,6 +113,10 @@ var Lich;
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
+        SurfaceIndex.prototype.getRightPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getRightPositionIndexByCoordPattern(x, y, transitionType);
+        };
         /**
          * Získá výchozí spodní dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
@@ -114,6 +126,10 @@ var Lich;
             var row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        };
+        SurfaceIndex.prototype.getBottomPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+            return this.getBottomPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
@@ -238,11 +254,18 @@ var Lich;
         /**
          * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
          */
-        SurfaceIndex.prototype.isSeamless = function (index, type) {
-            var type2 = this.getType(index);
+        SurfaceIndex.prototype.isSeamless = function (type2, type) {
+            if (type2 == type)
+                return true;
             var seamCheck = function (type, type2, ok1, ok2) {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2;
             };
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_DIRT_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY))
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY))
+                return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))
                 return true;
@@ -286,7 +309,7 @@ var Lich;
             // SRFC_ROCK_BRICK_BL_KEY
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY, Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY))
                 return true;
-            return type == type2;
+            return false;
         };
         SurfaceIndex.SPRITE_SIDE = 7;
         SurfaceIndex.PATTER_LENGTH = 4;

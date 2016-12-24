@@ -213,14 +213,14 @@ namespace Lich {
         /**
          * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
          */
-        isSeamless(index: number, type: SurfaceBgrKey) {
-            let type2 = this.getType(index);
+        isSeamless(type2: SurfaceBgrKey, type: SurfaceBgrKey) {
+            if (type == type2) return true;
             let seamCheck = (type: SurfaceBgrKey, type2: SurfaceBgrKey, ok1: SurfaceBgrKey, ok2: SurfaceBgrKey) => {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
             };
             // TODO exportovat do definic
             if (seamCheck(type, type2, SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY, SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY)) return true;
-            return type == type2;
+            return false;
         }
 
     }

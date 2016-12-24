@@ -100,35 +100,35 @@ var Lich;
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_CHAIR2]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_TABLE]),
             // usaditelných jako povrch
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_DIRT_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_DIRT_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_WOODWALL_KEY])
-                .setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_BRICK_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_BRICK_KEY])
-                .setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_BRICK_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY])
-                .setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_STRAW_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_STRAW_KEY])
-                .setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_STRAW_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_KRYSTAL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_KRYSTAL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLORITE_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_FLORITE_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_IRON_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_COAL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_COAL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_PLATFORM_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_IRON_PLATFORM_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_WOOD_PLATFORM_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_LADDER_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROOF_KEY])
-                .setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROOF_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_TL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROOF_TL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_TR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROOF_TR_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_TL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_TL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_TR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_TR_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY).setBackground(res.mapSurfacesBgrDefs[Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHAIN_LADDER_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_ORE_KEY, res.mapSurfaceDefs[Lich.SurfaceKey.SRFC_GOLD_ORE_KEY])
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_DIRT_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_DIRT_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_WOODWALL_KEY))
+                .setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_BRICK_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_BRICK_KEY))
+                .setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_BRICK_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY))
+                .setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_STRAW_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_STRAW_KEY))
+                .setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_STRAW_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_KRYSTAL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_KRYSTAL_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLORITE_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_FLORITE_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_IRON_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_COAL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_COAL_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROCK_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_IRON_PLATFORM_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_IRON_PLATFORM_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_PLATFORM_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_WOOD_PLATFORM_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_LADDER_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROOF_KEY))
+                .setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_ROOF_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_TL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROOF_TL_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROOF_TR_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROOF_TR_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_TL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROCK_BRICK_TL_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_TR_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROCK_BRICK_TR_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROCK_BRICK_BL_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_BR_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_ROCK_BRICK_BR_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY).setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHAIN_LADDER_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY)),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_ORE_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_ORE_KEY))
         ];
     };
 })(Lich || (Lich = {}));

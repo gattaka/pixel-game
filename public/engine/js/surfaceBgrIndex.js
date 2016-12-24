@@ -192,15 +192,16 @@ var Lich;
         /**
          * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
          */
-        SurfaceBgrIndex.prototype.isSeamless = function (index, type) {
-            var type2 = this.getType(index);
+        SurfaceBgrIndex.prototype.isSeamless = function (type2, type) {
+            if (type == type2)
+                return true;
             var seamCheck = function (type, type2, ok1, ok2) {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2;
             };
             // TODO exportovat do definic
             if (seamCheck(type, type2, Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_KEY, Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY))
                 return true;
-            return type == type2;
+            return false;
         };
         return SurfaceBgrIndex;
     }());

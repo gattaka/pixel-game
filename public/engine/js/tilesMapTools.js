@@ -26,18 +26,29 @@ var Lich;
             var valB = record.getValue(x, y + 1);
             var valL = record.getValue(x - 1, y);
             var srfcType = index.getType(val);
-            if (!valT || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false) {
-                record.setValue(x, y, index.getTopPositionIndexByCoordPattern(x, y, srfcType));
-            }
-            if (!valR || valR === Lich.SurfacePositionKey.VOID || index.isSeamless(valR, srfcType) == false) {
-                record.setValue(x, y, index.getRightPositionIndexByCoordPattern(x, y, srfcType));
-            }
-            if (!valB || valB === Lich.SurfacePositionKey.VOID || index.isSeamless(valB, srfcType) == false) {
-                record.setValue(x, y, index.getBottomPositionIndexByCoordPattern(x, y, srfcType));
-            }
-            if (!valL || valL === Lich.SurfacePositionKey.VOID || index.isSeamless(valL, srfcType) == false) {
-                record.setValue(x, y, index.getLeftPositionIndexByCoordPattern(x, y, srfcType));
-            }
+            var processSeam = function (otherVal, seamFc, seamLessFc) {
+                if (!otherVal || otherVal === Lich.SurfacePositionKey.VOID) {
+                    record.setValue(x, y, seamFc(x, y, srfcType));
+                }
+                else {
+                    var type = index.getType(otherVal);
+                    if (type != srfcType) {
+                        var seamless = index.isSeamless(type, srfcType);
+                        if (seamless) {
+                            var transition = seamLessFc(x, y, srfcType, type);
+                            if (transition)
+                                record.setValue(x, y, transition);
+                        }
+                        else {
+                            record.setValue(x, y, seamFc(x, y, srfcType));
+                        }
+                    }
+                }
+            };
+            processSeam(valT, index.getTopPositionIndexByCoordPattern.bind(index), index.getTopPositionIndexByCoordPatternOnTransition.bind(index));
+            processSeam(valR, index.getRightPositionIndexByCoordPattern.bind(index), index.getRightPositionIndexByCoordPatternOnTransition.bind(index));
+            processSeam(valB, index.getBottomPositionIndexByCoordPattern.bind(index), index.getBottomPositionIndexByCoordPatternOnTransition.bind(index));
+            processSeam(valL, index.getLeftPositionIndexByCoordPattern.bind(index), index.getLeftPositionIndexByCoordPatternOnTransition.bind(index));
         };
         TilesMapTools.generateCorner = function (record, x, y, bgr) {
             var rsc = Lich.Resources.getInstance();
@@ -77,7 +88,7 @@ var Lich;
                 }
             }
             // jsem levý horní roh
-            if (index.isLeftPosition(val) && (index.isTopPosition(val) || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+            if (index.isLeftPosition(val) && (index.isTopPosition(val) || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(index.getType(valT), srfcType) == false)) {
                 record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.TL));
             }
             // jsem levý dolní roh
@@ -89,7 +100,7 @@ var Lich;
                 record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.BR));
             }
             // jsem pravý horní roh
-            if (index.isRightPosition(val) && (index.isTopPosition(valL) || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(valT, srfcType) == false)) {
+            if (index.isRightPosition(val) && (index.isTopPosition(valL) || valT === Lich.SurfacePositionKey.VOID || index.isSeamless(index.getType(valT), srfcType) == false)) {
                 record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.TR));
             }
         };

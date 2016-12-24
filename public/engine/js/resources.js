@@ -73,8 +73,10 @@ var Lich;
              * DEFINICE
              */
             // definice povrchů a objektů
-            this.mapSurfaceDefs = new Array();
-            this.mapSurfacesBgrDefs = new Array();
+            this.mapSurfaceDefs = {};
+            this.mapSurfaceTransitionsDefs = {};
+            this.mapSurfaceTransitionsAliasDefs = {};
+            this.mapSurfacesBgrDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
@@ -162,14 +164,24 @@ var Lich;
             self.loader.loadManifest(manifest, true);
             // Definice mapových povrchů
             Lich.SURFACE_DEFS.forEach(function (definition) {
-                self.mapSurfaceDefs[definition.srfcKey] = definition;
+                self.mapSurfaceDefs[Lich.SurfaceKey[definition.srfcKey]] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapSurfacesFreqPool.insert(definition);
                 }
             });
+            // Definice přechodů mapových povrchů
+            Lich.SURFACE_TRANSITION_DEFS.forEach(function (definition) {
+                var level1 = self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.coveredSrfc]];
+                if (!level1) {
+                    level1 = {};
+                    self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.coveredSrfc]] = level1;
+                }
+                level1[Lich.SurfaceKey[definition.invadingSrfc]] = definition.transitionKey;
+                self.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[definition.transitionKey]] = definition.coveredSrfc;
+            });
             // Definice pozadí mapových povrchů
             Lich.SURFACE_BGR_DEFS.forEach(function (definition) {
-                self.mapSurfacesBgrDefs[definition.srfcKey] = definition;
+                self.mapSurfacesBgrDefs[Lich.SurfaceBgrKey[definition.srfcKey]] = definition;
             });
             // Definice mapových objektů
             Lich.MAP_OBJECT_DEFS.forEach(function (definition) {
@@ -208,6 +220,23 @@ var Lich;
             return Resources.INSTANCE;
         };
         ;
+        Resources.prototype.getSurfaceBgrDef = function (key) {
+            return this.mapSurfacesBgrDefs[Lich.SurfaceBgrKey[key]];
+        };
+        Resources.prototype.getSurfaceDef = function (key) {
+            // nejprve zkus, zda to není přechodový povrch, 
+            // který by se měl přeložit na jeho reálný povrch
+            var coveredSrfcKey = this.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[key]];
+            if (coveredSrfcKey)
+                key = coveredSrfcKey;
+            return this.mapSurfaceDefs[Lich.SurfaceKey[key]];
+        };
+        Resources.prototype.getTransitionSurface = function (outerSrfc, innerSrfc) {
+            var level1 = this.mapSurfaceTransitionsDefs[Lich.SurfaceKey[outerSrfc]];
+            if (!level1)
+                return undefined;
+            return level1[Lich.SurfaceKey[innerSrfc]];
+        };
         Resources.prototype.getImage = function (key) {
             return this.loader.getResult(key);
         };
