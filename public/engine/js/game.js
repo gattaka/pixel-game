@@ -55,7 +55,6 @@ var Lich;
             if (mobile) {
                 createjs.Touch.enable(self.stage);
                 self.stage.enableMouseOver(10);
-                self.stage.mouseMoveOutside = true;
             }
             /*----------*/
             /* Controls */
@@ -72,31 +71,52 @@ var Lich;
             /*--------------*/
             /* Mouse events */
             /*--------------*/
-            self.canvas.onmousedown = function (event) {
-                if (event.button == 0) {
+            if (mobile) {
+                self.stage.on("mousedown", function (evt) {
                     self.mouse.down = true;
-                }
-                else {
-                    self.mouse.rightDown = true;
-                }
-                self.mouse.clickChanged = true;
-                self.mouse.consumedByUI = false;
-            };
-            self.canvas.onmousemove = function (event) {
-                self.mouse.x = event.clientX;
-                self.mouse.y = event.clientY;
-                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
-            };
-            self.canvas.onmouseup = function (event) {
-                if (event.button == 0) {
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                    self.mouse.x = evt.stageX;
+                    self.mouse.y = evt.stageY;
+                }, null, false);
+                self.stage.on("pressmove", function (evt) {
+                    self.mouse.x = evt.stageX;
+                    self.mouse.y = evt.stageY;
+                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                }, null, false);
+                self.stage.on("pressup", function (evt) {
                     self.mouse.down = false;
-                }
-                else {
-                    self.mouse.rightDown = false;
-                }
-                self.mouse.clickChanged = true;
-                self.mouse.consumedByUI = false;
-            };
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                }, null, false);
+            }
+            else {
+                self.canvas.onmousedown = function (event) {
+                    if (event.button == 0) {
+                        self.mouse.down = true;
+                    }
+                    else {
+                        self.mouse.rightDown = true;
+                    }
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                };
+                self.canvas.onmousemove = function (event) {
+                    self.mouse.x = event.clientX;
+                    self.mouse.y = event.clientY;
+                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                };
+                self.canvas.onmouseup = function (event) {
+                    if (event.button == 0) {
+                        self.mouse.down = false;
+                    }
+                    else {
+                        self.mouse.rightDown = false;
+                    }
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                };
+            }
             var init = function () {
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 var loadWorld = function () {

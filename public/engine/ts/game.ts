@@ -82,7 +82,6 @@ namespace Lich {
             if (mobile) {
                 createjs.Touch.enable(self.stage);
                 self.stage.enableMouseOver(10);
-                self.stage.mouseMoveOutside = true;
             }
 
             /*----------*/
@@ -106,30 +105,52 @@ namespace Lich {
             /* Mouse events */
             /*--------------*/
 
-            self.canvas.onmousedown = (event: MouseEvent) => {
-                if (event.button == 0) {
+            if (mobile) {
+                self.stage.on("mousedown", function (evt: createjs.MouseEvent) {
                     self.mouse.down = true;
-                } else {
-                    self.mouse.rightDown = true;
-                }
-                self.mouse.clickChanged = true;
-                self.mouse.consumedByUI = false;
-            };
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                    self.mouse.x = evt.stageX;
+                    self.mouse.y = evt.stageY;
+                }, null, false);
 
-            self.canvas.onmousemove = (event: MouseEvent) => {
-                self.mouse.x = event.clientX;
-                self.mouse.y = event.clientY;
-                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
-            };
+                self.stage.on("pressmove", function (evt: createjs.MouseEvent) {
+                    self.mouse.x = evt.stageX;
+                    self.mouse.y = evt.stageY;
+                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                }, null, false);
 
-            self.canvas.onmouseup = (event: MouseEvent) => {
-                if (event.button == 0) {
+                self.stage.on("pressup", function (evt: createjs.MouseEvent) {
                     self.mouse.down = false;
-                } else {
-                    self.mouse.rightDown = false;
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                }, null, false);
+            } else {
+                self.canvas.onmousedown = (event: MouseEvent) => {
+                    if (event.button == 0) {
+                        self.mouse.down = true;
+                    } else {
+                        self.mouse.rightDown = true;
+                    }
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                };
+
+                self.canvas.onmousemove = (event: MouseEvent) => {
+                    self.mouse.x = event.clientX;
+                    self.mouse.y = event.clientY;
+                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                };
+
+                self.canvas.onmouseup = (event: MouseEvent) => {
+                    if (event.button == 0) {
+                        self.mouse.down = false;
+                    } else {
+                        self.mouse.rightDown = false;
+                    }
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
                 }
-                self.mouse.clickChanged = true;
-                self.mouse.consumedByUI = false;
             }
 
             let init = function () {
