@@ -25,6 +25,7 @@ var Lich;
             version.addChange("Minimap surface and background colors fixed");
             version.addChange("Mobile version ready");
             version.addChange("Surfaces basic transitions");
+            this.addVersion(version);
             version = new Version("0.15 - Dec 18, 2016");
             version.addChange("Christmas baubles introduced");
             version.addChange("Christmas tree introduced");
