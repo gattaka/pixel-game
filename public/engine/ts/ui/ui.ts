@@ -108,13 +108,24 @@ namespace Lich {
             let recipeListener = new RecipeManager(craftingUI.createRecipeAvailChangeListener());
 
             // Inventář
-            let inventoryUI = new InventoryUI(recipeListener, mobile);
-            inventoryUI.x = UI.SCREEN_SPACING;
-            inventoryUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
+            let inventoryUI;
+            if (mobile) {
+                let n = Math.floor(canvas.width / (Resources.PARTS_SIZE + PartsUI.SPACING)) - 4 - 1 - 3;
+                let m = Math.floor(canvas.height / (Resources.PARTS_SIZE + PartsUI.SPACING)) - 4;
+                inventoryUI = new InventoryUI(recipeListener, n, m);
+                inventoryUI.x = inventoryUI.expandedX = 4 * Button.sideSize + 2 * UI.SCREEN_SPACING;
+                inventoryUI.y = inventoryUI.expandedY = canvas.height / 2 - inventoryUI.height / 2;
+            } else {
+                inventoryUI = new InventoryUI(recipeListener);
+                inventoryUI.x = inventoryUI.expandedX = UI.SCREEN_SPACING;
+                inventoryUI.y = inventoryUI.expandedY = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
+            }
             self.inventoryUI = inventoryUI;
             self.addChild(inventoryUI);
             if (mobile) {
-                self.inventoryUI.toggle();
+                inventoryUI.collapsedX = UI.SCREEN_SPACING;
+                inventoryUI.collapsedY = canvas.height - PartsUI.pixelsByX(1) - UI.SCREEN_SPACING;
+                inventoryUI.toggle();
             }
 
             craftingUI.setInventoryUI(inventoryUI);
@@ -372,7 +383,7 @@ namespace Lich {
         static SELECT_BORDER = 5;
         static SPACING = 12;
 
-        constructor(public n: number, public m: number) {
+        constructor(protected n: number, protected m: number) {
             super(PartsUI.pixelsByX(n), PartsUI.pixelsByX(m));
         }
 

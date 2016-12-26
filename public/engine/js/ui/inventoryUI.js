@@ -7,10 +7,11 @@ var Lich;
 (function (Lich) {
     var InventoryUI = (function (_super) {
         __extends(InventoryUI, _super);
-        function InventoryUI(recipeManager, mobile) {
-            _super.call(this, InventoryUI.N, InventoryUI.M);
+        function InventoryUI(recipeManager, n, m) {
+            if (n === void 0) { n = InventoryUI.DEFAULT_N; }
+            if (m === void 0) { m = InventoryUI.DEFAULT_M; }
+            _super.call(this, n, m);
             this.recipeManager = recipeManager;
-            this.mobile = mobile;
             this.choosenItem = null;
             this.lineOffset = 0;
             // --- Virtuální inventář ---
@@ -50,10 +51,10 @@ var Lich;
             self.downBtn = downBtn;
             self.addChild(upBtn);
             self.addChild(downBtn);
-            upBtn.x = Lich.PartsUI.pixelsByX(InventoryUI.N) + Lich.PartsUI.SELECT_BORDER;
+            upBtn.x = Lich.PartsUI.pixelsByX(self.n) + Lich.PartsUI.SELECT_BORDER;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
-            downBtn.y = Lich.PartsUI.pixelsByX(InventoryUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
+            downBtn.y = Lich.PartsUI.pixelsByX(self.m) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
@@ -62,8 +63,8 @@ var Lich;
                 }
             }, null, false);
             downBtn.on("mousedown", function (evt) {
-                var occupLines = Math.ceil(self.itemsTypeArray.length / InventoryUI.N);
-                if (self.lineOffset < occupLines - InventoryUI.M) {
+                var occupLines = Math.ceil(self.itemsTypeArray.length / self.n);
+                if (self.lineOffset < occupLines - self.m) {
                     self.lineOffset++;
                     self.render();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
@@ -91,10 +92,11 @@ var Lich;
             }
         };
         InventoryUI.prototype.render = function () {
+            var self = this;
             this.itemsCont.removeAllChildren();
             this.itemHighlight.visible = false;
-            var itemsOffset = this.lineOffset * InventoryUI.N;
-            for (var i = itemsOffset; i < InventoryUI.N * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length; i++) {
+            var itemsOffset = this.lineOffset * self.n;
+            for (var i = itemsOffset; i < self.n * self.m + itemsOffset && i < this.itemsTypeArray.length; i++) {
                 if (this.itemsTypeArray[i] != null) {
                     this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
                 }
@@ -107,14 +109,18 @@ var Lich;
             if (self.toggleFlag) {
                 // jsem zabalen?
                 if (self.collapsed) {
-                    var newHeight = Lich.PartsUI.pixelsByX(InventoryUI.M);
+                    var newHeight = Lich.PartsUI.pixelsByX(self.m);
                     self.y = self.y - (newHeight - self.height);
-                    self.width = Lich.PartsUI.pixelsByX(InventoryUI.N);
+                    self.width = Lich.PartsUI.pixelsByX(self.n);
                     self.height = newHeight;
                     self.drawBackground();
                     self.itemHighlight.visible = self.itemHighlightVisibleBeforeCollapse;
                     self.upBtn.visible = true;
                     self.downBtn.visible = true;
+                    if (self.collapsedX && self.collapsedY) {
+                        self.x = self.expandedX;
+                        self.y = self.expandedY;
+                    }
                 }
                 else {
                     var newHeight = Lich.PartsUI.pixelsByX(1);
@@ -126,6 +132,10 @@ var Lich;
                     self.itemHighlight.visible = false;
                     self.upBtn.visible = false;
                     self.downBtn.visible = false;
+                    if (self.collapsedX && self.collapsedY) {
+                        self.x = self.collapsedX;
+                        self.y = self.collapsedY;
+                    }
                 }
                 self.itemsCont.visible = self.collapsed;
                 if (self.collapsedItem != null) {
@@ -199,9 +209,9 @@ var Lich;
                 self.itemsTypeIndexMap[item] = i;
                 self.itemsQuantityMap[item] = quant;
                 self.recipeManager.updateQuant(item, quant);
-                var itemsOffset = self.lineOffset * InventoryUI.N;
+                var itemsOffset = self.lineOffset * self.n;
                 if (i >= itemsOffset
-                    && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
+                    && i < self.n * self.m + itemsOffset) {
                     self.createUIItem(item, i - itemsOffset);
                 }
             }
@@ -213,8 +223,8 @@ var Lich;
             var itemUI = new Lich.ItemUI(item, quant);
             self.itemsUIMap[item] = itemUI;
             self.itemsCont.addChild(itemUI);
-            itemUI.x = (i % InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-            itemUI.y = Math.floor(i / InventoryUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+            itemUI.x = (i % self.n) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+            itemUI.y = Math.floor(i / self.n) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
             itemUI.hitArea = hitArea;
@@ -241,9 +251,8 @@ var Lich;
                 }, null, false);
             })();
         };
-        InventoryUI.N = 4;
-        InventoryUI.M = 8;
-        InventoryUI.INV_SIZE = InventoryUI.N * InventoryUI.M;
+        InventoryUI.DEFAULT_N = 4;
+        InventoryUI.DEFAULT_M = 8;
         return InventoryUI;
     }(Lich.PartsUI));
     Lich.InventoryUI = InventoryUI;

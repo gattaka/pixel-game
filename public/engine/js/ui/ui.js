@@ -80,13 +80,25 @@ var Lich;
             // Crafting recipes 
             var recipeListener = new Lich.RecipeManager(craftingUI.createRecipeAvailChangeListener());
             // Inventář
-            var inventoryUI = new Lich.InventoryUI(recipeListener, mobile);
-            inventoryUI.x = UI.SCREEN_SPACING;
-            inventoryUI.y = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
+            var inventoryUI;
+            if (mobile) {
+                var n = Math.floor(canvas.width / (Lich.Resources.PARTS_SIZE + PartsUI.SPACING)) - 4 - 1 - 3;
+                var m = Math.floor(canvas.height / (Lich.Resources.PARTS_SIZE + PartsUI.SPACING)) - 4;
+                inventoryUI = new Lich.InventoryUI(recipeListener, n, m);
+                inventoryUI.x = inventoryUI.expandedX = 4 * Button.sideSize + 2 * UI.SCREEN_SPACING;
+                inventoryUI.y = inventoryUI.expandedY = canvas.height / 2 - inventoryUI.height / 2;
+            }
+            else {
+                inventoryUI = new Lich.InventoryUI(recipeListener);
+                inventoryUI.x = inventoryUI.expandedX = UI.SCREEN_SPACING;
+                inventoryUI.y = inventoryUI.expandedY = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
+            }
             self.inventoryUI = inventoryUI;
             self.addChild(inventoryUI);
             if (mobile) {
-                self.inventoryUI.toggle();
+                inventoryUI.collapsedX = UI.SCREEN_SPACING;
+                inventoryUI.collapsedY = canvas.height - PartsUI.pixelsByX(1) - UI.SCREEN_SPACING;
+                inventoryUI.toggle();
             }
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;

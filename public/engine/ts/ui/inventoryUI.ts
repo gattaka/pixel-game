@@ -2,9 +2,8 @@ namespace Lich {
 
     export class InventoryUI extends PartsUI {
 
-        static N = 4;
-        static M = 8;
-        static INV_SIZE = InventoryUI.N * InventoryUI.M;
+        static DEFAULT_N = 4;
+        static DEFAULT_M = 8;
 
         choosenItem: InventoryKey = null;
 
@@ -33,6 +32,12 @@ namespace Lich {
         upBtn: Button;
         downBtn: Button;
 
+        expandedX: number;
+        expandedY: number;
+
+        collapsedX: number;
+        collapsedY: number;
+
         public serialize() {
             let array = [];
             this.itemsTypeArray.forEach((i) => {
@@ -52,8 +57,8 @@ namespace Lich {
             }
         }
 
-        constructor(private recipeManager: RecipeManager, private mobile: boolean) {
-            super(InventoryUI.N, InventoryUI.M);
+        constructor(private recipeManager: RecipeManager, n = InventoryUI.DEFAULT_N, m = InventoryUI.DEFAULT_M) {
+            super(n, m);
 
             var self = this;
 
@@ -82,10 +87,10 @@ namespace Lich {
             self.downBtn = downBtn;
             self.addChild(upBtn);
             self.addChild(downBtn);
-            upBtn.x = PartsUI.pixelsByX(InventoryUI.N) + PartsUI.SELECT_BORDER;
+            upBtn.x = PartsUI.pixelsByX(self.n) + PartsUI.SELECT_BORDER;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
-            downBtn.y = PartsUI.pixelsByX(InventoryUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
+            downBtn.y = PartsUI.pixelsByX(self.m) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
             upBtn.on("mousedown", function (evt) {
                 if (self.lineOffset > 0) {
@@ -96,8 +101,8 @@ namespace Lich {
             }, null, false);
 
             downBtn.on("mousedown", function (evt) {
-                let occupLines = Math.ceil(self.itemsTypeArray.length / InventoryUI.N);
-                if (self.lineOffset < occupLines - InventoryUI.M) {
+                let occupLines = Math.ceil(self.itemsTypeArray.length / self.n);
+                if (self.lineOffset < occupLines - self.m) {
                     self.lineOffset++;
                     self.render();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
@@ -112,11 +117,12 @@ namespace Lich {
         }
 
         render() {
+            let self = this;
             this.itemsCont.removeAllChildren();
             this.itemHighlight.visible = false;
-            let itemsOffset = this.lineOffset * InventoryUI.N;
+            let itemsOffset = this.lineOffset * self.n;
             for (let i = itemsOffset;
-                i < InventoryUI.N * InventoryUI.M + itemsOffset && i < this.itemsTypeArray.length;
+                i < self.n * self.m + itemsOffset && i < this.itemsTypeArray.length;
                 i++) {
                 if (this.itemsTypeArray[i] != null) {
                     this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
@@ -131,14 +137,18 @@ namespace Lich {
             if (self.toggleFlag) {
                 // jsem zabalen?
                 if (self.collapsed) {
-                    var newHeight = PartsUI.pixelsByX(InventoryUI.M);
+                    var newHeight = PartsUI.pixelsByX(self.m);
                     self.y = self.y - (newHeight - self.height);
-                    self.width = PartsUI.pixelsByX(InventoryUI.N);
+                    self.width = PartsUI.pixelsByX(self.n);
                     self.height = newHeight;
                     self.drawBackground();
                     self.itemHighlight.visible = self.itemHighlightVisibleBeforeCollapse;
                     self.upBtn.visible = true;
                     self.downBtn.visible = true;
+                    if (self.collapsedX && self.collapsedY) {
+                        self.x = self.expandedX;
+                        self.y = self.expandedY;
+                    }
                 } else {
                     var newHeight = PartsUI.pixelsByX(1);
                     self.y = self.y + (self.height - newHeight);
@@ -149,6 +159,10 @@ namespace Lich {
                     self.itemHighlight.visible = false;
                     self.upBtn.visible = false;
                     self.downBtn.visible = false;
+                    if (self.collapsedX && self.collapsedY) {
+                        self.x = self.collapsedX;
+                        self.y = self.collapsedY;
+                    }
                 }
                 self.itemsCont.visible = self.collapsed;
                 if (self.collapsedItem != null) {
@@ -225,9 +239,9 @@ namespace Lich {
                 self.itemsQuantityMap[item] = quant;
                 self.recipeManager.updateQuant(item, quant);
 
-                let itemsOffset = self.lineOffset * InventoryUI.N;
+                let itemsOffset = self.lineOffset * self.n;
                 if (i >= itemsOffset
-                    && i < InventoryUI.N * InventoryUI.M + itemsOffset) {
+                    && i < self.n * self.m + itemsOffset) {
                     self.createUIItem(item, i - itemsOffset);
                 }
             }
@@ -240,8 +254,8 @@ namespace Lich {
             let itemUI = new ItemUI(item, quant);
             self.itemsUIMap[item] = itemUI;
             self.itemsCont.addChild(itemUI);
-            itemUI.x = (i % InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
-            itemUI.y = Math.floor(i / InventoryUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+            itemUI.x = (i % self.n) * (Resources.PARTS_SIZE + PartsUI.SPACING);
+            itemUI.y = Math.floor(i / self.n) * (Resources.PARTS_SIZE + PartsUI.SPACING);
 
             let hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
