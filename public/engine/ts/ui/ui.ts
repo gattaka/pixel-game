@@ -182,7 +182,7 @@ namespace Lich {
                 self.addChild(minimapBtn);
                 minimapBtn.on("click", function (evt) {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                    self.minimapUI.toggle();
+                    self.minimapUI.show();
                 }, null, false);
             }
 
@@ -228,13 +228,12 @@ namespace Lich {
                     let angle;
                     let dx = x - radius;
                     let dy = radius - y;
-                    if (dx == 0) {
-                        angle = dy > 0 ? 90 : 270;
-                    } else {
-                        angle = 180 * Math.atan(dy / dx) / Math.PI;
-                        if (angle < 0)
-                            angle += 180;
-                    }
+                    let c = Math.sqrt(dx * dx + dy * dy);
+                    angle = 180 * Math.asin(dy / c) / Math.PI;
+                    if (dx > 0 && dy > 0) { /*ok*/ }
+                    if (dx < 0 && dy > 0) { angle = 180 - angle; }
+                    if (dx < 0 && dy < 0) { angle = 180 - angle; }
+                    if (dx > 0 && dy < 0) { angle = 360 + angle; }
                     // posuv, aby šipky nebyly na hranici ale uvnitř výseče
                     angle += 45 / 2;
                     switch (Math.floor(angle / 45)) {

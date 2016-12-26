@@ -146,7 +146,7 @@ var Lich;
                 self.addChild(minimapBtn);
                 minimapBtn.on("click", function (evt) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-                    self.minimapUI.toggle();
+                    self.minimapUI.show();
                 }, null, false);
             }
             if (mobile) {
@@ -204,13 +204,17 @@ var Lich;
                     var angle;
                     var dx = x - radius_1;
                     var dy = radius_1 - y;
-                    if (dx == 0) {
-                        angle = dy > 0 ? 90 : 270;
+                    var c = Math.sqrt(dx * dx + dy * dy);
+                    angle = 180 * Math.asin(dy / c) / Math.PI;
+                    if (dx > 0 && dy > 0) { }
+                    if (dx < 0 && dy > 0) {
+                        angle = 180 - angle;
                     }
-                    else {
-                        angle = 180 * Math.atan(dy / dx) / Math.PI;
-                        if (angle < 0)
-                            angle += 180;
+                    if (dx < 0 && dy < 0) {
+                        angle = 180 - angle;
+                    }
+                    if (dx > 0 && dy < 0) {
+                        angle = 360 + angle;
                     }
                     // posuv, aby šipky nebyly na hranici ale uvnitř výseče
                     angle += 45 / 2;
