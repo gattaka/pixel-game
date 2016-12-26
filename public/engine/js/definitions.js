@@ -188,7 +188,7 @@ var Lich;
             // jaký typ kolizí povrch má?
             collisionType) {
             if (collisionType === void 0) { collisionType = CollisionType.SOLID; }
-            _super.call(this, srfcKey, invObj, quant);
+            _super.call(this, mapObjKey, invObj, quant);
             this.mapObjKey = mapObjKey;
             this.invObj = invObj;
             this.quant = quant;
@@ -251,7 +251,7 @@ var Lich;
             quant, 
             // barva na minimapě
             minimapColor) {
-            _super.call(this, srfcKey, invObj, quant);
+            _super.call(this, mapObjKey, invObj, quant);
             this.mapObjKey = mapObjKey;
             this.invObj = invObj;
             this.quant = quant;

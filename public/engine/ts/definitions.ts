@@ -183,7 +183,7 @@ namespace Lich {
             public minimapColor: Color,
             // jaký typ kolizí povrch má?
             public collisionType = CollisionType.SOLID) {
-            super(srfcKey, invObj, quant);
+            super(mapObjKey, invObj, quant);
         }
 
         public setSize(minSize: number, maxSize: number): MapSurfaceDefinition {
@@ -233,7 +233,7 @@ namespace Lich {
             public quant: number,
             // barva na minimapě
             public minimapColor: Color) {
-            super(srfcKey, invObj, quant);
+            super(mapObjKey, invObj, quant);
         }
     }
 
