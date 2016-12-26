@@ -29,12 +29,12 @@ var Lich;
     var Diggable = (function () {
         function Diggable(
             // klíč
-            srfcKey, 
+            mapObjKey, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             invObj, 
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
             quant) {
-            this.srfcKey = srfcKey;
+            this.mapObjKey = mapObjKey;
             this.invObj = invObj;
             this.quant = quant;
             this.item = new DugObjDefinition(invObj, quant);
@@ -122,7 +122,7 @@ var Lich;
         __extends(MapObjDefinition, _super);
         function MapObjDefinition(
             // údaje o objektu na mapě
-            srfcKey, mapSpriteWidth, mapSpriteHeight, 
+            mapObjKey, mapSpriteWidth, mapSpriteHeight, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             invObj, 
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
@@ -131,8 +131,8 @@ var Lich;
             seedCooldown, 
             // akce na RMB kliknutí
             rmbAction) {
-            _super.call(this, srfcKey, invObj, quant);
-            this.srfcKey = srfcKey;
+            _super.call(this, mapObjKey, invObj, quant);
+            this.mapObjKey = mapObjKey;
             this.mapSpriteWidth = mapSpriteWidth;
             this.mapSpriteHeight = mapSpriteHeight;
             this.invObj = invObj;
@@ -176,7 +176,7 @@ var Lich;
         __extends(MapSurfaceDefinition, _super);
         function MapSurfaceDefinition(
             // údaje o povrchu na mapě
-            srfcKey, 
+            mapObjKey, 
             // id objektu, který má vypadnout do světa po vytěžení
             invObj, 
             // kolik INV objektů vznikne po vytěření
@@ -189,7 +189,7 @@ var Lich;
             collisionType) {
             if (collisionType === void 0) { collisionType = CollisionType.SOLID; }
             _super.call(this, srfcKey, invObj, quant);
-            this.srfcKey = srfcKey;
+            this.mapObjKey = mapObjKey;
             this.invObj = invObj;
             this.quant = quant;
             this.seedCooldown = seedCooldown;
@@ -244,7 +244,7 @@ var Lich;
         __extends(MapSurfaceBgrDefinition, _super);
         function MapSurfaceBgrDefinition(
             // údaje o povrchu na mapě
-            srfcKey, 
+            mapObjKey, 
             // id objektu, který má vypadnout do světa po vytěžení
             invObj, 
             // kolik INV objektů vznikne po vytěření
@@ -252,7 +252,7 @@ var Lich;
             // barva na minimapě
             minimapColor) {
             _super.call(this, srfcKey, invObj, quant);
-            this.srfcKey = srfcKey;
+            this.mapObjKey = mapObjKey;
             this.invObj = invObj;
             this.quant = quant;
             this.minimapColor = minimapColor;

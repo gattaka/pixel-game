@@ -36,7 +36,7 @@ var Lich;
                         if (this.aboveSurface && this.yt > 2) {
                             var srfcDef = res.getSurfaceDef(res.surfaceIndex.getType(surfaceVal));
                             // hlína?
-                            if (srfcDef.srfcKey == Lich.SurfaceKey.SRFC_DIRT_KEY) {
+                            if (srfcDef.mapObjKey == Lich.SurfaceKey.SRFC_DIRT_KEY) {
                                 var obj = tilesMap.mapObjectsTiles.getValue(this.xt, this.yt - 2);
                                 if (obj) {
                                 }
@@ -72,6 +72,9 @@ var Lich;
                                                     break;
                                                 case 3:
                                                     key = Lich.MapObjectKey.MAP_YELLOW_PLANT_KEY;
+                                                    break;
+                                                case 4:
+                                                    key = Lich.MapObjectKey.MAP_BERRY_KEY;
                                                     break;
                                             }
                                             break;

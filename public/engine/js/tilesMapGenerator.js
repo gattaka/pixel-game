@@ -129,7 +129,7 @@ var Lich;
                     if ((depositY / tilesMap.height) > (definition.minDepth / 100)
                         && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
                         var dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                        TilesMapGenerator.createDeposit(tilesMap, depositX, depositY, dia, definition.srfcKey);
+                        TilesMapGenerator.createDeposit(tilesMap, depositX, depositY, dia, definition.mapObjKey);
                         cooldown = definition.seedCooldown;
                     }
                 }
@@ -310,7 +310,7 @@ var Lich;
                         if ((depositY / tilesMap.height) > (definition.minDepth / 100)
                             && (depositY / tilesMap.height) < (definition.maxDepth / 100)) {
                             var dia = Math.floor(Math.random() * definition.maxSize) + 2;
-                            TilesMapGenerator.createDeposit(tilesMap, depositX, depositY, dia, definition.srfcKey);
+                            TilesMapGenerator.createDeposit(tilesMap, depositX, depositY, dia, definition.mapObjKey);
                             return true;
                         }
                         return false;

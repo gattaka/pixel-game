@@ -164,7 +164,7 @@ var Lich;
             self.loader.loadManifest(manifest, true);
             // Definice mapových povrchů
             Lich.SURFACE_DEFS.forEach(function (definition) {
-                self.mapSurfaceDefs[Lich.SurfaceKey[definition.srfcKey]] = definition;
+                self.mapSurfaceDefs[Lich.SurfaceKey[definition.mapObjKey]] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapSurfacesFreqPool.insert(definition);
                 }
@@ -181,11 +181,11 @@ var Lich;
             });
             // Definice pozadí mapových povrchů
             Lich.SURFACE_BGR_DEFS.forEach(function (definition) {
-                self.mapSurfacesBgrDefs[Lich.SurfaceBgrKey[definition.srfcKey]] = definition;
+                self.mapSurfacesBgrDefs[Lich.SurfaceBgrKey[definition.mapObjKey]] = definition;
             });
             // Definice mapových objektů
             Lich.MAP_OBJECT_DEFS.forEach(function (definition) {
-                self.mapObjectDefs[definition.srfcKey] = definition;
+                self.mapObjectDefs[definition.mapObjKey] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapObjectDefsFreqPool.insert(definition);
                 }

@@ -116,7 +116,7 @@ namespace Lich {
         static writeObjectRecord(tilesMap: TilesMap, cx: number, cy: number, object: MapObjDefinition) {
             var self = this;
             // zapiš objekt 
-            tilesMap.mapObjRecord.setValue(cx, cy, object.srfcKey);
+            tilesMap.mapObjRecord.setValue(cx, cy, object.mapObjKey);
             // zapiš obsazení jednotlivými dílky objektu
             for (var x = 0; x < object.mapSpriteWidth; x++) {
                 for (var y = 0; y < object.mapSpriteHeight; y++) {
@@ -125,7 +125,7 @@ namespace Lich {
                     tilesMap.mapObjectsTiles.setValue(
                         x + cx,
                         y + cy - object.mapSpriteHeight,
-                        new MapObjectTile(object.srfcKey, x, y)
+                        new MapObjectTile(object.mapObjKey, x, y)
                     );
                 }
             }

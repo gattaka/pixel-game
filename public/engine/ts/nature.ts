@@ -49,7 +49,7 @@ namespace Lich {
                         if (this.aboveSurface && this.yt > 2) {
                             let srfcDef = res.getSurfaceDef(res.surfaceIndex.getType(surfaceVal));
                             // hlína?
-                            if (srfcDef.srfcKey == SurfaceKey.SRFC_DIRT_KEY) {
+                            if (srfcDef.mapObjKey == SurfaceKey.SRFC_DIRT_KEY) {
                                 let obj = tilesMap.mapObjectsTiles.getValue(this.xt, this.yt - 2);
                                 if (obj) {
                                     // TODO Stromy
@@ -68,6 +68,7 @@ namespace Lich {
                                                 case 1: key = MapObjectKey.MAP_MAGENTA_PLANT_KEY; break;
                                                 case 2: key = MapObjectKey.MAP_CYAN_PLANT_KEY; break;
                                                 case 3: key = MapObjectKey.MAP_YELLOW_PLANT_KEY; break;
+                                                case 4: key = MapObjectKey.MAP_BERRY_KEY; break;
                                             } break;
                                         case 6: key = MapObjectKey.MAP_TREE3_KEY; break;
                                         case 7: key = MapObjectKey.MAP_TREE4_KEY; break;

@@ -20,7 +20,7 @@ namespace Lich {
         public item: DugObjDefinition;
         constructor(
             // klíč
-            public srfcKey: SurfaceKey | SurfaceBgrKey | MapObjectKey,
+            public mapObjKey: SurfaceKey | SurfaceBgrKey | MapObjectKey,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
@@ -121,7 +121,7 @@ namespace Lich {
 
         constructor(
             // údaje o objektu na mapě
-            public srfcKey: MapObjectKey,
+            public mapObjKey: MapObjectKey,
             public mapSpriteWidth: number,
             public mapSpriteHeight: number,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
@@ -132,7 +132,7 @@ namespace Lich {
             public seedCooldown: number,
             // akce na RMB kliknutí
             public rmbAction?: (game: Game, tx: number, ty: number, obj: MapObjectTile, objType: MapObjDefinition) => any) {
-            super(srfcKey, invObj, quant);
+            super(mapObjKey, invObj, quant);
         }
 
         public setFrames(frames: number): MapObjDefinition {
@@ -172,7 +172,7 @@ namespace Lich {
         public maxDepth = 100;
         constructor(
             // údaje o povrchu na mapě
-            public srfcKey: SurfaceKey,
+            public mapObjKey: SurfaceKey,
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
@@ -226,7 +226,7 @@ namespace Lich {
     export class MapSurfaceBgrDefinition extends Diggable {
         constructor(
             // údaje o povrchu na mapě
-            public srfcKey: SurfaceBgrKey,
+            public mapObjKey: SurfaceBgrKey,
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření

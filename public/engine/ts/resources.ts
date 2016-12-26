@@ -212,7 +212,7 @@ namespace Lich {
 
             // Definice mapových povrchů
             SURFACE_DEFS.forEach((definition: MapSurfaceDefinition) => {
-                self.mapSurfaceDefs[SurfaceKey[definition.srfcKey]] = definition;
+                self.mapSurfaceDefs[SurfaceKey[definition.mapObjKey]] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapSurfacesFreqPool.insert(definition);
                 }
@@ -231,12 +231,12 @@ namespace Lich {
 
             // Definice pozadí mapových povrchů
             SURFACE_BGR_DEFS.forEach((definition: MapSurfaceBgrDefinition) => {
-                self.mapSurfacesBgrDefs[SurfaceBgrKey[definition.srfcKey]] = definition;
+                self.mapSurfacesBgrDefs[SurfaceBgrKey[definition.mapObjKey]] = definition;
             });
 
             // Definice mapových objektů
             MAP_OBJECT_DEFS.forEach((definition: MapObjDefinition) => {
-                self.mapObjectDefs[definition.srfcKey] = definition;
+                self.mapObjectDefs[definition.mapObjKey] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapObjectDefsFreqPool.insert(definition);
                 }

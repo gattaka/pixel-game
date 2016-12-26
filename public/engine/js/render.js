@@ -210,7 +210,7 @@ var Lich;
             var objDef = Lich.Resources.getInstance().mapObjectDefs[objectTile.mapKey];
             var object;
             if (objDef.frames > 1) {
-                object = Lich.Resources.getInstance().getSpritePart(Lich.MapObjectKey[objDef.srfcKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
+                object = Lich.Resources.getInstance().getSpritePart(Lich.MapObjectKey[objDef.mapObjKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
                 return object;
             }
             else {
@@ -557,7 +557,7 @@ var Lich;
             // Sheet index dílku objektu
             for (var tx = 0; tx < mapObj.mapSpriteWidth; tx++) {
                 for (var ty = 0; ty < mapObj.mapSpriteHeight; ty++) {
-                    var objectTile = new Lich.MapObjectTile(mapObj.srfcKey, tx, ty);
+                    var objectTile = new Lich.MapObjectTile(mapObj.mapObjKey, tx, ty);
                     var tile = self.createObject(objectTile);
                     var sector = self.getSectorByTiles(tx0 + tx, ty0 + ty);
                     // přidej dílek do sektoru
@@ -621,7 +621,7 @@ var Lich;
                 if (object.mapSurface != null && alternative == false) {
                     // pokud je místo prázdné a bez objektu, lze vkládat povrchy
                     if (self.isForegroundFree(rx, ry)) {
-                        this.placeSurface(rx, ry, object.mapSurface.srfcKey, false);
+                        this.placeSurface(rx, ry, object.mapSurface.mapObjKey, false);
                         return true;
                     }
                 }
@@ -629,7 +629,7 @@ var Lich;
                 if (object.mapSurfaceBgr != null && alternative) {
                     // pokud je místo bez pozadí, lze vkládat pozadí povrchu
                     if (!self.tilesMap.mapBgrRecord.getValue(rx, ry)) {
-                        this.placeSurface(rx, ry, object.mapSurfaceBgr.srfcKey, true);
+                        this.placeSurface(rx, ry, object.mapSurfaceBgr.mapObjKey, true);
                         return true;
                     }
                 }
