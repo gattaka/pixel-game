@@ -128,6 +128,7 @@ var Lich;
                 self.addChild(invBtn);
                 invBtn.on("click", function (evt) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                    self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
                 }, null, false);
                 var craftBtn = new Button(Lich.UIGFXKey.UI_CRAFT_KEY);
@@ -136,6 +137,7 @@ var Lich;
                 self.addChild(craftBtn);
                 craftBtn.on("click", function (evt) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                    self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
                 }, null, false);
                 var minimapBtn = new Button(Lich.UIGFXKey.UI_MINIMAP_KEY);
@@ -148,71 +150,111 @@ var Lich;
                 }, null, false);
             }
             if (mobile) {
-                var movementCont = new createjs.Container;
-                movementCont.x = UI.SCREEN_SPACING;
-                movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
-                self.addChild(movementCont);
-                var leftUpBtn = new Button(Lich.UIGFXKey.UI_LEFT_UP_KEY);
-                movementCont.addChild(leftUpBtn);
-                leftUpBtn.on("mousedown", function (evt) {
+                var movementCont_1 = new createjs.Container;
+                movementCont_1.x = UI.SCREEN_SPACING;
+                movementCont_1.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
+                self.addChild(movementCont_1);
+                var shape = new createjs.Shape();
+                shape.graphics.beginStroke("rgba(0,0,0,0.7)");
+                shape.graphics.setStrokeStyle(2);
+                var radius_1 = 2 * Button.sideSize;
+                shape.graphics.beginFill("rgba(10,50,10,0.5)").drawCircle(0, 0, radius_1);
+                shape.x = radius_1;
+                shape.y = radius_1;
+                movementCont_1.addChild(shape);
+                var iconRadius = radius_1 - 25;
+                for (var i = 0; i < 8; i++) {
+                    var angle = -Math.PI * (i * 45) / 180;
+                    var x = radius_1 + iconRadius * Math.cos(angle);
+                    var y = radius_1 + iconRadius * Math.sin(angle);
+                    var key = void 0;
+                    switch (i) {
+                        case 0:
+                            key = Lich.UIGFXKey.UI_RIGHT_KEY;
+                            break;
+                        case 1:
+                            key = Lich.UIGFXKey.UI_RIGHT_UP_KEY;
+                            break;
+                        case 2:
+                            key = Lich.UIGFXKey.UI_UP_KEY;
+                            break;
+                        case 3:
+                            key = Lich.UIGFXKey.UI_LEFT_UP_KEY;
+                            break;
+                        case 4:
+                            key = Lich.UIGFXKey.UI_LEFT_KEY;
+                            break;
+                        case 5:
+                            key = Lich.UIGFXKey.UI_LEFT_DOWN_KEY;
+                            break;
+                        case 6:
+                            key = Lich.UIGFXKey.UI_DOWN_KEY;
+                            break;
+                        case 7:
+                            key = Lich.UIGFXKey.UI_RIGHT_DOWN_KEY;
+                            break;
+                    }
+                    var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[key]);
+                    bitmap.alpha = 0.7;
+                    bitmap.x = x - Lich.Resources.TILE_SIZE;
+                    bitmap.y = y - Lich.Resources.TILE_SIZE;
+                    movementCont_1.addChild(bitmap);
+                }
+                var directionByTouch_1 = function (x, y) {
+                    var angle;
+                    var dx = x - radius_1;
+                    var dy = radius_1 - y;
+                    if (dx == 0) {
+                        angle = dy > 0 ? 90 : 270;
+                    }
+                    else {
+                        angle = 180 * Math.atan(dy / dx) / Math.PI;
+                        if (angle < 0)
+                            angle += 180;
+                    }
+                    // posuv, aby šipky nebyly na hranici ale uvnitř výseče
+                    angle += 45 / 2;
+                    switch (Math.floor(angle / 45)) {
+                        case 0:
+                            self.controls.right = true;
+                            break;
+                        case 1:
+                            self.controls.right = true;
+                            self.controls.up = true;
+                            break;
+                        case 2:
+                            self.controls.up = true;
+                            break;
+                        case 3:
+                            self.controls.up = true;
+                            self.controls.left = true;
+                            break;
+                        case 4:
+                            self.controls.left = true;
+                            break;
+                        case 5:
+                            self.controls.left = true;
+                            self.controls.down = true;
+                            break;
+                        case 6:
+                            self.controls.down = true;
+                            break;
+                        case 7:
+                            self.controls.down = true;
+                            self.controls.right = true;
+                            break;
+                    }
+                };
+                movementCont_1.on("mousedown", function (evt) {
                     self.controls = new Lich.Controls();
-                    self.controls.left = true;
-                    self.controls.up = true;
+                    directionByTouch_1(evt.stageX - movementCont_1.x, evt.stageY - movementCont_1.y);
                 }, null, false);
-                var upBtn = new Button(Lich.UIGFXKey.UI_UP_KEY);
-                upBtn.x = Button.sideSize + PartsUI.SPACING;
-                movementCont.addChild(upBtn);
-                upBtn.on("mousedown", function (evt) {
+                movementCont_1.on("pressup", function (evt) {
                     self.controls = new Lich.Controls();
-                    self.controls.up = true;
                 }, null, false);
-                var rightUpBtn = new Button(Lich.UIGFXKey.UI_RIGHT_UP_KEY);
-                rightUpBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(rightUpBtn);
-                rightUpBtn.on("mousedown", function (evt) {
+                movementCont_1.on("pressmove", function (evt) {
                     self.controls = new Lich.Controls();
-                    self.controls.right = true;
-                    self.controls.up = true;
-                }, null, false);
-                var leftBtn = new Button(Lich.UIGFXKey.UI_LEFT_KEY);
-                leftBtn.y = Button.sideSize + PartsUI.SPACING;
-                movementCont.addChild(leftBtn);
-                leftBtn.on("mousedown", function (evt) {
-                    self.controls = new Lich.Controls();
-                    self.controls.left = true;
-                }, null, false);
-                var rightBtn = new Button(Lich.UIGFXKey.UI_RIGHT_KEY);
-                rightBtn.y = Button.sideSize + PartsUI.SPACING;
-                rightBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(rightBtn);
-                rightBtn.on("mousedown", function (evt) {
-                    self.controls = new Lich.Controls();
-                    self.controls.right = true;
-                }, null, false);
-                var leftDownBtn = new Button(Lich.UIGFXKey.UI_LEFT_DOWN_KEY);
-                leftDownBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(leftDownBtn);
-                leftDownBtn.on("mousedown", function (evt) {
-                    self.controls = new Lich.Controls();
-                    self.controls.left = true;
-                    self.controls.down = true;
-                }, null, false);
-                var downBtn = new Button(Lich.UIGFXKey.UI_DOWN_KEY);
-                downBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                downBtn.x = Button.sideSize + PartsUI.SPACING;
-                movementCont.addChild(downBtn);
-                downBtn.on("mousedown", function (evt) {
-                    self.controls = new Lich.Controls();
-                    self.controls.down = true;
-                }, null, false);
-                var rightDownBtn = new Button(Lich.UIGFXKey.UI_RIGHT_DOWN_KEY);
-                rightDownBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                rightDownBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(rightDownBtn);
-                rightDownBtn.on("mousedown", function (evt) {
-                    self.controls = new Lich.Controls();
-                    self.controls.right = true;
-                    self.controls.down = true;
+                    directionByTouch_1(evt.stageX - movementCont_1.x, evt.stageY - movementCont_1.y);
                 }, null, false);
             }
         }

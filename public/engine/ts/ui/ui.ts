@@ -162,6 +162,7 @@ namespace Lich {
                 self.addChild(invBtn);
                 invBtn.on("click", function (evt) {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
                 }, null, false);
 
@@ -171,6 +172,7 @@ namespace Lich {
                 self.addChild(craftBtn);
                 craftBtn.on("click", function (evt) {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
                 }, null, false);
 
@@ -190,75 +192,76 @@ namespace Lich {
                 movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont);
 
-                let leftUpBtn = new Button(UIGFXKey.UI_LEFT_UP_KEY);
-                movementCont.addChild(leftUpBtn);
-                leftUpBtn.on("mousedown", function (evt) {
+                let shape = new createjs.Shape();
+                shape.graphics.beginStroke("rgba(0,0,0,0.7)");
+                shape.graphics.setStrokeStyle(2);
+                let radius = 2 * Button.sideSize;
+                shape.graphics.beginFill("rgba(10,50,10,0.5)").drawCircle(0, 0, radius);
+                shape.x = radius;
+                shape.y = radius;
+                movementCont.addChild(shape);
+
+                let iconRadius = radius - 25;
+                for (let i = 0; i < 8; i++) {
+                    let angle = -Math.PI * (i * 45) / 180;
+                    let x = radius + iconRadius * Math.cos(angle);
+                    let y = radius + iconRadius * Math.sin(angle);
+                    let key;
+                    switch (i) {
+                        case 0: key = UIGFXKey.UI_RIGHT_KEY; break;
+                        case 1: key = UIGFXKey.UI_RIGHT_UP_KEY; break;
+                        case 2: key = UIGFXKey.UI_UP_KEY; break;
+                        case 3: key = UIGFXKey.UI_LEFT_UP_KEY; break;
+                        case 4: key = UIGFXKey.UI_LEFT_KEY; break;
+                        case 5: key = UIGFXKey.UI_LEFT_DOWN_KEY; break;
+                        case 6: key = UIGFXKey.UI_DOWN_KEY; break;
+                        case 7: key = UIGFXKey.UI_RIGHT_DOWN_KEY; break;
+                    }
+                    let bitmap = Resources.getInstance().getBitmap(UIGFXKey[key]);
+                    bitmap.alpha = 0.7;
+                    bitmap.x = x - Resources.TILE_SIZE;
+                    bitmap.y = y - Resources.TILE_SIZE;
+                    movementCont.addChild(bitmap);
+                }
+
+                let directionByTouch = (x: number, y: number) => {
+                    let angle;
+                    let dx = x - radius;
+                    let dy = radius - y;
+                    if (dx == 0) {
+                        angle = dy > 0 ? 90 : 270;
+                    } else {
+                        angle = 180 * Math.atan(dy / dx) / Math.PI;
+                        if (angle < 0)
+                            angle += 180;
+                    }
+                    // posuv, aby šipky nebyly na hranici ale uvnitř výseče
+                    angle += 45 / 2;
+                    switch (Math.floor(angle / 45)) {
+                        case 0: self.controls.right = true; break;
+                        case 1: self.controls.right = true; self.controls.up = true; break;
+                        case 2: self.controls.up = true; break;
+                        case 3: self.controls.up = true; self.controls.left = true; break;
+                        case 4: self.controls.left = true; break;
+                        case 5: self.controls.left = true; self.controls.down = true; break;
+                        case 6: self.controls.down = true; break;
+                        case 7: self.controls.down = true; self.controls.right = true; break;
+                    }
+                };
+
+                movementCont.on("mousedown", function (evt: createjs.MouseEvent) {
                     self.controls = new Controls();
-                    self.controls.left = true;
-                    self.controls.up = true;
+                    directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
+                }, null, false);
+                movementCont.on("pressup", function (evt) {
+                    self.controls = new Controls();
+                }, null, false);
+                movementCont.on("pressmove", function (evt: createjs.MouseEvent) {
+                    self.controls = new Controls();
+                    directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
                 }, null, false);
 
-                let upBtn = new Button(UIGFXKey.UI_UP_KEY);
-                upBtn.x = Button.sideSize + PartsUI.SPACING;
-                movementCont.addChild(upBtn);
-                upBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.up = true;
-                }, null, false);
 
-                let rightUpBtn = new Button(UIGFXKey.UI_RIGHT_UP_KEY);
-                rightUpBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(rightUpBtn);
-                rightUpBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.right = true;
-                    self.controls.up = true;
-                }, null, false);
-
-                let leftBtn = new Button(UIGFXKey.UI_LEFT_KEY);
-                leftBtn.y = Button.sideSize + PartsUI.SPACING;
-                movementCont.addChild(leftBtn);
-                leftBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.left = true;
-                }, null, false);
-
-                let rightBtn = new Button(UIGFXKey.UI_RIGHT_KEY);
-                rightBtn.y = Button.sideSize + PartsUI.SPACING;
-                rightBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(rightBtn);
-                rightBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.right = true;
-                }, null, false);
-
-                let leftDownBtn = new Button(UIGFXKey.UI_LEFT_DOWN_KEY);
-                leftDownBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(leftDownBtn);
-                leftDownBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.left = true;
-                    self.controls.down = true;
-                }, null, false);
-
-                let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
-                downBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                downBtn.x = Button.sideSize + PartsUI.SPACING;
-                movementCont.addChild(downBtn);
-                downBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.down = true;
-                }, null, false);
-
-                let rightDownBtn = new Button(UIGFXKey.UI_RIGHT_DOWN_KEY);
-                rightDownBtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                rightDownBtn.x = 2 * (Button.sideSize + PartsUI.SPACING);
-                movementCont.addChild(rightDownBtn);
-                rightDownBtn.on("mousedown", function (evt) {
-                    self.controls = new Controls();
-                    self.controls.right = true;
-                    self.controls.down = true;
-                }, null, false);
             }
 
         }
