@@ -364,7 +364,13 @@ namespace Lich {
 
                                     // okraje vyresetuj
                                     if (val !== SurfacePositionKey.VOID) {
-                                        record.setValue(x, y, index.getPositionIndex(srfcType, SurfacePositionKey.M1));
+                                        let realType = srfcType;
+                                        // pokud jde o přechodový povrch, musí se vyresetovat na původní hlavní povrch
+                                        if (Resources.getInstance().surfaceIndex.isTransitionSrfc(val)) {
+                                            let transVal = Resources.getInstance().surfaceIndex.getType(val);
+                                            realType = Resources.getInstance().mapTransitionSrfcs[SurfaceKey[transVal]].diggableSrfc;
+                                        }
+                                        record.setValue(x, y, index.getPositionIndex(realType, SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);
 
                                         // zjisti sektor dílku, aby byl přidán do fronty 
@@ -608,8 +614,7 @@ namespace Lich {
 
                                 // okraje vyresetuj (pokud nejsou středy)
                                 if (val !== SurfacePositionKey.VOID && val != null) {
-                                    record.setValue(x, y,
-                                        index.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
+                                    record.setValue(x, y, index.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
                                     tilesToReset.push([x, y]);
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 

@@ -172,13 +172,13 @@ var Lich;
             });
             // Definice přechodů mapových povrchů
             Lich.SURFACE_TRANSITION_DEFS.forEach(function (definition) {
-                var level1 = self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.coveredSrfc]];
+                var level1 = self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.diggableSrfc]];
                 if (!level1) {
                     level1 = {};
-                    self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.coveredSrfc]] = level1;
+                    self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.diggableSrfc]] = level1;
                 }
-                level1[Lich.SurfaceKey[definition.invadingSrfc]] = definition.transitionKey;
-                self.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[definition.transitionKey]] = definition.coveredSrfc;
+                level1[Lich.SurfaceKey[definition.borderSrfc]] = definition.transitionKey;
+                self.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[definition.transitionKey]] = definition.diggableSrfc;
                 self.mapTransitionSrfcs[Lich.SurfaceKey[definition.transitionKey]] = definition;
             });
             // Definice pozadí mapových povrchů

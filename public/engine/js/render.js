@@ -288,7 +288,13 @@ var Lich;
                                 if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
                                     // okraje vyresetuj
                                     if (val !== Lich.SurfacePositionKey.VOID) {
-                                        record.setValue(x, y, index.getPositionIndex(srfcType, Lich.SurfacePositionKey.M1));
+                                        var realType = srfcType;
+                                        // pokud jde o přechodový povrch, musí se vyresetovat na původní hlavní povrch
+                                        if (Lich.Resources.getInstance().surfaceIndex.isTransitionSrfc(val)) {
+                                            var transVal = Lich.Resources.getInstance().surfaceIndex.getType(val);
+                                            realType = Lich.Resources.getInstance().mapTransitionSrfcs[Lich.SurfaceKey[transVal]].diggableSrfc;
+                                        }
+                                        record.setValue(x, y, index.getPositionIndex(realType, Lich.SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);
                                         // zjisti sektor dílku, aby byl přidán do fronty 
                                         // ke cache update (postačí to udělat dle tilesToReset,

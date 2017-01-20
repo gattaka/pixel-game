@@ -222,13 +222,13 @@ namespace Lich {
 
             // Definice přechodů mapových povrchů
             SURFACE_TRANSITION_DEFS.forEach((definition: MapSurfaceTransitionDefinition) => {
-                let level1 = self.mapSurfaceTransitionsDefs[SurfaceKey[definition.coveredSrfc]];
+                let level1 = self.mapSurfaceTransitionsDefs[SurfaceKey[definition.diggableSrfc]];
                 if (!level1) {
                     level1 = {};
-                    self.mapSurfaceTransitionsDefs[SurfaceKey[definition.coveredSrfc]] = level1;
+                    self.mapSurfaceTransitionsDefs[SurfaceKey[definition.diggableSrfc]] = level1;
                 }
-                level1[SurfaceKey[definition.invadingSrfc]] = definition.transitionKey;
-                self.mapSurfaceTransitionsAliasDefs[SurfaceKey[definition.transitionKey]] = definition.coveredSrfc;
+                level1[SurfaceKey[definition.borderSrfc]] = definition.transitionKey;
+                self.mapSurfaceTransitionsAliasDefs[SurfaceKey[definition.transitionKey]] = definition.diggableSrfc;
                 self.mapTransitionSrfcs[SurfaceKey[definition.transitionKey]] = definition;
             });
 

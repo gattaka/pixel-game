@@ -216,13 +216,13 @@ var Lich;
     var MapSurfaceTransitionDefinition = (function () {
         function MapSurfaceTransitionDefinition(
             // jaký typ povrchu se prolíná dovnitř
-            invadingSrfc, 
+            borderSrfc, 
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
-            coveredSrfc, 
+            diggableSrfc, 
             // klíč přechodového povrchu
             transitionKey) {
-            this.invadingSrfc = invadingSrfc;
-            this.coveredSrfc = coveredSrfc;
+            this.borderSrfc = borderSrfc;
+            this.diggableSrfc = diggableSrfc;
             this.transitionKey = transitionKey;
         }
         return MapSurfaceTransitionDefinition;
