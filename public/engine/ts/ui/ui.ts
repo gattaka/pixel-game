@@ -85,7 +85,7 @@ namespace Lich {
 
             // Debug and loging
             if (!mobile) {
-                self.debugUI = new DebugLogUI(400, 0);
+                self.debugUI = new DebugLogUI(600, 0);
                 self.debugUI.x = UI.SCREEN_SPACING;
                 self.debugUI.y = UI.SCREEN_SPACING;
                 self.addChild(self.debugUI);

@@ -590,6 +590,8 @@ namespace Lich {
                 sceneMap = self.sceneTilesMap;
             }
 
+            // rx a ry jsou vždy sudé (horní levá tile z part)
+            // proto stačí překreslit -1 zpět ale +2 dopředu
             (function () {
                 for (var x = rx - 1; x <= rx + 2; x++) {
                     for (var y = ry - 1; y <= ry + 2; y++) {
@@ -604,7 +606,7 @@ namespace Lich {
 
                                 var srfcType = index.getType(val);
 
-                                // okraje vyresetuj (pokud nejsou středy
+                                // okraje vyresetuj (pokud nejsou středy)
                                 if (val !== SurfacePositionKey.VOID && val != null) {
                                     record.setValue(x, y,
                                         index.getMiddlePositionIndexByCoordPattern(x, y, srfcType));
@@ -707,7 +709,7 @@ namespace Lich {
         }
 
         /**
-         * Pokusí se umístit objekt na pixel souřadnice a vrátí true, 
+         * Pokusí se umístit objekt nebo povrch na pixel souřadnice a vrátí true, 
          * pokud se to podařilo 
          */
         place(x: number, y: number, object: InvObjDefinition, alternative: boolean): boolean {

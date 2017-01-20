@@ -77,6 +77,7 @@ var Lich;
             this.mapSurfaceTransitionsDefs = {};
             this.mapSurfaceTransitionsAliasDefs = {};
             this.mapSurfacesBgrDefs = {};
+            this.mapTransitionSrfcs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
@@ -178,6 +179,7 @@ var Lich;
                 }
                 level1[Lich.SurfaceKey[definition.invadingSrfc]] = definition.transitionKey;
                 self.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[definition.transitionKey]] = definition.coveredSrfc;
+                self.mapTransitionSrfcs[Lich.SurfaceKey[definition.transitionKey]] = definition;
             });
             // Definice pozadí mapových povrchů
             Lich.SURFACE_BGR_DEFS.forEach(function (definition) {

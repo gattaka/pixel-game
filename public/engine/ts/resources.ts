@@ -103,6 +103,8 @@ namespace Lich {
         private mapSurfaceTransitionsDefs: { [k: string]: { [k: string]: SurfaceKey } } = {};
         private mapSurfaceTransitionsAliasDefs: { [k: string]: SurfaceKey } = {};
         private mapSurfacesBgrDefs: { [k: string]: MapSurfaceBgrDefinition } = {};
+        
+        public mapTransitionSrfcs: { [k:string] : MapSurfaceTransitionDefinition} = {};
 
         public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
@@ -227,6 +229,7 @@ namespace Lich {
                 }
                 level1[SurfaceKey[definition.invadingSrfc]] = definition.transitionKey;
                 self.mapSurfaceTransitionsAliasDefs[SurfaceKey[definition.transitionKey]] = definition.coveredSrfc;
+                self.mapTransitionSrfcs[SurfaceKey[definition.transitionKey]] = definition;
             });
 
             // Definice pozadí mapových povrchů

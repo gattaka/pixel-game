@@ -67,6 +67,12 @@ var Lich;
             }
         }
         ;
+        SurfaceIndex.prototype.isTransitionSrfc = function (index) {
+            var key = this.getType(index);
+            if (Lich.Resources.getInstance().mapTransitionSrfcs[Lich.SurfaceKey[key]])
+                return true;
+            return false;
+        };
         /**
          * Získá výchozí prostřední dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
@@ -227,6 +233,13 @@ var Lich;
                 || reducedIndex == SurfacePositionKey.B3
                 || reducedIndex == SurfacePositionKey.B4;
         };
+        SurfaceIndex.prototype.getTypeName = function (index) {
+            return Lich.SurfaceKey[this.getType(index)];
+        };
+        SurfaceIndex.prototype.getPositionName = function (index) {
+            var reducedIndex = this.getPosition(index);
+            return SurfacePositionKey[reducedIndex];
+        };
         /**
          * Zjistí, zda index je horní levou instancí nějakého typu povrchu
          */
@@ -265,7 +278,8 @@ var Lich;
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY))
                 return true;
-            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY))
+            // musí být pouze z jedné strany, aby se správně vytvářely hrany
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)
                 return true;
             // Coal
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_COAL_KEY, Lich.SurfaceKey.SRFC_DIRT_KEY))

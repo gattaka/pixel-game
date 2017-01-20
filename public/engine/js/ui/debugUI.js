@@ -7,8 +7,8 @@ var Lich;
 (function (Lich) {
     var DebugLogUI = (function (_super) {
         __extends(DebugLogUI, _super);
-        function DebugLogUI(x, y) {
-            _super.call(this, x, y);
+        function DebugLogUI(width, height) {
+            _super.call(this, width, height);
             var self = this;
             this.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             this.addNextChild(this.fpsLabel);
@@ -28,10 +28,8 @@ var Lich;
             this.addNextChild(this.sectorLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.POINTED_AREA_CHANGE, function (data) {
                 self.tilesLabel.setText("TILES x: " + data.clsnx + " y: " + data.clsny
-                    + " pOfx: " + (data.partsOffsetX == undefined ? "-" : data.partsOffsetX)
-                    + " pOfy: " + (data.partsOffsetY == undefined ? "-" : data.partsOffsetY)
                     + " clsn: " + data.clsnHit
-                    + " type: " + (data.tileType == undefined ? "-" : data.tileType));
+                    + " type: " + (data.tileType == undefined ? "-" : data.tileType) + " : " + (data.tileVariant == undefined ? "-" : data.tileVariant));
                 if (data.secx) {
                     self.sectorLabel.setText("SECTOR: x: " + data.secx + " y: " + data.secy);
                 }

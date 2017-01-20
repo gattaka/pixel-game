@@ -1160,10 +1160,12 @@ namespace Lich {
 
             let coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             let clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY);
-            let typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
+            let tile = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
             let sector = self.render.getSectorByTiles(coord.x, coord.y);
+            let typ = tile ? Resources.getInstance().surfaceIndex.getTypeName(tile) : null;
+            let variant = tile ? Resources.getInstance().surfaceIndex.getPositionName(tile) : null;
             EventBus.getInstance().fireEvent(new PointedAreaEventPayload(
-                clsn.x, clsn.y, clsn.hit, clsn.partOffsetX, clsn.partOffsetY, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
+                clsn.x, clsn.y, clsn.hit, clsn.partOffsetX, clsn.partOffsetY, typ, variant, sector ? sector.map_x : null, sector ? sector.map_y : null));
 
         };
 

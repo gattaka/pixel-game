@@ -1090,9 +1090,11 @@ var Lich;
             }
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY);
-            var typ = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
+            var tile = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
             var sector = self.render.getSectorByTiles(coord.x, coord.y);
-            Lich.EventBus.getInstance().fireEvent(new Lich.PointedAreaEventPayload(clsn.x, clsn.y, clsn.hit, clsn.partOffsetX, clsn.partOffsetY, typ, sector ? sector.map_x : null, sector ? sector.map_y : null));
+            var typ = tile ? Lich.Resources.getInstance().surfaceIndex.getTypeName(tile) : null;
+            var variant = tile ? Lich.Resources.getInstance().surfaceIndex.getPositionName(tile) : null;
+            Lich.EventBus.getInstance().fireEvent(new Lich.PointedAreaEventPayload(clsn.x, clsn.y, clsn.hit, clsn.partOffsetX, clsn.partOffsetY, typ, variant, sector ? sector.map_x : null, sector ? sector.map_y : null));
         };
         ;
         World.prototype.checkReach = function (character, x, y, inTiles) {

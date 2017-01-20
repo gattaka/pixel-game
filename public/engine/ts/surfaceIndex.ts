@@ -36,6 +36,13 @@ namespace Lich {
             }
         };
 
+        isTransitionSrfc(index: number): boolean {
+            let key: SurfaceKey = this.getType(index);
+            if (Resources.getInstance().mapTransitionSrfcs[SurfaceKey[key]])
+                return true;
+            return false;
+        }
+
         /**
          * Získá výchozí prostřední dílek dle vzoru, 
          * který se opakuje, aby mapa byla pestřejší
@@ -215,6 +222,15 @@ namespace Lich {
                 || reducedIndex == SurfacePositionKey.B4;
         }
 
+        getTypeName(index: number): string {
+            return SurfaceKey[this.getType(index)];
+        }
+
+        getPositionName(index: number): string {
+            var reducedIndex = this.getPosition(index);
+            return SurfacePositionKey[reducedIndex];
+        }
+
         /**
          * Zjistí, zda index je horní levou instancí nějakého typu povrchu 
          */
@@ -254,7 +270,8 @@ namespace Lich {
             // Rock
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
-            if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
+            // musí být pouze z jedné strany, aby se správně vytvářely hrany
+            if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY) return true;
             // Coal
             if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY)) return true;

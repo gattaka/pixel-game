@@ -46,7 +46,8 @@ namespace Lich {
         constructor(public clsnx: number, public clsny: number, public clsnHit: boolean,
             public partsOffsetX: number,
             public partsOffsetY: number,
-            public tileType: number,
+            public tileType: string,
+            public tileVariant: string,
             public secx: number, public secy: number) { super(EventType.POINTED_AREA_CHANGE); }
     }
 
