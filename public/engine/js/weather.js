@@ -50,7 +50,7 @@ var Lich;
                     acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 150;
                 }
                 else {
-                    acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 100 + 100;
+                    acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 300;
                 }
                 var layer = new ParticleLayer(acc);
                 layer.width = this.width;
