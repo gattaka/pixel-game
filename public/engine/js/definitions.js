@@ -215,13 +215,10 @@ var Lich;
     Lich.MapSurfaceDefinition = MapSurfaceDefinition;
     var MapSurfaceTransitionDefinition = (function () {
         function MapSurfaceTransitionDefinition(
-            // jaký typ povrchu se prolíná dovnitř
-            borderSrfc, 
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
             diggableSrfc, 
             // klíč přechodového povrchu
             transitionKey) {
-            this.borderSrfc = borderSrfc;
             this.diggableSrfc = diggableSrfc;
             this.transitionKey = transitionKey;
         }

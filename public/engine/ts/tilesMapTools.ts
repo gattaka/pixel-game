@@ -29,25 +29,27 @@ namespace Lich {
 
             let srfcType = index.getType(val);
 
-            let processSeam = (otherVal: number, seamFc, seamLessFc): boolean => {
+            let processSeam = (otherVal: number, borderSeamFce, transitionSeamFce): boolean => {
                 if (!otherVal || otherVal === SurfacePositionKey.VOID) {
                     // Hrana mezi povrchem a prázdnem
-                    record.setValue(x, y, seamFc(x, y, srfcType));
+                    record.setValue(x, y, borderSeamFce(x, y, srfcType));
                 } else {
                     let type = index.getType(otherVal);
                     if (type != srfcType) {
                         // Přechod mezi povrchem a jiným povrchem
                         let seamless = index.isSeamless(type, srfcType);
-                        if (seamless) {
-                            // Povrchy mají mezi sebou přechod, zjisti jaký
-                            let transition = seamLessFc(x, y, srfcType, type);
+                        if (seamless == false) {
+                            // Povrchy nanavazují, vykresli je jako hrany
+                            // nebo pokud na ně existuje přechod, zjisti jaký
+                            let transition = transitionSeamFce(x, y, srfcType);
                             if (transition) {
+                                // přechod
                                 record.setValue(x, y, transition);
                                 return true;
+                            } else {
+                                // hrana
+                                record.setValue(x, y, borderSeamFce(x, y, srfcType));
                             }
-                        } else {
-                            // Povrchy nemají mezi sebou přechod, vykresli je jako hrany
-                            record.setValue(x, y, seamFc(x, y, srfcType));
                         }
                     }
                 }

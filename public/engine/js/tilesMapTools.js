@@ -26,27 +26,29 @@ var Lich;
             var valB = record.getValue(x, y + 1);
             var valL = record.getValue(x - 1, y);
             var srfcType = index.getType(val);
-            var processSeam = function (otherVal, seamFc, seamLessFc) {
+            var processSeam = function (otherVal, borderSeamFce, transitionSeamFce) {
                 if (!otherVal || otherVal === Lich.SurfacePositionKey.VOID) {
                     // Hrana mezi povrchem a prázdnem
-                    record.setValue(x, y, seamFc(x, y, srfcType));
+                    record.setValue(x, y, borderSeamFce(x, y, srfcType));
                 }
                 else {
                     var type = index.getType(otherVal);
                     if (type != srfcType) {
                         // Přechod mezi povrchem a jiným povrchem
                         var seamless = index.isSeamless(type, srfcType);
-                        if (seamless) {
-                            // Povrchy mají mezi sebou přechod, zjisti jaký
-                            var transition = seamLessFc(x, y, srfcType, type);
+                        if (seamless == false) {
+                            // Povrchy nanavazují, vykresli je jako hrany
+                            // nebo pokud na ně existuje přechod, zjisti jaký
+                            var transition = transitionSeamFce(x, y, srfcType);
                             if (transition) {
+                                // přechod
                                 record.setValue(x, y, transition);
                                 return true;
                             }
-                        }
-                        else {
-                            // Povrchy nemají mezi sebou přechod, vykresli je jako hrany
-                            record.setValue(x, y, seamFc(x, y, srfcType));
+                            else {
+                                // hrana
+                                record.setValue(x, y, borderSeamFce(x, y, srfcType));
+                            }
                         }
                     }
                 }

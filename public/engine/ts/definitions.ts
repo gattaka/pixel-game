@@ -201,8 +201,6 @@ namespace Lich {
 
     export class MapSurfaceTransitionDefinition {
         constructor(
-            // jaký typ povrchu se prolíná dovnitř
-            public borderSrfc: SurfaceKey,
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
             public diggableSrfc: SurfaceKey,
             // klíč přechodového povrchu

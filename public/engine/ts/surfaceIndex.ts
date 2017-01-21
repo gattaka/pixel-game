@@ -63,8 +63,8 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
-        getTopPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
-            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+        getTopPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type);
             return this.getTopPositionIndexByCoordPattern(x, y, transitionType);
         }
 
@@ -79,8 +79,8 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
-        getLeftPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
-            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+        getLeftPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type);
             return this.getLeftPositionIndexByCoordPattern(x, y, transitionType);
         }
 
@@ -95,8 +95,8 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
-        getRightPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
-            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+        getRightPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type);
             return this.getRightPositionIndexByCoordPattern(x, y, transitionType);
         }
 
@@ -111,8 +111,8 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
-        getBottomPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey, type2: SurfaceKey) {
-            let transitionType = Resources.getInstance().getTransitionSurface(type, type2);
+        getBottomPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceKey) {
+            let transitionType = Resources.getInstance().getTransitionSurface(type);
             return this.getBottomPositionIndexByCoordPattern(x, y, transitionType);
         }
 
@@ -260,26 +260,26 @@ namespace Lich {
         }
 
         /**
-         * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
+         * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu na sebe navazují (nemají mezi sebou hrany ani přechody)
          */
         isSeamless(type2: SurfaceKey, type: SurfaceKey) {
             if (type2 == type) return true;
             let seamCheck = (type: SurfaceKey, type2: SurfaceKey, ok1: SurfaceKey, ok2: SurfaceKey) => {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2
             };
+            // Přechody musí být pouze z jedné strany, aby se správně vytvářely hrany
             // Rock
-            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
-            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
-            // musí být pouze z jedné strany, aby se správně vytvářely hrany
+            if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_ROCK_KEY) return true;
             if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)) return true;
             // Coal
-            if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
-            if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY)) return true;
+            if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_COAL_KEY) return true;
             if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY)) return true;
             // Iron
-            if (seamCheck(type, type2, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_DIRT_KEY)) return true;
-            if (seamCheck(type, type2, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)) return true;
+            if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_IRON_KEY) return true;
             if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)) return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_BRICK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_WOODWALL_KEY)) return true;

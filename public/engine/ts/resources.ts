@@ -100,11 +100,11 @@ namespace Lich {
 
         // definice povrchů a objektů
         private mapSurfaceDefs: { [k: string]: MapSurfaceDefinition } = {};
-        private mapSurfaceTransitionsDefs: { [k: string]: { [k: string]: SurfaceKey } } = {};
-        private mapSurfaceTransitionsAliasDefs: { [k: string]: SurfaceKey } = {};
         private mapSurfacesBgrDefs: { [k: string]: MapSurfaceBgrDefinition } = {};
-        
-        public mapTransitionSrfcs: { [k:string] : MapSurfaceTransitionDefinition} = {};
+        // dle aliasovaného povrchu
+        private mapSurfaceTransitionsDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
+        // dle trans povrchu
+        public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
 
         public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
@@ -222,13 +222,7 @@ namespace Lich {
 
             // Definice přechodů mapových povrchů
             SURFACE_TRANSITION_DEFS.forEach((definition: MapSurfaceTransitionDefinition) => {
-                let level1 = self.mapSurfaceTransitionsDefs[SurfaceKey[definition.diggableSrfc]];
-                if (!level1) {
-                    level1 = {};
-                    self.mapSurfaceTransitionsDefs[SurfaceKey[definition.diggableSrfc]] = level1;
-                }
-                level1[SurfaceKey[definition.borderSrfc]] = definition.transitionKey;
-                self.mapSurfaceTransitionsAliasDefs[SurfaceKey[definition.transitionKey]] = definition.diggableSrfc;
+                self.mapSurfaceTransitionsDefs[SurfaceKey[definition.diggableSrfc]] = definition;
                 self.mapTransitionSrfcs[SurfaceKey[definition.transitionKey]] = definition;
             });
 
@@ -276,16 +270,16 @@ namespace Lich {
         getSurfaceDef(key: SurfaceKey) {
             // nejprve zkus, zda to není přechodový povrch, 
             // který by se měl přeložit na jeho reálný povrch
-            let coveredSrfcKey = this.mapSurfaceTransitionsAliasDefs[SurfaceKey[key]];
-            if (coveredSrfcKey)
-                key = coveredSrfcKey;
+            let transition: MapSurfaceTransitionDefinition = this.mapTransitionSrfcs[SurfaceKey[key]];
+            if (transition)
+                key = transition.diggableSrfc;
             return this.mapSurfaceDefs[SurfaceKey[key]];
         }
 
-        getTransitionSurface(outerSrfc: SurfaceKey, innerSrfc: SurfaceKey): SurfaceKey {
-            let level1 = this.mapSurfaceTransitionsDefs[SurfaceKey[outerSrfc]];
-            if (!level1) return undefined;
-            return level1[SurfaceKey[innerSrfc]];
+        getTransitionSurface(srfc: SurfaceKey): SurfaceKey {
+            let transDef = this.mapSurfaceTransitionsDefs[SurfaceKey[srfc]];
+            if (!transDef) return undefined;
+            return transDef.transitionKey;
         }
 
         getImage(key: string): HTMLImageElement {

@@ -91,8 +91,8 @@ var Lich;
             var key = (x + 1) % SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
-        SurfaceIndex.prototype.getTopPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
-            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+        SurfaceIndex.prototype.getTopPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type);
             return this.getTopPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
@@ -105,8 +105,8 @@ var Lich;
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
-        SurfaceIndex.prototype.getLeftPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
-            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+        SurfaceIndex.prototype.getLeftPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type);
             return this.getLeftPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
@@ -119,8 +119,8 @@ var Lich;
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
-        SurfaceIndex.prototype.getRightPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
-            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+        SurfaceIndex.prototype.getRightPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type);
             return this.getRightPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
@@ -133,8 +133,8 @@ var Lich;
             var key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         };
-        SurfaceIndex.prototype.getBottomPositionIndexByCoordPatternOnTransition = function (x, y, type, type2) {
-            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type, type2);
+        SurfaceIndex.prototype.getBottomPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurface(type);
             return this.getBottomPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
@@ -265,7 +265,7 @@ var Lich;
             return this.getPosition(index) == SurfacePositionKey.BR;
         };
         /**
-         * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu mají mezi sebou přechod bez hran
+         * Zjistí, zda typ povrchu z indexu a aktuální typ povrchu na sebe navazují (nemají mezi sebou hrany ani přechody)
          */
         SurfaceIndex.prototype.isSeamless = function (type2, type) {
             if (type2 == type)
@@ -273,27 +273,27 @@ var Lich;
             var seamCheck = function (type, type2, ok1, ok2) {
                 return type2 == ok1 && type == ok2 || type == ok1 && type2 == ok2;
             };
+            // Přechody musí být pouze z jedné strany, aby se správně vytvářely hrany
             // Rock
-            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_DIRT_KEY))
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_ROCK_KEY)
+                return true;
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY))
                 return true;
-            // musí být pouze z jedné strany, aby se správně vytvářely hrany
-            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY)
-                return true;
             // Coal
-            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_COAL_KEY, Lich.SurfaceKey.SRFC_DIRT_KEY))
-                return true;
-            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_COAL_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY))
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_COAL_KEY)
                 return true;
             if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY)
                 return true;
-            // Iron
-            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_IRON_KEY, Lich.SurfaceKey.SRFC_DIRT_KEY))
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_COAL_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY))
                 return true;
-            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_IRON_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY))
+            // Iron
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_IRON_KEY)
                 return true;
             if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_IRON_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY))
                 return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))

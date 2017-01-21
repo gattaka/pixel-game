@@ -74,9 +74,10 @@ var Lich;
              */
             // definice povrchů a objektů
             this.mapSurfaceDefs = {};
-            this.mapSurfaceTransitionsDefs = {};
-            this.mapSurfaceTransitionsAliasDefs = {};
             this.mapSurfacesBgrDefs = {};
+            // dle aliasovaného povrchu
+            this.mapSurfaceTransitionsDefs = {};
+            // dle trans povrchu
             this.mapTransitionSrfcs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
@@ -172,13 +173,7 @@ var Lich;
             });
             // Definice přechodů mapových povrchů
             Lich.SURFACE_TRANSITION_DEFS.forEach(function (definition) {
-                var level1 = self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.diggableSrfc]];
-                if (!level1) {
-                    level1 = {};
-                    self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.diggableSrfc]] = level1;
-                }
-                level1[Lich.SurfaceKey[definition.borderSrfc]] = definition.transitionKey;
-                self.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[definition.transitionKey]] = definition.diggableSrfc;
+                self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.diggableSrfc]] = definition;
                 self.mapTransitionSrfcs[Lich.SurfaceKey[definition.transitionKey]] = definition;
             });
             // Definice pozadí mapových povrchů
@@ -228,16 +223,16 @@ var Lich;
         Resources.prototype.getSurfaceDef = function (key) {
             // nejprve zkus, zda to není přechodový povrch, 
             // který by se měl přeložit na jeho reálný povrch
-            var coveredSrfcKey = this.mapSurfaceTransitionsAliasDefs[Lich.SurfaceKey[key]];
-            if (coveredSrfcKey)
-                key = coveredSrfcKey;
+            var transition = this.mapTransitionSrfcs[Lich.SurfaceKey[key]];
+            if (transition)
+                key = transition.diggableSrfc;
             return this.mapSurfaceDefs[Lich.SurfaceKey[key]];
         };
-        Resources.prototype.getTransitionSurface = function (outerSrfc, innerSrfc) {
-            var level1 = this.mapSurfaceTransitionsDefs[Lich.SurfaceKey[outerSrfc]];
-            if (!level1)
+        Resources.prototype.getTransitionSurface = function (srfc) {
+            var transDef = this.mapSurfaceTransitionsDefs[Lich.SurfaceKey[srfc]];
+            if (!transDef)
                 return undefined;
-            return level1[Lich.SurfaceKey[innerSrfc]];
+            return transDef.transitionKey;
         };
         Resources.prototype.getImage = function (key) {
             return this.loader.getResult(key);

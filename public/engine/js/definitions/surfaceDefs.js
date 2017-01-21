@@ -1,9 +1,9 @@
 var Lich;
 (function (Lich) {
     Lich.SURFACE_TRANSITION_DEFS = [
-        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY),
-        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_COAL_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY),
-        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_IRON_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)
+        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_ROCK_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY),
+        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_COAL_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY),
+        new Lich.MapSurfaceTransitionDefinition(Lich.SurfaceKey.SRFC_IRON_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)
     ];
     Lich.SURFACE_DEFS = [
         // Dirt má frekvenci 0 protože je použit jako základ a až do něj 
