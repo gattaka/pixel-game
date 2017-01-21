@@ -8,28 +8,37 @@ namespace Lich {
 
     enum WeatherMode {
         NONE,
-        SNOW_START,
-        SNOW,
-        SNOW_STOP
+        SNOW_RAIN_START,
+        SNOW_RAIN,
+        SNOW_RAIN_STOP
     }
 
     export class Weather extends createjs.Container {
 
-        private static SNOW_AMOUNT = 500;
+        private static MAX_WIND = 10;
+        private static SNOW_RAIN_AMOUNT = 500;
         private static SPAWN_BATCH_DELAY = 10000;
         private static PARTICLE_LAYERS = 3;
         private static MODE_DURATION = 60000;
-        private static MAX_WIND = 10;
-        private static SNOWFLAKE_SPAWN_PROP = 200;
+
         private static GIFT_SPAWN_PROP = 500;
+
+        private static SNOWFLAKE_SPAWN_PROP = 200;
         private static SNOWFLAKE_SPAWN_INTERVAL = 5000;
 
+        private static LOVELETTER_SPAWN_PROP = 400;
+        private static LOVELETTER_SPAWN_INTERVAL = 5000;
+
         private snowflakeTryTimer = 0;
+        private loveletterTryTimer = 0;
+
         private modeStartProgress = 0;
         private modeDurationTimer = 0;
         private spawnBatchDelayTimer = 0;
         private particleLayers = new Array<ParticleLayer>();
         private windSpeed = 0;
+
+        private lightScreen = new createjs.Shape();
 
         private mode = WeatherMode.NONE;
 
@@ -37,6 +46,11 @@ namespace Lich {
             super();
             this.width = game.getCanvas().width;
             this.height = game.getCanvas().height;
+            this.addChild(this.lightScreen);
+        }
+
+        updateLight(r: number, g: number, b: number, a: number) {
+            this.lightScreen.graphics.clear().beginFill("rgba(" + r + "," + g + "," + b + "," + a + ")").drawRect(0, 0, this.width, this.height);
         }
 
         switchMode(mode: WeatherMode) {
@@ -61,7 +75,7 @@ namespace Lich {
                 layer.height = this.height;
                 this.particleLayers.push(layer);
             }
-            for (let i = 0; i < Weather.SNOW_AMOUNT * 2; i++) {
+            for (let i = 0; i < Weather.SNOW_RAIN_AMOUNT * 2; i++) {
                 let p = new createjs.Shape();
                 let z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
                 if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
@@ -72,7 +86,7 @@ namespace Lich {
                 p.x = Math.random() * this.width;
                 p.y = Math.random() * this.height;
                 let x = z;
-                if (i >= Weather.SNOW_AMOUNT) {
+                if (i >= Weather.SNOW_RAIN_AMOUNT) {
                     x += Weather.PARTICLE_LAYERS;
                 }
                 this.particleLayers[x].addChild(p);
@@ -98,7 +112,7 @@ namespace Lich {
             if (this.windSpeed < -Weather.MAX_WIND)
                 this.windSpeed = -Weather.MAX_WIND;
 
-            if (this.mode == WeatherMode.SNOW && ThemeWatch.getCurrentTheme() == Theme.WINTER) {
+            if (this.mode == WeatherMode.SNOW_RAIN && ThemeWatch.getCurrentTheme() == Theme.WINTER) {
                 this.snowflakeTryTimer += delta;
                 let world = this.game.getWorld();
                 for (let i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
@@ -117,7 +131,17 @@ namespace Lich {
                 }
             }
 
-            if (this.mode == WeatherMode.SNOW || this.mode == WeatherMode.NONE) {
+            if (this.mode == WeatherMode.SNOW_RAIN && ThemeWatch.getCurrentTheme() == Theme.VALENTINE) {
+                this.loveletterTryTimer += delta;
+                let world = this.game.getWorld();
+                for (let i = 0; i < this.loveletterTryTimer / Weather.LOVELETTER_SPAWN_INTERVAL; i++) {
+                    this.loveletterTryTimer = 0;
+                    if (Math.random() * Weather.LOVELETTER_SPAWN_PROP < 1)
+                        world.spawnObject(new DugObjDefinition(InventoryKey.INV_LOVELETTER, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                }
+            }
+
+            if (this.mode == WeatherMode.SNOW_RAIN || this.mode == WeatherMode.NONE) {
                 this.modeDurationTimer += delta;
                 if (this.modeDurationTimer > Weather.MODE_DURATION) {
                     this.modeDurationTimer = 0;
@@ -125,16 +149,16 @@ namespace Lich {
                         case WeatherMode.NONE:
                             switch (Math.floor(Math.random() * 2)) {
                                 case 0: this.switchMode(WeatherMode.NONE); break;
-                                case 1: this.switchMode(WeatherMode.SNOW_START); break;
+                                case 1: this.switchMode(WeatherMode.SNOW_RAIN_START); break;
                             }
                             break;
-                        case WeatherMode.SNOW:
-                            this.switchMode(WeatherMode.SNOW_STOP); break;
+                        case WeatherMode.SNOW_RAIN:
+                            this.switchMode(WeatherMode.SNOW_RAIN_STOP); break;
                     }
                 }
             }
 
-            if (this.mode == WeatherMode.SNOW_START) {
+            if (this.mode == WeatherMode.SNOW_RAIN_START) {
                 this.spawnBatchDelayTimer += delta;
                 if (this.spawnBatchDelayTimer > Weather.SPAWN_BATCH_DELAY) {
                     this.spawnBatchDelayTimer = 0;
@@ -145,7 +169,7 @@ namespace Lich {
                         this.addChild(this.particleLayers[this.modeStartProgress]);
                         this.addChild(this.particleLayers[this.modeStartProgress + Weather.PARTICLE_LAYERS]);
                     } else {
-                        this.switchMode(WeatherMode.SNOW);
+                        this.switchMode(WeatherMode.SNOW_RAIN);
                     }
                     this.modeStartProgress++;
                 }
@@ -166,7 +190,7 @@ namespace Lich {
                             } else {
                                 partnerLayer = this.particleLayers[i - Weather.PARTICLE_LAYERS];
                             }
-                            if (this.mode == WeatherMode.SNOW_STOP) {
+                            if (this.mode == WeatherMode.SNOW_RAIN_STOP) {
                                 this.removeChild(p);
                                 this.particleLayers[i] = null;
                                 if (this.children.length == 0)

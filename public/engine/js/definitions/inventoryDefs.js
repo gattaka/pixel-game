@@ -56,11 +56,6 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_SNOWMAN, res.mapObjectDefs[Lich.MapObjectKey.MAP_SNOWMAN_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_RED_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_RED_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_TREE_KEY]),
@@ -68,6 +63,10 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_LOVELETTER).setConsumeAction(function (world) {
+                Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Valentimon, world);
+                return true;
+            }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction(function (world) {
                 // TODO 
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SPAWN_KEY);
@@ -128,7 +127,7 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY)),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY).setBackground(res.getSurfaceBgrDef(Lich.SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY)),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHAIN_LADDER_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_CHAIN_LADDER_KEY)),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_ORE_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_ORE_KEY))
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_KEY))
         ];
     };
 })(Lich || (Lich = {}));

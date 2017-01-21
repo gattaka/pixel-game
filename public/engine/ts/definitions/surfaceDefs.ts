@@ -2,7 +2,8 @@ namespace Lich {
     export let SURFACE_TRANSITION_DEFS: Array<MapSurfaceTransitionDefinition> = [
         new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_ROCK_KEY, SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY),
         new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_COAL_KEY, SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY),
-        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)
+        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY),
+        new MapSurfaceTransitionDefinition(SurfaceKey.SRFC_GOLD_KEY, SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY)
     ]
 
     export let SURFACE_DEFS: Array<MapSurfaceDefinition> = [
@@ -11,7 +12,7 @@ namespace Lich {
         new MapSurfaceDefinition(SurfaceKey.SRFC_DIRT_KEY, InventoryKey.INV_DIRT_KEY, 1, 0, new Color(156, 108, 36)),
         new MapSurfaceDefinition(SurfaceKey.SRFC_WOODWALL_KEY, InventoryKey.INV_WOODWALL_KEY, 1, 0, new Color(181, 129, 28)),
         new MapSurfaceDefinition(SurfaceKey.SRFC_KRYSTAL_KEY, InventoryKey.INV_KRYSTAL_KEY, 1, 10, new Color(0, 201, 201)).setDepth(50, 100),
-        new MapSurfaceDefinition(SurfaceKey.SRFC_GOLD_ORE_KEY, InventoryKey.INV_GOLD_ORE_KEY, 1, 40, new Color(228, 202, 127)).setDepth(20, 80),
+        new MapSurfaceDefinition(SurfaceKey.SRFC_GOLD_KEY, InventoryKey.INV_GOLD_KEY, 1, 40, new Color(228, 202, 127)).setDepth(20, 80),
         new MapSurfaceDefinition(SurfaceKey.SRFC_FLORITE_KEY, InventoryKey.INV_FLORITE_KEY, 1, 10, new Color(159, 68, 181)).setDepth(70, 100),
         new MapSurfaceDefinition(SurfaceKey.SRFC_BRICK_KEY, InventoryKey.INV_BRICK_KEY, 1, 0, new Color(79, 39, 0)),
         new MapSurfaceDefinition(SurfaceKey.SRFC_ROCK_BRICK_KEY, InventoryKey.INV_ROCK_BRICK_KEY, 1, 0, new Color(62, 62, 62)),

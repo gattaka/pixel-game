@@ -12,6 +12,7 @@ namespace Lich {
         // gfx animations
         ["images/effects/meteor_animation.png", AnimationKey.METEOR_ANIMATION_KEY],
         ["images/effects/blast_animation.png", AnimationKey.FIREBALL_ANIMATION_KEY],
-        ["images/effects/bolt_animation.png", AnimationKey.BOLT_ANIMATION_KEY]
+        ["images/effects/bolt_animation.png", AnimationKey.BOLT_ANIMATION_KEY],
+        ["images/effects/loveletter_animation.png", AnimationKey.LOVELETTER_ANIMATION_KEY]
     ]
 }

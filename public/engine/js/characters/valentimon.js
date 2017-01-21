@@ -16,14 +16,14 @@ var Lich;
                 64, // HEIGHT 
                 6, // COLLXOFFSET
                 9, // COLLYOFFSET
-                Lich.AnimationKey.VALENTIMON_ANIMATION_KEY, Valentimon.IDLE, 10, // frames
+                Lich.AnimationKey.VALENTIMON_ANIMATION_KEY, Valentimon.IDLE, 9, // frames
                 200, // HORIZONTAL_SPEED
                 200, // VERTICAL_SPEED
                 new Lich.Animations()
                     .add(Valentimon.IDLE, 0, 3, Valentimon.IDLE, 0.1)
-                    .add(Valentimon.ATTACK, 4, 6, Valentimon.IDLE, 0.3)
-                    .add(Valentimon.DIE, 5, 9, Valentimon.DEAD, 0.2)
-                    .add(Valentimon.DEAD, 9, 9, Valentimon.DEAD, 1), true, // unspawns
+                    .add(Valentimon.ATTACK, 3, 5, Valentimon.IDLE, 0.3)
+                    .add(Valentimon.DIE, 4, 8, Valentimon.DEAD, 0.2)
+                    .add(Valentimon.DEAD, 8, 8, Valentimon.DEAD, 1), true, // unspawns
                 0, // min depth 
                 100, // max depth
                 true // hovers
@@ -39,22 +39,22 @@ var Lich;
                 var heroTargetX = world.hero.x + world.hero.width / 2;
                 var heroTargetY = world.hero.y + world.hero.height / 2;
                 if (this.getCurrentHealth() > 0) {
-                    if (this.currentAttackCooldown < this.attackCooldown)
-                        this.currentAttackCooldown += delta;
-                    if (this.currentAttackCooldown > this.attackCooldown) {
+                    if (this.currentAttackCooldown >= this.attackCooldown) {
                         if (this.isPlayerInReach(world)) {
-                            this.performState(Valentimon.ATTACK);
                             world.hero.hit(this.damage, world);
+                            this.performState(Valentimon.ATTACK);
                             this.currentAttackCooldown = 0;
                         }
                         else {
-                            var spell = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[Lich.SpellKey.SPELL_BOLT_KEY]);
+                            var spell = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[Lich.SpellKey.SPELL_LOVELETTER]);
                             var context = new Lich.SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
+                            this.performState(Valentimon.ATTACK);
                             this.currentAttackCooldown = 0;
                         }
                     }
                     else {
+                        this.currentAttackCooldown += delta;
                         var processSpeed = function () {
                             // snaž se dosáhnout místo středem
                             var targetX = heroTargetX - _this.width / 2;

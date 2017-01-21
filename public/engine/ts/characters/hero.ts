@@ -53,6 +53,8 @@ namespace Lich {
 
             this.willRegen = 10;
             this.healthRegen = 1;
+            this.hitTextColor = "#E30";
+            this.hitTextBorderColor = "#300";
 
             this.onHealthChange(this.currentHealth);
             this.onWillChange(this.currentWill);
@@ -66,26 +68,21 @@ namespace Lich {
             EventBus.getInstance().fireEvent(new WillChangeEventPayload(this.maxWill, this.currentWill));
         };
 
-        hit(damage: number, world: World): number {
-            if (this.currentHealth > 0 && damage > 0) {
-                world.fadeText("-" + damage, this.x + this.width * Math.random(), this.y, 25, "#E30", "#300");
-                switch (Math.floor(Math.random() * 4)) {
-                    case 0:
-                        Mixer.playSound(SoundKey.SND_PUNCH_1_KEY);
-                        break;
-                    case 1:
-                        Mixer.playSound(SoundKey.SND_PUNCH_2_KEY);
-                        break;
-                    case 2:
-                        Mixer.playSound(SoundKey.SND_PUNCH_3_KEY);
-                        break;
-                    case 3:
-                        Mixer.playSound(SoundKey.SND_PUNCH_4_KEY);
-                        break;
-                }
+        hitSound() {
+            switch (Math.floor(Math.random() * 4)) {
+                case 0:
+                    Mixer.playSound(SoundKey.SND_PUNCH_1_KEY);
+                    break;
+                case 1:
+                    Mixer.playSound(SoundKey.SND_PUNCH_2_KEY);
+                    break;
+                case 2:
+                    Mixer.playSound(SoundKey.SND_PUNCH_3_KEY);
+                    break;
+                case 3:
+                    Mixer.playSound(SoundKey.SND_PUNCH_4_KEY);
+                    break;
             }
-            super.hit(damage, world);
-            return damage;
         }
 
         performState(desiredState) {

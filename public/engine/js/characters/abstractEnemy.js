@@ -53,7 +53,7 @@ var Lich;
                     this.currentAttackCooldown += delta;
                 if (this.isPlayerInReach(world)) {
                     this.movementTypeX = Lich.MovementTypeX.NONE;
-                    if (this.currentAttackCooldown > this.attackCooldown) {
+                    if (this.currentAttackCooldown >= this.attackCooldown) {
                         this.currentAttackCooldown = 0;
                         world.hero.hit(this.damage, world);
                     }

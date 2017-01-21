@@ -135,7 +135,7 @@ namespace Lich {
                     }
 
                     // uběhl čas k započítání dalšího zásahu?
-                    if (this.currentAttackCooldown > this.attackCooldown && world.hero.getCurrentHealth() > 0) {
+                    if (this.currentAttackCooldown >= this.attackCooldown && world.hero.getCurrentHealth() > 0) {
                         if (this.isPlayerInReach(world)) {
                             // jsem u hráče, zasáhni
                             this.currentAttackCooldown = 0;
@@ -143,8 +143,8 @@ namespace Lich {
                             stopCharging();
                         } else {
                             // jsem připraven útočit, útoč
-                            if ((this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN
-                                || this.frenzy && this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN / 2)
+                            if ((this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN
+                                || this.frenzy && this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN / 2)
                                 && !this.charging) {
                                 this.performState(ChickenBoss.ATTACK);
                                 Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);

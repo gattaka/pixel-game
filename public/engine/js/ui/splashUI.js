@@ -21,6 +21,11 @@ var Lich;
         function Changelog() {
             this.versions = new Lich.Table();
             var version;
+            version = new Version("0.17 - Jan 21, 2017");
+            version.addChange("Surfaces transitions finished");
+            version.addChange("Valentimon enemy introduced");
+            version.addChange("Enemies can shoot projectiles");
+            this.addVersion(version);
             version = new Version("0.16 - Dec 26, 2016");
             version.addChange("Minimap surface and background colors fixed");
             version.addChange("Mobile version ready");

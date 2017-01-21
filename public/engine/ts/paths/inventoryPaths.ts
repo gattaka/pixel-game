@@ -46,7 +46,7 @@ namespace Lich {
         ["images/ui/inventory/inv_banner.png", InventoryKey.INV_BANNER_KEY],
         ["images/ui/inventory/inv_flower_pot.png", InventoryKey.INV_FLOWER_POT_KEY],
         ["images/ui/inventory/inv_chandelier.png", InventoryKey.INV_CHANDELIER_KEY],
-        ["images/ui/inventory/inv_gold.png", InventoryKey.INV_GOLD_ORE_KEY],
+        ["images/ui/inventory/inv_gold.png", InventoryKey.INV_GOLD_KEY],
         ["images/ui/inventory/inv_chicken_meat.png", InventoryKey.INV_CHICKEN_MEAT_KEY],
         ["images/ui/inventory/inv_chicken_talon.png", InventoryKey.INV_CHICKEN_TALON_KEY],
         ["images/ui/inventory/inv_cauldron.png", InventoryKey.INV_CAULDRON_KEY],
@@ -67,6 +67,7 @@ namespace Lich {
         ["images/ui/inventory/inv_snowman.png", InventoryKey.INV_SNOWMAN],
         ["images/ui/inventory/inv_snowflake.png", InventoryKey.INV_SNOWFLAKE],
         ["images/ui/inventory/inv_wood_chair.png", InventoryKey.INV_WOOD_CHAIR],
-        ["images/ui/inventory/inv_wood_table.png", InventoryKey.INV_WOOD_TABLE]
+        ["images/ui/inventory/inv_wood_table.png", InventoryKey.INV_WOOD_TABLE],
+        ["images/ui/inventory/inv_loveletter.png", InventoryKey.INV_LOVELETTER]
     ]
 }

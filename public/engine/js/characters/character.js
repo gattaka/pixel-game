@@ -56,6 +56,8 @@ var Lich;
             this.maxWill = 50;
             this.currentWill = this.maxWill;
             this.willRegen = 0;
+            this.hitTextColor = "#E3E";
+            this.hitTextBorderColor = "#303";
             // Typy pohybu, u hráče odpovídá stisku klávesy, 
             // u nepřítele jeho AI nasměrování
             this.movementTypeX = MovementTypeX.NONE;
@@ -98,18 +100,22 @@ var Lich;
         /**
          * Health metody
          */
+        Character.prototype.hitSound = function () {
+        };
         Character.prototype.hit = function (damage, world) {
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
-                this.currentHealth -= damage;
-                // TODO armor
+                var effectiveDamage = damage;
+                this.currentHealth -= effectiveDamage;
+                // TODO zatím nemá armor, takže se aplikuje vše
+                this.onHealthChange(this.currentHealth - oldValue);
+                world.fadeText("-" + effectiveDamage, this.x + this.width * Math.random(), this.y, 25, this.hitTextColor, this.hitTextBorderColor);
+                this.hitSound();
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
                     this.die(world);
                 }
             }
-            this.onHealthChange(this.currentHealth - oldValue);
-            // TODO zatím nemá armor, takže se aplikuje vše
             return damage;
         };
         Character.prototype.fillHealth = function (amount) {

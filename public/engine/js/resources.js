@@ -202,7 +202,8 @@ var Lich;
                 new Lich.BoltSpellDef(),
                 new Lich.EnemySpellDef(),
                 new Lich.TeleportSpellDef(),
-                new Lich.UseItemSpellDef()
+                new Lich.UseItemSpellDef(),
+                new Lich.LoveletterSpellDef()
             ];
             SPELL_DEFS.forEach(function (definition) {
                 self.spellDefs.insert(Lich.SpellKey[definition.key], definition);

@@ -42,11 +42,6 @@ namespace Lich {
      */
     export abstract class BulletSpellDef extends SpellDefinition {
 
-        static FRAME_WIDTH = 60;
-        static FRAME_HEIGHT = 60;
-        static COLLXOFFSET = 20;
-        static COLLYOFFSET = 20;
-
         constructor(
             key: SpellKey,
             cost: number,
@@ -58,17 +53,19 @@ namespace Lich {
             public destroyMap: boolean,
             public piercing: boolean,
             public damage: number,
-            private radius?: number
+            private radius?: number,
+            private frameWidth = 60,
+            private frameHeight = 60,
+            private colloffsetX = 20,
+            private colloffsetY = 20,
+            private framesCount = 5,
+            private frameAnimations = {
+                "fly": [0, 0, "fly", 1],
+                "hit": [1, 4, "done", 0.3],
+                "done": [4, 4, "done", 1]
+            }
         ) {
             super(key, cost, cooldown);
-        }
-
-        protected getFrameWidth(): number {
-            return BulletSpellDef.FRAME_WIDTH;
-        }
-
-        protected getFrameHeight(): number {
-            return BulletSpellDef.FRAME_HEIGHT;
         }
 
         protected adjustObjectSpeed(context: SpellContext, object: AbstractWorldObject) {
@@ -90,27 +87,23 @@ namespace Lich {
                 "images": [Resources.getInstance().getImage(AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
-                    "height": self.getFrameHeight(),
-                    "count": 5,
+                    "height": self.frameHeight,
+                    "count": self.framesCount,
                     "regY": 0,
-                    "width": self.getFrameWidth()
+                    "width": self.frameWidth
                 },
-                "animations": {
-                    "fly": [0, 0, "fly", 1],
-                    "hit": [1, 4, "done", 0.3],
-                    "done": [4, 4, "done", 1]
-                }
+                "animations": self.frameAnimations
             });
 
             var object = new BasicBullet(
                 context.owner,
-                self.getFrameWidth(),
-                self.getFrameHeight(),
+                self.frameWidth,
+                self.frameHeight,
                 sheet,
                 "fly",
                 "done",
-                BulletSpellDef.COLLXOFFSET,
-                BulletSpellDef.COLLYOFFSET,
+                self.colloffsetX,
+                self.colloffsetY,
                 self.hitSoundKey,
                 self.destroyMap,
                 self.piercing,
@@ -118,6 +111,7 @@ namespace Lich {
                 self.radius
             );
 
+            // nastaví X a Y složku rychlosti dle směru
             self.adjustObjectSpeed(context, object);
 
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
@@ -159,7 +153,6 @@ namespace Lich {
                 FireballSpellDef.RADIUS
             );
         }
-
     }
 
     /**
@@ -176,14 +169,6 @@ namespace Lich {
 
         static FRAME_WIDTH = 120;
         static FRAME_HEIGHT = 120;
-
-        protected getFrameWidth(): number {
-            return MeteorSpellDef.FRAME_WIDTH;
-        }
-
-        protected getFrameHeight(): number {
-            return MeteorSpellDef.FRAME_HEIGHT;
-        }
 
         public cast(context: SpellContext): boolean {
             let a = context.yAim;
@@ -205,10 +190,44 @@ namespace Lich {
                 MeteorSpellDef.MAP_DESTROY,
                 MeteorSpellDef.PIERCING,
                 MeteorSpellDef.DAMAGE,
-                MeteorSpellDef.RADIUS
+                MeteorSpellDef.RADIUS,
+                MeteorSpellDef.FRAME_WIDTH,
+                MeteorSpellDef.FRAME_HEIGHT
             );
         }
 
+    }
+
+    /**
+     * Loveletter
+     */
+    export class LoveletterSpellDef extends BulletSpellDef {
+
+        constructor() {
+            super(
+                SpellKey.SPELL_LOVELETTER, // SpellKey
+                10, // cost
+                200, // COOLDOWN
+                SoundKey.SND_BOLT_CAST, // castSoundKey
+                SoundKey.SND_BURN_KEY, // hitSoundKey
+                1000, // speed
+                AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+                false, // destroyMap
+                false, // piercing
+                10, // damage
+                1, // radius
+                32, // frameWidth
+                32, // frameHeight 
+                10, // colloffsetX 
+                10, // colloffsetY 
+                6, // framesCount 
+                {
+                    "fly": [0, 0, "fly", 1],
+                    "hit": [1, 5, "done", 0.3],
+                    "done": [5, 5, "done", 1]
+                } //  frameAnimations 
+            );
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ var Lich;
         // gfx animations
         ["images/effects/meteor_animation.png", Lich.AnimationKey.METEOR_ANIMATION_KEY],
         ["images/effects/blast_animation.png", Lich.AnimationKey.FIREBALL_ANIMATION_KEY],
-        ["images/effects/bolt_animation.png", Lich.AnimationKey.BOLT_ANIMATION_KEY]
+        ["images/effects/bolt_animation.png", Lich.AnimationKey.BOLT_ANIMATION_KEY],
+        ["images/effects/loveletter_animation.png", Lich.AnimationKey.LOVELETTER_ANIMATION_KEY]
     ];
 })(Lich || (Lich = {}));

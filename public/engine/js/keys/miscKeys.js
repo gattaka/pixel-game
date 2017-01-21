@@ -30,6 +30,7 @@ var Lich;
         AnimationKey[AnimationKey["BUNNY_ANIMATION_KEY"] = 7] = "BUNNY_ANIMATION_KEY";
         AnimationKey[AnimationKey["CHICKEN_BOSS_ANIMATION_KEY"] = 8] = "CHICKEN_BOSS_ANIMATION_KEY";
         AnimationKey[AnimationKey["VALENTIMON_ANIMATION_KEY"] = 9] = "VALENTIMON_ANIMATION_KEY";
+        AnimationKey[AnimationKey["LOVELETTER_ANIMATION_KEY"] = 10] = "LOVELETTER_ANIMATION_KEY";
     })(Lich.AnimationKey || (Lich.AnimationKey = {}));
     var AnimationKey = Lich.AnimationKey;
     (function (UIGFXKey) {
@@ -71,8 +72,9 @@ var Lich;
         SpellKey[SpellKey["SPELL_ENEMY_KEY"] = 7] = "SPELL_ENEMY_KEY";
         SpellKey[SpellKey["SPELL_TELEPORT_KEY"] = 8] = "SPELL_TELEPORT_KEY";
         SpellKey[SpellKey["SPELL_USE_ITEM_KEY"] = 9] = "SPELL_USE_ITEM_KEY";
+        SpellKey[SpellKey["SPELL_LOVELETTER"] = 10] = "SPELL_LOVELETTER";
         // RMB click interakce s objekty
-        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 10] = "SPELL_INTERACT_KEY";
+        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 11] = "SPELL_INTERACT_KEY";
     })(Lich.SpellKey || (Lich.SpellKey = {}));
     var SpellKey = Lich.SpellKey;
     (function (SoundKey) {

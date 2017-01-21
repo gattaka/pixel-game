@@ -1,6 +1,7 @@
 namespace Lich {
     export enum Theme {
         NORMAL,
+        VALENTINE,
         WINTER
     }
 
@@ -9,12 +10,13 @@ namespace Lich {
             let loot: InventoryKey;
             let today = new Date();
             let mm = today.getMonth() + 1; // January is 0!
-            // return Theme.NORMAL;
             switch (mm) {
                 case 12:
                     return Theme.WINTER;
+                case 2:
+                    return Theme.VALENTINE;
                 default:
-                    return Theme.NORMAL;
+                    return Theme.VALENTINE;
             }
         }
 

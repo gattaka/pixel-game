@@ -132,7 +132,7 @@ namespace Lich {
             }
 
             if (!data.version || data.version < 1.4) {
-                TilesMapGenerator.seedSurface(tilesMap, Resources.getInstance().getSurfaceDef(SurfaceKey.SRFC_GOLD_ORE_KEY));
+                TilesMapGenerator.seedSurface(tilesMap, Resources.getInstance().getSurfaceDef(SurfaceKey.SRFC_GOLD_KEY));
                 TilesMapGenerator.sealMap(tilesMap);
             }
 

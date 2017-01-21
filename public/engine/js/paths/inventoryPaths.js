@@ -47,7 +47,7 @@ var Lich;
         ["images/ui/inventory/inv_banner.png", Lich.InventoryKey.INV_BANNER_KEY],
         ["images/ui/inventory/inv_flower_pot.png", Lich.InventoryKey.INV_FLOWER_POT_KEY],
         ["images/ui/inventory/inv_chandelier.png", Lich.InventoryKey.INV_CHANDELIER_KEY],
-        ["images/ui/inventory/inv_gold.png", Lich.InventoryKey.INV_GOLD_ORE_KEY],
+        ["images/ui/inventory/inv_gold.png", Lich.InventoryKey.INV_GOLD_KEY],
         ["images/ui/inventory/inv_chicken_meat.png", Lich.InventoryKey.INV_CHICKEN_MEAT_KEY],
         ["images/ui/inventory/inv_chicken_talon.png", Lich.InventoryKey.INV_CHICKEN_TALON_KEY],
         ["images/ui/inventory/inv_cauldron.png", Lich.InventoryKey.INV_CAULDRON_KEY],
@@ -68,6 +68,7 @@ var Lich;
         ["images/ui/inventory/inv_snowman.png", Lich.InventoryKey.INV_SNOWMAN],
         ["images/ui/inventory/inv_snowflake.png", Lich.InventoryKey.INV_SNOWFLAKE],
         ["images/ui/inventory/inv_wood_chair.png", Lich.InventoryKey.INV_WOOD_CHAIR],
-        ["images/ui/inventory/inv_wood_table.png", Lich.InventoryKey.INV_WOOD_TABLE]
+        ["images/ui/inventory/inv_wood_table.png", Lich.InventoryKey.INV_WOOD_TABLE],
+        ["images/ui/inventory/inv_loveletter.png", Lich.InventoryKey.INV_LOVELETTER]
     ];
 })(Lich || (Lich = {}));

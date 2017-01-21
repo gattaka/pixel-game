@@ -28,7 +28,8 @@ namespace Lich {
         CHICKEN_ANIMATION_KEY,
         BUNNY_ANIMATION_KEY,
         CHICKEN_BOSS_ANIMATION_KEY,
-        VALENTIMON_ANIMATION_KEY
+        VALENTIMON_ANIMATION_KEY,
+        LOVELETTER_ANIMATION_KEY
     }
 
     export enum UIGFXKey {
@@ -70,6 +71,7 @@ namespace Lich {
         SPELL_ENEMY_KEY,
         SPELL_TELEPORT_KEY,
         SPELL_USE_ITEM_KEY,
+        SPELL_LOVELETTER,
 
         // RMB click interakce s objekty
         SPELL_INTERACT_KEY

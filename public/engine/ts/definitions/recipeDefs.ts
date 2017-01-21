@@ -157,7 +157,7 @@ namespace Lich {
             [InventoryKey.INV_IRON_INGOT_KEY, 1],
         ], MapObjectKey.MAP_ANVIL_KEY],
         [[InventoryKey.INV_CHANDELIER_KEY, 1], [
-            [InventoryKey.INV_GOLD_ORE_KEY, 5],
+            [InventoryKey.INV_GOLD_KEY, 5],
         ], MapObjectKey.MAP_ANVIL_KEY],
         // Cauldron recipes
         [[InventoryKey.INV_RED_FLASK_KEY, 1], [

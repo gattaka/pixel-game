@@ -88,7 +88,7 @@ var Lich;
                         stopCharging();
                     }
                     // uběhl čas k započítání dalšího zásahu?
-                    if (this.currentAttackCooldown > this.attackCooldown && world.hero.getCurrentHealth() > 0) {
+                    if (this.currentAttackCooldown >= this.attackCooldown && world.hero.getCurrentHealth() > 0) {
                         if (this.isPlayerInReach(world)) {
                             // jsem u hráče, zasáhni
                             this.currentAttackCooldown = 0;
@@ -97,8 +97,8 @@ var Lich;
                         }
                         else {
                             // jsem připraven útočit, útoč
-                            if ((this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN
-                                || this.frenzy && this.currentChargeCooldown > ChickenBoss.CHARGE_COOLDOWN / 2)
+                            if ((this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN
+                                || this.frenzy && this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN / 2)
                                 && !this.charging) {
                                 this.performState(ChickenBoss.ATTACK);
                                 Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);

@@ -157,7 +157,7 @@ var Lich;
                 [Lich.InventoryKey.INV_IRON_INGOT_KEY, 1],
             ], Lich.MapObjectKey.MAP_ANVIL_KEY],
         [[Lich.InventoryKey.INV_CHANDELIER_KEY, 1], [
-                [Lich.InventoryKey.INV_GOLD_ORE_KEY, 5],
+                [Lich.InventoryKey.INV_GOLD_KEY, 5],
             ], Lich.MapObjectKey.MAP_ANVIL_KEY],
         // Cauldron recipes
         [[Lich.InventoryKey.INV_RED_FLASK_KEY, 1], [

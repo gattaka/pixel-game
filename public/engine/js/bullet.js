@@ -112,7 +112,6 @@ var Lich;
                             && target.ownerId != self.owner) {
                             targetRet = new Lich.CollisionTestResult(true, x, y);
                             var effectiveDamage = target.hit(self.damage, game.getWorld());
-                            game.getWorld().fadeText("-" + effectiveDamage, target.x + target.width * Math.random(), target.y, 25, "#E3E", "#303");
                             if (self.piercing == false) {
                                 break;
                             }

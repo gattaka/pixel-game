@@ -117,7 +117,6 @@ namespace Lich {
                             && target.ownerId != self.owner) {
                             targetRet = new CollisionTestResult(true, x, y);
                             let effectiveDamage = target.hit(self.damage, game.getWorld());
-                            game.getWorld().fadeText("-" + effectiveDamage, target.x + target.width * Math.random(), target.y, 25, "#E3E", "#303");
                             if (self.piercing == false) {
                                 break;
                             }

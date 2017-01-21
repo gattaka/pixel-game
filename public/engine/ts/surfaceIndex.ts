@@ -280,6 +280,10 @@ namespace Lich {
             if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_IRON_KEY) return true;
             if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_IRON_KEY, SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY)) return true;
+            // Gold
+            if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_GOLD_KEY) return true;
+            if (type == SurfaceKey.SRFC_DIRT_KEY && type2 == SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY) return true;
+            if (seamCheck(type, type2, SurfaceKey.SRFC_GOLD_KEY, SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY)) return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_BRICK_KEY)) return true;
             if (seamCheck(type, type2, SurfaceKey.SRFC_DIRT_KEY, SurfaceKey.SRFC_WOODWALL_KEY)) return true;

@@ -255,7 +255,8 @@ namespace Lich {
                 new BoltSpellDef(),
                 new EnemySpellDef(),
                 new TeleportSpellDef(),
-                new UseItemSpellDef()
+                new UseItemSpellDef(),
+                new LoveletterSpellDef()
             ];
             SPELL_DEFS.forEach((definition) => {
                 self.spellDefs.insert(SpellKey[definition.key], definition);

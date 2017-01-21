@@ -52,7 +52,17 @@ var Lich;
      */
     var BulletSpellDef = (function (_super) {
         __extends(BulletSpellDef, _super);
-        function BulletSpellDef(key, cost, cooldown, castSoundKey, hitSoundKey, speed, spriteKey, destroyMap, piercing, damage, radius) {
+        function BulletSpellDef(key, cost, cooldown, castSoundKey, hitSoundKey, speed, spriteKey, destroyMap, piercing, damage, radius, frameWidth, frameHeight, colloffsetX, colloffsetY, framesCount, frameAnimations) {
+            if (frameWidth === void 0) { frameWidth = 60; }
+            if (frameHeight === void 0) { frameHeight = 60; }
+            if (colloffsetX === void 0) { colloffsetX = 20; }
+            if (colloffsetY === void 0) { colloffsetY = 20; }
+            if (framesCount === void 0) { framesCount = 5; }
+            if (frameAnimations === void 0) { frameAnimations = {
+                "fly": [0, 0, "fly", 1],
+                "hit": [1, 4, "done", 0.3],
+                "done": [4, 4, "done", 1]
+            }; }
             _super.call(this, key, cost, cooldown);
             this.castSoundKey = castSoundKey;
             this.hitSoundKey = hitSoundKey;
@@ -62,13 +72,13 @@ var Lich;
             this.piercing = piercing;
             this.damage = damage;
             this.radius = radius;
+            this.frameWidth = frameWidth;
+            this.frameHeight = frameHeight;
+            this.colloffsetX = colloffsetX;
+            this.colloffsetY = colloffsetY;
+            this.framesCount = framesCount;
+            this.frameAnimations = frameAnimations;
         }
-        BulletSpellDef.prototype.getFrameWidth = function () {
-            return BulletSpellDef.FRAME_WIDTH;
-        };
-        BulletSpellDef.prototype.getFrameHeight = function () {
-            return BulletSpellDef.FRAME_HEIGHT;
-        };
         BulletSpellDef.prototype.adjustObjectSpeed = function (context, object) {
             var b = context.xAim - context.xCast;
             var a = context.yAim - context.yCast;
@@ -85,18 +95,15 @@ var Lich;
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
-                    "height": self.getFrameHeight(),
-                    "count": 5,
+                    "height": self.frameHeight,
+                    "count": self.framesCount,
                     "regY": 0,
-                    "width": self.getFrameWidth()
+                    "width": self.frameWidth
                 },
-                "animations": {
-                    "fly": [0, 0, "fly", 1],
-                    "hit": [1, 4, "done", 0.3],
-                    "done": [4, 4, "done", 1]
-                }
+                "animations": self.frameAnimations
             });
-            var object = new Lich.BasicBullet(context.owner, self.getFrameWidth(), self.getFrameHeight(), sheet, "fly", "done", BulletSpellDef.COLLXOFFSET, BulletSpellDef.COLLYOFFSET, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
+            var object = new Lich.BasicBullet(context.owner, self.frameWidth, self.frameHeight, sheet, "fly", "done", self.colloffsetX, self.colloffsetY, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
+            // nastaví X a Y složku rychlosti dle směru
             self.adjustObjectSpeed(context, object);
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
@@ -107,10 +114,6 @@ var Lich;
             Lich.Mixer.playSound(self.castSoundKey, 0.2);
             return true;
         };
-        BulletSpellDef.FRAME_WIDTH = 60;
-        BulletSpellDef.FRAME_HEIGHT = 60;
-        BulletSpellDef.COLLXOFFSET = 20;
-        BulletSpellDef.COLLYOFFSET = 20;
         return BulletSpellDef;
     }(SpellDefinition));
     Lich.BulletSpellDef = BulletSpellDef;
@@ -138,14 +141,8 @@ var Lich;
     var MeteorSpellDef = (function (_super) {
         __extends(MeteorSpellDef, _super);
         function MeteorSpellDef() {
-            _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, MeteorSpellDef.COST, MeteorSpellDef.COOLDOWN, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, MeteorSpellDef.SPEED, Lich.AnimationKey.METEOR_ANIMATION_KEY, MeteorSpellDef.MAP_DESTROY, MeteorSpellDef.PIERCING, MeteorSpellDef.DAMAGE, MeteorSpellDef.RADIUS);
+            _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, MeteorSpellDef.COST, MeteorSpellDef.COOLDOWN, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, MeteorSpellDef.SPEED, Lich.AnimationKey.METEOR_ANIMATION_KEY, MeteorSpellDef.MAP_DESTROY, MeteorSpellDef.PIERCING, MeteorSpellDef.DAMAGE, MeteorSpellDef.RADIUS, MeteorSpellDef.FRAME_WIDTH, MeteorSpellDef.FRAME_HEIGHT);
         }
-        MeteorSpellDef.prototype.getFrameWidth = function () {
-            return MeteorSpellDef.FRAME_WIDTH;
-        };
-        MeteorSpellDef.prototype.getFrameHeight = function () {
-            return MeteorSpellDef.FRAME_HEIGHT;
-        };
         MeteorSpellDef.prototype.cast = function (context) {
             var a = context.yAim;
             var b = Math.tan(Math.PI / 6) * a;
@@ -165,6 +162,38 @@ var Lich;
         return MeteorSpellDef;
     }(BulletSpellDef));
     Lich.MeteorSpellDef = MeteorSpellDef;
+    /**
+     * Loveletter
+     */
+    var LoveletterSpellDef = (function (_super) {
+        __extends(LoveletterSpellDef, _super);
+        function LoveletterSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_LOVELETTER, // SpellKey
+            10, // cost
+            200, // COOLDOWN
+            Lich.SoundKey.SND_BOLT_CAST, // castSoundKey
+            Lich.SoundKey.SND_BURN_KEY, // hitSoundKey
+            1000, // speed
+            Lich.AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+            false, // destroyMap
+            false, // piercing
+            10, // damage
+            1, // radius
+            32, // frameWidth
+            32, // frameHeight 
+            10, // colloffsetX 
+            10, // colloffsetY 
+            6, // framesCount 
+            {
+                "fly": [0, 0, "fly", 1],
+                "hit": [1, 5, "done", 0.3],
+                "done": [5, 5, "done", 1]
+            } //  frameAnimations 
+            );
+        }
+        return LoveletterSpellDef;
+    }(BulletSpellDef));
+    Lich.LoveletterSpellDef = LoveletterSpellDef;
     /**
      * Spell mana-boltu, který neničí povrch
      */

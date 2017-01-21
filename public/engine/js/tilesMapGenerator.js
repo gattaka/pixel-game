@@ -103,7 +103,7 @@ var Lich;
                 }
             }
             if (!data.version || data.version < 1.4) {
-                TilesMapGenerator.seedSurface(tilesMap, Lich.Resources.getInstance().getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_ORE_KEY));
+                TilesMapGenerator.seedSurface(tilesMap, Lich.Resources.getInstance().getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_KEY));
                 TilesMapGenerator.sealMap(tilesMap);
             }
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Objects"));

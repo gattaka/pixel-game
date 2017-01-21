@@ -40,11 +40,6 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAULDRON_KEY]),
             new InvObjDefinition(InventoryKey.INV_SNOWMAN, res.mapObjectDefs[MapObjectKey.MAP_SNOWMAN_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_BLUE_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_GREEN_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_GREEN_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_PURPLE_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_RED_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_RED_BAUBLE_KEY]),
-            // new InvObjDefinition(InventoryKey.INV_XMAS_YELLOW_BAUBLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_YELLOW_BAUBLE_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_HOLLY_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_TREE_KEY]),
@@ -52,6 +47,10 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
+            new InvObjDefinition(InventoryKey.INV_LOVELETTER).setConsumeAction((world: World): boolean => {
+                SpawnPool.getInstance().spawn(Enemy.Valentimon, world);
+                return true;
+            }),
             new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction((world: World): boolean => {
                 // TODO 
                 Mixer.playSound(SoundKey.SND_SPAWN_KEY);
@@ -111,7 +110,7 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_ROCK_BRICK_WINDOW_KEY).setBackground(res.getSurfaceBgrDef(SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY)),
             new InvObjDefinition(InventoryKey.INV_WOODWALL_WINDOW_KEY).setBackground(res.getSurfaceBgrDef(SurfaceBgrKey.SRFC_BGR_WOODWALL_WINDOW_KEY)),
             new InvObjDefinition(InventoryKey.INV_CHAIN_LADDER_KEY, res.getSurfaceDef(SurfaceKey.SRFC_CHAIN_LADDER_KEY)),
-            new InvObjDefinition(InventoryKey.INV_GOLD_ORE_KEY, res.getSurfaceDef(SurfaceKey.SRFC_GOLD_ORE_KEY))
+            new InvObjDefinition(InventoryKey.INV_GOLD_KEY, res.getSurfaceDef(SurfaceKey.SRFC_GOLD_KEY))
         ];
     }
 }

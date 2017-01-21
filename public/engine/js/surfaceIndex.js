@@ -295,6 +295,13 @@ var Lich;
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_IRON_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY))
                 return true;
+            // Gold
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_GOLD_KEY)
+                return true;
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY)
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_GOLD_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY))
+                return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))
                 return true;

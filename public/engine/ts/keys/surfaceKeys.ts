@@ -21,10 +21,11 @@ namespace Lich {
         SRFC_ROCK_BRICK_BL_KEY,
         SRFC_ROCK_BRICK_BR_KEY,
         SRFC_CHAIN_LADDER_KEY,
-        SRFC_GOLD_ORE_KEY,
+        SRFC_GOLD_KEY,
         SRFC_TRANS_DIRT_ROCK_KEY,
         SRFC_TRANS_DIRT_COAL_KEY,
-        SRFC_TRANS_DIRT_IRON_KEY
+        SRFC_TRANS_DIRT_IRON_KEY,
+        SRFC_TRANS_DIRT_GOLD_KEY
     }
 
     export enum SurfaceBgrKey {

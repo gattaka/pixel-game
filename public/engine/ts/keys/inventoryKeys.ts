@@ -45,7 +45,7 @@ namespace Lich {
         INV_BANNER_KEY,
         INV_FLOWER_POT_KEY,
         INV_CHANDELIER_KEY,
-        INV_GOLD_ORE_KEY,
+        INV_GOLD_KEY,
         INV_CHICKEN_MEAT_KEY,
         INV_CHICKEN_TALON_KEY,
         INV_CAULDRON_KEY,
@@ -67,6 +67,7 @@ namespace Lich {
         INV_SNOWFLAKE,
         INV_WOODWALL_WINDOW_KEY,
         INV_WOOD_CHAIR,
-        INV_WOOD_TABLE
+        INV_WOOD_TABLE,
+        INV_LOVELETTER
     }
 }

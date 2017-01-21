@@ -33,6 +33,9 @@ namespace Lich {
         protected currentWill = this.maxWill;
         protected willRegen = 0;
 
+        protected hitTextColor = "#E3E";
+        protected hitTextBorderColor = "#303";
+
         protected healthBar: createjs.Shape;
 
         // Typy pohybu, u hráče odpovídá stisku klávesy, 
@@ -45,7 +48,7 @@ namespace Lich {
         public spellCooldowns = new Table<number>();
 
         constructor(
-            public ownerId : string,
+            public ownerId: string,
             width: number, height: number,
             collXOffset: number, collYOffset: number,
             animationKey: AnimationKey,
@@ -118,19 +121,25 @@ namespace Lich {
          * Health metody
          */
 
+        protected hitSound() {
+        }
+
         hit(damage: number, world: World): number {
             var oldValue = this.currentHealth;
             if (this.currentHealth > 0) {
-                this.currentHealth -= damage;
-                // TODO armor
+                let effectiveDamage = damage;
+                this.currentHealth -= effectiveDamage;
+                // TODO zatím nemá armor, takže se aplikuje vše
+                this.onHealthChange(this.currentHealth - oldValue);
+                world.fadeText("-" + effectiveDamage, this.x + this.width * Math.random(), this.y, 25, this.hitTextColor, this.hitTextBorderColor);
+
+                this.hitSound();
 
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;
                     this.die(world);
                 }
             }
-            this.onHealthChange(this.currentHealth - oldValue);
-            // TODO zatím nemá armor, takže se aplikuje vše
             return damage;
         }
 
