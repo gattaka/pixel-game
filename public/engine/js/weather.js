@@ -92,14 +92,14 @@ var Lich;
                 this.windSpeed = Weather.MAX_WIND;
             if (this.windSpeed < -Weather.MAX_WIND)
                 this.windSpeed = -Weather.MAX_WIND;
-            if (this.mode == WeatherMode.SNOW) {
+            if (this.mode == WeatherMode.SNOW && Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
                 this.snowflakeTryTimer += delta;
                 var world = this.game.getWorld();
                 for (var i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
                     this.snowflakeTryTimer = 0;
                     if (Math.random() * Weather.SNOWFLAKE_SPAWN_PROP < 1)
                         world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
-                    if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER && Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
+                    if (Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
                         var gift = void 0;
                         switch (Math.floor(Math.random() * 3)) {
                             case 0:

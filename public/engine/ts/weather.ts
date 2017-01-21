@@ -98,14 +98,14 @@ namespace Lich {
             if (this.windSpeed < -Weather.MAX_WIND)
                 this.windSpeed = -Weather.MAX_WIND;
 
-            if (this.mode == WeatherMode.SNOW) {
+            if (this.mode == WeatherMode.SNOW && ThemeWatch.getCurrentTheme() == Theme.WINTER) {
                 this.snowflakeTryTimer += delta;
                 let world = this.game.getWorld();
                 for (let i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
                     this.snowflakeTryTimer = 0;
                     if (Math.random() * Weather.SNOWFLAKE_SPAWN_PROP < 1)
                         world.spawnObject(new DugObjDefinition(InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
-                    if (ThemeWatch.getCurrentTheme() == Theme.WINTER && Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
+                    if (Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
                         let gift;
                         switch (Math.floor(Math.random() * 3)) {
                             case 0: gift = InventoryKey.INV_GIFT1_KEY; break;
