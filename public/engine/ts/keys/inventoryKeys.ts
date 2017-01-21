@@ -68,6 +68,7 @@ namespace Lich {
         INV_WOODWALL_WINDOW_KEY,
         INV_WOOD_CHAIR,
         INV_WOOD_TABLE,
-        INV_LOVELETTER
+        INV_LOVELETTER,
+        INV_LOVEARROW
     }
 }

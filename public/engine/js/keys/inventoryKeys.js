@@ -70,6 +70,7 @@ var Lich;
         InventoryKey[InventoryKey["INV_WOOD_CHAIR"] = 66] = "INV_WOOD_CHAIR";
         InventoryKey[InventoryKey["INV_WOOD_TABLE"] = 67] = "INV_WOOD_TABLE";
         InventoryKey[InventoryKey["INV_LOVELETTER"] = 68] = "INV_LOVELETTER";
+        InventoryKey[InventoryKey["INV_LOVEARROW"] = 69] = "INV_LOVEARROW";
     })(Lich.InventoryKey || (Lich.InventoryKey = {}));
     var InventoryKey = Lich.InventoryKey;
 })(Lich || (Lich = {}));

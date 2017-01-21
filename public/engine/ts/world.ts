@@ -192,28 +192,30 @@ namespace Lich {
                 frames = invDef.frames;
             }
             var image = Resources.getInstance().getImage(InventoryKey[invItem.invObj]);
-            var object = new WorldObject(
-                invItem,
-                image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-                image.height,
-                Resources.getInstance().getSpriteSheet(InventoryKey[invItem.invObj], frames),
-                "idle",
-                { "idle": "idle" },
-                2,
-                0,
-                World.OBJECT_NOTIFY_TIME);
-            object.speedx = 0;
-            object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
-            if (inTiles) {
-                var coord = self.render.tilesToPixel(x, y);
-                object.x = coord.x + 10 - Math.random() * 20;
-                object.y = coord.y;
-            } else {
-                object.x = x + 10 - Math.random() * 20;
-                object.y = y;
+            for (let q = 0; q < invItem.quant; q++) {
+                var object = new WorldObject(
+                    invItem,
+                    image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
+                    image.height,
+                    Resources.getInstance().getSpriteSheet(InventoryKey[invItem.invObj], frames),
+                    "idle",
+                    { "idle": "idle" },
+                    2,
+                    0,
+                    World.OBJECT_NOTIFY_TIME);
+                object.speedx = 0;
+                object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
+                if (inTiles) {
+                    var coord = self.render.tilesToPixel(x, y);
+                    object.x = coord.x + 10 - Math.random() * 20;
+                    object.y = coord.y;
+                } else {
+                    object.x = x + 10 - Math.random() * 20;
+                    object.y = y;
+                }
+                self.freeObjects.push(object);
+                self.addChild(object);
             }
-            self.freeObjects.push(object);
-            self.addChild(object);
         };
 
         setSpawnPoint(tx: number, ty: number): boolean {

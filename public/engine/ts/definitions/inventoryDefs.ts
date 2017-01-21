@@ -48,7 +48,8 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_LOVELETTER).setConsumeAction((world: World): boolean => {
-                SpawnPool.getInstance().spawn(Enemy.Valentimon, world);
+                for (let i = 0; i < 5; i++)
+                    SpawnPool.getInstance().spawn(Enemy.Valentimon, world);
                 return true;
             }),
             new InvObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction((world: World): boolean => {

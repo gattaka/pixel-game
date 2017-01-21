@@ -27,6 +27,10 @@ namespace Lich {
             version.addChange("Surfaces transitions finished");
             version.addChange("Valentimon enemy introduced");
             version.addChange("Enemies can shoot projectiles");
+            version.addChange("Valentine event introduced");
+            version.addChange("Love letter introduced");
+            version.addChange("Love arrow introduced");
+            version.addChange("Gold sprite improved");
             this.addVersion(version);
 
             version = new Version("0.16 - Dec 26, 2016");

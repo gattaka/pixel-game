@@ -64,7 +64,8 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_LOVELETTER).setConsumeAction(function (world) {
-                Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Valentimon, world);
+                for (var i = 0; i < 5; i++)
+                    Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Valentimon, world);
                 return true;
             }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction(function (world) {
