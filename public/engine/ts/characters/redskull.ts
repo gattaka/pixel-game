@@ -2,6 +2,8 @@ namespace Lich {
     export namespace Enemy {
         export class Redskull extends AbstractEnemy {
 
+            static OWNER_ID = "REDSKULL";
+
             static IDLE = "IDLE";
             static BREATH = "BREATH";
             static WALKR = "WALKR";
@@ -18,6 +20,7 @@ namespace Lich {
 
             constructor() {
                 super(
+                    Redskull.OWNER_ID,
                     5, // DAMAGE
                     1000,// ATTACK_COOLDOWN
                     56, // WIDTH

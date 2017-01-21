@@ -31,7 +31,7 @@ var Lich;
     var MovementTypeY = Lich.MovementTypeY;
     var Character = (function (_super) {
         __extends(Character, _super);
-        function Character(width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers) {
+        function Character(ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers) {
             if (hovers === void 0) { hovers = false; }
             _super.call(this, width, height, new createjs.SpriteSheet({
                 framerate: 10,
@@ -45,6 +45,7 @@ var Lich;
                 },
                 "animations": animations.serialize()
             }), initState, collXOffset, collYOffset, hovers);
+            this.ownerId = ownerId;
             this.accelerationX = accelerationX;
             this.accelerationY = accelerationY;
             this.HEALTH_REGEN_TIME = 1000;
@@ -70,7 +71,7 @@ var Lich;
             this.addChild(this.healthBar);
         }
         Character.prototype.updateHealthBar = function () {
-            if (this.currentHealth == this.maxHealth) {
+            if (this.currentHealth == this.maxHealth || this.currentHealth == 0) {
                 this.healthBar.visible = false;
             }
             else {
@@ -91,6 +92,7 @@ var Lich;
         ;
         Character.prototype.die = function (world) {
             this.speedx = 0;
+            this.healthBar.visible = false;
             this.death();
         };
         /**
@@ -200,9 +202,8 @@ var Lich;
         };
         Character.prototype.performState = function (desiredState) {
             var self = this;
-            if (self.state !== desiredState) {
+            if (self.sprite.currentAnimation !== desiredState) {
                 self.gotoAndPlay(desiredState);
-                self.state = desiredState;
             }
         };
         Character.prototype.handleTick = function (delta) {

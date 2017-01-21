@@ -5,6 +5,7 @@ namespace Lich {
             /**
              * aka Murhun
              */
+            static OWNER_ID = "CHICKEN_BOSS";
 
             static IDLE = "IDLE";
             static ATTACK = "ATTACK";
@@ -48,6 +49,7 @@ namespace Lich {
 
             constructor() {
                 super(
+                    ChickenBoss.OWNER_ID,
                     20, // DAMAGE
                     1000, // ATTACK_COOLDOWN
                     184, // WIDTH

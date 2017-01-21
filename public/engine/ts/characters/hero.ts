@@ -5,7 +5,7 @@ namespace Lich {
         /* CONSTANTS */
         /*-----------*/
 
-        static OWNER_HERO_TAG = "OWNER_HERO_TAG";
+        static OWNER_ID = "HERO";
 
         static IDLE = "IDLE";
         static BREATH = "BREATH";
@@ -23,6 +23,7 @@ namespace Lich {
 
         constructor() {
             super(
+                Hero.OWNER_ID,
                 56, // WIDTH
                 80, // HEIGHT 
                 20, // COLLXOFFSET
@@ -89,10 +90,9 @@ namespace Lich {
 
         performState(desiredState) {
             var self = this;
-            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
+            if (self.sprite.currentAnimation !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
                 && self.sprite.currentAnimation != Hero.TELEPORT) {
                 self.gotoAndPlay(desiredState);
-                self.state = desiredState;
             }
         }
 

@@ -2,6 +2,8 @@ namespace Lich {
     export namespace Enemy {
         export class Hellhound extends AbstractEnemy {
 
+            static OWNER_ID = "HELLHOUND";
+
             static IDLE = "IDLE";
             static WALKR = "WALKR";
             static WALKL = "WALKL";
@@ -10,6 +12,7 @@ namespace Lich {
 
             constructor() {
                 super(
+                    Hellhound.OWNER_ID,
                     10, // DAMAGE
                     1000,// ATTACK_COOLDOWN
                     128, // WIDTH

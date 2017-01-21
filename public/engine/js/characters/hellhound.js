@@ -10,7 +10,7 @@ var Lich;
         var Hellhound = (function (_super) {
             __extends(Hellhound, _super);
             function Hellhound() {
-                _super.call(this, 10, // DAMAGE
+                _super.call(this, Hellhound.OWNER_ID, 10, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 128, // WIDTH
                 86, // HEIGHT 
@@ -62,6 +62,7 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
+            Hellhound.OWNER_ID = "HELLHOUND";
             Hellhound.IDLE = "IDLE";
             Hellhound.WALKR = "WALKR";
             Hellhound.WALKL = "WALKL";

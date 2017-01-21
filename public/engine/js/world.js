@@ -1055,7 +1055,7 @@ var Lich;
                         var heroCenterX = self.hero.x + self.hero.width / 2;
                         var heroCenterY = self.hero.y + self.hero.height / 4;
                         // zkus cast
-                        if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                        if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown 
                             self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
                         }
@@ -1080,7 +1080,7 @@ var Lich;
                         var heroCenterX_1 = self.hero.x + self.hero.width / 2;
                         var heroCenterY_1 = self.hero.y + self.hero.height / 4;
                         // zkus cast
-                        if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_HERO_TAG, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
+                        if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown a odeber will
                             self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
                             self.hero.decreseWill(spellDef.cost);

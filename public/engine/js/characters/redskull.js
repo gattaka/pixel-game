@@ -10,7 +10,7 @@ var Lich;
         var Redskull = (function (_super) {
             __extends(Redskull, _super);
             function Redskull() {
-                _super.call(this, 5, // DAMAGE
+                _super.call(this, Redskull.OWNER_ID, 5, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 56, // WIDTH
                 80, // HEIGHT 
@@ -70,6 +70,7 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
+            Redskull.OWNER_ID = "REDSKULL";
             Redskull.IDLE = "IDLE";
             Redskull.BREATH = "BREATH";
             Redskull.WALKR = "WALKR";

@@ -7,9 +7,11 @@ var Lich;
 (function (Lich) {
     var AbstractEnemy = (function (_super) {
         __extends(AbstractEnemy, _super);
-        function AbstractEnemy(damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, unspawns, minDepth, maxDepth, hovers) {
+        function AbstractEnemy(ownerId, damage, attackCooldown, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, 
+            // může se nepřítel sám unspawnout (když je moc daleko od hráče)
+            unspawns, minDepth, maxDepth, hovers) {
             if (hovers === void 0) { hovers = false; }
-            _super.call(this, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers);
+            _super.call(this, ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers);
             this.damage = damage;
             this.attackCooldown = attackCooldown;
             this.unspawns = unspawns;

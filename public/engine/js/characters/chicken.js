@@ -10,7 +10,7 @@ var Lich;
         var Chicken = (function (_super) {
             __extends(Chicken, _super);
             function Chicken() {
-                _super.call(this, 0, // DAMAGE
+                _super.call(this, Chicken.OWNER_ID, 0, // DAMAGE
                 0, // ATTACK_COOLDOWN
                 26, // WIDTH
                 26, // HEIGHT 
@@ -181,6 +181,7 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
+            Chicken.OWNER_ID = "CHICKEN";
             Chicken.IDLEL = "IDLEL";
             Chicken.IDLER = "IDLER";
             Chicken.EATL = "EATL";

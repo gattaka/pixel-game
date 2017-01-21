@@ -2,6 +2,8 @@ namespace Lich {
     export namespace Enemy {
         export class Bunny extends AbstractEnemy {
 
+            static OWNER_ID = "BUNNY";
+
             static IDLEL = "IDLEL";
             static IDLER = "IDLER";
             static EATL = "EATL";
@@ -20,6 +22,7 @@ namespace Lich {
 
             constructor() {
                 super(
+                    Bunny.OWNER_ID,
                     0, // DAMAGE
                     0, // ATTACK_COOLDOWN
                     32, // WIDTH

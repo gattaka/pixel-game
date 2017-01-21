@@ -27,7 +27,8 @@ namespace Lich {
         BOLT_ANIMATION_KEY,
         CHICKEN_ANIMATION_KEY,
         BUNNY_ANIMATION_KEY,
-        CHICKEN_BOSS_ANIMATION_KEY
+        CHICKEN_BOSS_ANIMATION_KEY,
+        VALENTIMON_ANIMATION_KEY
     }
 
     export enum UIGFXKey {

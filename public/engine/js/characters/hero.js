@@ -8,7 +8,7 @@ var Lich;
     var Hero = (function (_super) {
         __extends(Hero, _super);
         function Hero() {
-            _super.call(this, 56, // WIDTH
+            _super.call(this, Hero.OWNER_ID, 56, // WIDTH
             80, // HEIGHT 
             20, // COLLXOFFSET
             12, // COLLYOFFSET
@@ -67,10 +67,9 @@ var Lich;
         };
         Hero.prototype.performState = function (desiredState) {
             var self = this;
-            if (self.state !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
+            if (self.sprite.currentAnimation !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
                 && self.sprite.currentAnimation != Hero.TELEPORT) {
                 self.gotoAndPlay(desiredState);
-                self.state = desiredState;
             }
         };
         Hero.prototype.die = function (world) {
@@ -101,7 +100,7 @@ var Lich;
         /*-----------*/
         /* CONSTANTS */
         /*-----------*/
-        Hero.OWNER_HERO_TAG = "OWNER_HERO_TAG";
+        Hero.OWNER_ID = "HERO";
         Hero.IDLE = "IDLE";
         Hero.BREATH = "BREATH";
         Hero.WALKR = "WALKR";

@@ -2,7 +2,6 @@ namespace Lich {
 
     export abstract class AbstractWorldObject extends createjs.Container {
 
-        state: string;
         public speedx: number = 0;
         public speedy: number = 0;
         protected sprite: createjs.Sprite;
@@ -27,9 +26,8 @@ namespace Lich {
 
         performState(desiredState: string) {
             var self = this;
-            if (self.state !== desiredState) {
+            if (self.sprite.currentAnimation !== desiredState) {
                 self.sprite.gotoAndPlay(desiredState);
-                self.state = desiredState;
             }
         }
 
@@ -104,28 +102,32 @@ namespace Lich {
                 return;
             }
 
-            // Zjistí zda na daných pixel-souřadnicích dochází k zásahu nepřítele 
-            var hitEnemyOrCollide = function (x: number, y: number): CollisionTestResult {
-                var enemyRet = null;
-                for (var e = 0; e < game.getWorld().enemies.length; e++) {
-                    var enemy = game.getWorld().enemies[e];
-                    if (enemy) {
-                        if (enemy.getCurrentHealth() > 0
-                            && x > enemy.x && x < enemy.x + enemy.width
-                            && y > enemy.y && y < enemy.y + enemy.height) {
-                            enemyRet = new CollisionTestResult(true, x, y);
-                            let effectiveDamage = enemy.hit(self.damage, game.getWorld());
-                            game.getWorld().fadeText("-" + effectiveDamage, enemy.x + enemy.width * Math.random(), enemy.y, 25, "#E3E", "#303");
+            // Zjistí zda na daných pixel-souřadnicích dochází k zásahu cíle 
+            var hitTargetOrCollide = function (x: number, y: number): CollisionTestResult {
+                var targetRet = null;
+                let targets = [];
+                targets = targets.concat(game.getWorld().enemies);
+                targets.push(game.getWorld().hero);
+                for (var t = 0; t < targets.length; t++) {
+                    var target = targets[t];
+                    if (target) {
+                        if (target.getCurrentHealth() > 0
+                            && x > target.x && x < target.x + target.width
+                            && y > target.y && y < target.y + target.height
+                            && target.ownerId != self.owner) {
+                            targetRet = new CollisionTestResult(true, x, y);
+                            let effectiveDamage = target.hit(self.damage, game.getWorld());
+                            game.getWorld().fadeText("-" + effectiveDamage, target.x + target.width * Math.random(), target.y, 25, "#E3E", "#303");
                             if (self.piercing == false) {
                                 break;
                             }
                         }
                     }
                 }
-                if (enemyRet == null || self.piercing) {
+                if (targetRet == null || self.piercing) {
                     return game.getWorld().isCollision(x, y);
                 } else {
-                    return enemyRet;
+                    return targetRet;
                 }
             };
 
@@ -166,7 +168,7 @@ namespace Lich {
                     self.height - self.collYOffset * 2,
                     0,
                     distanceY,
-                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); },
+                    function (x: number, y: number) { return hitTargetOrCollide(x, y); },
                     true
                 );
                 if (clsnTest.hit === false) {
@@ -192,7 +194,7 @@ namespace Lich {
                     self.height - self.collYOffset * 2,
                     distanceX,
                     0,
-                    function (x: number, y: number) { return hitEnemyOrCollide(x, y); },
+                    function (x: number, y: number) { return hitTargetOrCollide(x, y); },
                     true
                 );
                 if (clsnTest.hit === false) {

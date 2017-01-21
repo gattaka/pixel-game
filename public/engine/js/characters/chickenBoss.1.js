@@ -10,7 +10,7 @@ var Lich;
         var ChickenBoss = (function (_super) {
             __extends(ChickenBoss, _super);
             function ChickenBoss() {
-                _super.call(this, ChickenBoss.OWNER_ID, 20, // DAMAGE
+                _super.call(this, 20, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 184, // WIDTH
                 304, // HEIGHT 
@@ -180,7 +180,6 @@ var Lich;
             /**
              * aka Murhun
              */
-            ChickenBoss.OWNER_ID = "CHICKEN_BOSS";
             ChickenBoss.IDLE = "IDLE";
             ChickenBoss.ATTACK = "ATTACK";
             /**

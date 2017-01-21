@@ -1122,7 +1122,7 @@ namespace Lich {
                         var heroCenterY = self.hero.y + self.hero.height / 4;
 
                         // zkus cast
-                        if (rmbSpellDef.cast(new SpellContext(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                        if (rmbSpellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown 
                             self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
                         }
@@ -1149,7 +1149,7 @@ namespace Lich {
                         let heroCenterY = self.hero.y + self.hero.height / 4;
 
                         // zkus cast
-                        if (spellDef.cast(new SpellContext(Hero.OWNER_HERO_TAG, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                        if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown a odeber will
                             self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
                             self.hero.decreseWill(spellDef.cost);

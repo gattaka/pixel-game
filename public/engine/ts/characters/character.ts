@@ -44,7 +44,9 @@ namespace Lich {
 
         public spellCooldowns = new Table<number>();
 
-        constructor(width: number, height: number,
+        constructor(
+            public ownerId : string,
+            width: number, height: number,
             collXOffset: number, collYOffset: number,
             animationKey: AnimationKey,
             initState: string,
@@ -76,7 +78,7 @@ namespace Lich {
         }
 
         private updateHealthBar() {
-            if (this.currentHealth == this.maxHealth) {
+            if (this.currentHealth == this.maxHealth || this.currentHealth == 0) {
                 this.healthBar.visible = false;
             } else {
                 this.healthBar.visible = true;
@@ -108,6 +110,7 @@ namespace Lich {
 
         die(world: World) {
             this.speedx = 0;
+            this.healthBar.visible = false;
             this.death();
         }
 
@@ -226,9 +229,8 @@ namespace Lich {
 
         performState(desiredState) {
             var self = this;
-            if (self.state !== desiredState) {
+            if (self.sprite.currentAnimation !== desiredState) {
                 self.gotoAndPlay(desiredState);
-                self.state = desiredState;
             }
         }
 

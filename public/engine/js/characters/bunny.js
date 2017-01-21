@@ -10,7 +10,7 @@ var Lich;
         var Bunny = (function (_super) {
             __extends(Bunny, _super);
             function Bunny() {
-                _super.call(this, 0, // DAMAGE
+                _super.call(this, Bunny.OWNER_ID, 0, // DAMAGE
                 0, // ATTACK_COOLDOWN
                 32, // WIDTH
                 32, // HEIGHT 
@@ -141,6 +141,7 @@ var Lich;
                     return damage;
                 }
             };
+            Bunny.OWNER_ID = "BUNNY";
             Bunny.IDLEL = "IDLEL";
             Bunny.IDLER = "IDLER";
             Bunny.EATL = "EATL";
