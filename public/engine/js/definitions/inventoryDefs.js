@@ -64,9 +64,11 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_LOVELETTER).setConsumeAction(function (world) {
-                for (var i = 0; i < 5; i++)
-                    Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Valentimon, world);
-                return true;
+                if (!Lich.Enemy.CupidBoss.spawned) {
+                    Lich.SpawnPool.getInstance().spawn(Lich.Enemy.CupidBoss, world);
+                    return true;
+                }
+                return false;
             }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY).setConsumeAction(function (world) {
                 // TODO 

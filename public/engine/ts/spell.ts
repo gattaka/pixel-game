@@ -214,7 +214,7 @@ namespace Lich {
                 AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
                 false, // destroyMap
                 false, // piercing
-                10, // damage
+                2, // damage
                 1, // radius
                 32, // frameWidth
                 32, // frameHeight 

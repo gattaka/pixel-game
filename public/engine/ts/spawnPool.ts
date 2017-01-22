@@ -42,7 +42,32 @@ namespace Lich {
             return ctx;
         }
 
-        public spawn(enemyClass, world: World): boolean {
+        private innerSpawnAt(enemy, world: World, xp: number, yp: number): AbstractEnemy {
+            let ei = 0;
+            for (ei = 0; ei < world.enemies.length; ei++) {
+                // buď najdi volné místo...
+                if (!world.enemies[ei]) {
+                    break;
+                }
+            }
+            // ...nebo vlož položku na konec pole
+            world.enemies[ei] = enemy;
+            enemy.id = ei;
+            enemy.x = xp;
+            enemy.y = yp;
+            world.enemiesCount++;
+
+            world.addChild(enemy);
+            EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
+            // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
+            return enemy;
+        }
+
+        public spawnAt(enemyClass, world: World, xp: number, yp: number): AbstractEnemy {
+            return this.innerSpawnAt(new enemyClass(), world, xp, yp);
+        }
+
+        public spawn(enemyClass, world: World): AbstractEnemy {
             let self = this;
             let ctx = self.createContext(world);
             // TODO tohle by se mělo dělat až když je jisté, že je nepřítele kam usadit. 
@@ -120,30 +145,13 @@ namespace Lich {
 
                     // Ok, vejde se
                     if (fits) {
-                        let ei = 0;
-                        for (ei = 0; ei < world.enemies.length; ei++) {
-                            // buď najdi volné místo...
-                            if (!world.enemies[ei]) {
-                                break;
-                            }
-                        }
-                        // ...nebo vlož položku na konec pole
-                        world.enemies[ei] = enemy;
-                        enemy.id = ei;
-                        world.enemiesCount++;
-
-                        world.addChild(enemy);
-                        EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
                         let ePxCoord = world.render.tilesToPixel(xt, yt);
-                        enemy.x = ePxCoord.x;
-                        enemy.y = ePxCoord.y;
-                        // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
-                        return true;
+                        return self.innerSpawnAt(enemy, world, ePxCoord.x, ePxCoord.y);
                     }
                 }
             }
 
-            return false;
+            return;
         }
 
         update(delta: number, world: World) {

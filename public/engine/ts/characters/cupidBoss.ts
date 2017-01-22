@@ -19,15 +19,17 @@ namespace Lich {
             static EXPLODE = "EXPLODE";
             static DEAD = "DEAD";
 
-            static HOVER_ALT = 400;
-            static PULL_HOVER_ALT = 500;
-            static MODE_COOLDOWN = 10000;
-            static SPAWN_COOLDOWN = 2000;
+            static HOVER_ALT = 300;
+            static PULL_HOVER_ALT = 400;
+            static MODE_COOLDOWN = 5000;
+            static SPAWN_COOLDOWN = 500;
+            static SPAWN_ENEMIES_COUNT = 5;
 
             static spawned = false;
 
             private currentModeChangeCooldown = 0;
             private currentSpawnCooldown = 0;
+            private spawnedEnemies = new Array<AbstractEnemy>();
 
             private currentMode: AI_MODE;
 
@@ -47,7 +49,7 @@ namespace Lich {
                     400, // VERTICAL_SPEED
                     new Animations()
                         .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                        .add(CupidBoss.ATTACK, 2, 3, CupidBoss.ATTACK, 0.1)
+                        .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.5)
                         .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
                         .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
                         .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1),
@@ -83,12 +85,11 @@ namespace Lich {
                         targetX -= this.width / 2;
                         targetY -= this.height / 2;
 
-
                         // nastav rychlost dle vzdálenosti
                         var b = targetX - this.x;
                         var a = targetY - this.y;
 
-                        if (Math.abs(b) < 2 && Math.abs(a) < 2) {
+                        if (Math.abs(b) < 10 && Math.abs(a) < 10) {
                             this.speedx = 0;
                             this.speedy = 0;
                         } else {
@@ -118,17 +119,45 @@ namespace Lich {
                         this.currentSpawnCooldown = 0;
                     }
 
+                    targetX = world.hero.x + world.hero.width / 2;
+                    targetY = world.hero.y - CupidBoss.HOVER_ALT;
+
                     switch (this.currentMode) {
                         case AI_MODE.IDLE:
-                            targetX = world.hero.x + world.hero.width / 2;
-                            targetY = world.hero.y - CupidBoss.HOVER_ALT;
                             break;
                         case AI_MODE.SPAWN:
                             if (this.currentSpawnCooldown < CupidBoss.SPAWN_COOLDOWN) {
                                 this.currentSpawnCooldown += delta;
                             } else {
-                                this.currentSpawnCooldown = 0;
-                                SpawnPool.getInstance().spawn(Enemy.Valentimon, world);
+                                let spawnMinion = (): AbstractEnemy => {
+                                    this.performState(CupidBoss.ATTACK);
+                                    this.currentSpawnCooldown = 0;
+                                    let angle = Math.random() * Math.PI * 2;
+                                    let radius = Math.max(this.width / 2, this.height / 2);
+                                    let enemy = SpawnPool.getInstance().spawnAt(
+                                        Enemy.Valentimon,
+                                        world,
+                                        this.x + this.width / 2 + Math.cos(angle) * radius,
+                                        this.y + this.height / 2 + Math.sin(angle) * radius
+                                    );
+                                    return enemy;
+                                }
+
+                                // pokud je to první spawnování, spawnuje, dokud není můžeš
+                                if (this.spawnedEnemies.length < CupidBoss.SPAWN_ENEMIES_COUNT) {
+                                    this.spawnedEnemies.push(spawnMinion());
+                                } else {
+                                    // zkus najít padlého nepřítele a nahraď ho novým
+                                    for (let e in this.spawnedEnemies) {
+                                        let enemy = this.spawnedEnemies[e];
+                                        // padlého = umřel a byl odebrán nebo mu hráč
+                                        // utekl a on byl automaticky dealokován 
+                                        if (!enemy.parent) {
+                                            this.spawnedEnemies[e] = spawnMinion();
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                             break;
                     }
@@ -155,7 +184,7 @@ namespace Lich {
             jumpL() { /* nic */ };
             midair() { /* nic */ };
             fall() { /* nic */ };
-            death() { this.performState(CupidBoss.DIE) };
+            death() { this.performState(CupidBoss.DIE); };
 
             die(world: World) {
                 super.die(world);

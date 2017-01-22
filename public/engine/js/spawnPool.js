@@ -30,6 +30,28 @@ var Lich;
             ctx.map = world.tilesMap;
             return ctx;
         };
+        SpawnPool.prototype.innerSpawnAt = function (enemy, world, xp, yp) {
+            var ei = 0;
+            for (ei = 0; ei < world.enemies.length; ei++) {
+                // buď najdi volné místo...
+                if (!world.enemies[ei]) {
+                    break;
+                }
+            }
+            // ...nebo vlož položku na konec pole
+            world.enemies[ei] = enemy;
+            enemy.id = ei;
+            enemy.x = xp;
+            enemy.y = yp;
+            world.enemiesCount++;
+            world.addChild(enemy);
+            Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
+            // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
+            return enemy;
+        };
+        SpawnPool.prototype.spawnAt = function (enemyClass, world, xp, yp) {
+            return this.innerSpawnAt(new enemyClass(), world, xp, yp);
+        };
         SpawnPool.prototype.spawn = function (enemyClass, world) {
             var self = this;
             var ctx = self.createContext(world);
@@ -100,24 +122,8 @@ var Lich;
                     }
                     // Ok, vejde se
                     if (fits) {
-                        var ei = 0;
-                        for (ei = 0; ei < world.enemies.length; ei++) {
-                            // buď najdi volné místo...
-                            if (!world.enemies[ei]) {
-                                break;
-                            }
-                        }
-                        // ...nebo vlož položku na konec pole
-                        world.enemies[ei] = enemy;
-                        enemy.id = ei;
-                        world.enemiesCount++;
-                        world.addChild(enemy);
-                        Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
                         var ePxCoord = world.render.tilesToPixel(xt, yt);
-                        enemy.x = ePxCoord.x;
-                        enemy.y = ePxCoord.y;
-                        // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
-                        return { value: true };
+                        return { value: self.innerSpawnAt(enemy, world, ePxCoord.x, ePxCoord.y) };
                     }
                 };
                 for (var xt = xstart; xt != xlimit; xt += xstep) {
@@ -129,7 +135,7 @@ var Lich;
                 var state_2 = _loop_1(yt);
                 if (typeof state_2 === "object") return state_2.value;
             }
-            return false;
+            return;
         };
         SpawnPool.prototype.update = function (delta, world) {
             if (world.enemiesCount >= SpawnPool.MAX_ENEMIES)

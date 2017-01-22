@@ -28,7 +28,7 @@ var Lich;
                 400, // VERTICAL_SPEED
                 new Lich.Animations()
                     .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.ATTACK, 0.1)
+                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.5)
                     .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
                     .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
                     .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1), false, // unspawns
@@ -38,6 +38,7 @@ var Lich;
                 );
                 this.currentModeChangeCooldown = 0;
                 this.currentSpawnCooldown = 0;
+                this.spawnedEnemies = new Array();
                 this.maxHealth = this.currentHealth = 5000;
                 this.healthBar.height = 10;
                 this.healthBar.y = -this.healthBar.height;
@@ -61,7 +62,7 @@ var Lich;
                         // nastav rychlost dle vzdálenosti
                         var b = targetX_1 - _this.x;
                         var a = targetY_1 - _this.y;
-                        if (Math.abs(b) < 2 && Math.abs(a) < 2) {
+                        if (Math.abs(b) < 10 && Math.abs(a) < 10) {
                             _this.speedx = 0;
                             _this.speedy = 0;
                         }
@@ -94,18 +95,40 @@ var Lich;
                         }
                         this.currentSpawnCooldown = 0;
                     }
+                    targetX_1 = world.hero.x + world.hero.width / 2;
+                    targetY_1 = world.hero.y - CupidBoss.HOVER_ALT;
                     switch (this.currentMode) {
                         case AI_MODE.IDLE:
-                            targetX_1 = world.hero.x + world.hero.width / 2;
-                            targetY_1 = world.hero.y - CupidBoss.HOVER_ALT;
                             break;
                         case AI_MODE.SPAWN:
                             if (this.currentSpawnCooldown < CupidBoss.SPAWN_COOLDOWN) {
                                 this.currentSpawnCooldown += delta;
                             }
                             else {
-                                this.currentSpawnCooldown = 0;
-                                Lich.SpawnPool.getInstance().spawn(Enemy.Valentimon, world);
+                                var spawnMinion = function () {
+                                    _this.performState(CupidBoss.ATTACK);
+                                    _this.currentSpawnCooldown = 0;
+                                    var angle = Math.random() * Math.PI * 2;
+                                    var radius = Math.max(_this.width / 2, _this.height / 2);
+                                    var enemy = Lich.SpawnPool.getInstance().spawnAt(Enemy.Valentimon, world, _this.x + _this.width / 2 + Math.cos(angle) * radius, _this.y + _this.height / 2 + Math.sin(angle) * radius);
+                                    return enemy;
+                                };
+                                // pokud je to první spawnování, spawnuje, dokud není můžeš
+                                if (this.spawnedEnemies.length < CupidBoss.SPAWN_ENEMIES_COUNT) {
+                                    this.spawnedEnemies.push(spawnMinion());
+                                }
+                                else {
+                                    // zkus najít padlého nepřítele a nahraď ho novým
+                                    for (var e in this.spawnedEnemies) {
+                                        var enemy = this.spawnedEnemies[e];
+                                        // padlého = umřel a byl odebrán nebo mu hráč
+                                        // utekl a on byl automaticky dealokován 
+                                        if (!enemy.parent) {
+                                            this.spawnedEnemies[e] = spawnMinion();
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                             break;
                     }
@@ -168,10 +191,11 @@ var Lich;
             CupidBoss.DIE = "DIE";
             CupidBoss.EXPLODE = "EXPLODE";
             CupidBoss.DEAD = "DEAD";
-            CupidBoss.HOVER_ALT = 400;
-            CupidBoss.PULL_HOVER_ALT = 500;
-            CupidBoss.MODE_COOLDOWN = 10000;
-            CupidBoss.SPAWN_COOLDOWN = 2000;
+            CupidBoss.HOVER_ALT = 300;
+            CupidBoss.PULL_HOVER_ALT = 400;
+            CupidBoss.MODE_COOLDOWN = 5000;
+            CupidBoss.SPAWN_COOLDOWN = 500;
+            CupidBoss.SPAWN_ENEMIES_COUNT = 5;
             CupidBoss.spawned = false;
             return CupidBoss;
         }(Lich.AbstractEnemy));
