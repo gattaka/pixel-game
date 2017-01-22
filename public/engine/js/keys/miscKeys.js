@@ -31,6 +31,7 @@ var Lich;
         AnimationKey[AnimationKey["CHICKEN_BOSS_ANIMATION_KEY"] = 8] = "CHICKEN_BOSS_ANIMATION_KEY";
         AnimationKey[AnimationKey["VALENTIMON_ANIMATION_KEY"] = 9] = "VALENTIMON_ANIMATION_KEY";
         AnimationKey[AnimationKey["LOVELETTER_ANIMATION_KEY"] = 10] = "LOVELETTER_ANIMATION_KEY";
+        AnimationKey[AnimationKey["CUPID_ANIMATION_KEY"] = 11] = "CUPID_ANIMATION_KEY";
     })(Lich.AnimationKey || (Lich.AnimationKey = {}));
     var AnimationKey = Lich.AnimationKey;
     (function (UIGFXKey) {

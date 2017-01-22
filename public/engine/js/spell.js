@@ -408,7 +408,7 @@ var Lich;
         }
         EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_GHOUL_SPAWN_KEY);
-            Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Valentimon, context.game.getWorld());
+            Lich.SpawnPool.getInstance().spawn(Lich.Enemy.CupidBoss, context.game.getWorld());
             return true;
         };
         return EnemySpellDef;

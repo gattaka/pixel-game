@@ -9,6 +9,7 @@ namespace Lich {
         ["images/characters/bunny.png", AnimationKey.BUNNY_ANIMATION_KEY],
         ["images/characters/chicken_boss.png", AnimationKey.CHICKEN_BOSS_ANIMATION_KEY],
         ["images/characters/valentimon.png", AnimationKey.VALENTIMON_ANIMATION_KEY],
+        ["images/characters/cupid.png", AnimationKey.CUPID_ANIMATION_KEY],
         // gfx animations
         ["images/effects/meteor_animation.png", AnimationKey.METEOR_ANIMATION_KEY],
         ["images/effects/blast_animation.png", AnimationKey.FIREBALL_ANIMATION_KEY],
