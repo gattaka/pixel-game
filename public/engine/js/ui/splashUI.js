@@ -30,6 +30,7 @@ var Lich;
             version.addChange("Love arrow introduced");
             version.addChange("Gold sprite improved");
             version.addChange("World create/load progress indication improved");
+            version.addChange("Cupid boss introduced");
             this.addVersion(version);
             version = new Version("0.16 - Dec 26, 2016");
             version.addChange("Minimap surface and background colors fixed");

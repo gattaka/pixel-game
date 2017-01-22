@@ -3,7 +3,6 @@ namespace Lich {
 
         enum AI_MODE {
             IDLE,
-            CHARGE,
             RAIN,
             SPAWN
         }
@@ -37,7 +36,7 @@ namespace Lich {
                 super(
                     CupidBoss.OWNER_ID,
                     30, // DAMAGE
-                    1000, // ATTACK_COOLDOWN
+                    500, // ATTACK_COOLDOWN
                     256, // WIDTH
                     320, // HEIGHT 
                     40, // COLLXOFFSET
@@ -49,7 +48,7 @@ namespace Lich {
                     400, // VERTICAL_SPEED
                     new Animations()
                         .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                        .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.5)
+                        .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 1)
                         .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
                         .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
                         .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1),
@@ -124,6 +123,17 @@ namespace Lich {
 
                     switch (this.currentMode) {
                         case AI_MODE.IDLE:
+                            break;
+                        case AI_MODE.RAIN:
+                            if (this.currentAttackCooldown >= this.attackCooldown) {
+                                let spell = Resources.getInstance().spellDefs.byKey(SpellKey[SpellKey.SPELL_LOVEARROW]);
+                                let castX = this.x + Math.random() * this.width;
+                                let castY = this.y + this.height;
+                                let context = new SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
+                                spell.cast(context);
+                                this.performState(Valentimon.ATTACK);
+                                this.currentAttackCooldown = 0;
+                            }
                             break;
                         case AI_MODE.SPAWN:
                             if (this.currentSpawnCooldown < CupidBoss.SPAWN_COOLDOWN) {

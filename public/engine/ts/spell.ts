@@ -199,22 +199,21 @@ namespace Lich {
     }
 
     /**
-     * Loveletter
+     * AbstractLoveSpellDef
      */
-    export class LoveletterSpellDef extends BulletSpellDef {
-
-        constructor() {
+    export abstract class AbstractLoveSpellDef extends BulletSpellDef {
+        constructor(spellKey: SpellKey, animationKey: AnimationKey, damage: number) {
             super(
-                SpellKey.SPELL_LOVELETTER, // SpellKey
+                spellKey, // SpellKey
                 10, // cost
                 200, // COOLDOWN
                 SoundKey.SND_BOLT_CAST, // castSoundKey
                 SoundKey.SND_BURN_KEY, // hitSoundKey
                 1000, // speed
-                AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+                animationKey, // spriteKey
                 false, // destroyMap
                 false, // piercing
-                2, // damage
+                damage, // damage
                 1, // radius
                 32, // frameWidth
                 32, // frameHeight 
@@ -226,6 +225,32 @@ namespace Lich {
                     "hit": [1, 5, "done", 0.3],
                     "done": [5, 5, "done", 1]
                 } //  frameAnimations 
+            );
+        }
+    }
+
+    /**
+     * LoveletterSpellDef
+     */
+    export class LoveletterSpellDef extends AbstractLoveSpellDef {
+        constructor() {
+            super(
+                SpellKey.SPELL_LOVELETTER, // SpellKey
+                AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+                2, // damage
+            );
+        }
+    }
+
+    /**
+     * LovearrowSpellDef
+     */
+    export class LovearrowSpellDef extends AbstractLoveSpellDef {
+        constructor() {
+            super(
+                SpellKey.SPELL_LOVEARROW, // SpellKey
+                AnimationKey.LOVEARROW_ANIMATION_KEY, // spriteKey
+                5, // damage
             );
         }
     }

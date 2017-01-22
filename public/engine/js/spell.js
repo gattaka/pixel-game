@@ -163,21 +163,21 @@ var Lich;
     }(BulletSpellDef));
     Lich.MeteorSpellDef = MeteorSpellDef;
     /**
-     * Loveletter
+     * AbstractLoveSpellDef
      */
-    var LoveletterSpellDef = (function (_super) {
-        __extends(LoveletterSpellDef, _super);
-        function LoveletterSpellDef() {
-            _super.call(this, Lich.SpellKey.SPELL_LOVELETTER, // SpellKey
+    var AbstractLoveSpellDef = (function (_super) {
+        __extends(AbstractLoveSpellDef, _super);
+        function AbstractLoveSpellDef(spellKey, animationKey, damage) {
+            _super.call(this, spellKey, // SpellKey
             10, // cost
             200, // COOLDOWN
             Lich.SoundKey.SND_BOLT_CAST, // castSoundKey
             Lich.SoundKey.SND_BURN_KEY, // hitSoundKey
             1000, // speed
-            Lich.AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+            animationKey, // spriteKey
             false, // destroyMap
             false, // piercing
-            2, // damage
+            damage, // damage
             1, // radius
             32, // frameWidth
             32, // frameHeight 
@@ -191,9 +191,35 @@ var Lich;
             } //  frameAnimations 
             );
         }
-        return LoveletterSpellDef;
+        return AbstractLoveSpellDef;
     }(BulletSpellDef));
+    Lich.AbstractLoveSpellDef = AbstractLoveSpellDef;
+    /**
+     * LoveletterSpellDef
+     */
+    var LoveletterSpellDef = (function (_super) {
+        __extends(LoveletterSpellDef, _super);
+        function LoveletterSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_LOVELETTER, // SpellKey
+            Lich.AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+            2);
+        }
+        return LoveletterSpellDef;
+    }(AbstractLoveSpellDef));
     Lich.LoveletterSpellDef = LoveletterSpellDef;
+    /**
+     * LovearrowSpellDef
+     */
+    var LovearrowSpellDef = (function (_super) {
+        __extends(LovearrowSpellDef, _super);
+        function LovearrowSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_LOVEARROW, // SpellKey
+            Lich.AnimationKey.LOVEARROW_ANIMATION_KEY, // spriteKey
+            5);
+        }
+        return LovearrowSpellDef;
+    }(AbstractLoveSpellDef));
+    Lich.LovearrowSpellDef = LovearrowSpellDef;
     /**
      * Spell mana-boltu, který neničí povrch
      */

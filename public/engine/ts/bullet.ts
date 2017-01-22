@@ -114,7 +114,8 @@ namespace Lich {
                         if (target.getCurrentHealth() > 0
                             && x > target.x && x < target.x + target.width
                             && y > target.y && y < target.y + target.height
-                            && target.ownerId != self.owner) {
+                            && target.ownerId != self.owner
+                            && (target.ownerId == Hero.OWNER_ID || self.owner == Hero.OWNER_ID)) {
                             targetRet = new CollisionTestResult(true, x, y);
                             let effectiveDamage = target.hit(self.damage, game.getWorld());
                             if (self.piercing == false) {

@@ -1,0 +1,21 @@
+name:       Falling Down
+citation:   "You want my briefcase? Here's my briefcase!"
+desc:       Travel at least -number- meters by freefall
+
+name:       Chicken Massacre
+citation:   "Poor chickens"
+desc:       Summon The Murhun
+
+name:       Chicken-proofed
+citation:   "Yummy!"
+desc:       Defeat The Murhun
+
+name:       Love Hurts
+citation:   "Love hurts, love scars, Love wounds, and marks..."
+desc:       Summon The Cupid
+
+name:       Heartbreaking
+citation:   "No wonder you're still single"
+desc:       Defeat The Cupid
+
+

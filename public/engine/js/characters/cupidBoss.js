@@ -10,15 +10,14 @@ var Lich;
         var AI_MODE;
         (function (AI_MODE) {
             AI_MODE[AI_MODE["IDLE"] = 0] = "IDLE";
-            AI_MODE[AI_MODE["CHARGE"] = 1] = "CHARGE";
-            AI_MODE[AI_MODE["RAIN"] = 2] = "RAIN";
-            AI_MODE[AI_MODE["SPAWN"] = 3] = "SPAWN";
+            AI_MODE[AI_MODE["RAIN"] = 1] = "RAIN";
+            AI_MODE[AI_MODE["SPAWN"] = 2] = "SPAWN";
         })(AI_MODE || (AI_MODE = {}));
         var CupidBoss = (function (_super) {
             __extends(CupidBoss, _super);
             function CupidBoss() {
                 _super.call(this, CupidBoss.OWNER_ID, 30, // DAMAGE
-                1000, // ATTACK_COOLDOWN
+                500, // ATTACK_COOLDOWN
                 256, // WIDTH
                 320, // HEIGHT 
                 40, // COLLXOFFSET
@@ -28,7 +27,7 @@ var Lich;
                 400, // VERTICAL_SPEED
                 new Lich.Animations()
                     .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.5)
+                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 1)
                     .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
                     .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
                     .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1), false, // unspawns
@@ -99,6 +98,17 @@ var Lich;
                     targetY_1 = world.hero.y - CupidBoss.HOVER_ALT;
                     switch (this.currentMode) {
                         case AI_MODE.IDLE:
+                            break;
+                        case AI_MODE.RAIN:
+                            if (this.currentAttackCooldown >= this.attackCooldown) {
+                                var spell = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[Lich.SpellKey.SPELL_LOVEARROW]);
+                                var castX = this.x + Math.random() * this.width;
+                                var castY = this.y + this.height;
+                                var context = new Lich.SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
+                                spell.cast(context);
+                                this.performState(Enemy.Valentimon.ATTACK);
+                                this.currentAttackCooldown = 0;
+                            }
                             break;
                         case AI_MODE.SPAWN:
                             if (this.currentSpawnCooldown < CupidBoss.SPAWN_COOLDOWN) {

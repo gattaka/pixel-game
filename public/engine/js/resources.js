@@ -203,7 +203,8 @@ var Lich;
                 new Lich.EnemySpellDef(),
                 new Lich.TeleportSpellDef(),
                 new Lich.UseItemSpellDef(),
-                new Lich.LoveletterSpellDef()
+                new Lich.LoveletterSpellDef(),
+                new Lich.LovearrowSpellDef()
             ];
             SPELL_DEFS.forEach(function (definition) {
                 self.spellDefs.insert(Lich.SpellKey[definition.key], definition);

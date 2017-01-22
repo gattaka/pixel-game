@@ -30,6 +30,7 @@ namespace Lich {
         CHICKEN_BOSS_ANIMATION_KEY,
         VALENTIMON_ANIMATION_KEY,
         LOVELETTER_ANIMATION_KEY,
+        LOVEARROW_ANIMATION_KEY,
         CUPID_ANIMATION_KEY
     }
 
@@ -73,6 +74,7 @@ namespace Lich {
         SPELL_TELEPORT_KEY,
         SPELL_USE_ITEM_KEY,
         SPELL_LOVELETTER,
+        SPELL_LOVEARROW,
 
         // RMB click interakce s objekty
         SPELL_INTERACT_KEY
