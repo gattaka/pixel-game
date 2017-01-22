@@ -124,23 +124,26 @@ var Lich;
                     idb.loadData(function (data) {
                         // podařilo se něco nahrát?
                         if (data) {
-                            var obj = JSON.parse(data);
+                            var obj_1 = JSON.parse(data);
                             self.loadUI.reset();
                             self.stage.addChild(self.loadUI);
                             self.loadUI.alpha = 1;
-                            if (obj.map) {
-                                var tilesMap_1 = Lich.TilesMapGenerator.deserialize(obj.map);
-                                populateContent(tilesMap_1);
-                                if (obj.inv) {
-                                    self.ui.inventoryUI.deserialize(obj.inv);
-                                    return;
-                                }
+                            if (obj_1.map) {
+                                Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
+                                    populateContent(tilesMap);
+                                    if (obj_1.inv) {
+                                        self.ui.inventoryUI.deserialize(obj_1.inv);
+                                    }
+                                });
                             }
                         }
-                        // pokud neexistuje save, vytvoř ho
-                        var tilesMap = Lich.TilesMapGenerator.createNew();
-                        populateContent(tilesMap);
-                        Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
+                        else {
+                            // pokud neexistuje save, vytvoř ho
+                            Lich.TilesMapGenerator.createNew(function (tilesMap) {
+                                populateContent(tilesMap);
+                                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
+                            });
+                        }
                     });
                 };
                 var populateContent = function (tilesMap) {
@@ -179,8 +182,10 @@ var Lich;
                         self.stage.addChild(self.loadUI);
                         self.loadUI.alpha = 1;
                         setTimeout(function () {
-                            var tilesMap = Lich.TilesMapGenerator.createNew();
-                            populateContent(tilesMap);
+                            Lich.TilesMapGenerator.createNew(function (tilesMap) {
+                                populateContent(tilesMap);
+                                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
+                            });
                         }, 1);
                         return true;
                     });

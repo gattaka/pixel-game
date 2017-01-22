@@ -17,6 +17,29 @@ namespace Lich {
         obj: Array<any>
     }
 
+    export class AsyncLoad {
+
+        private queue = [];
+
+        public load(callback: () => any): AsyncLoad {
+            this.queue.push(callback);
+            return this;
+        }
+
+        private innerRun(taskId: number) {
+            let self = this;
+            if (taskId < self.queue.length)
+                setTimeout(() => {
+                    self.queue[taskId++]();
+                    self.innerRun(taskId);
+                }, 1);
+        }
+
+        public run() {
+            this.innerRun(0)
+        }
+    }
+
     export class TilesMapGenerator {
 
         public static WORLD_FORMAT_VERSION: number = 1.4;
@@ -90,66 +113,92 @@ namespace Lich {
             return data;
         }
 
-        public static deserialize(data: SaveStructure): TilesMap {
+
+        public static deserialize(data: SaveStructure, callback: (map: TilesMap) => any) {
 
             console.log("Loading world version: " + (data.version ? data.version : "<1.3"));
 
-            let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
-            let progress = 0;
+            let async = new AsyncLoad();
 
             let tilesMap = new TilesMap(data.w, data.h);
+            // let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
+            let total = 4;
+            let progress = 0;
             if (data.spwx && data.spwy)
                 tilesMap.spawnPoint = new Coord2D(data.spwx, data.spwy);
 
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Surface"));
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, 0));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loading surface"));
+            });
 
-            let count = 0;
-            for (let v = 0; v < data.srf.length; v += 2) {
-                let amount = data.srf[v];
-                let key = data.srf[v + 1];
-                for (let i = 0; i < amount; i++) {
-                    tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    count++;
-                }
-                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
-            }
-
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Background"));
-
-            if (!data.version || data.version < 1.3) {
-                tilesMap.mapBgrRecord = new Array2D<number>(tilesMap.mapRecord.width, tilesMap.mapRecord.height);
-            } else {
-                count = 0;
-                for (let v = 0; v < data.bgr.length; v += 2) {
-                    let amount = data.bgr[v];
-                    let key = data.bgr[v + 1];
+            async.load(() => {
+                let count = 0;
+                for (let v = 0; v < data.srf.length; v += 2) {
+                    let amount = data.srf[v];
+                    let key = data.srf[v + 1];
                     for (let i = 0; i < amount; i++) {
-                        tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                        tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
                         count++;
                     }
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
                 }
-            }
+            });
 
-            if (!data.version || data.version < 1.4) {
-                TilesMapGenerator.seedSurface(tilesMap, Resources.getInstance().getSurfaceDef(SurfaceKey.SRFC_GOLD_KEY));
-                TilesMapGenerator.sealMap(tilesMap);
-            }
-
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Objects"));
-
-            for (let v = 0; v < data.obj.length; v += 3) {
-                let x = data.obj[v];
-                let y = data.obj[v + 1];
-                let key = data.obj[v + 2];
-                tilesMap.mapObjRecord.setValue(x, y, key);
-                TilesMapTools.writeObjectRecord(tilesMap, x, y, Resources.getInstance().mapObjectDefs[key]);
+            async.load(() => {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
-            };
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loading background"));
+            });
 
-            EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
+            async.load(() => {
+                if (!data.version || data.version < 1.3) {
+                    tilesMap.mapBgrRecord = new Array2D<number>(tilesMap.mapRecord.width, tilesMap.mapRecord.height);
+                } else {
+                    let count = 0;
+                    for (let v = 0; v < data.bgr.length; v += 2) {
+                        let amount = data.bgr[v];
+                        let key = data.bgr[v + 1];
+                        for (let i = 0; i < amount; i++) {
+                            tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                            count++;
+                        }
+                    }
+                }
+            });
 
-            return tilesMap;
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Checking/Updating map version"));
+            });
+
+            async.load(() => {
+                if (!data.version || data.version < 1.4) {
+                    TilesMapGenerator.seedSurface(tilesMap, Resources.getInstance().getSurfaceDef(SurfaceKey.SRFC_GOLD_KEY));
+                    TilesMapGenerator.polishMap(tilesMap);
+                }
+            });
+
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loading objects"));
+            });
+
+            async.load(() => {
+                for (let v = 0; v < data.obj.length; v += 3) {
+                    let x = data.obj[v];
+                    let y = data.obj[v + 1];
+                    let key = data.obj[v + 2];
+                    tilesMap.mapObjRecord.setValue(x, y, key);
+                    TilesMapTools.writeObjectRecord(tilesMap, x, y, Resources.getInstance().mapObjectDefs[key]);
+                };
+            });
+
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
+                callback(tilesMap);
+            });
+
+            async.run();
         }
 
         private static seedSurface(tilesMap: TilesMap, definition: MapSurfaceDefinition) {
@@ -227,7 +276,7 @@ namespace Lich {
             }
         }
 
-        private static sealMap(tilesMap: TilesMap) {
+        private static polishMap(tilesMap: TilesMap) {
             // hrany
             for (let y = 0; y < tilesMap.height; y++) {
                 for (let x = 0; x < tilesMap.width; x++) {
@@ -244,38 +293,52 @@ namespace Lich {
         }
 
         public static createNew(
+            callback: (map: TilesMap) => any,
             width = TilesMapGenerator.DEFAULT_MAP_WIDTH,
             height = TilesMapGenerator.DEFAULT_MAP_HEIGHT,
-            groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL): TilesMap {
+            groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL) {
+
+            let async = new AsyncLoad();
+
+            let total = 6;
+            let progress = 0;
 
             var tilesMap = new TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             let mass = tilesMap.height * tilesMap.width;
 
-            // hills profile
-            let hills = new Array<number>();
-            // main
-            let mainSpeed = 180 / tilesMap.width;
-            let mainAmp = 20;
-            let mainShift = Math.random() * 180;
-            // osc1
-            let osc1Speed = 0.5;
-            let osc1Amp = 1;
-            let osc1Shift = 0;
-            // osc2
-            let osc2Speed = 5;
-            let osc2Amp = 2;
-            let osc2Shift = 0;
-            // osc3
-            let osc3Speed = 10;
-            let osc3Amp = 0.5;
-            let osc3Shift = 0;
-            for (var x = 0; x < tilesMap.width; x++) {
-                let xx = x * mainSpeed + mainShift;
-                let y1 = Math.sin(osc1Speed * Math.PI / 180 * (xx + osc1Shift)) * osc1Amp;
-                let y2 = Math.sin(osc2Speed * Math.PI / 180 * (xx + osc2Shift)) * osc2Amp;
-                let y3 = Math.sin(osc3Speed * Math.PI / 180 * (xx + osc3Shift)) * osc3Amp;
-                hills[x] = Math.abs(y1 + y2 + y3) * mainAmp;
-            }
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, 0));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Preparing hills shape"));
+            });
+
+            let hills;
+            async.load(() => {
+                // hills profile
+                hills = new Array<number>();
+                // main
+                let mainSpeed = 180 / tilesMap.width;
+                let mainAmp = 20;
+                let mainShift = Math.random() * 180;
+                // osc1
+                let osc1Speed = 0.5;
+                let osc1Amp = 1;
+                let osc1Shift = 0;
+                // osc2
+                let osc2Speed = 5;
+                let osc2Amp = 2;
+                let osc2Shift = 0;
+                // osc3
+                let osc3Speed = 10;
+                let osc3Amp = 0.5;
+                let osc3Shift = 0;
+                for (var x = 0; x < tilesMap.width; x++) {
+                    let xx = x * mainSpeed + mainShift;
+                    let y1 = Math.sin(osc1Speed * Math.PI / 180 * (xx + osc1Shift)) * osc1Amp;
+                    let y2 = Math.sin(osc2Speed * Math.PI / 180 * (xx + osc2Shift)) * osc2Amp;
+                    let y3 = Math.sin(osc3Speed * Math.PI / 180 * (xx + osc3Shift)) * osc3Amp;
+                    hills[x] = Math.abs(y1 + y2 + y3) * mainAmp;
+                }
+            });
 
             let fillTile = (x: number, y: number, callback: (nx, ny) => any) => {
                 for (var _x = x; _x <= x + 1; _x++) {
@@ -285,23 +348,35 @@ namespace Lich {
                 }
             }
 
-            // base generation
-            for (var y = 0; y < tilesMap.height; y += 2) {
-                for (var x = 0; x < tilesMap.width; x += 2) {
-                    // aplikuj profil kopce pokud je vytvořen "vzduch" mapy
-                    fillTile(x, y, (nx, ny) => {
-                        // získá výchozí prostřední dílek dle vzoru, 
-                        // který se opakuje, aby mapa byla pestřejší
-                        tilesMap.mapRecord.setValue(nx, ny,
-                            y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, SurfaceKey.SRFC_DIRT_KEY)
-                                : SurfacePositionKey.VOID
-                        );
-                    });
-                }
-            }
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating hills"));
+            });
 
-            // Holes
-            (function () {
+            async.load(() => {
+                // base generation
+                for (var y = 0; y < tilesMap.height; y += 2) {
+                    for (var x = 0; x < tilesMap.width; x += 2) {
+                        // aplikuj profil kopce pokud je vytvořen "vzduch" mapy
+                        fillTile(x, y, (nx, ny) => {
+                            // získá výchozí prostřední dílek dle vzoru, 
+                            // který se opakuje, aby mapa byla pestřejší
+                            tilesMap.mapRecord.setValue(nx, ny,
+                                y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, SurfaceKey.SRFC_DIRT_KEY)
+                                    : SurfacePositionKey.VOID
+                            );
+                        });
+                    }
+                }
+            });
+
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Punching map holes"));
+            });
+
+            async.load(() => {
+                // Holes
                 var createHole = function (x0, y0, d0) {
                     var d = Utils.even(d0);
                     var x = Utils.even(x0);
@@ -345,11 +420,15 @@ namespace Lich {
                     let holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
                 }
-            })();
+            });
 
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Creating ore deposits"));
+            });
 
-            // Minerály 
-            (function () {
+            async.load(() => {
+                // Minerály 
                 // random deposit
                 let depositP = mass * 0.005;
                 for (let i = 0; i < depositP; i++) {
@@ -366,13 +445,24 @@ namespace Lich {
                         return false;
                     });
                 }
-            })();
+            });
 
-            TilesMapGenerator.sealMap(tilesMap);
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Polishing terrain"));
+            });
 
-            // objekty 
-            (function () {
+            async.load(() => {
+                TilesMapGenerator.polishMap(tilesMap);
+            });
 
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Placing map objects"));
+            });
+
+            async.load(() => {
+                // objekty 
                 var isFree = function (x0, y0, width, height) {
                     for (var y = y0 - height; y <= y0; y++) {
                         for (var x = x0; x <= x0 + width - 1; x++) {
@@ -407,12 +497,15 @@ namespace Lich {
                         }
                     }
                 }
-            })();
+            });
 
-            return tilesMap;
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
+                callback(tilesMap);
+            });
 
+            async.run();
         }
-
     }
-
 };

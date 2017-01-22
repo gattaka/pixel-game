@@ -6,6 +6,28 @@
  */
 var Lich;
 (function (Lich) {
+    var AsyncLoad = (function () {
+        function AsyncLoad() {
+            this.queue = [];
+        }
+        AsyncLoad.prototype.load = function (callback) {
+            this.queue.push(callback);
+            return this;
+        };
+        AsyncLoad.prototype.innerRun = function (taskId) {
+            var self = this;
+            if (taskId < self.queue.length)
+                setTimeout(function () {
+                    self.queue[taskId++]();
+                    self.innerRun(taskId);
+                }, 1);
+        };
+        AsyncLoad.prototype.run = function () {
+            this.innerRun(0);
+        };
+        return AsyncLoad;
+    }());
+    Lich.AsyncLoad = AsyncLoad;
     var TilesMapGenerator = (function () {
         function TilesMapGenerator() {
         }
@@ -68,56 +90,80 @@ var Lich;
             }
             return data;
         };
-        TilesMapGenerator.deserialize = function (data) {
+        TilesMapGenerator.deserialize = function (data, callback) {
             console.log("Loading world version: " + (data.version ? data.version : "<1.3"));
-            var total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
-            var progress = 0;
+            var async = new AsyncLoad();
             var tilesMap = new Lich.TilesMap(data.w, data.h);
+            // let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
+            var total = 4;
+            var progress = 0;
             if (data.spwx && data.spwy)
                 tilesMap.spawnPoint = new Lich.Coord2D(data.spwx, data.spwy);
-            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Surface"));
-            var count = 0;
-            for (var v = 0; v < data.srf.length; v += 2) {
-                var amount = data.srf[v];
-                var key = data.srf[v + 1];
-                for (var i = 0; i < amount; i++) {
-                    tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
-                    count++;
-                }
-                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
-            }
-            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Background"));
-            if (!data.version || data.version < 1.3) {
-                tilesMap.mapBgrRecord = new Lich.Array2D(tilesMap.mapRecord.width, tilesMap.mapRecord.height);
-            }
-            else {
-                count = 0;
-                for (var v = 0; v < data.bgr.length; v += 2) {
-                    var amount = data.bgr[v];
-                    var key = data.bgr[v + 1];
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, 0));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loading surface"));
+            });
+            async.load(function () {
+                var count = 0;
+                for (var v = 0; v < data.srf.length; v += 2) {
+                    var amount = data.srf[v];
+                    var key = data.srf[v + 1];
                     for (var i = 0; i < amount; i++) {
-                        tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                        tilesMap.mapRecord.setValue(count % data.w, Math.floor(count / data.w), key);
                         count++;
                     }
-                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 }
-            }
-            if (!data.version || data.version < 1.4) {
-                TilesMapGenerator.seedSurface(tilesMap, Lich.Resources.getInstance().getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_KEY));
-                TilesMapGenerator.sealMap(tilesMap);
-            }
-            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Objects"));
-            for (var v = 0; v < data.obj.length; v += 3) {
-                var x = data.obj[v];
-                var y = data.obj[v + 1];
-                var key = data.obj[v + 2];
-                tilesMap.mapObjRecord.setValue(x, y, key);
-                Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, Lich.Resources.getInstance().mapObjectDefs[key]);
+            });
+            async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
-            }
-            ;
-            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
-            return tilesMap;
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loading background"));
+            });
+            async.load(function () {
+                if (!data.version || data.version < 1.3) {
+                    tilesMap.mapBgrRecord = new Lich.Array2D(tilesMap.mapRecord.width, tilesMap.mapRecord.height);
+                }
+                else {
+                    var count = 0;
+                    for (var v = 0; v < data.bgr.length; v += 2) {
+                        var amount = data.bgr[v];
+                        var key = data.bgr[v + 1];
+                        for (var i = 0; i < amount; i++) {
+                            tilesMap.mapBgrRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                            count++;
+                        }
+                    }
+                }
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Checking/Updating map version"));
+            });
+            async.load(function () {
+                if (!data.version || data.version < 1.4) {
+                    TilesMapGenerator.seedSurface(tilesMap, Lich.Resources.getInstance().getSurfaceDef(Lich.SurfaceKey.SRFC_GOLD_KEY));
+                    TilesMapGenerator.polishMap(tilesMap);
+                }
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loading objects"));
+            });
+            async.load(function () {
+                for (var v = 0; v < data.obj.length; v += 3) {
+                    var x = data.obj[v];
+                    var y = data.obj[v + 1];
+                    var key = data.obj[v + 2];
+                    tilesMap.mapObjRecord.setValue(x, y, key);
+                    Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, Lich.Resources.getInstance().mapObjectDefs[key]);
+                }
+                ;
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
+                callback(tilesMap);
+            });
+            async.run();
         };
         TilesMapGenerator.seedSurface = function (tilesMap, definition) {
             var depositP = tilesMap.width * tilesMap.height * 0.005;
@@ -189,7 +235,7 @@ var Lich;
                 }
             }
         };
-        TilesMapGenerator.sealMap = function (tilesMap) {
+        TilesMapGenerator.polishMap = function (tilesMap) {
             // hrany
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
@@ -203,37 +249,47 @@ var Lich;
                 }
             }
         };
-        TilesMapGenerator.createNew = function (width, height, groundLevel) {
+        TilesMapGenerator.createNew = function (callback, width, height, groundLevel) {
             if (width === void 0) { width = TilesMapGenerator.DEFAULT_MAP_WIDTH; }
             if (height === void 0) { height = TilesMapGenerator.DEFAULT_MAP_HEIGHT; }
             if (groundLevel === void 0) { groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL; }
+            var async = new AsyncLoad();
+            var total = 6;
+            var progress = 0;
             var tilesMap = new Lich.TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             var mass = tilesMap.height * tilesMap.width;
-            // hills profile
-            var hills = new Array();
-            // main
-            var mainSpeed = 180 / tilesMap.width;
-            var mainAmp = 20;
-            var mainShift = Math.random() * 180;
-            // osc1
-            var osc1Speed = 0.5;
-            var osc1Amp = 1;
-            var osc1Shift = 0;
-            // osc2
-            var osc2Speed = 5;
-            var osc2Amp = 2;
-            var osc2Shift = 0;
-            // osc3
-            var osc3Speed = 10;
-            var osc3Amp = 0.5;
-            var osc3Shift = 0;
-            for (var x = 0; x < tilesMap.width; x++) {
-                var xx = x * mainSpeed + mainShift;
-                var y1 = Math.sin(osc1Speed * Math.PI / 180 * (xx + osc1Shift)) * osc1Amp;
-                var y2 = Math.sin(osc2Speed * Math.PI / 180 * (xx + osc2Shift)) * osc2Amp;
-                var y3 = Math.sin(osc3Speed * Math.PI / 180 * (xx + osc3Shift)) * osc3Amp;
-                hills[x] = Math.abs(y1 + y2 + y3) * mainAmp;
-            }
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, 0));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Preparing hills shape"));
+            });
+            var hills;
+            async.load(function () {
+                // hills profile
+                hills = new Array();
+                // main
+                var mainSpeed = 180 / tilesMap.width;
+                var mainAmp = 20;
+                var mainShift = Math.random() * 180;
+                // osc1
+                var osc1Speed = 0.5;
+                var osc1Amp = 1;
+                var osc1Shift = 0;
+                // osc2
+                var osc2Speed = 5;
+                var osc2Amp = 2;
+                var osc2Shift = 0;
+                // osc3
+                var osc3Speed = 10;
+                var osc3Amp = 0.5;
+                var osc3Shift = 0;
+                for (var x = 0; x < tilesMap.width; x++) {
+                    var xx = x * mainSpeed + mainShift;
+                    var y1 = Math.sin(osc1Speed * Math.PI / 180 * (xx + osc1Shift)) * osc1Amp;
+                    var y2 = Math.sin(osc2Speed * Math.PI / 180 * (xx + osc2Shift)) * osc2Amp;
+                    var y3 = Math.sin(osc3Speed * Math.PI / 180 * (xx + osc3Shift)) * osc3Amp;
+                    hills[x] = Math.abs(y1 + y2 + y3) * mainAmp;
+                }
+            });
             var fillTile = function (x, y, callback) {
                 for (var _x = x; _x <= x + 1; _x++) {
                     for (var _y = y; _y <= y + 1; _y++) {
@@ -241,20 +297,30 @@ var Lich;
                     }
                 }
             };
-            // base generation
-            for (var y = 0; y < tilesMap.height; y += 2) {
-                for (var x = 0; x < tilesMap.width; x += 2) {
-                    // aplikuj profil kopce pokud je vytvořen "vzduch" mapy
-                    fillTile(x, y, function (nx, ny) {
-                        // získá výchozí prostřední dílek dle vzoru, 
-                        // který se opakuje, aby mapa byla pestřejší
-                        tilesMap.mapRecord.setValue(nx, ny, y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, Lich.SurfaceKey.SRFC_DIRT_KEY)
-                            : Lich.SurfacePositionKey.VOID);
-                    });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Creating hills"));
+            });
+            async.load(function () {
+                // base generation
+                for (var y = 0; y < tilesMap.height; y += 2) {
+                    for (var x = 0; x < tilesMap.width; x += 2) {
+                        // aplikuj profil kopce pokud je vytvořen "vzduch" mapy
+                        fillTile(x, y, function (nx, ny) {
+                            // získá výchozí prostřední dílek dle vzoru, 
+                            // který se opakuje, aby mapa byla pestřejší
+                            tilesMap.mapRecord.setValue(nx, ny, y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, Lich.SurfaceKey.SRFC_DIRT_KEY)
+                                : Lich.SurfacePositionKey.VOID);
+                        });
+                    }
                 }
-            }
-            // Holes
-            (function () {
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Punching map holes"));
+            });
+            async.load(function () {
+                // Holes
                 var createHole = function (x0, y0, d0) {
                     var d = Lich.Utils.even(d0);
                     var x = Lich.Utils.even(x0);
@@ -297,9 +363,13 @@ var Lich;
                     var holeY = Math.floor(Math.random() * tilesMap.height);
                     createHole(holeX, holeY, dia);
                 }
-            })();
-            // Minerály 
-            (function () {
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Creating ore deposits"));
+            });
+            async.load(function () {
+                // Minerály 
                 // random deposit
                 var depositP = mass * 0.005;
                 var _loop_1 = function(i) {
@@ -319,10 +389,20 @@ var Lich;
                 for (var i = 0; i < depositP; i++) {
                     _loop_1(i);
                 }
-            })();
-            TilesMapGenerator.sealMap(tilesMap);
-            // objekty 
-            (function () {
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Polishing terrain"));
+            });
+            async.load(function () {
+                TilesMapGenerator.polishMap(tilesMap);
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Placing map objects"));
+            });
+            async.load(function () {
+                // objekty 
                 var isFree = function (x0, y0, width, height) {
                     for (var y = y0 - height; y <= y0; y++) {
                         for (var x = x0; x <= x0 + width - 1; x++) {
@@ -356,8 +436,13 @@ var Lich;
                         }
                     }
                 }
-            })();
-            return tilesMap;
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
+                callback(tilesMap);
+            });
+            async.run();
         };
         TilesMapGenerator.WORLD_FORMAT_VERSION = 1.4;
         // musí být sudé

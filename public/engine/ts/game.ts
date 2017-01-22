@@ -167,19 +167,20 @@ namespace Lich {
                             self.stage.addChild(self.loadUI);
                             self.loadUI.alpha = 1;
                             if (obj.map) {
-                                let tilesMap = TilesMapGenerator.deserialize(obj.map);
-                                populateContent(tilesMap);
-                                if (obj.inv) {
-                                    self.ui.inventoryUI.deserialize(obj.inv);
-                                    return;
-                                }
+                                TilesMapGenerator.deserialize(obj.map, (tilesMap) => {
+                                    populateContent(tilesMap);
+                                    if (obj.inv) {
+                                        self.ui.inventoryUI.deserialize(obj.inv);
+                                    }
+                                });
                             }
+                        } else {
+                            // pokud neexistuje save, vytvoř ho
+                            TilesMapGenerator.createNew((tilesMap) => {
+                                populateContent(tilesMap);
+                                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
+                            });
                         }
-
-                        // pokud neexistuje save, vytvoř ho
-                        let tilesMap = TilesMapGenerator.createNew();
-                        populateContent(tilesMap);
-                        EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                     });
                 };
 
@@ -223,8 +224,10 @@ namespace Lich {
                         self.stage.addChild(self.loadUI);
                         self.loadUI.alpha = 1;
                         setTimeout(() => {
-                            let tilesMap = TilesMapGenerator.createNew();
-                            populateContent(tilesMap);
+                            TilesMapGenerator.createNew((tilesMap) => {
+                                populateContent(tilesMap);
+                                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
+                            });
                         }, 1);
                         return true;
                     });

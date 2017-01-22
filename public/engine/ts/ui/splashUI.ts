@@ -31,6 +31,7 @@ namespace Lich {
             version.addChange("Love letter introduced");
             version.addChange("Love arrow introduced");
             version.addChange("Gold sprite improved");
+            version.addChange("World create/load progress indication improved");
             this.addVersion(version);
 
             version = new Version("0.16 - Dec 26, 2016");

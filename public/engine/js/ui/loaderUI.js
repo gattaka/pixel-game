@@ -9,6 +9,7 @@ var Lich;
         __extends(LoaderUI, _super);
         function LoaderUI(game) {
             _super.call(this);
+            this.game = game;
             var self = this;
             self.width = game.getCanvas().width;
             self.height = game.getCanvas().height;

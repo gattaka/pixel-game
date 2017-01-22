@@ -8,7 +8,7 @@ namespace Lich {
         private progressLabel: Label;
         private currentItemLabel: Label;
 
-        constructor(game: Game) {
+        constructor(private game: Game) {
             super();
             let self = this;
             self.width = game.getCanvas().width;
