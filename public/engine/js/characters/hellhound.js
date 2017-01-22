@@ -52,7 +52,7 @@ var Lich;
             Hellhound.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SKELETON_DIE_KEY);
-                world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_BONES_KEY, 5), this.x, this.y, false);
+                this.dropLoot(world, Lich.InventoryKey.INV_BONES_KEY);
                 world.fadeEnemy(this);
             };
             Hellhound.prototype.hit = function (damage, world) {

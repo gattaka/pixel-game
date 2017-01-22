@@ -128,8 +128,7 @@ namespace Lich {
             die(world: World) {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_SQUASHED_KEY);
-                let loot = InventoryKey.INV_CHICKEN_MEAT_KEY;
-                world.spawnObject(new DugObjDefinition(loot, 1), this.x, this.y, false);
+                this.dropLoot(world, InventoryKey.INV_CHICKEN_MEAT_KEY);
                 world.fadeEnemy(this);
             }
 

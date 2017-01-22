@@ -193,11 +193,8 @@ namespace Lich {
             die(world: World) {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_DEAD_KEY, 0.8);
-                for (let i = 0; i < 15; i++) {
-                    let xjitter = 10 - Math.random() * 20;
-                    let yjitter = 10 - Math.random() * 20;
-                    world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 1), this.x + xjitter, this.y + yjitter, false);
-                }
+                this.dropLoot(world, InventoryKey.INV_CHICKEN_MEAT_KEY, 3, 5);
+                this.dropLoot(world, InventoryKey.INV_RED_FLASK_KEY, 2);
                 world.fadeEnemy(this);
                 Mixer.stopAllMusic();
                 Mixer.playMusic(MusicKey.MSC_DIRT_THEME_KEY, 0.3);

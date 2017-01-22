@@ -46,6 +46,15 @@ var Lich;
             }
             return false;
         };
+        AbstractEnemy.prototype.dropLoot = function (world, invKey, quant, batch) {
+            if (quant === void 0) { quant = 1; }
+            if (batch === void 0) { batch = 1; }
+            for (var i = 0; i < quant; i++) {
+                var xjitter = 10 - Math.random() * 20;
+                var yjitter = 10 - Math.random() * 20;
+                world.spawnObject(new Lich.DugObjDefinition(invKey, batch), this.x + xjitter, this.y + yjitter, false);
+            }
+        };
         AbstractEnemy.prototype.runAI = function (world, delta) {
             var _this = this;
             if (this.getCurrentHealth() > 0) {

@@ -178,11 +178,8 @@ var Lich;
                 this.speedx = 0;
                 this.speedy = 0;
                 // Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_DEAD_KEY, 0.8);
-                for (var i = 0; i < 15; i++) {
-                    var xjitter = 10 - Math.random() * 20;
-                    var yjitter = 10 - Math.random() * 20;
-                    world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, 1), this.x + xjitter, this.y + yjitter, false);
-                }
+                this.dropLoot(world, Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, 3, 5);
+                this.dropLoot(world, Lich.InventoryKey.INV_RED_FLASK_KEY, 2);
                 world.fadeEnemy(this);
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);

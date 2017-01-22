@@ -130,8 +130,7 @@ var Lich;
             Bunny.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SQUASHED_KEY);
-                var loot = Lich.InventoryKey.INV_CHICKEN_MEAT_KEY;
-                world.spawnObject(new Lich.DugObjDefinition(loot, 1), this.x, this.y, false);
+                this.dropLoot(world, Lich.InventoryKey.INV_CHICKEN_MEAT_KEY);
                 world.fadeEnemy(this);
             };
             Bunny.prototype.hit = function (damage, world) {

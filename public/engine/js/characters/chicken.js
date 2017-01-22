@@ -141,10 +141,10 @@ var Lich;
                         break;
                 }
                 if (Math.random() > 0.5) {
-                    world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, 1), this.x, this.y, false);
+                    this.dropLoot(world, Lich.InventoryKey.INV_CHICKEN_MEAT_KEY);
                 }
                 else {
-                    world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_CHICKEN_TALON_KEY, 1), this.x, this.y, false);
+                    this.dropLoot(world, Lich.InventoryKey.INV_CHICKEN_TALON_KEY);
                 }
                 world.fadeEnemy(this);
                 Enemy.ChickenBoss.chickenKills++;

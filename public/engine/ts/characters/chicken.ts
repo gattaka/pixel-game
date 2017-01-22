@@ -135,9 +135,9 @@ namespace Lich {
                     case 2: Mixer.playSound(SoundKey.SND_CHICKEN_DEAD_3_KEY); break;
                 }
                 if (Math.random() > 0.5) {
-                    world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_MEAT_KEY, 1), this.x, this.y, false);
+                    this.dropLoot(world, InventoryKey.INV_CHICKEN_MEAT_KEY);
                 } else {
-                    world.spawnObject(new DugObjDefinition(InventoryKey.INV_CHICKEN_TALON_KEY, 1), this.x, this.y, false);
+                    this.dropLoot(world, InventoryKey.INV_CHICKEN_TALON_KEY);
                 }
                 world.fadeEnemy(this);
                 ChickenBoss.chickenKills++;

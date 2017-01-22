@@ -54,6 +54,14 @@ namespace Lich {
             return false;
         }
 
+        protected dropLoot(world: World, invKey: InventoryKey, quant: number = 1, batch: number = 1) {
+            for (let i = 0; i < quant; i++) {
+                let xjitter = 10 - Math.random() * 20;
+                let yjitter = 10 - Math.random() * 20;
+                world.spawnObject(new DugObjDefinition(invKey, batch), this.x + xjitter, this.y + yjitter, false);
+            }
+        }
+
         runAI(world: World, delta: number) {
             if (this.getCurrentHealth() > 0) {
                 if (this.currentAttackCooldown < this.attackCooldown)
