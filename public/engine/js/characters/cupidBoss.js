@@ -27,7 +27,7 @@ var Lich;
                 400, // VERTICAL_SPEED
                 new Lich.Animations()
                     .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 1)
+                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.3)
                     .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
                     .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
                     .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1), false, // unspawns
@@ -178,8 +178,8 @@ var Lich;
                 this.speedx = 0;
                 this.speedy = 0;
                 // Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_DEAD_KEY, 0.8);
-                this.dropLoot(world, Lich.InventoryKey.INV_CHICKEN_MEAT_KEY, 3, 5);
                 this.dropLoot(world, Lich.InventoryKey.INV_RED_FLASK_KEY, 2);
+                this.dropLoot(world, Lich.InventoryKey.INV_GOLD_KEY, 3);
                 world.fadeEnemy(this);
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);

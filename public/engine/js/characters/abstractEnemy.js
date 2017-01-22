@@ -50,8 +50,10 @@ var Lich;
             if (quant === void 0) { quant = 1; }
             if (batch === void 0) { batch = 1; }
             for (var i = 0; i < quant; i++) {
-                var xjitter = 10 - Math.random() * 20;
-                var yjitter = 10 - Math.random() * 20;
+                // Random spawn přes celou plochu nepřítele, mimo poslení PART části,
+                // za kterou by se mohl loot spawnou do stěny, případně podlahy
+                var xjitter = Math.random() * (this.width - Lich.Resources.PARTS_SIZE);
+                var yjitter = Math.random() * (this.height - Lich.Resources.PARTS_SIZE);
                 world.spawnObject(new Lich.DugObjDefinition(invKey, batch), this.x + xjitter, this.y + yjitter, false);
             }
         };

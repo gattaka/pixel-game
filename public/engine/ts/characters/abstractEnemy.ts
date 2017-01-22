@@ -56,8 +56,10 @@ namespace Lich {
 
         protected dropLoot(world: World, invKey: InventoryKey, quant: number = 1, batch: number = 1) {
             for (let i = 0; i < quant; i++) {
-                let xjitter = 10 - Math.random() * 20;
-                let yjitter = 10 - Math.random() * 20;
+                // Random spawn přes celou plochu nepřítele, mimo poslení PART části,
+                // za kterou by se mohl loot spawnou do stěny, případně podlahy
+                let xjitter = Math.random() * (this.width - Resources.PARTS_SIZE);
+                let yjitter = Math.random() * (this.height - Resources.PARTS_SIZE);
                 world.spawnObject(new DugObjDefinition(invKey, batch), this.x + xjitter, this.y + yjitter, false);
             }
         }
