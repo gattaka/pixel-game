@@ -28,6 +28,8 @@ var Lich;
         ["images/surfaces/dirt_to_rock.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY],
         ["images/surfaces/dirt_to_coal.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY],
         ["images/surfaces/dirt_to_iron.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY],
-        ["images/surfaces/dirt_to_gold.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY]
+        ["images/surfaces/dirt_to_gold.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY],
+        ["images/surfaces/dirt_to_krystals.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_KRYSTAL_KEY],
+        ["images/surfaces/dirt_to_florite.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_FLORITE_KEY]
     ];
 })(Lich || (Lich = {}));

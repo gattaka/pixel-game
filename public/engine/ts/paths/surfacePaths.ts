@@ -28,6 +28,8 @@ namespace Lich {
         ["images/surfaces/dirt_to_rock.png", SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY],
         ["images/surfaces/dirt_to_coal.png", SurfaceKey.SRFC_TRANS_DIRT_COAL_KEY],
         ["images/surfaces/dirt_to_iron.png", SurfaceKey.SRFC_TRANS_DIRT_IRON_KEY],
-        ["images/surfaces/dirt_to_gold.png", SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY]
+        ["images/surfaces/dirt_to_gold.png", SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY],
+        ["images/surfaces/dirt_to_krystals.png", SurfaceKey.SRFC_TRANS_DIRT_KRYSTAL_KEY],
+        ["images/surfaces/dirt_to_florite.png", SurfaceKey.SRFC_TRANS_DIRT_FLORITE_KEY]
     ]
 }

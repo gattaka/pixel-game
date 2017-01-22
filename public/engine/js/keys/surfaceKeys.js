@@ -27,6 +27,8 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_COAL_KEY"] = 23] = "SRFC_TRANS_DIRT_COAL_KEY";
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_IRON_KEY"] = 24] = "SRFC_TRANS_DIRT_IRON_KEY";
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_GOLD_KEY"] = 25] = "SRFC_TRANS_DIRT_GOLD_KEY";
+        SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_KRYSTAL_KEY"] = 26] = "SRFC_TRANS_DIRT_KRYSTAL_KEY";
+        SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_FLORITE_KEY"] = 27] = "SRFC_TRANS_DIRT_FLORITE_KEY";
     })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
     var SurfaceKey = Lich.SurfaceKey;
     (function (SurfaceBgrKey) {

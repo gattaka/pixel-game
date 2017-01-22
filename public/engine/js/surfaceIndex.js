@@ -302,6 +302,20 @@ var Lich;
                 return true;
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_GOLD_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_GOLD_KEY))
                 return true;
+            // Krystals
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_KRYSTAL_KEY)
+                return true;
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_KRYSTAL_KEY)
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_KRYSTAL_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_KRYSTAL_KEY))
+                return true;
+            // Florite
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_FLORITE_KEY)
+                return true;
+            if (type == Lich.SurfaceKey.SRFC_DIRT_KEY && type2 == Lich.SurfaceKey.SRFC_TRANS_DIRT_FLORITE_KEY)
+                return true;
+            if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_FLORITE_KEY, Lich.SurfaceKey.SRFC_TRANS_DIRT_FLORITE_KEY))
+                return true;
             // TODO exportovat do definic
             if (seamCheck(type, type2, Lich.SurfaceKey.SRFC_DIRT_KEY, Lich.SurfaceKey.SRFC_BRICK_KEY))
                 return true;
