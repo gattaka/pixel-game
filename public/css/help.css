@@ -80,3 +80,33 @@ h1 {
     width: 20px;
     text-align: center;
 }
+
+#achievements-div {
+
+}
+
+.achv-div {
+	clear: both;
+	padding: 10px;
+}
+
+.achv-div > img {
+	float: left;
+	margin-right: 15px;
+}
+
+.achv-text-div {
+}
+
+.achv-name-div {
+	font-size: 18px;
+    font-weight: bold;
+}
+
+.achv-motto-div {
+    margin-bottom: 12px;
+    font-style: italic;
+}
+.achv-desc-div {
+
+}

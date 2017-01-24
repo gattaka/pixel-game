@@ -1,10 +1,10 @@
 var Lich;
 (function (Lich) {
     var AchievementDefinition = (function () {
-        function AchievementDefinition(key, name, motton, description) {
+        function AchievementDefinition(key, name, motto, description) {
             this.key = key;
             this.name = name;
-            this.motton = motton;
+            this.motto = motto;
             this.description = description;
         }
         return AchievementDefinition;

@@ -33,6 +33,7 @@ namespace Lich {
             version.addChange("Gold sprite improved");
             version.addChange("World create/load progress indication improved");
             version.addChange("Cupid boss introduced");
+            version.addChange("Achievements intriduced");
             this.addVersion(version);
 
             version = new Version("0.16 - Dec 26, 2016");

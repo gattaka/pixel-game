@@ -3,7 +3,7 @@ namespace Lich {
         constructor(
             public key: AchievementKey,
             public name: string,
-            public motton: string,
+            public motto: string,
             public description: string) { }
     }
 

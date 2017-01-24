@@ -144,7 +144,7 @@ var Lich;
                 nameLabel.x = achvImgSide + AbstractUI.BORDER + PartsUI.SPACING;
                 nameLabel.y = AbstractUI.BORDER;
                 var mottoLabelSize = 17;
-                var mottoLabel = new Lich.Label("\"" + achvDef.motton + "\"", "italic " + mottoLabelSize + "px " + Lich.Resources.FONT, "#EEE");
+                var mottoLabel = new Lich.Label("\"" + achvDef.motto + "\"", "italic " + mottoLabelSize + "px " + Lich.Resources.FONT, "#EEE");
                 achvCont.addChild(mottoLabel);
                 mottoLabel.x = nameLabel.x;
                 mottoLabel.y = nameLabel.y + nameLabelSize + PartsUI.SPACING;

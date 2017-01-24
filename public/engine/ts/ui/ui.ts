@@ -180,7 +180,7 @@ namespace Lich {
                 nameLabel.y = AbstractUI.BORDER;
 
                 let mottoLabelSize = 17;
-                let mottoLabel = new Label("\"" + achvDef.motton + "\"", "italic " + mottoLabelSize + "px " + Resources.FONT, "#EEE");
+                let mottoLabel = new Label("\"" + achvDef.motto + "\"", "italic " + mottoLabelSize + "px " + Resources.FONT, "#EEE");
                 achvCont.addChild(mottoLabel);
                 mottoLabel.x = nameLabel.x;
                 mottoLabel.y = nameLabel.y + nameLabelSize + PartsUI.SPACING;
