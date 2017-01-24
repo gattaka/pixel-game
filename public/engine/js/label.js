@@ -26,6 +26,16 @@ var Lich;
             this.height = this.label.getBounds().height;
             this.width = this.label.getBounds().width;
         }
+        Label.prototype.setLineWidth = function (value) {
+            this.label.lineWidth = value;
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.lineWidth = value;
+        };
+        Label.prototype.setLineHeight = function (value) {
+            this.label.lineHeight = value;
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.lineHeight = value;
+        };
         Label.prototype.setText = function (value) {
             this.label.text = value;
             if (typeof this.outlineLabel !== "undefined")

@@ -106,6 +106,7 @@ namespace Lich {
         // dle trans povrchu
         public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
 
+        public achievementsDefs: { [k: string]: AchievementDefinition } = {};
         public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
@@ -171,6 +172,10 @@ namespace Lich {
             // UI
             UI_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], UIGFXKey[path[1]]));
+            });
+            // achievements
+            ACHIEVEMENTS_PATHS.forEach((path) => {
+                manifest.push(new Load(path[0], AchievementKey[path[1]]));
             });
             // background
             BACKGROUND_PATHS.forEach((path) => {
@@ -242,6 +247,11 @@ namespace Lich {
             // Definice inventárních objektů 
             INVENTORY_DEFS(self).forEach((definition: InvObjDefinition) => {
                 self.invObjectDefs[definition.invKey] = definition;
+            });
+
+            // Definice achievementů
+            ACHIEVEMENTS_DEFS.forEach((definition: AchievementDefinition) => {
+                self.achievementsDefs[AchievementKey[definition.key]] = definition;
             });
 
             // Definice spells

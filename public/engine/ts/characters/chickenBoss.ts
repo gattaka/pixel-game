@@ -81,6 +81,7 @@ namespace Lich {
                 Mixer.playMusic(MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
 
                 ChickenBoss.spawned = true;
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.ACHIEVEMENT_DONE, AchievementKey[AchievementKey.ACHV_CHICKEN_MASSACRE]));
             }
 
             runAI(world: World, delta: number) {
@@ -199,6 +200,7 @@ namespace Lich {
                 Mixer.stopAllMusic();
                 Mixer.playMusic(MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 ChickenBoss.spawned = false;
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.ACHIEVEMENT_DONE, AchievementKey[AchievementKey.ACHV_CHICKEN_PROOFED]));
             }
 
             hit(damage: number, world: World): number {

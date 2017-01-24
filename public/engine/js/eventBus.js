@@ -6,25 +6,27 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Lich;
 (function (Lich) {
     (function (EventType) {
-        EventType[EventType["LOAD_PROGRESS"] = 0] = "LOAD_PROGRESS";
-        EventType[EventType["LOAD_ITEM"] = 1] = "LOAD_ITEM";
-        EventType[EventType["LOAD_FINISHED"] = 2] = "LOAD_FINISHED";
-        EventType[EventType["HEALTH_CHANGE"] = 3] = "HEALTH_CHANGE";
-        EventType[EventType["WILL_CHANGE"] = 4] = "WILL_CHANGE";
-        EventType[EventType["MOUSE_MOVE"] = 5] = "MOUSE_MOVE";
-        EventType[EventType["PLAYER_SPEED_CHANGE"] = 6] = "PLAYER_SPEED_CHANGE";
-        EventType[EventType["FPS_CHANGE"] = 7] = "FPS_CHANGE";
-        EventType[EventType["POINTED_AREA_CHANGE"] = 8] = "POINTED_AREA_CHANGE";
-        EventType[EventType["SAVE_WORLD"] = 9] = "SAVE_WORLD";
-        EventType[EventType["LOAD_WORLD"] = 10] = "LOAD_WORLD";
-        EventType[EventType["NEW_WORLD"] = 11] = "NEW_WORLD";
-        EventType[EventType["MAP_SHIFT_X"] = 12] = "MAP_SHIFT_X";
-        EventType[EventType["MAP_SHIFT_Y"] = 13] = "MAP_SHIFT_Y";
-        EventType[EventType["ENEMY_COUNT_CHANGE"] = 14] = "ENEMY_COUNT_CHANGE";
-        EventType[EventType["PLAYER_POSITION_CHANGE"] = 15] = "PLAYER_POSITION_CHANGE";
-        EventType[EventType["SURFACE_CHANGE"] = 16] = "SURFACE_CHANGE";
-        EventType[EventType["WORKSTATION_CHANGE"] = 17] = "WORKSTATION_CHANGE";
-        EventType[EventType["WORKSTATION_UNREACHABLE"] = 18] = "WORKSTATION_UNREACHABLE";
+        EventType[EventType["ACHIEVEMENT_PROGRESS"] = 0] = "ACHIEVEMENT_PROGRESS";
+        EventType[EventType["ACHIEVEMENT_DONE"] = 1] = "ACHIEVEMENT_DONE";
+        EventType[EventType["LOAD_PROGRESS"] = 2] = "LOAD_PROGRESS";
+        EventType[EventType["LOAD_ITEM"] = 3] = "LOAD_ITEM";
+        EventType[EventType["LOAD_FINISHED"] = 4] = "LOAD_FINISHED";
+        EventType[EventType["HEALTH_CHANGE"] = 5] = "HEALTH_CHANGE";
+        EventType[EventType["WILL_CHANGE"] = 6] = "WILL_CHANGE";
+        EventType[EventType["MOUSE_MOVE"] = 7] = "MOUSE_MOVE";
+        EventType[EventType["PLAYER_SPEED_CHANGE"] = 8] = "PLAYER_SPEED_CHANGE";
+        EventType[EventType["FPS_CHANGE"] = 9] = "FPS_CHANGE";
+        EventType[EventType["POINTED_AREA_CHANGE"] = 10] = "POINTED_AREA_CHANGE";
+        EventType[EventType["SAVE_WORLD"] = 11] = "SAVE_WORLD";
+        EventType[EventType["LOAD_WORLD"] = 12] = "LOAD_WORLD";
+        EventType[EventType["NEW_WORLD"] = 13] = "NEW_WORLD";
+        EventType[EventType["MAP_SHIFT_X"] = 14] = "MAP_SHIFT_X";
+        EventType[EventType["MAP_SHIFT_Y"] = 15] = "MAP_SHIFT_Y";
+        EventType[EventType["ENEMY_COUNT_CHANGE"] = 16] = "ENEMY_COUNT_CHANGE";
+        EventType[EventType["PLAYER_POSITION_CHANGE"] = 17] = "PLAYER_POSITION_CHANGE";
+        EventType[EventType["SURFACE_CHANGE"] = 18] = "SURFACE_CHANGE";
+        EventType[EventType["WORKSTATION_CHANGE"] = 19] = "WORKSTATION_CHANGE";
+        EventType[EventType["WORKSTATION_UNREACHABLE"] = 20] = "WORKSTATION_UNREACHABLE";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

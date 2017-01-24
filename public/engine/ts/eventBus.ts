@@ -1,6 +1,8 @@
 namespace Lich {
 
     export enum EventType {
+        ACHIEVEMENT_PROGRESS,
+        ACHIEVEMENT_DONE,
         LOAD_PROGRESS,
         LOAD_ITEM,
         LOAD_FINISHED,

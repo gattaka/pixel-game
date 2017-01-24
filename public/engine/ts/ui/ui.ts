@@ -156,6 +156,60 @@ namespace Lich {
             // self.addChild(musicUI);
             // self.musicUI = musicUI;
 
+            // Achievements info
+            EventBus.getInstance().registerConsumer(EventType.ACHIEVEMENT_DONE, (payload: StringEventPayload): boolean => {
+                let achvCont = new createjs.Container();
+
+                let achvImgSide = 80;
+                let w = 300;
+                let h = achvImgSide + 2 * AbstractUI.BORDER
+                let bgr = new UIBackground();
+                bgr.drawBackground(w, h);
+                achvCont.addChild(bgr);
+
+                let achvDef = Resources.getInstance().achievementsDefs[payload.payload];
+                let bmp = Resources.getInstance().getBitmap(payload.payload);
+                achvCont.addChild(bmp);
+                bmp.x = AbstractUI.BORDER;
+                bmp.y = AbstractUI.BORDER;
+
+                let nameLabelSize = 20;
+                let nameLabel = new Label(achvDef.name, nameLabelSize + "px " + Resources.FONT, "#0E0");
+                achvCont.addChild(nameLabel);
+                nameLabel.x = achvImgSide + AbstractUI.BORDER + PartsUI.SPACING;
+                nameLabel.y = AbstractUI.BORDER;
+
+                let mottoLabelSize = 17;
+                let mottoLabel = new Label("\"" + achvDef.motton + "\"", "italic " + mottoLabelSize + "px " + Resources.FONT, "#EEE");
+                achvCont.addChild(mottoLabel);
+                mottoLabel.x = nameLabel.x;
+                mottoLabel.y = nameLabel.y + nameLabelSize + PartsUI.SPACING;
+                mottoLabel.setLineHeight(mottoLabelSize + 3);
+                mottoLabel.setLineWidth(w - AbstractUI.BORDER * 2 - achvImgSide - PartsUI.SPACING);
+
+                self.addChild(achvCont);
+                achvCont.x = canvas.width / 2 - w / 2;
+                achvCont.y = canvas.height;
+                // vyjeď s panelem achievementu
+                createjs.Tween.get(achvCont)
+                    .to({
+                        y: canvas.height - h
+                    }, 500).call(function () {
+                        // vyčkej 
+                        setTimeout(() => {
+                            // zajeď s panelem zpět
+                            createjs.Tween.get(achvCont)
+                                .to({
+                                    y: canvas.height
+                                }, 500).call(function () {
+                                    self.removeChild(achvCont);
+                                });
+                        }, 10000);
+                    });
+
+                return false;
+            });
+
             // Minimapa
             let minimapUI = new MinimapUI(canvas.width, canvas.height, tilesMap);
             // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;

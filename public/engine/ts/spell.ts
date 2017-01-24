@@ -483,7 +483,8 @@ namespace Lich {
         public cast(context: SpellContext): boolean {
             Mixer.playSound(SoundKey.SND_GHOUL_SPAWN_KEY);
 
-            SpawnPool.getInstance().spawn(Enemy.CupidBoss, context.game.getWorld());
+            // SpawnPool.getInstance().spawn(Enemy.CupidBoss, context.game.getWorld());
+            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.ACHIEVEMENT_DONE, AchievementKey[AchievementKey.ACHV_LOVE_HURTS]));
 
             return true;
         }

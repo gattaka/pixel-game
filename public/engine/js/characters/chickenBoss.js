@@ -42,6 +42,7 @@ var Lich;
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
                 ChickenBoss.spawned = true;
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_CHICKEN_MASSACRE]));
             }
             ChickenBoss.prototype.runAI = function (world, delta) {
                 var _this = this;
@@ -161,6 +162,7 @@ var Lich;
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 ChickenBoss.spawned = false;
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_CHICKEN_PROOFED]));
             };
             ChickenBoss.prototype.hit = function (damage, world) {
                 if (this.getCurrentHealth() > 0) {

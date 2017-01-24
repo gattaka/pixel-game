@@ -62,6 +62,14 @@ namespace Lich {
         UI_MINIMAP_KEY
     }
 
+    export enum AchievementKey {
+        ACHV_FALLING_DOWN,
+        ACHV_CHICKEN_MASSACRE,
+        ACHV_CHICKEN_PROOFED,
+        ACHV_LOVE_HURTS,
+        ACHV_HEARTBREAKING
+    }
+
     export enum SpellKey {
         SPELL_PLACE_KEY,
         SPELL_PLACE_BGR_KEY,

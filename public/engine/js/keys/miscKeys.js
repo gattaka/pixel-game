@@ -63,6 +63,14 @@ var Lich;
         UIGFXKey[UIGFXKey["UI_MINIMAP_KEY"] = 22] = "UI_MINIMAP_KEY";
     })(Lich.UIGFXKey || (Lich.UIGFXKey = {}));
     var UIGFXKey = Lich.UIGFXKey;
+    (function (AchievementKey) {
+        AchievementKey[AchievementKey["ACHV_FALLING_DOWN"] = 0] = "ACHV_FALLING_DOWN";
+        AchievementKey[AchievementKey["ACHV_CHICKEN_MASSACRE"] = 1] = "ACHV_CHICKEN_MASSACRE";
+        AchievementKey[AchievementKey["ACHV_CHICKEN_PROOFED"] = 2] = "ACHV_CHICKEN_PROOFED";
+        AchievementKey[AchievementKey["ACHV_LOVE_HURTS"] = 3] = "ACHV_LOVE_HURTS";
+        AchievementKey[AchievementKey["ACHV_HEARTBREAKING"] = 4] = "ACHV_HEARTBREAKING";
+    })(Lich.AchievementKey || (Lich.AchievementKey = {}));
+    var AchievementKey = Lich.AchievementKey;
     (function (SpellKey) {
         SpellKey[SpellKey["SPELL_PLACE_KEY"] = 0] = "SPELL_PLACE_KEY";
         SpellKey[SpellKey["SPELL_PLACE_BGR_KEY"] = 1] = "SPELL_PLACE_BGR_KEY";

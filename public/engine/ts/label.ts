@@ -29,6 +29,18 @@ namespace Lich {
             this.width = this.label.getBounds().width;
         }
 
+        setLineWidth(value) {
+            this.label.lineWidth = value
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.lineWidth = value;
+        }
+
+        setLineHeight(value) {
+            this.label.lineHeight = value
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.lineHeight = value;
+        }
+
         setText(value) {
             this.label.text = value;
             if (typeof this.outlineLabel !== "undefined")

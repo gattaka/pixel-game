@@ -71,6 +71,7 @@ namespace Lich {
                 this.currentMode = AI_MODE.IDLE;
 
                 CupidBoss.spawned = true;
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.ACHIEVEMENT_DONE, AchievementKey[AchievementKey.ACHV_LOVE_HURTS]));
             }
 
             runAI(world: World, delta: number) {
@@ -207,6 +208,7 @@ namespace Lich {
                 Mixer.stopAllMusic();
                 Mixer.playMusic(MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 CupidBoss.spawned = false;
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.ACHIEVEMENT_DONE, AchievementKey[AchievementKey.ACHV_HEARTBREAKING]));
             }
 
             hit(damage: number, world: World): number {

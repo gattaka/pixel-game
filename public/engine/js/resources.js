@@ -79,6 +79,7 @@ var Lich;
             this.mapSurfaceTransitionsDefs = {};
             // dle trans povrchu
             this.mapTransitionSrfcs = {};
+            this.achievementsDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
@@ -126,6 +127,10 @@ var Lich;
             // UI
             Lich.UI_PATHS.forEach(function (path) {
                 manifest.push(new Load(path[0], Lich.UIGFXKey[path[1]]));
+            });
+            // achievements
+            Lich.ACHIEVEMENTS_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.AchievementKey[path[1]]));
             });
             // background
             Lich.BACKGROUND_PATHS.forEach(function (path) {
@@ -190,6 +195,10 @@ var Lich;
             // Definice inventárních objektů 
             Lich.INVENTORY_DEFS(self).forEach(function (definition) {
                 self.invObjectDefs[definition.invKey] = definition;
+            });
+            // Definice achievementů
+            Lich.ACHIEVEMENTS_DEFS.forEach(function (definition) {
+                self.achievementsDefs[Lich.AchievementKey[definition.key]] = definition;
             });
             // Definice spells
             var SPELL_DEFS = [
