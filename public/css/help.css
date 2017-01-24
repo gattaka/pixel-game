@@ -81,9 +81,8 @@ h1 {
     text-align: center;
 }
 
-#achievements-div {
-
-}
+/*#achievements-div {
+}*/
 
 .achv-div {
 	clear: both;
@@ -95,8 +94,8 @@ h1 {
 	margin-right: 15px;
 }
 
-.achv-text-div {
-}
+/*.achv-text-div {
+}*/
 
 .achv-name-div {
 	font-size: 18px;
@@ -107,6 +106,6 @@ h1 {
     margin-bottom: 12px;
     font-style: italic;
 }
-.achv-desc-div {
 
-}
+/*.achv-desc-div {
+}*/
