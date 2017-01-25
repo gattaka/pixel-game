@@ -131,11 +131,11 @@ namespace Lich {
      */
     export class FireballSpellDef extends BulletSpellDef {
         static SPEED = 1500;
-        static MAP_DESTROY = true;
+        static MAP_DESTROY = false;
         static PIERCING = true;
         static DAMAGE = 50;
         static COOLDOWN = 200;
-        static COST = 10;
+        static COST = 5;
         static RADIUS = 4;
 
         constructor() {

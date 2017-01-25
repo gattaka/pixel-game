@@ -126,11 +126,11 @@ var Lich;
             _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.SoundKey.SND_FIREBALL_KEY, Lich.SoundKey.SND_BURN_KEY, FireballSpellDef.SPEED, Lich.AnimationKey.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE, FireballSpellDef.RADIUS);
         }
         FireballSpellDef.SPEED = 1500;
-        FireballSpellDef.MAP_DESTROY = true;
+        FireballSpellDef.MAP_DESTROY = false;
         FireballSpellDef.PIERCING = true;
         FireballSpellDef.DAMAGE = 50;
         FireballSpellDef.COOLDOWN = 200;
-        FireballSpellDef.COST = 10;
+        FireballSpellDef.COST = 5;
         FireballSpellDef.RADIUS = 4;
         return FireballSpellDef;
     }(BulletSpellDef));

@@ -112,6 +112,16 @@ var Lich;
         Utils.even = function (value) {
             return Utils.isEven(value) ? value : value - 1;
         };
+        // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+        Utils.guid = function () {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+        };
         Utils.contains = function (a, obj) {
             for (var i = 0; i < a.length; i++) {
                 if (a[i] === obj) {

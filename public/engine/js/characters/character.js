@@ -48,6 +48,7 @@ var Lich;
             this.ownerId = ownerId;
             this.accelerationX = accelerationX;
             this.accelerationY = accelerationY;
+            this.uuid = Lich.Utils.guid();
             this.HEALTH_REGEN_TIME = 1000;
             this.maxHealth = 100;
             this.currentHealth = this.maxHealth;

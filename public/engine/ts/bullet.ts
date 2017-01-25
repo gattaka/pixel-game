@@ -42,6 +42,14 @@ namespace Lich {
         // je vše ukončeno (doběhla i koncová animace)?
         public done: boolean = false;
 
+        // jak dlouho se musí počkat, než se započítá další damage piercing projektilu?
+        public static PIERCING_TIMEOUT = 1000;
+        // mapa nepřátel a jejich timeoutů do dalšího zásahu tímto projektilem
+        // není možné globálně počítat timeout, protože by nastavení timeoutu
+        // zásahem jednoho nepřítele mohlo způsobit nezapočítání prvního 
+        // zásahu jiného nepřítele, který je těsném závěsu za zasaženým
+        public enemyPiercingTimeouts: { [k: string]: number } = {};
+
         constructor(
             // čí je to střela
             public owner: string,
@@ -102,10 +110,16 @@ namespace Lich {
                 return;
             }
 
-            // Zjistí zda na daných pixel-souřadnicích dochází k zásahu cíle 
+            // Zjistí zda na daných pixel-souřadnicích dochází k zásahu cíle nebo povrchu
+            // protože je tato funkce volána z isBoundsInCollision, je potřeba aby byla 
+            // při zásahu cíle (nikoliv povrchu) vracela new CollisionTestResult (tedy SOLID
+            // typ kolize -- isBoundsInCollision totiž nekončí po prvním "hit" případu,
+            // ale zkouší (kvůli zkoseným povrchům) i další kontrolní testy -- v takovém
+            // případě by to byl problém, protože by se enemyPiercingTimeouts započítávali
+            // víckrát, než jednou
             var hitTargetOrCollide = function (x: number, y: number): CollisionTestResult {
                 var targetRet = null;
-                let targets = [];
+                let targets = new Array<Character>();
                 targets = targets.concat(game.getWorld().enemies);
                 targets.push(game.getWorld().hero);
                 for (var t = 0; t < targets.length; t++) {
@@ -116,9 +130,25 @@ namespace Lich {
                             && y > target.y && y < target.y + target.height
                             && target.ownerId != self.owner
                             && (target.ownerId == Hero.OWNER_ID || self.owner == Hero.OWNER_ID)) {
+                            // => CollisionType.SOLID -- takže hned dojde k ukončení isBoundsInCollision
                             targetRet = new CollisionTestResult(true, x, y);
-                            let effectiveDamage = target.hit(self.damage, game.getWorld());
-                            if (self.piercing == false) {
+
+                            if (self.piercing) {
+                                let uuid = target.uuid;
+                                let targetTimeout = self.enemyPiercingTimeouts[uuid];
+                                if (!targetTimeout || targetTimeout < 0) {
+                                    // proveď -- nemá ještě timeout nebo už má odčekáno
+                                    self.enemyPiercingTimeouts[uuid] = BulletObject.PIERCING_TIMEOUT;
+                                    target.hit(self.damage, game.getWorld());
+                                } else {
+                                    // čekej
+                                    self.enemyPiercingTimeouts[uuid] -= sDelta;
+                                    // tenhle čeká, další poteciální cíl
+                                    continue;
+                                }
+                            } else {
+                                // není piercing -- jeden zásah je konec projektilu
+                                target.hit(self.damage, game.getWorld());
                                 break;
                             }
                         }

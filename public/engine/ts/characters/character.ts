@@ -23,6 +23,8 @@ namespace Lich {
     }
     export abstract class Character extends AbstractWorldObject {
 
+        public uuid = Utils.guid();
+
         protected HEALTH_REGEN_TIME = 1000;
         protected maxHealth = 100;
         protected currentHealth = this.maxHealth;

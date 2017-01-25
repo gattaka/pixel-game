@@ -23,6 +23,11 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.18 - Jan 25, 2017");
+            version.addChange("Piercing projectiles damage fixed");
+            version.addChange("Fireball no longer destroys map");
+            this.addVersion(version);
+
             version = new Version("0.17 - Jan 21, 2017");
             version.addChange("Surfaces transitions finished");
             version.addChange("Valentimon enemy introduced");
