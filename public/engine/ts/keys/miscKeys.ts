@@ -132,6 +132,7 @@ namespace Lich {
         MSC_KRYSTAL_THEME_KEY,
         MSC_FLOOD_THEME_KEY,
         MSC_LAVA_THEME_KEY,
-        MSC_CHICKEN_BOSS_THEME_KEY
+        MSC_CHICKEN_BOSS_THEME_KEY,
+        MSC_CUPID_BOSS_THEME_KEY
     }
 }

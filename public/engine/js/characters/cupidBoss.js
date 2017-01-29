@@ -45,7 +45,7 @@ var Lich;
                 this.movementTypeX = Lich.MovementTypeX.HOVER;
                 this.movementTypeY = Lich.MovementTypeY.HOVER;
                 Lich.Mixer.stopAllMusic();
-                Lich.Mixer.playMusic(Lich.MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
+                Lich.Mixer.playMusic(Lich.MusicKey.MSC_CUPID_BOSS_THEME_KEY);
                 this.currentMode = AI_MODE.IDLE;
                 CupidBoss.spawned = true;
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_LOVE_HURTS]));

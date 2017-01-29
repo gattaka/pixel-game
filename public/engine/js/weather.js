@@ -103,9 +103,9 @@ var Lich;
                 var world = this.game.getWorld();
                 for (var i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
                     this.snowflakeTryTimer = 0;
-                    if (Math.random() * Weather.SNOWFLAKE_SPAWN_PROP < 1)
+                    if (Lich.Utils.prop(Weather.SNOWFLAKE_SPAWN_PROP))
                         world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
-                    if (Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
+                    if (Lich.Utils.prop(Weather.GIFT_SPAWN_PROP)) {
                         var gift = void 0;
                         switch (Math.floor(Math.random() * 3)) {
                             case 0:
@@ -122,12 +122,12 @@ var Lich;
                     }
                 }
             }
-            if (this.mode == WeatherMode.SNOW_RAIN && Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.VALENTINE) {
+            if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.VALENTINE) {
                 this.loveletterTryTimer += delta;
                 var world = this.game.getWorld();
                 for (var i = 0; i < this.loveletterTryTimer / Weather.LOVELETTER_SPAWN_INTERVAL; i++) {
                     this.loveletterTryTimer = 0;
-                    if (Math.random() * Weather.LOVELETTER_SPAWN_PROP < 1)
+                    if (Lich.Utils.prop(Weather.LOVELETTER_SPAWN_PROP))
                         world.spawnObject(new Lich.DugObjDefinition(Lich.InventoryKey.INV_LOVELETTER, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
                 }
             }
@@ -205,11 +205,11 @@ var Lich;
         Weather.SPAWN_BATCH_DELAY = 10000;
         Weather.PARTICLE_LAYERS = 3;
         Weather.MODE_DURATION = 60000;
-        Weather.GIFT_SPAWN_PROP = 500;
-        Weather.SNOWFLAKE_SPAWN_PROP = 200;
+        Weather.GIFT_SPAWN_PROP = 1000; // 1/1000
+        Weather.SNOWFLAKE_SPAWN_PROP = 1000; // 1/1000
         Weather.SNOWFLAKE_SPAWN_INTERVAL = 5000;
-        Weather.LOVELETTER_SPAWN_PROP = 400;
-        Weather.LOVELETTER_SPAWN_INTERVAL = 5000;
+        Weather.LOVELETTER_SPAWN_PROP = 1000; // 1/1000
+        Weather.LOVELETTER_SPAWN_INTERVAL = 10000;
         return Weather;
     }(createjs.Container));
     Lich.Weather = Weather;

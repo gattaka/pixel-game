@@ -66,7 +66,7 @@ namespace Lich {
                 this.movementTypeY = MovementTypeY.HOVER;
 
                 Mixer.stopAllMusic();
-                Mixer.playMusic(MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
+                Mixer.playMusic(MusicKey.MSC_CUPID_BOSS_THEME_KEY);
 
                 this.currentMode = AI_MODE.IDLE;
 

@@ -21,13 +21,12 @@ namespace Lich {
         private static PARTICLE_LAYERS = 3;
         private static MODE_DURATION = 60000;
 
-        private static GIFT_SPAWN_PROP = 500;
-
-        private static SNOWFLAKE_SPAWN_PROP = 200;
+        private static GIFT_SPAWN_PROP = 1000; // 1/1000
+        private static SNOWFLAKE_SPAWN_PROP = 1000; // 1/1000
         private static SNOWFLAKE_SPAWN_INTERVAL = 5000;
 
-        private static LOVELETTER_SPAWN_PROP = 400;
-        private static LOVELETTER_SPAWN_INTERVAL = 5000;
+        private static LOVELETTER_SPAWN_PROP = 1000; // 1/1000
+        private static LOVELETTER_SPAWN_INTERVAL = 10000;
 
         private snowflakeTryTimer = 0;
         private loveletterTryTimer = 0;
@@ -117,9 +116,9 @@ namespace Lich {
                 let world = this.game.getWorld();
                 for (let i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
                     this.snowflakeTryTimer = 0;
-                    if (Math.random() * Weather.SNOWFLAKE_SPAWN_PROP < 1)
+                    if (Utils.prop(Weather.SNOWFLAKE_SPAWN_PROP))
                         world.spawnObject(new DugObjDefinition(InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
-                    if (Math.random() * Weather.GIFT_SPAWN_PROP < 1) {
+                    if (Utils.prop(Weather.GIFT_SPAWN_PROP)) {
                         let gift;
                         switch (Math.floor(Math.random() * 3)) {
                             case 0: gift = InventoryKey.INV_GIFT1_KEY; break;
@@ -131,12 +130,12 @@ namespace Lich {
                 }
             }
 
-            if (this.mode == WeatherMode.SNOW_RAIN && ThemeWatch.getCurrentTheme() == Theme.VALENTINE) {
+            if (ThemeWatch.getCurrentTheme() == Theme.VALENTINE) {
                 this.loveletterTryTimer += delta;
                 let world = this.game.getWorld();
                 for (let i = 0; i < this.loveletterTryTimer / Weather.LOVELETTER_SPAWN_INTERVAL; i++) {
                     this.loveletterTryTimer = 0;
-                    if (Math.random() * Weather.LOVELETTER_SPAWN_PROP < 1)
+                    if (Utils.prop(Weather.LOVELETTER_SPAWN_PROP))
                         world.spawnObject(new DugObjDefinition(InventoryKey.INV_LOVELETTER, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
                 }
             }

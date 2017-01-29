@@ -122,6 +122,12 @@ var Lich;
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                 s4() + '-' + s4() + s4() + s4();
         };
+        Utils.prop = function (p) {
+            // náhodně vybere číslo v rozsahu <0..p)
+            // zaokrouhlí, aby bylo celočíselné 
+            // pokud je výsledek 1 jde o pravděpodobnost 1/p
+            return Math.floor(Math.random() * p) == 1;
+        };
         Utils.contains = function (a, obj) {
             for (var i = 0; i < a.length; i++) {
                 if (a[i] === obj) {

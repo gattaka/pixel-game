@@ -434,8 +434,7 @@ var Lich;
         }
         EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_GHOUL_SPAWN_KEY);
-            // SpawnPool.getInstance().spawn(Enemy.CupidBoss, context.game.getWorld());
-            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_LOVE_HURTS]));
+            Lich.SpawnPool.getInstance().spawn(Lich.Enemy.CupidBoss, context.game.getWorld());
             return true;
         };
         return EnemySpellDef;
