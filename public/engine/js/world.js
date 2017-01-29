@@ -280,6 +280,8 @@ var Lich;
                 }
             }
             self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+            // Refresh pro minimapu
+            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
         };
         World.prototype.resetPlayer = function () {
             this.hero.fillHealth(this.hero.getMaxHealth());
@@ -395,6 +397,7 @@ var Lich;
                     object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
                     if (object.speedy < World.MAX_FREEFALL_SPEED)
                         object.speedy = World.MAX_FREEFALL_SPEED;
+                    ;
                 }
                 if (object.hovers) {
                     makeShift(0, distanceY);
@@ -604,10 +607,17 @@ var Lich;
             else {
                 self.hero.movementTypeX = Lich.MovementTypeX.NONE;
             }
-            // ulož starou vertikální rychlost 
+            // ulož staré rychlosti a pozici
+            var oldPosX = self.hero.x;
+            var oldPosY = self.hero.y;
+            var oldSpeedX = self.hero.speedx;
             var oldSpeedY = self.hero.speedy;
             // update pohybu hráče
             updateCharacter(self.hero, self.shiftWorldBy.bind(self));
+            if (self.hero.x != oldPosX || self.hero.y != oldPosY)
+                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+            if (self.hero.speedx != oldSpeedX || self.hero.speedy != oldSpeedY)
+                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
             // kontrola zranění z pádu
             if (self.hero.speedy == 0 && oldSpeedY < 0) {
                 var threshold = World.MAX_FREEFALL_SPEED / 1.5;
@@ -616,8 +626,6 @@ var Lich;
                     self.hero.hit(Math.floor(self.hero.getMaxHealth() * oldSpeedY / (World.MAX_FREEFALL_SPEED - threshold)), this);
                 }
             }
-            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
-            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
             // update nepřátel
             self.enemies.forEach(function (enemy) {
                 if (enemy) {

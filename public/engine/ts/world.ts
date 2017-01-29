@@ -298,6 +298,9 @@ namespace Lich {
                 }
             }
             self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+
+            // Refresh pro minimapu
+            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
         }
 
         resetPlayer() {
@@ -421,7 +424,7 @@ namespace Lich {
                     // v = v_0 + at
                     object.speedy = object.speedy + World.WORLD_GRAVITY * sDelta;
                     if (object.speedy < World.MAX_FREEFALL_SPEED)
-                        object.speedy = World.MAX_FREEFALL_SPEED;
+                        object.speedy = World.MAX_FREEFALL_SPEED;;
                 }
 
                 if (object.hovers) {
@@ -673,11 +676,19 @@ namespace Lich {
                 self.hero.movementTypeX = MovementTypeX.NONE;
             }
 
-            // ulož starou vertikální rychlost 
+            // ulož staré rychlosti a pozici
+            let oldPosX = self.hero.x;
+            let oldPosY = self.hero.y;
+            let oldSpeedX = self.hero.speedx;
             let oldSpeedY = self.hero.speedy;
 
             // update pohybu hráče
             updateCharacter(self.hero, self.shiftWorldBy.bind(self));
+
+            if (self.hero.x != oldPosX || self.hero.y != oldPosY)
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+            if (self.hero.speedx != oldSpeedX || self.hero.speedy != oldSpeedY)
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
 
             // kontrola zranění z pádu
             if (self.hero.speedy == 0 && oldSpeedY < 0) {
@@ -687,9 +698,6 @@ namespace Lich {
                     self.hero.hit(Math.floor(self.hero.getMaxHealth() * oldSpeedY / (World.MAX_FREEFALL_SPEED - threshold)), this);
                 }
             }
-
-            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
-            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
 
             // update nepřátel
             self.enemies.forEach(function (enemy) {
