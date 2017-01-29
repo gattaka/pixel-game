@@ -49,6 +49,14 @@ namespace Lich {
         static DEFAULT_MAP_HEIGHT = 1000;
         static DEFAULT_MAP_GROUND_LEVEL = 50;
 
+        // Loot tower consts
+        static LOOT_TOWER_MIN_WIDTH = 7;
+        static LOOT_TOWER_MAX_WIDTH = 13;
+        static LOOT_TOWER_MIN_FLOORS = 2;
+        static LOOT_TOWER_MAX_FLOORS = 5;
+        static LOOT_TOWER_MIN_FLOOR_HEIGHT = 2;
+        static LOOT_TOWER_MAX_FLOOR_HEIGHT = 4;
+
         private constructor() { }
 
         public static serialize(tilesMap: TilesMap): SaveStructure {
@@ -187,7 +195,6 @@ namespace Lich {
                     let x = data.obj[v];
                     let y = data.obj[v + 1];
                     let key = data.obj[v + 2];
-                    tilesMap.mapObjRecord.setValue(x, y, key);
                     TilesMapTools.writeObjectRecord(tilesMap, x, y, Resources.getInstance().mapObjectDefs[key]);
                 };
             });
@@ -216,6 +223,105 @@ namespace Lich {
                     }
                 }
             }
+        }
+
+        private static createLootTower(tilesMap: TilesMap, x0: number, y0: number, width: number, floors: Array<number>) {
+            let x = Utils.even(x0);
+            let y = Utils.even(y0);
+
+            let placeBgr = (tx: number, ty: number, srfc: SurfaceBgrKey) => {
+                for (let i = 0; i < 2; i++) {
+                    for (let j = 0; j < 2; j++) {
+                        tilesMap.mapBgrRecord.setValue(tx + i, ty + j, Resources.getInstance().surfaceBgrIndex.getMiddlePositionIndexByCoordPattern(tx + i, ty + j, srfc));
+                    }
+                }
+            };
+
+            let placeSrfc = (tx: number, ty: number, srfc: SurfaceKey) => {
+                for (let i = 0; i < 2; i++) {
+                    for (let j = 0; j < 2; j++) {
+                        let pos;
+                        if (srfc)
+                            pos = Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(tx + i, ty + j, srfc);
+                        else
+                            pos = SurfacePositionKey.VOID;
+                        tilesMap.mapRecord.setValue(tx + i, ty + j, pos);
+                    }
+                }
+            };
+
+            let placeSrfcLine = (tx: number, srfc: SurfaceKey) => {
+                for (let i = 0; i < width; i++) {
+                    placeSrfc(tx + i * 2, y, srfc);
+                }
+                y += 2;
+            };
+
+            let placeRoom = (x: number, h: number, srfc: SurfaceKey, bSrfc: SurfaceBgrKey, ladder: boolean) => {
+                let leftLadder = Math.random() > 0.5;
+
+                // strop
+                placeSrfcLine(x, srfc);
+
+                if (ladder) {
+                    let lx = leftLadder ? x + 2 : x + (width - 2) * 2;
+                    placeBgr(lx - 2, y - 2, bSrfc);
+                    placeSrfc(lx, y - 2, SurfaceKey.SRFC_WOOD_LADDER_KEY);
+                    placeBgr(lx, y - 2, bSrfc);
+                    placeBgr(lx + 2, y - 2, bSrfc);
+                }
+
+                // místnost
+                for (let i = 0; i < h; i++) {
+                    placeSrfc(x, y, srfc);
+                    placeSrfc(x + (width - 1) * 2, y, srfc);
+                    for (let j = 1; j < width - 1; j++) {
+                        placeBgr(x + j * 2, y, bSrfc);
+                        if (ladder && (leftLadder && j == 1 || !leftLadder && j == width - 2)) {
+                            placeSrfc(x + j * 2, y, SurfaceKey.SRFC_WOOD_LADDER_KEY);
+                        } else {
+                            placeSrfc(x + j * 2, y, undefined); // void
+                            // poslední řádek před podlahou
+                            if (i == h - 1) {
+                                let loot: MapObjectKey;
+                                switch (Math.floor(Math.random() * 20)) {
+                                    case 0: loot = MapObjectKey.MAP_GOLD_COINS; break;
+                                    case 1: loot = MapObjectKey.MAP_GOLD_COINS2; break;
+                                    case 2: loot = MapObjectKey.MAP_SILVER_COINS; break;
+                                    case 3: loot = MapObjectKey.MAP_GOLD_DISHES; break;
+                                    case 4: loot = MapObjectKey.MAP_GOLD_DISHES2; break;
+                                    case 5: loot = MapObjectKey.MAP_GOLD_BOWL; break;
+                                    default: break;
+                                }
+                                if (loot)
+                                    TilesMapTools.writeObjectRecord(tilesMap, x + j * 2, y + 2, Resources.getInstance().mapObjectDefs[loot]);
+                            }
+                        }
+                    }
+
+                    y += 2;
+                }
+            };
+
+            let placeBattlements = (x: number, srfc: SurfaceKey) => {
+                for (let i = 0; i < width; i++) {
+                    if (i % 2 == 0)
+                        placeSrfc(x + i * 2, y, srfc);
+                }
+                y += 2;
+            }
+
+            // Hradby
+            placeBattlements(x, SurfaceKey.SRFC_ROCK_BRICK_KEY);
+
+            // Místnosti
+            for (let i = 0; i < floors.length; i++) {
+                placeRoom(x, floors[i], SurfaceKey.SRFC_ROCK_BRICK_KEY, SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, i != 0);
+            }
+
+            // Podlaha
+            placeSrfcLine(x, SurfaceKey.SRFC_ROCK_BRICK_KEY);
+
         }
 
         private static createDeposit(tilesMap: TilesMap, x0: number, y0: number, d0: number, oreKey: SurfaceKey) {
@@ -300,7 +406,7 @@ namespace Lich {
 
             let async = new AsyncLoad();
 
-            let total = 6;
+            let total = 7;
             let progress = 0;
 
             var tilesMap = new TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
@@ -362,7 +468,7 @@ namespace Lich {
                             // získá výchozí prostřední dílek dle vzoru, 
                             // který se opakuje, aby mapa byla pestřejší
                             tilesMap.mapRecord.setValue(nx, ny,
-                                y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, SurfaceKey.SRFC_DIRT_KEY)
+                                y > groundLevel + hills[x] ? Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, SurfaceKey.SRFC_DIRT_KEY)
                                     : SurfacePositionKey.VOID
                             );
                         });
@@ -444,6 +550,30 @@ namespace Lich {
                         }
                         return false;
                     });
+                }
+            });
+
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loot towers"));
+            });
+
+            async.load(() => {
+                // Loot věže 
+                // random deposit
+                let count = tilesMap.width * 0.002;
+                for (let i = 0; i < count; i++) {
+                    let towerX = Math.floor(Math.random() * (tilesMap.width / (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2)) * (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2));
+                    let width = Utils.odd(Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_WIDTH, TilesMapGenerator.LOOT_TOWER_MAX_WIDTH));
+                    let height = 2; // cimbuří
+                    let floorCount = Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_FLOORS, TilesMapGenerator.LOOT_TOWER_MAX_FLOORS);
+                    let floors = [];
+                    for (let i = 0; i < floorCount; i++) {
+                        floors[i] = Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_FLOOR_HEIGHT, TilesMapGenerator.LOOT_TOWER_MAX_FLOOR_HEIGHT);
+                        height += floors[i];
+                    }
+                    let towerY = Math.floor(groundLevel + hills[towerX] - (height * 2 * 0.75)); // 3/4 věže jsou nad zemí
+                    TilesMapGenerator.createLootTower(tilesMap, towerX, towerY, width, floors);
                 }
             });
 

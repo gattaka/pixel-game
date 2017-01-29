@@ -139,6 +139,10 @@ namespace Lich {
             return Utils.isEven(value) ? value : value - 1;
         }
 
+        static odd(value: number): number {
+            return Utils.isEven(value) ? value - 1 : value;
+        }
+
         // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
         static guid() {
             function s4() {
@@ -155,6 +159,10 @@ namespace Lich {
             // zaokrouhlí, aby bylo celočíselné 
             // pokud je výsledek 1 jde o pravděpodobnost 1/p
             return Math.floor(Math.random() * p) == 1;
+        }
+
+        static randRange(min: number, max: number) {
+            return Math.floor(Math.random() * (max + 1 - min)) + min;
         }
 
         static contains<T>(a: Array<T>, obj: T) {

@@ -50,6 +50,12 @@ namespace Lich {
         ["images/parts/snowman.png", MapObjectKey.MAP_SNOWMAN_KEY],
         ["images/parts/wood_chair.png", MapObjectKey.MAP_WOOD_CHAIR],
         ["images/parts/wood_chair2.png", MapObjectKey.MAP_WOOD_CHAIR2],
-        ["images/parts/wood_table.png", MapObjectKey.MAP_WOOD_TABLE]
+        ["images/parts/wood_table.png", MapObjectKey.MAP_WOOD_TABLE],
+        ["images/parts/gold_coins.png", MapObjectKey.MAP_GOLD_COINS],
+        ["images/parts/gold_coins2.png", MapObjectKey.MAP_GOLD_COINS2],
+        ["images/parts/silver_coins.png", MapObjectKey.MAP_SILVER_COINS],
+        ["images/parts/gold_dishes.png", MapObjectKey.MAP_GOLD_DISHES],
+        ["images/parts/gold_dishes2.png", MapObjectKey.MAP_GOLD_DISHES2],
+        ["images/parts/gold_bowl.png", MapObjectKey.MAP_GOLD_BOWL]
     ];
 }

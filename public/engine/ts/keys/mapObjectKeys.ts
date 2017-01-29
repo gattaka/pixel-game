@@ -50,5 +50,11 @@ namespace Lich {
         MAP_WOOD_CHAIR,
         MAP_WOOD_CHAIR2,
         MAP_WOOD_TABLE,
+        MAP_GOLD_COINS,
+        MAP_GOLD_COINS2,
+        MAP_SILVER_COINS,
+        MAP_GOLD_DISHES,
+        MAP_GOLD_DISHES2,
+        MAP_GOLD_BOWL
     }
 }

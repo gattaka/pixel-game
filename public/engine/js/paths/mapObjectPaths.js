@@ -51,6 +51,12 @@ var Lich;
         ["images/parts/snowman.png", Lich.MapObjectKey.MAP_SNOWMAN_KEY],
         ["images/parts/wood_chair.png", Lich.MapObjectKey.MAP_WOOD_CHAIR],
         ["images/parts/wood_chair2.png", Lich.MapObjectKey.MAP_WOOD_CHAIR2],
-        ["images/parts/wood_table.png", Lich.MapObjectKey.MAP_WOOD_TABLE]
+        ["images/parts/wood_table.png", Lich.MapObjectKey.MAP_WOOD_TABLE],
+        ["images/parts/gold_coins.png", Lich.MapObjectKey.MAP_GOLD_COINS],
+        ["images/parts/gold_coins2.png", Lich.MapObjectKey.MAP_GOLD_COINS2],
+        ["images/parts/silver_coins.png", Lich.MapObjectKey.MAP_SILVER_COINS],
+        ["images/parts/gold_dishes.png", Lich.MapObjectKey.MAP_GOLD_DISHES],
+        ["images/parts/gold_dishes2.png", Lich.MapObjectKey.MAP_GOLD_DISHES2],
+        ["images/parts/gold_bowl.png", Lich.MapObjectKey.MAP_GOLD_BOWL]
     ];
 })(Lich || (Lich = {}));

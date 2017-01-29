@@ -153,7 +153,6 @@ var Lich;
                     var x = data.obj[v];
                     var y = data.obj[v + 1];
                     var key = data.obj[v + 2];
-                    tilesMap.mapObjRecord.setValue(x, y, key);
                     Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, Lich.Resources.getInstance().mapObjectDefs[key]);
                 }
                 ;
@@ -180,6 +179,104 @@ var Lich;
                     }
                 }
             }
+        };
+        TilesMapGenerator.createLootTower = function (tilesMap, x0, y0, width, floors) {
+            var x = Lich.Utils.even(x0);
+            var y = Lich.Utils.even(y0);
+            var placeBgr = function (tx, ty, srfc) {
+                for (var i = 0; i < 2; i++) {
+                    for (var j = 0; j < 2; j++) {
+                        tilesMap.mapBgrRecord.setValue(tx + i, ty + j, Lich.Resources.getInstance().surfaceBgrIndex.getMiddlePositionIndexByCoordPattern(tx + i, ty + j, srfc));
+                    }
+                }
+            };
+            var placeSrfc = function (tx, ty, srfc) {
+                for (var i = 0; i < 2; i++) {
+                    for (var j = 0; j < 2; j++) {
+                        var pos = void 0;
+                        if (srfc)
+                            pos = Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(tx + i, ty + j, srfc);
+                        else
+                            pos = Lich.SurfacePositionKey.VOID;
+                        tilesMap.mapRecord.setValue(tx + i, ty + j, pos);
+                    }
+                }
+            };
+            var placeSrfcLine = function (tx, srfc) {
+                for (var i = 0; i < width; i++) {
+                    placeSrfc(tx + i * 2, y, srfc);
+                }
+                y += 2;
+            };
+            var placeRoom = function (x, h, srfc, bSrfc, ladder) {
+                var leftLadder = Math.random() > 0.5;
+                // strop
+                placeSrfcLine(x, srfc);
+                if (ladder) {
+                    var lx = leftLadder ? x + 2 : x + (width - 2) * 2;
+                    placeBgr(lx - 2, y - 2, bSrfc);
+                    placeSrfc(lx, y - 2, Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY);
+                    placeBgr(lx, y - 2, bSrfc);
+                    placeBgr(lx + 2, y - 2, bSrfc);
+                }
+                // místnost
+                for (var i = 0; i < h; i++) {
+                    placeSrfc(x, y, srfc);
+                    placeSrfc(x + (width - 1) * 2, y, srfc);
+                    for (var j = 1; j < width - 1; j++) {
+                        placeBgr(x + j * 2, y, bSrfc);
+                        if (ladder && (leftLadder && j == 1 || !leftLadder && j == width - 2)) {
+                            placeSrfc(x + j * 2, y, Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY);
+                        }
+                        else {
+                            placeSrfc(x + j * 2, y, undefined); // void
+                            // poslední řádek před podlahou
+                            if (i == h - 1) {
+                                var loot = void 0;
+                                switch (Math.floor(Math.random() * 20)) {
+                                    case 0:
+                                        loot = Lich.MapObjectKey.MAP_GOLD_COINS;
+                                        break;
+                                    case 1:
+                                        loot = Lich.MapObjectKey.MAP_GOLD_COINS2;
+                                        break;
+                                    case 2:
+                                        loot = Lich.MapObjectKey.MAP_SILVER_COINS;
+                                        break;
+                                    case 3:
+                                        loot = Lich.MapObjectKey.MAP_GOLD_DISHES;
+                                        break;
+                                    case 4:
+                                        loot = Lich.MapObjectKey.MAP_GOLD_DISHES2;
+                                        break;
+                                    case 5:
+                                        loot = Lich.MapObjectKey.MAP_GOLD_BOWL;
+                                        break;
+                                    default: break;
+                                }
+                                if (loot)
+                                    Lich.TilesMapTools.writeObjectRecord(tilesMap, x + j * 2, y + 2, Lich.Resources.getInstance().mapObjectDefs[loot]);
+                            }
+                        }
+                    }
+                    y += 2;
+                }
+            };
+            var placeBattlements = function (x, srfc) {
+                for (var i = 0; i < width; i++) {
+                    if (i % 2 == 0)
+                        placeSrfc(x + i * 2, y, srfc);
+                }
+                y += 2;
+            };
+            // Hradby
+            placeBattlements(x, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY);
+            // Místnosti
+            for (var i = 0; i < floors.length; i++) {
+                placeRoom(x, floors[i], Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY, Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, i != 0);
+            }
+            // Podlaha
+            placeSrfcLine(x, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY);
         };
         TilesMapGenerator.createDeposit = function (tilesMap, x0, y0, d0, oreKey) {
             var d = Lich.Utils.even(d0);
@@ -254,7 +351,7 @@ var Lich;
             if (height === void 0) { height = TilesMapGenerator.DEFAULT_MAP_HEIGHT; }
             if (groundLevel === void 0) { groundLevel = TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL; }
             var async = new AsyncLoad();
-            var total = 6;
+            var total = 7;
             var progress = 0;
             var tilesMap = new Lich.TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             var mass = tilesMap.height * tilesMap.width;
@@ -309,7 +406,7 @@ var Lich;
                         fillTile(x, y, function (nx, ny) {
                             // získá výchozí prostřední dílek dle vzoru, 
                             // který se opakuje, aby mapa byla pestřejší
-                            tilesMap.mapRecord.setValue(nx, ny, y > TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL + hills[x] ? Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, Lich.SurfaceKey.SRFC_DIRT_KEY)
+                            tilesMap.mapRecord.setValue(nx, ny, y > groundLevel + hills[x] ? Lich.Resources.getInstance().surfaceIndex.getMiddlePositionIndexByCoordPattern(nx, ny, Lich.SurfaceKey.SRFC_DIRT_KEY)
                                 : Lich.SurfacePositionKey.VOID);
                         });
                     }
@@ -392,6 +489,28 @@ var Lich;
             });
             async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loot towers"));
+            });
+            async.load(function () {
+                // Loot věže 
+                // random deposit
+                var count = tilesMap.width * 0.002;
+                for (var i = 0; i < count; i++) {
+                    var towerX = Math.floor(Math.random() * (tilesMap.width / (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2)) * (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2));
+                    var width_1 = Lich.Utils.odd(Lich.Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_WIDTH, TilesMapGenerator.LOOT_TOWER_MAX_WIDTH));
+                    var height_1 = 2; // cimbuří
+                    var floorCount = Lich.Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_FLOORS, TilesMapGenerator.LOOT_TOWER_MAX_FLOORS);
+                    var floors = [];
+                    for (var i_1 = 0; i_1 < floorCount; i_1++) {
+                        floors[i_1] = Lich.Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_FLOOR_HEIGHT, TilesMapGenerator.LOOT_TOWER_MAX_FLOOR_HEIGHT);
+                        height_1 += floors[i_1];
+                    }
+                    var towerY = Math.floor(groundLevel + hills[towerX] - (height_1 * 2 * 0.75)); // 3/4 věže jsou nad zemí
+                    TilesMapGenerator.createLootTower(tilesMap, towerX, towerY, width_1, floors);
+                }
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Polishing terrain"));
             });
             async.load(function () {
@@ -449,6 +568,13 @@ var Lich;
         TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
         TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;
         TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 50;
+        // Loot tower consts
+        TilesMapGenerator.LOOT_TOWER_MIN_WIDTH = 7;
+        TilesMapGenerator.LOOT_TOWER_MAX_WIDTH = 13;
+        TilesMapGenerator.LOOT_TOWER_MIN_FLOORS = 2;
+        TilesMapGenerator.LOOT_TOWER_MAX_FLOORS = 5;
+        TilesMapGenerator.LOOT_TOWER_MIN_FLOOR_HEIGHT = 2;
+        TilesMapGenerator.LOOT_TOWER_MAX_FLOOR_HEIGHT = 4;
         return TilesMapGenerator;
     }());
     Lich.TilesMapGenerator = TilesMapGenerator;

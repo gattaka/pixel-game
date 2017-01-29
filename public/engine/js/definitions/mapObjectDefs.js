@@ -53,6 +53,12 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_WOOD_CHAIR2, 2, 2, Lich.InventoryKey.INV_WOOD_CHAIR, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_WOOD_TABLE, 2, 2, Lich.InventoryKey.INV_WOOD_TABLE, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_RED_FLASK_KEY, 2, 2, Lich.InventoryKey.INV_RED_FLASK_KEY, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GOLD_COINS, 2, 2, Lich.InventoryKey.INV_GOLD_COINS, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GOLD_COINS2, 2, 2, Lich.InventoryKey.INV_GOLD_COINS, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_SILVER_COINS, 2, 2, Lich.InventoryKey.INV_SILVER_COINS, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GOLD_DISHES, 2, 2, Lich.InventoryKey.INV_GOLD_DISHES, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GOLD_DISHES2, 2, 2, Lich.InventoryKey.INV_GOLD_DISHES2, 1, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GOLD_BOWL, 2, 2, Lich.InventoryKey.INV_GOLD_BOWL, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_TORCH_KEY, 2, 4, Lich.InventoryKey.INV_TORCH_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_SNOWMAN_KEY, 2, 4, Lich.InventoryKey.INV_SNOWMAN, 1, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_DOOR_OPEN_KEY, 2, 4, Lich.InventoryKey.INV_DOOR_KEY, 1, 0, function (game, tx, ty, obj, objType) {

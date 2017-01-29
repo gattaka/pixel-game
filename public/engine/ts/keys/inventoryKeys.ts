@@ -69,6 +69,11 @@ namespace Lich {
         INV_WOOD_CHAIR,
         INV_WOOD_TABLE,
         INV_LOVELETTER,
-        INV_LOVEARROW
+        INV_LOVEARROW,
+        INV_GOLD_COINS,
+        INV_SILVER_COINS,
+        INV_GOLD_DISHES,
+        INV_GOLD_DISHES2,
+        INV_GOLD_BOWL
     }
 }

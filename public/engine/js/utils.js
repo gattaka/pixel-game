@@ -112,6 +112,9 @@ var Lich;
         Utils.even = function (value) {
             return Utils.isEven(value) ? value : value - 1;
         };
+        Utils.odd = function (value) {
+            return Utils.isEven(value) ? value - 1 : value;
+        };
         // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
         Utils.guid = function () {
             function s4() {
@@ -127,6 +130,9 @@ var Lich;
             // zaokrouhlí, aby bylo celočíselné 
             // pokud je výsledek 1 jde o pravděpodobnost 1/p
             return Math.floor(Math.random() * p) == 1;
+        };
+        Utils.randRange = function (min, max) {
+            return Math.floor(Math.random() * (max + 1 - min)) + min;
         };
         Utils.contains = function (a, obj) {
             for (var i = 0; i < a.length; i++) {

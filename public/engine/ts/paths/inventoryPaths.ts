@@ -69,6 +69,11 @@ namespace Lich {
         ["images/ui/inventory/inv_wood_chair.png", InventoryKey.INV_WOOD_CHAIR],
         ["images/ui/inventory/inv_wood_table.png", InventoryKey.INV_WOOD_TABLE],
         ["images/ui/inventory/inv_loveletter.png", InventoryKey.INV_LOVELETTER],
-        ["images/ui/inventory/inv_lovearrow.png", InventoryKey.INV_LOVEARROW]
+        ["images/ui/inventory/inv_lovearrow.png", InventoryKey.INV_LOVEARROW],
+        ["images/ui/inventory/inv_gold_coins2.png", InventoryKey.INV_GOLD_COINS],
+        ["images/ui/inventory/inv_silver_coins.png", InventoryKey.INV_SILVER_COINS],
+        ["images/ui/inventory/inv_gold_dishes.png", InventoryKey.INV_GOLD_DISHES],
+        ["images/ui/inventory/inv_gold_dishes2.png", InventoryKey.INV_GOLD_DISHES2],
+        ["images/ui/inventory/inv_gold_bowl.png", InventoryKey.INV_GOLD_BOWL]
     ]
 }
