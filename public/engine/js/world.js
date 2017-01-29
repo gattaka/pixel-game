@@ -71,6 +71,8 @@ var Lich;
             var self = this;
             self.render = new Lich.Render(game, self);
             self.hero = new Lich.Hero();
+            self.hero.x = game.getCanvas().width / 2;
+            self.hero.y = game.getCanvas().height / 2;
             /*------------*/
             /* Characters */
             /*------------*/
@@ -223,8 +225,6 @@ var Lich;
             var self = this;
             var game = self.game;
             var tilesMap = self.tilesMap;
-            self.hero.x = game.getCanvas().width / 2;
-            self.hero.y = game.getCanvas().height / 2;
             var hero = self.hero;
             // Tohle je potřeba udělat, jinak se při více teleportech hráči
             // nastřádá rychlost a například směrem dolů se při opakovaném
@@ -299,51 +299,63 @@ var Lich;
                 console.log("Ou.. shiftY je Nan");
             }
             var self = this;
-            var rndDstX = Lich.Utils.floor(shiftX);
-            var rndDstY = Lich.Utils.floor(shiftY);
+            var rndShiftX = Lich.Utils.floor(shiftX);
+            var rndShiftY = Lich.Utils.floor(shiftY);
             var canvasCenterX = self.game.getCanvas().width / 2;
             var canvasCenterY = self.game.getCanvas().height / 2;
-            var willShiftX = self.render.canShiftX(rndDstX) && self.hero.x == canvasCenterX;
-            var willShiftY = self.render.canShiftY(rndDstY) && self.hero.y == canvasCenterY;
-            self.render.shiftSectorsBy(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
-            self.game.getBackground().shift(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
+            var realShiftX = self.render.limitShiftX(rndShiftX);
+            var realShiftY = self.render.limitShiftY(rndShiftY);
+            // Podmínka na realShift a screenOffset je pak proto, aby se mohla mapa
+            // posunout po inicializaci, kdy je spawnpoint ve vzáleném konci
+            // na druhý konec se není třeba ptát, protože je to výchozí pozice mapy (0,0)
+            var initShiftX = realShiftX < 0 && self.render.screenOffsetX == 0;
+            var initShiftY = realShiftY < 0 && self.render.screenOffsetY == 0;
+            // Je potřeba kontrolovat i canvasCenter pozici hráče, 
+            // aby se mohl z krajních pozic mapy vůbec na střed obrazovky vrátit
+            var willShiftX = realShiftX && self.hero.x == canvasCenterX || initShiftX;
+            var willShiftY = realShiftY && self.hero.y == canvasCenterY || initShiftY;
+            self.render.shiftSectorsBy(willShiftX ? realShiftX : 0, willShiftY ? realShiftY : 0);
+            self.game.getBackground().shift(willShiftX ? realShiftX : 0, willShiftY ? realShiftY : 0);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
             self.labelObjects.forEach(function (item) {
                 if (item) {
                     if (willShiftX)
-                        item.x += rndDstX;
+                        item.x += realShiftX;
+                    // virtualY kvůli tween pohybu textu
                     if (willShiftY)
-                        item["virtualY"] += rndDstY;
+                        item["virtualY"] += realShiftY;
                 }
             });
             toShift.forEach(function (items) {
                 items.forEach(function (item) {
                     if (item) {
                         if (willShiftX)
-                            item.x += rndDstX;
+                            item.x += realShiftX;
                         if (willShiftY)
-                            item.y += rndDstY;
+                            item.y += realShiftY;
                     }
                 });
             });
-            if (!willShiftX) {
+            // Při initShift se sice scéna hýbe, (willShift = true), 
+            // ale zároveň se musí pohnout i hráč do pozice mimo střed
+            if (!willShiftX || initShiftX) {
                 // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
                 // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
-                if (self.hero.x > canvasCenterX && self.hero.x - rndDstX < canvasCenterX
-                    || self.hero.x < canvasCenterX && self.hero.x - rndDstX > canvasCenterX) {
+                if (self.hero.x > canvasCenterX && self.hero.x - rndShiftX < canvasCenterX
+                    || self.hero.x < canvasCenterX && self.hero.x - rndShiftX > canvasCenterX) {
                     self.hero.x = canvasCenterX;
                 }
                 else {
-                    self.hero.x -= rndDstX;
+                    self.hero.x -= initShiftX ? (rndShiftX - realShiftX) : rndShiftX;
                 }
             }
-            if (!willShiftY) {
-                if (self.hero.y > canvasCenterY && self.hero.y - rndDstY < canvasCenterY
-                    || self.hero.y < canvasCenterY && self.hero.y - rndDstY > canvasCenterY) {
+            if (!willShiftY || initShiftY) {
+                if (self.hero.y > canvasCenterY && self.hero.y - rndShiftY < canvasCenterY
+                    || self.hero.y < canvasCenterY && self.hero.y - rndShiftY > canvasCenterY) {
                     self.hero.y = canvasCenterY;
                 }
                 else {
-                    self.hero.y -= rndDstY;
+                    self.hero.y -= initShiftY ? (rndShiftY - realShiftY) : rndShiftY;
                 }
             }
         };

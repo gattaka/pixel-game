@@ -80,6 +80,8 @@ namespace Lich {
 
             self.render = new Render(game, self);
             self.hero = new Hero();
+            self.hero.x = game.getCanvas().width / 2;
+            self.hero.y = game.getCanvas().height / 2;
 
             /*------------*/
             /* Characters */
@@ -246,8 +248,6 @@ namespace Lich {
             var self = this;
             let game = self.game;
             let tilesMap = self.tilesMap;
-            self.hero.x = game.getCanvas().width / 2;
-            self.hero.y = game.getCanvas().height / 2;
             let hero = self.hero;
             // Tohle je potřeba udělat, jinak se při více teleportech hráči
             // nastřádá rychlost a například směrem dolů se při opakovaném
@@ -321,24 +321,35 @@ namespace Lich {
             }
 
             let self = this;
-            let rndDstX = Utils.floor(shiftX);
-            let rndDstY = Utils.floor(shiftY);
+            let rndShiftX = Utils.floor(shiftX);
+            let rndShiftY = Utils.floor(shiftY);
             let canvasCenterX = self.game.getCanvas().width / 2;
             let canvasCenterY = self.game.getCanvas().height / 2;
-            let willShiftX = self.render.canShiftX(rndDstX) && self.hero.x == canvasCenterX;
-            let willShiftY = self.render.canShiftY(rndDstY) && self.hero.y == canvasCenterY;
+            let realShiftX = self.render.limitShiftX(rndShiftX);
+            let realShiftY = self.render.limitShiftY(rndShiftY);
 
-            self.render.shiftSectorsBy(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
-            self.game.getBackground().shift(willShiftX ? rndDstX : 0, willShiftY ? rndDstY : 0);
+            // Podmínka na realShift a screenOffset je pak proto, aby se mohla mapa
+            // posunout po inicializaci, kdy je spawnpoint ve vzáleném konci
+            // na druhý konec se není třeba ptát, protože je to výchozí pozice mapy (0,0)
+            let initShiftX = realShiftX < 0 && self.render.screenOffsetX == 0;
+            let initShiftY = realShiftY < 0 && self.render.screenOffsetY == 0;
+            // Je potřeba kontrolovat i canvasCenter pozici hráče, 
+            // aby se mohl z krajních pozic mapy vůbec na střed obrazovky vrátit
+            let willShiftX = realShiftX && self.hero.x == canvasCenterX || initShiftX;
+            let willShiftY = realShiftY && self.hero.y == canvasCenterY || initShiftY;
+
+            self.render.shiftSectorsBy(willShiftX ? realShiftX : 0, willShiftY ? realShiftY : 0);
+            self.game.getBackground().shift(willShiftX ? realShiftX : 0, willShiftY ? realShiftY : 0);
 
             let toShift = [self.freeObjects, self.bulletObjects, self.enemies];
 
             self.labelObjects.forEach(function (item) {
                 if (item) {
                     if (willShiftX)
-                        item.x += rndDstX;
+                        item.x += realShiftX;
+                    // virtualY kvůli tween pohybu textu
                     if (willShiftY)
-                        item["virtualY"] += rndDstY;
+                        item["virtualY"] += realShiftY;
                 }
             });
 
@@ -346,29 +357,31 @@ namespace Lich {
                 items.forEach((item) => {
                     if (item) {
                         if (willShiftX)
-                            item.x += rndDstX;
+                            item.x += realShiftX;
                         if (willShiftY)
-                            item.y += rndDstY;
+                            item.y += realShiftY;
                     }
                 });
             });
 
-            if (!willShiftX) {
+            // Při initShift se sice scéna hýbe, (willShift = true), 
+            // ale zároveň se musí pohnout i hráč do pozice mimo střed
+            if (!willShiftX || initShiftX) {
                 // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
                 // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
-                if (self.hero.x > canvasCenterX && self.hero.x - rndDstX < canvasCenterX
-                    || self.hero.x < canvasCenterX && self.hero.x - rndDstX > canvasCenterX) {
+                if (self.hero.x > canvasCenterX && self.hero.x - rndShiftX < canvasCenterX
+                    || self.hero.x < canvasCenterX && self.hero.x - rndShiftX > canvasCenterX) {
                     self.hero.x = canvasCenterX;
                 } else {
-                    self.hero.x -= rndDstX;
+                    self.hero.x -= initShiftX ? (rndShiftX - realShiftX) : rndShiftX;
                 }
             }
-            if (!willShiftY) {
-                if (self.hero.y > canvasCenterY && self.hero.y - rndDstY < canvasCenterY
-                    || self.hero.y < canvasCenterY && self.hero.y - rndDstY > canvasCenterY) {
+            if (!willShiftY || initShiftY) {
+                if (self.hero.y > canvasCenterY && self.hero.y - rndShiftY < canvasCenterY
+                    || self.hero.y < canvasCenterY && self.hero.y - rndShiftY > canvasCenterY) {
                     self.hero.y = canvasCenterY;
                 } else {
-                    self.hero.y -= rndDstY;
+                    self.hero.y -= initShiftY ? (rndShiftY - realShiftY) : rndShiftY;
                 }
             }
         };

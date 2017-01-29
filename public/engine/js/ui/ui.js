@@ -171,15 +171,23 @@ var Lich;
                 });
                 return false;
             });
+            // Minimap render
+            var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
             // Minimapa
-            var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, tilesMap);
-            // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
-            // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
-            minimapUI.x = UI.SCREEN_SPACING;
+            var minimapUI = new Lich.MinimapUI(minimapRender);
+            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
             minimapUI.y = UI.SCREEN_SPACING;
             self.addChild(minimapUI);
             self.minimapUI = minimapUI;
-            minimapUI.hide();
+            // mapa
+            var mapUI = new Lich.MapUI(canvas.width, canvas.height, minimapRender);
+            // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
+            // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
+            mapUI.x = UI.SCREEN_SPACING;
+            mapUI.y = UI.SCREEN_SPACING;
+            self.addChild(mapUI);
+            self.mapUI = mapUI;
+            mapUI.hide();
             if (mobile) {
                 var invBtn = new Button(Lich.UIGFXKey.UI_BACKPACK_KEY);
                 invBtn.x = UI.SCREEN_SPACING;
@@ -205,7 +213,7 @@ var Lich;
                 self.addChild(minimapBtn);
                 minimapBtn.on("click", function (evt) {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-                    self.minimapUI.show();
+                    self.mapUI.show();
                 }, null, false);
             }
             if (mobile) {

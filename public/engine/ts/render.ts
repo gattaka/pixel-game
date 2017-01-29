@@ -289,19 +289,31 @@ namespace Lich {
         }
 
         /**
-         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         * Vrací, o kolik je možné scénu dále posouvat, aniž bych překonal její okraj
          */
-        canShiftX(dst: number): boolean {
+        limitShiftX(dst: number): number {
             var self = this;
-            return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.tilesMap.width * Resources.TILE_SIZE + self.game.getCanvas().width;
+            // terén by přejel levý počátek směrem doprava (dst > 0)
+            if (self.screenOffsetX + dst > 0)
+                return -self.screenOffsetX;
+            // terén by se odlepil od pravého konce směrem doleva (dst < 0)
+            if (self.screenOffsetX + dst < self.game.getCanvas().width - self.tilesMap.width * Resources.TILE_SIZE)
+                return self.game.getCanvas().width - self.tilesMap.width * Resources.TILE_SIZE - self.screenOffsetX;
+            return dst;
         }
 
         /**
-         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         * Vrací, o kolik je možné scénu dále posouvat, aniž bych překonal její okraj
          */
-        canShiftY(dst: number): boolean {
+        limitShiftY(dst: number): number {
             var self = this;
-            return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.tilesMap.height * Resources.TILE_SIZE + self.game.getCanvas().height;
+            // terén by přejel horní počátek směrem dolů (dst > 0)
+            if (self.screenOffsetY + dst > 0)
+                return -self.screenOffsetY;
+            // terén by se odlepil od spodního konce směrem nahoru (dst < 0)
+            if (self.screenOffsetY + dst < self.game.getCanvas().height - self.tilesMap.height * Resources.TILE_SIZE)
+                return self.game.getCanvas().height - self.tilesMap.height * Resources.TILE_SIZE - self.screenOffsetY;
+            return dst;
         }
 
         shiftSectorsBy(shiftX: number, shiftY: number) {

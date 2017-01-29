@@ -221,18 +221,30 @@ var Lich;
             }
         };
         /**
-         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         * Vrací, o kolik je možné scénu dále posouvat, aniž bych překonal její okraj
          */
-        Render.prototype.canShiftX = function (dst) {
+        Render.prototype.limitShiftX = function (dst) {
             var self = this;
-            return self.screenOffsetX + dst <= 0 && self.screenOffsetX + dst >= -self.tilesMap.width * Lich.Resources.TILE_SIZE + self.game.getCanvas().width;
+            // terén by přejel levý počátek směrem doprava (dst > 0)
+            if (self.screenOffsetX + dst > 0)
+                return -self.screenOffsetX;
+            // terén by se odlepil od pravého konce směrem doleva (dst < 0)
+            if (self.screenOffsetX + dst < self.game.getCanvas().width - self.tilesMap.width * Lich.Resources.TILE_SIZE)
+                return self.game.getCanvas().width - self.tilesMap.width * Lich.Resources.TILE_SIZE - self.screenOffsetX;
+            return dst;
         };
         /**
-         * Vrací, zda je možné scénu dále posouvat, nebo již jsem na jejím okraji
+         * Vrací, o kolik je možné scénu dále posouvat, aniž bych překonal její okraj
          */
-        Render.prototype.canShiftY = function (dst) {
+        Render.prototype.limitShiftY = function (dst) {
             var self = this;
-            return self.screenOffsetY + dst <= 0 && self.screenOffsetY + dst >= -self.tilesMap.height * Lich.Resources.TILE_SIZE + self.game.getCanvas().height;
+            // terén by přejel horní počátek směrem dolů (dst > 0)
+            if (self.screenOffsetY + dst > 0)
+                return -self.screenOffsetY;
+            // terén by se odlepil od spodního konce směrem nahoru (dst < 0)
+            if (self.screenOffsetY + dst < self.game.getCanvas().height - self.tilesMap.height * Lich.Resources.TILE_SIZE)
+                return self.game.getCanvas().height - self.tilesMap.height * Lich.Resources.TILE_SIZE - self.screenOffsetY;
+            return dst;
         };
         Render.prototype.shiftSectorsBy = function (shiftX, shiftY) {
             var self = this;
