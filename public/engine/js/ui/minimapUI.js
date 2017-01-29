@@ -77,7 +77,7 @@ var Lich;
     Lich.MinimapRender = MinimapRender;
     var MinimapUI = (function (_super) {
         __extends(MinimapUI, _super);
-        function MinimapUI(mapRender) {
+        function MinimapUI(mainCanvasWidth, mainCanvasHeight, mapRender) {
             _super.call(this, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
             this.mapRender = mapRender;
             this.shiftX = 0;
@@ -105,11 +105,45 @@ var Lich;
                 var miniYShift = self.shiftY / yScale;
                 var miniXPlayer = self.playerX / xScale;
                 var miniYPlayer = self.playerY / yScale;
-                // poloha ikony
-                self.playerIcon.x = self.width / 2 - self.playerIcon.width / 2 + miniXPlayer;
-                self.playerIcon.y = self.height / 2 - self.playerIcon.height / 2 + +miniYPlayer;
-                // pusuv mapy
-                self.bitmap.sourceRect = new createjs.Rectangle(-miniXShift - miniXPlayer - self.width / 2, -miniYShift - miniYPlayer - self.height / 2, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
+                var miniCanvasW = mainCanvasWidth / xScale;
+                var miniCanvasH = mainCanvasHeight / yScale;
+                var iconX, viewX;
+                // mapRender.tilesMap.width je v tiles, já tady počítám v parts (/2)
+                if (miniXPlayer - miniXShift >= self.width / 2 && miniXPlayer - miniXShift <= mapRender.tilesMap.width / 2 - self.width / 2) {
+                    iconX = self.width / 2;
+                    viewX = miniXPlayer - miniXShift - self.width / 2;
+                }
+                else {
+                    if (miniXPlayer - miniXShift > self.width / 2) {
+                        iconX = self.width / 2 + miniXPlayer - miniXShift - (mapRender.tilesMap.width / 2 - self.width / 2);
+                        viewX = mapRender.tilesMap.width / 2 - self.width;
+                    }
+                    else {
+                        iconX = miniXPlayer - miniXShift;
+                        viewX = 0;
+                    }
+                }
+                var iconY, viewY;
+                // mapRender.tilesMap.height je v tiles, já tady počítám v parts (/2)
+                if (miniYPlayer - miniYShift >= self.height / 2 && miniYPlayer - miniYShift <= mapRender.tilesMap.height / 2 - self.height / 2) {
+                    iconY = self.height / 2;
+                    viewY = miniYPlayer - miniYShift - self.height / 2;
+                }
+                else {
+                    if (miniYPlayer - miniYShift > self.height / 2) {
+                        iconY = self.height / 2 + miniYPlayer - miniYShift - (mapRender.tilesMap.height / 2 - self.height / 2);
+                        viewY = mapRender.tilesMap.height / 2 - self.height / 2;
+                    }
+                    else {
+                        iconY = miniYPlayer - miniYShift;
+                        viewY = 0;
+                    }
+                }
+                // pozice ikony
+                self.playerIcon.x = iconX - self.playerIcon.width / 2;
+                self.playerIcon.y = iconY - self.playerIcon.height / 2;
+                // pozice minimapy
+                self.bitmap.sourceRect = new createjs.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
             };
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
                 self.shiftX = payload.payload;

@@ -215,7 +215,7 @@ namespace Lich {
             let minimapRender = new MinimapRender(canvas.width, canvas.height, tilesMap)
 
             // Minimapa
-            let minimapUI = new MinimapUI(minimapRender);
+            let minimapUI = new MinimapUI(canvas.width, canvas.height, minimapRender);
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
             minimapUI.y = UI.SCREEN_SPACING;
             self.addChild(minimapUI);

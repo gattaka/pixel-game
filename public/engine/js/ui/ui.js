@@ -174,7 +174,7 @@ var Lich;
             // Minimap render
             var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
             // Minimapa
-            var minimapUI = new Lich.MinimapUI(minimapRender);
+            var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, minimapRender);
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
             minimapUI.y = UI.SCREEN_SPACING;
             self.addChild(minimapUI);
