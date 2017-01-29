@@ -301,65 +301,71 @@ var Lich;
                 console.log("Ou.. shiftY je Nan");
             }
             var self = this;
+            // požadovaný posuv
             var rndShiftX = Lich.Utils.floor(shiftX);
             var rndShiftY = Lich.Utils.floor(shiftY);
             var canvasCenterX = self.game.getCanvas().width / 2;
             var canvasCenterY = self.game.getCanvas().height / 2;
-            var realShiftX = self.render.limitShiftX(rndShiftX);
-            var realShiftY = self.render.limitShiftY(rndShiftY);
-            // Podmínka na realShift a screenOffset je pak proto, aby se mohla mapa
-            // posunout po inicializaci, kdy je spawnpoint ve vzáleném konci
-            // na druhý konec se není třeba ptát, protože je to výchozí pozice mapy (0,0)
-            var initShiftX = realShiftX < 0 && self.render.screenOffsetX == 0;
-            var initShiftY = realShiftY < 0 && self.render.screenOffsetY == 0;
-            // Je potřeba kontrolovat i canvasCenter pozici hráče, 
-            // aby se mohl z krajních pozic mapy vůbec na střed obrazovky vrátit
-            var willShiftX = realShiftX && self.hero.x == canvasCenterX || initShiftX;
-            var willShiftY = realShiftY && self.hero.y == canvasCenterY || initShiftY;
-            self.render.shiftSectorsBy(willShiftX ? realShiftX : 0, willShiftY ? realShiftY : 0);
-            self.game.getBackground().shift(willShiftX ? realShiftX : 0, willShiftY ? realShiftY : 0);
+            var playerShiftX, sceneShiftX;
+            var playerShiftY, sceneShiftY;
+            // kolik zbývá hráčovi z cesty na střed směrem v pohybu
+            var playerPreShiftX = self.hero.x != canvasCenterX ? canvasCenterX - self.hero.x : 0;
+            var playerPreShiftY = self.hero.y != canvasCenterY ? canvasCenterY - self.hero.y : 0;
+            if (playerPreShiftX != 0 && Lich.Utils.sign(playerPreShiftX) != Lich.Utils.sign(rndShiftX)) {
+                if (Math.abs(playerPreShiftX) > Math.abs(rndShiftX)) {
+                    playerPreShiftX = rndShiftX;
+                }
+            }
+            else {
+                playerPreShiftX = 0;
+            }
+            if (playerPreShiftY != 0 && Lich.Utils.sign(playerPreShiftY) != Lich.Utils.sign(rndShiftY)) {
+                if (Math.abs(playerPreShiftY) > Math.abs(rndShiftY)) {
+                    playerPreShiftY = rndShiftY;
+                }
+            }
+            else {
+                playerPreShiftY = 0;
+            }
+            // kolik můžu posunout scénu? Odečti od posunu část, kterou provedu hráčem
+            var plannedShiftX = rndShiftX - playerPreShiftX;
+            var plannedShiftY = rndShiftY - playerPreShiftY;
+            sceneShiftX = self.render.limitShiftX(plannedShiftX);
+            sceneShiftY = self.render.limitShiftY(plannedShiftY);
+            // kolik posunu budu muset zobrazit hráčem, protože scéna je nadoraz?
+            var overSceneX = plannedShiftX - sceneShiftX;
+            var overSceneY = plannedShiftY - sceneShiftY;
+            // hráč se tedy posune o "dojezd" při startu a "přejezd" při konci
+            playerShiftX = overSceneX + playerPreShiftX;
+            playerShiftY = overSceneY + playerPreShiftY;
+            self.hero.x -= playerShiftX;
+            self.hero.y -= playerShiftY;
+            if (self.hero.x < 0)
+                self.hero.x = -self.hero.collXOffset;
+            if (self.hero.x > self.game.getCanvas().width)
+                self.hero.x = self.game.getCanvas().width - self.hero.width + self.hero.collXOffset;
+            if (self.hero.y < 0)
+                self.hero.y = -self.hero.collYOffset;
+            if (self.hero.y > self.game.getCanvas().height)
+                self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
+            self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
+            self.game.getBackground().shift(sceneShiftX, sceneShiftY);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
             self.labelObjects.forEach(function (item) {
                 if (item) {
-                    if (willShiftX)
-                        item.x += realShiftX;
+                    item.x += sceneShiftX;
                     // virtualY kvůli tween pohybu textu
-                    if (willShiftY)
-                        item["virtualY"] += realShiftY;
+                    item["virtualY"] += sceneShiftY;
                 }
             });
             toShift.forEach(function (items) {
                 items.forEach(function (item) {
                     if (item) {
-                        if (willShiftX)
-                            item.x += realShiftX;
-                        if (willShiftY)
-                            item.y += realShiftY;
+                        item.x += sceneShiftX;
+                        item.y += sceneShiftY;
                     }
                 });
             });
-            // Při initShift se sice scéna hýbe, (willShift = true), 
-            // ale zároveň se musí pohnout i hráč do pozice mimo střed
-            if (!willShiftX || initShiftX) {
-                // Scéna se nehýbe (je v krajních pozicích) posuň tedy jenom hráče
-                // Zabraňuje přeskakování středu, na který jsou vztažené kontroly
-                if (self.hero.x > canvasCenterX && self.hero.x - rndShiftX < canvasCenterX
-                    || self.hero.x < canvasCenterX && self.hero.x - rndShiftX > canvasCenterX) {
-                    self.hero.x = canvasCenterX;
-                }
-                else {
-                    self.hero.x -= initShiftX ? (rndShiftX - realShiftX) : rndShiftX;
-                }
-            }
-            if (!willShiftY || initShiftY) {
-                if (self.hero.y > canvasCenterY && self.hero.y - rndShiftY < canvasCenterY
-                    || self.hero.y < canvasCenterY && self.hero.y - rndShiftY > canvasCenterY) {
-                    self.hero.y = canvasCenterY;
-                }
-                else {
-                    self.hero.y -= initShiftY ? (rndShiftY - realShiftY) : rndShiftY;
-                }
-            }
         };
         ;
         World.prototype.shiftWorldTo = function (x, y) {
