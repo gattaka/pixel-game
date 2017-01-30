@@ -132,7 +132,7 @@ var Lich;
                 else {
                     if (miniYPlayer - miniYShift > self.height / 2) {
                         iconY = self.height / 2 + miniYPlayer - miniYShift - (mapRender.tilesMap.height / 2 - self.height / 2);
-                        viewY = mapRender.tilesMap.height / 2 - self.height / 2;
+                        viewY = mapRender.tilesMap.height / 2 - self.height;
                     }
                     else {
                         iconY = miniYPlayer - miniYShift;

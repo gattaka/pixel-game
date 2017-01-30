@@ -27,6 +27,7 @@ var Lich;
             version.addChange("Loot towers introduced");
             version.addChange("Spawn point player placing bug fixed");
             version.addChange("Minimap revived");
+            version.addChange("Player border movement fixed");
             this.addVersion(version);
             version = new Version("0.17 - Jan 21, 2017");
             version.addChange("Surfaces transitions finished");
