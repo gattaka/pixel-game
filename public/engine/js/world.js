@@ -311,9 +311,12 @@ var Lich;
             // kolik zbývá hráčovi z cesty na střed směrem v pohybu
             var playerPreShiftX = self.hero.x != canvasCenterX ? canvasCenterX - self.hero.x : 0;
             var playerPreShiftY = self.hero.y != canvasCenterY ? canvasCenterY - self.hero.y : 0;
+            // pokud jsem například vlevo od středu ale pohybuju se opět doleva, nenabízej nic            
             if (playerPreShiftX != 0 && Lich.Utils.sign(playerPreShiftX) != Lich.Utils.sign(rndShiftX)) {
                 if (Math.abs(playerPreShiftX) > Math.abs(rndShiftX)) {
-                    playerPreShiftX = rndShiftX;
+                    // pokud by vzdálenost hráče od středu byla větší, než plánový posuv
+                    // sniž vzdálenost, kterou spotřebuje hráč svou cestu do sředu
+                    playerPreShiftX = -rndShiftX;
                 }
             }
             else {
@@ -321,23 +324,23 @@ var Lich;
             }
             if (playerPreShiftY != 0 && Lich.Utils.sign(playerPreShiftY) != Lich.Utils.sign(rndShiftY)) {
                 if (Math.abs(playerPreShiftY) > Math.abs(rndShiftY)) {
-                    playerPreShiftY = rndShiftY;
+                    playerPreShiftY = -rndShiftY;
                 }
             }
             else {
                 playerPreShiftY = 0;
             }
             // kolik můžu posunout scénu? Odečti od posunu část, kterou provedu hráčem
-            var plannedShiftX = rndShiftX - playerPreShiftX;
-            var plannedShiftY = rndShiftY - playerPreShiftY;
+            var plannedShiftX = rndShiftX + playerPreShiftX;
+            var plannedShiftY = rndShiftY + playerPreShiftY;
             sceneShiftX = self.render.limitShiftX(plannedShiftX);
             sceneShiftY = self.render.limitShiftY(plannedShiftY);
             // kolik posunu budu muset zobrazit hráčem, protože scéna je nadoraz?
             var overSceneX = plannedShiftX - sceneShiftX;
             var overSceneY = plannedShiftY - sceneShiftY;
             // hráč se tedy posune o "dojezd" při startu a "přejezd" při konci
-            playerShiftX = overSceneX + playerPreShiftX;
-            playerShiftY = overSceneY + playerPreShiftY;
+            playerShiftX = overSceneX - playerPreShiftX;
+            playerShiftY = overSceneY - playerPreShiftY;
             self.hero.x -= playerShiftX;
             self.hero.y -= playerShiftY;
             if (self.hero.x < 0)
