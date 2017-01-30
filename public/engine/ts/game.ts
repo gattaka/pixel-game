@@ -386,6 +386,11 @@ namespace Lich {
                         } else {
                             self.ui.mapUI.prepareForToggle();
                         }
+                        if (self.keys[78]) {
+                            self.ui.minimapUI.toggle();
+                        } else {
+                            self.ui.minimapUI.prepareForToggle();
+                        }
                         if (self.keys[16]) {
                             self.ui.spellsUI.toggleShift();
                         } else {

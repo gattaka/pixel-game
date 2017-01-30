@@ -33,11 +33,29 @@ namespace Lich {
 
             let self = this;
 
+            // Minimap render
+            let minimapRender = new MinimapRender(canvas.width, canvas.height, tilesMap)
+
+            // Minimapa
+            let minimapUI = new MinimapUI(canvas.width, canvas.height, minimapRender);
+            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
+            minimapUI.y = UI.SCREEN_SPACING;
+            self.addChild(minimapUI);
+            self.minimapUI = minimapUI;
+
+            // mapa
+            let mapUI = new MapUI(canvas.width, canvas.height, minimapRender);
+            mapUI.x = UI.SCREEN_SPACING;
+            mapUI.y = UI.SCREEN_SPACING;
+            self.addChild(mapUI);
+            self.mapUI = mapUI;
+            mapUI.hide();
+
             // Help btn
             if (!mobile) {
                 let helpBtn = this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.width - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             } else {
                 let menuCont = new createjs.Container;
@@ -210,26 +228,6 @@ namespace Lich {
 
                 return false;
             });
-
-            // Minimap render
-            let minimapRender = new MinimapRender(canvas.width, canvas.height, tilesMap)
-
-            // Minimapa
-            let minimapUI = new MinimapUI(canvas.width, canvas.height, minimapRender);
-            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
-            minimapUI.y = UI.SCREEN_SPACING;
-            self.addChild(minimapUI);
-            self.minimapUI = minimapUI;
-
-            // mapa
-            let mapUI = new MapUI(canvas.width, canvas.height, minimapRender);
-            // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
-            // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
-            mapUI.x = UI.SCREEN_SPACING;
-            mapUI.y = UI.SCREEN_SPACING;
-            self.addChild(mapUI);
-            self.mapUI = mapUI;
-            mapUI.hide();
 
             if (mobile) {
                 let invBtn = new Button(UIGFXKey.UI_BACKPACK_KEY);

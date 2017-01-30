@@ -13,11 +13,26 @@ var Lich;
             // mobile
             this.controls = new Lich.Controls();
             var self = this;
+            // Minimap render
+            var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
+            // Minimapa
+            var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, minimapRender);
+            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
+            minimapUI.y = UI.SCREEN_SPACING;
+            self.addChild(minimapUI);
+            self.minimapUI = minimapUI;
+            // mapa
+            var mapUI = new Lich.MapUI(canvas.width, canvas.height, minimapRender);
+            mapUI.x = UI.SCREEN_SPACING;
+            mapUI.y = UI.SCREEN_SPACING;
+            self.addChild(mapUI);
+            self.mapUI = mapUI;
+            mapUI.hide();
             // Help btn
             if (!mobile) {
                 var helpBtn = this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.width - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             }
             else {
@@ -171,23 +186,6 @@ var Lich;
                 });
                 return false;
             });
-            // Minimap render
-            var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
-            // Minimapa
-            var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, minimapRender);
-            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
-            minimapUI.y = UI.SCREEN_SPACING;
-            self.addChild(minimapUI);
-            self.minimapUI = minimapUI;
-            // mapa
-            var mapUI = new Lich.MapUI(canvas.width, canvas.height, minimapRender);
-            // minimapUI.x = canvas.width / 2 - minimapUI.width / 2;
-            // minimapUI.y = canvas.height / 2 - minimapUI.height / 2;
-            mapUI.x = UI.SCREEN_SPACING;
-            mapUI.y = UI.SCREEN_SPACING;
-            self.addChild(mapUI);
-            self.mapUI = mapUI;
-            mapUI.hide();
             if (mobile) {
                 var invBtn = new Button(Lich.UIGFXKey.UI_BACKPACK_KEY);
                 invBtn.x = UI.SCREEN_SPACING;
