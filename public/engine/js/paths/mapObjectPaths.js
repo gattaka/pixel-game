@@ -49,16 +49,17 @@ var Lich;
         ["images/parts/xmas_tree.png", Lich.MapObjectKey.MAP_XMAS_TREE_KEY],
         ["images/parts/advent_wreath.png", Lich.MapObjectKey.MAP_ADVENT_WREATH_KEY],
         ["images/parts/snowman.png", Lich.MapObjectKey.MAP_SNOWMAN_KEY],
-        ["images/parts/wood_chair.png", Lich.MapObjectKey.MAP_WOOD_CHAIR],
-        ["images/parts/wood_chair2.png", Lich.MapObjectKey.MAP_WOOD_CHAIR2],
-        ["images/parts/wood_table.png", Lich.MapObjectKey.MAP_WOOD_TABLE],
-        ["images/parts/gold_coins.png", Lich.MapObjectKey.MAP_GOLD_COINS],
-        ["images/parts/gold_coins2.png", Lich.MapObjectKey.MAP_GOLD_COINS2],
-        ["images/parts/silver_coins.png", Lich.MapObjectKey.MAP_SILVER_COINS],
-        ["images/parts/gold_dishes.png", Lich.MapObjectKey.MAP_GOLD_DISHES],
-        ["images/parts/gold_dishes2.png", Lich.MapObjectKey.MAP_GOLD_DISHES2],
-        ["images/parts/gold_bowl.png", Lich.MapObjectKey.MAP_GOLD_BOWL],
-        ["images/parts/skeleton_on_chair.png", Lich.MapObjectKey.MAP_SKELETON_ON_CHAIR],
-        ["images/parts/dead_fireplace.png", Lich.MapObjectKey.MAP_DEAD_FIREPLACE]
+        ["images/parts/wood_chair.png", Lich.MapObjectKey.MAP_WOOD_CHAIR_KEY],
+        ["images/parts/wood_chair2.png", Lich.MapObjectKey.MAP_WOOD_CHAIR2_KEY],
+        ["images/parts/wood_table.png", Lich.MapObjectKey.MAP_WOOD_TABLE_KEY],
+        ["images/parts/gold_coins.png", Lich.MapObjectKey.MAP_GOLD_COINS_KEY],
+        ["images/parts/gold_coins2.png", Lich.MapObjectKey.MAP_GOLD_COINS2_KEY],
+        ["images/parts/silver_coins.png", Lich.MapObjectKey.MAP_SILVER_COINS_KEY],
+        ["images/parts/gold_dishes.png", Lich.MapObjectKey.MAP_GOLD_DISHES_KEY],
+        ["images/parts/gold_dishes2.png", Lich.MapObjectKey.MAP_GOLD_DISHES2_KEY],
+        ["images/parts/gold_bowl.png", Lich.MapObjectKey.MAP_GOLD_BOWL_KEY],
+        ["images/parts/skeleton_on_chair.png", Lich.MapObjectKey.MAP_SKELETON_ON_CHAIR_KEY],
+        ["images/parts/dead_fireplace.png", Lich.MapObjectKey.MAP_DEAD_FIREPLACE_KEY],
+        ["images/parts/dead_chandelier.png", Lich.MapObjectKey.MAP_DEAD_CHANDELIER_KEY]
     ];
 })(Lich || (Lich = {}));

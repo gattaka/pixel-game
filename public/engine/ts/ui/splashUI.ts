@@ -25,6 +25,8 @@ namespace Lich {
 
             version = new Version("0.19 - Jan 31, 2017");   
             version.addChange("Background transitions fixed");
+            version.addChange("Loot towers spawn fixed");
+            version.addChange("Loot towers content improved");
             this.addVersion(version);
 
             version = new Version("0.18 - Jan 25, 2017");

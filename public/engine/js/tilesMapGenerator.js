@@ -233,36 +233,54 @@ var Lich;
                         }
                         else {
                             placeSrfc(x + j * 2, y, undefined); // void
-                            // poslední řádek před podlahou
-                            if (i == h - 1 && !tilesMap.mapObjectsTiles.getValue(x + j * 2, y)) {
+                            if (!tilesMap.mapObjectsTiles.getValue(x + j * 2, y) && j > 1 && j < width - 2) {
                                 var loot = void 0;
-                                switch (Math.floor(Math.random() * 20)) {
-                                    case 0:
-                                        loot = Lich.MapObjectKey.MAP_GOLD_COINS;
-                                        break;
-                                    case 1:
-                                        loot = Lich.MapObjectKey.MAP_GOLD_COINS2;
-                                        break;
-                                    case 2:
-                                        loot = Lich.MapObjectKey.MAP_SILVER_COINS;
-                                        break;
-                                    case 3:
-                                        loot = Lich.MapObjectKey.MAP_GOLD_DISHES;
-                                        break;
-                                    case 4:
-                                        loot = Lich.MapObjectKey.MAP_GOLD_DISHES2;
-                                        break;
-                                    case 5:
-                                        loot = Lich.MapObjectKey.MAP_GOLD_BOWL;
-                                        break;
-                                    case 6:
-                                        if (j < width - 2)
-                                            loot = Lich.MapObjectKey.MAP_DEAD_FIREPLACE;
-                                        break;
-                                    case 7:
-                                        loot = Lich.MapObjectKey.MAP_SKELETON_ON_CHAIR;
-                                        break;
-                                    default: break;
+                                // pod stropem
+                                if (i == 0) {
+                                    switch (Math.floor(Math.random() * 10)) {
+                                        case 6:
+                                            if (j < width - 3 && h > 2)
+                                                loot = Lich.MapObjectKey.MAP_DEAD_CHANDELIER_KEY;
+                                            break;
+                                        default: break;
+                                    }
+                                }
+                                // poslední řádek před podlahou
+                                if (i == h - 1) {
+                                    switch (Math.floor(Math.random() * 20)) {
+                                        case 0:
+                                            loot = Lich.MapObjectKey.MAP_GOLD_COINS_KEY;
+                                            break;
+                                        case 1:
+                                            loot = Lich.MapObjectKey.MAP_GOLD_COINS2_KEY;
+                                            break;
+                                        case 2:
+                                            loot = Lich.MapObjectKey.MAP_SILVER_COINS_KEY;
+                                            break;
+                                        case 3:
+                                            loot = Lich.MapObjectKey.MAP_GOLD_DISHES_KEY;
+                                            break;
+                                        case 4:
+                                            loot = Lich.MapObjectKey.MAP_GOLD_DISHES2_KEY;
+                                            break;
+                                        case 5:
+                                            loot = Lich.MapObjectKey.MAP_GOLD_BOWL_KEY;
+                                            break;
+                                        case 6:
+                                            if (j < width - 3)
+                                                loot = Lich.MapObjectKey.MAP_DEAD_FIREPLACE_KEY;
+                                            break;
+                                        case 7:
+                                            loot = Lich.MapObjectKey.MAP_SKELETON_ON_CHAIR_KEY;
+                                            break;
+                                        case 8:
+                                            loot = Lich.MapObjectKey.MAP_WOOD_TABLE_KEY;
+                                            break;
+                                        case 8:
+                                            loot = Lich.MapObjectKey.MAP_CAULDRON_KEY;
+                                            break;
+                                        default: break;
+                                    }
                                 }
                                 if (loot)
                                     Lich.TilesMapTools.writeObjectRecord(tilesMap, x + j * 2, y + 2, Lich.Resources.getInstance().mapObjectDefs[loot]);

@@ -44,11 +44,11 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_TREE_KEY]),
             new InvObjDefinition(InventoryKey.INV_ADVENT_WREATH_KEY, res.mapObjectDefs[MapObjectKey.MAP_ADVENT_WREATH_KEY]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_COINS, res.mapObjectDefs[MapObjectKey.MAP_GOLD_COINS]),
-            new InvObjDefinition(InventoryKey.INV_SILVER_COINS, res.mapObjectDefs[MapObjectKey.MAP_SILVER_COINS]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES2, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES2]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_BOWL, res.mapObjectDefs[MapObjectKey.MAP_GOLD_BOWL]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_COINS, res.mapObjectDefs[MapObjectKey.MAP_GOLD_COINS_KEY]),
+            new InvObjDefinition(InventoryKey.INV_SILVER_COINS, res.mapObjectDefs[MapObjectKey.MAP_SILVER_COINS_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES2, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES2_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_BOWL, res.mapObjectDefs[MapObjectKey.MAP_GOLD_BOWL_KEY]),
             new InvObjDefinition(InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
@@ -85,9 +85,9 @@ namespace Lich {
             }),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
-            new InvObjDefinition(InventoryKey.INV_WOOD_CHAIR, res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR])
-                .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR2]),
-            new InvObjDefinition(InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[MapObjectKey.MAP_WOOD_TABLE]),
+            new InvObjDefinition(InventoryKey.INV_WOOD_CHAIR, res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR_KEY])
+                .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR2_KEY]),
+            new InvObjDefinition(InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[MapObjectKey.MAP_WOOD_TABLE_KEY]),
 
             // usaditelných jako povrch
             new InvObjDefinition(InventoryKey.INV_DIRT_KEY, res.getSurfaceDef(SurfaceKey.SRFC_DIRT_KEY)),
