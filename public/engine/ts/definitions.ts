@@ -208,6 +208,15 @@ namespace Lich {
         }
     }
 
+    export class MapSurfaceBgrTransitionDefinition {
+        constructor(
+            // jaký typ povrchu je prolínán a který se při výkopu měl vracet
+            public diggableSrfc: SurfaceBgrKey,
+            // klíč přechodového povrchu
+            public transitionKey: SurfaceBgrKey) {
+        }
+    }
+
     /**
      * Stěny povrchů (pozadí) jsou ve 4 formách:
      * 

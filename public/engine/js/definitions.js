@@ -225,6 +225,18 @@ var Lich;
         return MapSurfaceTransitionDefinition;
     }());
     Lich.MapSurfaceTransitionDefinition = MapSurfaceTransitionDefinition;
+    var MapSurfaceBgrTransitionDefinition = (function () {
+        function MapSurfaceBgrTransitionDefinition(
+            // jaký typ povrchu je prolínán a který se při výkopu měl vracet
+            diggableSrfc, 
+            // klíč přechodového povrchu
+            transitionKey) {
+            this.diggableSrfc = diggableSrfc;
+            this.transitionKey = transitionKey;
+        }
+        return MapSurfaceBgrTransitionDefinition;
+    }());
+    Lich.MapSurfaceBgrTransitionDefinition = MapSurfaceBgrTransitionDefinition;
     /**
      * Stěny povrchů (pozadí) jsou ve 4 formách:
      *

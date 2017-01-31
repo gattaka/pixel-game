@@ -103,8 +103,10 @@ namespace Lich {
         private mapSurfacesBgrDefs: { [k: string]: MapSurfaceBgrDefinition } = {};
         // dle aliasovaného povrchu
         private mapSurfaceTransitionsDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
+        private mapSurfaceBgrTransitionsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
         // dle trans povrchu
         public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
+        public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
         public mapObjectDefs = new Array<MapObjDefinition>();
@@ -290,6 +292,12 @@ namespace Lich {
 
         getTransitionSurface(srfc: SurfaceKey): SurfaceKey {
             let transDef = this.mapSurfaceTransitionsDefs[SurfaceKey[srfc]];
+            if (!transDef) return undefined;
+            return transDef.transitionKey;
+        }
+
+        getTransitionSurfaceBgr(srfc: SurfaceBgrKey): SurfaceBgrKey {
+            let transDef = this.mapSurfaceBgrTransitionsDefs[SurfaceBgrKey[srfc]];
             if (!transDef) return undefined;
             return transDef.transitionKey;
         }

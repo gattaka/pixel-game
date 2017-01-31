@@ -77,8 +77,10 @@ var Lich;
             this.mapSurfacesBgrDefs = {};
             // dle aliasovaného povrchu
             this.mapSurfaceTransitionsDefs = {};
+            this.mapSurfaceBgrTransitionsDefs = {};
             // dle trans povrchu
             this.mapTransitionSrfcs = {};
+            this.mapTransitionSrfcBgrs = {};
             this.achievementsDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
@@ -241,6 +243,12 @@ var Lich;
         };
         Resources.prototype.getTransitionSurface = function (srfc) {
             var transDef = this.mapSurfaceTransitionsDefs[Lich.SurfaceKey[srfc]];
+            if (!transDef)
+                return undefined;
+            return transDef.transitionKey;
+        };
+        Resources.prototype.getTransitionSurfaceBgr = function (srfc) {
+            var transDef = this.mapSurfaceBgrTransitionsDefs[Lich.SurfaceBgrKey[srfc]];
             if (!transDef)
                 return undefined;
             return transDef.transitionKey;

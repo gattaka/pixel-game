@@ -21,6 +21,12 @@ var Lich;
             }
         }
         ;
+        SurfaceBgrIndex.prototype.isTransitionSrfc = function (index) {
+            var key = this.getType(index);
+            if (Lich.Resources.getInstance().mapTransitionSrfcBgrs[Lich.SurfaceBgrKey[key]])
+                return true;
+            return false;
+        };
         /**
          * Získá výchozí prostřední dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
@@ -39,6 +45,10 @@ var Lich;
             var key = (x + 1) % Lich.SurfaceIndex.PATTER_LENGTH + 2; // +1 za VOID a +1 za předcházející dílky ve sprite
             return this.getPositionIndex(type, Lich.SurfacePositionKey[Lich.SurfacePositionKey[key]]);
         };
+        SurfaceBgrIndex.prototype.getTopPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getTopPositionIndexByCoordPattern(x, y, transitionType);
+        };
         /**
          * Získá výchozí levý dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
@@ -48,6 +58,10 @@ var Lich;
             var row = (y + 1) % Lich.SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             var key = col + row * Lich.SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, Lich.SurfacePositionKey[Lich.SurfacePositionKey[key]]);
+        };
+        SurfaceBgrIndex.prototype.getLeftPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getLeftPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
          * Získá výchozí pravý dílek dle vzoru,
@@ -59,6 +73,10 @@ var Lich;
             var key = col + row * Lich.SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, Lich.SurfacePositionKey[Lich.SurfacePositionKey[key]]);
         };
+        SurfaceBgrIndex.prototype.getRightPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getRightPositionIndexByCoordPattern(x, y, transitionType);
+        };
         /**
          * Získá výchozí spodní dílek dle vzoru,
          * který se opakuje, aby mapa byla pestřejší
@@ -68,6 +86,10 @@ var Lich;
             var row = Lich.SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             var key = col + row * Lich.SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, Lich.SurfacePositionKey[Lich.SurfacePositionKey[key]]);
+        };
+        SurfaceBgrIndex.prototype.getBottomPositionIndexByCoordPatternOnTransition = function (x, y, type) {
+            var transitionType = Lich.Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getBottomPositionIndexByCoordPattern(x, y, transitionType);
         };
         /**
          * Ze vzorku zjistí z jakého typu povrchu index je
@@ -164,6 +186,13 @@ var Lich;
                 || reducedIndex == Lich.SurfacePositionKey.B2
                 || reducedIndex == Lich.SurfacePositionKey.B3
                 || reducedIndex == Lich.SurfacePositionKey.B4;
+        };
+        SurfaceBgrIndex.prototype.getTypeName = function (index) {
+            return Lich.SurfaceBgrKey[this.getType(index)];
+        };
+        SurfaceBgrIndex.prototype.getPositionName = function (index) {
+            var reducedIndex = this.getPosition(index);
+            return Lich.SurfacePositionKey[reducedIndex];
         };
         /**
          * Zjistí, zda index je horní levou instancí nějakého typu povrchu

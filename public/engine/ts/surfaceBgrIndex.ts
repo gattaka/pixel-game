@@ -23,6 +23,13 @@ namespace Lich {
             }
         };
 
+        isTransitionSrfc(index: number): boolean {
+            let key: SurfaceBgrKey = this.getType(index);
+            if (Resources.getInstance().mapTransitionSrfcBgrs[SurfaceBgrKey[key]])
+                return true;
+            return false;
+        }
+
         /**
          * Získá výchozí prostřední dílek dle vzoru, 
          * který se opakuje, aby mapa byla pestřejší
@@ -43,6 +50,11 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
+        getTopPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceBgrKey) {
+            let transitionType = Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getTopPositionIndexByCoordPattern(x, y, transitionType);
+        }
+
         /**
          * Získá výchozí levý dílek dle vzoru, 
          * který se opakuje, aby mapa byla pestřejší
@@ -52,6 +64,11 @@ namespace Lich {
             let row = (y + 1) % SurfaceIndex.PATTER_LENGTH + 1; // +1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        getLeftPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceBgrKey) {
+            let transitionType = Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getLeftPositionIndexByCoordPattern(x, y, transitionType);
         }
 
         /**
@@ -65,6 +82,11 @@ namespace Lich {
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
         }
 
+        getRightPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceBgrKey) {
+            let transitionType = Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getRightPositionIndexByCoordPattern(x, y, transitionType);
+        }
+
         /**
          * Získá výchozí spodní dílek dle vzoru, 
          * který se opakuje, aby mapa byla pestřejší
@@ -74,6 +96,11 @@ namespace Lich {
             let row = SurfaceIndex.PATTER_LENGTH + 1; // PATTER_LENGTH + 1 za předcházející dílky ve sprite
             let key = col + row * SurfaceIndex.SPRITE_SIDE;
             return this.getPositionIndex(type, SurfacePositionKey[SurfacePositionKey[key]]);
+        }
+
+        getBottomPositionIndexByCoordPatternOnTransition(x: number, y: number, type: SurfaceBgrKey) {
+            let transitionType = Resources.getInstance().getTransitionSurfaceBgr(type);
+            return this.getBottomPositionIndexByCoordPattern(x, y, transitionType);
         }
 
         /**
@@ -180,6 +207,15 @@ namespace Lich {
                 || reducedIndex == SurfacePositionKey.B2
                 || reducedIndex == SurfacePositionKey.B3
                 || reducedIndex == SurfacePositionKey.B4;
+        }
+
+        getTypeName(index: number): string {
+            return SurfaceBgrKey[this.getType(index)];
+        }
+
+        getPositionName(index: number): string {
+            var reducedIndex = this.getPosition(index);
+            return SurfacePositionKey[reducedIndex];
         }
 
         /**
