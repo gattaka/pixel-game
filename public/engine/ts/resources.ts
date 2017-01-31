@@ -71,6 +71,7 @@ namespace Lich {
         static FONT = "expressway";
         static OUTLINE_COLOR = "#000";
         static TEXT_COLOR = "#FF0";
+        static WORLD_LOADER_COLOR = "#84ff00";
         static DEBUG_TEXT_COLOR = "#FF0";
 
         static REACH_TILES_RADIUS = 10;
@@ -217,6 +218,7 @@ namespace Lich {
             self.loader.addEventListener("complete", function () {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
             });
+
             self.loader.loadManifest(manifest, true);
 
             // Definice mapových povrchů

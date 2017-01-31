@@ -41,6 +41,13 @@ var Lich;
             if (typeof this.outlineLabel !== "undefined")
                 this.outlineLabel.text = value;
         };
+        Label.prototype.setColor = function (value) {
+            this.label.color = value;
+        };
+        Label.prototype.setOutlineColor = function (value) {
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.color = value;
+        };
         return Label;
     }(createjs.Container));
     Lich.Label = Label;

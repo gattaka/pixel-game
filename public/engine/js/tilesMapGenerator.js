@@ -99,6 +99,8 @@ var Lich;
             var progress = 0;
             if (data.spwx && data.spwy)
                 tilesMap.spawnPoint = new Lich.Coord2D(data.spwx, data.spwy);
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_NAME_CHANGE, "Loading world"));
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_COLOR_CHANGE, Lich.Resources.WORLD_LOADER_COLOR));
             async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, 0));
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loading surface"));
@@ -202,36 +204,37 @@ var Lich;
                     }
                 }
             };
-            var placeSrfcLine = function (tx, srfc) {
+            var placeSrfcLine = function (tx, srfc, bSrfc) {
                 for (var i = 0; i < width; i++) {
                     placeSrfc(tx + i * 2, y, srfc);
+                    placeBgr(tx + i * 2, y, bSrfc);
                 }
                 y += 2;
             };
             var placeRoom = function (x, h, srfc, bSrfc, ladder) {
                 var leftLadder = Math.random() > 0.5;
                 // strop
-                placeSrfcLine(x, srfc);
+                placeSrfcLine(x, srfc, bSrfc);
                 if (ladder) {
                     var lx = leftLadder ? x + 2 : x + (width - 2) * 2;
-                    placeBgr(lx - 2, y - 2, bSrfc);
                     placeSrfc(lx, y - 2, Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY);
-                    placeBgr(lx, y - 2, bSrfc);
-                    placeBgr(lx + 2, y - 2, bSrfc);
                 }
                 // místnost
                 for (var i = 0; i < h; i++) {
                     placeSrfc(x, y, srfc);
-                    placeSrfc(x + (width - 1) * 2, y, srfc);
+                    placeBgr(x, y, bSrfc);
                     for (var j = 1; j < width - 1; j++) {
-                        placeBgr(x + j * 2, y, bSrfc);
+                        if (i > 0 && i < h - 1 && j > 2 && j % 3 == 0 && j < width - 2)
+                            placeBgr(x + j * 2, y, Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_WINDOW_KEY);
+                        else
+                            placeBgr(x + j * 2, y, bSrfc);
                         if (ladder && (leftLadder && j == 1 || !leftLadder && j == width - 2)) {
                             placeSrfc(x + j * 2, y, Lich.SurfaceKey.SRFC_WOOD_LADDER_KEY);
                         }
                         else {
                             placeSrfc(x + j * 2, y, undefined); // void
                             // poslední řádek před podlahou
-                            if (i == h - 1) {
+                            if (i == h - 1 && !tilesMap.mapObjectsTiles.getValue(x + j * 2, y)) {
                                 var loot = void 0;
                                 switch (Math.floor(Math.random() * 20)) {
                                     case 0:
@@ -252,6 +255,13 @@ var Lich;
                                     case 5:
                                         loot = Lich.MapObjectKey.MAP_GOLD_BOWL;
                                         break;
+                                    case 6:
+                                        if (j < width - 2)
+                                            loot = Lich.MapObjectKey.MAP_DEAD_FIREPLACE;
+                                        break;
+                                    case 7:
+                                        loot = Lich.MapObjectKey.MAP_SKELETON_ON_CHAIR;
+                                        break;
                                     default: break;
                                 }
                                 if (loot)
@@ -259,6 +269,8 @@ var Lich;
                             }
                         }
                     }
+                    placeSrfc(x + (width - 1) * 2, y, srfc);
+                    placeBgr(x + (width - 1) * 2, y, bSrfc);
                     y += 2;
                 }
             };
@@ -276,7 +288,7 @@ var Lich;
                 placeRoom(x, floors[i], Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY, Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, i != 0);
             }
             // Podlaha
-            placeSrfcLine(x, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY);
+            placeSrfcLine(x, Lich.SurfaceKey.SRFC_ROCK_BRICK_KEY, Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY);
         };
         TilesMapGenerator.createDeposit = function (tilesMap, x0, y0, d0, oreKey) {
             var d = Lich.Utils.even(d0);
@@ -337,12 +349,14 @@ var Lich;
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     Lich.TilesMapTools.generateEdge(tilesMap.mapRecord, x, y, false);
+                    Lich.TilesMapTools.generateEdge(tilesMap.mapBgrRecord, x, y, false);
                 }
             }
             // rohy
             for (var y = 0; y < tilesMap.height; y++) {
                 for (var x = 0; x < tilesMap.width; x++) {
                     Lich.TilesMapTools.generateCorner(tilesMap.mapRecord, x, y, false);
+                    Lich.TilesMapTools.generateCorner(tilesMap.mapBgrRecord, x, y, false);
                 }
             }
         };
@@ -355,6 +369,8 @@ var Lich;
             var progress = 0;
             var tilesMap = new Lich.TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             var mass = tilesMap.height * tilesMap.width;
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_NAME_CHANGE, "Creating a new world"));
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_COLOR_CHANGE, Lich.Resources.WORLD_LOADER_COLOR));
             async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, 0));
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Preparing hills shape"));
@@ -496,7 +512,7 @@ var Lich;
                 // random deposit
                 var count = tilesMap.width * 0.002;
                 for (var i = 0; i < count; i++) {
-                    var towerX = Math.floor(Math.random() * (tilesMap.width / (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2)) * (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2));
+                    var towerX = Math.floor(Math.random() * (tilesMap.width / (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2))) * (TilesMapGenerator.LOOT_TOWER_MAX_WIDTH + 2);
                     var width_1 = Lich.Utils.odd(Lich.Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_WIDTH, TilesMapGenerator.LOOT_TOWER_MAX_WIDTH));
                     var height_1 = 2; // cimbuří
                     var floorCount = Lich.Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_FLOORS, TilesMapGenerator.LOOT_TOWER_MAX_FLOORS);
@@ -505,7 +521,7 @@ var Lich;
                         floors[i_1] = Lich.Utils.randRange(TilesMapGenerator.LOOT_TOWER_MIN_FLOOR_HEIGHT, TilesMapGenerator.LOOT_TOWER_MAX_FLOOR_HEIGHT);
                         height_1 += floors[i_1];
                     }
-                    var towerY = Math.floor(groundLevel + hills[towerX] - (height_1 * 2 * 0.75)); // 3/4 věže jsou nad zemí
+                    var towerY = Math.floor(groundLevel + hills[towerX] - height_1 * 2 + (5 * 2)); // 5 parts věže jsou pod zemí
                     TilesMapGenerator.createLootTower(tilesMap, towerX, towerY, width_1, floors);
                 }
             });

@@ -10,6 +10,7 @@ var Lich;
         function LoaderUI(game) {
             _super.call(this);
             this.game = game;
+            this.loaderName = "Loading...";
             var self = this;
             self.width = game.getCanvas().width;
             self.height = game.getCanvas().height;
@@ -28,11 +29,23 @@ var Lich;
             self.reset();
         }
         LoaderUI.prototype.reset = function () {
+            var _this = this;
             var self = this;
             this.currentItemLabel.setText(" ");
-            this.progressLabel.setText("Loading...");
+            this.progressLabel.setText(this.loaderName);
+            this.currentItemLabel.setColor(Lich.Resources.TEXT_COLOR);
+            this.progressLabel.setColor(Lich.Resources.TEXT_COLOR);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOADER_NAME_CHANGE, function (n) {
+                self.loaderName = n.payload;
+                return true;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOADER_COLOR_CHANGE, function (n) {
+                _this.currentItemLabel.setColor(n.payload);
+                _this.progressLabel.setColor(n.payload);
+                return true;
+            });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_PROGRESS, function (n) {
-                self.progressLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                self.progressLabel.setText(Math.floor(n.payload * 100) + "% " + self.loaderName);
                 return true;
             });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_ITEM, function (e) {

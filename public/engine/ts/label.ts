@@ -47,5 +47,14 @@ namespace Lich {
                 this.outlineLabel.text = value;
         }
 
+        setColor(value) {
+            this.label.color = value;
+        }
+
+        setOutlineColor(value) {
+            if (typeof this.outlineLabel !== "undefined")
+                this.outlineLabel.color = value;
+        }
+
     }
 }

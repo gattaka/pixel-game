@@ -57,6 +57,8 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_GOLD_DISHES"] = 53] = "MAP_GOLD_DISHES";
         MapObjectKey[MapObjectKey["MAP_GOLD_DISHES2"] = 54] = "MAP_GOLD_DISHES2";
         MapObjectKey[MapObjectKey["MAP_GOLD_BOWL"] = 55] = "MAP_GOLD_BOWL";
+        MapObjectKey[MapObjectKey["MAP_SKELETON_ON_CHAIR"] = 56] = "MAP_SKELETON_ON_CHAIR";
+        MapObjectKey[MapObjectKey["MAP_DEAD_FIREPLACE"] = 57] = "MAP_DEAD_FIREPLACE";
     })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
     var MapObjectKey = Lich.MapObjectKey;
 })(Lich || (Lich = {}));

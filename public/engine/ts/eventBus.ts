@@ -3,6 +3,8 @@ namespace Lich {
     export enum EventType {
         ACHIEVEMENT_PROGRESS,
         ACHIEVEMENT_DONE,
+        LOADER_COLOR_CHANGE,
+        LOADER_NAME_CHANGE,
         LOAD_PROGRESS,
         LOAD_ITEM,
         LOAD_FINISHED,

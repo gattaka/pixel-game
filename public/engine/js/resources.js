@@ -310,6 +310,7 @@ var Lich;
         Resources.FONT = "expressway";
         Resources.OUTLINE_COLOR = "#000";
         Resources.TEXT_COLOR = "#FF0";
+        Resources.WORLD_LOADER_COLOR = "#84ff00";
         Resources.DEBUG_TEXT_COLOR = "#FF0";
         Resources.REACH_TILES_RADIUS = 10;
         Resources.SPRITE_FRAMERATE = 0.2;

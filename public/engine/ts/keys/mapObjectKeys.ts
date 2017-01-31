@@ -55,6 +55,8 @@ namespace Lich {
         MAP_SILVER_COINS,
         MAP_GOLD_DISHES,
         MAP_GOLD_DISHES2,
-        MAP_GOLD_BOWL
+        MAP_GOLD_BOWL,
+        MAP_SKELETON_ON_CHAIR,
+        MAP_DEAD_FIREPLACE
     }
 }

@@ -7,6 +7,7 @@ namespace Lich {
         private loadScreen: createjs.Shape;
         private progressLabel: Label;
         private currentItemLabel: Label;
+        private loaderName = "Loading...";
 
         constructor(private game: Game) {
             super();
@@ -35,10 +36,23 @@ namespace Lich {
         public reset() {
             let self = this;
             this.currentItemLabel.setText(" ");
-            this.progressLabel.setText("Loading...");
+            this.progressLabel.setText(this.loaderName);
+            this.currentItemLabel.setColor(Resources.TEXT_COLOR);
+            this.progressLabel.setColor(Resources.TEXT_COLOR);
+
+            EventBus.getInstance().registerConsumer(EventType.LOADER_NAME_CHANGE, (n: StringEventPayload): boolean => {
+                self.loaderName = n.payload;
+                return true;
+            });
+
+            EventBus.getInstance().registerConsumer(EventType.LOADER_COLOR_CHANGE, (n: StringEventPayload): boolean => {
+                this.currentItemLabel.setColor(n.payload);
+                this.progressLabel.setColor(n.payload);
+                return true;
+            });
 
             EventBus.getInstance().registerConsumer(EventType.LOAD_PROGRESS, (n: NumberEventPayload): boolean => {
-                self.progressLabel.setText(Math.floor(n.payload * 100) + "% Loading... ");
+                self.progressLabel.setText(Math.floor(n.payload * 100) + "% " + self.loaderName);
                 return true;
             });
 

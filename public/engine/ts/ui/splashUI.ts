@@ -23,7 +23,7 @@ namespace Lich {
 
             var version;
 
-            version = new Version("0.19 - Jan 31, 2017");
+            version = new Version("0.19 - Jan 31, 2017");   
             version.addChange("Background transitions fixed");
             this.addVersion(version);
 
