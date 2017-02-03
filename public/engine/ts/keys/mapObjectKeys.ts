@@ -58,6 +58,8 @@ namespace Lich {
         MAP_GOLD_BOWL_KEY,
         MAP_SKELETON_ON_CHAIR_KEY,
         MAP_DEAD_FIREPLACE_KEY,
-        MAP_DEAD_CHANDELIER_KEY
+        MAP_DEAD_CHANDELIER_KEY,
+        MAP_WOODEN_CHEST,
+        MAP_WOODEN_GOLD_CHEST,
     }
 }

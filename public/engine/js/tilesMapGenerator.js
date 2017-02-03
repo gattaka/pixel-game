@@ -276,8 +276,14 @@ var Lich;
                                         case 8:
                                             loot = Lich.MapObjectKey.MAP_WOOD_TABLE_KEY;
                                             break;
-                                        case 8:
+                                        case 9:
                                             loot = Lich.MapObjectKey.MAP_CAULDRON_KEY;
+                                            break;
+                                        case 10:
+                                            loot = Lich.MapObjectKey.MAP_WOODEN_CHEST;
+                                            break;
+                                        case 11:
+                                            loot = Lich.MapObjectKey.MAP_WOODEN_GOLD_CHEST;
                                             break;
                                         default: break;
                                     }

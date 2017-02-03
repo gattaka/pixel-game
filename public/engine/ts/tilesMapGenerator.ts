@@ -307,7 +307,9 @@ namespace Lich {
                                         case 6: if (j < width - 3) loot = MapObjectKey.MAP_DEAD_FIREPLACE_KEY; break;
                                         case 7: loot = MapObjectKey.MAP_SKELETON_ON_CHAIR_KEY; break;
                                         case 8: loot = MapObjectKey.MAP_WOOD_TABLE_KEY; break;
-                                        case 8: loot = MapObjectKey.MAP_CAULDRON_KEY; break;
+                                        case 9: loot = MapObjectKey.MAP_CAULDRON_KEY; break;
+                                        case 10: loot = MapObjectKey.MAP_WOODEN_CHEST; break;
+                                        case 11: loot = MapObjectKey.MAP_WOODEN_GOLD_CHEST; break;
                                         default: break;
                                     }
                                 }

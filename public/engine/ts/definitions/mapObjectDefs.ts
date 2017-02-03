@@ -27,6 +27,8 @@ namespace Lich {
         new MapObjDefinition(MapObjectKey.MAP_BERRY_KEY, 2, 2, InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
+        new MapObjDefinition(MapObjectKey.MAP_WOODEN_GOLD_CHEST, 2, 2, null, 0, 0),
+        new MapObjDefinition(MapObjectKey.MAP_WOODEN_CHEST, 2, 2, null, 0, 0),
         new MapObjDefinition(MapObjectKey.MAP_GRASS1_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_GRASS2_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),
         new MapObjDefinition(MapObjectKey.MAP_GRASS3_KEY, 2, 2, InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),

@@ -27,6 +27,8 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BERRY_KEY, 2, 2, Lich.InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BUSH_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BUSH2_KEY, 2, 2, null, 0, 15).setDepth(0, 10),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_WOODEN_GOLD_CHEST, 2, 2, null, 0, 0),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_WOODEN_CHEST, 2, 2, null, 0, 0),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRASS1_KEY, 2, 2, Lich.InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRASS2_KEY, 2, 2, Lich.InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRASS3_KEY, 2, 2, Lich.InventoryKey.INV_STRAW_KEY, 1, 1).setDepth(0, 10),
