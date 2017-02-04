@@ -23,7 +23,7 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_ENEMY_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
-            self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY, Lich.SpellKey.SPELL_HOME_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Lich.Highlight();

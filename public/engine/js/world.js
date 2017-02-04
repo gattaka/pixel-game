@@ -221,11 +221,22 @@ var Lich;
             }
             return fits;
         };
-        World.prototype.placePlayerOnSpawnPoint = function () {
+        World.prototype.placePlayerOnScreen = function (xp, yp) {
             var self = this;
-            var game = self.game;
-            var tilesMap = self.tilesMap;
             var hero = self.hero;
+            var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
+            var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            var tCoord = self.render.pixelsToTiles(xp - hero.width / 2, yp - hero.height / 2);
+            if (self.fits(tCoord.x, tCoord.y, heroWidth, heroHeight)) {
+                self.placePlayerOn(tCoord.x, tCoord.y, hero);
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        World.prototype.placePlayerOn = function (xt, yt, hero) {
+            var self = this;
             // Tohle je potřeba udělat, jinak se při více teleportech hráči
             // nastřádá rychlost a například směrem dolů se při opakovaném
             // teleportování 1px nad zemí pak dokáže i zabít :)  
@@ -233,29 +244,40 @@ var Lich;
             hero.speedy = 0;
             this.hero.isClimbing = false;
             this.hero.play();
+            var pCoord = self.render.tilesToPixel(xt, yt);
+            self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+            // Refresh pro minimapu
+            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+        };
+        World.prototype.fits = function (xt, yt, w, h) {
+            var self = this;
+            for (var hyt = 0; hyt < h; hyt++) {
+                for (var hxt = 0; hxt < w; hxt++) {
+                    var result = self.isCollisionByTiles(xt + hxt, yt + hyt);
+                    if (result.hit) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        World.prototype.placePlayerOnSpawnPoint = function () {
+            var self = this;
+            var game = self.game;
+            var tilesMap = self.tilesMap;
+            var hero = self.hero;
             var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
             var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
             var pCoord;
             if (tilesMap.spawnPoint) {
-                pCoord = self.render.tilesToPixel(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y);
+                self.placePlayerOn(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y, hero);
             }
             else {
                 // TODO xt by se mělo střídavě od středu vzdalovat 
                 var xt_1 = tilesMap.width / 2;
                 var _loop_1 = function(yt) {
                     // je hráče kam umístit?
-                    var fits = true;
-                    (function () {
-                        for (var hyt = 0; hyt < heroHeight; hyt++) {
-                            for (var hxt = 0; hxt < heroWidth; hxt++) {
-                                var result = self.isCollisionByTiles(xt_1 + hxt, yt + hyt);
-                                if (result.hit) {
-                                    fits = false;
-                                    return;
-                                }
-                            }
-                        }
-                    })();
+                    var fits = self.fits(xt_1, yt, heroWidth, heroHeight);
                     if (fits) {
                         // je hráče na co umístit?
                         var sits_1 = false;
@@ -269,7 +291,7 @@ var Lich;
                             }
                         })();
                         if (sits_1) {
-                            pCoord = self.render.tilesToPixel(xt_1, yt);
+                            self.placePlayerOn(xt_1, yt, hero);
                             return "break";
                         }
                     }
@@ -279,9 +301,6 @@ var Lich;
                     if (state_1 === "break") break;
                 }
             }
-            self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
-            // Refresh pro minimapu
-            Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
         };
         World.prototype.resetPlayer = function () {
             this.hero.fillHealth(this.hero.getMaxHealth());

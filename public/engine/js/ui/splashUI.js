@@ -21,10 +21,16 @@ var Lich;
         function Changelog() {
             this.versions = new Lich.Table();
             var version;
+            version = new Version("0.20 - Feb 4, 2017");
+            version.addChange("Armchair, portrait, books, cabinet, bookshelf and candle introduced");
+            version.addChange("Home and teleport spell introduced");
+            this.addVersion(version);
             version = new Version("0.19 - Jan 31, 2017");
             version.addChange("Background transitions fixed");
             version.addChange("Loot towers spawn fixed");
             version.addChange("Loot towers content improved");
+            version.addChange("Armchair, portrait, books, cabinet, bookshelf and candle introduced");
+            version.addChange("Home and teleport spell introduced");
             this.addVersion(version);
             version = new Version("0.18 - Jan 25, 2017");
             version.addChange("Piercing projectiles damage fixed");

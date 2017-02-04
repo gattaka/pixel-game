@@ -81,11 +81,12 @@ var Lich;
         SpellKey[SpellKey["SPELL_BOLT_KEY"] = 6] = "SPELL_BOLT_KEY";
         SpellKey[SpellKey["SPELL_ENEMY_KEY"] = 7] = "SPELL_ENEMY_KEY";
         SpellKey[SpellKey["SPELL_TELEPORT_KEY"] = 8] = "SPELL_TELEPORT_KEY";
-        SpellKey[SpellKey["SPELL_USE_ITEM_KEY"] = 9] = "SPELL_USE_ITEM_KEY";
-        SpellKey[SpellKey["SPELL_LOVELETTER"] = 10] = "SPELL_LOVELETTER";
-        SpellKey[SpellKey["SPELL_LOVEARROW"] = 11] = "SPELL_LOVEARROW";
+        SpellKey[SpellKey["SPELL_HOME_KEY"] = 9] = "SPELL_HOME_KEY";
+        SpellKey[SpellKey["SPELL_USE_ITEM_KEY"] = 10] = "SPELL_USE_ITEM_KEY";
+        SpellKey[SpellKey["SPELL_LOVELETTER"] = 11] = "SPELL_LOVELETTER";
+        SpellKey[SpellKey["SPELL_LOVEARROW"] = 12] = "SPELL_LOVEARROW";
         // RMB click interakce s objekty
-        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 12] = "SPELL_INTERACT_KEY";
+        SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 13] = "SPELL_INTERACT_KEY";
     })(Lich.SpellKey || (Lich.SpellKey = {}));
     var SpellKey = Lich.SpellKey;
     (function (SoundKey) {

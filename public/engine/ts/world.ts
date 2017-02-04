@@ -244,11 +244,23 @@ namespace Lich {
             return fits;
         }
 
-        placePlayerOnSpawnPoint() {
+        placePlayerOnScreen(xp: number, yp: number) {
             var self = this;
-            let game = self.game;
-            let tilesMap = self.tilesMap;
             let hero = self.hero;
+            let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
+            let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            let tCoord = self.render.pixelsToTiles(xp - hero.width / 2, yp - hero.height / 2);
+            if (self.fits(tCoord.x, tCoord.y, heroWidth, heroHeight)) {
+                self.placePlayerOn(tCoord.x, tCoord.y, hero);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        placePlayerOn(xt: number, yt: number, hero: Hero) {
+            var self = this;
+
             // Tohle je potřeba udělat, jinak se při více teleportech hráči
             // nastřádá rychlost a například směrem dolů se při opakovaném
             // teleportování 1px nad zemí pak dokáže i zabít :)  
@@ -256,28 +268,44 @@ namespace Lich {
             hero.speedy = 0;
             this.hero.isClimbing = false;
             this.hero.play();
+
+            let pCoord = self.render.tilesToPixel(xt, yt);
+            self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
+
+            // Refresh pro minimapu
+            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+        }
+
+        fits(xt: number, yt: number, w: number, h: number) {
+            var self = this;
+            for (let hyt = 0; hyt < h; hyt++) {
+                for (let hxt = 0; hxt < w; hxt++) {
+                    let result = self.isCollisionByTiles(xt + hxt, yt + hyt);
+                    if (result.hit) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        placePlayerOnSpawnPoint() {
+            var self = this;
+            let game = self.game;
+            let tilesMap = self.tilesMap;
+            let hero = self.hero;
+
             let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
             let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
             let pCoord;
             if (tilesMap.spawnPoint) {
-                pCoord = self.render.tilesToPixel(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y);
+                self.placePlayerOn(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y, hero);
             } else {
                 // TODO xt by se mělo střídavě od středu vzdalovat 
                 let xt = tilesMap.width / 2;
                 for (let yt = 0; yt < tilesMap.height; yt++) {
                     // je hráče kam umístit?
-                    let fits = true;
-                    (() => {
-                        for (let hyt = 0; hyt < heroHeight; hyt++) {
-                            for (let hxt = 0; hxt < heroWidth; hxt++) {
-                                let result = self.isCollisionByTiles(xt + hxt, yt + hyt);
-                                if (result.hit) {
-                                    fits = false;
-                                    return;
-                                }
-                            }
-                        }
-                    })();
+                    let fits = self.fits(xt, yt, heroWidth, heroHeight);
                     if (fits) {
                         // je hráče na co umístit?
                         let sits = false;
@@ -291,16 +319,12 @@ namespace Lich {
                             }
                         })();
                         if (sits) {
-                            pCoord = self.render.tilesToPixel(xt, yt);
+                            self.placePlayerOn(xt, yt, hero);
                             break;
                         }
                     }
                 }
             }
-            self.shiftWorldBy(-(pCoord.x - hero.x), -(pCoord.y - hero.y));
-
-            // Refresh pro minimapu
-            EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
         }
 
         resetPlayer() {

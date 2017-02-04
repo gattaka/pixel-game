@@ -297,17 +297,38 @@ var Lich;
             var world = context.game.getWorld();
             Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
             world.hero.performState(Lich.Hero.TELEPORT);
-            // world.placePlayerOnSpawnPoint();
+            setTimeout(function () {
+                world.placePlayerOnScreen(context.xAim, context.yAim);
+            }, 100);
+            return true;
+        };
+        TeleportSpellDef.COOLDOWN = 200;
+        TeleportSpellDef.COST = 2; // DEV cost :)
+        return TeleportSpellDef;
+    }(SpellDefinition));
+    Lich.TeleportSpellDef = TeleportSpellDef;
+    /**
+     * Domů spell
+     */
+    var HomeSpellDef = (function (_super) {
+        __extends(HomeSpellDef, _super);
+        function HomeSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
+        }
+        HomeSpellDef.prototype.cast = function (context) {
+            var world = context.game.getWorld();
+            Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
+            world.hero.performState(Lich.Hero.TELEPORT);
             setTimeout(function () {
                 world.placePlayerOnSpawnPoint();
             }, 100);
             return true;
         };
-        TeleportSpellDef.COOLDOWN = 200;
-        TeleportSpellDef.COST = 20;
-        return TeleportSpellDef;
+        HomeSpellDef.COOLDOWN = 200;
+        HomeSpellDef.COST = 20;
+        return HomeSpellDef;
     }(SpellDefinition));
-    Lich.TeleportSpellDef = TeleportSpellDef;
+    Lich.HomeSpellDef = HomeSpellDef;
     /**
      * Spell pro interakci objektů a povrchů z mapy
      */

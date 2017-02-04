@@ -14,13 +14,13 @@ namespace Lich {
             [InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, 4],
             [InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4],
         ]],
-        [[InventoryKey.INV_SNOWMAN, 1], [
-            [InventoryKey.INV_SNOWBALL, 4],
+        [[InventoryKey.INV_SNOWMAN_KEY, 1], [
+            [InventoryKey.INV_SNOWBALL_KEY, 4],
             [InventoryKey.INV_COAL_KEY, 1],
             [InventoryKey.INV_CAULDRON_KEY, 1]
         ]],
-        [[InventoryKey.INV_SNOWBALL, 1], [
-            [InventoryKey.INV_SNOWFLAKE, 5]
+        [[InventoryKey.INV_SNOWBALL_KEY, 1], [
+            [InventoryKey.INV_SNOWFLAKE_KEY, 5]
         ]],
         [[InventoryKey.INV_DOOR_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 2]
@@ -81,10 +81,10 @@ namespace Lich {
         [[InventoryKey.INV_WOODWALL_WINDOW_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 1]
         ]],
-        [[InventoryKey.INV_WOOD_CHAIR, 1], [
+        [[InventoryKey.INV_WOOD_CHAIR_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 2]
         ]],
-        [[InventoryKey.INV_WOOD_TABLE, 1], [
+        [[InventoryKey.INV_WOOD_TABLE_KEY, 1], [
             [InventoryKey.INV_WOOD_KEY, 3]
         ]],
         [[InventoryKey.INV_WOODWALL_KEY, 5], [

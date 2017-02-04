@@ -80,6 +80,7 @@ namespace Lich {
         SPELL_BOLT_KEY,
         SPELL_ENEMY_KEY,
         SPELL_TELEPORT_KEY,
+        SPELL_HOME_KEY,
         SPELL_USE_ITEM_KEY,
         SPELL_LOVELETTER,
         SPELL_LOVEARROW,

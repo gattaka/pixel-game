@@ -25,7 +25,7 @@ namespace Lich {
         private static SNOWFLAKE_SPAWN_PROP = 1000; // 1/1000
         private static SNOWFLAKE_SPAWN_INTERVAL = 5000;
 
-        private static LOVELETTER_SPAWN_PROP = 1000; // 1/1000
+        private static LOVELETTER_SPAWN_PROP = 10000; // 1/10000
         private static LOVELETTER_SPAWN_INTERVAL = 10000;
 
         private snowflakeTryTimer = 0;
@@ -117,7 +117,7 @@ namespace Lich {
                 for (let i = 0; i < this.snowflakeTryTimer / Weather.SNOWFLAKE_SPAWN_INTERVAL; i++) {
                     this.snowflakeTryTimer = 0;
                     if (Utils.prop(Weather.SNOWFLAKE_SPAWN_PROP))
-                        world.spawnObject(new DugObjDefinition(InventoryKey.INV_SNOWFLAKE, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                        world.spawnObject(new DugObjDefinition(InventoryKey.INV_SNOWFLAKE_KEY, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
                     if (Utils.prop(Weather.GIFT_SPAWN_PROP)) {
                         let gift;
                         switch (Math.floor(Math.random() * 3)) {
@@ -136,7 +136,7 @@ namespace Lich {
                 for (let i = 0; i < this.loveletterTryTimer / Weather.LOVELETTER_SPAWN_INTERVAL; i++) {
                     this.loveletterTryTimer = 0;
                     if (Utils.prop(Weather.LOVELETTER_SPAWN_PROP))
-                        world.spawnObject(new DugObjDefinition(InventoryKey.INV_LOVELETTER, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
+                        world.spawnObject(new DugObjDefinition(InventoryKey.INV_LOVELETTER_KEY, 1), Math.floor(Math.random() * world.tilesMap.width), 0);
                 }
             }
 

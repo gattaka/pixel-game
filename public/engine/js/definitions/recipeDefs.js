@@ -14,13 +14,13 @@ var Lich;
                 [Lich.InventoryKey.INV_XMAS_BLUE_BAUBLE_KEY, 4],
                 [Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, 4],
             ]],
-        [[Lich.InventoryKey.INV_SNOWMAN, 1], [
-                [Lich.InventoryKey.INV_SNOWBALL, 4],
+        [[Lich.InventoryKey.INV_SNOWMAN_KEY, 1], [
+                [Lich.InventoryKey.INV_SNOWBALL_KEY, 4],
                 [Lich.InventoryKey.INV_COAL_KEY, 1],
                 [Lich.InventoryKey.INV_CAULDRON_KEY, 1]
             ]],
-        [[Lich.InventoryKey.INV_SNOWBALL, 1], [
-                [Lich.InventoryKey.INV_SNOWFLAKE, 5]
+        [[Lich.InventoryKey.INV_SNOWBALL_KEY, 1], [
+                [Lich.InventoryKey.INV_SNOWFLAKE_KEY, 5]
             ]],
         [[Lich.InventoryKey.INV_DOOR_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 2]
@@ -81,10 +81,10 @@ var Lich;
         [[Lich.InventoryKey.INV_WOODWALL_WINDOW_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 1]
             ]],
-        [[Lich.InventoryKey.INV_WOOD_CHAIR, 1], [
+        [[Lich.InventoryKey.INV_WOOD_CHAIR_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 2]
             ]],
-        [[Lich.InventoryKey.INV_WOOD_TABLE, 1], [
+        [[Lich.InventoryKey.INV_WOOD_TABLE_KEY, 1], [
                 [Lich.InventoryKey.INV_WOOD_KEY, 3]
             ]],
         [[Lich.InventoryKey.INV_WOODWALL_KEY, 5], [

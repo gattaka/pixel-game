@@ -101,7 +101,7 @@ namespace Lich {
             die(world: World) {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_SKELETON_DIE_KEY);
-                this.dropLoot(world, InventoryKey.INV_LOVEARROW);
+                this.dropLoot(world, InventoryKey.INV_LOVEARROW_KEY);
                 world.fadeEnemy(this);
             }
 

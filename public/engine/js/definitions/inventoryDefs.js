@@ -34,6 +34,12 @@ var Lich;
     Lich.INVENTORY_DEFS = function (res) {
         return [
             // usaditelných jako objekt
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_ARMCHAIR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_ARMCHAIR_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_BOOKS_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BOOKS_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_BOOKSHELF_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BOOKSHELF_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CABINET_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CABINET_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_CANDLE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CANDLE_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_PORTRAIT_VALENTIMON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_PORTRAIT_VALENTIMON_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_MUSHROOM_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_MUSHROOM_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_MUSHROOM2_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_MUSHROOM2_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_MUSHROOM3_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_MUSHROOM3_KEY]),
@@ -55,20 +61,20 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_FLOWER_POT_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CHANDELIER_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_CAULDRON_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_SNOWMAN, res.mapObjectDefs[Lich.MapObjectKey.MAP_SNOWMAN_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_SNOWMAN_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_SNOWMAN_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_HOLLY_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_XMAS_TREE_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ADVENT_WREATH_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_ADVENT_WREATH_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_COINS, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_COINS_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_SILVER_COINS, res.mapObjectDefs[Lich.MapObjectKey.MAP_SILVER_COINS_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_DISHES, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_DISHES_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_DISHES2, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_DISHES2_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_BOWL, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_BOWL_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_COINS_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_COINS_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_SILVER_COINS_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_SILVER_COINS_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_DISHES_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_DISHES_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_DISHES2_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_DISHES2_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_GOLD_BOWL_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_GOLD_BOWL_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_LOVELETTER).setConsumeAction(function (world) {
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_LOVELETTER_KEY).setConsumeAction(function (world) {
                 if (!Lich.Enemy.CupidBoss.spawned) {
                     Lich.SpawnPool.getInstance().spawn(Lich.Enemy.CupidBoss, world);
                     return true;
@@ -103,9 +109,9 @@ var Lich;
             }),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_DOOR_OPEN2_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_CHAIR, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_CHAIR_KEY])
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_CHAIR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_CHAIR_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_CHAIR2_KEY]),
-            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_TABLE_KEY]),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOOD_TABLE_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_WOOD_TABLE_KEY]),
             // usaditelných jako povrch
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_DIRT_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_DIRT_KEY)),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_WOODWALL_KEY, res.getSurfaceDef(Lich.SurfaceKey.SRFC_WOODWALL_KEY))

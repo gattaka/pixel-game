@@ -341,7 +341,7 @@ namespace Lich {
     export class TeleportSpellDef extends SpellDefinition {
 
         static COOLDOWN = 200;
-        static COST = 20;
+        static COST = 2; // DEV cost :)
 
         constructor() {
             super(SpellKey.SPELL_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
@@ -351,7 +351,29 @@ namespace Lich {
             let world = context.game.getWorld();
             Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
             world.hero.performState(Hero.TELEPORT);
-            // world.placePlayerOnSpawnPoint();
+            setTimeout(() => {
+                world.placePlayerOnScreen(context.xAim, context.yAim);
+            }, 100)
+            return true;
+        }
+    }
+
+    /**
+     * Domů spell
+     */
+    export class HomeSpellDef extends SpellDefinition {
+
+        static COOLDOWN = 200;
+        static COST = 20;
+
+        constructor() {
+            super(SpellKey.SPELL_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
+        }
+
+        public cast(context: SpellContext): boolean {
+            let world = context.game.getWorld();
+            Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
+            world.hero.performState(Hero.TELEPORT);
             setTimeout(() => {
                 world.placePlayerOnSpawnPoint();
             }, 100)

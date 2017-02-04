@@ -97,7 +97,7 @@ var Lich;
             Valentimon.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SKELETON_DIE_KEY);
-                this.dropLoot(world, Lich.InventoryKey.INV_LOVEARROW);
+                this.dropLoot(world, Lich.InventoryKey.INV_LOVEARROW_KEY);
                 world.fadeEnemy(this);
             };
             Valentimon.prototype.hit = function (damage, world) {

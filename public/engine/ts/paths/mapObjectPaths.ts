@@ -60,7 +60,13 @@ namespace Lich {
         ["images/parts/skeleton_on_chair.png", MapObjectKey.MAP_SKELETON_ON_CHAIR_KEY],
         ["images/parts/dead_fireplace.png", MapObjectKey.MAP_DEAD_FIREPLACE_KEY],
         ["images/parts/dead_chandelier.png", MapObjectKey.MAP_DEAD_CHANDELIER_KEY],
-        ["images/parts/wooden_chest.png", MapObjectKey.MAP_WOODEN_CHEST],
-        ["images/parts/wooden_chest_gold.png", MapObjectKey.MAP_WOODEN_GOLD_CHEST]
+        ["images/parts/wooden_chest.png", MapObjectKey.MAP_WOODEN_CHEST_KEY],
+        ["images/parts/wooden_chest_gold.png", MapObjectKey.MAP_WOODEN_GOLD_CHEST_KEY],
+        ["images/parts/armchair.png", MapObjectKey.MAP_ARMCHAIR_KEY],
+        ["images/parts/books.png", MapObjectKey.MAP_BOOKS_KEY],
+        ["images/parts/bookshelf.png", MapObjectKey.MAP_BOOKSHELF_KEY],
+        ["images/parts/cabinet.png", MapObjectKey.MAP_CABINET_KEY],
+        ["images/parts/candle.png", MapObjectKey.MAP_CANDLE_KEY],
+        ["images/parts/portrait_valentimon.png", MapObjectKey.MAP_PORTRAIT_VALENTIMON_KEY]
     ];
 }

@@ -268,6 +268,7 @@ namespace Lich {
                 new PlaceBgrSpellDef(),
                 new BoltSpellDef(),
                 new EnemySpellDef(),
+                new HomeSpellDef(),
                 new TeleportSpellDef(),
                 new UseItemSpellDef(),
                 new LoveletterSpellDef(),

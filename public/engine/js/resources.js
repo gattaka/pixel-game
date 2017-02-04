@@ -212,6 +212,7 @@ var Lich;
                 new Lich.PlaceBgrSpellDef(),
                 new Lich.BoltSpellDef(),
                 new Lich.EnemySpellDef(),
+                new Lich.HomeSpellDef(),
                 new Lich.TeleportSpellDef(),
                 new Lich.UseItemSpellDef(),
                 new Lich.LoveletterSpellDef(),

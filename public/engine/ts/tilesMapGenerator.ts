@@ -291,13 +291,13 @@ namespace Lich {
                                 // pod stropem
                                 if (i == 0) {
                                     switch (Math.floor(Math.random() * 10)) {
-                                        case 6: if (j < width - 3 && h > 2) loot = MapObjectKey.MAP_DEAD_CHANDELIER_KEY; break;
+                                        case 6: if (j < width - 3 && h >= 3) loot = MapObjectKey.MAP_DEAD_CHANDELIER_KEY; break;
                                         default: break;
                                     }
                                 }
                                 // poslední řádek před podlahou
                                 if (i == h - 1) {
-                                    switch (Math.floor(Math.random() * 20)) {
+                                    switch (Math.floor(Math.random() * 25)) {
                                         case 0: loot = MapObjectKey.MAP_GOLD_COINS_KEY; break;
                                         case 1: loot = MapObjectKey.MAP_GOLD_COINS2_KEY; break;
                                         case 2: loot = MapObjectKey.MAP_SILVER_COINS_KEY; break;
@@ -308,8 +308,12 @@ namespace Lich {
                                         case 7: loot = MapObjectKey.MAP_SKELETON_ON_CHAIR_KEY; break;
                                         case 8: loot = MapObjectKey.MAP_WOOD_TABLE_KEY; break;
                                         case 9: loot = MapObjectKey.MAP_CAULDRON_KEY; break;
-                                        case 10: loot = MapObjectKey.MAP_WOODEN_CHEST; break;
-                                        case 11: loot = MapObjectKey.MAP_WOODEN_GOLD_CHEST; break;
+                                        case 10: loot = MapObjectKey.MAP_WOODEN_CHEST_KEY; break;
+                                        case 11: loot = MapObjectKey.MAP_WOODEN_GOLD_CHEST_KEY; break;
+                                        case 12: loot = MapObjectKey.MAP_BOOKS_KEY; break;
+                                        case 13: if (h >= 4) loot = MapObjectKey.MAP_ARMCHAIR_KEY; break;
+                                        case 14: if (h >= 4) loot = MapObjectKey.MAP_CABINET_KEY; break;
+                                        case 15: if (h >= 4) loot = MapObjectKey.MAP_BOOKSHELF_KEY; break;
                                         default: break;
                                     }
                                 }

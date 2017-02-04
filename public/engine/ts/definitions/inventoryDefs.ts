@@ -18,6 +18,12 @@ namespace Lich {
     export let INVENTORY_DEFS = (res: Resources) => {
         return [
             // usaditelných jako objekt
+            new InvObjDefinition(InventoryKey.INV_ARMCHAIR_KEY, res.mapObjectDefs[MapObjectKey.MAP_ARMCHAIR_KEY]),
+            new InvObjDefinition(InventoryKey.INV_BOOKS_KEY, res.mapObjectDefs[MapObjectKey.MAP_BOOKS_KEY]),
+            new InvObjDefinition(InventoryKey.INV_BOOKSHELF_KEY, res.mapObjectDefs[MapObjectKey.MAP_BOOKSHELF_KEY]),
+            new InvObjDefinition(InventoryKey.INV_CABINET_KEY, res.mapObjectDefs[MapObjectKey.MAP_CABINET_KEY]),
+            new InvObjDefinition(InventoryKey.INV_CANDLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_CANDLE_KEY]),
+            new InvObjDefinition(InventoryKey.INV_PORTRAIT_VALENTIMON_KEY, res.mapObjectDefs[MapObjectKey.MAP_PORTRAIT_VALENTIMON_KEY]),
             new InvObjDefinition(InventoryKey.INV_MUSHROOM_KEY, res.mapObjectDefs[MapObjectKey.MAP_MUSHROOM_KEY]),
             new InvObjDefinition(InventoryKey.INV_MUSHROOM2_KEY, res.mapObjectDefs[MapObjectKey.MAP_MUSHROOM2_KEY]),
             new InvObjDefinition(InventoryKey.INV_MUSHROOM3_KEY, res.mapObjectDefs[MapObjectKey.MAP_MUSHROOM3_KEY]),
@@ -39,20 +45,20 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_FLOWER_POT_KEY, res.mapObjectDefs[MapObjectKey.MAP_FLOWER_POT_KEY]),
             new InvObjDefinition(InventoryKey.INV_CHANDELIER_KEY, res.mapObjectDefs[MapObjectKey.MAP_CHANDELIER_KEY]),
             new InvObjDefinition(InventoryKey.INV_CAULDRON_KEY, res.mapObjectDefs[MapObjectKey.MAP_CAULDRON_KEY]),
-            new InvObjDefinition(InventoryKey.INV_SNOWMAN, res.mapObjectDefs[MapObjectKey.MAP_SNOWMAN_KEY]),
+            new InvObjDefinition(InventoryKey.INV_SNOWMAN_KEY, res.mapObjectDefs[MapObjectKey.MAP_SNOWMAN_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_HOLLY_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_HOLLY_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_CHAIN_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_CHAIN_KEY]),
             new InvObjDefinition(InventoryKey.INV_XMAS_TREE_KEY, res.mapObjectDefs[MapObjectKey.MAP_XMAS_TREE_KEY]),
             new InvObjDefinition(InventoryKey.INV_ADVENT_WREATH_KEY, res.mapObjectDefs[MapObjectKey.MAP_ADVENT_WREATH_KEY]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_COINS, res.mapObjectDefs[MapObjectKey.MAP_GOLD_COINS_KEY]),
-            new InvObjDefinition(InventoryKey.INV_SILVER_COINS, res.mapObjectDefs[MapObjectKey.MAP_SILVER_COINS_KEY]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES_KEY]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES2, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES2_KEY]),
-            new InvObjDefinition(InventoryKey.INV_GOLD_BOWL, res.mapObjectDefs[MapObjectKey.MAP_GOLD_BOWL_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_COINS_KEY, res.mapObjectDefs[MapObjectKey.MAP_GOLD_COINS_KEY]),
+            new InvObjDefinition(InventoryKey.INV_SILVER_COINS_KEY, res.mapObjectDefs[MapObjectKey.MAP_SILVER_COINS_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES_KEY, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_DISHES2_KEY, res.mapObjectDefs[MapObjectKey.MAP_GOLD_DISHES2_KEY]),
+            new InvObjDefinition(InventoryKey.INV_GOLD_BOWL_KEY, res.mapObjectDefs[MapObjectKey.MAP_GOLD_BOWL_KEY]),
             new InvObjDefinition(InventoryKey.INV_GIFT1_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT2_KEY).setConsumeAction(xmasGiftSpawn),
             new InvObjDefinition(InventoryKey.INV_GIFT3_KEY).setConsumeAction(xmasGiftSpawn),
-            new InvObjDefinition(InventoryKey.INV_LOVELETTER).setConsumeAction((world: World): boolean => {
+            new InvObjDefinition(InventoryKey.INV_LOVELETTER_KEY).setConsumeAction((world: World): boolean => {
                 if (!Enemy.CupidBoss.spawned) {
                     SpawnPool.getInstance().spawn(Enemy.CupidBoss, world);
                     return true;
@@ -85,9 +91,9 @@ namespace Lich {
             }),
             new InvObjDefinition(InventoryKey.INV_DOOR_KEY, res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_DOOR_OPEN2_KEY]),
-            new InvObjDefinition(InventoryKey.INV_WOOD_CHAIR, res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR_KEY])
+            new InvObjDefinition(InventoryKey.INV_WOOD_CHAIR_KEY, res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR_KEY])
                 .setMapObjAlternative(res.mapObjectDefs[MapObjectKey.MAP_WOOD_CHAIR2_KEY]),
-            new InvObjDefinition(InventoryKey.INV_WOOD_TABLE, res.mapObjectDefs[MapObjectKey.MAP_WOOD_TABLE_KEY]),
+            new InvObjDefinition(InventoryKey.INV_WOOD_TABLE_KEY, res.mapObjectDefs[MapObjectKey.MAP_WOOD_TABLE_KEY]),
 
             // usaditelných jako povrch
             new InvObjDefinition(InventoryKey.INV_DIRT_KEY, res.getSurfaceDef(SurfaceKey.SRFC_DIRT_KEY)),

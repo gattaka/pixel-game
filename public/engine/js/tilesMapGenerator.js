@@ -239,7 +239,7 @@ var Lich;
                                 if (i == 0) {
                                     switch (Math.floor(Math.random() * 10)) {
                                         case 6:
-                                            if (j < width - 3 && h > 2)
+                                            if (j < width - 3 && h >= 3)
                                                 loot = Lich.MapObjectKey.MAP_DEAD_CHANDELIER_KEY;
                                             break;
                                         default: break;
@@ -247,7 +247,7 @@ var Lich;
                                 }
                                 // poslední řádek před podlahou
                                 if (i == h - 1) {
-                                    switch (Math.floor(Math.random() * 20)) {
+                                    switch (Math.floor(Math.random() * 25)) {
                                         case 0:
                                             loot = Lich.MapObjectKey.MAP_GOLD_COINS_KEY;
                                             break;
@@ -280,10 +280,25 @@ var Lich;
                                             loot = Lich.MapObjectKey.MAP_CAULDRON_KEY;
                                             break;
                                         case 10:
-                                            loot = Lich.MapObjectKey.MAP_WOODEN_CHEST;
+                                            loot = Lich.MapObjectKey.MAP_WOODEN_CHEST_KEY;
                                             break;
                                         case 11:
-                                            loot = Lich.MapObjectKey.MAP_WOODEN_GOLD_CHEST;
+                                            loot = Lich.MapObjectKey.MAP_WOODEN_GOLD_CHEST_KEY;
+                                            break;
+                                        case 12:
+                                            loot = Lich.MapObjectKey.MAP_BOOKS_KEY;
+                                            break;
+                                        case 13:
+                                            if (h >= 4)
+                                                loot = Lich.MapObjectKey.MAP_ARMCHAIR_KEY;
+                                            break;
+                                        case 14:
+                                            if (h >= 4)
+                                                loot = Lich.MapObjectKey.MAP_CABINET_KEY;
+                                            break;
+                                        case 15:
+                                            if (h >= 4)
+                                                loot = Lich.MapObjectKey.MAP_BOOKSHELF_KEY;
                                             break;
                                         default: break;
                                     }
