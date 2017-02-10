@@ -11,6 +11,7 @@ var Lich;
         ["images/ui/enemy_spell.png", Lich.SpellKey.SPELL_ENEMY_KEY],
         ["images/ui/teleport_spell.png", Lich.SpellKey.SPELL_TELEPORT_KEY],
         ["images/ui/home_spell.png", Lich.SpellKey.SPELL_HOME_KEY],
-        ["images/ui/use_spell.png", Lich.SpellKey.SPELL_USE_ITEM_KEY]
+        ["images/ui/use_spell.png", Lich.SpellKey.SPELL_USE_ITEM_KEY],
+        ["images/ui/place_spell.png", Lich.SpellKey.SPELL_REVEAL_FOG_KEY]
     ];
 })(Lich || (Lich = {}));

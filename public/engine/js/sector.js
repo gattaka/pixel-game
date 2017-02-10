@@ -5,10 +5,34 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
+    var AbstractSector = (function (_super) {
+        __extends(AbstractSector, _super);
+        function AbstractSector(secId, map_x, map_y, width, height) {
+            _super.call(this);
+            this.secId = secId;
+            this.map_x = map_x;
+            this.map_y = map_y;
+            this.width = width;
+            this.height = height;
+            this.backgroundCont = new createjs.Container();
+            this.cacheableCont = new createjs.Container();
+            this.animatedCont = new createjs.Container();
+        }
+        return AbstractSector;
+    }(createjs.Container));
+    Lich.AbstractSector = AbstractSector;
+    var FogSector = (function (_super) {
+        __extends(FogSector, _super);
+        function FogSector() {
+            _super.apply(this, arguments);
+        }
+        return FogSector;
+    }(AbstractSector));
+    Lich.FogSector = FogSector;
     var Sector = (function (_super) {
         __extends(Sector, _super);
         function Sector(secId, map_x, map_y, width, height) {
-            _super.call(this);
+            _super.call(this, secId, map_x, map_y, width, height);
             this.secId = secId;
             this.map_x = map_x;
             this.map_y = map_y;
@@ -56,6 +80,6 @@ var Lich;
             return this.animatedCont.removeChild(child);
         };
         return Sector;
-    }(createjs.Container));
+    }(AbstractSector));
     Lich.Sector = Sector;
 })(Lich || (Lich = {}));

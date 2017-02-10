@@ -85,7 +85,7 @@ namespace Lich {
         /*
          * Přepínače
          */
-        static SHOW_SECTORS = false;
+        static SHOW_SECTORS = true;
         static PRINT_SECTOR_ALLOC = false;
 
         /*
@@ -164,6 +164,8 @@ namespace Lich {
             SURFACE_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], SurfaceKey[path[1]]));
             });
+            // Fog
+            manifest.push(new Load(FOG_PATH[0], FogKey[FOG_PATH[1]]));
             // surface backgrounds
             SURFACE_BGR_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], SurfaceBgrKey[path[1]]));
@@ -272,7 +274,8 @@ namespace Lich {
                 new TeleportSpellDef(),
                 new UseItemSpellDef(),
                 new LoveletterSpellDef(),
-                new LovearrowSpellDef()
+                new LovearrowSpellDef(),
+                new RevealFogSpellDef()
             ];
             SPELL_DEFS.forEach((definition) => {
                 self.spellDefs.insert(SpellKey[definition.key], definition);

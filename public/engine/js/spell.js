@@ -286,6 +286,22 @@ var Lich;
     }(SpellDefinition));
     Lich.UseItemSpellDef = UseItemSpellDef;
     /**
+     * Reveal Fog spell
+     */
+    var RevealFogSpellDef = (function (_super) {
+        __extends(RevealFogSpellDef, _super);
+        function RevealFogSpellDef() {
+            _super.call(this, Lich.SpellKey.SPELL_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
+        }
+        RevealFogSpellDef.prototype.cast = function (context) {
+            return context.game.getWorld().render.revealFog(context.xAim, context.yAim);
+        };
+        RevealFogSpellDef.COOLDOWN = 0;
+        RevealFogSpellDef.COST = 0;
+        return RevealFogSpellDef;
+    }(SpellDefinition));
+    Lich.RevealFogSpellDef = RevealFogSpellDef;
+    /**
      * Teleportační spell
      */
     var TeleportSpellDef = (function (_super) {

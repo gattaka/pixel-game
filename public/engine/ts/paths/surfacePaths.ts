@@ -32,4 +32,10 @@ namespace Lich {
         ["images/surfaces/dirt_to_krystals.png", SurfaceKey.SRFC_TRANS_DIRT_KRYSTAL_KEY],
         ["images/surfaces/dirt_to_florite.png", SurfaceKey.SRFC_TRANS_DIRT_FLORITE_KEY]
     ]
+
+    // Fog
+    export let FOG_PATH: [string, FogKey] = [
+        "images/surfaces/fog.png", FogKey.FOG_KEY
+    ]
+
 }

@@ -1,5 +1,6 @@
 namespace Lich {
-    export class Sector extends createjs.Container {
+
+    export abstract class AbstractSector extends createjs.Container {
 
         public backgroundCont = new createjs.Container();
         public cacheableCont = new createjs.Container();
@@ -12,6 +13,25 @@ namespace Lich {
             public width: number,
             public height: number) {
             super();
+        }
+    }
+
+    export class FogSector extends AbstractSector {
+    }
+
+    export class Sector extends AbstractSector {
+
+        public backgroundCont = new createjs.Container();
+        public cacheableCont = new createjs.Container();
+        public animatedCont = new createjs.Container();
+
+        constructor(
+            public secId: number,
+            public map_x: number,
+            public map_y: number,
+            public width: number,
+            public height: number) {
+            super(secId, map_x, map_y, width, height);
 
             this.backgroundCont.width = this.width;
             this.backgroundCont.height = this.height;

@@ -17,6 +17,8 @@ var Lich;
         BackgroundKey[BackgroundKey["CLOUD3_KEY"] = 13] = "CLOUD3_KEY";
         BackgroundKey[BackgroundKey["CLOUD4_KEY"] = 14] = "CLOUD4_KEY";
         BackgroundKey[BackgroundKey["CLOUD5_KEY"] = 15] = "CLOUD5_KEY";
+        // Fog
+        BackgroundKey[BackgroundKey["FOG_KEY"] = 16] = "FOG_KEY";
     })(Lich.BackgroundKey || (Lich.BackgroundKey = {}));
     var BackgroundKey = Lich.BackgroundKey;
     (function (AnimationKey) {
@@ -87,6 +89,8 @@ var Lich;
         SpellKey[SpellKey["SPELL_LOVEARROW"] = 12] = "SPELL_LOVEARROW";
         // RMB click interakce s objekty
         SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 13] = "SPELL_INTERACT_KEY";
+        // Reveal
+        SpellKey[SpellKey["SPELL_REVEAL_FOG_KEY"] = 14] = "SPELL_REVEAL_FOG_KEY";
     })(Lich.SpellKey || (Lich.SpellKey = {}));
     var SpellKey = Lich.SpellKey;
     (function (SoundKey) {

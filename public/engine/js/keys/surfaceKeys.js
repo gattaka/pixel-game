@@ -31,6 +31,10 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_FLORITE_KEY"] = 27] = "SRFC_TRANS_DIRT_FLORITE_KEY";
     })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
     var SurfaceKey = Lich.SurfaceKey;
+    (function (FogKey) {
+        FogKey[FogKey["FOG_KEY"] = 0] = "FOG_KEY";
+    })(Lich.FogKey || (Lich.FogKey = {}));
+    var FogKey = Lich.FogKey;
     (function (SurfaceBgrKey) {
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_BRICK_KEY"] = 0] = "SRFC_BGR_BRICK_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_WOODWALL_KEY"] = 1] = "SRFC_BGR_WOODWALL_KEY";

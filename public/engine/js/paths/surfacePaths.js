@@ -32,4 +32,8 @@ var Lich;
         ["images/surfaces/dirt_to_krystals.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_KRYSTAL_KEY],
         ["images/surfaces/dirt_to_florite.png", Lich.SurfaceKey.SRFC_TRANS_DIRT_FLORITE_KEY]
     ];
+    // Fog
+    Lich.FOG_PATH = [
+        "images/surfaces/fog.png", Lich.FogKey.FOG_KEY
+    ];
 })(Lich || (Lich = {}));

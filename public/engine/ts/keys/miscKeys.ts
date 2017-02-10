@@ -15,7 +15,9 @@ namespace Lich {
         CLOUD2_KEY,
         CLOUD3_KEY,
         CLOUD4_KEY,
-        CLOUD5_KEY
+        CLOUD5_KEY,
+        // Fog
+        FOG_KEY
     }
 
     export enum AnimationKey {
@@ -86,7 +88,10 @@ namespace Lich {
         SPELL_LOVEARROW,
 
         // RMB click interakce s objekty
-        SPELL_INTERACT_KEY
+        SPELL_INTERACT_KEY,
+
+        // Reveal
+        SPELL_REVEAL_FOG_KEY
     }
 
     export enum SoundKey {

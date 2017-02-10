@@ -118,6 +118,8 @@ var Lich;
             Lich.SURFACE_PATHS.forEach(function (path) {
                 manifest.push(new Load(path[0], Lich.SurfaceKey[path[1]]));
             });
+            // Fog
+            manifest.push(new Load(Lich.FOG_PATH[0], Lich.FogKey[Lich.FOG_PATH[1]]));
             // surface backgrounds
             Lich.SURFACE_BGR_PATHS.forEach(function (path) {
                 manifest.push(new Load(path[0], Lich.SurfaceBgrKey[path[1]]));
@@ -216,7 +218,8 @@ var Lich;
                 new Lich.TeleportSpellDef(),
                 new Lich.UseItemSpellDef(),
                 new Lich.LoveletterSpellDef(),
-                new Lich.LovearrowSpellDef()
+                new Lich.LovearrowSpellDef(),
+                new Lich.RevealFogSpellDef()
             ];
             SPELL_DEFS.forEach(function (definition) {
                 self.spellDefs.insert(Lich.SpellKey[definition.key], definition);
@@ -321,7 +324,7 @@ var Lich;
         /*
          * Přepínače
          */
-        Resources.SHOW_SECTORS = false;
+        Resources.SHOW_SECTORS = true;
         Resources.PRINT_SECTOR_ALLOC = false;
         /*
          * Velikosti

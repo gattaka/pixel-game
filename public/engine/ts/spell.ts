@@ -336,6 +336,23 @@ namespace Lich {
     }
 
     /**
+     * Reveal Fog spell
+     */
+    export class RevealFogSpellDef extends SpellDefinition {
+
+        static COOLDOWN = 0;
+        static COST = 0;
+
+        constructor() {
+            super(SpellKey.SPELL_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
+        }
+
+        public cast(context: SpellContext): boolean {
+            return context.game.getWorld().render.revealFog(context.xAim, context.yAim);
+        }
+    }
+
+    /**
      * Teleportační spell
      */
     export class TeleportSpellDef extends SpellDefinition {

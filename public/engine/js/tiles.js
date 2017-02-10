@@ -28,6 +28,8 @@ var Lich;
             this.mapBgrRecord = new Lich.Array2D(width, height);
             this.mapObjRecord = new Lich.Array2D(width, height);
             this.mapObjectsTiles = new Lich.Array2D(width, height);
+            // this.fogTree = new FogTree(width, height);
+            this.fogTree = new Lich.Array2D(width / 2, height / 2);
         }
         return TilesMap;
     }());
