@@ -85,7 +85,7 @@ namespace Lich {
         /*
          * Přepínače
          */
-        static SHOW_SECTORS = true;
+        static SHOW_SECTORS = false;
         static PRINT_SECTOR_ALLOC = false;
 
         /*
@@ -108,6 +108,8 @@ namespace Lich {
         // dle trans povrchu
         public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
+
+        private bitmapCache: { [k: string]: createjs.Bitmap } = {};
 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
         public mapObjectDefs = new Array<MapObjDefinition>();
@@ -313,8 +315,12 @@ namespace Lich {
         };
 
         getBitmap(key: string): createjs.Bitmap {
-            let btm = new createjs.Bitmap(this.getImage(key));
-            return btm;
+            let cachedBmp = this.bitmapCache[key];
+            if (!cachedBmp) {
+                cachedBmp = new createjs.Bitmap(this.getImage(key));
+                this.bitmapCache[key] = cachedBmp;
+            }
+            return cachedBmp.clone();
         };
 
         getSpritePart(key: string, tileX: number, tileY: number, count: number, width: number, height: number) {

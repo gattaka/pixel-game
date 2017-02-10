@@ -308,6 +308,29 @@ var Lich;
             this.hero.idle();
             this.placePlayerOnSpawnPoint();
         };
+        World.prototype.checkReveal = function () {
+            var self = this;
+            var coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
+            // Reveal 
+            // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
+            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
+                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
+                var radius = Lich.Resources.PARTS_SIZE * 7;
+                this.currentRevealViewX = coord.x;
+                this.currentRevealViewY = coord.y;
+                var cx = Math.floor(self.hero.x + self.hero.width / 2);
+                var cy = Math.floor(self.hero.y + self.hero.height / 2);
+                var d2 = Math.pow(radius, 2);
+                for (var y = cy - radius; y < cy + radius; y += Lich.Resources.PARTS_SIZE * 2) {
+                    for (var x = cx - radius; x < cx + radius; x += Lich.Resources.PARTS_SIZE * 2) {
+                        var r2 = Math.pow(cx - x, 2) + Math.pow(cy - y, 2);
+                        if (r2 <= d2) {
+                            self.render.revealFog(x, y);
+                        }
+                    }
+                }
+            }
+        };
         /**
          * Udává, o kolik se má ve scéně posunout svět, záporné shiftX tedy posouvá
          * fyzicky svět doleva, takže je to jako kdyby hráč šel doprava
@@ -373,6 +396,7 @@ var Lich;
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
             self.game.getBackground().shift(sceneShiftX, sceneShiftY);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
+            self.checkReveal();
             self.labelObjects.forEach(function (item) {
                 if (item) {
                     item.x += sceneShiftX;

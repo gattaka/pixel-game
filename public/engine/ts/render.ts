@@ -435,10 +435,11 @@ namespace Lich {
 
             let rsc = Resources.getInstance();
             let record = self.tilesMap.fogTree;
-            let sceneMap = self.sceneFogTilesMap;
 
             let fogIndex = record.getValue(rx, ry);
             if (fogIndex != FogTile.I_MM) {
+
+                let sceneMap = self.sceneFogTilesMap;
 
                 (function () {
                     for (let x = rx - 1; x <= rx + 2; x++) {
@@ -544,7 +545,6 @@ namespace Lich {
                 return true;
             }
             return false;
-
         }
 
         digSurface(rx, ry, bgr: boolean): boolean {

@@ -347,9 +347,9 @@ var Lich;
             var fogTilesToReset = [];
             var rsc = Lich.Resources.getInstance();
             var record = self.tilesMap.fogTree;
-            var sceneMap = self.sceneFogTilesMap;
             var fogIndex = record.getValue(rx, ry);
             if (fogIndex != Lich.FogTile.I_MM) {
+                var sceneMap_1 = self.sceneFogTilesMap;
                 (function () {
                     for (var x_1 = rx - 1; x_1 <= rx + 2; x_1++) {
                         for (var y_1 = ry - 1; y_1 <= ry + 2; y_1++) {
@@ -371,7 +371,7 @@ var Lich;
                                 else {
                                     record.setValue(x_1, y_1, Lich.FogTile.I_MM);
                                     if (typeof fogSector !== "undefined" && fogSector !== null) {
-                                        var child = sceneMap.getValue(x_1, y_1);
+                                        var child = sceneMap_1.getValue(x_1, y_1);
                                         fogSector.removeChild(child);
                                         self.markFogSector(fogSector);
                                     }
@@ -447,7 +447,7 @@ var Lich;
                     var x = item[0];
                     var y = item[1];
                     // pokud už je alokován dílek na obrazovce, rovnou ho uprav
-                    var tile = sceneMap.getValue(x, y);
+                    var tile = sceneMap_1.getValue(x, y);
                     if (tile !== null) {
                         var v = record.getValue(x, y);
                         self.setFogSourceRect(tile, v);

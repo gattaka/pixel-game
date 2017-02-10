@@ -67,6 +67,11 @@ namespace Lich {
         bulletObjects = Array<BulletObject>();
         labelObjects = new Array<Label>();
 
+        // pozice Reveal okna, vůči kterému se kontroluje, 
+        // zda se má provést nové odkrývání (posunul jsem se dostatečně?)
+        currentRevealViewX: number;
+        currentRevealViewY: number;
+
         render: Render;
         hero: Hero;
 
@@ -334,6 +339,31 @@ namespace Lich {
             this.placePlayerOnSpawnPoint();
         }
 
+        private checkReveal() {
+            let self = this;
+            let coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
+
+            // Reveal 
+            // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
+            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
+                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
+                let radius = Resources.PARTS_SIZE * 7;
+                this.currentRevealViewX = coord.x;
+                this.currentRevealViewY = coord.y;
+                let cx = Math.floor(self.hero.x + self.hero.width / 2);
+                let cy = Math.floor(self.hero.y + self.hero.height / 2);
+                let d2 = Math.pow(radius, 2);
+                for (let y = cy - radius; y < cy + radius; y += Resources.PARTS_SIZE * 2) {
+                    for (let x = cx - radius; x < cx + radius; x += Resources.PARTS_SIZE * 2) {
+                        var r2 = Math.pow(cx - x, 2) + Math.pow(cy - y, 2);
+                        if (r2 <= d2) {
+                            self.render.revealFog(x, y);
+                        }
+                    }
+                }
+            }
+        }
+
         /**
          * Udává, o kolik se má ve scéně posunout svět, záporné shiftX tedy posouvá 
          * fyzicky svět doleva, takže je to jako kdyby hráč šel doprava 
@@ -399,6 +429,8 @@ namespace Lich {
             self.game.getBackground().shift(sceneShiftX, sceneShiftY);
 
             let toShift = [self.freeObjects, self.bulletObjects, self.enemies];
+
+            self.checkReveal();
 
             self.labelObjects.forEach(function (item) {
                 if (item) {

@@ -81,6 +81,7 @@ var Lich;
             // dle trans povrchu
             this.mapTransitionSrfcs = {};
             this.mapTransitionSrfcBgrs = {};
+            this.bitmapCache = {};
             this.achievementsDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
@@ -262,8 +263,12 @@ var Lich;
         };
         ;
         Resources.prototype.getBitmap = function (key) {
-            var btm = new createjs.Bitmap(this.getImage(key));
-            return btm;
+            var cachedBmp = this.bitmapCache[key];
+            if (!cachedBmp) {
+                cachedBmp = new createjs.Bitmap(this.getImage(key));
+                this.bitmapCache[key] = cachedBmp;
+            }
+            return cachedBmp.clone();
         };
         ;
         Resources.prototype.getSpritePart = function (key, tileX, tileY, count, width, height) {
@@ -324,7 +329,7 @@ var Lich;
         /*
          * Přepínače
          */
-        Resources.SHOW_SECTORS = true;
+        Resources.SHOW_SECTORS = false;
         Resources.PRINT_SECTOR_ALLOC = false;
         /*
          * Velikosti
