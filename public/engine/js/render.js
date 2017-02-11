@@ -24,11 +24,9 @@ var Lich;
         function Render(game, world) {
             this.game = game;
             this.world = world;
-            /**
-             * VAR
-             */
             this.onDigObjectListeners = new Array();
             this.onDigSurfaceListeners = new Array();
+            // aktuální posuv mapy v px
             this.screenOffsetX = 0;
             this.screenOffsetY = 0;
             // souřadnice aktuálního sektorového "okna" v půlsektorech
@@ -47,20 +45,8 @@ var Lich;
             this.sceneObjectsMap = new Lich.Array2D();
             var self = this;
             self.tilesMap = world.tilesMap;
-            // vytvoř kontejner pro sektory
-            self.sectorsCont = new createjs.Container();
-            world.addChild(self.sectorsCont);
-            self.sectorsCont.x = 0;
-            self.sectorsCont.y = 0;
-            self.sectorsCont.width = game.getCanvas().width;
-            self.sectorsCont.height = game.getCanvas().height;
-            // DEV TODO do světa (Aby odpovídaly vrstvy)
-            self.fogSectorsCont = new createjs.Container();
-            world.addChild(self.fogSectorsCont);
-            self.fogSectorsCont.x = 0;
-            self.fogSectorsCont.y = 0;
-            self.fogSectorsCont.width = game.getCanvas().width;
-            self.fogSectorsCont.height = game.getCanvas().height;
+            self.sectorsCont = world.tilesSectorsCont;
+            self.fogSectorsCont = world.fogSectorsCont;
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();
         }
@@ -949,9 +935,6 @@ var Lich;
         };
         return Render;
     }());
-    /**
-     * STATIC
-     */
     // Velikost sektoru v dílcích
     Render.FOG_SECTOR_SIZE = 8; // Musí být sudé
     Render.SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;

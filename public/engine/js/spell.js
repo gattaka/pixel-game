@@ -109,7 +109,7 @@ var Lich;
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
             context.game.getWorld().bulletObjects.push(object);
-            context.game.getWorld().addChild(object);
+            context.game.getWorld().entitiesCont.addChild(object);
             object.x = context.xCast - object.width / 2;
             object.y = context.yCast - object.height / 2;
             Lich.Mixer.playSound(self.castSoundKey, 0.2);

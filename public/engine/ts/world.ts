@@ -73,30 +73,57 @@ namespace Lich {
         currentRevealViewY: number;
 
         render: Render;
-        hero: Hero;
 
+        // kontejnery
+        tilesSectorsCont = new createjs.Container();
+        entitiesCont = new createjs.Container();
+        fogSectorsCont = new createjs.Container();
+        messagesCont = new createjs.Container();
+
+        hero: Hero;
         enemiesCount = 0;
         enemies = new Array<AbstractEnemy>();
+
+        private initFullScaleCont(cont: createjs.Container) {
+            var self = this;
+            cont.x = 0;
+            cont.y = 0;
+            cont.width = self.game.getCanvas().width;
+            cont.height = self.game.getCanvas().height;
+        }
 
         constructor(public game: Game, public tilesMap: TilesMap) {
             super();
 
             var self = this;
 
+            // Tiles cont (objekty, povrch, pozadí)
+            self.initFullScaleCont(self.tilesSectorsCont);
+            self.addChild(self.tilesSectorsCont);
+
+            // Entities cont (volné objekty, nepřtelé, hráč, projektily)
+            self.initFullScaleCont(self.entitiesCont);
+            self.addChild(self.entitiesCont);
+
+            // Fog cont
+            self.initFullScaleCont(self.fogSectorsCont);
+            self.addChild(self.fogSectorsCont);
+
+            // Messages cont (damage pts texty, hlášení)
+            self.initFullScaleCont(self.messagesCont);
+            self.addChild(self.messagesCont);
+
+            // Render
             self.render = new Render(game, self);
+
+            // Hráč
             self.hero = new Hero();
             self.hero.x = game.getCanvas().width / 2;
             self.hero.y = game.getCanvas().height / 2;
-
-            /*------------*/
-            /* Characters */
-            /*------------*/
-            self.addChild(self.hero);
+            self.entitiesCont.addChild(self.hero);
             self.placePlayerOnSpawnPoint();
 
-            /*------------*/
-            /* Dig events */
-            /*------------*/
+            // Dig events 
             let listener = function (objType: Diggable, x: number, y: number) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
@@ -131,7 +158,7 @@ namespace Lich {
             let self = this;
 
             let deadInfo = new createjs.Container();
-            this.addChild(deadInfo);
+            this.messagesCont.addChild(deadInfo);
 
             let shape = new createjs.Shape();
             shape.width = this.game.getCanvas().width;
@@ -165,7 +192,7 @@ namespace Lich {
         fadeText(text: string, px: number, py: number, size = PartsUI.TEXT_SIZE, color = Resources.TEXT_COLOR, outlineColor = Resources.OUTLINE_COLOR, time = 1000) {
             let self = this;
             let label = new Label(text, size + "px " + Resources.FONT, color, true, outlineColor, 1);
-            self.addChild(label);
+            self.messagesCont.addChild(label);
             label.x = px;
             label.y = py;
             label["tweenY"] = 0;
@@ -220,7 +247,7 @@ namespace Lich {
                 object.y = y;
             }
             self.freeObjects.push(object);
-            self.addChild(object);
+            self.entitiesCont.addChild(object);
         };
 
         setSpawnPoint(tx: number, ty: number): boolean {

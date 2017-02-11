@@ -44,7 +44,7 @@ var Lich;
             enemy.x = xp;
             enemy.y = yp;
             world.enemiesCount++;
-            world.addChild(enemy);
+            world.entitiesCont.addChild(enemy);
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
             // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
             return enemy;

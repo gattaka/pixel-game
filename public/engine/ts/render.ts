@@ -17,10 +17,6 @@ namespace Lich {
 
     export class Render {
 
-        /**
-         * STATIC
-         */
-
         // Velikost sektoru v dílcích
         static FOG_SECTOR_SIZE = 8; // Musí být sudé
         static SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;
@@ -32,13 +28,10 @@ namespace Lich {
         static BUFFER_SECTORS_X = 1;
         static BUFFER_SECTORS_Y = 1;
 
-        /**
-         * VAR
-         */
-
         onDigObjectListeners = new Array<(objType: Diggable, x: number, y: number) => any>();
         onDigSurfaceListeners = new Array<(objType: Diggable, x: number, y: number) => any>();
 
+        // aktuální posuv mapy v px
         screenOffsetX = 0;
         screenOffsetY = 0;
 
@@ -65,22 +58,8 @@ namespace Lich {
         constructor(public game: Game, public world: World) {
             var self = this;
             self.tilesMap = world.tilesMap;
-
-            // vytvoř kontejner pro sektory
-            self.sectorsCont = new createjs.Container();
-            world.addChild(self.sectorsCont);
-            self.sectorsCont.x = 0;
-            self.sectorsCont.y = 0;
-            self.sectorsCont.width = game.getCanvas().width;
-            self.sectorsCont.height = game.getCanvas().height;
-
-            // DEV TODO do světa (Aby odpovídaly vrstvy)
-            self.fogSectorsCont = new createjs.Container();
-            world.addChild(self.fogSectorsCont);
-            self.fogSectorsCont.x = 0;
-            self.fogSectorsCont.y = 0;
-            self.fogSectorsCont.width = game.getCanvas().width;
-            self.fogSectorsCont.height = game.getCanvas().height;
+            self.sectorsCont = world.tilesSectorsCont;
+            self.fogSectorsCont = world.fogSectorsCont;
 
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();

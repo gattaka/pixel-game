@@ -67,21 +67,35 @@ var Lich;
             _this.freeObjects = Array();
             _this.bulletObjects = Array();
             _this.labelObjects = new Array();
+            // kontejnery
+            _this.tilesSectorsCont = new createjs.Container();
+            _this.entitiesCont = new createjs.Container();
+            _this.fogSectorsCont = new createjs.Container();
+            _this.messagesCont = new createjs.Container();
             _this.enemiesCount = 0;
             _this.enemies = new Array();
             var self = _this;
+            // Tiles cont (objekty, povrch, pozadí)
+            self.initFullScaleCont(self.tilesSectorsCont);
+            self.addChild(self.tilesSectorsCont);
+            // Entities cont (volné objekty, nepřtelé, hráč, projektily)
+            self.initFullScaleCont(self.entitiesCont);
+            self.addChild(self.entitiesCont);
+            // Fog cont
+            self.initFullScaleCont(self.fogSectorsCont);
+            self.addChild(self.fogSectorsCont);
+            // Messages cont (damage pts texty, hlášení)
+            self.initFullScaleCont(self.messagesCont);
+            self.addChild(self.messagesCont);
+            // Render
             self.render = new Lich.Render(game, self);
+            // Hráč
             self.hero = new Lich.Hero();
             self.hero.x = game.getCanvas().width / 2;
             self.hero.y = game.getCanvas().height / 2;
-            /*------------*/
-            /* Characters */
-            /*------------*/
-            self.addChild(self.hero);
+            self.entitiesCont.addChild(self.hero);
             self.placePlayerOnSpawnPoint();
-            /*------------*/
-            /* Dig events */
-            /*------------*/
+            // Dig events 
             var listener = function (objType, x, y) {
                 if (typeof objType.item !== "undefined") {
                     for (var i = 0; i < objType.item.quant; i++) {
@@ -93,6 +107,13 @@ var Lich;
             self.render.addOnDigObjectListener(listener);
             return _this;
         }
+        World.prototype.initFullScaleCont = function (cont) {
+            var self = this;
+            cont.x = 0;
+            cont.y = 0;
+            cont.width = self.game.getCanvas().width;
+            cont.height = self.game.getCanvas().height;
+        };
         World.prototype.fadeEnemy = function (enemy) {
             var self = this;
             createjs.Tween.get(enemy)
@@ -112,7 +133,7 @@ var Lich;
         World.prototype.showDeadInfo = function () {
             var self = this;
             var deadInfo = new createjs.Container();
-            this.addChild(deadInfo);
+            this.messagesCont.addChild(deadInfo);
             var shape = new createjs.Shape();
             shape.width = this.game.getCanvas().width;
             shape.height = this.game.getCanvas().height;
@@ -146,7 +167,7 @@ var Lich;
             if (time === void 0) { time = 1000; }
             var self = this;
             var label = new Lich.Label(text, size + "px " + Lich.Resources.FONT, color, true, outlineColor, 1);
-            self.addChild(label);
+            self.messagesCont.addChild(label);
             label.x = px;
             label.y = py;
             label["tweenY"] = 0;
@@ -195,7 +216,7 @@ var Lich;
                 object.y = y;
             }
             self.freeObjects.push(object);
-            self.addChild(object);
+            self.entitiesCont.addChild(object);
         };
         ;
         World.prototype.setSpawnPoint = function (tx, ty) {

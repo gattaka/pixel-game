@@ -57,7 +57,7 @@ namespace Lich {
             enemy.y = yp;
             world.enemiesCount++;
 
-            world.addChild(enemy);
+            world.entitiesCont.addChild(enemy);
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, world.enemiesCount));
             // console.log("SPAWN: " + enemy.x + ":" + enemy.y + " (px) " + xt + ":" + (yt) + " (tls)");
             return enemy;
