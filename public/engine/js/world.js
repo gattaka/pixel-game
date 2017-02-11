@@ -126,7 +126,7 @@ var Lich;
         World.prototype.removeEnemy = function (enemy) {
             var self = this;
             self.enemies[enemy.id] = undefined;
-            self.removeChild(enemy);
+            self.entitiesCont.removeChild(enemy);
             self.enemiesCount--;
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
         };
@@ -157,7 +157,7 @@ var Lich;
             }).to({
                 alpha: 0
             }, 200).call(function () {
-                self.removeChild(deadInfo);
+                self.messagesCont.removeChild(deadInfo);
             });
         };
         World.prototype.fadeText = function (text, px, py, size, color, outlineColor, time) {
@@ -187,7 +187,7 @@ var Lich;
                 tweenY: -100
             }, time).call(function () {
                 self.labelObjects[id] = undefined;
-                self.removeChild(label);
+                self.messagesCont.removeChild(label);
             });
         };
         World.prototype.spawnObject = function (invItem, x, y, inTiles) {
@@ -737,7 +737,7 @@ var Lich;
                     object.update(sDelta, self.game);
                     if (object.isDone() || object.getCurrentAnimation() === "done") {
                         self.bulletObjects.splice(i, 1);
-                        self.removeChild(object);
+                        self.entitiesCont.removeChild(object);
                     }
                 }
             })();
@@ -762,7 +762,7 @@ var Lich;
                         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
                             self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
-                            self.removeChild(object);
+                            self.entitiesCont.removeChild(object);
                             Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, 0.2);
                             object = null;
                         }

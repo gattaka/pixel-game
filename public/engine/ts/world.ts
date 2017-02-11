@@ -149,7 +149,7 @@ namespace Lich {
         removeEnemy(enemy: AbstractEnemy) {
             let self = this;
             self.enemies[enemy.id] = undefined;
-            self.removeChild(enemy);
+            self.entitiesCont.removeChild(enemy);
             self.enemiesCount--;
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.ENEMY_COUNT_CHANGE, self.enemiesCount));
         }
@@ -185,7 +185,7 @@ namespace Lich {
                 }).to({
                     alpha: 0
                 }, 200).call(() => {
-                    self.removeChild(deadInfo);
+                    self.messagesCont.removeChild(deadInfo);
                 })
         }
 
@@ -212,7 +212,7 @@ namespace Lich {
                     tweenY: -100
                 }, time).call(function () {
                     self.labelObjects[id] = undefined;
-                    self.removeChild(label);
+                    self.messagesCont.removeChild(label);
                 });
         }
 
@@ -830,7 +830,7 @@ namespace Lich {
                     object.update(sDelta, self.game);
                     if (object.isDone() || object.getCurrentAnimation() === "done") {
                         self.bulletObjects.splice(i, 1);
-                        self.removeChild(object);
+                        self.entitiesCont.removeChild(object);
                     }
                 }
             })();
@@ -859,7 +859,7 @@ namespace Lich {
                         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
                             self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
-                            self.removeChild(object);
+                            self.entitiesCont.removeChild(object);
                             Mixer.playSound(SoundKey.SND_PICK_KEY, 0.2);
                             object = null;
                         }
