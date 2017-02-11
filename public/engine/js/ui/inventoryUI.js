@@ -10,25 +10,25 @@ var Lich;
         function InventoryUI(recipeManager, n, m) {
             if (n === void 0) { n = InventoryUI.DEFAULT_N; }
             if (m === void 0) { m = InventoryUI.DEFAULT_M; }
-            _super.call(this, n, m);
-            this.recipeManager = recipeManager;
-            this.choosenItem = null;
-            this.lineOffset = 0;
+            var _this = _super.call(this, n, m) || this;
+            _this.recipeManager = recipeManager;
+            _this.choosenItem = null;
+            _this.lineOffset = 0;
             // --- Virtuální inventář ---
             // pole obsazení položkami
-            this.itemsTypeArray = new Array();
+            _this.itemsTypeArray = new Array();
             // mapa pořadí typů položek
-            this.itemsTypeIndexMap = new Lich.HashMap();
+            _this.itemsTypeIndexMap = new Lich.HashMap();
             // mapa počtů dle typu položky
-            this.itemsQuantityMap = new Lich.HashMap();
+            _this.itemsQuantityMap = new Lich.HashMap();
             // --- UI ----
             // mapa existujících UI prvků dle typu položky
-            this.itemsUIMap = new Lich.HashMap();
-            this.itemHighlightVisibleBeforeCollapse = true;
-            this.itemsCont = new createjs.Container();
-            this.collapsed = false;
-            this.collapsedCont = new createjs.Container();
-            var self = this;
+            _this.itemsUIMap = new Lich.HashMap();
+            _this.itemHighlightVisibleBeforeCollapse = true;
+            _this.itemsCont = new createjs.Container();
+            _this.collapsed = false;
+            _this.collapsedCont = new createjs.Container();
+            var self = _this;
             // zvýraznění vybrané položky
             self.itemHighlight = new Lich.Highlight();
             self.itemHighlight.visible = false;
@@ -72,6 +72,7 @@ var Lich;
             }, null, false);
             var offset = 5;
             self.cache(-offset, -offset, self.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2, self.height + offset * 2);
+            return _this;
         }
         InventoryUI.prototype.serialize = function () {
             var _this = this;
@@ -251,9 +252,9 @@ var Lich;
                 }, null, false);
             })();
         };
-        InventoryUI.DEFAULT_N = 4;
-        InventoryUI.DEFAULT_M = 8;
         return InventoryUI;
     }(Lich.PartsUI));
+    InventoryUI.DEFAULT_N = 4;
+    InventoryUI.DEFAULT_M = 8;
     Lich.InventoryUI = InventoryUI;
 })(Lich || (Lich = {}));

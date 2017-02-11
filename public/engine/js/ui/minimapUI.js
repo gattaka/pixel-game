@@ -25,7 +25,7 @@ var Lich;
             })();
             var listener = function (payload) {
                 var imgData = ctx.createImageData(1, 1);
-                var _loop_1 = function(i) {
+                var _loop_1 = function (i) {
                     self.processFillBySurface(payload.x, payload.y, function (color) {
                         imgData.data[i + 0] = color.r;
                         imgData.data[i + 1] = color.g;
@@ -89,25 +89,25 @@ var Lich;
             self.processFillBySurface(x, y, fill);
         };
         ;
-        MinimapRender.MINIMAP_COOLDOWN = 30;
         return MinimapRender;
     }());
+    MinimapRender.MINIMAP_COOLDOWN = 30;
     Lich.MinimapRender = MinimapRender;
     var MinimapUI = (function (_super) {
         __extends(MinimapUI, _super);
         function MinimapUI(mainCanvasWidth, mainCanvasHeight, mapRender) {
-            _super.call(this, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
-            this.mapRender = mapRender;
-            this.shiftX = 0;
-            this.shiftY = 0;
-            this.playerX = 0;
-            this.playerY = 0;
-            var self = this;
+            var _this = _super.call(this, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE) || this;
+            _this.mapRender = mapRender;
+            _this.shiftX = 0;
+            _this.shiftY = 0;
+            _this.playerX = 0;
+            _this.playerY = 0;
+            var self = _this;
             var border = new createjs.Shape();
             border.graphics.setStrokeStyle(1);
             border.graphics.beginStroke("rgba(0,0,0,255)");
             border.graphics.beginFill("rgba(209,251,255,255)");
-            border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
+            border.graphics.drawRect(-1, -1, _this.width + 2, _this.height + 2);
             self.addChild(border);
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
@@ -179,21 +179,22 @@ var Lich;
                 adjustMinimapView();
                 return false;
             });
+            return _this;
         }
-        MinimapUI.MAP_SIDE = 200;
         return MinimapUI;
     }(Lich.AbstractUI));
+    MinimapUI.MAP_SIDE = 200;
     Lich.MinimapUI = MinimapUI;
     var MapUI = (function (_super) {
         __extends(MapUI, _super);
         function MapUI(mainCanvasWidth, mainCanvasHeight, mapRender) {
-            _super.call(this, mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2, mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2);
-            this.mapRender = mapRender;
-            this.shiftX = 0;
-            this.shiftY = 0;
-            this.playerX = 0;
-            this.playerY = 0;
-            var self = this;
+            var _this = _super.call(this, mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2, mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2) || this;
+            _this.mapRender = mapRender;
+            _this.shiftX = 0;
+            _this.shiftY = 0;
+            _this.playerX = 0;
+            _this.playerY = 0;
+            var self = _this;
             self.on("click", function (evt) {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 self.hide();
@@ -202,7 +203,7 @@ var Lich;
             border.graphics.setStrokeStyle(1);
             border.graphics.beginStroke("rgba(0,0,0,255)");
             border.graphics.beginFill("rgba(209,251,255,255)");
-            border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
+            border.graphics.drawRect(-1, -1, _this.width + 2, _this.height + 2);
             self.addChild(border);
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
@@ -237,6 +238,7 @@ var Lich;
                 adjustPlayerIcon();
                 return false;
             });
+            return _this;
         }
         return MapUI;
     }(Lich.AbstractUI));

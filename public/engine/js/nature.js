@@ -114,9 +114,9 @@ var Lich;
                 }
             }
         };
-        Nature.COOLDOWN = 1000;
-        Nature.PARTS_PER_STEP = 50;
         return Nature;
     }());
+    Nature.COOLDOWN = 1000;
+    Nature.PARTS_PER_STEP = 50;
     Lich.Nature = Nature;
 })(Lich || (Lich = {}));

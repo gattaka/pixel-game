@@ -40,7 +40,6 @@ var Lich;
                 case Lich.Theme.WINTER:
                     self.canvas.style.backgroundColor = "#cce1e8";
                     break;
-                case Lich.Theme.NORMAL:
                 default:
                     self.canvas.style.backgroundColor = "#839e61";
             }
@@ -51,6 +50,11 @@ var Lich;
                 self.canvas.height = window.innerHeight;
             }
             resizeCanvas();
+            var ctx = self.canvas.getContext("2d");
+            // let ctx: any = (<HTMLCanvasElement>self.stage.cacheCanvas).getContext("2d");
+            ctx.imageSmoothingEnabled = true;
+            ctx.mozImageSmoothingEnabled = true;
+            ctx.webkitImageSmoothingEnabled = true;
             self.stage = new createjs.Stage(self.canvas);
             if (mobile) {
                 createjs.Touch.enable(self.stage);

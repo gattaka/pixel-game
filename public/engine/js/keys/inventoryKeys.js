@@ -1,5 +1,6 @@
 var Lich;
 (function (Lich) {
+    var InventoryKey;
     (function (InventoryKey) {
         InventoryKey[InventoryKey["INV_BERRY_KEY"] = 0] = "INV_BERRY_KEY";
         InventoryKey[InventoryKey["INV_BONES_KEY"] = 1] = "INV_BONES_KEY";
@@ -82,6 +83,5 @@ var Lich;
         InventoryKey[InventoryKey["INV_CABINET_KEY"] = 78] = "INV_CABINET_KEY";
         InventoryKey[InventoryKey["INV_CANDLE_KEY"] = 79] = "INV_CANDLE_KEY";
         InventoryKey[InventoryKey["INV_PORTRAIT_VALENTIMON_KEY"] = 80] = "INV_PORTRAIT_VALENTIMON_KEY";
-    })(Lich.InventoryKey || (Lich.InventoryKey = {}));
-    var InventoryKey = Lich.InventoryKey;
+    })(InventoryKey = Lich.InventoryKey || (Lich.InventoryKey = {}));
 })(Lich || (Lich = {}));

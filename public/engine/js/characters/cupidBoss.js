@@ -16,7 +16,7 @@ var Lich;
         var CupidBoss = (function (_super) {
             __extends(CupidBoss, _super);
             function CupidBoss() {
-                _super.call(this, CupidBoss.OWNER_ID, 30, // DAMAGE
+                var _this = _super.call(this, CupidBoss.OWNER_ID, 30, // DAMAGE
                 500, // ATTACK_COOLDOWN
                 256, // WIDTH
                 320, // HEIGHT 
@@ -34,21 +34,22 @@ var Lich;
                 0, // min depth 
                 100, // max depth
                 true // hovers
-                );
-                this.currentModeChangeCooldown = 0;
-                this.currentSpawnCooldown = 0;
-                this.spawnedEnemies = new Array();
-                this.maxHealth = this.currentHealth = 5000;
-                this.healthBar.height = 10;
-                this.healthBar.y = -this.healthBar.height;
+                ) || this;
+                _this.currentModeChangeCooldown = 0;
+                _this.currentSpawnCooldown = 0;
+                _this.spawnedEnemies = new Array();
+                _this.maxHealth = _this.currentHealth = 5000;
+                _this.healthBar.height = 10;
+                _this.healthBar.y = -_this.healthBar.height;
                 // stále jsem v hover pohybu
-                this.movementTypeX = Lich.MovementTypeX.HOVER;
-                this.movementTypeY = Lich.MovementTypeY.HOVER;
+                _this.movementTypeX = Lich.MovementTypeX.HOVER;
+                _this.movementTypeY = Lich.MovementTypeY.HOVER;
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_CUPID_BOSS_THEME_KEY);
-                this.currentMode = AI_MODE.IDLE;
+                _this.currentMode = AI_MODE.IDLE;
                 CupidBoss.spawned = true;
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_LOVE_HURTS]));
+                return _this;
             }
             CupidBoss.prototype.runAI = function (world, delta) {
                 var _this = this;
@@ -193,21 +194,21 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
-            CupidBoss.OWNER_ID = "CUPID_BOSS";
-            CupidBoss.IDLE = "IDLE";
-            CupidBoss.ATTACK = "ATTACK";
-            CupidBoss.HIT = "HIT";
-            CupidBoss.DIE = "DIE";
-            CupidBoss.EXPLODE = "EXPLODE";
-            CupidBoss.DEAD = "DEAD";
-            CupidBoss.HOVER_ALT = 300;
-            CupidBoss.PULL_HOVER_ALT = 400;
-            CupidBoss.MODE_COOLDOWN = 5000;
-            CupidBoss.SPAWN_COOLDOWN = 500;
-            CupidBoss.SPAWN_ENEMIES_COUNT = 5;
-            CupidBoss.spawned = false;
             return CupidBoss;
         }(Lich.AbstractEnemy));
+        CupidBoss.OWNER_ID = "CUPID_BOSS";
+        CupidBoss.IDLE = "IDLE";
+        CupidBoss.ATTACK = "ATTACK";
+        CupidBoss.HIT = "HIT";
+        CupidBoss.DIE = "DIE";
+        CupidBoss.EXPLODE = "EXPLODE";
+        CupidBoss.DEAD = "DEAD";
+        CupidBoss.HOVER_ALT = 300;
+        CupidBoss.PULL_HOVER_ALT = 400;
+        CupidBoss.MODE_COOLDOWN = 5000;
+        CupidBoss.SPAWN_COOLDOWN = 500;
+        CupidBoss.SPAWN_ENEMIES_COUNT = 5;
+        CupidBoss.spawned = false;
         Enemy.CupidBoss = CupidBoss;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

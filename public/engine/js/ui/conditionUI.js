@@ -8,39 +8,39 @@ var Lich;
     var ConditionUI = (function (_super) {
         __extends(ConditionUI, _super);
         function ConditionUI() {
-            _super.call(this, 350, 2 * Lich.AbstractUI.BORDER + Lich.Resources.PARTS_SIZE);
-            this.healthBar = new createjs.Shape();
-            this.willBar = new createjs.Shape();
-            this.maxHealth = 0;
-            this.maxWill = 0;
-            this.currentHealth = 0;
-            this.currentWill = 0;
-            var self = this;
-            this.barWidth = this.width - ConditionUI.INNER_BORDER * 2;
-            this.barHeight = this.height / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
+            var _this = _super.call(this, 350, 2 * Lich.AbstractUI.BORDER + Lich.Resources.PARTS_SIZE) || this;
+            _this.healthBar = new createjs.Shape();
+            _this.willBar = new createjs.Shape();
+            _this.maxHealth = 0;
+            _this.maxWill = 0;
+            _this.currentHealth = 0;
+            _this.currentWill = 0;
+            var self = _this;
+            _this.barWidth = _this.width - ConditionUI.INNER_BORDER * 2;
+            _this.barHeight = _this.height / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
             // podklady 
             var healthBgrBar = new createjs.Shape();
             healthBgrBar.graphics.setStrokeStyle(2);
             healthBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
-            healthBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, ConditionUI.INNER_BORDER, this.barWidth, this.barHeight, 3);
-            this.addChild(healthBgrBar);
+            healthBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, ConditionUI.INNER_BORDER, _this.barWidth, _this.barHeight, 3);
+            _this.addChild(healthBgrBar);
             var willBgrBar = new createjs.Shape();
             willBgrBar.graphics.setStrokeStyle(2);
             willBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
-            willBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, this.height / 2 + ConditionUI.SPACING / 2, this.barWidth, this.barHeight, 3);
-            this.addChild(willBgrBar);
+            willBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, _this.height / 2 + ConditionUI.SPACING / 2, _this.barWidth, _this.barHeight, 3);
+            _this.addChild(willBgrBar);
             // zdraví
-            this.addChild(this.healthBar);
-            this.healthText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.healthText.y = ConditionUI.INNER_BORDER;
-            this.addChild(this.healthText);
+            _this.addChild(_this.healthBar);
+            _this.healthText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.healthText.y = ConditionUI.INNER_BORDER;
+            _this.addChild(_this.healthText);
             // vůle
-            this.addChild(this.willBar);
-            this.willText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.willText.y = this.height / 2 + ConditionUI.SPACING / 2;
-            this.addChild(this.willText);
-            this.updateHealthBar();
-            this.updateWillBar();
+            _this.addChild(_this.willBar);
+            _this.willText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.willText.y = _this.height / 2 + ConditionUI.SPACING / 2;
+            _this.addChild(_this.willText);
+            _this.updateHealthBar();
+            _this.updateWillBar();
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.HEALTH_CHANGE, function (data) {
                 self.setMaxHealth(data.maxHealth);
                 self.setHealth(data.currentHealth);
@@ -51,6 +51,7 @@ var Lich;
                 self.setWill(data.currentWill);
                 return false;
             });
+            return _this;
         }
         ConditionUI.prototype.setMaxHealth = function (maxHealth) {
             this.maxHealth = maxHealth;
@@ -106,9 +107,9 @@ var Lich;
             this.willText.setText(this.currentWill + "/" + this.maxWill);
             this.willText.x = this.width / 2 - this.willText.getBounds().width / 2;
         };
-        ConditionUI.INNER_BORDER = 5;
-        ConditionUI.SPACING = 4;
         return ConditionUI;
     }(Lich.AbstractUI));
+    ConditionUI.INNER_BORDER = 5;
+    ConditionUI.SPACING = 4;
     Lich.ConditionUI = ConditionUI;
 })(Lich || (Lich = {}));

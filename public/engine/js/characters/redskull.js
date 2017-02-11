@@ -10,7 +10,7 @@ var Lich;
         var Redskull = (function (_super) {
             __extends(Redskull, _super);
             function Redskull() {
-                _super.call(this, Redskull.OWNER_ID, 5, // DAMAGE
+                return _super.call(this, Redskull.OWNER_ID, 5, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 56, // WIDTH
                 80, // HEIGHT 
@@ -35,7 +35,7 @@ var Lich;
                     .add(Redskull.CLIMB, 37, 39, Redskull.CLIMB, 0.3), true, // unspawns
                 0, // min depth 
                 50 // max depth
-                );
+                ) || this;
             }
             Redskull.prototype.walkL = function () { this.performState(Redskull.WALKL); };
             ;
@@ -70,22 +70,22 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
-            Redskull.OWNER_ID = "REDSKULL";
-            Redskull.IDLE = "IDLE";
-            Redskull.BREATH = "BREATH";
-            Redskull.WALKR = "WALKR";
-            Redskull.WALKL = "WALKL";
-            Redskull.JUMP = "JUMP";
-            Redskull.MIDAIR = "MIDAIR";
-            Redskull.FALL = "FALL";
-            Redskull.JUMPR = "JUMPR";
-            Redskull.JUMPL = "JUMPL";
-            Redskull.DIE = "DIE";
-            Redskull.DEAD = "DEAD";
-            Redskull.TELEPORT = "TELEPORT";
-            Redskull.CLIMB = "CLIMB";
             return Redskull;
         }(Lich.AbstractEnemy));
+        Redskull.OWNER_ID = "REDSKULL";
+        Redskull.IDLE = "IDLE";
+        Redskull.BREATH = "BREATH";
+        Redskull.WALKR = "WALKR";
+        Redskull.WALKL = "WALKL";
+        Redskull.JUMP = "JUMP";
+        Redskull.MIDAIR = "MIDAIR";
+        Redskull.FALL = "FALL";
+        Redskull.JUMPR = "JUMPR";
+        Redskull.JUMPL = "JUMPL";
+        Redskull.DIE = "DIE";
+        Redskull.DEAD = "DEAD";
+        Redskull.TELEPORT = "TELEPORT";
+        Redskull.CLIMB = "CLIMB";
         Enemy.Redskull = Redskull;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

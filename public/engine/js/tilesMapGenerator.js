@@ -524,7 +524,7 @@ var Lich;
                 // Minerály 
                 // random deposit
                 var depositP = mass * 0.005;
-                var _loop_1 = function(i) {
+                var _loop_1 = function (i) {
                     var depositX = Math.floor(Math.random() * tilesMap.width);
                     var depositY = Math.floor(Math.random() * tilesMap.height);
                     // z čeho bude ložisko?
@@ -618,20 +618,20 @@ var Lich;
             });
             async.run();
         };
-        TilesMapGenerator.WORLD_FORMAT_VERSION = 1.4;
-        // musí být sudé
-        TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
-        TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;
-        TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 50;
-        // Loot tower consts
-        TilesMapGenerator.LOOT_TOWER_MIN_WIDTH = 7;
-        TilesMapGenerator.LOOT_TOWER_MAX_WIDTH = 13;
-        TilesMapGenerator.LOOT_TOWER_MIN_FLOORS = 2;
-        TilesMapGenerator.LOOT_TOWER_MAX_FLOORS = 5;
-        TilesMapGenerator.LOOT_TOWER_MIN_FLOOR_HEIGHT = 2;
-        TilesMapGenerator.LOOT_TOWER_MAX_FLOOR_HEIGHT = 4;
         return TilesMapGenerator;
     }());
+    TilesMapGenerator.WORLD_FORMAT_VERSION = 1.4;
+    // musí být sudé
+    TilesMapGenerator.DEFAULT_MAP_WIDTH = 2000;
+    TilesMapGenerator.DEFAULT_MAP_HEIGHT = 1000;
+    TilesMapGenerator.DEFAULT_MAP_GROUND_LEVEL = 50;
+    // Loot tower consts
+    TilesMapGenerator.LOOT_TOWER_MIN_WIDTH = 7;
+    TilesMapGenerator.LOOT_TOWER_MAX_WIDTH = 13;
+    TilesMapGenerator.LOOT_TOWER_MIN_FLOORS = 2;
+    TilesMapGenerator.LOOT_TOWER_MAX_FLOORS = 5;
+    TilesMapGenerator.LOOT_TOWER_MIN_FLOOR_HEIGHT = 2;
+    TilesMapGenerator.LOOT_TOWER_MAX_FLOOR_HEIGHT = 4;
     Lich.TilesMapGenerator = TilesMapGenerator;
 })(Lich || (Lich = {}));
 ;

@@ -1,5 +1,6 @@
 var Lich;
 (function (Lich) {
+    var BackgroundKey;
     (function (BackgroundKey) {
         BackgroundKey[BackgroundKey["DIRT_BACK_START_KEY"] = 0] = "DIRT_BACK_START_KEY";
         BackgroundKey[BackgroundKey["DIRT_BACK_KEY"] = 1] = "DIRT_BACK_KEY";
@@ -19,8 +20,8 @@ var Lich;
         BackgroundKey[BackgroundKey["CLOUD5_KEY"] = 15] = "CLOUD5_KEY";
         // Fog
         BackgroundKey[BackgroundKey["FOG_KEY"] = 16] = "FOG_KEY";
-    })(Lich.BackgroundKey || (Lich.BackgroundKey = {}));
-    var BackgroundKey = Lich.BackgroundKey;
+    })(BackgroundKey = Lich.BackgroundKey || (Lich.BackgroundKey = {}));
+    var AnimationKey;
     (function (AnimationKey) {
         AnimationKey[AnimationKey["METEOR_ANIMATION_KEY"] = 0] = "METEOR_ANIMATION_KEY";
         AnimationKey[AnimationKey["FIREBALL_ANIMATION_KEY"] = 1] = "FIREBALL_ANIMATION_KEY";
@@ -35,8 +36,8 @@ var Lich;
         AnimationKey[AnimationKey["LOVELETTER_ANIMATION_KEY"] = 10] = "LOVELETTER_ANIMATION_KEY";
         AnimationKey[AnimationKey["LOVEARROW_ANIMATION_KEY"] = 11] = "LOVEARROW_ANIMATION_KEY";
         AnimationKey[AnimationKey["CUPID_ANIMATION_KEY"] = 12] = "CUPID_ANIMATION_KEY";
-    })(Lich.AnimationKey || (Lich.AnimationKey = {}));
-    var AnimationKey = Lich.AnimationKey;
+    })(AnimationKey = Lich.AnimationKey || (Lich.AnimationKey = {}));
+    var UIGFXKey;
     (function (UIGFXKey) {
         UIGFXKey[UIGFXKey["PLAYER_ICON_KEY"] = 0] = "PLAYER_ICON_KEY";
         // misc.
@@ -63,16 +64,16 @@ var Lich;
         UIGFXKey[UIGFXKey["UI_BACKPACK_KEY"] = 20] = "UI_BACKPACK_KEY";
         UIGFXKey[UIGFXKey["UI_MENU_KEY"] = 21] = "UI_MENU_KEY";
         UIGFXKey[UIGFXKey["UI_MINIMAP_KEY"] = 22] = "UI_MINIMAP_KEY";
-    })(Lich.UIGFXKey || (Lich.UIGFXKey = {}));
-    var UIGFXKey = Lich.UIGFXKey;
+    })(UIGFXKey = Lich.UIGFXKey || (Lich.UIGFXKey = {}));
+    var AchievementKey;
     (function (AchievementKey) {
         AchievementKey[AchievementKey["ACHV_FALLING_DOWN"] = 0] = "ACHV_FALLING_DOWN";
         AchievementKey[AchievementKey["ACHV_CHICKEN_MASSACRE"] = 1] = "ACHV_CHICKEN_MASSACRE";
         AchievementKey[AchievementKey["ACHV_CHICKEN_PROOFED"] = 2] = "ACHV_CHICKEN_PROOFED";
         AchievementKey[AchievementKey["ACHV_LOVE_HURTS"] = 3] = "ACHV_LOVE_HURTS";
         AchievementKey[AchievementKey["ACHV_HEARTBREAKING"] = 4] = "ACHV_HEARTBREAKING";
-    })(Lich.AchievementKey || (Lich.AchievementKey = {}));
-    var AchievementKey = Lich.AchievementKey;
+    })(AchievementKey = Lich.AchievementKey || (Lich.AchievementKey = {}));
+    var SpellKey;
     (function (SpellKey) {
         SpellKey[SpellKey["SPELL_PLACE_KEY"] = 0] = "SPELL_PLACE_KEY";
         SpellKey[SpellKey["SPELL_PLACE_BGR_KEY"] = 1] = "SPELL_PLACE_BGR_KEY";
@@ -91,8 +92,8 @@ var Lich;
         SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 13] = "SPELL_INTERACT_KEY";
         // Reveal
         SpellKey[SpellKey["SPELL_REVEAL_FOG_KEY"] = 14] = "SPELL_REVEAL_FOG_KEY";
-    })(Lich.SpellKey || (Lich.SpellKey = {}));
-    var SpellKey = Lich.SpellKey;
+    })(SpellKey = Lich.SpellKey || (Lich.SpellKey = {}));
+    var SoundKey;
     (function (SoundKey) {
         SoundKey[SoundKey["SND_FIREBALL_KEY"] = 0] = "SND_FIREBALL_KEY";
         SoundKey[SoundKey["SND_BURN_KEY"] = 1] = "SND_BURN_KEY";
@@ -128,8 +129,8 @@ var Lich;
         SoundKey[SoundKey["SND_CHICKEN_BOSS_HIT_KEY"] = 31] = "SND_CHICKEN_BOSS_HIT_KEY";
         SoundKey[SoundKey["SND_CHICKEN_BOSS_DEAD_KEY"] = 32] = "SND_CHICKEN_BOSS_DEAD_KEY";
         SoundKey[SoundKey["SND_CHICKEN_BOSS_ATTACK_KEY"] = 33] = "SND_CHICKEN_BOSS_ATTACK_KEY";
-    })(Lich.SoundKey || (Lich.SoundKey = {}));
-    var SoundKey = Lich.SoundKey;
+    })(SoundKey = Lich.SoundKey || (Lich.SoundKey = {}));
+    var MusicKey;
     (function (MusicKey) {
         MusicKey[MusicKey["MSC_DIRT_THEME_KEY"] = 0] = "MSC_DIRT_THEME_KEY";
         MusicKey[MusicKey["MSC_BUILD_THEME_KEY"] = 1] = "MSC_BUILD_THEME_KEY";
@@ -139,6 +140,5 @@ var Lich;
         MusicKey[MusicKey["MSC_LAVA_THEME_KEY"] = 5] = "MSC_LAVA_THEME_KEY";
         MusicKey[MusicKey["MSC_CHICKEN_BOSS_THEME_KEY"] = 6] = "MSC_CHICKEN_BOSS_THEME_KEY";
         MusicKey[MusicKey["MSC_CUPID_BOSS_THEME_KEY"] = 7] = "MSC_CUPID_BOSS_THEME_KEY";
-    })(Lich.MusicKey || (Lich.MusicKey = {}));
-    var MusicKey = Lich.MusicKey;
+    })(MusicKey = Lich.MusicKey || (Lich.MusicKey = {}));
 })(Lich || (Lich = {}));

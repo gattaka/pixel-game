@@ -107,32 +107,32 @@ var Lich;
             }
         };
         ;
-        /*-----------*/
-        /* CONSTANTS */
-        /*-----------*/
-        Background.CLOUDS_SPACE = 150;
-        Background.CLOUDS_KEYS = [
-            Lich.BackgroundKey.CLOUD1_KEY,
-            Lich.BackgroundKey.CLOUD2_KEY,
-            Lich.BackgroundKey.CLOUD3_KEY,
-            Lich.BackgroundKey.CLOUD4_KEY,
-            Lich.BackgroundKey.CLOUD5_KEY
-        ];
-        Background.BGR_ORDER = [
-            Lich.BackgroundKey.FAR_MOUNTAIN_KEY,
-            Lich.BackgroundKey.MOUNTAIN_KEY,
-            Lich.BackgroundKey.WOODLAND1_KEY,
-            Lich.BackgroundKey.WOODLAND2_KEY,
-            Lich.BackgroundKey.WOODLAND3_KEY,
-            Lich.BackgroundKey.WOODLAND4_KEY,
-        ];
-        Background.BGR_STARTS = [50, 200, 400, 450, 560, 620];
-        Background.BGR_DIVIDERS_X = [5, 4, 3.8, 3.6, 3.4, 3];
-        Background.BGR_DIVIDERS_Y = [10, 8, 6, 5.5, 5, 4];
-        Background.DIRT_DIVIDER_X = 1.1;
-        Background.DIRT_DIVIDER_Y = 1.1;
-        Background.DIRT_START = 1800;
         return Background;
     }());
+    /*-----------*/
+    /* CONSTANTS */
+    /*-----------*/
+    Background.CLOUDS_SPACE = 150;
+    Background.CLOUDS_KEYS = [
+        Lich.BackgroundKey.CLOUD1_KEY,
+        Lich.BackgroundKey.CLOUD2_KEY,
+        Lich.BackgroundKey.CLOUD3_KEY,
+        Lich.BackgroundKey.CLOUD4_KEY,
+        Lich.BackgroundKey.CLOUD5_KEY
+    ];
+    Background.BGR_ORDER = [
+        Lich.BackgroundKey.FAR_MOUNTAIN_KEY,
+        Lich.BackgroundKey.MOUNTAIN_KEY,
+        Lich.BackgroundKey.WOODLAND1_KEY,
+        Lich.BackgroundKey.WOODLAND2_KEY,
+        Lich.BackgroundKey.WOODLAND3_KEY,
+        Lich.BackgroundKey.WOODLAND4_KEY,
+    ];
+    Background.BGR_STARTS = [50, 200, 400, 450, 560, 620];
+    Background.BGR_DIVIDERS_X = [5, 4, 3.8, 3.6, 3.4, 3];
+    Background.BGR_DIVIDERS_Y = [10, 8, 6, 5.5, 5, 4];
+    Background.DIRT_DIVIDER_X = 1.1;
+    Background.DIRT_DIVIDER_Y = 1.1;
+    Background.DIRT_START = 1800;
     Lich.Background = Background;
 })(Lich || (Lich = {}));

@@ -31,9 +31,9 @@ var Lich;
             this.onDigSurfaceListeners = new Array();
             this.screenOffsetX = 0;
             this.screenOffsetY = 0;
-            // souřadnice aktuálního sektorového "okna"
-            this.currentStartSecX = null;
-            this.currentStartSecY = null;
+            // souřadnice aktuálního sektorového "okna" v půlsektorech
+            this.currentStartHalfSecX = null;
+            this.currentStartHalfSecY = null;
             this.sectorsToUpdate = new Array();
             this.fogSectorsToUpdate = new Array();
             // Mapy sektorů
@@ -75,28 +75,61 @@ var Lich;
             var self = this;
             var maxSecCountX = Math.ceil(self.tilesMap.width / Render.SECTOR_SIZE);
             var maxSecCountY = Math.ceil(self.tilesMap.height / Render.SECTOR_SIZE);
+            // Pokud jsem úplně vlevo, vykresluj od X sektoru 0
             var startSecX = 0;
+            var halfStartSecX = 0;
+            var applyXdither = false;
+            var oddXdither = false;
             if (self.screenOffsetX < 0) {
-                startSecX = Math.floor(-1 * self.screenOffsetX / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE));
+                // Pokud došlo k nějakému posunu doprava, zjisti kolik sektorů by se do tohoto posuvu vešlo
+                // půlsektory pro dither
+                halfStartSecX = Math.floor(-1 * self.screenOffsetX / (Render.SECTOR_SIZE / 2 * Lich.Resources.TILE_SIZE));
+                oddXdither = halfStartSecX % 2 == 0;
+                startSecX = Math.floor(halfStartSecX / 2);
+                // Vždy ponech BUFFER_SECTORS_X sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
+                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
                 startSecX = startSecX >= Render.BUFFER_SECTORS_X ? startSecX - Render.BUFFER_SECTORS_X : startSecX;
+                applyXdither = startSecX != 0;
             }
-            var countSectX = Math.floor(self.sectorsCont.width / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 1;
+            var countSectX = Math.floor(self.sectorsCont.width / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
+            applyXdither = applyXdither && startSecX + countSectX != maxSecCountX;
+            // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
             var startSecY = 0;
+            var halfStartSecY = 0;
+            var applyYdither = false;
+            var oddYdither = false;
             if (self.screenOffsetY < 0) {
-                startSecY = Math.floor(-1 * self.screenOffsetY / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE));
+                // Pokud došlo k nějakému posunu dolů, zjisti kolik sektorů by se do tohoto posuvu vešlo
+                // půlsektory pro dither
+                halfStartSecY = Math.floor(-1 * self.screenOffsetY / (Render.SECTOR_SIZE / 2 * Lich.Resources.TILE_SIZE));
+                oddYdither = halfStartSecY % 2 == 0;
+                startSecY = Math.floor(halfStartSecY / 2);
+                // Vždy ponech BUFFER_SECTORS_Y sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
+                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
                 startSecY = startSecY >= Render.BUFFER_SECTORS_Y ? startSecY - Render.BUFFER_SECTORS_Y : startSecY;
             }
-            var countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 1;
+            var countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
+            applyYdither = applyYdither && startSecY + countSectY != maxSecCountY;
             // změnilo se něco? Pokud není potřeba pře-alokovávat sektory, ukonči fci
-            if (self.currentStartSecX === startSecX && self.currentStartSecY === startSecY)
+            if (self.currentStartHalfSecX === halfStartSecX && self.currentStartHalfSecY === halfStartSecY)
                 return;
             // změnit stavy
-            self.currentStartSecX = startSecX;
-            self.currentStartSecY = startSecY;
+            self.currentStartHalfSecX = halfStartSecX;
+            self.currentStartHalfSecY = halfStartSecY;
             // projdi sektory, nepoužité dealokuj, nové naplň
             for (var x = 0; x < maxSecCountX; x++) {
                 for (var y = 0; y < maxSecCountY; y++) {
                     if (x >= startSecX && x <= startSecX + countSectX && y >= startSecY && y <= startSecY + countSectY) {
+                        // pokud je zapnuté prokládání a jde o krajní sektory, nezpracovávej liché resp. sudé sektory
+                        // tyto sektory budou zpracovány dalším půl-sektorovém kroku
+                        if (applyXdither && (x == startSecX || x == startSecX + countSectX)) {
+                            if (oddXdither == (y % 2 == 0))
+                                continue;
+                        }
+                        if (applyYdither && (y == startSecY || y == startSecY + countSectY)) {
+                            if (oddYdither == (x % 2 == 0))
+                                continue;
+                        }
                         // jde o platný sektor 
                         // pokud ještě není alokován tak alokuj
                         if (self.sectorsMap.getValue(x, y) == null) {
@@ -914,20 +947,20 @@ var Lich;
             var sy = Math.floor(y / Render.FOG_SECTOR_SIZE);
             return self.fogSectorsMap.getValue(sx, sy);
         };
-        /**
-         * STATIC
-         */
-        // Velikost sektoru v dílcích
-        Render.FOG_SECTOR_SIZE = 8; // Musí být sudé
-        Render.SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;
-        // kolik překreslení se po změně nebude cachovat, protože 
-        // je dost pravděpodobné, že se bude ještě měnit?
-        Render.SECTOR_CACHE_COOLDOWN = 5;
-        // Počet okrajových sektorů, které nejsou zobrazeny,
-        // ale jsou alokovány (pro plynulé posuny)
-        Render.BUFFER_SECTORS_X = 1;
-        Render.BUFFER_SECTORS_Y = 1;
         return Render;
     }());
+    /**
+     * STATIC
+     */
+    // Velikost sektoru v dílcích
+    Render.FOG_SECTOR_SIZE = 8; // Musí být sudé
+    Render.SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;
+    // kolik překreslení se po změně nebude cachovat, protože 
+    // je dost pravděpodobné, že se bude ještě měnit?
+    Render.SECTOR_CACHE_COOLDOWN = 5;
+    // Počet okrajových sektorů, které nejsou zobrazeny,
+    // ale jsou alokovány (pro plynulé posuny)
+    Render.BUFFER_SECTORS_X = 1;
+    Render.BUFFER_SECTORS_Y = 1;
     Lich.Render = Render;
 })(Lich || (Lich = {}));

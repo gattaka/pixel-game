@@ -89,6 +89,7 @@ var Lich;
     /**
      * Typ kolize objektů/povrchů
      */
+    var CollisionType;
     (function (CollisionType) {
         // Nelze procházet žádným směrem
         CollisionType[CollisionType["SOLID"] = 0] = "SOLID";
@@ -104,8 +105,7 @@ var Lich;
         // Nekoliduje vůbec, umožňuje volný pohyb
         // u které zabraňuje pádu
         CollisionType[CollisionType["LADDER"] = 6] = "LADDER";
-    })(Lich.CollisionType || (Lich.CollisionType = {}));
-    var CollisionType = Lich.CollisionType;
+    })(CollisionType = Lich.CollisionType || (Lich.CollisionType = {}));
     /**
      * Objekty jsou ve 4 formách:
      *
@@ -131,18 +131,19 @@ var Lich;
             seedCooldown, 
             // akce na RMB kliknutí
             rmbAction) {
-            _super.call(this, mapObjKey, invObj, quant);
-            this.mapObjKey = mapObjKey;
-            this.mapSpriteWidth = mapSpriteWidth;
-            this.mapSpriteHeight = mapSpriteHeight;
-            this.invObj = invObj;
-            this.quant = quant;
-            this.seedCooldown = seedCooldown;
-            this.rmbAction = rmbAction;
-            this.frames = 1;
-            this.collision = false;
-            this.minDepth = 10;
-            this.maxDepth = 100;
+            var _this = _super.call(this, mapObjKey, invObj, quant) || this;
+            _this.mapObjKey = mapObjKey;
+            _this.mapSpriteWidth = mapSpriteWidth;
+            _this.mapSpriteHeight = mapSpriteHeight;
+            _this.invObj = invObj;
+            _this.quant = quant;
+            _this.seedCooldown = seedCooldown;
+            _this.rmbAction = rmbAction;
+            _this.frames = 1;
+            _this.collision = false;
+            _this.minDepth = 10;
+            _this.maxDepth = 100;
+            return _this;
         }
         MapObjDefinition.prototype.setFrames = function (frames) {
             this.frames = frames;
@@ -188,17 +189,18 @@ var Lich;
             // jaký typ kolizí povrch má?
             collisionType) {
             if (collisionType === void 0) { collisionType = CollisionType.SOLID; }
-            _super.call(this, mapObjKey, invObj, quant);
-            this.mapObjKey = mapObjKey;
-            this.invObj = invObj;
-            this.quant = quant;
-            this.seedCooldown = seedCooldown;
-            this.minimapColor = minimapColor;
-            this.collisionType = collisionType;
-            this.minSize = 1;
-            this.maxSize = 3;
-            this.minDepth = 10;
-            this.maxDepth = 100;
+            var _this = _super.call(this, mapObjKey, invObj, quant) || this;
+            _this.mapObjKey = mapObjKey;
+            _this.invObj = invObj;
+            _this.quant = quant;
+            _this.seedCooldown = seedCooldown;
+            _this.minimapColor = minimapColor;
+            _this.collisionType = collisionType;
+            _this.minSize = 1;
+            _this.maxSize = 3;
+            _this.minDepth = 10;
+            _this.maxDepth = 100;
+            return _this;
         }
         MapSurfaceDefinition.prototype.setSize = function (minSize, maxSize) {
             this.minSize = minSize;
@@ -260,11 +262,12 @@ var Lich;
             quant, 
             // barva na minimapě
             minimapColor) {
-            _super.call(this, mapObjKey, invObj, quant);
-            this.mapObjKey = mapObjKey;
-            this.invObj = invObj;
-            this.quant = quant;
-            this.minimapColor = minimapColor;
+            var _this = _super.call(this, mapObjKey, invObj, quant) || this;
+            _this.mapObjKey = mapObjKey;
+            _this.invObj = invObj;
+            _this.quant = quant;
+            _this.minimapColor = minimapColor;
+            return _this;
         }
         return MapSurfaceBgrDefinition;
     }(Diggable));

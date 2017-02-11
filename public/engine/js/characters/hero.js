@@ -8,7 +8,7 @@ var Lich;
     var Hero = (function (_super) {
         __extends(Hero, _super);
         function Hero() {
-            _super.call(this, Hero.OWNER_ID, 56, // WIDTH
+            var _this = _super.call(this, Hero.OWNER_ID, 56, // WIDTH
             80, // HEIGHT 
             20, // COLLXOFFSET
             12, // COLLYOFFSET
@@ -30,13 +30,14 @@ var Lich;
                 .add(Hero.DIE, 28, 28, Hero.DEAD, 0.2)
                 .add(Hero.DEAD, 29, 29, Hero.DEAD, 0.2)
                 .add(Hero.TELEPORT, 30, 36, Hero.IDLE, 1.0)
-                .add(Hero.CLIMB, 37, 39, Hero.CLIMB, 0.3));
-            this.willRegen = 10;
-            this.healthRegen = 1;
-            this.hitTextColor = "#E30";
-            this.hitTextBorderColor = "#300";
-            this.onHealthChange(this.currentHealth);
-            this.onWillChange(this.currentWill);
+                .add(Hero.CLIMB, 37, 39, Hero.CLIMB, 0.3)) || this;
+            _this.willRegen = 10;
+            _this.healthRegen = 1;
+            _this.hitTextColor = "#E30";
+            _this.hitTextBorderColor = "#300";
+            _this.onHealthChange(_this.currentHealth);
+            _this.onWillChange(_this.currentWill);
+            return _this;
         }
         Hero.prototype.onHealthChange = function (difference) {
             Lich.EventBus.getInstance().fireEvent(new Lich.HealthChangeEventPayload(this.maxHealth, this.currentHealth));
@@ -94,24 +95,24 @@ var Lich;
         ;
         Hero.prototype.death = function () { this.performState(Hero.DIE); };
         ;
-        /*-----------*/
-        /* CONSTANTS */
-        /*-----------*/
-        Hero.OWNER_ID = "HERO";
-        Hero.IDLE = "IDLE";
-        Hero.BREATH = "BREATH";
-        Hero.WALKR = "WALKR";
-        Hero.WALKL = "WALKL";
-        Hero.JUMP = "JUMP";
-        Hero.MIDAIR = "MIDAIR";
-        Hero.FALL = "FALL";
-        Hero.JUMPR = "JUMPR";
-        Hero.JUMPL = "JUMPL";
-        Hero.DIE = "DIE";
-        Hero.DEAD = "DEAD";
-        Hero.TELEPORT = "TELEPORT";
-        Hero.CLIMB = "CLIMB";
         return Hero;
     }(Lich.Character));
+    /*-----------*/
+    /* CONSTANTS */
+    /*-----------*/
+    Hero.OWNER_ID = "HERO";
+    Hero.IDLE = "IDLE";
+    Hero.BREATH = "BREATH";
+    Hero.WALKR = "WALKR";
+    Hero.WALKL = "WALKL";
+    Hero.JUMP = "JUMP";
+    Hero.MIDAIR = "MIDAIR";
+    Hero.FALL = "FALL";
+    Hero.JUMPR = "JUMPR";
+    Hero.JUMPL = "JUMPL";
+    Hero.DIE = "DIE";
+    Hero.DEAD = "DEAD";
+    Hero.TELEPORT = "TELEPORT";
+    Hero.CLIMB = "CLIMB";
     Lich.Hero = Hero;
 })(Lich || (Lich = {}));

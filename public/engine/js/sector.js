@@ -8,15 +8,16 @@ var Lich;
     var AbstractSector = (function (_super) {
         __extends(AbstractSector, _super);
         function AbstractSector(secId, map_x, map_y, width, height) {
-            _super.call(this);
-            this.secId = secId;
-            this.map_x = map_x;
-            this.map_y = map_y;
-            this.width = width;
-            this.height = height;
-            this.backgroundCont = new createjs.Container();
-            this.cacheableCont = new createjs.Container();
-            this.animatedCont = new createjs.Container();
+            var _this = _super.call(this) || this;
+            _this.secId = secId;
+            _this.map_x = map_x;
+            _this.map_y = map_y;
+            _this.width = width;
+            _this.height = height;
+            _this.backgroundCont = new createjs.Container();
+            _this.cacheableCont = new createjs.Container();
+            _this.animatedCont = new createjs.Container();
+            return _this;
         }
         return AbstractSector;
     }(createjs.Container));
@@ -24,7 +25,7 @@ var Lich;
     var FogSector = (function (_super) {
         __extends(FogSector, _super);
         function FogSector() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return FogSector;
     }(AbstractSector));
@@ -32,24 +33,25 @@ var Lich;
     var Sector = (function (_super) {
         __extends(Sector, _super);
         function Sector(secId, map_x, map_y, width, height) {
-            _super.call(this, secId, map_x, map_y, width, height);
-            this.secId = secId;
-            this.map_x = map_x;
-            this.map_y = map_y;
-            this.width = width;
-            this.height = height;
-            this.backgroundCont = new createjs.Container();
-            this.cacheableCont = new createjs.Container();
-            this.animatedCont = new createjs.Container();
-            this.backgroundCont.width = this.width;
-            this.backgroundCont.height = this.height;
-            this.cacheableCont.width = this.width;
-            this.cacheableCont.height = this.height;
-            this.animatedCont.width = this.width;
-            this.animatedCont.height = this.height;
-            this.addChild(this.backgroundCont);
-            this.addChild(this.cacheableCont);
-            this.addChild(this.animatedCont);
+            var _this = _super.call(this, secId, map_x, map_y, width, height) || this;
+            _this.secId = secId;
+            _this.map_x = map_x;
+            _this.map_y = map_y;
+            _this.width = width;
+            _this.height = height;
+            _this.backgroundCont = new createjs.Container();
+            _this.cacheableCont = new createjs.Container();
+            _this.animatedCont = new createjs.Container();
+            _this.backgroundCont.width = _this.width;
+            _this.backgroundCont.height = _this.height;
+            _this.cacheableCont.width = _this.width;
+            _this.cacheableCont.height = _this.height;
+            _this.animatedCont.width = _this.width;
+            _this.animatedCont.height = _this.height;
+            _this.addChild(_this.backgroundCont);
+            _this.addChild(_this.cacheableCont);
+            _this.addChild(_this.animatedCont);
+            return _this;
         }
         // override
         Sector.prototype.cache = function (x, y, width, height, scale) {

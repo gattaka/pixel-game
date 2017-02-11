@@ -8,12 +8,12 @@ var Lich;
     var ItemUI = (function (_super) {
         __extends(ItemUI, _super);
         function ItemUI(item, quant) {
-            _super.call(this);
-            this.item = item;
-            this.width = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING;
-            this.height = this.width;
+            var _this = _super.call(this) || this;
+            _this.item = item;
+            _this.width = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING;
+            _this.height = _this.width;
             var invDef = Lich.Resources.getInstance().invObjectDefs[item];
-            this.invDef = invDef;
+            _this.invDef = invDef;
             var frames = 1;
             if (typeof invDef === "undefined" || invDef == null) {
                 frames = 1;
@@ -21,17 +21,18 @@ var Lich;
             else {
                 frames = invDef.frames;
             }
-            this.frames = frames;
+            _this.frames = frames;
             var sprite = Lich.Resources.getInstance().getSprite(Lich.InventoryKey[item], frames);
-            this.sprite = sprite;
-            this.addChild(sprite);
-            sprite.x = this.width / 2 - sprite.width / 2;
-            sprite.y = this.height / 2 - sprite.height / 2;
+            _this.sprite = sprite;
+            _this.addChild(sprite);
+            sprite.x = _this.width / 2 - sprite.width / 2;
+            sprite.y = _this.height / 2 - sprite.height / 2;
             var text = new Lich.Label("" + quant, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.count = text;
-            this.addChild(text);
+            _this.count = text;
+            _this.addChild(text);
             text.x = 0;
-            text.y = this.height - Lich.PartsUI.TEXT_SIZE - Lich.PartsUI.SPACING;
+            text.y = _this.height - Lich.PartsUI.TEXT_SIZE - Lich.PartsUI.SPACING;
+            return _this;
         }
         return ItemUI;
     }(createjs.Container));

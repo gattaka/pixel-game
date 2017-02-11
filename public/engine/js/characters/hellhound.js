@@ -10,7 +10,7 @@ var Lich;
         var Hellhound = (function (_super) {
             __extends(Hellhound, _super);
             function Hellhound() {
-                _super.call(this, Hellhound.OWNER_ID, 10, // DAMAGE
+                return _super.call(this, Hellhound.OWNER_ID, 10, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 128, // WIDTH
                 86, // HEIGHT 
@@ -27,7 +27,7 @@ var Lich;
                     .add(Hellhound.JUMPL, 10, 15, Hellhound.WALKL, 0.2), true, // unspawns
                 0, // min depth 
                 50 // max depth
-                );
+                ) || this;
             }
             Hellhound.prototype.walkL = function () { this.performState(Hellhound.WALKL); };
             ;
@@ -62,14 +62,14 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
-            Hellhound.OWNER_ID = "HELLHOUND";
-            Hellhound.IDLE = "IDLE";
-            Hellhound.WALKR = "WALKR";
-            Hellhound.WALKL = "WALKL";
-            Hellhound.JUMPR = "JUMPR";
-            Hellhound.JUMPL = "JUMPL";
             return Hellhound;
         }(Lich.AbstractEnemy));
+        Hellhound.OWNER_ID = "HELLHOUND";
+        Hellhound.IDLE = "IDLE";
+        Hellhound.WALKR = "WALKR";
+        Hellhound.WALKL = "WALKL";
+        Hellhound.JUMPR = "JUMPR";
+        Hellhound.JUMPL = "JUMPL";
         Enemy.Hellhound = Hellhound;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

@@ -8,8 +8,9 @@ var Lich;
     var ParticleLayer = (function (_super) {
         __extends(ParticleLayer, _super);
         function ParticleLayer(speed) {
-            _super.call(this);
-            this.speed = speed;
+            var _this = _super.call(this) || this;
+            _this.speed = speed;
+            return _this;
         }
         return ParticleLayer;
     }(createjs.Container));
@@ -23,20 +24,21 @@ var Lich;
     var Weather = (function (_super) {
         __extends(Weather, _super);
         function Weather(game) {
-            _super.call(this);
-            this.game = game;
-            this.snowflakeTryTimer = 0;
-            this.loveletterTryTimer = 0;
-            this.modeStartProgress = 0;
-            this.modeDurationTimer = 0;
-            this.spawnBatchDelayTimer = 0;
-            this.particleLayers = new Array();
-            this.windSpeed = 0;
-            this.lightScreen = new createjs.Shape();
-            this.mode = WeatherMode.NONE;
-            this.width = game.getCanvas().width;
-            this.height = game.getCanvas().height;
-            this.addChild(this.lightScreen);
+            var _this = _super.call(this) || this;
+            _this.game = game;
+            _this.snowflakeTryTimer = 0;
+            _this.loveletterTryTimer = 0;
+            _this.modeStartProgress = 0;
+            _this.modeDurationTimer = 0;
+            _this.spawnBatchDelayTimer = 0;
+            _this.particleLayers = new Array();
+            _this.windSpeed = 0;
+            _this.lightScreen = new createjs.Shape();
+            _this.mode = WeatherMode.NONE;
+            _this.width = game.getCanvas().width;
+            _this.height = game.getCanvas().height;
+            _this.addChild(_this.lightScreen);
+            return _this;
         }
         Weather.prototype.updateLight = function (r, g, b, a) {
             this.lightScreen.graphics.clear().beginFill("rgba(" + r + "," + g + "," + b + "," + a + ")").drawRect(0, 0, this.width, this.height);
@@ -200,17 +202,17 @@ var Lich;
                 }
             }
         };
-        Weather.MAX_WIND = 10;
-        Weather.SNOW_RAIN_AMOUNT = 500;
-        Weather.SPAWN_BATCH_DELAY = 10000;
-        Weather.PARTICLE_LAYERS = 3;
-        Weather.MODE_DURATION = 60000;
-        Weather.GIFT_SPAWN_PROP = 1000; // 1/1000
-        Weather.SNOWFLAKE_SPAWN_PROP = 1000; // 1/1000
-        Weather.SNOWFLAKE_SPAWN_INTERVAL = 5000;
-        Weather.LOVELETTER_SPAWN_PROP = 10000; // 1/10000
-        Weather.LOVELETTER_SPAWN_INTERVAL = 10000;
         return Weather;
     }(createjs.Container));
+    Weather.MAX_WIND = 10;
+    Weather.SNOW_RAIN_AMOUNT = 500;
+    Weather.SPAWN_BATCH_DELAY = 10000;
+    Weather.PARTICLE_LAYERS = 3;
+    Weather.MODE_DURATION = 60000;
+    Weather.GIFT_SPAWN_PROP = 1000; // 1/1000
+    Weather.SNOWFLAKE_SPAWN_PROP = 1000; // 1/1000
+    Weather.SNOWFLAKE_SPAWN_INTERVAL = 5000;
+    Weather.LOVELETTER_SPAWN_PROP = 10000; // 1/10000
+    Weather.LOVELETTER_SPAWN_INTERVAL = 10000;
     Lich.Weather = Weather;
 })(Lich || (Lich = {}));

@@ -1,5 +1,6 @@
 var Lich;
 (function (Lich) {
+    var SurfacePositionKey;
     (function (SurfacePositionKey) {
         SurfacePositionKey[SurfacePositionKey["VOID"] = 0] = "VOID";
         SurfacePositionKey[SurfacePositionKey["TL"] = 1] = "TL";
@@ -44,8 +45,7 @@ var Lich;
         SurfacePositionKey[SurfacePositionKey["B4"] = 40] = "B4";
         SurfacePositionKey[SurfacePositionKey["BR"] = 41] = "BR";
         SurfacePositionKey[SurfacePositionKey["RESERVED2"] = 42] = "RESERVED2";
-    })(Lich.SurfacePositionKey || (Lich.SurfacePositionKey = {}));
-    var SurfacePositionKey = Lich.SurfacePositionKey;
+    })(SurfacePositionKey = Lich.SurfacePositionKey || (Lich.SurfacePositionKey = {}));
     var SurfaceIndex = (function () {
         function SurfaceIndex() {
             // počet pozic a typů
@@ -369,9 +369,9 @@ var Lich;
                 return true;
             return false;
         };
-        SurfaceIndex.SPRITE_SIDE = 7;
-        SurfaceIndex.PATTER_LENGTH = 4;
         return SurfaceIndex;
     }());
+    SurfaceIndex.SPRITE_SIDE = 7;
+    SurfaceIndex.PATTER_LENGTH = 4;
     Lich.SurfaceIndex = SurfaceIndex;
 })(Lich || (Lich = {}));

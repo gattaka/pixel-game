@@ -10,7 +10,7 @@ var Lich;
         var ChickenBoss = (function (_super) {
             __extends(ChickenBoss, _super);
             function ChickenBoss() {
-                _super.call(this, ChickenBoss.OWNER_ID, 20, // DAMAGE
+                var _this = _super.call(this, ChickenBoss.OWNER_ID, 20, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 184, // WIDTH
                 304, // HEIGHT 
@@ -25,24 +25,25 @@ var Lich;
                 0, // min depth 
                 100, // max depth
                 true // hovers
-                );
-                this.angle = 0;
-                this.currentChargeCooldown = 0;
-                this.charging = false;
-                this.sprinting = true;
-                this.lockedSpeedX = 0;
-                this.lockedSpeedY = 0;
-                this.lockedTime = 0;
-                this.maxHealth = this.currentHealth = 5000;
-                this.healthBar.height = 10;
-                this.healthBar.y = -this.healthBar.height;
+                ) || this;
+                _this.angle = 0;
+                _this.currentChargeCooldown = 0;
+                _this.charging = false;
+                _this.sprinting = true;
+                _this.lockedSpeedX = 0;
+                _this.lockedSpeedY = 0;
+                _this.lockedTime = 0;
+                _this.maxHealth = _this.currentHealth = 5000;
+                _this.healthBar.height = 10;
+                _this.healthBar.y = -_this.healthBar.height;
                 // stále jsem v hover pohybu
-                this.movementTypeX = Lich.MovementTypeX.HOVER;
-                this.movementTypeY = Lich.MovementTypeY.HOVER;
+                _this.movementTypeX = Lich.MovementTypeX.HOVER;
+                _this.movementTypeY = Lich.MovementTypeY.HOVER;
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_CHICKEN_BOSS_THEME_KEY);
                 ChickenBoss.spawned = true;
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_CHICKEN_MASSACRE]));
+                return _this;
             }
             ChickenBoss.prototype.runAI = function (world, delta) {
                 var _this = this;
@@ -176,39 +177,39 @@ var Lich;
                 }
                 return damage;
             };
-            /**
-             * aka Murhun
-             */
-            ChickenBoss.OWNER_ID = "CHICKEN_BOSS";
-            ChickenBoss.IDLE = "IDLE";
-            ChickenBoss.ATTACK = "ATTACK";
-            /**
-             * Protože při nízké rychlosti otáčení se daří AI přejíždět
-             * cíl a tak vzniká neustálé "cukání", když se chce vrátit
-             * k nepattrně přejetému cíli, je potřeba rychlost zvýšit,
-             * aby stále cíl "doháněl"
-             *
-             * Dohánění má ale za důsledek vizuální zmenšení rádiusu,
-             * protože se AI motá uprostřed a cíl mu stále utíká
-             *
-             * Proto je potřeba vést rádiusy dva. Jeden, který "tahá"
-             * AI dokola a druhý který říká jak detekovat vzdálenost
-             * hráče u které se má k němu sprintovat a kdy se dá kolem
-             * něj jenom obíhat
-             */
-            ChickenBoss.ANGLE_STEP_PER_SEC = 90;
-            ChickenBoss.PULL_RADIUS = 500;
-            ChickenBoss.RADIUS = 400;
-            ChickenBoss.CHARGE_COOLDOWN = 6000;
-            ChickenBoss.CHARGE_DURATION = 2000;
-            // každých ANGER_COOLDOWN se sníží chickenKills
-            ChickenBoss.ANGER_COOLDOWN = 30000;
-            ChickenBoss.ANGER_THRESHOLD = 10;
-            ChickenBoss.currentAngerCooldown = 0;
-            ChickenBoss.chickenKills = 0;
-            ChickenBoss.spawned = false;
             return ChickenBoss;
         }(Lich.AbstractEnemy));
+        /**
+         * aka Murhun
+         */
+        ChickenBoss.OWNER_ID = "CHICKEN_BOSS";
+        ChickenBoss.IDLE = "IDLE";
+        ChickenBoss.ATTACK = "ATTACK";
+        /**
+         * Protože při nízké rychlosti otáčení se daří AI přejíždět
+         * cíl a tak vzniká neustálé "cukání", když se chce vrátit
+         * k nepattrně přejetému cíli, je potřeba rychlost zvýšit,
+         * aby stále cíl "doháněl"
+         *
+         * Dohánění má ale za důsledek vizuální zmenšení rádiusu,
+         * protože se AI motá uprostřed a cíl mu stále utíká
+         *
+         * Proto je potřeba vést rádiusy dva. Jeden, který "tahá"
+         * AI dokola a druhý který říká jak detekovat vzdálenost
+         * hráče u které se má k němu sprintovat a kdy se dá kolem
+         * něj jenom obíhat
+         */
+        ChickenBoss.ANGLE_STEP_PER_SEC = 90;
+        ChickenBoss.PULL_RADIUS = 500;
+        ChickenBoss.RADIUS = 400;
+        ChickenBoss.CHARGE_COOLDOWN = 6000;
+        ChickenBoss.CHARGE_DURATION = 2000;
+        // každých ANGER_COOLDOWN se sníží chickenKills
+        ChickenBoss.ANGER_COOLDOWN = 30000;
+        ChickenBoss.ANGER_THRESHOLD = 10;
+        ChickenBoss.currentAngerCooldown = 0;
+        ChickenBoss.chickenKills = 0;
+        ChickenBoss.spawned = false;
         Enemy.ChickenBoss = ChickenBoss;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

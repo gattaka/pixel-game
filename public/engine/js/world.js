@@ -14,16 +14,17 @@ var Lich;
     var WorldObject = (function (_super) {
         __extends(WorldObject, _super);
         function WorldObject(item, width, height, spriteSheet, initState, states, collXOffset, collYOffset, notificationTimer) {
-            _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset);
-            this.item = item;
-            this.width = width;
-            this.height = height;
-            this.spriteSheet = spriteSheet;
-            this.initState = initState;
-            this.states = states;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.notificationTimer = notificationTimer;
+            var _this = _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset) || this;
+            _this.item = item;
+            _this.width = width;
+            _this.height = height;
+            _this.spriteSheet = spriteSheet;
+            _this.initState = initState;
+            _this.states = states;
+            _this.collXOffset = collXOffset;
+            _this.collYOffset = collYOffset;
+            _this.notificationTimer = notificationTimer;
+            return _this;
         }
         ;
         return WorldObject;
@@ -57,18 +58,18 @@ var Lich;
     var World = (function (_super) {
         __extends(World, _super);
         function World(game, tilesMap) {
-            _super.call(this);
-            this.game = game;
-            this.tilesMap = tilesMap;
+            var _this = _super.call(this) || this;
+            _this.game = game;
+            _this.tilesMap = tilesMap;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
-            this.freeObjects = Array();
-            this.bulletObjects = Array();
-            this.labelObjects = new Array();
-            this.enemiesCount = 0;
-            this.enemies = new Array();
-            var self = this;
+            _this.freeObjects = Array();
+            _this.bulletObjects = Array();
+            _this.labelObjects = new Array();
+            _this.enemiesCount = 0;
+            _this.enemies = new Array();
+            var self = _this;
             self.render = new Lich.Render(game, self);
             self.hero = new Lich.Hero();
             self.hero.x = game.getCanvas().width / 2;
@@ -90,6 +91,7 @@ var Lich;
             };
             self.render.addOnDigSurfaceListener(listener);
             self.render.addOnDigObjectListener(listener);
+            return _this;
         }
         World.prototype.fadeEnemy = function (enemy) {
             var self = this;
@@ -275,7 +277,7 @@ var Lich;
             else {
                 // TODO xt by se mělo střídavě od středu vzdalovat 
                 var xt_1 = tilesMap.width / 2;
-                var _loop_1 = function(yt) {
+                var _loop_1 = function (yt) {
                     // je hráče kam umístit?
                     var fits = self.fits(xt_1, yt, heroWidth, heroHeight);
                     if (fits) {
@@ -298,7 +300,8 @@ var Lich;
                 };
                 for (var yt = 0; yt < tilesMap.height; yt++) {
                     var state_1 = _loop_1(yt);
-                    if (state_1 === "break") break;
+                    if (state_1 === "break")
+                        break;
                 }
             }
         };
@@ -385,14 +388,10 @@ var Lich;
             playerShiftY = overSceneY - playerPreShiftY;
             self.hero.x -= playerShiftX;
             self.hero.y -= playerShiftY;
-            if (self.hero.x < 0)
-                self.hero.x = -self.hero.collXOffset;
-            if (self.hero.x > self.game.getCanvas().width)
-                self.hero.x = self.game.getCanvas().width - self.hero.width + self.hero.collXOffset;
-            if (self.hero.y < 0)
-                self.hero.y = -self.hero.collYOffset;
-            if (self.hero.y > self.game.getCanvas().height)
-                self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
+            // if (self.hero.x < 0) self.hero.x = - self.hero.collXOffset;
+            // if (self.hero.x > self.game.getCanvas().width) self.hero.x = self.game.getCanvas().width - self.hero.width + self.hero.collXOffset;
+            // if (self.hero.y < 0) self.hero.y = - self.hero.collYOffset;
+            // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
             self.game.getBackground().shift(sceneShiftX, sceneShiftY);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
@@ -1210,21 +1209,21 @@ var Lich;
             Lich.SpawnPool.getInstance().update(delta, self);
         };
         ;
-        /*-----------*/
-        /* CONSTANTS */
-        /*-----------*/
-        World.OBJECT_NOTIFY_TIME = 500;
-        World.OBJECT_NOTIFY_BOUNCE_SPEED = 120;
-        World.OBJECT_PICKUP_DISTANCE = 10;
-        World.OBJECT_PICKUP_FORCE_DISTANCE = 100;
-        World.OBJECT_PICKUP_FORCE_TIME = 150;
-        // Pixel/s2
-        World.WORLD_GRAVITY = -1200;
-        World.CLIMBING_SPEED = 300;
-        World.DESCENT_SPEED = -10;
-        World.MAX_FREEFALL_SPEED = -1200;
         return World;
     }(createjs.Container));
+    /*-----------*/
+    /* CONSTANTS */
+    /*-----------*/
+    World.OBJECT_NOTIFY_TIME = 500;
+    World.OBJECT_NOTIFY_BOUNCE_SPEED = 120;
+    World.OBJECT_PICKUP_DISTANCE = 10;
+    World.OBJECT_PICKUP_FORCE_DISTANCE = 100;
+    World.OBJECT_PICKUP_FORCE_TIME = 150;
+    // Pixel/s2
+    World.WORLD_GRAVITY = -1200;
+    World.CLIMBING_SPEED = 300;
+    World.DESCENT_SPEED = -10;
+    World.MAX_FREEFALL_SPEED = -1200;
     Lich.World = World;
     var ReachInfo = (function () {
         function ReachInfo(source, characterCoordTL, characterCoordTR, characterCoordBR, characterCoordBL, inReach) {

@@ -10,7 +10,7 @@ var Lich;
         var Chicken = (function (_super) {
             __extends(Chicken, _super);
             function Chicken() {
-                _super.call(this, Chicken.OWNER_ID, 0, // DAMAGE
+                var _this = _super.call(this, Chicken.OWNER_ID, 0, // DAMAGE
                 0, // ATTACK_COOLDOWN
                 26, // WIDTH
                 26, // HEIGHT 
@@ -31,11 +31,12 @@ var Lich;
                     .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1), true, // unspawns
                 0, // min depth 
                 25 // max depth
-                );
-                this.modeCooldown = 0;
-                this.currentMode = 0;
-                this.lastOrientationLeft = true;
-                this.setNewMaxHealth(50);
+                ) || this;
+                _this.modeCooldown = 0;
+                _this.currentMode = 0;
+                _this.lastOrientationLeft = true;
+                _this.setNewMaxHealth(50);
+                return _this;
             }
             Chicken.prototype.runAI = function (world, delta) {
                 if (this.currentHealth > 0) {
@@ -181,19 +182,19 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
-            Chicken.OWNER_ID = "CHICKEN";
-            Chicken.IDLEL = "IDLEL";
-            Chicken.IDLER = "IDLER";
-            Chicken.EATL = "EATL";
-            Chicken.EATR = "EATR";
-            Chicken.WALKR = "WALKR";
-            Chicken.WALKL = "WALKL";
-            Chicken.JUMPR = "JUMPR";
-            Chicken.JUMPL = "JUMPL";
-            Chicken.DIE = "DIE";
-            Chicken.MODE_COOLDOWN = 3000;
             return Chicken;
         }(Lich.AbstractEnemy));
+        Chicken.OWNER_ID = "CHICKEN";
+        Chicken.IDLEL = "IDLEL";
+        Chicken.IDLER = "IDLER";
+        Chicken.EATL = "EATL";
+        Chicken.EATR = "EATR";
+        Chicken.WALKR = "WALKR";
+        Chicken.WALKL = "WALKL";
+        Chicken.JUMPR = "JUMPR";
+        Chicken.JUMPL = "JUMPL";
+        Chicken.DIE = "DIE";
+        Chicken.MODE_COOLDOWN = 3000;
         Enemy.Chicken = Chicken;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

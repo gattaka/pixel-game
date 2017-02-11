@@ -8,15 +8,14 @@ var Lich;
     var MusicUI = (function (_super) {
         __extends(MusicUI, _super);
         function MusicUI() {
-            var _this = this;
-            _super.call(this, MusicUI.N, MusicUI.M);
-            this.choosenItem = {};
-            this.trackContent = [];
-            this.trackIndex = {};
-            this.reversedTrackIndex = [];
-            this.itemsCont = new createjs.Container();
-            this.itemHighlightShape = new createjs.Shape();
-            var self = this;
+            var _this = _super.call(this, MusicUI.N, MusicUI.M) || this;
+            _this.choosenItem = {};
+            _this.trackContent = [];
+            _this.trackIndex = {};
+            _this.reversedTrackIndex = [];
+            _this.itemsCont = new createjs.Container();
+            _this.itemHighlightShape = new createjs.Shape();
+            var self = _this;
             var trackInsert = function (track, volume) {
                 var self = _this;
                 var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.UI_SOUND_KEY]);
@@ -50,6 +49,7 @@ var Lich;
             self.addChild(self.itemsCont);
             var offset = 5;
             self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
+            return _this;
         }
         MusicUI.prototype.selectTrack = function (track, volume) {
             var self = this;
@@ -64,9 +64,9 @@ var Lich;
             Lich.Mixer.playMusic(track, volume);
             self.updateCache();
         };
-        MusicUI.N = 6;
-        MusicUI.M = 1;
         return MusicUI;
     }(Lich.PartsUI));
+    MusicUI.N = 6;
+    MusicUI.M = 1;
     Lich.MusicUI = MusicUI;
 })(Lich || (Lich = {}));

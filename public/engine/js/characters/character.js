@@ -5,6 +5,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
+    var MovementTypeX;
     (function (MovementTypeX) {
         // Nic nedělá
         MovementTypeX[MovementTypeX["NONE"] = 0] = "NONE";
@@ -14,8 +15,8 @@ var Lich;
         MovementTypeX[MovementTypeX["WALK_RIGHT"] = 2] = "WALK_RIGHT";
         // Vznáší se (nerespektuje gravitaci ani kolize)
         MovementTypeX[MovementTypeX["HOVER"] = 3] = "HOVER";
-    })(Lich.MovementTypeX || (Lich.MovementTypeX = {}));
-    var MovementTypeX = Lich.MovementTypeX;
+    })(MovementTypeX = Lich.MovementTypeX || (Lich.MovementTypeX = {}));
+    var MovementTypeY;
     (function (MovementTypeY) {
         // Nic nedělá
         MovementTypeY[MovementTypeY["NONE"] = 0] = "NONE";
@@ -27,13 +28,12 @@ var Lich;
         MovementTypeY[MovementTypeY["ASCENT"] = 3] = "ASCENT";
         // Vznáší se (nerespektuje gravitaci ani kolize)
         MovementTypeY[MovementTypeY["HOVER"] = 4] = "HOVER";
-    })(Lich.MovementTypeY || (Lich.MovementTypeY = {}));
-    var MovementTypeY = Lich.MovementTypeY;
+    })(MovementTypeY = Lich.MovementTypeY || (Lich.MovementTypeY = {}));
     var Character = (function (_super) {
         __extends(Character, _super);
         function Character(ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers) {
             if (hovers === void 0) { hovers = false; }
-            _super.call(this, width, height, new createjs.SpriteSheet({
+            var _this = _super.call(this, width, height, new createjs.SpriteSheet({
                 framerate: 10,
                 "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[animationKey])],
                 "frames": {
@@ -44,34 +44,35 @@ var Lich;
                     "width": width
                 },
                 "animations": animations.serialize()
-            }), initState, collXOffset, collYOffset, hovers);
-            this.ownerId = ownerId;
-            this.accelerationX = accelerationX;
-            this.accelerationY = accelerationY;
-            this.uuid = Lich.Utils.guid();
-            this.HEALTH_REGEN_TIME = 1000;
-            this.maxHealth = 100;
-            this.currentHealth = this.maxHealth;
-            this.healthRegen = 0;
-            this.WILL_REGEN_TIME = 1000;
-            this.maxWill = 50;
-            this.currentWill = this.maxWill;
-            this.willRegen = 0;
-            this.hitTextColor = "#E3E";
-            this.hitTextBorderColor = "#303";
+            }), initState, collXOffset, collYOffset, hovers) || this;
+            _this.ownerId = ownerId;
+            _this.accelerationX = accelerationX;
+            _this.accelerationY = accelerationY;
+            _this.uuid = Lich.Utils.guid();
+            _this.HEALTH_REGEN_TIME = 1000;
+            _this.maxHealth = 100;
+            _this.currentHealth = _this.maxHealth;
+            _this.healthRegen = 0;
+            _this.WILL_REGEN_TIME = 1000;
+            _this.maxWill = 50;
+            _this.currentWill = _this.maxWill;
+            _this.willRegen = 0;
+            _this.hitTextColor = "#E3E";
+            _this.hitTextBorderColor = "#303";
             // Typy pohybu, u hráče odpovídá stisku klávesy, 
             // u nepřítele jeho AI nasměrování
-            this.movementTypeX = MovementTypeX.NONE;
-            this.movementTypeY = MovementTypeY.NONE;
-            this.isClimbing = false;
-            this.spellCooldowns = new Lich.Table();
-            this.healthBar = new createjs.Shape();
-            this.healthBar.width = this.width;
-            this.healthBar.height = 4;
-            this.healthBar.x = 0;
-            this.healthBar.y = -this.healthBar.height;
-            this.healthBar.visible = false;
-            this.addChild(this.healthBar);
+            _this.movementTypeX = MovementTypeX.NONE;
+            _this.movementTypeY = MovementTypeY.NONE;
+            _this.isClimbing = false;
+            _this.spellCooldowns = new Lich.Table();
+            _this.healthBar = new createjs.Shape();
+            _this.healthBar.width = _this.width;
+            _this.healthBar.height = 4;
+            _this.healthBar.x = 0;
+            _this.healthBar.y = -_this.healthBar.height;
+            _this.healthBar.visible = false;
+            _this.addChild(_this.healthBar);
+            return _this;
         }
         Character.prototype.updateHealthBar = function () {
             if (this.currentHealth == this.maxHealth || this.currentHealth == 0) {

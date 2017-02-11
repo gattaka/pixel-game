@@ -44,9 +44,9 @@ var Lich;
                 Mixer.soundInstances[id] == null;
             }
         };
-        Mixer.soundInstances = new Array();
-        Mixer.musicInstances = new Array();
         return Mixer;
     }());
+    Mixer.soundInstances = new Array();
+    Mixer.musicInstances = new Array();
     Lich.Mixer = Mixer;
 })(Lich || (Lich = {}));

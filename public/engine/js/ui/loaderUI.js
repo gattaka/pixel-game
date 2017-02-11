@@ -8,10 +8,10 @@ var Lich;
     var LoaderUI = (function (_super) {
         __extends(LoaderUI, _super);
         function LoaderUI(game) {
-            _super.call(this);
-            this.game = game;
-            this.loaderName = "Loading...";
-            var self = this;
+            var _this = _super.call(this) || this;
+            _this.game = game;
+            _this.loaderName = "Loading...";
+            var self = _this;
             self.width = game.getCanvas().width;
             self.height = game.getCanvas().height;
             self.loadScreen = new createjs.Shape();
@@ -27,6 +27,7 @@ var Lich;
             self.currentItemLabel.y = self.progressLabel.y + 40;
             self.addChild(self.currentItemLabel);
             self.reset();
+            return _this;
         }
         LoaderUI.prototype.reset = function () {
             var _this = this;

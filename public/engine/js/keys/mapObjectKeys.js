@@ -1,5 +1,6 @@
 var Lich;
 (function (Lich) {
+    var MapObjectKey;
     (function (MapObjectKey) {
         MapObjectKey[MapObjectKey["MAP_BERRY_KEY"] = 0] = "MAP_BERRY_KEY";
         MapObjectKey[MapObjectKey["MAP_BUSH_KEY"] = 1] = "MAP_BUSH_KEY";
@@ -68,6 +69,5 @@ var Lich;
         MapObjectKey[MapObjectKey["MAP_CABINET_KEY"] = 64] = "MAP_CABINET_KEY";
         MapObjectKey[MapObjectKey["MAP_CANDLE_KEY"] = 65] = "MAP_CANDLE_KEY";
         MapObjectKey[MapObjectKey["MAP_PORTRAIT_VALENTIMON_KEY"] = 66] = "MAP_PORTRAIT_VALENTIMON_KEY";
-    })(Lich.MapObjectKey || (Lich.MapObjectKey = {}));
-    var MapObjectKey = Lich.MapObjectKey;
+    })(MapObjectKey = Lich.MapObjectKey || (Lich.MapObjectKey = {}));
 })(Lich || (Lich = {}));

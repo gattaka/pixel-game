@@ -8,24 +8,24 @@ var Lich;
     var DebugLogUI = (function (_super) {
         __extends(DebugLogUI, _super);
         function DebugLogUI(width, height) {
-            _super.call(this, width, height);
-            var self = this;
-            this.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.addNextChild(this.fpsLabel);
+            var _this = _super.call(this, width, height) || this;
+            var self = _this;
+            _this.fpsLabel = new Lich.Label("-- fps", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.addNextChild(_this.fpsLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.FPS_CHANGE, function (data) {
                 self.fpsLabel.setText(Math.round(data.payload) + " fps");
                 return false;
             });
-            this.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.addNextChild(this.mouseLabel);
+            _this.mouseLabel = new Lich.Label("PIXELS x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.addNextChild(_this.mouseLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MOUSE_MOVE, function (data) {
                 self.mouseLabel.setText("PIXELS x: " + data.x + " y: " + data.y);
                 return false;
             });
-            this.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.addNextChild(this.tilesLabel);
-            this.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
-            this.addNextChild(this.sectorLabel);
+            _this.tilesLabel = new Lich.Label("TILES x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.addNextChild(_this.tilesLabel);
+            _this.sectorLabel = new Lich.Label("SECTOR: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.addNextChild(_this.sectorLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.POINTED_AREA_CHANGE, function (data) {
                 self.tilesLabel.setText("TILES x: " + data.clsnx + " y: " + data.clsny
                     + " clsn: " + data.clsnHit
@@ -38,18 +38,19 @@ var Lich;
                 }
                 return false;
             });
-            this.playerLabel = new Lich.Label("SPEED x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.playerLabel = new Lich.Label("SPEED x: - y: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_SPEED_CHANGE, function (data) {
                 self.playerLabel.setText("SPEED x: " + Math.floor(data.x) + " y: " + Math.floor(data.y));
                 return false;
             });
-            this.addNextChild(this.playerLabel);
-            this.enemiesLabel = new Lich.Label("ENEMIES LEFT: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.addNextChild(_this.playerLabel);
+            _this.enemiesLabel = new Lich.Label("ENEMIES LEFT: -", "15px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.ENEMY_COUNT_CHANGE, function (data) {
                 self.enemiesLabel.setText("ENEMIES LEFT: " + data.payload);
                 return false;
             });
-            this.addNextChild(this.enemiesLabel);
+            _this.addNextChild(_this.enemiesLabel);
+            return _this;
         }
         DebugLogUI.prototype.addNextChild = function (child) {
             if (this.height == 0) {
@@ -64,8 +65,8 @@ var Lich;
             _super.prototype.addChild.call(this, child);
             this.drawBackground();
         };
-        DebugLogUI.PADDING = 5;
         return DebugLogUI;
     }(Lich.AbstractUI));
+    DebugLogUI.PADDING = 5;
     Lich.DebugLogUI = DebugLogUI;
 })(Lich || (Lich = {}));

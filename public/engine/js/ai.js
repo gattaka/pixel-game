@@ -236,10 +236,11 @@ var Lich;
         function BackpackGA(populationSize, maxGenerations) {
             if (populationSize === void 0) { populationSize = 10; }
             if (maxGenerations === void 0) { maxGenerations = 200; }
-            _super.call(this, 6, populationSize, maxGenerations);
-            this.values = [15, 10, 9, 5, 12, 5];
-            this.weights = [1, 5, 3, 4, 7, 1];
-            this.maxWeight = 10;
+            var _this = _super.call(this, 6, populationSize, maxGenerations) || this;
+            _this.values = [15, 10, 9, 5, 12, 5];
+            _this.weights = [1, 5, 3, 4, 7, 1];
+            _this.maxWeight = 10;
+            return _this;
         }
         BackpackGA.prototype.getRand = function () {
             return Math.floor(Math.random() * 2);

@@ -42,9 +42,9 @@ namespace Lich {
         screenOffsetX = 0;
         screenOffsetY = 0;
 
-        // souřadnice aktuálního sektorového "okna"
-        currentStartSecX = null;
-        currentStartSecY = null;
+        // souřadnice aktuálního sektorového "okna" v půlsektorech
+        currentStartHalfSecX = null;
+        currentStartHalfSecY = null;
         sectorsToUpdate = new Array<SectorUpdateRequest>();
         fogSectorsToUpdate = new Array<FogSectorUpdateRequest>();
         // Kontejnery na sektory
@@ -97,36 +97,72 @@ namespace Lich {
         // zkoumá, zda je potřeba přealokovat sektory 
         updateSectors() {
             let self = this;
+
             let maxSecCountX = Math.ceil(self.tilesMap.width / Render.SECTOR_SIZE);
             let maxSecCountY = Math.ceil(self.tilesMap.height / Render.SECTOR_SIZE);
 
+            // Pokud jsem úplně vlevo, vykresluj od X sektoru 0
             let startSecX = 0;
+            let halfStartSecX = 0;
+            let applyXdither = false;
+            let oddXdither = false;
             if (self.screenOffsetX < 0) {
-                startSecX = Math.floor(-1 * self.screenOffsetX / (Render.SECTOR_SIZE * Resources.TILE_SIZE));
+                // Pokud došlo k nějakému posunu doprava, zjisti kolik sektorů by se do tohoto posuvu vešlo
+                // půlsektory pro dither
+                halfStartSecX = Math.floor(-1 * self.screenOffsetX / (Render.SECTOR_SIZE / 2 * Resources.TILE_SIZE));
+                oddXdither = halfStartSecX % 2 == 0;
+                startSecX = Math.floor(halfStartSecX / 2);
+                // Vždy ponech BUFFER_SECTORS_X sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
+                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
                 startSecX = startSecX >= Render.BUFFER_SECTORS_X ? startSecX - Render.BUFFER_SECTORS_X : startSecX;
+                applyXdither = startSecX != 0;
             }
-            let countSectX = Math.floor(self.sectorsCont.width / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 1;
+            let countSectX = Math.floor(self.sectorsCont.width / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
+            applyXdither = applyXdither && startSecX + countSectX != maxSecCountX;
 
+            // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
             let startSecY = 0;
+            let halfStartSecY = 0;
+            let applyYdither = false;
+            let oddYdither = false;
             if (self.screenOffsetY < 0) {
-                startSecY = Math.floor(-1 * self.screenOffsetY / (Render.SECTOR_SIZE * Resources.TILE_SIZE));
+                // Pokud došlo k nějakému posunu dolů, zjisti kolik sektorů by se do tohoto posuvu vešlo
+                // půlsektory pro dither
+                halfStartSecY = Math.floor(-1 * self.screenOffsetY / (Render.SECTOR_SIZE / 2 * Resources.TILE_SIZE));
+                oddYdither = halfStartSecY % 2 == 0;
+                startSecY = Math.floor(halfStartSecY / 2);
+                // Vždy ponech BUFFER_SECTORS_Y sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
+                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
                 startSecY = startSecY >= Render.BUFFER_SECTORS_Y ? startSecY - Render.BUFFER_SECTORS_Y : startSecY;
             }
-            let countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 1;
+            let countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
+            applyYdither = applyYdither && startSecY + countSectY != maxSecCountY;
 
             // změnilo se něco? Pokud není potřeba pře-alokovávat sektory, ukonči fci
-            if (self.currentStartSecX === startSecX && self.currentStartSecY === startSecY)
+            if (self.currentStartHalfSecX === halfStartSecX && self.currentStartHalfSecY === halfStartSecY)
                 return;
 
             // změnit stavy
-            self.currentStartSecX = startSecX;
-            self.currentStartSecY = startSecY;
+            self.currentStartHalfSecX = halfStartSecX;
+            self.currentStartHalfSecY = halfStartSecY;
 
             // projdi sektory, nepoužité dealokuj, nové naplň
             for (let x = 0; x < maxSecCountX; x++) {
                 for (let y = 0; y < maxSecCountY; y++) {
 
                     if (x >= startSecX && x <= startSecX + countSectX && y >= startSecY && y <= startSecY + countSectY) {
+
+                        // pokud je zapnuté prokládání a jde o krajní sektory, nezpracovávej liché resp. sudé sektory
+                        // tyto sektory budou zpracovány dalším půl-sektorovém kroku
+                        if (applyXdither && (x == startSecX || x == startSecX + countSectX)) {
+                            if (oddXdither == (y % 2 == 0))
+                                continue;
+                        }
+                        if (applyYdither && (y == startSecY || y == startSecY + countSectY)) {
+                            if (oddYdither == (x % 2 == 0))
+                                continue;
+                        }
+
                         // jde o platný sektor 
                         // pokud ještě není alokován tak alokuj
                         if (self.sectorsMap.getValue(x, y) == null) {

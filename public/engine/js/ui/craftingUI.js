@@ -8,40 +8,40 @@ var Lich;
     var IngredientsCont = (function (_super) {
         __extends(IngredientsCont, _super);
         function IngredientsCont() {
-            _super.call(this, CraftingUI.N * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING) - Lich.PartsUI.SPACING + 2 * Lich.AbstractUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.PartsUI.SELECT_BORDER);
-            this.itemsCont = new createjs.Container();
-            this.itemsCont.x = Lich.PartsUI.BORDER;
-            this.itemsCont.y = Lich.PartsUI.SELECT_BORDER;
-            this.addChild(this.itemsCont);
+            var _this = _super.call(this, CraftingUI.N * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING) - Lich.PartsUI.SPACING + 2 * Lich.AbstractUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.PartsUI.SELECT_BORDER) || this;
+            _this.itemsCont = new createjs.Container();
+            _this.itemsCont.x = Lich.PartsUI.BORDER;
+            _this.itemsCont.y = Lich.PartsUI.SELECT_BORDER;
+            _this.addChild(_this.itemsCont);
+            return _this;
         }
         return IngredientsCont;
     }(Lich.AbstractUI));
     var CraftingUI = (function (_super) {
         __extends(CraftingUI, _super);
         function CraftingUI() {
-            var _this = this;
-            _super.call(this, CraftingUI.N, CraftingUI.M);
-            this.lineOffset = 0;
-            this.choosenItem = null;
+            var _this = _super.call(this, CraftingUI.N, CraftingUI.M) || this;
+            _this.lineOffset = 0;
+            _this.choosenItem = null;
             // --- Virtuální seznam ---
             // pole obsazení položkami
-            this.itemsTypeArray = new Array();
+            _this.itemsTypeArray = new Array();
             // mapa pořadí typů položek
-            this.itemsTypeIndexMap = new Lich.HashMap();
+            _this.itemsTypeIndexMap = new Lich.HashMap();
             // --- UI ----
             // mapa existujících UI prvků dle typu položky
-            this.itemsUIMap = new Lich.HashMap();
-            this.itemsCont = new createjs.Container();
-            var self = this;
-            this.workstationIcon = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
-            var bounds = this.workstationIcon.getBounds();
-            this.workstationIconBgr = new Lich.UIBackground();
-            this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
-            this.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
-            this.workstationIcon.x = this.workstationIconBgr.x + Lich.PartsUI.SELECT_BORDER;
-            this.workstationIcon.y = Lich.PartsUI.SELECT_BORDER;
-            this.addChild(this.workstationIconBgr);
-            this.addChild(this.workstationIcon);
+            _this.itemsUIMap = new Lich.HashMap();
+            _this.itemsCont = new createjs.Container();
+            var self = _this;
+            _this.workstationIcon = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+            var bounds = _this.workstationIcon.getBounds();
+            _this.workstationIconBgr = new Lich.UIBackground();
+            _this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
+            _this.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
+            _this.workstationIcon.x = _this.workstationIconBgr.x + Lich.PartsUI.SELECT_BORDER;
+            _this.workstationIcon.y = Lich.PartsUI.SELECT_BORDER;
+            _this.addChild(_this.workstationIconBgr);
+            _this.addChild(_this.workstationIcon);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.WORKSTATION_UNREACHABLE, function (payload) {
                 if (self.workstation && self.parent) {
                     self.hide();
@@ -121,6 +121,7 @@ var Lich;
                 }
             }, null, false);
             self.measureCacheArea();
+            return _this;
         }
         CraftingUI.prototype.setInventoryUI = function (inventoryUI) {
             this.inventoryUI = inventoryUI;
@@ -244,10 +245,10 @@ var Lich;
             if (mouse.down) {
             }
         };
-        CraftingUI.N = 12;
-        CraftingUI.M = 6;
-        CraftingUI.CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
         return CraftingUI;
     }(Lich.PartsUI));
+    CraftingUI.N = 12;
+    CraftingUI.M = 6;
+    CraftingUI.CRAFT_SIZE = CraftingUI.N * CraftingUI.M;
     Lich.CraftingUI = CraftingUI;
 })(Lich || (Lich = {}));

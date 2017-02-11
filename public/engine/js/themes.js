@@ -1,11 +1,11 @@
 var Lich;
 (function (Lich) {
+    var Theme;
     (function (Theme) {
         Theme[Theme["NORMAL"] = 0] = "NORMAL";
         Theme[Theme["VALENTINE"] = 1] = "VALENTINE";
         Theme[Theme["WINTER"] = 2] = "WINTER";
-    })(Lich.Theme || (Lich.Theme = {}));
-    var Theme = Lich.Theme;
+    })(Theme = Lich.Theme || (Lich.Theme = {}));
     var ThemeWatch = (function () {
         function ThemeWatch() {
         }

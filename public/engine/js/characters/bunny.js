@@ -10,7 +10,7 @@ var Lich;
         var Bunny = (function (_super) {
             __extends(Bunny, _super);
             function Bunny() {
-                _super.call(this, Bunny.OWNER_ID, 0, // DAMAGE
+                var _this = _super.call(this, Bunny.OWNER_ID, 0, // DAMAGE
                 0, // ATTACK_COOLDOWN
                 32, // WIDTH
                 32, // HEIGHT 
@@ -31,11 +31,12 @@ var Lich;
                     .add(Bunny.DIE, 12, 12, Bunny.DIE, 0.1), true, // unspawns
                 0, // min depth 
                 20 // max depth
-                );
-                this.modeCooldown = 0;
-                this.currentMode = 0;
-                this.lastOrientationLeft = true;
-                this.setNewMaxHealth(50);
+                ) || this;
+                _this.modeCooldown = 0;
+                _this.currentMode = 0;
+                _this.lastOrientationLeft = true;
+                _this.setNewMaxHealth(50);
+                return _this;
             }
             Bunny.prototype.runAI = function (world, delta) {
                 if (this.currentHealth > 0) {
@@ -140,19 +141,19 @@ var Lich;
                     return damage;
                 }
             };
-            Bunny.OWNER_ID = "BUNNY";
-            Bunny.IDLEL = "IDLEL";
-            Bunny.IDLER = "IDLER";
-            Bunny.EATL = "EATL";
-            Bunny.EATR = "EATR";
-            Bunny.WALKR = "WALKR";
-            Bunny.WALKL = "WALKL";
-            Bunny.JUMPR = "JUMPR";
-            Bunny.JUMPL = "JUMPL";
-            Bunny.DIE = "DIE";
-            Bunny.MODE_COOLDOWN = 3000;
             return Bunny;
         }(Lich.AbstractEnemy));
+        Bunny.OWNER_ID = "BUNNY";
+        Bunny.IDLEL = "IDLEL";
+        Bunny.IDLER = "IDLER";
+        Bunny.EATL = "EATL";
+        Bunny.EATR = "EATR";
+        Bunny.WALKR = "WALKR";
+        Bunny.WALKL = "WALKL";
+        Bunny.JUMPR = "JUMPR";
+        Bunny.JUMPL = "JUMPL";
+        Bunny.DIE = "DIE";
+        Bunny.MODE_COOLDOWN = 3000;
         Enemy.Bunny = Bunny;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

@@ -87,7 +87,7 @@ var Lich;
                 ylimit = ctx.startTiles.y;
                 ystep = -1;
             }
-            var _loop_1 = function(yt) {
+            var _loop_1 = function (yt) {
                 // Pokud nejde o záporné souřadnice nebo mimo rámec
                 if (yt < 0 || yt >= ctx.map.height)
                     return "continue";
@@ -95,7 +95,7 @@ var Lich;
                 var percentY = (yt / ctx.map.height) * 100;
                 if (percentY > enemy.maxDepth || percentY < enemy.minDepth)
                     return "continue";
-                var _loop_2 = function(xt) {
+                var _loop_2 = function (xt) {
                     // Pokud nejde o záporné souřadnice nebo mimo rámec
                     if (xt < 0 || xt >= ctx.map.width)
                         return "continue";
@@ -128,12 +128,14 @@ var Lich;
                 };
                 for (var xt = xstart; xt != xlimit; xt += xstep) {
                     var state_1 = _loop_2(xt);
-                    if (typeof state_1 === "object") return state_1;
+                    if (typeof state_1 === "object")
+                        return state_1;
                 }
             };
             for (var yt = ystart; yt != ylimit; yt += ystep) {
                 var state_2 = _loop_1(yt);
-                if (typeof state_2 === "object") return state_2.value;
+                if (typeof state_2 === "object")
+                    return state_2.value;
             }
             return;
         };
@@ -157,9 +159,9 @@ var Lich;
                     Lich.Enemy.ChickenBoss.chickenKills--;
             }
         };
-        SpawnPool.SPAWN_ZONE_SIZE = 20; // v tiles
-        SpawnPool.MAX_ENEMIES = 20;
         return SpawnPool;
     }());
+    SpawnPool.SPAWN_ZONE_SIZE = 20; // v tiles
+    SpawnPool.MAX_ENEMIES = 20;
     Lich.SpawnPool = SpawnPool;
 })(Lich || (Lich = {}));

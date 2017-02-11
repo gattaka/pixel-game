@@ -13,18 +13,19 @@ var Lich;
             if (outline === void 0) { outline = true; }
             if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
             if (outlineWidth === void 0) { outlineWidth = 1; }
-            _super.call(this);
-            this.label = new createjs.Text(text, font, color);
+            var _this = _super.call(this) || this;
+            _this.label = new createjs.Text(text, font, color);
             if (outline) {
-                this.outlineLabel = new createjs.Text(text, font, outlineColor);
-                this.addChild(this.outlineLabel);
+                _this.outlineLabel = new createjs.Text(text, font, outlineColor);
+                _this.addChild(_this.outlineLabel);
                 if (typeof outlineWidth !== "undefined")
                     outlineWidth = 1;
-                this.outlineLabel.outline = outlineWidth + 2;
+                _this.outlineLabel.outline = outlineWidth + 2;
             }
-            this.addChild(this.label);
-            this.height = this.label.getBounds().height;
-            this.width = this.label.getBounds().width;
+            _this.addChild(_this.label);
+            _this.height = _this.label.getBounds().height;
+            _this.width = _this.label.getBounds().width;
+            return _this;
         }
         Label.prototype.setLineWidth = function (value) {
             this.label.lineWidth = value;

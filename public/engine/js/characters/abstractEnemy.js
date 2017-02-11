@@ -11,13 +11,14 @@ var Lich;
             // může se nepřítel sám unspawnout (když je moc daleko od hráče)
             unspawns, minDepth, maxDepth, hovers) {
             if (hovers === void 0) { hovers = false; }
-            _super.call(this, ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers);
-            this.damage = damage;
-            this.attackCooldown = attackCooldown;
-            this.unspawns = unspawns;
-            this.minDepth = minDepth;
-            this.maxDepth = maxDepth;
-            this.currentAttackCooldown = 0;
+            var _this = _super.call(this, ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers) || this;
+            _this.damage = damage;
+            _this.attackCooldown = attackCooldown;
+            _this.unspawns = unspawns;
+            _this.minDepth = minDepth;
+            _this.maxDepth = maxDepth;
+            _this.currentAttackCooldown = 0;
+            return _this;
         }
         AbstractEnemy.prototype.isPlayerInReach = function (world) {
             // enemy

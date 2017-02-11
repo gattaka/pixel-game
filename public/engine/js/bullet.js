@@ -9,18 +9,19 @@ var Lich;
         __extends(AbstractWorldObject, _super);
         function AbstractWorldObject(width, height, spriteSheet, initState, collXOffset, collYOffset, hovers) {
             if (hovers === void 0) { hovers = false; }
-            _super.call(this);
-            this.width = width;
-            this.height = height;
-            this.spriteSheet = spriteSheet;
-            this.initState = initState;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.hovers = hovers;
-            this.speedx = 0;
-            this.speedy = 0;
-            this.sprite = new createjs.Sprite(spriteSheet, initState);
-            this.addChild(this.sprite);
+            var _this = _super.call(this) || this;
+            _this.width = width;
+            _this.height = height;
+            _this.spriteSheet = spriteSheet;
+            _this.initState = initState;
+            _this.collXOffset = collXOffset;
+            _this.collYOffset = collYOffset;
+            _this.hovers = hovers;
+            _this.speedx = 0;
+            _this.speedy = 0;
+            _this.sprite = new createjs.Sprite(spriteSheet, initState);
+            _this.addChild(_this.sprite);
+            return _this;
         }
         AbstractWorldObject.prototype.play = function () { this.sprite.play(); };
         AbstractWorldObject.prototype.stop = function () { this.sprite.stop(); };
@@ -60,40 +61,42 @@ var Lich;
             piercing, 
             // kolik střela ubírá
             damage) {
-            _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset);
-            this.owner = owner;
-            this.width = width;
-            this.height = height;
-            this.spriteSheet = spriteSheet;
-            this.initState = initState;
-            this.endState = endState;
-            this.collXOffset = collXOffset;
-            this.collYOffset = collYOffset;
-            this.hitSound = hitSound;
-            this.mapDestroy = mapDestroy;
-            this.piercing = piercing;
-            this.damage = damage;
+            var _this = _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset) || this;
+            _this.owner = owner;
+            _this.width = width;
+            _this.height = height;
+            _this.spriteSheet = spriteSheet;
+            _this.initState = initState;
+            _this.endState = endState;
+            _this.collXOffset = collXOffset;
+            _this.collYOffset = collYOffset;
+            _this.hitSound = hitSound;
+            _this.mapDestroy = mapDestroy;
+            _this.piercing = piercing;
+            _this.damage = damage;
             // pouští se koncová animace?
-            this.ending = false;
+            _this.ending = false;
             // je vše ukončeno (doběhla i koncová animace)?
-            this.done = false;
+            _this.done = false;
             // mapa nepřátel a jejich timeoutů do dalšího zásahu tímto projektilem
             // není možné globálně počítat timeout, protože by nastavení timeoutu
             // zásahem jednoho nepřítele mohlo způsobit nezapočítání prvního 
             // zásahu jiného nepřítele, který je těsném závěsu za zasaženým
-            this.enemyPiercingTimeouts = {};
+            _this.enemyPiercingTimeouts = {};
+            return _this;
         }
         ;
-        // jak dlouho se musí počkat, než se započítá další damage piercing projektilu?
-        BulletObject.PIERCING_TIMEOUT = 1000;
         return BulletObject;
     }(AbstractWorldObject));
+    // jak dlouho se musí počkat, než se započítá další damage piercing projektilu?
+    BulletObject.PIERCING_TIMEOUT = 1000;
     Lich.BulletObject = BulletObject;
     var BasicBullet = (function (_super) {
         __extends(BasicBullet, _super);
         function BasicBullet(owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
-            _super.call(this, owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
-            this.radius = radius;
+            var _this = _super.call(this, owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage) || this;
+            _this.radius = radius;
+            return _this;
         }
         ;
         BasicBullet.prototype.update = function (sDelta, game) {

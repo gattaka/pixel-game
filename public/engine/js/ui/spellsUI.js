@@ -8,14 +8,14 @@ var Lich;
     var SpellsUI = (function (_super) {
         __extends(SpellsUI, _super);
         function SpellsUI() {
-            _super.call(this, SpellsUI.N, SpellsUI.M);
-            this.toggleFlag = false;
-            this.spellContent = new Array();
-            this.spellIndex = new Array();
-            this.alternativeSpellIndex = new Array();
-            this.itemsCont = new createjs.Container();
-            this.itemHighlightShape = new createjs.Shape();
-            var self = this;
+            var _this = _super.call(this, SpellsUI.N, SpellsUI.M) || this;
+            _this.toggleFlag = false;
+            _this.spellContent = new Array();
+            _this.spellIndex = new Array();
+            _this.alternativeSpellIndex = new Array();
+            _this.itemsCont = new createjs.Container();
+            _this.itemHighlightShape = new createjs.Shape();
+            var self = _this;
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_PLACE_KEY, Lich.SpellKey.SPELL_PLACE_BGR_KEY);
@@ -37,6 +37,7 @@ var Lich;
             var offset = 5;
             self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
             self.selectSpell(0);
+            return _this;
         }
         SpellsUI.prototype.toggleShift = function () {
             var self = this;
@@ -100,9 +101,9 @@ var Lich;
                 self.selectSpell(index);
             }, null, false);
         };
-        SpellsUI.N = 9;
-        SpellsUI.M = 1;
         return SpellsUI;
     }(Lich.PartsUI));
+    SpellsUI.N = 9;
+    SpellsUI.M = 1;
     Lich.SpellsUI = SpellsUI;
 })(Lich || (Lich = {}));

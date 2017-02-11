@@ -1,5 +1,6 @@
 var Lich;
 (function (Lich) {
+    var FogTile;
     (function (FogTile) {
         FogTile[FogTile["TL"] = 0] = "TL";
         FogTile[FogTile["TT"] = 1] = "TT";
@@ -19,8 +20,7 @@ var Lich;
         FogTile[FogTile["I_BL"] = 15] = "I_BL";
         FogTile[FogTile["I_BB"] = 16] = "I_BB";
         FogTile[FogTile["I_BR"] = 17] = "I_BR";
-    })(Lich.FogTile || (Lich.FogTile = {}));
-    var FogTile = Lich.FogTile;
+    })(FogTile = Lich.FogTile || (Lich.FogTile = {}));
     var FogTree = (function () {
         function FogTree(
             // šířka tohoto (pod)prostoru

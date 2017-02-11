@@ -10,7 +10,7 @@ var Lich;
         var Valentimon = (function (_super) {
             __extends(Valentimon, _super);
             function Valentimon() {
-                _super.call(this, Valentimon.OWNER_ID, 10, // DAMAGE
+                var _this = _super.call(this, Valentimon.OWNER_ID, 10, // DAMAGE
                 1000, // ATTACK_COOLDOWN
                 64, // WIDTH
                 64, // HEIGHT 
@@ -27,11 +27,12 @@ var Lich;
                 0, // min depth 
                 100, // max depth
                 true // hovers
-                );
-                this.maxHealth = this.currentHealth = 200;
+                ) || this;
+                _this.maxHealth = _this.currentHealth = 200;
                 // stále jsem v hover pohybu
-                this.movementTypeX = Lich.MovementTypeX.HOVER;
-                this.movementTypeY = Lich.MovementTypeY.HOVER;
+                _this.movementTypeX = Lich.MovementTypeX.HOVER;
+                _this.movementTypeY = Lich.MovementTypeY.HOVER;
+                return _this;
             }
             Valentimon.prototype.runAI = function (world, delta) {
                 var _this = this;
@@ -107,16 +108,16 @@ var Lich;
                 _super.prototype.hit.call(this, damage, world);
                 return damage;
             };
-            /**
-             * aka Love Hurts
-             */
-            Valentimon.OWNER_ID = "VALENTIMON";
-            Valentimon.IDLE = "IDLE";
-            Valentimon.ATTACK = "ATTACK";
-            Valentimon.DIE = "DIE";
-            Valentimon.DEAD = "DEAD";
             return Valentimon;
         }(Lich.AbstractEnemy));
+        /**
+         * aka Love Hurts
+         */
+        Valentimon.OWNER_ID = "VALENTIMON";
+        Valentimon.IDLE = "IDLE";
+        Valentimon.ATTACK = "ATTACK";
+        Valentimon.DIE = "DIE";
+        Valentimon.DEAD = "DEAD";
         Enemy.Valentimon = Valentimon;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));
 })(Lich || (Lich = {}));

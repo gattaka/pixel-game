@@ -420,10 +420,10 @@ namespace Lich {
             playerShiftY = overSceneY - playerPreShiftY;
             self.hero.x -= playerShiftX;
             self.hero.y -= playerShiftY;
-            if (self.hero.x < 0) self.hero.x = - self.hero.collXOffset;
-            if (self.hero.x > self.game.getCanvas().width) self.hero.x = self.game.getCanvas().width - self.hero.width + self.hero.collXOffset;
-            if (self.hero.y < 0) self.hero.y = - self.hero.collYOffset;
-            if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
+            // if (self.hero.x < 0) self.hero.x = - self.hero.collXOffset;
+            // if (self.hero.x > self.game.getCanvas().width) self.hero.x = self.game.getCanvas().width - self.hero.width + self.hero.collXOffset;
+            // if (self.hero.y < 0) self.hero.y = - self.hero.collYOffset;
+            // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
 
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
             self.game.getBackground().shift(sceneShiftX, sceneShiftY);

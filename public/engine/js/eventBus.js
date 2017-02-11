@@ -5,6 +5,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Lich;
 (function (Lich) {
+    var EventType;
     (function (EventType) {
         EventType[EventType["ACHIEVEMENT_PROGRESS"] = 0] = "ACHIEVEMENT_PROGRESS";
         EventType[EventType["ACHIEVEMENT_DONE"] = 1] = "ACHIEVEMENT_DONE";
@@ -30,8 +31,7 @@ var Lich;
         EventType[EventType["WORKSTATION_CHANGE"] = 21] = "WORKSTATION_CHANGE";
         EventType[EventType["WORKSTATION_UNREACHABLE"] = 22] = "WORKSTATION_UNREACHABLE";
         EventType[EventType["SURFACE_REVEAL"] = 23] = "SURFACE_REVEAL";
-    })(Lich.EventType || (Lich.EventType = {}));
-    var EventType = Lich.EventType;
+    })(EventType = Lich.EventType || (Lich.EventType = {}));
     var EventPayload = (function () {
         function EventPayload(type) {
             this.type = type;
@@ -41,7 +41,7 @@ var Lich;
     var SimpleEventPayload = (function (_super) {
         __extends(SimpleEventPayload, _super);
         function SimpleEventPayload(type) {
-            _super.call(this, type);
+            return _super.call(this, type) || this;
         }
         return SimpleEventPayload;
     }(EventPayload));
@@ -49,8 +49,9 @@ var Lich;
     var StringEventPayload = (function (_super) {
         __extends(StringEventPayload, _super);
         function StringEventPayload(type, payload) {
-            _super.call(this, type);
-            this.payload = payload;
+            var _this = _super.call(this, type) || this;
+            _this.payload = payload;
+            return _this;
         }
         return StringEventPayload;
     }(EventPayload));
@@ -58,8 +59,9 @@ var Lich;
     var NumberEventPayload = (function (_super) {
         __extends(NumberEventPayload, _super);
         function NumberEventPayload(type, payload) {
-            _super.call(this, type);
-            this.payload = payload;
+            var _this = _super.call(this, type) || this;
+            _this.payload = payload;
+            return _this;
         }
         return NumberEventPayload;
     }(EventPayload));
@@ -67,9 +69,10 @@ var Lich;
     var TupleEventPayload = (function (_super) {
         __extends(TupleEventPayload, _super);
         function TupleEventPayload(type, x, y) {
-            _super.call(this, type);
-            this.x = x;
-            this.y = y;
+            var _this = _super.call(this, type) || this;
+            _this.x = x;
+            _this.y = y;
+            return _this;
         }
         return TupleEventPayload;
     }(EventPayload));
@@ -77,16 +80,17 @@ var Lich;
     var PointedAreaEventPayload = (function (_super) {
         __extends(PointedAreaEventPayload, _super);
         function PointedAreaEventPayload(clsnx, clsny, clsnHit, partsOffsetX, partsOffsetY, tileType, tileVariant, secx, secy) {
-            _super.call(this, EventType.POINTED_AREA_CHANGE);
-            this.clsnx = clsnx;
-            this.clsny = clsny;
-            this.clsnHit = clsnHit;
-            this.partsOffsetX = partsOffsetX;
-            this.partsOffsetY = partsOffsetY;
-            this.tileType = tileType;
-            this.tileVariant = tileVariant;
-            this.secx = secx;
-            this.secy = secy;
+            var _this = _super.call(this, EventType.POINTED_AREA_CHANGE) || this;
+            _this.clsnx = clsnx;
+            _this.clsny = clsny;
+            _this.clsnHit = clsnHit;
+            _this.partsOffsetX = partsOffsetX;
+            _this.partsOffsetY = partsOffsetY;
+            _this.tileType = tileType;
+            _this.tileVariant = tileVariant;
+            _this.secx = secx;
+            _this.secy = secy;
+            return _this;
         }
         return PointedAreaEventPayload;
     }(EventPayload));
@@ -94,9 +98,10 @@ var Lich;
     var HealthChangeEventPayload = (function (_super) {
         __extends(HealthChangeEventPayload, _super);
         function HealthChangeEventPayload(maxHealth, currentHealth) {
-            _super.call(this, EventType.HEALTH_CHANGE);
-            this.maxHealth = maxHealth;
-            this.currentHealth = currentHealth;
+            var _this = _super.call(this, EventType.HEALTH_CHANGE) || this;
+            _this.maxHealth = maxHealth;
+            _this.currentHealth = currentHealth;
+            return _this;
         }
         return HealthChangeEventPayload;
     }(EventPayload));
@@ -104,9 +109,10 @@ var Lich;
     var WillChangeEventPayload = (function (_super) {
         __extends(WillChangeEventPayload, _super);
         function WillChangeEventPayload(maxWill, currentWill) {
-            _super.call(this, EventType.WILL_CHANGE);
-            this.maxWill = maxWill;
-            this.currentWill = currentWill;
+            var _this = _super.call(this, EventType.WILL_CHANGE) || this;
+            _this.maxWill = maxWill;
+            _this.currentWill = currentWill;
+            return _this;
         }
         return WillChangeEventPayload;
     }(EventPayload));

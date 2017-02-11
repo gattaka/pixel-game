@@ -316,28 +316,28 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.FONT = "expressway";
-        Resources.OUTLINE_COLOR = "#000";
-        Resources.TEXT_COLOR = "#FF0";
-        Resources.WORLD_LOADER_COLOR = "#84ff00";
-        Resources.DEBUG_TEXT_COLOR = "#FF0";
-        Resources.REACH_TILES_RADIUS = 10;
-        Resources.SPRITE_FRAMERATE = 0.2;
-        // Jméno klíče, pod kterým bude v cookies uložen USER DB 
-        // klíč záznamu jeho SAVE na serveru  
-        Resources.COOKIE_KEY = "LICH_ENGINE_COOKIE_USER_KEY";
-        /*
-         * Přepínače
-         */
-        Resources.SHOW_SECTORS = false;
-        Resources.PRINT_SECTOR_ALLOC = false;
-        /*
-         * Velikosti
-         */
-        Resources.TILE_SIZE = 16;
-        Resources.PARTS_SIZE = 2 * Resources.TILE_SIZE;
-        Resources.PARTS_SHEET_WIDTH = 20;
         return Resources;
     }());
+    Resources.FONT = "expressway";
+    Resources.OUTLINE_COLOR = "#000";
+    Resources.TEXT_COLOR = "#FF0";
+    Resources.WORLD_LOADER_COLOR = "#84ff00";
+    Resources.DEBUG_TEXT_COLOR = "#FF0";
+    Resources.REACH_TILES_RADIUS = 10;
+    Resources.SPRITE_FRAMERATE = 0.2;
+    // Jméno klíče, pod kterým bude v cookies uložen USER DB 
+    // klíč záznamu jeho SAVE na serveru  
+    Resources.COOKIE_KEY = "LICH_ENGINE_COOKIE_USER_KEY";
+    /*
+     * Přepínače
+     */
+    Resources.SHOW_SECTORS = false;
+    Resources.PRINT_SECTOR_ALLOC = false;
+    /*
+     * Velikosti
+     */
+    Resources.TILE_SIZE = 16;
+    Resources.PARTS_SIZE = 2 * Resources.TILE_SIZE;
+    Resources.PARTS_SHEET_WIDTH = 20;
     Lich.Resources = Resources;
 })(Lich || (Lich = {}));

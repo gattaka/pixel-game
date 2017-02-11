@@ -8,11 +8,11 @@ var Lich;
     var UI = (function (_super) {
         __extends(UI, _super);
         function UI(canvas, tilesMap, mobile) {
-            _super.call(this);
-            this.canvas = canvas;
+            var _this = _super.call(this) || this;
+            _this.canvas = canvas;
             // mobile
-            this.controls = new Lich.Controls();
-            var self = this;
+            _this.controls = new Lich.Controls();
+            var self = _this;
             // Minimap render
             var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
             // Minimapa
@@ -30,7 +30,7 @@ var Lich;
             mapUI.hide();
             // Help btn
             if (!mobile) {
-                var helpBtn = this.createHelpButton();
+                var helpBtn = _this.createHelpButton();
                 self.addChild(helpBtn);
                 helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.width - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
@@ -62,7 +62,7 @@ var Lich;
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }, null, false);
-                var helpBtn = this.createHelpButton();
+                var helpBtn = _this.createHelpButton();
                 menuCont_1.addChild(helpBtn);
                 helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
                 var menuBtn = new Button(Lich.UIGFXKey.UI_MENU_KEY);
@@ -326,6 +326,7 @@ var Lich;
                     directionByTouch_1(evt.stageX - movementCont_1.x, evt.stageY - movementCont_1.y);
                 }, null, false);
             }
+            return _this;
         }
         UI.prototype.createHelpButton = function () {
             var helpBtn = new Button(Lich.UIGFXKey.UI_HELP_KEY);
@@ -345,14 +346,14 @@ var Lich;
             });
             return uiHit;
         };
-        UI.SCREEN_SPACING = 20;
         return UI;
     }(createjs.Container));
+    UI.SCREEN_SPACING = 20;
     Lich.UI = UI;
     var UIBackground = (function (_super) {
         __extends(UIBackground, _super);
         function UIBackground() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         UIBackground.prototype.drawBackground = function (width, height) {
             this.width = width;
@@ -369,14 +370,15 @@ var Lich;
     var AbstractUI = (function (_super) {
         __extends(AbstractUI, _super);
         function AbstractUI(width, height) {
-            _super.call(this);
-            this.width = width;
-            this.height = height;
-            this.toggleFlag = true;
-            this.parentRef = null;
-            this.outerShape = new UIBackground();
-            this.drawBackground();
-            this.addChild(this.outerShape);
+            var _this = _super.call(this) || this;
+            _this.width = width;
+            _this.height = height;
+            _this.toggleFlag = true;
+            _this.parentRef = null;
+            _this.outerShape = new UIBackground();
+            _this.drawBackground();
+            _this.addChild(_this.outerShape);
+            return _this;
         }
         AbstractUI.prototype.drawBackground = function () {
             this.outerShape.drawBackground(this.width, this.height);
@@ -409,10 +411,10 @@ var Lich;
         AbstractUI.prototype.prepareForToggle = function () {
             this.toggleFlag = true;
         };
-        AbstractUI.BORDER = 10;
-        AbstractUI.TEXT_SIZE = 15;
         return AbstractUI;
     }(createjs.Container));
+    AbstractUI.BORDER = 10;
+    AbstractUI.TEXT_SIZE = 15;
     Lich.AbstractUI = AbstractUI;
     var UIShape = (function (_super) {
         __extends(UIShape, _super);
@@ -422,12 +424,13 @@ var Lich;
             if (blue2 === void 0) { blue2 = blue; }
             if (op === void 0) { op = 0.2; }
             if (op2 === void 0) { op2 = 0.5; }
-            _super.call(this);
-            this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
-            this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
-            this.graphics.setStrokeStyle(2);
+            var _this = _super.call(this) || this;
+            _this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
+            _this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
+            _this.graphics.setStrokeStyle(2);
             var side = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-            this.graphics.drawRoundRect(0, 0, side, side, 3);
+            _this.graphics.drawRoundRect(0, 0, side, side, 3);
+            return _this;
         }
         return UIShape;
     }(createjs.Shape));
@@ -435,7 +438,7 @@ var Lich;
     var Highlight = (function (_super) {
         __extends(Highlight, _super);
         function Highlight() {
-            _super.call(this, 250, 250, 10);
+            return _super.call(this, 250, 250, 10) || this;
         }
         return Highlight;
     }(UIShape));
@@ -443,38 +446,40 @@ var Lich;
     var PartsUI = (function (_super) {
         __extends(PartsUI, _super);
         function PartsUI(n, m) {
-            _super.call(this, PartsUI.pixelsByX(n), PartsUI.pixelsByX(m));
-            this.n = n;
-            this.m = m;
+            var _this = _super.call(this, PartsUI.pixelsByX(n), PartsUI.pixelsByX(m)) || this;
+            _this.n = n;
+            _this.m = m;
+            return _this;
         }
         PartsUI.pixelsByX = function (x) {
             return x * Lich.Resources.PARTS_SIZE + (x - 1) * (PartsUI.SPACING) + 2 * AbstractUI.BORDER;
         };
-        PartsUI.SELECT_BORDER = 5;
-        PartsUI.SPACING = 12;
         return PartsUI;
     }(AbstractUI));
+    PartsUI.SELECT_BORDER = 5;
+    PartsUI.SPACING = 12;
     Lich.PartsUI = PartsUI;
     var Button = (function (_super) {
         __extends(Button, _super);
         function Button(bitmap) {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
-            this.addChild(bgr);
+            _this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;
             if (bitmap) {
                 var btmp = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[bitmap]);
-                this.addChild(btmp);
+                _this.addChild(btmp);
                 btmp.x = PartsUI.SELECT_BORDER;
                 btmp.y = PartsUI.SELECT_BORDER;
             }
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Button.sideSize, Button.sideSize);
-            this.hitArea = hitArea;
+            _this.hitArea = hitArea;
+            return _this;
         }
-        Button.sideSize = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
         return Button;
     }(createjs.Container));
+    Button.sideSize = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
     Lich.Button = Button;
 })(Lich || (Lich = {}));

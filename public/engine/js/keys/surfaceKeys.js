@@ -1,5 +1,6 @@
 var Lich;
 (function (Lich) {
+    var SurfaceKey;
     (function (SurfaceKey) {
         SurfaceKey[SurfaceKey["SRFC_DIRT_KEY"] = 0] = "SRFC_DIRT_KEY";
         SurfaceKey[SurfaceKey["SRFC_WOODWALL_KEY"] = 1] = "SRFC_WOODWALL_KEY";
@@ -29,12 +30,12 @@ var Lich;
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_GOLD_KEY"] = 25] = "SRFC_TRANS_DIRT_GOLD_KEY";
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_KRYSTAL_KEY"] = 26] = "SRFC_TRANS_DIRT_KRYSTAL_KEY";
         SurfaceKey[SurfaceKey["SRFC_TRANS_DIRT_FLORITE_KEY"] = 27] = "SRFC_TRANS_DIRT_FLORITE_KEY";
-    })(Lich.SurfaceKey || (Lich.SurfaceKey = {}));
-    var SurfaceKey = Lich.SurfaceKey;
+    })(SurfaceKey = Lich.SurfaceKey || (Lich.SurfaceKey = {}));
+    var FogKey;
     (function (FogKey) {
         FogKey[FogKey["FOG_KEY"] = 0] = "FOG_KEY";
-    })(Lich.FogKey || (Lich.FogKey = {}));
-    var FogKey = Lich.FogKey;
+    })(FogKey = Lich.FogKey || (Lich.FogKey = {}));
+    var SurfaceBgrKey;
     (function (SurfaceBgrKey) {
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_BRICK_KEY"] = 0] = "SRFC_BGR_BRICK_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_WOODWALL_KEY"] = 1] = "SRFC_BGR_WOODWALL_KEY";
@@ -43,6 +44,5 @@ var Lich;
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROCK_BRICK_KEY"] = 4] = "SRFC_BGR_ROCK_BRICK_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_ROCK_BRICK_WINDOW_KEY"] = 5] = "SRFC_BGR_ROCK_BRICK_WINDOW_KEY";
         SurfaceBgrKey[SurfaceBgrKey["SRFC_BGR_WOODWALL_WINDOW_KEY"] = 6] = "SRFC_BGR_WOODWALL_WINDOW_KEY";
-    })(Lich.SurfaceBgrKey || (Lich.SurfaceBgrKey = {}));
-    var SurfaceBgrKey = Lich.SurfaceBgrKey;
+    })(SurfaceBgrKey = Lich.SurfaceBgrKey || (Lich.SurfaceBgrKey = {}));
 })(Lich || (Lich = {}));
