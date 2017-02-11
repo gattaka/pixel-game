@@ -23,7 +23,7 @@ var Lich;
                 }
                 ctx.putImageData(imgData, 0, 0);
             })();
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, function (payload) {
+            var listener = function (payload) {
                 var imgData = ctx.createImageData(1, 1);
                 var _loop_1 = function(i) {
                     self.processFillBySurface(payload.x, payload.y, function (color) {
@@ -39,22 +39,40 @@ var Lich;
                 ;
                 ctx.putImageData(imgData, payload.x / 2, payload.y / 2);
                 return false;
+            };
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, listener);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_REVEAL, function (payload) {
+                for (var y = 0; y < 4; y += 2) {
+                    for (var x = 0; x < 4; x += 2) {
+                        listener(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, payload.x + x, payload.y + y));
+                    }
+                }
+                return false;
             });
         }
         MinimapRender.prototype.processFillBySurface = function (x, y, fill) {
-            var item = this.tilesMap.mapRecord.getValue(x, y);
-            if (item && item != Lich.SurfacePositionKey.VOID) {
-                var key = Lich.Resources.getInstance().surfaceIndex.getType(item);
-                fill(Lich.Resources.getInstance().getSurfaceDef(key).minimapColor);
+            // tiles to sudé Parts
+            var rx = Math.floor(x / 2);
+            var ry = Math.floor(y / 2);
+            var fog = this.tilesMap.fogTree.getValue(rx, ry);
+            if (fog != Lich.FogTile.I_MM) {
+                fill(new Lich.Color(0, 0, 0));
             }
             else {
-                var bgrItem = this.tilesMap.mapBgrRecord.getValue(x, y);
-                if (bgrItem && bgrItem != Lich.SurfacePositionKey.VOID) {
-                    var key = Lich.Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
-                    fill(Lich.Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
+                var item = this.tilesMap.mapRecord.getValue(x, y);
+                if (item && item != Lich.SurfacePositionKey.VOID) {
+                    var key = Lich.Resources.getInstance().surfaceIndex.getType(item);
+                    fill(Lich.Resources.getInstance().getSurfaceDef(key).minimapColor);
                 }
                 else {
-                    fill(new Lich.Color(209, 251, 255));
+                    var bgrItem = this.tilesMap.mapBgrRecord.getValue(x, y);
+                    if (bgrItem && bgrItem != Lich.SurfacePositionKey.VOID) {
+                        var key = Lich.Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
+                        fill(Lich.Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
+                    }
+                    else {
+                        fill(new Lich.Color(209, 251, 255));
+                    }
                 }
             }
         };

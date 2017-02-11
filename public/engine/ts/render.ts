@@ -542,6 +542,8 @@ namespace Lich {
                     }
                 });
 
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_REVEAL, rx * 2, ry * 2));
+
                 return true;
             }
             return false;

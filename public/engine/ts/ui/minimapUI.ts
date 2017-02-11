@@ -30,7 +30,7 @@ namespace Lich {
                 ctx.putImageData(imgData, 0, 0);
             })();
 
-            EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, (payload: TupleEventPayload) => {
+            let listener = (payload: TupleEventPayload) => {
                 let imgData = ctx.createImageData(1, 1);
                 for (let i = 0; i < imgData.data.length; i += 4) {
                     self.processFillBySurface(payload.x, payload.y, (color: Color) => {
@@ -42,22 +42,40 @@ namespace Lich {
                 };
                 ctx.putImageData(imgData, payload.x / 2, payload.y / 2);
                 return false;
+            };
+
+            EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, listener);
+            EventBus.getInstance().registerConsumer(EventType.SURFACE_REVEAL, (payload: TupleEventPayload) => {
+                for (let y = 0; y < 4; y += 2) {
+                    for (let x = 0; x < 4; x += 2) {
+                        listener(new TupleEventPayload(EventType.SURFACE_REVEAL, payload.x + x, payload.y + y));
+                    }
+                }
+                return false;
             });
 
         }
 
         private processFillBySurface(x: number, y: number, fill: (color: Color) => any) {
-            let item: number = this.tilesMap.mapRecord.getValue(x, y);
-            if (item && item != SurfacePositionKey.VOID) {
-                let key: SurfaceKey = Resources.getInstance().surfaceIndex.getType(item);
-                fill(Resources.getInstance().getSurfaceDef(key).minimapColor);
+            // tiles to sudé Parts
+            var rx = Math.floor(x / 2);
+            var ry = Math.floor(y / 2);
+            let fog: number = this.tilesMap.fogTree.getValue(rx, ry);
+            if (fog != FogTile.I_MM) {
+                fill(new Color(0, 0, 0));
             } else {
-                let bgrItem: number = this.tilesMap.mapBgrRecord.getValue(x, y);
-                if (bgrItem && bgrItem != SurfacePositionKey.VOID) {
-                    let key: SurfaceBgrKey = Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
-                    fill(Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
+                let item: number = this.tilesMap.mapRecord.getValue(x, y);
+                if (item && item != SurfacePositionKey.VOID) {
+                    let key: SurfaceKey = Resources.getInstance().surfaceIndex.getType(item);
+                    fill(Resources.getInstance().getSurfaceDef(key).minimapColor);
                 } else {
-                    fill(new Color(209, 251, 255));
+                    let bgrItem: number = this.tilesMap.mapBgrRecord.getValue(x, y);
+                    if (bgrItem && bgrItem != SurfacePositionKey.VOID) {
+                        let key: SurfaceBgrKey = Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
+                        fill(Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
+                    } else {
+                        fill(new Color(209, 251, 255));
+                    }
                 }
             }
         }

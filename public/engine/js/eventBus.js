@@ -29,6 +29,7 @@ var Lich;
         EventType[EventType["SURFACE_CHANGE"] = 20] = "SURFACE_CHANGE";
         EventType[EventType["WORKSTATION_CHANGE"] = 21] = "WORKSTATION_CHANGE";
         EventType[EventType["WORKSTATION_UNREACHABLE"] = 22] = "WORKSTATION_UNREACHABLE";
+        EventType[EventType["SURFACE_REVEAL"] = 23] = "SURFACE_REVEAL";
     })(Lich.EventType || (Lich.EventType = {}));
     var EventType = Lich.EventType;
     var EventPayload = (function () {

@@ -453,6 +453,7 @@ var Lich;
                         self.setFogSourceRect(tile, v);
                     }
                 });
+                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx * 2, ry * 2));
                 return true;
             }
             return false;
