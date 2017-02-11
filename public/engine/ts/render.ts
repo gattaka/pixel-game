@@ -113,6 +113,7 @@ namespace Lich {
                 // Vždy ponech BUFFER_SECTORS_Y sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
                 // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
                 startSecY = startSecY >= Render.BUFFER_SECTORS_Y ? startSecY - Render.BUFFER_SECTORS_Y : startSecY;
+                applyYdither = startSecY != 0;
             }
             let countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
             applyYdither = applyYdither && startSecY + countSectY != maxSecCountY;
