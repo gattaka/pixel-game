@@ -22,8 +22,8 @@ namespace Lich {
          */
 
         // Velikost sektoru v dílcích
-        static SECTOR_SIZE = 12;
-        static FOG_SECTOR_SIZE = Render.SECTOR_SIZE / 2;
+        static FOG_SECTOR_SIZE = 8; // Musí být sudé
+        static SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;
         // kolik překreslení se po změně nebude cachovat, protože 
         // je dost pravděpodobné, že se bude ještě měnit?
         static SECTOR_CACHE_COOLDOWN = 5;

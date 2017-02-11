@@ -315,7 +315,7 @@ var Lich;
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
             if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
                 || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
-                var radius = Lich.Resources.PARTS_SIZE * 7;
+                var radius = Lich.Resources.PARTS_SIZE * 11; // musí být liché
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
                 var cx = Math.floor(self.hero.x + self.hero.width / 2);

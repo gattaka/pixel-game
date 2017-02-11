@@ -918,8 +918,8 @@ var Lich;
          * STATIC
          */
         // Velikost sektoru v dílcích
-        Render.SECTOR_SIZE = 12;
-        Render.FOG_SECTOR_SIZE = Render.SECTOR_SIZE / 2;
+        Render.FOG_SECTOR_SIZE = 8; // Musí být sudé
+        Render.SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;
         // kolik překreslení se po změně nebude cachovat, protože 
         // je dost pravděpodobné, že se bude ještě měnit?
         Render.SECTOR_CACHE_COOLDOWN = 5;
