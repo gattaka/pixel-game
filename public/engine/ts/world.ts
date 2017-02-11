@@ -77,6 +77,7 @@ namespace Lich {
         // kontejnery
         tilesSectorsCont = new createjs.Container();
         entitiesCont = new createjs.Container();
+        weather: Weather;
         fogSectorsCont = new createjs.Container();
         messagesCont = new createjs.Container();
 
@@ -104,6 +105,10 @@ namespace Lich {
             // Entities cont (volné objekty, nepřtelé, hráč, projektily)
             self.initFullScaleCont(self.entitiesCont);
             self.addChild(self.entitiesCont);
+
+            // Weather
+            self.weather = new Weather(game);
+            self.addChild(self.weather);
 
             // Fog cont
             self.initFullScaleCont(self.fogSectorsCont);
@@ -374,7 +379,7 @@ namespace Lich {
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
             if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
                 || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
-                let radius = Resources.PARTS_SIZE * 11; // musí být liché
+                let radius = Resources.PARTS_SIZE * Resources.REVEAL_SIZE;
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
                 let cx = Math.floor(self.hero.x + self.hero.width / 2);
@@ -1299,6 +1304,7 @@ namespace Lich {
         handleTick(delta) {
             var self = this;
             self.render.handleTick();
+            self.weather.update(delta);
             self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
@@ -1318,8 +1324,6 @@ namespace Lich {
             }
 
             Nature.getInstance().handleTick(delta, self);
-
-            // Spawn 
             SpawnPool.getInstance().update(delta, self);
         };
     }

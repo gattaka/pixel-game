@@ -40,7 +40,8 @@ var Lich;
                 h: tilesMap.height,
                 srf: [],
                 bgr: [],
-                obj: []
+                obj: [],
+                fog: []
             };
             var last = tilesMap.mapRecord.getValue(0, 0);
             var count = 0; // 0 protože ještě jsem nic nenačetl
@@ -88,6 +89,19 @@ var Lich;
                     }
                 }
             }
+            data.fog = [];
+            var serializeFogTree = function (tree) {
+                if (tree.fractioned) {
+                    serializeFogTree(tree.subTree1);
+                    serializeFogTree(tree.subTree2);
+                    serializeFogTree(tree.subTree3);
+                    serializeFogTree(tree.subTree4);
+                }
+                else {
+                    data.fog.push([tree.x, tree.y, tree.value]);
+                }
+            };
+            serializeFogTree(tilesMap.fogTree);
             return data;
         };
         TilesMapGenerator.deserialize = function (data, callback) {
@@ -95,7 +109,7 @@ var Lich;
             var async = new AsyncLoad();
             var tilesMap = new Lich.TilesMap(data.w, data.h);
             // let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
-            var total = 4;
+            var total = 5;
             var progress = 0;
             if (data.spwx && data.spwy)
                 tilesMap.spawnPoint = new Lich.Coord2D(data.spwx, data.spwy);
@@ -158,6 +172,18 @@ var Lich;
                     Lich.TilesMapTools.writeObjectRecord(tilesMap, x, y, Lich.Resources.getInstance().mapObjectDefs[key]);
                 }
                 ;
+            });
+            async.load(function () {
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loading fog"));
+            });
+            async.load(function () {
+                tilesMap.fogTree = new Lich.FogTree(data.w / 2, data.h / 2);
+                if (data.fog)
+                    for (var i = 0; i < data.fog.length; i++) {
+                        var rec = data.fog[i];
+                        tilesMap.fogTree.setValue(rec[0], rec[1], rec[2]);
+                    }
             });
             async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, ++progress / total));

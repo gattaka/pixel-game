@@ -23,6 +23,12 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.21 - Feb 11, 2017");
+            version.addChange("Fog of war introduced");
+            version.addChange("Surface display optimized");
+            version.addChange("Border movement fixed");
+            this.addVersion(version);
+
             version = new Version("0.20 - Feb 4, 2017");
             version.addChange("Armchair, portrait, books, cabinet, bookshelf and candle introduced");
             version.addChange("Home and teleport spell introduced");

@@ -73,7 +73,7 @@ namespace Lich {
         static TEXT_COLOR = "#FF0";
         static WORLD_LOADER_COLOR = "#84ff00";
         static DEBUG_TEXT_COLOR = "#FF0";
-
+        static REVEAL_SIZE = 13; // musí být liché
         static REACH_TILES_RADIUS = 10;
 
         static SPRITE_FRAMERATE = 0.2;

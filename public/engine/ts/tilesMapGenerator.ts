@@ -14,7 +14,8 @@ namespace Lich {
         h: number,
         srf: Array<any>,
         bgr: Array<any>,
-        obj: Array<any>
+        obj: Array<any>,
+        fog: Array<any>
     }
 
     export class AsyncLoad {
@@ -68,7 +69,8 @@ namespace Lich {
                 h: tilesMap.height,
                 srf: [],
                 bgr: [],
-                obj: []
+                obj: [],
+                fog: []
             }
 
             let last: any = tilesMap.mapRecord.getValue(0, 0);
@@ -118,9 +120,21 @@ namespace Lich {
                 }
             }
 
+            data.fog = [];
+            let serializeFogTree = (tree: FogTree) => {
+                if (tree.fractioned) {
+                    serializeFogTree(tree.subTree1);
+                    serializeFogTree(tree.subTree2);
+                    serializeFogTree(tree.subTree3);
+                    serializeFogTree(tree.subTree4);
+                } else {
+                    data.fog.push([tree.x, tree.y, tree.value]);
+                }
+            }
+            serializeFogTree(tilesMap.fogTree);
+
             return data;
         }
-
 
         public static deserialize(data: SaveStructure, callback: (map: TilesMap) => any) {
 
@@ -129,12 +143,12 @@ namespace Lich {
             let async = new AsyncLoad();
 
             let tilesMap = new TilesMap(data.w, data.h);
+
             // let total = (data.srf.length + data.bgr.length) / 2 + data.obj.length;
-            let total = 4;
+            let total = 5;
             let progress = 0;
             if (data.spwx && data.spwy)
                 tilesMap.spawnPoint = new Coord2D(data.spwx, data.spwy);
-
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_NAME_CHANGE, "Loading world"));
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
@@ -201,6 +215,20 @@ namespace Lich {
                     let key = data.obj[v + 2];
                     TilesMapTools.writeObjectRecord(tilesMap, x, y, Resources.getInstance().mapObjectDefs[key]);
                 };
+            });
+
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loading fog"));
+            });
+
+            async.load(() => {
+                tilesMap.fogTree = new FogTree(data.w / 2, data.h / 2);
+                if (data.fog)
+                    for (let i = 0; i < data.fog.length; i++) {
+                        let rec = data.fog[i];
+                        tilesMap.fogTree.setValue(rec[0], rec[1], rec[2]);
+                    }
             });
 
             async.load(() => {

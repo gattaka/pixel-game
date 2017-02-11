@@ -81,6 +81,9 @@ var Lich;
             // Entities cont (volné objekty, nepřtelé, hráč, projektily)
             self.initFullScaleCont(self.entitiesCont);
             self.addChild(self.entitiesCont);
+            // Weather
+            self.weather = new Lich.Weather(game);
+            self.addChild(self.weather);
             // Fog cont
             self.initFullScaleCont(self.fogSectorsCont);
             self.addChild(self.fogSectorsCont);
@@ -339,7 +342,7 @@ var Lich;
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
             if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
                 || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
-                var radius = Lich.Resources.PARTS_SIZE * 11; // musí být liché
+                var radius = Lich.Resources.PARTS_SIZE * Lich.Resources.REVEAL_SIZE;
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
                 var cx = Math.floor(self.hero.x + self.hero.width / 2);
@@ -1209,6 +1212,7 @@ var Lich;
         World.prototype.handleTick = function (delta) {
             var self = this;
             self.render.handleTick();
+            self.weather.update(delta);
             self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
@@ -1226,7 +1230,6 @@ var Lich;
                 self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
             Lich.Nature.getInstance().handleTick(delta, self);
-            // Spawn 
             Lich.SpawnPool.getInstance().update(delta, self);
         };
         ;

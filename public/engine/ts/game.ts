@@ -19,7 +19,6 @@ namespace Lich {
         private content: createjs.Container;
         private background: Background;
         private world: World;
-        private weather: Weather;
         private ui: UI;
 
         private loadUI: LoaderUI;
@@ -200,9 +199,7 @@ namespace Lich {
                     self.ui = new UI(self.canvas, tilesMap, mobile);
                     self.background = new Background(self);
                     self.world = new World(self, tilesMap);
-                    self.weather = new Weather(self);
                     self.content.addChild(self.world);
-                    self.content.addChild(self.weather);
                     self.content.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
@@ -408,7 +405,6 @@ namespace Lich {
                     }
 
                     self.getWorld().update(delta, controls);
-                    self.weather.update(delta);
                 }
 
                 self.stage.update();
