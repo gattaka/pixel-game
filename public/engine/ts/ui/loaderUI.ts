@@ -1,6 +1,6 @@
 namespace Lich {
 
-    export class LoaderUI extends createjs.Container {
+    export class LoaderUI extends createjs.SpriteContainer {
 
         private loader;
 

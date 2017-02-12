@@ -35,6 +35,6 @@ var Lich;
             return _this;
         }
         return ItemUI;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     Lich.ItemUI = ItemUI;
 })(Lich || (Lich = {}));

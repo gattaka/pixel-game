@@ -55,6 +55,6 @@ var Lich;
             });
         };
         return LoaderUI;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     Lich.LoaderUI = LoaderUI;
 })(Lich || (Lich = {}));

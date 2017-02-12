@@ -15,8 +15,8 @@ namespace Lich {
         static CURRENT_GAME: Game;
 
         private canvas: HTMLCanvasElement;
-        private stage: createjs.Stage;
-        private content: createjs.Container;
+        private stage: createjs.SpriteStage;
+        private content: createjs.SpriteContainer;
         private background: Background;
         private world: World;
         private ui: UI;
@@ -32,7 +32,7 @@ namespace Lich {
         mouse = new Mouse();
 
         public getCanvas(): HTMLCanvasElement { return this.canvas; }
-        public getContent(): createjs.Container { return this.content; }
+        public getContent(): createjs.SpriteContainer { return this.content; }
         public getBackground(): Background { return this.background; }
         public getWorld(): World { return this.world; }
         public getUI(): UI { return this.ui; }
@@ -75,12 +75,7 @@ namespace Lich {
             }
             resizeCanvas();
 
-            let ctx: any = self.canvas.getContext("2d");
-            // let ctx: any = (<HTMLCanvasElement>self.stage.cacheCanvas).getContext("2d");
-            ctx.imageSmoothingEnabled = true;
-            ctx.mozImageSmoothingEnabled = true;
-            ctx.webkitImageSmoothingEnabled = true;
-            self.stage = new createjs.Stage(self.canvas);
+            self.stage = new createjs.SpriteStage(self.canvas);
 
             if (mobile) {
                 createjs.Touch.enable(self.stage);
@@ -264,7 +259,7 @@ namespace Lich {
                 loadWorld();
             }
 
-            self.content = new createjs.Container();
+            self.content = new createjs.SpriteContainer();
             self.stage.addChild(self.content);
 
             if (Resources.getInstance().isLoaderDone()) {

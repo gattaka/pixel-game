@@ -13,7 +13,7 @@ var Lich;
             _this.spellContent = new Array();
             _this.spellIndex = new Array();
             _this.alternativeSpellIndex = new Array();
-            _this.itemsCont = new createjs.Container();
+            _this.itemsCont = new createjs.SpriteContainer();
             _this.itemHighlightShape = new createjs.Shape();
             var self = _this;
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
@@ -25,7 +25,6 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY, Lich.SpellKey.SPELL_HOME_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);
-            self.spellInsert(Lich.SpellKey.SPELL_REVEAL_FOG_KEY);
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Lich.Highlight();
             self.itemHighlightShape.visible = false;
@@ -103,7 +102,7 @@ var Lich;
         };
         return SpellsUI;
     }(Lich.PartsUI));
-    SpellsUI.N = 9;
+    SpellsUI.N = 8;
     SpellsUI.M = 1;
     Lich.SpellsUI = SpellsUI;
 })(Lich || (Lich = {}));

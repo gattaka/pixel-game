@@ -68,10 +68,10 @@ var Lich;
             _this.bulletObjects = Array();
             _this.labelObjects = new Array();
             // kontejnery
-            _this.tilesSectorsCont = new createjs.Container();
-            _this.entitiesCont = new createjs.Container();
-            _this.fogSectorsCont = new createjs.Container();
-            _this.messagesCont = new createjs.Container();
+            _this.tilesSectorsCont = new createjs.SpriteContainer();
+            _this.entitiesCont = new createjs.SpriteContainer();
+            _this.fogSectorsCont = new createjs.SpriteContainer();
+            _this.messagesCont = new createjs.SpriteContainer();
             _this.enemiesCount = 0;
             _this.enemies = new Array();
             var self = _this;
@@ -135,7 +135,7 @@ var Lich;
         };
         World.prototype.showDeadInfo = function () {
             var self = this;
-            var deadInfo = new createjs.Container();
+            var deadInfo = new createjs.SpriteContainer();
             this.messagesCont.addChild(deadInfo);
             var shape = new createjs.Shape();
             shape.width = this.game.getCanvas().width;
@@ -1234,7 +1234,7 @@ var Lich;
         };
         ;
         return World;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     /*-----------*/
     /* CONSTANTS */
     /*-----------*/

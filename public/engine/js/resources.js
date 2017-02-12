@@ -283,9 +283,9 @@ var Lich;
             }
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [this.getImage(key)],
-                "frames": frames,
-                "animations": { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
+                images: [this.getImage(key)],
+                frames: frames,
+                animations: { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
             });
             var sprite = new createjs.Sprite(sheet, "idle");
             sprite.gotoAndPlay("idle");
@@ -295,15 +295,15 @@ var Lich;
             var self = this;
             var sheet = new createjs.SpriteSheet({
                 framerate: 10,
-                "images": [self.getImage(key)],
-                "frames": {
-                    "regX": 0,
-                    "height": Resources.PARTS_SIZE,
-                    "count": framesCount,
-                    "regY": 0,
-                    "width": Resources.PARTS_SIZE
+                images: [self.getImage(key)],
+                frames: {
+                    regX: 0,
+                    height: Resources.PARTS_SIZE,
+                    count: framesCount,
+                    regY: 0,
+                    width: Resources.PARTS_SIZE
                 },
-                "animations": {
+                animations: {
                     "idle": [0, framesCount - 1, "idle", Resources.SPRITE_FRAMERATE]
                 }
             });

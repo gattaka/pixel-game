@@ -41,7 +41,7 @@ namespace Lich {
         ) { }
     }
 
-    export class World extends createjs.Container {
+    export class World extends createjs.SpriteContainer {
 
         /*-----------*/
         /* CONSTANTS */
@@ -75,17 +75,17 @@ namespace Lich {
         render: Render;
 
         // kontejnery
-        tilesSectorsCont = new createjs.Container();
-        entitiesCont = new createjs.Container();
+        tilesSectorsCont = new createjs.SpriteContainer();
+        entitiesCont = new createjs.SpriteContainer();
         weather: Weather;
-        fogSectorsCont = new createjs.Container();
-        messagesCont = new createjs.Container();
+        fogSectorsCont = new createjs.SpriteContainer();
+        messagesCont = new createjs.SpriteContainer();
 
         hero: Hero;
         enemiesCount = 0;
         enemies = new Array<AbstractEnemy>();
 
-        private initFullScaleCont(cont: createjs.Container) {
+        private initFullScaleCont(cont: createjs.SpriteContainer) {
             var self = this;
             cont.x = 0;
             cont.y = 0;
@@ -162,7 +162,7 @@ namespace Lich {
         showDeadInfo() {
             let self = this;
 
-            let deadInfo = new createjs.Container();
+            let deadInfo = new createjs.SpriteContainer();
             this.messagesCont.addChild(deadInfo);
 
             let shape = new createjs.Shape();

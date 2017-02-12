@@ -22,10 +22,10 @@ namespace Lich {
         itemsUIMap = new HashMap<ItemUI>();
         itemHighlight: createjs.Shape;
         itemHighlightVisibleBeforeCollapse = true;
-        itemsCont = new createjs.Container();
+        itemsCont = new createjs.SpriteContainer();
 
         collapsed = false;
-        collapsedCont = new createjs.Container();
+        collapsedCont = new createjs.SpriteContainer();
         collapsedItem: ItemUI;
         collapsedHighlight: createjs.Shape;
 

@@ -1,6 +1,6 @@
 namespace Lich {
 
-    export class ItemUI extends createjs.Container {
+    export class ItemUI extends createjs.SpriteContainer {
 
         public sprite: createjs.Sprite;
         public count: Label;

@@ -209,7 +209,7 @@ var Lich;
         function SplashScreenUI() {
             var _this = _super.call(this, SplashScreenUI.WIDTH, 20 + (SplashScreenUI.LINES + 1) * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING + SplashScreenUI.OUTLINE * 2)) || this;
             _this.lines = new Array();
-            _this.cont = new createjs.Container();
+            _this.cont = new createjs.SpriteContainer();
             _this.currentLine = 0;
             var self = _this;
             var changelog = new Changelog();

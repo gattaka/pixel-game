@@ -2,7 +2,7 @@ namespace Lich {
 
     class IngredientsCont extends AbstractUI {
 
-        public itemsCont = new createjs.Container();
+        public itemsCont = new createjs.SpriteContainer();
 
         constructor() {
             super(CraftingUI.N * (Resources.PARTS_SIZE + PartsUI.SPACING) - PartsUI.SPACING + 2 * AbstractUI.BORDER,
@@ -35,7 +35,7 @@ namespace Lich {
         // mapa existujících UI prvků dle typu položky
         itemsUIMap = new HashMap<ItemUI>();
 
-        itemsCont = new createjs.Container();
+        itemsCont = new createjs.SpriteContainer();
 
         craftBtn: Button;
         ingredientsCont: IngredientsCont;

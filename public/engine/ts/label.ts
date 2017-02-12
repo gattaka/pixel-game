@@ -1,5 +1,5 @@
 namespace Lich {
-    export class Label extends createjs.Container {
+    export class Label extends createjs.SpriteContainer {
 
         label: createjs.Text;
         outlineLabel: createjs.Text;

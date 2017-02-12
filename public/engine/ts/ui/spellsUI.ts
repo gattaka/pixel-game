@@ -2,7 +2,7 @@ namespace Lich {
 
     export class SpellsUI extends PartsUI {
 
-        static N = 9;
+        static N = 8;
         static M = 1;
 
         toggleFlag = false;
@@ -12,7 +12,7 @@ namespace Lich {
         spellIndex = new Array<SpellKey>();
         alternativeSpellIndex = new Array<SpellKey>();
 
-        itemsCont = new createjs.Container();
+        itemsCont = new createjs.SpriteContainer();
         itemHighlightShape = new createjs.Shape();
 
         constructor() {
@@ -29,7 +29,6 @@ namespace Lich {
             self.spellInsert(SpellKey.SPELL_FIREBALL_KEY);
             self.spellInsert(SpellKey.SPELL_TELEPORT_KEY, SpellKey.SPELL_HOME_KEY);
             self.spellInsert(SpellKey.SPELL_METEOR_KEY);
-            self.spellInsert(SpellKey.SPELL_REVEAL_FOG_KEY);            
 
             // zvýraznění vybrané položky
             self.itemHighlightShape = new Highlight();

@@ -13,7 +13,7 @@ var Lich;
             return _this;
         }
         return ParticleLayer;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     var WeatherMode;
     (function (WeatherMode) {
         WeatherMode[WeatherMode["NONE"] = 0] = "NONE";
@@ -203,7 +203,7 @@ var Lich;
             }
         };
         return Weather;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     Weather.MAX_WIND = 10;
     Weather.SNOW_RAIN_AMOUNT = 500;
     Weather.SPAWN_BATCH_DELAY = 10000;

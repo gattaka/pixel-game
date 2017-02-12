@@ -13,7 +13,7 @@ var Lich;
             _this.trackContent = [];
             _this.trackIndex = {};
             _this.reversedTrackIndex = [];
-            _this.itemsCont = new createjs.Container();
+            _this.itemsCont = new createjs.SpriteContainer();
             _this.itemHighlightShape = new createjs.Shape();
             var self = _this;
             var trackInsert = function (track, volume) {

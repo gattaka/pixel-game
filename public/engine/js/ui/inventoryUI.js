@@ -25,9 +25,9 @@ var Lich;
             // mapa existujících UI prvků dle typu položky
             _this.itemsUIMap = new Lich.HashMap();
             _this.itemHighlightVisibleBeforeCollapse = true;
-            _this.itemsCont = new createjs.Container();
+            _this.itemsCont = new createjs.SpriteContainer();
             _this.collapsed = false;
-            _this.collapsedCont = new createjs.Container();
+            _this.collapsedCont = new createjs.SpriteContainer();
             var self = _this;
             // zvýraznění vybrané položky
             self.itemHighlight = new Lich.Highlight();

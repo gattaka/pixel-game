@@ -1,10 +1,10 @@
 namespace Lich {
 
-    export abstract class AbstractSector extends createjs.Container {
+    export abstract class AbstractSector extends createjs.SpriteContainer {
 
-        public backgroundCont = new createjs.Container();
-        public cacheableCont = new createjs.Container();
-        public animatedCont = new createjs.Container();
+        public backgroundCont = new createjs.SpriteContainer();
+        public cacheableCont = new createjs.SpriteContainer();
+        public animatedCont = new createjs.SpriteContainer();
 
         constructor(
             public secId: number,
@@ -21,9 +21,9 @@ namespace Lich {
 
     export class Sector extends AbstractSector {
 
-        public backgroundCont = new createjs.Container();
-        public cacheableCont = new createjs.Container();
-        public animatedCont = new createjs.Container();
+        public backgroundCont = new createjs.SpriteContainer();
+        public cacheableCont = new createjs.SpriteContainer();
+        public animatedCont = new createjs.SpriteContainer();
 
         constructor(
             public secId: number,

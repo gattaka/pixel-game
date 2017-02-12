@@ -26,8 +26,8 @@ namespace Lich {
         // 2D pole dílků objektů na mapě
         public mapObjectsTiles: Array2D<MapObjectTile>;
         // fog mapa
-        public fogTree: FogTree;
-        // public fogTree: Array2D<FogTile>;
+        // public fogTree: FogTree;
+        public fogTree: Array2D<FogTile>;
         // spawnPoint pro hráče
         public spawnPoint: Coord2D;
 
@@ -41,8 +41,8 @@ namespace Lich {
             this.mapBgrRecord = new Array2D<number>(width, height);
             this.mapObjRecord = new Array2D<number>(width, height);
             this.mapObjectsTiles = new Array2D<MapObjectTile>(width, height);
-            this.fogTree = new FogTree(width/2, height/2);
-            // this.fogTree = new Array2D<FogTile>(width / 2, height / 2);
+            // this.fogTree = new FogTree(width/2, height/2);
+            this.fogTree = new Array2D<FogTile>(width / 2, height / 2);
         }
 
     }

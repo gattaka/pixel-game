@@ -36,7 +36,7 @@ var Lich;
         AbstractWorldObject.prototype.updateAnimations = function () { };
         ;
         return AbstractWorldObject;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     Lich.AbstractWorldObject = AbstractWorldObject;
     var BulletObject = (function (_super) {
         __extends(BulletObject, _super);

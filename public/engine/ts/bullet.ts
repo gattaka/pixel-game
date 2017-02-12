@@ -1,6 +1,6 @@
 namespace Lich {
 
-    export abstract class AbstractWorldObject extends createjs.Container {
+    export abstract class AbstractWorldObject extends createjs.SpriteContainer {
 
         public speedx: number = 0;
         public speedy: number = 0;

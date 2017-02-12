@@ -10,7 +10,7 @@ namespace Lich {
         trackIndex = {};
         reversedTrackIndex = [];
 
-        itemsCont = new createjs.Container();
+        itemsCont = new createjs.SpriteContainer();
         itemHighlightShape = new createjs.Shape();
 
         constructor() {

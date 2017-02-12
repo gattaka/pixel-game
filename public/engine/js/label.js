@@ -50,6 +50,6 @@ var Lich;
                 this.outlineLabel.color = value;
         };
         return Label;
-    }(createjs.Container));
+    }(createjs.SpriteContainer));
     Lich.Label = Label;
 })(Lich || (Lich = {}));
