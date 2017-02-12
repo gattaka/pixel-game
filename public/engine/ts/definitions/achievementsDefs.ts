@@ -8,10 +8,10 @@ namespace Lich {
     }
 
     export let ACHIEVEMENTS_DEFS = [
-        new AchievementDefinition(AchievementKey.ACHV_FALLING_DOWN, "Falling Down", "You want my briefcase? Here's my briefcase!", "Fall the height of the world by freefall"),
-        new AchievementDefinition(AchievementKey.ACHV_CHICKEN_MASSACRE, "Chicken Massacre", "Poor chickens...", "Summon The Murhun"),
-        new AchievementDefinition(AchievementKey.ACHV_CHICKEN_PROOFED, "Chicken-proofed", "Yummy!", "Defeat The Murhun"),
-        new AchievementDefinition(AchievementKey.ACHV_LOVE_HURTS, "Love Hurts", "Love hurts, love scars, love wounds, and marks...", "Summon The Cupid"),
-        new AchievementDefinition(AchievementKey.ACHV_HEARTBREAKING, "Heartbreaking", "No wonder you're still single", "Defeat The Cupid")
+        new AchievementDefinition(AchievementKey.ACHV_FALLING_DOWN_KEY, "Falling Down", "You want my briefcase? Here's my briefcase!", "Fall the height of the world by freefall"),
+        new AchievementDefinition(AchievementKey.ACHV_CHICKEN_MASSACRE_KEY, "Chicken Massacre", "Poor chickens...", "Summon The Murhun"),
+        new AchievementDefinition(AchievementKey.ACHV_CHICKEN_PROOFED_KEY, "Chicken-proofed", "Yummy!", "Defeat The Murhun"),
+        new AchievementDefinition(AchievementKey.ACHV_LOVE_HURTS_KEY, "Love Hurts", "Love hurts, love scars, love wounds, and marks...", "Summon The Cupid"),
+        new AchievementDefinition(AchievementKey.ACHV_HEARTBREAKING_KEY, "Heartbreaking", "No wonder you're still single", "Defeat The Cupid")
     ]
 }

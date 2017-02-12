@@ -172,7 +172,7 @@ var Lich;
             return _super.call(this, spellKey, // SpellKey
             10, // cost
             200, // COOLDOWN
-            Lich.SoundKey.SND_BOLT_CAST, // castSoundKey
+            Lich.SoundKey.SND_BOLT_CAST_KEY, // castSoundKey
             Lich.SoundKey.SND_BURN_KEY, // hitSoundKey
             1000, // speed
             animationKey, // spriteKey
@@ -227,7 +227,7 @@ var Lich;
     var BoltSpellDef = (function (_super) {
         __extends(BoltSpellDef, _super);
         function BoltSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_BOLT_KEY, BoltSpellDef.COST, BoltSpellDef.COOLDOWN, Lich.SoundKey.SND_BOLT_CAST, Lich.SoundKey.SND_FIREBALL_KEY, BoltSpellDef.SPEED, Lich.AnimationKey.BOLT_ANIMATION_KEY, BoltSpellDef.MAP_DESTROY, BoltSpellDef.PIERCING, BoltSpellDef.DAMAGE) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_BOLT_KEY, BoltSpellDef.COST, BoltSpellDef.COOLDOWN, Lich.SoundKey.SND_BOLT_CAST_KEY, Lich.SoundKey.SND_FIREBALL_KEY, BoltSpellDef.SPEED, Lich.AnimationKey.BOLT_ANIMATION_KEY, BoltSpellDef.MAP_DESTROY, BoltSpellDef.PIERCING, BoltSpellDef.DAMAGE) || this;
         }
         return BoltSpellDef;
     }(BulletSpellDef));

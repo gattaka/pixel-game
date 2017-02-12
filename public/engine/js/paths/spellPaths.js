@@ -1,17 +1,17 @@
 var Lich;
 (function (Lich) {
     Lich.SPELL_PATHS = [
-        ["images/ui/dig_spell.png", Lich.SpellKey.SPELL_DIG_KEY],
-        ["images/ui/dig_bgr_spell.png", Lich.SpellKey.SPELL_DIG_BGR_KEY],
-        ["images/ui/fireball_spell.png", Lich.SpellKey.SPELL_FIREBALL_KEY],
-        ["images/ui/meteor_spell.png", Lich.SpellKey.SPELL_METEOR_KEY],
-        ["images/ui/place_spell.png", Lich.SpellKey.SPELL_PLACE_KEY],
-        ["images/ui/place_bgr_spell.png", Lich.SpellKey.SPELL_PLACE_BGR_KEY],
-        ["images/ui/bolt_spell.png", Lich.SpellKey.SPELL_BOLT_KEY],
-        ["images/ui/enemy_spell.png", Lich.SpellKey.SPELL_ENEMY_KEY],
-        ["images/ui/teleport_spell.png", Lich.SpellKey.SPELL_TELEPORT_KEY],
-        ["images/ui/home_spell.png", Lich.SpellKey.SPELL_HOME_KEY],
-        ["images/ui/use_spell.png", Lich.SpellKey.SPELL_USE_ITEM_KEY],
-        ["images/ui/place_spell.png", Lich.SpellKey.SPELL_REVEAL_FOG_KEY]
+        ["dig_spell", Lich.SpellKey.SPELL_DIG_KEY],
+        ["dig_bgr_spell", Lich.SpellKey.SPELL_DIG_BGR_KEY],
+        ["fireball_spell", Lich.SpellKey.SPELL_FIREBALL_KEY],
+        ["meteor_spell", Lich.SpellKey.SPELL_METEOR_KEY],
+        ["place_spell", Lich.SpellKey.SPELL_PLACE_KEY],
+        ["place_bgr_spell", Lich.SpellKey.SPELL_PLACE_BGR_KEY],
+        ["bolt_spell", Lich.SpellKey.SPELL_BOLT_KEY],
+        ["enemy_spell", Lich.SpellKey.SPELL_ENEMY_KEY],
+        ["teleport_spell", Lich.SpellKey.SPELL_TELEPORT_KEY],
+        ["home_spell", Lich.SpellKey.SPELL_HOME_KEY],
+        ["use_spell", Lich.SpellKey.SPELL_USE_ITEM_KEY],
+        ["place_spell", Lich.SpellKey.SPELL_REVEAL_FOG_KEY]
     ];
 })(Lich || (Lich = {}));

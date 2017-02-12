@@ -207,7 +207,7 @@ namespace Lich {
                 spellKey, // SpellKey
                 10, // cost
                 200, // COOLDOWN
-                SoundKey.SND_BOLT_CAST, // castSoundKey
+                SoundKey.SND_BOLT_CAST_KEY, // castSoundKey
                 SoundKey.SND_BURN_KEY, // hitSoundKey
                 1000, // speed
                 animationKey, // spriteKey
@@ -271,7 +271,7 @@ namespace Lich {
                 SpellKey.SPELL_BOLT_KEY,
                 BoltSpellDef.COST,
                 BoltSpellDef.COOLDOWN,
-                SoundKey.SND_BOLT_CAST,
+                SoundKey.SND_BOLT_CAST_KEY,
                 SoundKey.SND_FIREBALL_KEY,
                 BoltSpellDef.SPEED,
                 AnimationKey.BOLT_ANIMATION_KEY,

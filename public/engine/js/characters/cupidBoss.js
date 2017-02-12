@@ -48,7 +48,7 @@ var Lich;
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_CUPID_BOSS_THEME_KEY);
                 _this.currentMode = AI_MODE.IDLE;
                 CupidBoss.spawned = true;
-                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_LOVE_HURTS]));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_LOVE_HURTS_KEY]));
                 return _this;
             }
             CupidBoss.prototype.runAI = function (world, delta) {
@@ -186,7 +186,7 @@ var Lich;
                 Lich.Mixer.stopAllMusic();
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
                 CupidBoss.spawned = false;
-                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_HEARTBREAKING]));
+                Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.ACHIEVEMENT_DONE, Lich.AchievementKey[Lich.AchievementKey.ACHV_HEARTBREAKING_KEY]));
             };
             CupidBoss.prototype.hit = function (damage, world) {
                 if (this.getCurrentHealth() > 0) {

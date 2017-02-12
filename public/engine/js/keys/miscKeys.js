@@ -1,5 +1,12 @@
 var Lich;
 (function (Lich) {
+    var SpritesheetKey;
+    (function (SpritesheetKey) {
+        SpritesheetKey[SpritesheetKey["SPST_FONTS_KEY"] = 0] = "SPST_FONTS_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_OBJECTS_KEY"] = 1] = "SPST_OBJECTS_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_TILES_KEY"] = 2] = "SPST_TILES_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_UI_KEY"] = 3] = "SPST_UI_KEY";
+    })(SpritesheetKey = Lich.SpritesheetKey || (Lich.SpritesheetKey = {}));
     var BackgroundKey;
     (function (BackgroundKey) {
         BackgroundKey[BackgroundKey["DIRT_BACK_START_KEY"] = 0] = "DIRT_BACK_START_KEY";
@@ -67,11 +74,11 @@ var Lich;
     })(UIGFXKey = Lich.UIGFXKey || (Lich.UIGFXKey = {}));
     var AchievementKey;
     (function (AchievementKey) {
-        AchievementKey[AchievementKey["ACHV_FALLING_DOWN"] = 0] = "ACHV_FALLING_DOWN";
-        AchievementKey[AchievementKey["ACHV_CHICKEN_MASSACRE"] = 1] = "ACHV_CHICKEN_MASSACRE";
-        AchievementKey[AchievementKey["ACHV_CHICKEN_PROOFED"] = 2] = "ACHV_CHICKEN_PROOFED";
-        AchievementKey[AchievementKey["ACHV_LOVE_HURTS"] = 3] = "ACHV_LOVE_HURTS";
-        AchievementKey[AchievementKey["ACHV_HEARTBREAKING"] = 4] = "ACHV_HEARTBREAKING";
+        AchievementKey[AchievementKey["ACHV_FALLING_DOWN_KEY"] = 0] = "ACHV_FALLING_DOWN_KEY";
+        AchievementKey[AchievementKey["ACHV_CHICKEN_MASSACRE_KEY"] = 1] = "ACHV_CHICKEN_MASSACRE_KEY";
+        AchievementKey[AchievementKey["ACHV_CHICKEN_PROOFED_KEY"] = 2] = "ACHV_CHICKEN_PROOFED_KEY";
+        AchievementKey[AchievementKey["ACHV_LOVE_HURTS_KEY"] = 3] = "ACHV_LOVE_HURTS_KEY";
+        AchievementKey[AchievementKey["ACHV_HEARTBREAKING_KEY"] = 4] = "ACHV_HEARTBREAKING_KEY";
     })(AchievementKey = Lich.AchievementKey || (Lich.AchievementKey = {}));
     var SpellKey;
     (function (SpellKey) {
@@ -99,7 +106,7 @@ var Lich;
         SoundKey[SoundKey["SND_BURN_KEY"] = 1] = "SND_BURN_KEY";
         SoundKey[SoundKey["SND_METEOR_FALL_KEY"] = 2] = "SND_METEOR_FALL_KEY";
         SoundKey[SoundKey["SND_METEOR_HIT_KEY"] = 3] = "SND_METEOR_HIT_KEY";
-        SoundKey[SoundKey["SND_BOLT_CAST"] = 4] = "SND_BOLT_CAST";
+        SoundKey[SoundKey["SND_BOLT_CAST_KEY"] = 4] = "SND_BOLT_CAST_KEY";
         SoundKey[SoundKey["SND_PICK_KEY"] = 5] = "SND_PICK_KEY";
         SoundKey[SoundKey["SND_PLACE_KEY"] = 6] = "SND_PLACE_KEY";
         SoundKey[SoundKey["SND_PICK_AXE_1_KEY"] = 7] = "SND_PICK_AXE_1_KEY";

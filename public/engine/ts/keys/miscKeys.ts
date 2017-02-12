@@ -1,4 +1,12 @@
 namespace Lich {
+
+    export enum SpritesheetKey {
+        SPST_FONTS_KEY,
+        SPST_OBJECTS_KEY,
+        SPST_TILES_KEY,
+        SPST_UI_KEY
+    }
+
     export enum BackgroundKey {
         DIRT_BACK_START_KEY,
         DIRT_BACK_KEY,
@@ -65,11 +73,11 @@ namespace Lich {
     }
 
     export enum AchievementKey {
-        ACHV_FALLING_DOWN,
-        ACHV_CHICKEN_MASSACRE,
-        ACHV_CHICKEN_PROOFED,
-        ACHV_LOVE_HURTS,
-        ACHV_HEARTBREAKING
+        ACHV_FALLING_DOWN_KEY,
+        ACHV_CHICKEN_MASSACRE_KEY,
+        ACHV_CHICKEN_PROOFED_KEY,
+        ACHV_LOVE_HURTS_KEY,
+        ACHV_HEARTBREAKING_KEY
     }
 
     export enum SpellKey {
@@ -99,7 +107,7 @@ namespace Lich {
         SND_BURN_KEY,
         SND_METEOR_FALL_KEY,
         SND_METEOR_HIT_KEY,
-        SND_BOLT_CAST,
+        SND_BOLT_CAST_KEY,
         SND_PICK_KEY,
         SND_PLACE_KEY,
         SND_PICK_AXE_1_KEY,

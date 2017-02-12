@@ -7,7 +7,7 @@
 namespace Lich {
 
     class Load {
-        constructor(public src: string, public id: string) { };
+        constructor(public src: string, public id: string, public type?: string) { };
     }
 
     export interface HasCooldown {
@@ -64,18 +64,25 @@ namespace Lich {
         }
     }
 
+    export class SpriteItemDef {
+        constructor(
+            public frame: number,
+            public name: string,
+            public x: number,
+            public y: number,
+            public width: number,
+            public height: number
+        ) { }
+    }
+
     export class Resources {
 
         private static INSTANCE: Resources;
 
-        static FONT = "expressway";
-        static OUTLINE_COLOR = "#000";
-        static TEXT_COLOR = "#FF0";
-        static WORLD_LOADER_COLOR = "#84ff00";
-        static DEBUG_TEXT_COLOR = "#FF0";
         static REVEAL_SIZE = 13; // musí být liché
         static REACH_TILES_RADIUS = 10;
-
+        static SPRITESHEET_IMAGE_SUFFIX = ".png";
+        static SPRITESHEET_MAP_SUFFIX = ".json";
         static SPRITE_FRAMERATE = 0.2;
 
         // Jméno klíče, pod kterým bude v cookies uložen USER DB 
@@ -109,12 +116,13 @@ namespace Lich {
         public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
-        private bitmapCache: { [k: string]: createjs.Bitmap } = {};
-
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
         public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
+
+        public spritesheetsMap: { [k: string]: createjs.SpriteSheet } = {};
+        public spritesheetsDefsMap: { [k: string]: { [k: string]: SpriteItemDef } } = {};
 
         // definice inv položek
         public invObjectDefs = new Array<InvObjDefinition>();
@@ -147,67 +155,37 @@ namespace Lich {
 
             var self = this;
             var manifest = [];
+
             /**
              * IMAGES  
              */
-            // inventory
-            INVENTORY_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], InventoryKey[path[1]]));
+
+            // spritesheets
+            SPRITESHEETS_PATHS.forEach((path) => {
+                manifest.push(new Load(path[0] + path[1] + Resources.SPRITESHEET_IMAGE_SUFFIX, SpritesheetKey[path[2]] + Resources.SPRITESHEET_IMAGE_SUFFIX));
+                manifest.push(new Load(path[0] + path[1] + Resources.SPRITESHEET_MAP_SUFFIX, SpritesheetKey[path[2]] + Resources.SPRITESHEET_MAP_SUFFIX, createjs.AbstractLoader.JSON));
             });
-            // spells
-            SPELL_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], SpellKey[path[1]]));
-            });
-            // animations
-            ANIMATION_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], AnimationKey[path[1]]));
-            });
-            // surfaces
-            SURFACE_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], SurfaceKey[path[1]]));
-            });
-            // Fog
-            manifest.push(new Load(FOG_PATH[0], FogKey[FOG_PATH[1]]));
-            // surface backgrounds
-            SURFACE_BGR_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], SurfaceBgrKey[path[1]]));
-            });
-            // objects
-            MAP_OBJECT_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], MapObjectKey[path[1]]));
-            });
-            // UI
-            UI_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], UIGFXKey[path[1]]));
-            });
-            // achievements
-            ACHIEVEMENTS_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], AchievementKey[path[1]]));
-            });
+
             // background
             BACKGROUND_PATHS.forEach((path) => {
                 manifest.push(new Load(path[0], BackgroundKey[path[1]]));
             });
+
             /**
              * SOUNDS AND MUSIC
              */
-            // sounds
-            SOUND_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], SoundKey[path[1]]));
-            });
-            // music
-            MUSIC_PATHS.forEach((path) => {
-                manifest.push(new Load(path[0], MusicKey[path[1]]));
-            });
 
-            // nejprve font (nahrává se mimo loader)
-            var config: WebFont.Config = {
-                custom: {
-                    families: ['expressway'],
-                    urls: ['/css/fonts.css']
-                },
-            }
-            WebFont.load(config);
+            // TODO
+            /*
+                        // sounds
+                        SOUND_PATHS.forEach((path) => {
+                            manifest.push(new Load(path[0], SoundKey[path[1]]));
+                        });
+                        // music
+                        MUSIC_PATHS.forEach((path) => {
+                            manifest.push(new Load(path[0], MusicKey[path[1]]));
+                        });
+            */
 
             // pak loader 
             self.loader = new createjs.LoadQueue(false);
@@ -220,6 +198,57 @@ namespace Lich {
                 EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, event.item.src));
             });
             self.loader.addEventListener("complete", function () {
+
+                // SpriteSheet definice
+                SPRITESHEETS_PATHS.forEach((path) => {
+                    let key = SpritesheetKey[path[2]];
+                    let spritesheetImg = self.getImage(key + Resources.SPRITESHEET_IMAGE_SUFFIX);
+                    let spritesheetDefsArr: Array<SpriteItemDef> = self.loader.getResult(key + Resources.SPRITESHEET_MAP_SUFFIX);
+                    let spritesheetDefsMap = {};
+                    self.spritesheetsDefsMap[key] = spritesheetDefsMap;
+                    let frames = [];
+                    let animations = {};
+                    for (let i = 0; i < spritesheetDefsArr.length; i++) {
+                        let sd = spritesheetDefsArr[i];
+                        // TODO je potřeba stávající spritesheety rozdělit, protože teď jsou
+                        // ve spojeném souboru jako jeden snímek (JSON definice) namísto několika
+                        let sDef = new SpriteItemDef(frames.length, sd["name"], sd["x"], sd["y"], sd["width"], sd["height"]);
+                        spritesheetDefsMap[sd["name"]] = sDef;
+                        frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
+                        animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
+
+                        // Připraví rozložení animace pro sektory
+                        // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
+                        // DEV test
+                        if (sDef.name == "fireplace") {
+                            let frCnt = 4; // počet snímků animace
+                            let w = 8 * 8; // šířka snímku animace
+                            let h = 4 * 8; // výška snímku animace
+                            let spliceSide = 2 * 8; // velikost výřezu 
+                            let wSplicing = w / spliceSide;
+                            let hSplicing = h / spliceSide;
+                            for (let y = 0; y < hSplicing; y++) {
+                                for (let x = 0; x < wSplicing; x++) {
+                                    for (let f = 0; f < frCnt; f++) {
+                                        // počítá se s tím, že snímky jsou zleva doprava za sebou
+                                        frames.push([sDef.x + x * spliceSide + w * f, sDef.y + y * spliceSide, spliceSide, spliceSide]);
+                                    }
+                                    let name = sDef.name + "-FRAGMENT-" + x + "-" + y;
+                                    animations[name] = [frames.length - frCnt, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
+                                }
+                            }
+                        }
+                    }
+
+                    let sheet = new createjs.SpriteSheet({
+                        framerate: 10,
+                        images: [spritesheetImg],
+                        frames: frames,
+                        animations: animations
+                    });
+                    self.spritesheetsMap[key] = sheet;
+                });
+
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
             });
 
@@ -310,22 +339,17 @@ namespace Lich {
             return transDef.transitionKey;
         }
 
-        getImage(key: string): HTMLImageElement {
+        private getImage(key: string): HTMLImageElement {
             return <HTMLImageElement>this.loader.getResult(key);
         };
 
-        getBitmap(key: string): createjs.Bitmap {
-            let cachedBmp = this.bitmapCache[key];
-            if (!cachedBmp) {
-                cachedBmp = new createjs.Bitmap(this.getImage(key));
-                this.bitmapCache[key] = cachedBmp;
-            }
-            return cachedBmp.clone();
+        private getBitmap(key: string): createjs.Bitmap {
+            return new createjs.Bitmap(this.getImage(key));
         };
 
-        getSpritePart(key: string, tileX: number, tileY: number, count: number, width: number, height: number) {
-            var frames = [];
-            for (var i = 0; i < count; i++) {
+        getSpritePart(key: string, tileX: number, tileY: number, count: number, width: number, height: number): createjs.Sprite {
+            let frames = [];
+            for (let i = 0; i < count; i++) {
                 frames.push([
                     tileX * Resources.TILE_SIZE + i * width * Resources.TILE_SIZE, // x
                     tileY * Resources.TILE_SIZE, // y
@@ -333,40 +357,28 @@ namespace Lich {
                     Resources.TILE_SIZE
                 ]);
             }
-            var sheet = new createjs.SpriteSheet({
+            let sheet = new createjs.SpriteSheet({
                 framerate: 10,
                 images: [this.getImage(key)],
                 frames: frames,
                 animations: { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
             });
-            var sprite = new createjs.Sprite(sheet, "idle");
+            let sprite = new createjs.Sprite(sheet, "idle");
             sprite.gotoAndPlay("idle");
             return sprite;
         }
 
-        getSpriteSheet(key: string, framesCount: number): createjs.SpriteSheet {
-            var self = this;
-            var sheet = new createjs.SpriteSheet({
-                framerate: 10,
-                images: [self.getImage(key)],
-                frames: {
-                    regX: 0,
-                    height: Resources.PARTS_SIZE,
-                    count: framesCount,
-                    regY: 0,
-                    width: Resources.PARTS_SIZE
-                },
-                animations: {
-                    "idle": [0, framesCount - 1, "idle", Resources.SPRITE_FRAMERATE],
-                }
-            });
-            return sheet;
+        getText(text: string) {
+            let self = this;
+            let bitmapText = new createjs.BitmapText(text, self.spritesheetsMap[SpritesheetKey[SpritesheetKey.SPST_FONTS_KEY]]);
+            return bitmapText;
         }
 
-        getSprite(key: string, framesCount: number): createjs.Sprite {
-            var self = this;
-            var sprite = new createjs.Sprite(self.getSpriteSheet(key, framesCount), "idle");
-            sprite.gotoAndPlay("idle");
+        getSprite(spritesheetKey: SpritesheetKey, spriteKey: string): createjs.Sprite {
+            let self = this;
+            let key = SpritesheetKey[spritesheetKey];
+            let sprite = new createjs.Sprite(self.spritesheetsMap[key]);
+            sprite.gotoAndStop(self.spritesheetsDefsMap[key][spriteKey].frame);
             return sprite;
         };
 

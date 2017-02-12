@@ -3,7 +3,7 @@ namespace Lich {
         ["sound/fireball_cast.ogg", SoundKey.SND_FIREBALL_KEY],
         ["sound/pick.ogg", SoundKey.SND_PICK_KEY],
         ["sound/fireball_hit.ogg", SoundKey.SND_BURN_KEY],
-        ["sound/bolt_cast.ogg", SoundKey.SND_BOLT_CAST],
+        ["sound/bolt_cast.ogg", SoundKey.SND_BOLT_CAST_KEY],
         ["sound/place.ogg", SoundKey.SND_PLACE_KEY],
         ["sound/pick_axe1.ogg", SoundKey.SND_PICK_AXE_1_KEY],
         ["sound/pick_axe2.ogg", SoundKey.SND_PICK_AXE_2_KEY],

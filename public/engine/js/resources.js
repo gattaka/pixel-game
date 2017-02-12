@@ -7,9 +7,10 @@
 var Lich;
 (function (Lich) {
     var Load = (function () {
-        function Load(src, id) {
+        function Load(src, id, type) {
             this.src = src;
             this.id = id;
+            this.type = type;
         }
         ;
         return Load;
@@ -67,6 +68,18 @@ var Lich;
         return FreqPool;
     }());
     Lich.FreqPool = FreqPool;
+    var SpriteItemDef = (function () {
+        function SpriteItemDef(frame, name, x, y, width, height) {
+            this.frame = frame;
+            this.name = name;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+        return SpriteItemDef;
+    }());
+    Lich.SpriteItemDef = SpriteItemDef;
     var Resources = (function () {
         function Resources() {
             /**
@@ -81,11 +94,12 @@ var Lich;
             // dle trans povrchu
             this.mapTransitionSrfcs = {};
             this.mapTransitionSrfcBgrs = {};
-            this.bitmapCache = {};
             this.achievementsDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
+            this.spritesheetsMap = {};
+            this.spritesheetsDefsMap = {};
             // definice inv položek
             this.invObjectDefs = new Array();
             // definice spells
@@ -103,39 +117,10 @@ var Lich;
             /**
              * IMAGES
              */
-            // inventory
-            Lich.INVENTORY_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.InventoryKey[path[1]]));
-            });
-            // spells
-            Lich.SPELL_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.SpellKey[path[1]]));
-            });
-            // animations
-            Lich.ANIMATION_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.AnimationKey[path[1]]));
-            });
-            // surfaces
-            Lich.SURFACE_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.SurfaceKey[path[1]]));
-            });
-            // Fog
-            manifest.push(new Load(Lich.FOG_PATH[0], Lich.FogKey[Lich.FOG_PATH[1]]));
-            // surface backgrounds
-            Lich.SURFACE_BGR_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.SurfaceBgrKey[path[1]]));
-            });
-            // objects
-            Lich.MAP_OBJECT_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.MapObjectKey[path[1]]));
-            });
-            // UI
-            Lich.UI_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.UIGFXKey[path[1]]));
-            });
-            // achievements
-            Lich.ACHIEVEMENTS_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.AchievementKey[path[1]]));
+            // spritesheets
+            Lich.SPRITESHEETS_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0] + path[1] + Resources.SPRITESHEET_IMAGE_SUFFIX, Lich.SpritesheetKey[path[2]] + Resources.SPRITESHEET_IMAGE_SUFFIX));
+                manifest.push(new Load(path[0] + path[1] + Resources.SPRITESHEET_MAP_SUFFIX, Lich.SpritesheetKey[path[2]] + Resources.SPRITESHEET_MAP_SUFFIX, createjs.AbstractLoader.JSON));
             });
             // background
             Lich.BACKGROUND_PATHS.forEach(function (path) {
@@ -144,22 +129,17 @@ var Lich;
             /**
              * SOUNDS AND MUSIC
              */
-            // sounds
-            Lich.SOUND_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.SoundKey[path[1]]));
-            });
-            // music
-            Lich.MUSIC_PATHS.forEach(function (path) {
-                manifest.push(new Load(path[0], Lich.MusicKey[path[1]]));
-            });
-            // nejprve font (nahrává se mimo loader)
-            var config = {
-                custom: {
-                    families: ['expressway'],
-                    urls: ['/css/fonts.css']
-                }
-            };
-            WebFont.load(config);
+            // TODO
+            /*
+                        // sounds
+                        SOUND_PATHS.forEach((path) => {
+                            manifest.push(new Load(path[0], SoundKey[path[1]]));
+                        });
+                        // music
+                        MUSIC_PATHS.forEach((path) => {
+                            manifest.push(new Load(path[0], MusicKey[path[1]]));
+                        });
+            */
             // pak loader 
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
@@ -171,6 +151,53 @@ var Lich;
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, event.item.src));
             });
             self.loader.addEventListener("complete", function () {
+                // SpriteSheet definice
+                Lich.SPRITESHEETS_PATHS.forEach(function (path) {
+                    var key = Lich.SpritesheetKey[path[2]];
+                    var spritesheetImg = self.getImage(key + Resources.SPRITESHEET_IMAGE_SUFFIX);
+                    var spritesheetDefsArr = self.loader.getResult(key + Resources.SPRITESHEET_MAP_SUFFIX);
+                    var spritesheetDefsMap = {};
+                    self.spritesheetsDefsMap[key] = spritesheetDefsMap;
+                    var frames = [];
+                    var animations = {};
+                    for (var i = 0; i < spritesheetDefsArr.length; i++) {
+                        var sd = spritesheetDefsArr[i];
+                        // TODO je potřeba stávající spritesheety rozdělit, protože teď jsou
+                        // ve spojeném souboru jako jeden snímek (JSON definice) namísto několika
+                        var sDef = new SpriteItemDef(frames.length, sd["name"], sd["x"], sd["y"], sd["width"], sd["height"]);
+                        spritesheetDefsMap[sd["name"]] = sDef;
+                        frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
+                        animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
+                        // Připraví rozložení animace pro sektory
+                        // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
+                        // DEV test
+                        if (sDef.name == "fireplace") {
+                            var frCnt = 4; // počet snímků animace
+                            var w = 8 * 8; // šířka snímku animace
+                            var h = 4 * 8; // výška snímku animace
+                            var spliceSide = 2 * 8; // velikost výřezu 
+                            var wSplicing = w / spliceSide;
+                            var hSplicing = h / spliceSide;
+                            for (var y = 0; y < hSplicing; y++) {
+                                for (var x = 0; x < wSplicing; x++) {
+                                    for (var f = 0; f < frCnt; f++) {
+                                        // počítá se s tím, že snímky jsou zleva doprava za sebou
+                                        frames.push([sDef.x + x * spliceSide + w * f, sDef.y + y * spliceSide, spliceSide, spliceSide]);
+                                    }
+                                    var name_1 = sDef.name + "-FRAGMENT-" + x + "-" + y;
+                                    animations[name_1] = [frames.length - frCnt, frames.length - 1, name_1, Resources.SPRITE_FRAMERATE];
+                                }
+                            }
+                        }
+                    }
+                    var sheet = new createjs.SpriteSheet({
+                        framerate: 10,
+                        images: [spritesheetImg],
+                        frames: frames,
+                        animations: animations
+                    });
+                    self.spritesheetsMap[key] = sheet;
+                });
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });
             self.loader.loadManifest(manifest, true);
@@ -263,12 +290,7 @@ var Lich;
         };
         ;
         Resources.prototype.getBitmap = function (key) {
-            var cachedBmp = this.bitmapCache[key];
-            if (!cachedBmp) {
-                cachedBmp = new createjs.Bitmap(this.getImage(key));
-                this.bitmapCache[key] = cachedBmp;
-            }
-            return cachedBmp.clone();
+            return new createjs.Bitmap(this.getImage(key));
         };
         ;
         Resources.prototype.getSpritePart = function (key, tileX, tileY, count, width, height) {
@@ -291,40 +313,25 @@ var Lich;
             sprite.gotoAndPlay("idle");
             return sprite;
         };
-        Resources.prototype.getSpriteSheet = function (key, framesCount) {
+        Resources.prototype.getText = function (text) {
             var self = this;
-            var sheet = new createjs.SpriteSheet({
-                framerate: 10,
-                images: [self.getImage(key)],
-                frames: {
-                    regX: 0,
-                    height: Resources.PARTS_SIZE,
-                    count: framesCount,
-                    regY: 0,
-                    width: Resources.PARTS_SIZE
-                },
-                animations: {
-                    "idle": [0, framesCount - 1, "idle", Resources.SPRITE_FRAMERATE]
-                }
-            });
-            return sheet;
+            var bitmapText = new createjs.BitmapText(text, self.spritesheetsMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FONTS_KEY]]);
+            return bitmapText;
         };
-        Resources.prototype.getSprite = function (key, framesCount) {
+        Resources.prototype.getSprite = function (spritesheetKey, spriteKey) {
             var self = this;
-            var sprite = new createjs.Sprite(self.getSpriteSheet(key, framesCount), "idle");
-            sprite.gotoAndPlay("idle");
+            var key = Lich.SpritesheetKey[spritesheetKey];
+            var sprite = new createjs.Sprite(self.spritesheetsMap[key]);
+            sprite.gotoAndStop(self.spritesheetsDefsMap[key][spriteKey].frame);
             return sprite;
         };
         ;
         return Resources;
     }());
-    Resources.FONT = "expressway";
-    Resources.OUTLINE_COLOR = "#000";
-    Resources.TEXT_COLOR = "#FF0";
-    Resources.WORLD_LOADER_COLOR = "#84ff00";
-    Resources.DEBUG_TEXT_COLOR = "#FF0";
     Resources.REVEAL_SIZE = 13; // musí být liché
     Resources.REACH_TILES_RADIUS = 10;
+    Resources.SPRITESHEET_IMAGE_SUFFIX = ".png";
+    Resources.SPRITESHEET_MAP_SUFFIX = ".json";
     Resources.SPRITE_FRAMERATE = 0.2;
     // Jméno klíče, pod kterým bude v cookies uložen USER DB 
     // klíč záznamu jeho SAVE na serveru  
