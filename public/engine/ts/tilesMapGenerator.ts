@@ -151,7 +151,7 @@ namespace Lich {
                 tilesMap.spawnPoint = new Coord2D(data.spwx, data.spwy);
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_NAME_CHANGE, "Loading world"));
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
+            // EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
 
             async.load(() => {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, 0));
@@ -469,7 +469,7 @@ namespace Lich {
             let mass = tilesMap.height * tilesMap.width;
 
             EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_NAME_CHANGE, "Creating a new world"));
-            EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
+            // EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
 
             async.load(() => {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, 0));

@@ -95,7 +95,8 @@ var Lich;
             this.mapTransitionSrfcs = {};
             this.mapTransitionSrfcBgrs = {};
             this.achievementsDefs = {};
-            this.animationsDefs = {};
+            this.animationsBySetDefs = {};
+            this.animationsBySheetDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
@@ -163,12 +164,40 @@ var Lich;
                     var animations = {};
                     for (var i = 0; i < spritesheetDefsArr.length; i++) {
                         var sd = spritesheetDefsArr[i];
-                        // TODO je potřeba stávající spritesheety rozdělit, protože teď jsou
-                        // ve spojeném souboru jako jeden snímek (JSON definice) namísto několika
                         var sDef = new SpriteItemDef(frames.length, sd["name"], sd["x"], sd["y"], sd["width"], sd["height"]);
                         spritesheetDefsMap[sd["name"]] = sDef;
                         frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
                         animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
+                        // Objekty nech v celku, akorát animace rozděl
+                        if (Lich.SpritesheetKey.SPST_OBJECTS_KEY == path[2]) {
+                            // Pokud se jedná o animaci, rozděl ji dle rozměrů
+                            var animationDef = self.animationsBySheetDefs[sDef.name];
+                            if (animationDef) {
+                                var frCnt = 0; // počítadlo snímků animace
+                                var wSplicing = sDef.width / animationDef.width;
+                                var hSplicing = sDef.height / animationDef.height;
+                                // Připrav snímky
+                                for (var y = 0; y < hSplicing; y++) {
+                                    for (var x = 0; x < wSplicing; x++) {
+                                        frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
+                                        frCnt++;
+                                    }
+                                }
+                                // Ze snímků sestav animace dle definic
+                                for (var a = 0; a < animationDef.animations.length; a++) {
+                                    var animDef = animationDef.animations[a];
+                                    animations[Lich.AnimationKey[animDef.animation]] = [
+                                        frames.length - frCnt + animDef.startFrame,
+                                        frames.length - frCnt - 1 + animDef.endFrame,
+                                        animDef.nextAnimation,
+                                        animDef.time
+                                    ];
+                                }
+                            }
+                        }
+                        // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
+                        if (Lich.SpritesheetKey.SPST_TILES_KEY == path[2]) {
+                        }
                         // Připraví rozložení animace pro sektory
                         // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
                         // DEV test
@@ -235,7 +264,8 @@ var Lich;
             });
             // Definice animací
             Lich.ANIMATION_DEFS.forEach(function (definition) {
-                self.animationsDefs[Lich.AnimationSetKey[definition.animationSetKey]] = definition;
+                self.animationsBySetDefs[Lich.AnimationSetKey[definition.animationSetKey]] = definition;
+                self.animationsBySheetDefs[definition.subSpritesheetName] = definition;
             });
             // Definice spells
             var SPELL_DEFS = [
@@ -323,6 +353,17 @@ var Lich;
             var bitmapText = new createjs.BitmapText(text, self.spritesheetsMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FONTS_KEY]]);
             return bitmapText;
         };
+        Resources.prototype.getTileSprite = function (spriteKey, positionIndex) {
+            var self = this;
+            var key = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_TILES_KEY];
+            var sprite = new createjs.Sprite(self.spritesheetsMap[key]);
+            if (positionIndex)
+                sprite.gotoAndPlay(spriteKey + "-FRAGMENT-" + positionIndex);
+            else
+                sprite.gotoAndPlay(self.spritesheetsDefsMap[key][spriteKey].frame);
+            return sprite;
+        };
+        ;
         Resources.prototype.getSprite = function (spritesheetKey, spriteKey) {
             var self = this;
             var key = Lich.SpritesheetKey[spritesheetKey];

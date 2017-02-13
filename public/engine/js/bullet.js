@@ -77,7 +77,7 @@ var Lich;
             return _this;
         }
         BulletObject.prototype.initSprite = function () {
-            var animationDef = Lich.Resources.getInstance().animationsDefs[this.animationSetKey];
+            var animationDef = Lich.Resources.getInstance().animationsBySetDefs[this.animationSetKey];
             this.width = animationDef.width;
             this.height = animationDef.height;
             this.sprite = Lich.Resources.getInstance().getSprite(Lich.SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);

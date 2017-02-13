@@ -49,11 +49,11 @@ namespace Lich {
         // Mapa dílků
         tilesMap: TilesMap;
         // Vykreslené dílky povrchu a pozadí
-        sceneTilesMap = new Array2D<createjs.Bitmap>();
-        sceneBgrTilesMap = new Array2D<createjs.Bitmap>();
-        sceneFogTilesMap = new Array2D<createjs.Bitmap>();
+        sceneTilesMap = new Array2D<createjs.Sprite>();
+        sceneBgrTilesMap = new Array2D<createjs.Sprite>();
+        sceneFogTilesMap = new Array2D<createjs.Sprite>();
         // Vykreslené dílky objektů
-        sceneObjectsMap = new Array2D<createjs.Bitmap>();
+        sceneObjectsMap = new Array2D<createjs.Sprite>();
 
         constructor(public game: Game, public world: World) {
             var self = this;
@@ -342,7 +342,7 @@ namespace Lich {
         createFogTile(positionIndex: number) {
             var self = this;
             let rsc = Resources.getInstance();
-            let tile = rsc.getBitmap(FogKey[FogKey.FOG_KEY]);
+            let tile = rsc.getSprite(SpritesheetKey.SPST_TILES_KEY, FogKey[FogKey.FOG_KEY]);
             self.setFogSourceRect(tile, positionIndex);
             return tile;
         }
@@ -353,7 +353,7 @@ namespace Lich {
             let typ, tile;
             if (bgr) {
                 typ = rsc.surfaceBgrIndex.getType(positionIndex);
-                tile = rsc.getBitmap(SurfaceBgrKey[typ]);
+                tile = rsc.getSprite(SurfaceBgrKey[typ]);
             } else {
                 typ = rsc.surfaceIndex.getType(positionIndex);
                 tile = rsc.getBitmap(SurfaceKey[typ]);

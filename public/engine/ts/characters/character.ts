@@ -50,7 +50,7 @@ namespace Lich {
         public spellCooldowns = new Table<number>();
 
         initSprite() {
-            let animationDef = Resources.getInstance().animationsDefs[this.animationSetKey];
+            let animationDef = Resources.getInstance().animationsBySetDefs[this.animationSetKey];
             this.width = animationDef.width;
             this.height = animationDef.height;
             this.sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);

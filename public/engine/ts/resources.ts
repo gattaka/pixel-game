@@ -117,7 +117,8 @@ namespace Lich {
         public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
-        public animationsDefs: { [k: string]: AnimationDefinition } = {};
+        public animationsBySetDefs: { [k: string]: AnimationDefinition } = {};
+        public animationsBySheetDefs: { [k: string]: AnimationDefinition } = {};
         public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
@@ -211,12 +212,42 @@ namespace Lich {
                     let animations = {};
                     for (let i = 0; i < spritesheetDefsArr.length; i++) {
                         let sd = spritesheetDefsArr[i];
-                        // TODO je potřeba stávající spritesheety rozdělit, protože teď jsou
-                        // ve spojeném souboru jako jeden snímek (JSON definice) namísto několika
                         let sDef = new SpriteItemDef(frames.length, sd["name"], sd["x"], sd["y"], sd["width"], sd["height"]);
                         spritesheetDefsMap[sd["name"]] = sDef;
                         frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
                         animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
+
+                        // Objekty nech v celku, akorát animace rozděl
+                        if (SpritesheetKey.SPST_OBJECTS_KEY == path[2]) {
+                            // Pokud se jedná o animaci, rozděl ji dle rozměrů
+                            let animationDef = self.animationsBySheetDefs[sDef.name];
+                            if (animationDef) {
+                                let frCnt = 0; // počítadlo snímků animace
+                                let wSplicing = sDef.width / animationDef.width;
+                                let hSplicing = sDef.height / animationDef.height;
+                                // Připrav snímky
+                                for (let y = 0; y < hSplicing; y++) {
+                                    for (let x = 0; x < wSplicing; x++) {
+                                        frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
+                                        frCnt++;
+                                    }
+                                }
+                                // Ze snímků sestav animace dle definic
+                                for (let a = 0; a < animationDef.animations.length; a++) {
+                                    let animDef = animationDef.animations[a];
+                                    animations[AnimationKey[animDef.animation]] = [
+                                        frames.length - frCnt + animDef.startFrame,
+                                        frames.length - frCnt - 1 + animDef.endFrame,
+                                        animDef.nextAnimation,
+                                        animDef.time
+                                    ];
+                                }
+                            }
+                        }
+
+                        // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
+                        if (SpritesheetKey.SPST_TILES_KEY == path[2]) {
+                        }
 
                         // Připraví rozložení animace pro sektory
                         // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
@@ -294,7 +325,8 @@ namespace Lich {
 
             // Definice animací
             ANIMATION_DEFS.forEach((definition: AnimationDefinition) => {
-                self.animationsDefs[AnimationSetKey[definition.animationSetKey]] = definition;
+                self.animationsBySetDefs[AnimationSetKey[definition.animationSetKey]] = definition;
+                self.animationsBySheetDefs[definition.subSpritesheetName] = definition;
             });
 
             // Definice spells
@@ -379,6 +411,17 @@ namespace Lich {
             let bitmapText = new createjs.BitmapText(text, self.spritesheetsMap[SpritesheetKey[SpritesheetKey.SPST_FONTS_KEY]]);
             return bitmapText;
         }
+
+        getTileSprite(spriteKey: string, positionIndex?: number): createjs.Sprite {
+            let self = this;
+            let key = SpritesheetKey[SpritesheetKey.SPST_TILES_KEY];
+            let sprite = new createjs.Sprite(self.spritesheetsMap[key]);
+            if (positionIndex)
+                sprite.gotoAndPlay(spriteKey + "-FRAGMENT-" + positionIndex);
+            else
+                sprite.gotoAndPlay(self.spritesheetsDefsMap[key][spriteKey].frame);
+            return sprite;
+        };
 
         getSprite(spritesheetKey: SpritesheetKey, spriteKey: string): createjs.Sprite {
             let self = this;

@@ -268,7 +268,7 @@ var Lich;
         Render.prototype.createFogTile = function (positionIndex) {
             var self = this;
             var rsc = Lich.Resources.getInstance();
-            var tile = rsc.getBitmap(Lich.FogKey[Lich.FogKey.FOG_KEY]);
+            var tile = rsc.getSprite(Lich.SpritesheetKey.SPST_TILES_KEY, Lich.FogKey[Lich.FogKey.FOG_KEY]);
             self.setFogSourceRect(tile, positionIndex);
             return tile;
         };
@@ -278,7 +278,7 @@ var Lich;
             var typ, tile;
             if (bgr) {
                 typ = rsc.surfaceBgrIndex.getType(positionIndex);
-                tile = rsc.getBitmap(Lich.SurfaceBgrKey[typ]);
+                tile = rsc.getSprite(Lich.SurfaceBgrKey[typ]);
             }
             else {
                 typ = rsc.surfaceIndex.getType(positionIndex);
