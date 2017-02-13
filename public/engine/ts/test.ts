@@ -24,6 +24,7 @@ namespace Lich {
             self.canvas = <HTMLCanvasElement>document.getElementById(canvasId);
             self.canvas.style.backgroundColor = "#cce1e8";
             self.stage = new createjs.SpriteStage(self.canvas);
+            let webGL = !(!self.canvas.getContext('webgl'));
 
             // resize the canvas to fill browser window dynamically
             window.addEventListener('resize', resizeCanvas, false);
@@ -44,8 +45,9 @@ namespace Lich {
             function handleTick(event) {
                 let delta = event.delta;
 
-                if (self.text)
-                    self.text.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + "";
+                if (self.text) {
+                    self.text.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " " + (webGL ? "WebGL" : "No-WebGL");
+                }
 
                 for (let i = 0; i < self.sprites.length; i++) {
                     let sprite = self.sprites[i];
@@ -68,7 +70,10 @@ namespace Lich {
                 //     frames: { width: 32, height: 32 },
                 // });
                 let container = new createjs.SpriteContainer();
-                for (let i = 0; i < 2000; i++) {
+                // 20 000 ~ 40 FPS
+                // 10 000 ~ 54 FPS
+                // 5 000 ~ 59 FPS
+                for (let i = 0; i < 5000; i++) {
                     let sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_TILES_KEY, "fireplace");
                     sprite.gotoAndPlay("fireplace" + "-FRAGMENT-" + Math.floor(Math.random() * 4) + "-" + Math.floor(Math.random() * 2));
                     container.addChild(sprite);
