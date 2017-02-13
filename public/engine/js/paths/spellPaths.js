@@ -7,7 +7,7 @@ var Lich;
         ["meteor_spell", Lich.SpellKey.SPELL_METEOR_KEY],
         ["place_spell", Lich.SpellKey.SPELL_PLACE_KEY],
         ["place_bgr_spell", Lich.SpellKey.SPELL_PLACE_BGR_KEY],
-        ["bolt_spell", Lich.SpellKey.SPELL_BOLT_KEY],
+        ["bolt_spell", Lich.SpellKey.SPELL_ICEBOLT_KEY],
         ["enemy_spell", Lich.SpellKey.SPELL_ENEMY_KEY],
         ["teleport_spell", Lich.SpellKey.SPELL_TELEPORT_KEY],
         ["home_spell", Lich.SpellKey.SPELL_HOME_KEY],

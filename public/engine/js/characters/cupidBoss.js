@@ -16,21 +16,13 @@ var Lich;
         var CupidBoss = (function (_super) {
             __extends(CupidBoss, _super);
             function CupidBoss() {
-                var _this = _super.call(this, CupidBoss.OWNER_ID, 30, // DAMAGE
+                var _this = _super.call(this, CupidBoss.OWNER_ID, Lich.AnimationSetKey.CUPID_ANIMATION_KEY, Lich.AnimationKey.ANM_CUPID_IDLE_KEY, 30, // DAMAGE
                 500, // ATTACK_COOLDOWN
-                256, // WIDTH
-                320, // HEIGHT 
                 40, // COLLXOFFSET
                 100, // COLLYOFFSET
-                Lich.AnimationSetKey.CUPID_ANIMATION_KEY, CupidBoss.IDLE, 8, // frames
                 400, // HORIZONTAL_SPEED
                 400, // VERTICAL_SPEED
-                new Lich.AnimationDefinition()
-                    .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                    .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.3)
-                    .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
-                    .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
-                    .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1), false, // unspawns
+                false, // unspawns
                 0, // min depth 
                 100, // max depth
                 true // hovers
@@ -108,7 +100,7 @@ var Lich;
                                 var castY = this.y + this.height;
                                 var context = new Lich.SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
                                 spell.cast(context);
-                                this.performAnimation(Enemy.Valentimon.ATTACK);
+                                this.performAnimation(Lich.AnimationKey.ANM_CUPID_ATTACK_KEY);
                                 this.currentAttackCooldown = 0;
                             }
                             break;
@@ -118,7 +110,7 @@ var Lich;
                             }
                             else {
                                 var spawnMinion = function () {
-                                    _this.performAnimation(CupidBoss.ATTACK);
+                                    _this.performAnimation(Lich.AnimationKey.ANM_CUPID_ATTACK_KEY);
                                     _this.currentSpawnCooldown = 0;
                                     var angle = Math.random() * Math.PI * 2;
                                     var radius = Math.max(_this.width / 2, _this.height / 2);
@@ -173,7 +165,7 @@ var Lich;
             ;
             CupidBoss.prototype.fall = function () { };
             ;
-            CupidBoss.prototype.death = function () { this.performAnimation(CupidBoss.DIE); };
+            CupidBoss.prototype.death = function () { this.performAnimation(Lich.AnimationKey.ANM_CUPID_DIE_KEY); };
             ;
             CupidBoss.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
@@ -197,12 +189,6 @@ var Lich;
             return CupidBoss;
         }(Lich.AbstractEnemy));
         CupidBoss.OWNER_ID = "CUPID_BOSS";
-        CupidBoss.IDLE = "IDLE";
-        CupidBoss.ATTACK = "ATTACK";
-        CupidBoss.HIT = "HIT";
-        CupidBoss.DIE = "DIE";
-        CupidBoss.EXPLODE = "EXPLODE";
-        CupidBoss.DEAD = "DEAD";
         CupidBoss.HOVER_ALT = 300;
         CupidBoss.PULL_HOVER_ALT = 400;
         CupidBoss.MODE_COOLDOWN = 5000;

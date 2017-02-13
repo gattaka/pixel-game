@@ -92,14 +92,43 @@ var Lich;
         new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "chicken_boss", Lich.AnimationSetKey.CHICKEN_BOSS_ANIMATION_KEY, 184, 304)
             .add(Lich.AnimationKey.ANM_MURHUN_IDLE_KEY, 1, 1, Lich.AnimationKey.ANM_MURHUN_IDLE_KEY, 0.1)
             .add(Lich.AnimationKey.ANM_MURHUN_ATTACK_KEY, 0, 0, Lich.AnimationKey.ANM_MURHUN_ATTACK_KEY, 0.1),
-        ["hellhound", Lich.AnimationSetKey.HELLHOUND_ANIMATION_KEY],
-        ["valentimon", Lich.AnimationSetKey.VALENTIMON_ANIMATION_KEY],
-        ["cupid", Lich.AnimationSetKey.CUPID_ANIMATION_KEY],
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "hellhound", Lich.AnimationSetKey.HELLHOUND_ANIMATION_KEY, 128, 86)
+            .add(Lich.AnimationKey.ANM_HELLHOUND_IDLE_KEY, 22, 24, Lich.AnimationKey.ANM_HELLHOUND_IDLE_KEY, 0.1)
+            .add(Lich.AnimationKey.ANM_HELLHOUND_WALKR_KEY, 5, 9, Lich.AnimationKey.ANM_HELLHOUND_WALKR_KEY, 0.2)
+            .add(Lich.AnimationKey.ANM_HELLHOUND_WALKL_KEY, 0, 4, Lich.AnimationKey.ANM_HELLHOUND_WALKL_KEY, 0.2)
+            .add(Lich.AnimationKey.ANM_HELLHOUND_JUMPR_KEY, 16, 21, Lich.AnimationKey.ANM_HELLHOUND_WALKR_KEY, 0.2)
+            .add(Lich.AnimationKey.ANM_HELLHOUND_JUMPL_KEY, 10, 15, Lich.AnimationKey.ANM_HELLHOUND_WALKL_KEY, 0.2),
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "cupid", Lich.AnimationSetKey.CUPID_ANIMATION_KEY, 256, 320)
+            .add(Lich.AnimationKey.ANM_CUPID_IDLE_KEY, 0, 1, Lich.AnimationKey.ANM_CUPID_IDLE_KEY, 0.1)
+            .add(Lich.AnimationKey.ANM_CUPID_ATTACK_KEY, 2, 3, Lich.AnimationKey.ANM_CUPID_IDLE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_CUPID_HIT_KEY, 4, 4, Lich.AnimationKey.ANM_CUPID_IDLE_KEY, 0.2)
+            .add(Lich.AnimationKey.ANM_CUPID_DIE_KEY, 5, 5, Lich.AnimationKey.ANM_CUPID_DEAD_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_CUPID_DEAD_KEY, 5, 5, Lich.AnimationKey.ANM_CUPID_DEAD_KEY, 0.1),
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "valentimon", Lich.AnimationSetKey.VALENTIMON_ANIMATION_KEY, 64, 64)
+            .add(Lich.AnimationKey.ANM_VALENTIMON_IDLE_KEY, 0, 3, Lich.AnimationKey.ANM_VALENTIMON_IDLE_KEY, 0.1)
+            .add(Lich.AnimationKey.ANM_VALENTIMON_ATTACK_KEY, 3, 5, Lich.AnimationKey.ANM_VALENTIMON_IDLE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_VALENTIMON_DIE_KEY, 4, 8, Lich.AnimationKey.ANM_VALENTIMON_DEAD_KEY, 0.2)
+            .add(Lich.AnimationKey.ANM_VALENTIMON_DEAD_KEY, 8, 8, Lich.AnimationKey.ANM_VALENTIMON_DEAD_KEY, 1),
         // gfx animations
-        ["meteor_animation", Lich.AnimationSetKey.METEOR_ANIMATION_KEY],
-        ["blast_animation", Lich.AnimationSetKey.FIREBALL_ANIMATION_KEY],
-        ["bolt_animation", Lich.AnimationSetKey.BOLT_ANIMATION_KEY],
-        ["loveletter_animation", Lich.AnimationSetKey.LOVELETTER_ANIMATION_KEY],
-        ["lovearrow_animation", Lich.AnimationSetKey.LOVEARROW_ANIMATION_KEY]
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "blast_animation", Lich.AnimationSetKey.FIREBALL_ANIMATION_KEY, 60, 60)
+            .add(Lich.AnimationKey.ANM_FIREBALL_FLY_KEY, 0, 0, Lich.AnimationKey.ANM_FIREBALL_FLY_KEY, 1)
+            .add(Lich.AnimationKey.ANM_FIREBALL_HIT_KEY, 1, 4, Lich.AnimationKey.ANM_FIREBALL_DONE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_FIREBALL_DONE_KEY, 4, 4, Lich.AnimationKey.ANM_FIREBALL_DONE_KEY, 1),
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "meteor_animation", Lich.AnimationSetKey.METEOR_ANIMATION_KEY, 120, 120)
+            .add(Lich.AnimationKey.ANM_METEOR_FLY_KEY, 0, 0, Lich.AnimationKey.ANM_METEOR_FLY_KEY, 1)
+            .add(Lich.AnimationKey.ANM_METEOR_HIT_KEY, 1, 4, Lich.AnimationKey.ANM_METEOR_DONE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_METEOR_DONE_KEY, 4, 4, Lich.AnimationKey.ANM_METEOR_DONE_KEY, 1),
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "bolt_animation", Lich.AnimationSetKey.ICEBOLT_ANIMATION_KEY, 60, 60)
+            .add(Lich.AnimationKey.ANM_ICEBOLT_FLY_KEY, 0, 0, Lich.AnimationKey.ANM_ICEBOLT_FLY_KEY, 1)
+            .add(Lich.AnimationKey.ANM_ICEBOLT_HIT_KEY, 1, 4, Lich.AnimationKey.ANM_ICEBOLT_DONE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_ICEBOLT_DONE_KEY, 4, 4, Lich.AnimationKey.ANM_ICEBOLT_DONE_KEY, 1),
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "loveletter_animation", Lich.AnimationSetKey.LOVELETTER_ANIMATION_KEY, 32, 32)
+            .add(Lich.AnimationKey.ANM_LOVELETTER_FLY_KEY, 0, 0, Lich.AnimationKey.ANM_LOVELETTER_FLY_KEY, 1)
+            .add(Lich.AnimationKey.ANM_LOVELETTER_HIT_KEY, 1, 5, Lich.AnimationKey.ANM_LOVELETTER_DONE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_LOVELETTER_DONE_KEY, 5, 5, Lich.AnimationKey.ANM_LOVELETTER_DONE_KEY, 1),
+        new AnimationDefinition(Lich.SpritesheetKey.SPST_OBJECTS_KEY, "lovearrow_animation", Lich.AnimationSetKey.LOVEARROW_ANIMATION_KEY, 32, 32)
+            .add(Lich.AnimationKey.ANM_LOVEARROW_FLY_KEY, 0, 0, Lich.AnimationKey.ANM_LOVEARROW_FLY_KEY, 1)
+            .add(Lich.AnimationKey.ANM_LOVEARROW_HIT_KEY, 1, 5, Lich.AnimationKey.ANM_LOVEARROW_DONE_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_LOVEARROW_DONE_KEY, 5, 5, Lich.AnimationKey.ANM_LOVEARROW_DONE_KEY, 1),
     ];
 })(Lich || (Lich = {}));

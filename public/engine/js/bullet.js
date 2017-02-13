@@ -21,10 +21,11 @@ var Lich;
         AbstractWorldObject.prototype.stop = function () { this.sprite.stop(); };
         AbstractWorldObject.prototype.gotoAndPlay = function (desiredState) { this.sprite.gotoAndPlay(desiredState); };
         AbstractWorldObject.prototype.getCurrentAnimation = function () { return this.sprite.currentAnimation; };
-        AbstractWorldObject.prototype.performAnimation = function (desiredState) {
+        AbstractWorldObject.prototype.performAnimation = function (desiredAnimation) {
             var self = this;
-            if (self.sprite.currentAnimation !== desiredState) {
-                self.sprite.gotoAndPlay(desiredState);
+            var stringKey = Lich.AnimationKey[desiredAnimation];
+            if (self.sprite.currentAnimation !== stringKey) {
+                self.gotoAndPlay(stringKey);
             }
         };
         AbstractWorldObject.prototype.updateAnimations = function () { };
@@ -37,14 +38,12 @@ var Lich;
         function BulletObject(
             // čí je to střela
             owner, 
-            // velikost střely
-            width, height, 
-            // spritesheet animace střely
-            spriteSheet, 
+            // sada animací, ze které sřela je
+            animationSetKey, 
             // počáteční stav animace
-            initState, 
+            initAnimation, 
             // koncový stav animace
-            endState, 
+            endAnimation, 
             // kolizní tolerance
             collXOffset, collYOffset, 
             // zvuk dopadu
@@ -55,13 +54,11 @@ var Lich;
             piercing, 
             // kolik střela ubírá
             damage) {
-            var _this = _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset) || this;
+            var _this = _super.call(this, collXOffset, collYOffset) || this;
             _this.owner = owner;
-            _this.width = width;
-            _this.height = height;
-            _this.spriteSheet = spriteSheet;
-            _this.initState = initState;
-            _this.endState = endState;
+            _this.animationSetKey = animationSetKey;
+            _this.initAnimation = initAnimation;
+            _this.endAnimation = endAnimation;
             _this.collXOffset = collXOffset;
             _this.collYOffset = collYOffset;
             _this.hitSound = hitSound;
@@ -79,6 +76,13 @@ var Lich;
             _this.enemyPiercingTimeouts = {};
             return _this;
         }
+        BulletObject.prototype.initSprite = function () {
+            var animationDef = Lich.Resources.getInstance().animationsDefs[this.animationSetKey];
+            this.width = animationDef.width;
+            this.height = animationDef.height;
+            this.sprite = Lich.Resources.getInstance().getSprite(Lich.SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);
+            this.addChild(this.sprite);
+        };
         ;
         return BulletObject;
     }(AbstractWorldObject));
@@ -87,8 +91,8 @@ var Lich;
     Lich.BulletObject = BulletObject;
     var BasicBullet = (function (_super) {
         __extends(BasicBullet, _super);
-        function BasicBullet(owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
-            var _this = _super.call(this, owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage) || this;
+        function BasicBullet(owner, animationSetKey, initAnimation, endAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
+            var _this = _super.call(this, owner, animationSetKey, initAnimation, endAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage) || this;
             _this.radius = radius;
             return _this;
         }
@@ -96,7 +100,7 @@ var Lich;
         BasicBullet.prototype.update = function (sDelta, game) {
             var self = this;
             if (self.ending) {
-                if (self.sprite.currentAnimation === self.endState) {
+                if (self.sprite.currentAnimation === Lich.AnimationKey[self.endAnimation]) {
                     self.done = true;
                 }
                 return;

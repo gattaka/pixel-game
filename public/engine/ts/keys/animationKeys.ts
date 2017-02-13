@@ -6,7 +6,7 @@ namespace Lich {
         LICH_ANIMATION_KEY,
         CORPSE_ANIMATION_KEY,
         HELLHOUND_ANIMATION_KEY,
-        BOLT_ANIMATION_KEY,
+        ICEBOLT_ANIMATION_KEY,
         CHICKEN_ANIMATION_KEY,
         BUNNY_ANIMATION_KEY,
         CHICKEN_BOSS_ANIMATION_KEY,
@@ -68,6 +68,44 @@ namespace Lich {
         // Murhun
         ANM_MURHUN_IDLE_KEY,
         ANM_MURHUN_ATTACK_KEY,
+        // Hellhound
+        ANM_HELLHOUND_IDLE_KEY,
+        ANM_HELLHOUND_WALKR_KEY,
+        ANM_HELLHOUND_WALKL_KEY,
+        ANM_HELLHOUND_JUMPR_KEY,
+        ANM_HELLHOUND_JUMPL_KEY,
+        // Cupid
+        ANM_CUPID_IDLE_KEY,
+        ANM_CUPID_ATTACK_KEY,
+        ANM_CUPID_HIT_KEY,
+        ANM_CUPID_DIE_KEY,
+        ANM_CUPID_EXPLODE_KEY,
+        ANM_CUPID_DEAD_KEY,
+        // Valentimon
+        ANM_VALENTIMON_IDLE_KEY,
+        ANM_VALENTIMON_ATTACK_KEY,
+        ANM_VALENTIMON_DIE_KEY,
+        ANM_VALENTIMON_DEAD_KEY,
+        // Fireball
+        ANM_FIREBALL_FLY_KEY,
+        ANM_FIREBALL_HIT_KEY,
+        ANM_FIREBALL_DONE_KEY,
+        // Icebolt
+        ANM_ICEBOLT_FLY_KEY,
+        ANM_ICEBOLT_HIT_KEY,
+        ANM_ICEBOLT_DONE_KEY,
+        // Meteor
+        ANM_METEOR_FLY_KEY,
+        ANM_METEOR_HIT_KEY,
+        ANM_METEOR_DONE_KEY,
+        // Loveletter
+        ANM_LOVELETTER_FLY_KEY,
+        ANM_LOVELETTER_HIT_KEY,
+        ANM_LOVELETTER_DONE_KEY,
+        // Lovearrow
+        ANM_LOVEARROW_FLY_KEY,
+        ANM_LOVEARROW_HIT_KEY,
+        ANM_LOVEARROW_DONE_KEY
     }
 
 }

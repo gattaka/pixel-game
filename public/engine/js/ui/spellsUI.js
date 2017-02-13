@@ -21,7 +21,7 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_PLACE_KEY, Lich.SpellKey.SPELL_PLACE_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_USE_ITEM_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_ENEMY_KEY);
-            self.spellInsert(Lich.SpellKey.SPELL_BOLT_KEY);
+            self.spellInsert(Lich.SpellKey.SPELL_ICEBOLT_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_FIREBALL_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY, Lich.SpellKey.SPELL_HOME_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);

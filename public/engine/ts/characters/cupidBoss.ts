@@ -11,13 +11,6 @@ namespace Lich {
 
             static OWNER_ID = "CUPID_BOSS";
 
-            static IDLE = "IDLE";
-            static ATTACK = "ATTACK";
-            static HIT = "HIT";
-            static DIE = "DIE";
-            static EXPLODE = "EXPLODE";
-            static DEAD = "DEAD";
-
             static HOVER_ALT = 300;
             static PULL_HOVER_ALT = 400;
             static MODE_COOLDOWN = 5000;
@@ -35,23 +28,14 @@ namespace Lich {
             constructor() {
                 super(
                     CupidBoss.OWNER_ID,
+                    AnimationSetKey.CUPID_ANIMATION_KEY,
+                    AnimationKey.ANM_CUPID_IDLE_KEY,
                     30, // DAMAGE
                     500, // ATTACK_COOLDOWN
-                    256, // WIDTH
-                    320, // HEIGHT 
                     40, // COLLXOFFSET
                     100, // COLLYOFFSET
-                    AnimationSetKey.CUPID_ANIMATION_KEY,
-                    CupidBoss.IDLE,
-                    8, // frames
                     400, // HORIZONTAL_SPEED
                     400, // VERTICAL_SPEED
-                    new AnimationDefinition()
-                        .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
-                        .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.3)
-                        .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
-                        .add(CupidBoss.DIE, 5, 5, CupidBoss.DEAD, 0.3)
-                        .add(CupidBoss.DEAD, 5, 5, CupidBoss.DEAD, 0.1),
                     false, // unspawns
                     0, // min depth 
                     100, // max depth
@@ -132,7 +116,7 @@ namespace Lich {
                                 let castY = this.y + this.height;
                                 let context = new SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
                                 spell.cast(context);
-                                this.performAnimation(Valentimon.ATTACK);
+                                this.performAnimation(AnimationKey.ANM_CUPID_ATTACK_KEY);
                                 this.currentAttackCooldown = 0;
                             }
                             break;
@@ -141,7 +125,7 @@ namespace Lich {
                                 this.currentSpawnCooldown += delta;
                             } else {
                                 let spawnMinion = (): AbstractEnemy => {
-                                    this.performAnimation(CupidBoss.ATTACK);
+                                    this.performAnimation(AnimationKey.ANM_CUPID_ATTACK_KEY);
                                     this.currentSpawnCooldown = 0;
                                     let angle = Math.random() * Math.PI * 2;
                                     let radius = Math.max(this.width / 2, this.height / 2);
@@ -195,7 +179,7 @@ namespace Lich {
             jumpL() { /* nic */ };
             midair() { /* nic */ };
             fall() { /* nic */ };
-            death() { this.performAnimation(CupidBoss.DIE); };
+            death() { this.performAnimation(AnimationKey.ANM_CUPID_DIE_KEY); };
 
             die(world: World) {
                 super.die(world);

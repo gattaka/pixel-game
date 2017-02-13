@@ -46,24 +46,19 @@ namespace Lich {
             key: SpellKey,
             cost: number,
             cooldown: number,
+            private animationSetKey: AnimationSetKey,
+            private initAnimation: AnimationKey,
+            private endAnimation: AnimationKey,
             public castSoundKey: SoundKey,
             public hitSoundKey: SoundKey,
             public speed: number,
-            public spriteKey: AnimationSetKey,
             public destroyMap: boolean,
             public piercing: boolean,
             public damage: number,
             private radius?: number,
-            private frameWidth = 60,
-            private frameHeight = 60,
             private colloffsetX = 20,
             private colloffsetY = 20,
-            private framesCount = 5,
-            private frameAnimations = {
-                "fly": [0, 0, "fly", 1],
-                "hit": [1, 4, "done", 0.3],
-                "done": [4, 4, "done", 1]
-            }
+
         ) {
             super(key, cost, cooldown);
         }
@@ -82,26 +77,11 @@ namespace Lich {
         public cast(context: SpellContext): boolean {
             var self = this;
 
-            var sheet = new createjs.SpriteSheet({
-                framerate: 30,
-                "images": [Resources.getInstance().getImage(AnimationSetKey[self.spriteKey])],
-                "frames": {
-                    "regX": 0,
-                    "height": self.frameHeight,
-                    "count": self.framesCount,
-                    "regY": 0,
-                    "width": self.frameWidth
-                },
-                "animations": self.frameAnimations
-            });
-
             var object = new BasicBullet(
                 context.owner,
-                self.frameWidth,
-                self.frameHeight,
-                sheet,
-                "fly",
-                "done",
+                self.animationSetKey,
+                self.initAnimation,
+                self.endAnimation,
                 self.colloffsetX,
                 self.colloffsetY,
                 self.hitSoundKey,
@@ -143,10 +123,12 @@ namespace Lich {
                 SpellKey.SPELL_FIREBALL_KEY,
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
+                AnimationSetKey.FIREBALL_ANIMATION_KEY,
+                AnimationKey.ANM_FIREBALL_FLY_KEY,
+                AnimationKey.ANM_FIREBALL_DONE_KEY,
                 SoundKey.SND_FIREBALL_KEY,
                 SoundKey.SND_BURN_KEY,
                 FireballSpellDef.SPEED,
-                AnimationSetKey.FIREBALL_ANIMATION_KEY,
                 FireballSpellDef.MAP_DESTROY,
                 FireballSpellDef.PIERCING,
                 FireballSpellDef.DAMAGE,
@@ -159,17 +141,6 @@ namespace Lich {
      * Spell meteoritu, který ničí i povrch
      */
     export class MeteorSpellDef extends BulletSpellDef {
-        static SPEED = 1500;
-        static MAP_DESTROY = true;
-        static PIERCING = true;
-        static DAMAGE = 50;
-        static COOLDOWN = 200;
-        static COST = 10;
-        static RADIUS = 10;
-
-        static FRAME_WIDTH = 120;
-        static FRAME_HEIGHT = 120;
-
         public cast(context: SpellContext): boolean {
             let a = context.yAim;
             let b = Math.tan(Math.PI / 6) * a;
@@ -181,18 +152,18 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_METEOR_KEY,
-                MeteorSpellDef.COST,
-                MeteorSpellDef.COOLDOWN,
+                10, // COST,
+                200, // COOLDOWN,
+                AnimationSetKey.METEOR_ANIMATION_KEY,
+                AnimationKey.ANM_METEOR_FLY_KEY,
+                AnimationKey.ANM_METEOR_DONE_KEY,
                 SoundKey.SND_METEOR_FALL_KEY,
                 SoundKey.SND_METEOR_HIT_KEY,
-                MeteorSpellDef.SPEED,
-                AnimationSetKey.METEOR_ANIMATION_KEY,
-                MeteorSpellDef.MAP_DESTROY,
-                MeteorSpellDef.PIERCING,
-                MeteorSpellDef.DAMAGE,
-                MeteorSpellDef.RADIUS,
-                MeteorSpellDef.FRAME_WIDTH,
-                MeteorSpellDef.FRAME_HEIGHT
+                1500, // SPEED,
+                true, // MAP_DESTROY,
+                true, // PIERCING,
+                50, // DAMAGE
+                10 // RADIUS,
             );
         }
 
@@ -202,29 +173,28 @@ namespace Lich {
      * AbstractLoveSpellDef
      */
     export abstract class AbstractLoveSpellDef extends BulletSpellDef {
-        constructor(spellKey: SpellKey, animationKey: AnimationSetKey, damage: number) {
+        constructor(
+            spellKey: SpellKey,
+            animationSetKey: AnimationSetKey,
+            initAnimation: AnimationKey,
+            endAnimation: AnimationKey,
+            damage: number) {
             super(
                 spellKey, // SpellKey
-                10, // cost
+                10, // COST
                 200, // COOLDOWN
+                animationSetKey,
+                initAnimation,
+                endAnimation,
                 SoundKey.SND_BOLT_CAST_KEY, // castSoundKey
                 SoundKey.SND_BURN_KEY, // hitSoundKey
                 1000, // speed
-                animationKey, // spriteKey
                 false, // destroyMap
                 false, // piercing
                 damage, // damage
                 1, // radius
-                32, // frameWidth
-                32, // frameHeight 
                 10, // colloffsetX 
                 10, // colloffsetY 
-                6, // framesCount 
-                {
-                    "fly": [0, 0, "fly", 1],
-                    "hit": [1, 5, "done", 0.3],
-                    "done": [5, 5, "done", 1]
-                } //  frameAnimations 
             );
         }
     }
@@ -237,6 +207,8 @@ namespace Lich {
             super(
                 SpellKey.SPELL_LOVELETTER, // SpellKey
                 AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+                AnimationKey.ANM_LOVELETTER_FLY_KEY,
+                AnimationKey.ANM_LOVELETTER_DONE_KEY,
                 2, // damage
             );
         }
@@ -250,6 +222,8 @@ namespace Lich {
             super(
                 SpellKey.SPELL_LOVEARROW, // SpellKey
                 AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
+                AnimationKey.ANM_LOVEARROW_FLY_KEY,
+                AnimationKey.ANM_LOVEARROW_DONE_KEY,
                 5, // damage
             );
         }
@@ -259,25 +233,21 @@ namespace Lich {
      * Spell mana-boltu, který neničí povrch
      */
     export class BoltSpellDef extends BulletSpellDef {
-        static SPEED = 1500;
-        static MAP_DESTROY = false;
-        static PIERCING = false;
-        static DAMAGE = 30;
-        static COOLDOWN = 100;
-        static COST = 2;
 
         constructor() {
             super(
-                SpellKey.SPELL_BOLT_KEY,
-                BoltSpellDef.COST,
-                BoltSpellDef.COOLDOWN,
+                SpellKey.SPELL_ICEBOLT_KEY,
+                2, // COST,
+                100, // COOLDOWN,
+                AnimationSetKey.ICEBOLT_ANIMATION_KEY,
+                AnimationKey.ANM_ICEBOLT_FLY_KEY,
+                AnimationKey.ANM_ICEBOLT_DONE_KEY,
                 SoundKey.SND_BOLT_CAST_KEY,
                 SoundKey.SND_FIREBALL_KEY,
-                BoltSpellDef.SPEED,
-                AnimationSetKey.BOLT_ANIMATION_KEY,
-                BoltSpellDef.MAP_DESTROY,
-                BoltSpellDef.PIERCING,
-                BoltSpellDef.DAMAGE
+                1500, // SPEED
+                false, // MAP_DESTROY,
+                false, // PIERCING,
+                30 // DAMAGE
             );
         }
 
@@ -367,7 +337,7 @@ namespace Lich {
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
             Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
-            world.hero.performAnimation(Hero.TELEPORT);
+            world.hero.performAnimation(AnimationKey.ANM_HERO_TELEPORT_KEY);
             setTimeout(() => {
                 world.placePlayerOnScreen(context.xAim, context.yAim);
             }, 100)
@@ -390,7 +360,7 @@ namespace Lich {
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
             Mixer.playSound(SoundKey.SND_TELEPORT_KEY);
-            world.hero.performAnimation(Hero.TELEPORT);
+            world.hero.performAnimation(AnimationKey.ANM_HERO_TELEPORT_KEY);
             setTimeout(() => {
                 world.placePlayerOnSpawnPoint();
             }, 100)

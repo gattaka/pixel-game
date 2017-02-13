@@ -232,14 +232,6 @@ namespace Lich {
             }
         }
 
-        performAnimation(desiredAnimation: AnimationKey) {
-            var self = this;
-            let stringKey = AnimationKey[desiredAnimation];
-            if (self.sprite.currentAnimation !== stringKey) {
-                self.gotoAndPlay(stringKey);
-            }
-        }
-
         handleTick(delta) {
             if (this.getCurrentHealth() > 0) {
                 this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);

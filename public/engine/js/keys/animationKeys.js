@@ -7,7 +7,7 @@ var Lich;
         AnimationSetKey[AnimationSetKey["LICH_ANIMATION_KEY"] = 2] = "LICH_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["CORPSE_ANIMATION_KEY"] = 3] = "CORPSE_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["HELLHOUND_ANIMATION_KEY"] = 4] = "HELLHOUND_ANIMATION_KEY";
-        AnimationSetKey[AnimationSetKey["BOLT_ANIMATION_KEY"] = 5] = "BOLT_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["ICEBOLT_ANIMATION_KEY"] = 5] = "ICEBOLT_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["CHICKEN_ANIMATION_KEY"] = 6] = "CHICKEN_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["BUNNY_ANIMATION_KEY"] = 7] = "BUNNY_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["CHICKEN_BOSS_ANIMATION_KEY"] = 8] = "CHICKEN_BOSS_ANIMATION_KEY";
@@ -69,5 +69,43 @@ var Lich;
         // Murhun
         AnimationKey[AnimationKey["ANM_MURHUN_IDLE_KEY"] = 44] = "ANM_MURHUN_IDLE_KEY";
         AnimationKey[AnimationKey["ANM_MURHUN_ATTACK_KEY"] = 45] = "ANM_MURHUN_ATTACK_KEY";
+        // Hellhound
+        AnimationKey[AnimationKey["ANM_HELLHOUND_IDLE_KEY"] = 46] = "ANM_HELLHOUND_IDLE_KEY";
+        AnimationKey[AnimationKey["ANM_HELLHOUND_WALKR_KEY"] = 47] = "ANM_HELLHOUND_WALKR_KEY";
+        AnimationKey[AnimationKey["ANM_HELLHOUND_WALKL_KEY"] = 48] = "ANM_HELLHOUND_WALKL_KEY";
+        AnimationKey[AnimationKey["ANM_HELLHOUND_JUMPR_KEY"] = 49] = "ANM_HELLHOUND_JUMPR_KEY";
+        AnimationKey[AnimationKey["ANM_HELLHOUND_JUMPL_KEY"] = 50] = "ANM_HELLHOUND_JUMPL_KEY";
+        // Cupid
+        AnimationKey[AnimationKey["ANM_CUPID_IDLE_KEY"] = 51] = "ANM_CUPID_IDLE_KEY";
+        AnimationKey[AnimationKey["ANM_CUPID_ATTACK_KEY"] = 52] = "ANM_CUPID_ATTACK_KEY";
+        AnimationKey[AnimationKey["ANM_CUPID_HIT_KEY"] = 53] = "ANM_CUPID_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_CUPID_DIE_KEY"] = 54] = "ANM_CUPID_DIE_KEY";
+        AnimationKey[AnimationKey["ANM_CUPID_EXPLODE_KEY"] = 55] = "ANM_CUPID_EXPLODE_KEY";
+        AnimationKey[AnimationKey["ANM_CUPID_DEAD_KEY"] = 56] = "ANM_CUPID_DEAD_KEY";
+        // Valentimon
+        AnimationKey[AnimationKey["ANM_VALENTIMON_IDLE_KEY"] = 57] = "ANM_VALENTIMON_IDLE_KEY";
+        AnimationKey[AnimationKey["ANM_VALENTIMON_ATTACK_KEY"] = 58] = "ANM_VALENTIMON_ATTACK_KEY";
+        AnimationKey[AnimationKey["ANM_VALENTIMON_DIE_KEY"] = 59] = "ANM_VALENTIMON_DIE_KEY";
+        AnimationKey[AnimationKey["ANM_VALENTIMON_DEAD_KEY"] = 60] = "ANM_VALENTIMON_DEAD_KEY";
+        // Fireball
+        AnimationKey[AnimationKey["ANM_FIREBALL_FLY_KEY"] = 61] = "ANM_FIREBALL_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_FIREBALL_HIT_KEY"] = 62] = "ANM_FIREBALL_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_FIREBALL_DONE_KEY"] = 63] = "ANM_FIREBALL_DONE_KEY";
+        // Icebolt
+        AnimationKey[AnimationKey["ANM_ICEBOLT_FLY_KEY"] = 64] = "ANM_ICEBOLT_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_ICEBOLT_HIT_KEY"] = 65] = "ANM_ICEBOLT_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_ICEBOLT_DONE_KEY"] = 66] = "ANM_ICEBOLT_DONE_KEY";
+        // Meteor
+        AnimationKey[AnimationKey["ANM_METEOR_FLY_KEY"] = 67] = "ANM_METEOR_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_METEOR_HIT_KEY"] = 68] = "ANM_METEOR_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_METEOR_DONE_KEY"] = 69] = "ANM_METEOR_DONE_KEY";
+        // Loveletter
+        AnimationKey[AnimationKey["ANM_LOVELETTER_FLY_KEY"] = 70] = "ANM_LOVELETTER_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_LOVELETTER_HIT_KEY"] = 71] = "ANM_LOVELETTER_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_LOVELETTER_DONE_KEY"] = 72] = "ANM_LOVELETTER_DONE_KEY";
+        // Lovearrow
+        AnimationKey[AnimationKey["ANM_LOVEARROW_FLY_KEY"] = 73] = "ANM_LOVEARROW_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_LOVEARROW_HIT_KEY"] = 74] = "ANM_LOVEARROW_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_LOVEARROW_DONE_KEY"] = 75] = "ANM_LOVEARROW_DONE_KEY";
     })(AnimationKey = Lich.AnimationKey || (Lich.AnimationKey = {}));
 })(Lich || (Lich = {}));

@@ -71,7 +71,7 @@ namespace Lich {
         SPELL_DIG_BGR_KEY,
         SPELL_FIREBALL_KEY,
         SPELL_METEOR_KEY,
-        SPELL_BOLT_KEY,
+        SPELL_ICEBOLT_KEY,
         SPELL_ENEMY_KEY,
         SPELL_TELEPORT_KEY,
         SPELL_HOME_KEY,

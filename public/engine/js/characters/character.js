@@ -205,13 +205,6 @@ var Lich;
                 }
             }
         };
-        Character.prototype.performAnimation = function (desiredAnimation) {
-            var self = this;
-            var stringKey = Lich.AnimationKey[desiredAnimation];
-            if (self.sprite.currentAnimation !== stringKey) {
-                self.gotoAndPlay(stringKey);
-            }
-        };
         Character.prototype.handleTick = function (delta) {
             if (this.getCurrentHealth() > 0) {
                 this.fillHealth((delta / this.HEALTH_REGEN_TIME) * this.healthRegen);

@@ -20,10 +20,11 @@ namespace Lich {
         gotoAndPlay(desiredState: string) { this.sprite.gotoAndPlay(desiredState); }
         getCurrentAnimation() { return this.sprite.currentAnimation; }
 
-        performAnimation(desiredState: string) {
+        performAnimation(desiredAnimation: AnimationKey) {
             var self = this;
-            if (self.sprite.currentAnimation !== desiredState) {
-                self.sprite.gotoAndPlay(desiredState);
+            let stringKey = AnimationKey[desiredAnimation];
+            if (self.sprite.currentAnimation !== stringKey) {
+                self.gotoAndPlay(stringKey);
             }
         }
 
@@ -46,18 +47,23 @@ namespace Lich {
         // zásahu jiného nepřítele, který je těsném závěsu za zasaženým
         public enemyPiercingTimeouts: { [k: string]: number } = {};
 
+        initSprite() {
+            let animationDef = Resources.getInstance().animationsDefs[this.animationSetKey];
+            this.width = animationDef.width;
+            this.height = animationDef.height;
+            this.sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);
+            this.addChild(this.sprite);
+        }
+
         constructor(
             // čí je to střela
             public owner: string,
-            // velikost střely
-            public width: number,
-            public height: number,
-            // spritesheet animace střely
-            public spriteSheet: createjs.SpriteSheet,
+            // sada animací, ze které sřela je
+            private animationSetKey: AnimationSetKey,
             // počáteční stav animace
-            public initState: string,
+            public initAnimation: AnimationKey,
             // koncový stav animace
-            public endState: string,
+            public endAnimation: AnimationKey,
             // kolizní tolerance
             public collXOffset: number,
             public collYOffset: number,
@@ -70,7 +76,7 @@ namespace Lich {
             // kolik střela ubírá
             public damage: number
         ) {
-            super(width, height, spriteSheet, initState, collXOffset, collYOffset);
+            super(collXOffset, collYOffset);
         };
 
         public abstract update(sDelta: number, game: Game);
@@ -81,11 +87,9 @@ namespace Lich {
     export class BasicBullet extends BulletObject {
         constructor(
             owner: string,
-            width: number,
-            height: number,
-            spriteSheet: createjs.SpriteSheet,
-            initState: string,
-            endState: string,
+            animationSetKey: AnimationSetKey,
+            initAnimation: AnimationKey,
+            endAnimation: AnimationKey,
             collXOffset: number,
             collYOffset: number,
             hitSoundKey: SoundKey,
@@ -94,13 +98,13 @@ namespace Lich {
             damage: number,
             private radius?: number,
         ) {
-            super(owner, width, height, spriteSheet, initState, endState, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
+            super(owner, animationSetKey, initAnimation, endAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
         };
 
         public update(sDelta: number, game: Game) {
             var self: BasicBullet = this;
             if (self.ending) {
-                if (self.sprite.currentAnimation === self.endState) {
+                if (self.sprite.currentAnimation === AnimationKey[self.endAnimation]) {
                     self.done = true;
                 }
                 return;

@@ -4,45 +4,30 @@ namespace Lich {
 
             static OWNER_ID = "HELLHOUND";
 
-            static IDLE = "IDLE";
-            static WALKR = "WALKR";
-            static WALKL = "WALKL";
-            static JUMPR = "JUMPR";
-            static JUMPL = "JUMPL";
-
             constructor() {
                 super(
                     Hellhound.OWNER_ID,
+                    AnimationSetKey.HELLHOUND_ANIMATION_KEY,
+                    AnimationKey.ANM_HELLHOUND_IDLE_KEY,
                     10, // DAMAGE
                     1000,// ATTACK_COOLDOWN
-                    128, // WIDTH
-                    86, // HEIGHT 
                     16, // COLLXOFFSET
                     12, // COLLYOFFSET
-                    AnimationSetKey.HELLHOUND_ANIMATION_KEY,
-                    Hellhound.IDLE,
-                    25, // frames
                     600, // HERO_HORIZONTAL_SPEED
                     500, // HERO_VERTICAL_SPEED
-                    new AnimationDefinition()
-                        .add(Hellhound.IDLE, 22, 24, Hellhound.IDLE, 0.1)
-                        .add(Hellhound.WALKR, 5, 9, Hellhound.WALKR, 0.2)
-                        .add(Hellhound.WALKL, 0, 4, Hellhound.WALKL, 0.2)
-                        .add(Hellhound.JUMPR, 16, 21, Hellhound.WALKR, 0.2)
-                        .add(Hellhound.JUMPL, 10, 15, Hellhound.WALKL, 0.2),
                     true, // unspawns
                     0, // min depth 
                     50 // max depth
                 );
             }
 
-            walkL() { this.performAnimation(Hellhound.WALKL) };
-            walkR() { this.performAnimation(Hellhound.WALKR) };
-            idle() { this.performAnimation(Hellhound.IDLE) };
+            walkL() { this.performAnimation(AnimationKey.ANM_HELLHOUND_WALKL_KEY) };
+            walkR() { this.performAnimation(AnimationKey.ANM_HELLHOUND_WALKR_KEY) };
+            idle() { this.performAnimation(AnimationKey.ANM_HELLHOUND_IDLE_KEY) };
             climb() { /* TODO */ };
             jump() { /* TODO */ };
-            jumpR() { this.performAnimation(Hellhound.JUMPR) };
-            jumpL() { this.performAnimation(Hellhound.JUMPL) };
+            jumpR() { this.performAnimation(AnimationKey.ANM_HELLHOUND_JUMPR_KEY) };
+            jumpL() { this.performAnimation(AnimationKey.ANM_HELLHOUND_JUMPL_KEY) };
             midair() { /* TODO */ };
             fall() { /* TODO */ };
             death() { /* TODO */ };

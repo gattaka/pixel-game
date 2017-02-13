@@ -6,7 +6,7 @@ namespace Lich {
         ["meteor_spell", SpellKey.SPELL_METEOR_KEY],
         ["place_spell", SpellKey.SPELL_PLACE_KEY],
         ["place_bgr_spell", SpellKey.SPELL_PLACE_BGR_KEY],
-        ["bolt_spell", SpellKey.SPELL_BOLT_KEY],
+        ["bolt_spell", SpellKey.SPELL_ICEBOLT_KEY],
         ["enemy_spell", SpellKey.SPELL_ENEMY_KEY],
         ["teleport_spell", SpellKey.SPELL_TELEPORT_KEY],
         ["home_spell", SpellKey.SPELL_HOME_KEY],

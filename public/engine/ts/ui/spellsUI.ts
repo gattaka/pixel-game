@@ -25,7 +25,7 @@ namespace Lich {
             self.spellInsert(SpellKey.SPELL_PLACE_KEY, SpellKey.SPELL_PLACE_BGR_KEY);
             self.spellInsert(SpellKey.SPELL_USE_ITEM_KEY);
             self.spellInsert(SpellKey.SPELL_ENEMY_KEY);
-            self.spellInsert(SpellKey.SPELL_BOLT_KEY);
+            self.spellInsert(SpellKey.SPELL_ICEBOLT_KEY);
             self.spellInsert(SpellKey.SPELL_FIREBALL_KEY);
             self.spellInsert(SpellKey.SPELL_TELEPORT_KEY, SpellKey.SPELL_HOME_KEY);
             self.spellInsert(SpellKey.SPELL_METEOR_KEY);

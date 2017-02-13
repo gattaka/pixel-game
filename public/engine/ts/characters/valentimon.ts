@@ -9,30 +9,17 @@ namespace Lich {
 
             static OWNER_ID = "VALENTIMON";
 
-            static IDLE = "IDLE";
-            static ATTACK = "ATTACK";
-            static DIE = "DIE";
-            static DEAD = "DEAD";
-
             constructor() {
                 super(
                     Valentimon.OWNER_ID,
+                    AnimationSetKey.VALENTIMON_ANIMATION_KEY,
+                    AnimationKey.ANM_VALENTIMON_IDLE_KEY,
                     10, // DAMAGE
                     1000, // ATTACK_COOLDOWN
-                    64, // WIDTH
-                    64, // HEIGHT 
                     6, // COLLXOFFSET
                     9, // COLLYOFFSET
-                    AnimationSetKey.VALENTIMON_ANIMATION_KEY,
-                    Valentimon.IDLE,
-                    9, // frames
                     200, // HORIZONTAL_SPEED
                     200, // VERTICAL_SPEED
-                    new AnimationDefinition()
-                        .add(Valentimon.IDLE, 0, 3, Valentimon.IDLE, 0.1)
-                        .add(Valentimon.ATTACK, 3, 5, Valentimon.IDLE, 0.3)
-                        .add(Valentimon.DIE, 4, 8, Valentimon.DEAD, 0.2)
-                        .add(Valentimon.DEAD, 8, 8, Valentimon.DEAD, 1),
                     true, // unspawns
                     0, // min depth 
                     100, // max depth
@@ -54,13 +41,13 @@ namespace Lich {
                     if (this.currentAttackCooldown >= this.attackCooldown) {
                         if (this.isPlayerInReach(world)) {
                             world.hero.hit(this.damage, world);
-                            this.performAnimation(Valentimon.ATTACK);
+                            this.performAnimation(AnimationKey.ANM_VALENTIMON_ATTACK_KEY);
                             this.currentAttackCooldown = 0;
                         } else {
                             let spell = Resources.getInstance().spellDefs.byKey(SpellKey[SpellKey.SPELL_LOVELETTER]);
                             let context = new SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
-                            this.performAnimation(Valentimon.ATTACK);
+                            this.performAnimation(AnimationKey.ANM_VALENTIMON_ATTACK_KEY);
                             this.currentAttackCooldown = 0;
                         }
                     } else {
@@ -96,7 +83,7 @@ namespace Lich {
             jumpL() { /* nic */ };
             midair() { /* nic */ };
             fall() { /* nic */ };
-            death() { this.performAnimation(Valentimon.DIE) };
+            death() { this.performAnimation(AnimationKey.ANM_VALENTIMON_DIE_KEY) };
 
             die(world: World) {
                 super.die(world);
