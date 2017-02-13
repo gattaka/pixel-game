@@ -7,27 +7,21 @@ var Lich;
 (function (Lich) {
     var AbstractWorldObject = (function (_super) {
         __extends(AbstractWorldObject, _super);
-        function AbstractWorldObject(width, height, spriteSheet, initState, collXOffset, collYOffset, hovers) {
+        function AbstractWorldObject(collXOffset, collYOffset, hovers) {
             if (hovers === void 0) { hovers = false; }
             var _this = _super.call(this) || this;
-            _this.width = width;
-            _this.height = height;
-            _this.spriteSheet = spriteSheet;
-            _this.initState = initState;
             _this.collXOffset = collXOffset;
             _this.collYOffset = collYOffset;
             _this.hovers = hovers;
             _this.speedx = 0;
             _this.speedy = 0;
-            _this.sprite = new createjs.Sprite(spriteSheet, initState);
-            _this.addChild(_this.sprite);
             return _this;
         }
         AbstractWorldObject.prototype.play = function () { this.sprite.play(); };
         AbstractWorldObject.prototype.stop = function () { this.sprite.stop(); };
         AbstractWorldObject.prototype.gotoAndPlay = function (desiredState) { this.sprite.gotoAndPlay(desiredState); };
         AbstractWorldObject.prototype.getCurrentAnimation = function () { return this.sprite.currentAnimation; };
-        AbstractWorldObject.prototype.performState = function (desiredState) {
+        AbstractWorldObject.prototype.performAnimation = function (desiredState) {
             var self = this;
             if (self.sprite.currentAnimation !== desiredState) {
                 self.sprite.gotoAndPlay(desiredState);

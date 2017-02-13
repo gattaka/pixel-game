@@ -31,21 +31,11 @@ var Lich;
     })(MovementTypeY = Lich.MovementTypeY || (Lich.MovementTypeY = {}));
     var Character = (function (_super) {
         __extends(Character, _super);
-        function Character(ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers) {
+        function Character(ownerId, animationSetKey, initAnimation, collXOffset, collYOffset, accelerationX, accelerationY, hovers) {
             if (hovers === void 0) { hovers = false; }
-            var _this = _super.call(this, width, height, new createjs.SpriteSheet({
-                framerate: 10,
-                "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[animationKey])],
-                "frames": {
-                    "regX": 0,
-                    "height": height,
-                    "count": frames,
-                    "regY": 0,
-                    "width": width
-                },
-                "animations": animations.serialize()
-            }), initState, collXOffset, collYOffset, hovers) || this;
+            var _this = _super.call(this, collXOffset, collYOffset, hovers) || this;
             _this.ownerId = ownerId;
+            _this.animationSetKey = animationSetKey;
             _this.accelerationX = accelerationX;
             _this.accelerationY = accelerationY;
             _this.uuid = Lich.Utils.guid();
@@ -74,6 +64,13 @@ var Lich;
             _this.addChild(_this.healthBar);
             return _this;
         }
+        Character.prototype.initSprite = function () {
+            var animationDef = Lich.Resources.getInstance().animationsDefs[this.animationSetKey];
+            this.width = animationDef.width;
+            this.height = animationDef.height;
+            this.sprite = Lich.Resources.getInstance().getSprite(Lich.SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);
+            this.addChild(this.sprite);
+        };
         Character.prototype.updateHealthBar = function () {
             if (this.currentHealth == this.maxHealth || this.currentHealth == 0) {
                 this.healthBar.visible = false;
@@ -208,10 +205,11 @@ var Lich;
                 }
             }
         };
-        Character.prototype.performState = function (desiredState) {
+        Character.prototype.performAnimation = function (desiredAnimation) {
             var self = this;
-            if (self.sprite.currentAnimation !== desiredState) {
-                self.gotoAndPlay(desiredState);
+            var stringKey = Lich.AnimationKey[desiredAnimation];
+            if (self.sprite.currentAnimation !== stringKey) {
+                self.gotoAndPlay(stringKey);
             }
         };
         Character.prototype.handleTick = function (delta) {

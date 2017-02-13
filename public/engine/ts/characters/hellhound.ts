@@ -19,12 +19,12 @@ namespace Lich {
                     86, // HEIGHT 
                     16, // COLLXOFFSET
                     12, // COLLYOFFSET
-                    AnimationKey.HELLHOUND_ANIMATION_KEY,
+                    AnimationSetKey.HELLHOUND_ANIMATION_KEY,
                     Hellhound.IDLE,
                     25, // frames
                     600, // HERO_HORIZONTAL_SPEED
                     500, // HERO_VERTICAL_SPEED
-                    new Animations()
+                    new AnimationDefinition()
                         .add(Hellhound.IDLE, 22, 24, Hellhound.IDLE, 0.1)
                         .add(Hellhound.WALKR, 5, 9, Hellhound.WALKR, 0.2)
                         .add(Hellhound.WALKL, 0, 4, Hellhound.WALKL, 0.2)
@@ -36,13 +36,13 @@ namespace Lich {
                 );
             }
 
-            walkL() { this.performState(Hellhound.WALKL) };
-            walkR() { this.performState(Hellhound.WALKR) };
-            idle() { this.performState(Hellhound.IDLE) };
+            walkL() { this.performAnimation(Hellhound.WALKL) };
+            walkR() { this.performAnimation(Hellhound.WALKR) };
+            idle() { this.performAnimation(Hellhound.IDLE) };
             climb() { /* TODO */ };
             jump() { /* TODO */ };
-            jumpR() { this.performState(Hellhound.JUMPR) };
-            jumpL() { this.performState(Hellhound.JUMPL) };
+            jumpR() { this.performAnimation(Hellhound.JUMPR) };
+            jumpL() { this.performAnimation(Hellhound.JUMPL) };
             midair() { /* TODO */ };
             fall() { /* TODO */ };
             death() { /* TODO */ };

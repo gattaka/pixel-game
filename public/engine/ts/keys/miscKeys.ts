@@ -28,22 +28,6 @@ namespace Lich {
         FOG_KEY
     }
 
-    export enum AnimationKey {
-        METEOR_ANIMATION_KEY,
-        FIREBALL_ANIMATION_KEY,
-        LICH_ANIMATION_KEY,
-        CORPSE_ANIMATION_KEY,
-        HELLHOUND_ANIMATION_KEY,
-        BOLT_ANIMATION_KEY,
-        CHICKEN_ANIMATION_KEY,
-        BUNNY_ANIMATION_KEY,
-        CHICKEN_BOSS_ANIMATION_KEY,
-        VALENTIMON_ANIMATION_KEY,
-        LOVELETTER_ANIMATION_KEY,
-        LOVEARROW_ANIMATION_KEY,
-        CUPID_ANIMATION_KEY
-    }
-
     export enum UIGFXKey {
         PLAYER_ICON_KEY,
         // misc.

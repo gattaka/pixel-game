@@ -23,7 +23,8 @@ namespace Lich {
 
             self.canvas = <HTMLCanvasElement>document.getElementById(canvasId);
             self.canvas.style.backgroundColor = "#cce1e8";
-            self.stage = new createjs.SpriteStage(self.canvas);
+            // antialising = true (3. argument) značně zhorší FPS
+            self.stage = new createjs.SpriteStage(self.canvas, false, false);
             let webGL = !(!self.canvas.getContext('webgl'));
 
             // resize the canvas to fill browser window dynamically
@@ -89,6 +90,7 @@ namespace Lich {
                 container3.addChild(self.text);
                 self.text.x = 10;
                 self.text.y = 10;
+                self.text.scaleX = self.text.scaleY = 1.5;
 
                 self.stage.updateViewport(self.canvas.width, self.canvas.height);
                 self.stage.addChild(container);

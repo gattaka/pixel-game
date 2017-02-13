@@ -16,10 +16,10 @@ var Lich;
                 64, // HEIGHT 
                 6, // COLLXOFFSET
                 9, // COLLYOFFSET
-                Lich.AnimationKey.VALENTIMON_ANIMATION_KEY, Valentimon.IDLE, 9, // frames
+                Lich.AnimationSetKey.VALENTIMON_ANIMATION_KEY, Valentimon.IDLE, 9, // frames
                 200, // HORIZONTAL_SPEED
                 200, // VERTICAL_SPEED
-                new Lich.Animations()
+                new Lich.AnimationDefinition()
                     .add(Valentimon.IDLE, 0, 3, Valentimon.IDLE, 0.1)
                     .add(Valentimon.ATTACK, 3, 5, Valentimon.IDLE, 0.3)
                     .add(Valentimon.DIE, 4, 8, Valentimon.DEAD, 0.2)
@@ -43,14 +43,14 @@ var Lich;
                     if (this.currentAttackCooldown >= this.attackCooldown) {
                         if (this.isPlayerInReach(world)) {
                             world.hero.hit(this.damage, world);
-                            this.performState(Valentimon.ATTACK);
+                            this.performAnimation(Valentimon.ATTACK);
                             this.currentAttackCooldown = 0;
                         }
                         else {
                             var spell = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[Lich.SpellKey.SPELL_LOVELETTER]);
                             var context = new Lich.SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
-                            this.performState(Valentimon.ATTACK);
+                            this.performAnimation(Valentimon.ATTACK);
                             this.currentAttackCooldown = 0;
                         }
                     }
@@ -93,7 +93,7 @@ var Lich;
             ;
             Valentimon.prototype.fall = function () { };
             ;
-            Valentimon.prototype.death = function () { this.performState(Valentimon.DIE); };
+            Valentimon.prototype.death = function () { this.performAnimation(Valentimon.DIE); };
             ;
             Valentimon.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);

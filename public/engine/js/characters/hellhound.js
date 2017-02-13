@@ -16,10 +16,10 @@ var Lich;
                 86, // HEIGHT 
                 16, // COLLXOFFSET
                 12, // COLLYOFFSET
-                Lich.AnimationKey.HELLHOUND_ANIMATION_KEY, Hellhound.IDLE, 25, // frames
+                Lich.AnimationSetKey.HELLHOUND_ANIMATION_KEY, Hellhound.IDLE, 25, // frames
                 600, // HERO_HORIZONTAL_SPEED
                 500, // HERO_VERTICAL_SPEED
-                new Lich.Animations()
+                new Lich.AnimationDefinition()
                     .add(Hellhound.IDLE, 22, 24, Hellhound.IDLE, 0.1)
                     .add(Hellhound.WALKR, 5, 9, Hellhound.WALKR, 0.2)
                     .add(Hellhound.WALKL, 0, 4, Hellhound.WALKL, 0.2)
@@ -29,19 +29,19 @@ var Lich;
                 50 // max depth
                 ) || this;
             }
-            Hellhound.prototype.walkL = function () { this.performState(Hellhound.WALKL); };
+            Hellhound.prototype.walkL = function () { this.performAnimation(Hellhound.WALKL); };
             ;
-            Hellhound.prototype.walkR = function () { this.performState(Hellhound.WALKR); };
+            Hellhound.prototype.walkR = function () { this.performAnimation(Hellhound.WALKR); };
             ;
-            Hellhound.prototype.idle = function () { this.performState(Hellhound.IDLE); };
+            Hellhound.prototype.idle = function () { this.performAnimation(Hellhound.IDLE); };
             ;
             Hellhound.prototype.climb = function () { };
             ;
             Hellhound.prototype.jump = function () { };
             ;
-            Hellhound.prototype.jumpR = function () { this.performState(Hellhound.JUMPR); };
+            Hellhound.prototype.jumpR = function () { this.performAnimation(Hellhound.JUMPR); };
             ;
-            Hellhound.prototype.jumpL = function () { this.performState(Hellhound.JUMPL); };
+            Hellhound.prototype.jumpL = function () { this.performAnimation(Hellhound.JUMPL); };
             ;
             Hellhound.prototype.midair = function () { };
             ;

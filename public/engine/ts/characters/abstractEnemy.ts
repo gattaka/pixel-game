@@ -8,22 +8,19 @@ namespace Lich {
 
         constructor(
             ownerId: string,
+            animationKey: AnimationSetKey,
+            initAnimation: AnimationKey,
             protected damage: number,
             protected attackCooldown: number,
-            width: number, height: number,
             collXOffset: number, collYOffset: number,
-            animationKey: AnimationKey,
-            initState: string,
-            frames: number,
             accelerationX: number,
             accelerationY: number,
-            animations: Animations,
             // může se nepřítel sám unspawnout (když je moc daleko od hráče)
             public unspawns: boolean,
             public minDepth: number,
             public maxDepth: number,
             hovers = false) {
-            super(ownerId, width, height, collXOffset, collYOffset, animationKey, initState, frames, accelerationX, accelerationY, animations, hovers);
+            super(ownerId, animationKey, initAnimation, collXOffset, collYOffset,  accelerationX, accelerationY,  hovers);
         }
 
         protected isPlayerInReach(world: World) {

@@ -95,6 +95,7 @@ var Lich;
             this.mapTransitionSrfcs = {};
             this.mapTransitionSrfcBgrs = {};
             this.achievementsDefs = {};
+            this.animationsDefs = {};
             this.mapObjectDefs = new Array();
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
@@ -231,6 +232,10 @@ var Lich;
             // Definice achievementů
             Lich.ACHIEVEMENTS_DEFS.forEach(function (definition) {
                 self.achievementsDefs[Lich.AchievementKey[definition.key]] = definition;
+            });
+            // Definice animací
+            Lich.ANIMATION_DEFS.forEach(function (definition) {
+                self.animationsDefs[Lich.AnimationSetKey[definition.animationSetKey]] = definition;
             });
             // Definice spells
             var SPELL_DEFS = [

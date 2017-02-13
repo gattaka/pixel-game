@@ -22,10 +22,10 @@ var Lich;
                 320, // HEIGHT 
                 40, // COLLXOFFSET
                 100, // COLLYOFFSET
-                Lich.AnimationKey.CUPID_ANIMATION_KEY, CupidBoss.IDLE, 8, // frames
+                Lich.AnimationSetKey.CUPID_ANIMATION_KEY, CupidBoss.IDLE, 8, // frames
                 400, // HORIZONTAL_SPEED
                 400, // VERTICAL_SPEED
-                new Lich.Animations()
+                new Lich.AnimationDefinition()
                     .add(CupidBoss.IDLE, 0, 1, CupidBoss.IDLE, 0.1)
                     .add(CupidBoss.ATTACK, 2, 3, CupidBoss.IDLE, 0.3)
                     .add(CupidBoss.HIT, 4, 4, CupidBoss.IDLE, 0.2)
@@ -108,7 +108,7 @@ var Lich;
                                 var castY = this.y + this.height;
                                 var context = new Lich.SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
                                 spell.cast(context);
-                                this.performState(Enemy.Valentimon.ATTACK);
+                                this.performAnimation(Enemy.Valentimon.ATTACK);
                                 this.currentAttackCooldown = 0;
                             }
                             break;
@@ -118,7 +118,7 @@ var Lich;
                             }
                             else {
                                 var spawnMinion = function () {
-                                    _this.performState(CupidBoss.ATTACK);
+                                    _this.performAnimation(CupidBoss.ATTACK);
                                     _this.currentSpawnCooldown = 0;
                                     var angle = Math.random() * Math.PI * 2;
                                     var radius = Math.max(_this.width / 2, _this.height / 2);
@@ -173,7 +173,7 @@ var Lich;
             ;
             CupidBoss.prototype.fall = function () { };
             ;
-            CupidBoss.prototype.death = function () { this.performState(CupidBoss.DIE); };
+            CupidBoss.prototype.death = function () { this.performAnimation(CupidBoss.DIE); };
             ;
             CupidBoss.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);

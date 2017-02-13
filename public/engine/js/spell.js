@@ -93,7 +93,7 @@ var Lich;
             var self = this;
             var sheet = new createjs.SpriteSheet({
                 framerate: 30,
-                "images": [Lich.Resources.getInstance().getImage(Lich.AnimationKey[self.spriteKey])],
+                "images": [Lich.Resources.getInstance().getImage(Lich.AnimationSetKey[self.spriteKey])],
                 "frames": {
                     "regX": 0,
                     "height": self.frameHeight,
@@ -124,7 +124,7 @@ var Lich;
     var FireballSpellDef = (function (_super) {
         __extends(FireballSpellDef, _super);
         function FireballSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.SoundKey.SND_FIREBALL_KEY, Lich.SoundKey.SND_BURN_KEY, FireballSpellDef.SPEED, Lich.AnimationKey.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE, FireballSpellDef.RADIUS) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.SoundKey.SND_FIREBALL_KEY, Lich.SoundKey.SND_BURN_KEY, FireballSpellDef.SPEED, Lich.AnimationSetKey.FIREBALL_ANIMATION_KEY, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE, FireballSpellDef.RADIUS) || this;
         }
         return FireballSpellDef;
     }(BulletSpellDef));
@@ -142,7 +142,7 @@ var Lich;
     var MeteorSpellDef = (function (_super) {
         __extends(MeteorSpellDef, _super);
         function MeteorSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, MeteorSpellDef.COST, MeteorSpellDef.COOLDOWN, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, MeteorSpellDef.SPEED, Lich.AnimationKey.METEOR_ANIMATION_KEY, MeteorSpellDef.MAP_DESTROY, MeteorSpellDef.PIERCING, MeteorSpellDef.DAMAGE, MeteorSpellDef.RADIUS, MeteorSpellDef.FRAME_WIDTH, MeteorSpellDef.FRAME_HEIGHT) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, MeteorSpellDef.COST, MeteorSpellDef.COOLDOWN, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, MeteorSpellDef.SPEED, Lich.AnimationSetKey.METEOR_ANIMATION_KEY, MeteorSpellDef.MAP_DESTROY, MeteorSpellDef.PIERCING, MeteorSpellDef.DAMAGE, MeteorSpellDef.RADIUS, MeteorSpellDef.FRAME_WIDTH, MeteorSpellDef.FRAME_HEIGHT) || this;
         }
         MeteorSpellDef.prototype.cast = function (context) {
             var a = context.yAim;
@@ -202,7 +202,7 @@ var Lich;
         __extends(LoveletterSpellDef, _super);
         function LoveletterSpellDef() {
             return _super.call(this, Lich.SpellKey.SPELL_LOVELETTER, // SpellKey
-            Lich.AnimationKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+            Lich.AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
             2) || this;
         }
         return LoveletterSpellDef;
@@ -215,7 +215,7 @@ var Lich;
         __extends(LovearrowSpellDef, _super);
         function LovearrowSpellDef() {
             return _super.call(this, Lich.SpellKey.SPELL_LOVEARROW, // SpellKey
-            Lich.AnimationKey.LOVEARROW_ANIMATION_KEY, // spriteKey
+            Lich.AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
             5) || this;
         }
         return LovearrowSpellDef;
@@ -227,7 +227,7 @@ var Lich;
     var BoltSpellDef = (function (_super) {
         __extends(BoltSpellDef, _super);
         function BoltSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_BOLT_KEY, BoltSpellDef.COST, BoltSpellDef.COOLDOWN, Lich.SoundKey.SND_BOLT_CAST_KEY, Lich.SoundKey.SND_FIREBALL_KEY, BoltSpellDef.SPEED, Lich.AnimationKey.BOLT_ANIMATION_KEY, BoltSpellDef.MAP_DESTROY, BoltSpellDef.PIERCING, BoltSpellDef.DAMAGE) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_BOLT_KEY, BoltSpellDef.COST, BoltSpellDef.COOLDOWN, Lich.SoundKey.SND_BOLT_CAST_KEY, Lich.SoundKey.SND_FIREBALL_KEY, BoltSpellDef.SPEED, Lich.AnimationSetKey.BOLT_ANIMATION_KEY, BoltSpellDef.MAP_DESTROY, BoltSpellDef.PIERCING, BoltSpellDef.DAMAGE) || this;
         }
         return BoltSpellDef;
     }(BulletSpellDef));
@@ -313,7 +313,7 @@ var Lich;
         TeleportSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
             Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
-            world.hero.performState(Lich.Hero.TELEPORT);
+            world.hero.performAnimation(Lich.Hero.TELEPORT);
             setTimeout(function () {
                 world.placePlayerOnScreen(context.xAim, context.yAim);
             }, 100);
@@ -335,7 +335,7 @@ var Lich;
         HomeSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
             Lich.Mixer.playSound(Lich.SoundKey.SND_TELEPORT_KEY);
-            world.hero.performState(Lich.Hero.TELEPORT);
+            world.hero.performAnimation(Lich.Hero.TELEPORT);
             setTimeout(function () {
                 world.placePlayerOnSpawnPoint();
             }, 100);

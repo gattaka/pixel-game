@@ -23,12 +23,12 @@ namespace Lich {
                     64, // HEIGHT 
                     6, // COLLXOFFSET
                     9, // COLLYOFFSET
-                    AnimationKey.VALENTIMON_ANIMATION_KEY,
+                    AnimationSetKey.VALENTIMON_ANIMATION_KEY,
                     Valentimon.IDLE,
                     9, // frames
                     200, // HORIZONTAL_SPEED
                     200, // VERTICAL_SPEED
-                    new Animations()
+                    new AnimationDefinition()
                         .add(Valentimon.IDLE, 0, 3, Valentimon.IDLE, 0.1)
                         .add(Valentimon.ATTACK, 3, 5, Valentimon.IDLE, 0.3)
                         .add(Valentimon.DIE, 4, 8, Valentimon.DEAD, 0.2)
@@ -54,13 +54,13 @@ namespace Lich {
                     if (this.currentAttackCooldown >= this.attackCooldown) {
                         if (this.isPlayerInReach(world)) {
                             world.hero.hit(this.damage, world);
-                            this.performState(Valentimon.ATTACK);
+                            this.performAnimation(Valentimon.ATTACK);
                             this.currentAttackCooldown = 0;
                         } else {
                             let spell = Resources.getInstance().spellDefs.byKey(SpellKey[SpellKey.SPELL_LOVELETTER]);
                             let context = new SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
-                            this.performState(Valentimon.ATTACK);
+                            this.performAnimation(Valentimon.ATTACK);
                             this.currentAttackCooldown = 0;
                         }
                     } else {
@@ -96,7 +96,7 @@ namespace Lich {
             jumpL() { /* nic */ };
             midair() { /* nic */ };
             fall() { /* nic */ };
-            death() { this.performState(Valentimon.DIE) };
+            death() { this.performAnimation(Valentimon.DIE) };
 
             die(world: World) {
                 super.die(world);

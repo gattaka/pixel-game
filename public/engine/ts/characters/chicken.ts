@@ -4,16 +4,6 @@ namespace Lich {
 
             static OWNER_ID = "CHICKEN";
 
-            static IDLEL = "IDLEL";
-            static IDLER = "IDLER";
-            static EATL = "EATL";
-            static EATR = "EATR";
-            static WALKR = "WALKR";
-            static WALKL = "WALKL";
-            static JUMPR = "JUMPR";
-            static JUMPL = "JUMPL";
-            static DIE = "DIE";
-
             static MODE_COOLDOWN = 3000;
 
             modeCooldown = 0;
@@ -24,27 +14,14 @@ namespace Lich {
             constructor() {
                 super(
                     Chicken.OWNER_ID,
+                    AnimationSetKey.CHICKEN_ANIMATION_KEY,
+                    AnimationKey.ANM_CHICKEN_IDLEL_KEY,
                     0, // DAMAGE
                     0, // ATTACK_COOLDOWN
-                    26, // WIDTH
-                    26, // HEIGHT 
                     8, // COLLXOFFSET
                     2, // COLLYOFFSET
-                    AnimationKey.CHICKEN_ANIMATION_KEY,
-                    Chicken.IDLEL,
-                    15, // frames
                     100, // HORIZONTAL_SPEED
                     320, // VERTICAL_SPEED
-                    new Animations()
-                        .add(Chicken.EATL, 0, 1, Chicken.EATL, 0.1)
-                        .add(Chicken.IDLEL, 2, 2, Chicken.IDLEL, 0.001)
-                        .add(Chicken.JUMPL, 3, 3, Chicken.WALKL, 0.2)
-                        .add(Chicken.WALKL, 3, 6, Chicken.WALKL, 0.2)
-                        .add(Chicken.WALKR, 7, 10, Chicken.WALKR, 0.2)
-                        .add(Chicken.JUMPR, 10, 10, Chicken.WALKR, 0.2)
-                        .add(Chicken.IDLER, 11, 11, Chicken.IDLER, 0.001)
-                        .add(Chicken.EATR, 12, 13, Chicken.EATR, 0.1)
-                        .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1),
                     true, // unspawns
                     0, // min depth 
                     25 // max depth
@@ -101,31 +78,31 @@ namespace Lich {
                         this.movementTypeY = MovementTypeY.NONE;
                         if (this.currentMode == 0) {
                             if (this.lastOrientationLeft) {
-                                this.performState(Chicken.IDLEL);
+                                this.performAnimation(AnimationKey.ANM_CHICKEN_IDLEL_KEY);
                             } else {
-                                this.performState(Chicken.IDLER);
+                                this.performAnimation(AnimationKey.ANM_CHICKEN_IDLER_KEY);
                             }
                         } else {
                             if (this.lastOrientationLeft) {
-                                this.performState(Chicken.EATL);
+                                this.performAnimation(AnimationKey.ANM_CHICKEN_EATL_KEY);
                             } else {
-                                this.performState(Chicken.EATR);
+                                this.performAnimation(AnimationKey.ANM_CHICKEN_EATR_KEY);
                             }
                         }
                     }
                 }
             }
 
-            walkL() { this.performState(Chicken.WALKL) };
-            walkR() { this.performState(Chicken.WALKR) };
+            walkL() { this.performAnimation(AnimationKey.ANM_CHICKEN_WALKL_KEY) };
+            walkR() { this.performAnimation(AnimationKey.ANM_CHICKEN_WALKR_KEY) };
             idle() { /* nic */ };
             climb() { /* nic */ };
-            jump() { this.performState(Chicken.JUMPL) };
-            jumpR() { this.performState(Chicken.JUMPR) };
-            jumpL() { this.performState(Chicken.JUMPL) };
-            midair() { this.performState(Chicken.JUMPL) };
-            fall() { this.performState(Chicken.JUMPL) };
-            death() { this.performState(Chicken.DIE) };
+            jump() { this.performAnimation(AnimationKey.ANM_CHICKEN_JUMPL_KEY) };
+            jumpR() { this.performAnimation(AnimationKey.ANM_CHICKEN_JUMPR_KEY) };
+            jumpL() { this.performAnimation(AnimationKey.ANM_CHICKEN_JUMPL_KEY) };
+            midair() { this.performAnimation(AnimationKey.ANM_CHICKEN_JUMPL_KEY) };
+            fall() { this.performAnimation(AnimationKey.ANM_CHICKEN_JUMPL_KEY) };
+            death() { this.performAnimation(AnimationKey.ANM_CHICKEN_DIE_KEY) };
 
             die(world: World) {
                 super.die(world);

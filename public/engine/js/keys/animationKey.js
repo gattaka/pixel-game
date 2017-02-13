@@ -28,6 +28,22 @@ var Lich;
         // Fog
         BackgroundKey[BackgroundKey["FOG_KEY"] = 16] = "FOG_KEY";
     })(BackgroundKey = Lich.BackgroundKey || (Lich.BackgroundKey = {}));
+    var AnimationSetKey;
+    (function (AnimationSetKey) {
+        AnimationSetKey[AnimationSetKey["METEOR_ANIMATION_KEY"] = 0] = "METEOR_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["FIREBALL_ANIMATION_KEY"] = 1] = "FIREBALL_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["LICH_ANIMATION_KEY"] = 2] = "LICH_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["CORPSE_ANIMATION_KEY"] = 3] = "CORPSE_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["HELLHOUND_ANIMATION_KEY"] = 4] = "HELLHOUND_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["BOLT_ANIMATION_KEY"] = 5] = "BOLT_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["CHICKEN_ANIMATION_KEY"] = 6] = "CHICKEN_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["BUNNY_ANIMATION_KEY"] = 7] = "BUNNY_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["CHICKEN_BOSS_ANIMATION_KEY"] = 8] = "CHICKEN_BOSS_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["VALENTIMON_ANIMATION_KEY"] = 9] = "VALENTIMON_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["LOVELETTER_ANIMATION_KEY"] = 10] = "LOVELETTER_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["LOVEARROW_ANIMATION_KEY"] = 11] = "LOVEARROW_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["CUPID_ANIMATION_KEY"] = 12] = "CUPID_ANIMATION_KEY";
+    })(AnimationSetKey = Lich.AnimationSetKey || (Lich.AnimationSetKey = {}));
     var UIGFXKey;
     (function (UIGFXKey) {
         UIGFXKey[UIGFXKey["PLAYER_ICON_KEY"] = 0] = "PLAYER_ICON_KEY";

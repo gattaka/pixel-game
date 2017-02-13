@@ -7,8 +7,6 @@ namespace Lich {
              */
             static OWNER_ID = "CHICKEN_BOSS";
 
-            static IDLE = "IDLE";
-            static ATTACK = "ATTACK";
             /**
              * Protože při nízké rychlosti otáčení se daří AI přejíždět 
              * cíl a tak vzniká neustálé "cukání", když se chce vrátit
@@ -50,20 +48,14 @@ namespace Lich {
             constructor() {
                 super(
                     ChickenBoss.OWNER_ID,
+                    AnimationSetKey.CHICKEN_BOSS_ANIMATION_KEY,
+                    AnimationKey.ANM_MURHUN_IDLE_KEY,
                     20, // DAMAGE
                     1000, // ATTACK_COOLDOWN
-                    184, // WIDTH
-                    304, // HEIGHT 
                     40, // COLLXOFFSET
                     100, // COLLYOFFSET
-                    AnimationKey.CHICKEN_BOSS_ANIMATION_KEY,
-                    ChickenBoss.IDLE,
-                    2, // frames
                     600, // HORIZONTAL_SPEED
                     600, // VERTICAL_SPEED
-                    new Animations()
-                        .add(ChickenBoss.IDLE, 1, 1, ChickenBoss.IDLE, 0.1)
-                        .add(ChickenBoss.ATTACK, 0, 0, ChickenBoss.ATTACK, 0.1),
                     false, // unspawns
                     0, // min depth 
                     100, // max depth
@@ -99,7 +91,7 @@ namespace Lich {
                         this.currentChargeCooldown = 0;
                         this.charging = false;
                         this.lockedTime = 0;
-                        this.performState(ChickenBoss.IDLE);
+                        this.performAnimation(AnimationKey.ANM_MURHUN_IDLE_KEY);
                         // a skonči na protější straně
                         this.sprinting = false;
                         this.angle = (this.angle + 180) % 360;
@@ -147,7 +139,7 @@ namespace Lich {
                             if ((this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN
                                 || this.frenzy && this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN / 2)
                                 && !this.charging) {
-                                this.performState(ChickenBoss.ATTACK);
+                                this.performAnimation(AnimationKey.ANM_MURHUN_ATTACK_KEY);
                                 Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);
                                 this.lockedTime = 0;
                                 targetX = world.hero.x + world.hero.width / 2;

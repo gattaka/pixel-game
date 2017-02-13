@@ -117,6 +117,7 @@ namespace Lich {
         public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
+        public animationsDefs: { [k: string]: AnimationDefinition } = {};
         public mapObjectDefs = new Array<MapObjDefinition>();
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
@@ -289,6 +290,11 @@ namespace Lich {
             // Definice achievementů
             ACHIEVEMENTS_DEFS.forEach((definition: AchievementDefinition) => {
                 self.achievementsDefs[AchievementKey[definition.key]] = definition;
+            });
+
+            // Definice animací
+            ANIMATION_DEFS.forEach((definition: AnimationDefinition) => {
+                self.animationsDefs[AnimationSetKey[definition.animationSetKey]] = definition;
             });
 
             // Definice spells

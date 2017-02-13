@@ -10,18 +10,13 @@ var Lich;
         var ChickenBoss = (function (_super) {
             __extends(ChickenBoss, _super);
             function ChickenBoss() {
-                var _this = _super.call(this, ChickenBoss.OWNER_ID, 20, // DAMAGE
+                var _this = _super.call(this, ChickenBoss.OWNER_ID, Lich.AnimationSetKey.CHICKEN_BOSS_ANIMATION_KEY, Lich.AnimationKey.ANM_MURHUN_IDLE_KEY, 20, // DAMAGE
                 1000, // ATTACK_COOLDOWN
-                184, // WIDTH
-                304, // HEIGHT 
                 40, // COLLXOFFSET
                 100, // COLLYOFFSET
-                Lich.AnimationKey.CHICKEN_BOSS_ANIMATION_KEY, ChickenBoss.IDLE, 2, // frames
                 600, // HORIZONTAL_SPEED
                 600, // VERTICAL_SPEED
-                new Lich.Animations()
-                    .add(ChickenBoss.IDLE, 1, 1, ChickenBoss.IDLE, 0.1)
-                    .add(ChickenBoss.ATTACK, 0, 0, ChickenBoss.ATTACK, 0.1), false, // unspawns
+                false, // unspawns
                 0, // min depth 
                 100, // max depth
                 true // hovers
@@ -58,7 +53,7 @@ var Lich;
                         _this.currentChargeCooldown = 0;
                         _this.charging = false;
                         _this.lockedTime = 0;
-                        _this.performState(ChickenBoss.IDLE);
+                        _this.performAnimation(Lich.AnimationKey.ANM_MURHUN_IDLE_KEY);
                         // a skonči na protější straně
                         _this.sprinting = false;
                         _this.angle = (_this.angle + 180) % 360;
@@ -102,7 +97,7 @@ var Lich;
                             if ((this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN
                                 || this.frenzy && this.currentChargeCooldown >= ChickenBoss.CHARGE_COOLDOWN / 2)
                                 && !this.charging) {
-                                this.performState(ChickenBoss.ATTACK);
+                                this.performAnimation(Lich.AnimationKey.ANM_MURHUN_ATTACK_KEY);
                                 Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);
                                 this.lockedTime = 0;
                                 targetX_1 = world.hero.x + world.hero.width / 2;
@@ -183,8 +178,6 @@ var Lich;
          * aka Murhun
          */
         ChickenBoss.OWNER_ID = "CHICKEN_BOSS";
-        ChickenBoss.IDLE = "IDLE";
-        ChickenBoss.ATTACK = "ATTACK";
         /**
          * Protože při nízké rychlosti otáčení se daří AI přejíždět
          * cíl a tak vzniká neustálé "cukání", když se chce vrátit

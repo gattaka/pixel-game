@@ -10,25 +10,13 @@ var Lich;
         var Chicken = (function (_super) {
             __extends(Chicken, _super);
             function Chicken() {
-                var _this = _super.call(this, Chicken.OWNER_ID, 0, // DAMAGE
+                var _this = _super.call(this, Chicken.OWNER_ID, Lich.AnimationSetKey.CHICKEN_ANIMATION_KEY, Lich.AnimationKey.ANM_CHICKEN_IDLEL_KEY, 0, // DAMAGE
                 0, // ATTACK_COOLDOWN
-                26, // WIDTH
-                26, // HEIGHT 
                 8, // COLLXOFFSET
                 2, // COLLYOFFSET
-                Lich.AnimationKey.CHICKEN_ANIMATION_KEY, Chicken.IDLEL, 15, // frames
                 100, // HORIZONTAL_SPEED
                 320, // VERTICAL_SPEED
-                new Lich.Animations()
-                    .add(Chicken.EATL, 0, 1, Chicken.EATL, 0.1)
-                    .add(Chicken.IDLEL, 2, 2, Chicken.IDLEL, 0.001)
-                    .add(Chicken.JUMPL, 3, 3, Chicken.WALKL, 0.2)
-                    .add(Chicken.WALKL, 3, 6, Chicken.WALKL, 0.2)
-                    .add(Chicken.WALKR, 7, 10, Chicken.WALKR, 0.2)
-                    .add(Chicken.JUMPR, 10, 10, Chicken.WALKR, 0.2)
-                    .add(Chicken.IDLER, 11, 11, Chicken.IDLER, 0.001)
-                    .add(Chicken.EATR, 12, 13, Chicken.EATR, 0.1)
-                    .add(Chicken.DIE, 14, 14, Chicken.DIE, 0.1), true, // unspawns
+                true, // unspawns
                 0, // min depth 
                 25 // max depth
                 ) || this;
@@ -91,42 +79,42 @@ var Lich;
                         this.movementTypeY = Lich.MovementTypeY.NONE;
                         if (this.currentMode == 0) {
                             if (this.lastOrientationLeft) {
-                                this.performState(Chicken.IDLEL);
+                                this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_IDLEL_KEY);
                             }
                             else {
-                                this.performState(Chicken.IDLER);
+                                this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_IDLER_KEY);
                             }
                         }
                         else {
                             if (this.lastOrientationLeft) {
-                                this.performState(Chicken.EATL);
+                                this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_EATL_KEY);
                             }
                             else {
-                                this.performState(Chicken.EATR);
+                                this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_EATR_KEY);
                             }
                         }
                     }
                 }
             };
-            Chicken.prototype.walkL = function () { this.performState(Chicken.WALKL); };
+            Chicken.prototype.walkL = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_WALKL_KEY); };
             ;
-            Chicken.prototype.walkR = function () { this.performState(Chicken.WALKR); };
+            Chicken.prototype.walkR = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_WALKR_KEY); };
             ;
             Chicken.prototype.idle = function () { };
             ;
             Chicken.prototype.climb = function () { };
             ;
-            Chicken.prototype.jump = function () { this.performState(Chicken.JUMPL); };
+            Chicken.prototype.jump = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_JUMPL_KEY); };
             ;
-            Chicken.prototype.jumpR = function () { this.performState(Chicken.JUMPR); };
+            Chicken.prototype.jumpR = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_JUMPR_KEY); };
             ;
-            Chicken.prototype.jumpL = function () { this.performState(Chicken.JUMPL); };
+            Chicken.prototype.jumpL = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_JUMPL_KEY); };
             ;
-            Chicken.prototype.midair = function () { this.performState(Chicken.JUMPL); };
+            Chicken.prototype.midair = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_JUMPL_KEY); };
             ;
-            Chicken.prototype.fall = function () { this.performState(Chicken.JUMPL); };
+            Chicken.prototype.fall = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_JUMPL_KEY); };
             ;
-            Chicken.prototype.death = function () { this.performState(Chicken.DIE); };
+            Chicken.prototype.death = function () { this.performAnimation(Lich.AnimationKey.ANM_CHICKEN_DIE_KEY); };
             ;
             Chicken.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
@@ -185,15 +173,6 @@ var Lich;
             return Chicken;
         }(Lich.AbstractEnemy));
         Chicken.OWNER_ID = "CHICKEN";
-        Chicken.IDLEL = "IDLEL";
-        Chicken.IDLER = "IDLER";
-        Chicken.EATL = "EATL";
-        Chicken.EATR = "EATR";
-        Chicken.WALKR = "WALKR";
-        Chicken.WALKL = "WALKL";
-        Chicken.JUMPR = "JUMPR";
-        Chicken.JUMPL = "JUMPL";
-        Chicken.DIE = "DIE";
         Chicken.MODE_COOLDOWN = 3000;
         Enemy.Chicken = Chicken;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));

@@ -49,29 +49,23 @@ namespace Lich {
 
         public spellCooldowns = new Table<number>();
 
+        initSprite() {
+            let animationDef = Resources.getInstance().animationsDefs[this.animationSetKey];
+            this.width = animationDef.width;
+            this.height = animationDef.height;
+            this.sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);
+            this.addChild(this.sprite);
+        }
+
         constructor(
             public ownerId: string,
-            width: number, height: number,
+            private animationSetKey: AnimationSetKey,
+            initAnimation: AnimationKey,
             collXOffset: number, collYOffset: number,
-            animationKey: AnimationKey,
-            initState: string,
-            frames: number,
             public accelerationX: number,
             public accelerationY: number,
-            animations: Animations,
             hovers = false) {
-            super(width, height, new createjs.SpriteSheet({
-                framerate: 10,
-                "images": [Resources.getInstance().getImage(AnimationKey[animationKey])],
-                "frames": {
-                    "regX": 0,
-                    "height": height,
-                    "count": frames,
-                    "regY": 0,
-                    "width": width,
-                },
-                "animations": animations.serialize()
-            }), initState, collXOffset, collYOffset, hovers);
+            super(collXOffset, collYOffset, hovers);
 
             this.healthBar = new createjs.Shape();
             this.healthBar.width = this.width;
@@ -238,10 +232,11 @@ namespace Lich {
             }
         }
 
-        performState(desiredState) {
+        performAnimation(desiredAnimation: AnimationKey) {
             var self = this;
-            if (self.sprite.currentAnimation !== desiredState) {
-                self.gotoAndPlay(desiredState);
+            let stringKey = AnimationKey[desiredAnimation];
+            if (self.sprite.currentAnimation !== stringKey) {
+                self.gotoAndPlay(stringKey);
             }
         }
 

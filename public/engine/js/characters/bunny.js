@@ -10,25 +10,13 @@ var Lich;
         var Bunny = (function (_super) {
             __extends(Bunny, _super);
             function Bunny() {
-                var _this = _super.call(this, Bunny.OWNER_ID, 0, // DAMAGE
+                var _this = _super.call(this, Bunny.OWNER_ID, Lich.AnimationSetKey.BUNNY_ANIMATION_KEY, Lich.AnimationKey.ANM_BUNNY_IDLEL_KEY, 0, // DAMAGE
                 0, // ATTACK_COOLDOWN
-                32, // WIDTH
-                32, // HEIGHT 
                 8, // COLLXOFFSET
                 2, // COLLYOFFSET
-                Lich.AnimationKey.BUNNY_ANIMATION_KEY, Bunny.IDLEL, 13, // frames
                 100, // HORIZONTAL_SPEED
                 320, // VERTICAL_SPEED
-                new Lich.Animations()
-                    .add(Bunny.EATL, 6, 7, Bunny.EATL, 0.1)
-                    .add(Bunny.IDLEL, 11, 11, Bunny.IDLEL, 0.001)
-                    .add(Bunny.JUMPL, 8, 11, Bunny.JUMPL, 0.2)
-                    .add(Bunny.WALKL, 8, 11, Bunny.WALKL, 0.2)
-                    .add(Bunny.WALKR, 0, 3, Bunny.WALKR, 0.2)
-                    .add(Bunny.JUMPR, 0, 3, Bunny.JUMPR, 0.2)
-                    .add(Bunny.IDLER, 0, 0, Bunny.IDLER, 0.001)
-                    .add(Bunny.EATR, 4, 5, Bunny.EATR, 0.1)
-                    .add(Bunny.DIE, 12, 12, Bunny.DIE, 0.1), true, // unspawns
+                true, // unspawns
                 0, // min depth 
                 20 // max depth
                 ) || this;
@@ -91,42 +79,42 @@ var Lich;
                         this.movementTypeY = Lich.MovementTypeY.NONE;
                         if (this.currentMode == 0) {
                             if (this.lastOrientationLeft) {
-                                this.performState(Bunny.IDLEL);
+                                this.performAnimation(Lich.AnimationKey.ANM_BUNNY_IDLEL_KEY);
                             }
                             else {
-                                this.performState(Bunny.IDLER);
+                                this.performAnimation(Lich.AnimationKey.ANM_BUNNY_IDLER_KEY);
                             }
                         }
                         else {
                             if (this.lastOrientationLeft) {
-                                this.performState(Bunny.EATL);
+                                this.performAnimation(Lich.AnimationKey.ANM_BUNNY_EATL_KEY);
                             }
                             else {
-                                this.performState(Bunny.EATR);
+                                this.performAnimation(Lich.AnimationKey.ANM_BUNNY_EATR_KEY);
                             }
                         }
                     }
                 }
             };
-            Bunny.prototype.walkL = function () { this.performState(Bunny.WALKL); };
+            Bunny.prototype.walkL = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_WALKL_KEY); };
             ;
-            Bunny.prototype.walkR = function () { this.performState(Bunny.WALKR); };
+            Bunny.prototype.walkR = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_WALKR_KEY); };
             ;
             Bunny.prototype.idle = function () { };
             ;
             Bunny.prototype.climb = function () { };
             ;
-            Bunny.prototype.jump = function () { this.performState(Bunny.JUMPL); };
+            Bunny.prototype.jump = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_JUMPL_KEY); };
             ;
-            Bunny.prototype.jumpR = function () { this.performState(Bunny.JUMPR); };
+            Bunny.prototype.jumpR = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_JUMPR_KEY); };
             ;
-            Bunny.prototype.jumpL = function () { this.performState(Bunny.JUMPL); };
+            Bunny.prototype.jumpL = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_JUMPL_KEY); };
             ;
-            Bunny.prototype.midair = function () { this.performState(Bunny.JUMPL); };
+            Bunny.prototype.midair = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_JUMPL_KEY); };
             ;
-            Bunny.prototype.fall = function () { this.performState(Bunny.JUMPL); };
+            Bunny.prototype.fall = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_JUMPL_KEY); };
             ;
-            Bunny.prototype.death = function () { this.performState(Bunny.DIE); };
+            Bunny.prototype.death = function () { this.performAnimation(Lich.AnimationKey.ANM_BUNNY_DIE_KEY); };
             ;
             Bunny.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
@@ -144,15 +132,6 @@ var Lich;
             return Bunny;
         }(Lich.AbstractEnemy));
         Bunny.OWNER_ID = "BUNNY";
-        Bunny.IDLEL = "IDLEL";
-        Bunny.IDLER = "IDLER";
-        Bunny.EATL = "EATL";
-        Bunny.EATR = "EATR";
-        Bunny.WALKR = "WALKR";
-        Bunny.WALKL = "WALKL";
-        Bunny.JUMPR = "JUMPR";
-        Bunny.JUMPL = "JUMPL";
-        Bunny.DIE = "DIE";
         Bunny.MODE_COOLDOWN = 3000;
         Enemy.Bunny = Bunny;
     })(Enemy = Lich.Enemy || (Lich.Enemy = {}));

@@ -8,29 +8,10 @@ var Lich;
     var Hero = (function (_super) {
         __extends(Hero, _super);
         function Hero() {
-            var _this = _super.call(this, Hero.OWNER_ID, 56, // WIDTH
-            80, // HEIGHT 
-            20, // COLLXOFFSET
+            var _this = _super.call(this, Hero.OWNER_ID, Lich.AnimationSetKey.LICH_ANIMATION_KEY, Lich.AnimationKey.ANM_HERO_IDLE_KEY, 20, // COLLXOFFSET
             12, // COLLYOFFSET
-            // 0,
-            // 0,
-            Lich.AnimationKey.LICH_ANIMATION_KEY, Hero.IDLE, 40, // frames
             300, // HERO_HORIZONTAL_SPEED
-            520, // HERO_VERTICAL_SPEED
-            new Lich.Animations()
-                .add(Hero.IDLE, 0, 0, Hero.BREATH, 0.005)
-                .add(Hero.BREATH, 1, 1, Hero.IDLE, 0.04)
-                .add(Hero.WALKR, 2, 9, Hero.WALKR, 0.3)
-                .add(Hero.WALKL, 10, 17, Hero.WALKL, 0.3)
-                .add(Hero.JUMP, 18, 19, Hero.MIDAIR, 0.2)
-                .add(Hero.MIDAIR, 19, 19, Hero.MIDAIR, 0.2)
-                .add(Hero.FALL, 19, 23, Hero.IDLE, 0.2)
-                .add(Hero.JUMPR, 25, 25, Hero.JUMPR, 0.2)
-                .add(Hero.JUMPL, 27, 27, Hero.JUMPL, 0.2)
-                .add(Hero.DIE, 28, 28, Hero.DEAD, 0.2)
-                .add(Hero.DEAD, 29, 29, Hero.DEAD, 0.2)
-                .add(Hero.TELEPORT, 30, 36, Hero.IDLE, 1.0)
-                .add(Hero.CLIMB, 37, 39, Hero.CLIMB, 0.3)) || this;
+            520) || this;
             _this.willRegen = 10;
             _this.healthRegen = 1;
             _this.hitTextColor = "#E30";
@@ -63,11 +44,12 @@ var Lich;
                     break;
             }
         };
-        Hero.prototype.performState = function (desiredState) {
+        Hero.prototype.performAnimation = function (desiredAnimation) {
             var self = this;
-            if (self.sprite.currentAnimation !== desiredState && (this.currentHealth > 0 || desiredState == Hero.DIE)
-                && self.sprite.currentAnimation != Hero.TELEPORT) {
-                self.gotoAndPlay(desiredState);
+            var stringKey = Lich.AnimationKey[desiredAnimation];
+            if (self.sprite.currentAnimation !== stringKey && (this.currentHealth > 0 || stringKey == Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_DIE_KEY])
+                && self.sprite.currentAnimation != Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_TELEPORT_KEY]) {
+                self.gotoAndPlay(stringKey);
             }
         };
         Hero.prototype.die = function (world) {
@@ -75,25 +57,25 @@ var Lich;
             Lich.Mixer.playSound(Lich.SoundKey.SND_SQUASHED_KEY);
             world.showDeadInfo();
         };
-        Hero.prototype.walkL = function () { this.performState(Hero.WALKL); };
+        Hero.prototype.walkL = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_WALKL_KEY); };
         ;
-        Hero.prototype.walkR = function () { this.performState(Hero.WALKR); };
+        Hero.prototype.walkR = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_WALKR_KEY); };
         ;
-        Hero.prototype.idle = function () { this.performState(Hero.IDLE); };
+        Hero.prototype.idle = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_IDLE_KEY); };
         ;
-        Hero.prototype.climb = function () { this.performState(Hero.CLIMB); };
+        Hero.prototype.climb = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_CLIMB_KEY); };
         ;
-        Hero.prototype.jump = function () { this.performState(Hero.JUMP); };
+        Hero.prototype.jump = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_JUMP_KEY); };
         ;
-        Hero.prototype.jumpR = function () { this.performState(Hero.JUMPR); };
+        Hero.prototype.jumpR = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_JUMPR_KEY); };
         ;
-        Hero.prototype.jumpL = function () { this.performState(Hero.JUMPL); };
+        Hero.prototype.jumpL = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_JUMPL_KEY); };
         ;
-        Hero.prototype.midair = function () { this.performState(Hero.MIDAIR); };
+        Hero.prototype.midair = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_MIDAIR_KEY); };
         ;
-        Hero.prototype.fall = function () { this.performState(Hero.FALL); };
+        Hero.prototype.fall = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_FALL_KEY); };
         ;
-        Hero.prototype.death = function () { this.performState(Hero.DIE); };
+        Hero.prototype.death = function () { this.performAnimation(Lich.AnimationKey.ANM_HERO_DIE_KEY); };
         ;
         return Hero;
     }(Lich.Character));
@@ -101,18 +83,5 @@ var Lich;
     /* CONSTANTS */
     /*-----------*/
     Hero.OWNER_ID = "HERO";
-    Hero.IDLE = "IDLE";
-    Hero.BREATH = "BREATH";
-    Hero.WALKR = "WALKR";
-    Hero.WALKL = "WALKL";
-    Hero.JUMP = "JUMP";
-    Hero.MIDAIR = "MIDAIR";
-    Hero.FALL = "FALL";
-    Hero.JUMPR = "JUMPR";
-    Hero.JUMPL = "JUMPL";
-    Hero.DIE = "DIE";
-    Hero.DEAD = "DEAD";
-    Hero.TELEPORT = "TELEPORT";
-    Hero.CLIMB = "CLIMB";
     Lich.Hero = Hero;
 })(Lich || (Lich = {}));

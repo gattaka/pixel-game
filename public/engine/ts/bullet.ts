@@ -6,17 +6,13 @@ namespace Lich {
         public speedy: number = 0;
         protected sprite: createjs.Sprite;
 
+        protected abstract initSprite();
+
         constructor(
-            public width: number,
-            public height: number,
-            public spriteSheet: createjs.SpriteSheet,
-            public initState: string,
             public collXOffset: number,
             public collYOffset: number,
             public hovers = false) {
             super();
-            this.sprite = new createjs.Sprite(spriteSheet, initState);
-            this.addChild(this.sprite);
         }
 
         play() { this.sprite.play(); }
@@ -24,7 +20,7 @@ namespace Lich {
         gotoAndPlay(desiredState: string) { this.sprite.gotoAndPlay(desiredState); }
         getCurrentAnimation() { return this.sprite.currentAnimation; }
 
-        performState(desiredState: string) {
+        performAnimation(desiredState: string) {
             var self = this;
             if (self.sprite.currentAnimation !== desiredState) {
                 self.sprite.gotoAndPlay(desiredState);
