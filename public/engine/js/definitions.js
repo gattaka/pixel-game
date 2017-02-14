@@ -46,8 +46,15 @@ var Lich;
      * Objekty, které vzniknou při vytěžení mapy nebo při vyhození z inventáře
      */
     var InvObjDefinition = (function () {
-        function InvObjDefinition(invKey, target) {
+        function InvObjDefinition(
+            // klíč
+            invKey, 
+            // sprite název
+            spriteName, 
+            // cíl při položení
+            target) {
             this.invKey = invKey;
+            this.spriteName = spriteName;
             this.frames = 1;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  
@@ -122,7 +129,9 @@ var Lich;
         __extends(MapObjDefinition, _super);
         function MapObjDefinition(
             // údaje o objektu na mapě
-            mapObjKey, spriteName, mapSpriteWidth, mapSpriteHeight, 
+            mapObjKey, 
+            // sprite název
+            spriteName, mapSpriteWidth, mapSpriteHeight, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             invObj, 
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
@@ -179,6 +188,8 @@ var Lich;
         function MapSurfaceDefinition(
             // údaje o povrchu na mapě
             mapObjKey, 
+            // sprite název
+            spriteName, 
             // id objektu, který má vypadnout do světa po vytěžení
             invObj, 
             // kolik INV objektů vznikne po vytěření
@@ -192,6 +203,7 @@ var Lich;
             if (collisionType === void 0) { collisionType = CollisionType.SOLID; }
             var _this = _super.call(this, mapObjKey, invObj, quant) || this;
             _this.mapObjKey = mapObjKey;
+            _this.spriteName = spriteName;
             _this.invObj = invObj;
             _this.quant = quant;
             _this.seedCooldown = seedCooldown;
@@ -221,9 +233,12 @@ var Lich;
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
             diggableSrfc, 
             // klíč přechodového povrchu
-            transitionKey) {
+            transitionKey, 
+            // sprite název
+            spriteName) {
             this.diggableSrfc = diggableSrfc;
             this.transitionKey = transitionKey;
+            this.spriteName = spriteName;
         }
         return MapSurfaceTransitionDefinition;
     }());
@@ -233,9 +248,12 @@ var Lich;
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
             diggableSrfc, 
             // klíč přechodového povrchu
-            transitionKey) {
+            transitionKey, 
+            // sprite název
+            spriteName) {
             this.diggableSrfc = diggableSrfc;
             this.transitionKey = transitionKey;
+            this.spriteName = spriteName;
         }
         return MapSurfaceBgrTransitionDefinition;
     }());
@@ -257,6 +275,8 @@ var Lich;
         function MapSurfaceBgrDefinition(
             // údaje o povrchu na mapě
             mapObjKey, 
+            // sprite název
+            spriteName, 
             // id objektu, který má vypadnout do světa po vytěžení
             invObj, 
             // kolik INV objektů vznikne po vytěření
@@ -265,6 +285,7 @@ var Lich;
             minimapColor) {
             var _this = _super.call(this, mapObjKey, invObj, quant) || this;
             _this.mapObjKey = mapObjKey;
+            _this.spriteName = spriteName;
             _this.invObj = invObj;
             _this.quant = quant;
             _this.minimapColor = minimapColor;

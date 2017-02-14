@@ -49,7 +49,13 @@ namespace Lich {
         // konzumace, vrací, zda byl objekt opravdu zkonzumován
         public consumeAction?: (world: World) => boolean;
 
-        constructor(public invKey: InventoryKey, target?: MapObjDefinition | MapSurfaceDefinition) {
+        constructor(
+            // klíč
+            public invKey: InventoryKey,
+            // sprite název
+            public spriteName: string,
+            // cíl při položení
+            target?: MapObjDefinition | MapSurfaceDefinition) {
             if ((target instanceof MapObjDefinition)) {
                 this.mapObj = <MapObjDefinition>target;
             }
@@ -122,6 +128,7 @@ namespace Lich {
         constructor(
             // údaje o objektu na mapě
             public mapObjKey: MapObjectKey,
+            // sprite název
             public spriteName: string,
             public mapSpriteWidth: number,
             public mapSpriteHeight: number,
@@ -174,6 +181,8 @@ namespace Lich {
         constructor(
             // údaje o povrchu na mapě
             public mapObjKey: SurfaceKey,
+            // sprite název
+            public spriteName: string,
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření
@@ -205,7 +214,9 @@ namespace Lich {
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
             public diggableSrfc: SurfaceKey,
             // klíč přechodového povrchu
-            public transitionKey: SurfaceKey) {
+            public transitionKey: SurfaceKey,
+            // sprite název
+            public spriteName: string) {
         }
     }
 
@@ -214,7 +225,9 @@ namespace Lich {
             // jaký typ povrchu je prolínán a který se při výkopu měl vracet
             public diggableSrfc: SurfaceBgrKey,
             // klíč přechodového povrchu
-            public transitionKey: SurfaceBgrKey) {
+            public transitionKey: SurfaceBgrKey,
+            // sprite název
+            public spriteName: string) {
         }
     }
 
@@ -235,6 +248,8 @@ namespace Lich {
         constructor(
             // údaje o povrchu na mapě
             public mapObjKey: SurfaceBgrKey,
+            // sprite název
+            public spriteName: string,
             // id objektu, který má vypadnout do světa po vytěžení
             public invObj: InventoryKey,
             // kolik INV objektů vznikne po vytěření

@@ -517,7 +517,7 @@ var Lich;
                                         // pokud jde o přechodový povrch, musí se vyresetovat na původní hlavní povrch
                                         if (Lich.Resources.getInstance().surfaceIndex.isTransitionSrfc(val)) {
                                             var transVal = Lich.Resources.getInstance().surfaceIndex.getType(val);
-                                            realType = Lich.Resources.getInstance().mapTransitionSrfcs[Lich.SurfaceKey[transVal]].diggableSrfc;
+                                            realType = Lich.Resources.getInstance().mapTransitionSrfcDefs[Lich.SurfaceKey[transVal]].diggableSrfc;
                                         }
                                         record.setValue(x, y, index.getPositionIndex(realType, Lich.SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);

@@ -15,7 +15,7 @@ var Lich;
             // klíč hlavního spritesheetu 
             spritesheetKey, 
             // jméno položky z hlavního spritesheetu
-            subSpritesheetName, 
+            spriteName, 
             // klíč sady animací
             animationSetKey, 
             // počet snímků
@@ -23,7 +23,7 @@ var Lich;
             // rozměry snímků animací
             width, height) {
             this.spritesheetKey = spritesheetKey;
-            this.subSpritesheetName = subSpritesheetName;
+            this.spriteName = spriteName;
             this.animationSetKey = animationSetKey;
             this.frames = frames;
             this.width = width;

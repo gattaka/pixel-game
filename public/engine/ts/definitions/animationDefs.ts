@@ -16,7 +16,7 @@ namespace Lich {
             // klíč hlavního spritesheetu 
             public spritesheetKey: SpritesheetKey,
             // jméno položky z hlavního spritesheetu
-            public subSpritesheetName: string,
+            public spriteName: string,
             // klíč sady animací
             public animationSetKey: AnimationSetKey,
             // počet snímků

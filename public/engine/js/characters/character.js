@@ -68,7 +68,7 @@ var Lich;
             var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
             this.width = animationDef.width;
             this.height = animationDef.height;
-            this.sprite = Lich.Resources.getInstance().getSprite(Lich.SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);
+            this.sprite = Lich.Resources.getInstance().getSprite(Lich.SpritesheetKey.SPST_OBJECTS_KEY, animationDef.spriteName);
             this.addChild(this.sprite);
         };
         Character.prototype.updateHealthBar = function () {

@@ -26,7 +26,7 @@ var Lich;
             this.recipesDiv = document.createElement("div");
             this.recipesDiv.id = "recipes-list-div";
             // URL grafiky položek
-            Lich.INVENTORY_PATHS.forEach(function (path) {
+            INVENTORY_PATHS.forEach(function (path) {
                 _this.recipeImgMap[path[1]] = path[0];
             });
             // Přehled receptů dle položky
@@ -93,7 +93,7 @@ var Lich;
             var _this = this;
             this.achievementsDiv = document.getElementById("achievements-div");
             // URL grafiky položek
-            Lich.ACHIEVEMENTS_PATHS.forEach(function (path) {
+            ACHIEVEMENTS_PATHS.forEach(function (path) {
                 _this.achvImgMap[path[1]] = path[0];
             });
             // Přehled dle položky

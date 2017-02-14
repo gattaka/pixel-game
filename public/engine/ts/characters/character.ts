@@ -53,7 +53,7 @@ namespace Lich {
             let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
             this.width = animationDef.width;
             this.height = animationDef.height;
-            this.sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_OBJECTS_KEY, animationDef.subSpritesheetName);
+            this.sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_OBJECTS_KEY, animationDef.spriteName);
             this.addChild(this.sprite);
         }
 

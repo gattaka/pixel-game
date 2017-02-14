@@ -69,7 +69,7 @@ var Lich;
         ;
         SurfaceIndex.prototype.isTransitionSrfc = function (index) {
             var key = this.getType(index);
-            if (Lich.Resources.getInstance().mapTransitionSrfcs[Lich.SurfaceKey[key]])
+            if (Lich.Resources.getInstance().mapTransitionSrfcDefs[Lich.SurfaceKey[key]])
                 return true;
             return false;
         };

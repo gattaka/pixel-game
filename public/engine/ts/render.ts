@@ -609,7 +609,7 @@ namespace Lich {
                                         // pokud jde o přechodový povrch, musí se vyresetovat na původní hlavní povrch
                                         if (Resources.getInstance().surfaceIndex.isTransitionSrfc(val)) {
                                             let transVal = Resources.getInstance().surfaceIndex.getType(val);
-                                            realType = Resources.getInstance().mapTransitionSrfcs[SurfaceKey[transVal]].diggableSrfc;
+                                            realType = Resources.getInstance().mapTransitionSrfcDefs[SurfaceKey[transVal]].diggableSrfc;
                                         }
                                         record.setValue(x, y, index.getPositionIndex(realType, SurfacePositionKey.M1));
                                         tilesToReset.push([x, y]);

@@ -106,14 +106,14 @@ namespace Lich {
          * DEFINICE
          */
 
-        // definice povrchů a objektů
+        // definice povrchů a pozadí povrchů
         private mapSurfaceDefs: { [k: string]: MapSurfaceDefinition } = {};
         private mapSurfacesBgrDefs: { [k: string]: MapSurfaceBgrDefinition } = {};
         // dle aliasovaného povrchu
         private mapSurfaceTransitionsDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         private mapSurfaceBgrTransitionsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
         // dle trans povrchu
-        public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
+        public mapTransitionSrfcDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         // definice achievementů 
@@ -125,18 +125,43 @@ namespace Lich {
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
 
+        /**
+         * Sprite info  
+         */
+
+        // Mapa inventářových položek dle jejich sprite jména
+        public invObjectDefsBySpriteNameMap: { [k: string]: InvObjDefinition } = {};
+        // Mapa mapových objektů dle jejich sprite jména
+        public mapObjectDefsBySpriteNameMap: { [k: string]: MapObjDefinition } = {};
+        // Mapa povrchů dle jejich sprite jména
+        public mapSurfaceDefsBySpriteNameMap: { [k: string]: MapSurfaceDefinition } = {};
+        // Mapa pozadí povrchů dle jejich sprite jména
+        public mapSurfaceBgrDefsBySpriteNameMap: { [k: string]: MapSurfaceBgrDefinition } = {};
+        // Mapa přechodových povrchů dle jejich sprite jména
+        public mapTransitionSrfcDefsBySpriteNameMap: { [k: string]: MapSurfaceTransitionDefinition } = {};
+        // Mapa přechodových pozadí povrchů dle jejich sprite jména
+        public mapTransitionSrfcBgrDefsBySpriteNameMap: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
+
+        /**
+         * Spritesheet info  
+         */
+
         // Mapa spritesheets dle klíče 
         public spritesheetByKeyMap: { [k: string]: createjs.SpriteSheet } = {};
         // Mapa sprites dle jejich souborového jména ve spritesheet dle jeho klíče
         public spriteItemDefsBySheetByNameMap: { [k: string]: { [k: string]: SpriteItemDef } } = {};
+
+        /**
+         * Animace
+         */
+
         // Mapa definic animací dle klíče animační sady
         public animationSetDefsByKey: { [k: string]: AnimationSetDefinition } = {};
         // Mapa definic animací dle souborového jména sub-spritesheet
-        public animationSetDefsBySubSheetName: { [k: string]: AnimationSetDefinition } = {};
+        public animationSetDefsBySpriteName: { [k: string]: AnimationSetDefinition } = {};
 
         // definice inv položek
         public invObjectDefs = new Array<InvObjDefinition>();
-
         // definice spells
         public spellDefs = new Table<SpellDefinition>();
         public interactSpellDef = new MapObjectsInteractionSpellDef();
@@ -229,7 +254,7 @@ namespace Lich {
                         // Objekty nech v celku, akorát animace rozděl
                         if (SpritesheetKey.SPST_OBJECTS_KEY == key) {
                             // Pokud se jedná o animaci, rozděl ji dle rozměrů
-                            let animationDef = self.animationSetDefsBySubSheetName[sDef.name];
+                            let animationDef = self.animationSetDefsBySpriteName[sDef.name];
                             if (animationDef) {
                                 let frCnt = 0; // počítadlo snímků animace
                                 let wSplicing = sDef.width / animationDef.width;
@@ -256,10 +281,11 @@ namespace Lich {
 
                         // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
                         if (SpritesheetKey.SPST_TILES_KEY == key) {
-                            // Připraví rozložení animace pro sektory
-                            // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
-                            // DEV test
-                            if (sDef.name == "fireplace") {
+                            // zkus sprite zpracovat jako mapobject
+                            let mapObjectDef = self.mapObjectDefsBySpriteNameMap[sDef.name];
+                            if (mapObjectDef) {
+                                // může být animován    
+                                // rozděl dle sektorů
                                 let frCnt = 4; // počet snímků animace
                                 let w = 8 * 8; // šířka snímku animace
                                 let h = 4 * 8; // výška snímku animace
@@ -276,6 +302,14 @@ namespace Lich {
                                         animations[name] = [frames.length - frCnt, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
                                     }
                                 }
+                            }
+                            // zkus sprite zpracovat jako tile
+
+                            // Připraví rozložení animace pro sektory
+                            // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
+                            // DEV test
+                            if (sDef.name == "fireplace") {
+
                             }
                         }
 
@@ -298,6 +332,7 @@ namespace Lich {
             // Definice mapových povrchů
             SURFACE_DEFS.forEach((definition: MapSurfaceDefinition) => {
                 self.mapSurfaceDefs[SurfaceKey[definition.mapObjKey]] = definition;
+                self.mapSurfaceDefsBySpriteNameMap[definition.spriteName] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapSurfacesFreqPool.insert(definition);
                 }
@@ -306,17 +341,20 @@ namespace Lich {
             // Definice přechodů mapových povrchů
             SURFACE_TRANSITION_DEFS.forEach((definition: MapSurfaceTransitionDefinition) => {
                 self.mapSurfaceTransitionsDefs[SurfaceKey[definition.diggableSrfc]] = definition;
-                self.mapTransitionSrfcs[SurfaceKey[definition.transitionKey]] = definition;
+                self.mapTransitionSrfcDefs[SurfaceKey[definition.transitionKey]] = definition;
+                self.mapTransitionSrfcDefsBySpriteNameMap[definition.spriteName] = definition;
             });
 
             // Definice pozadí mapových povrchů
             SURFACE_BGR_DEFS.forEach((definition: MapSurfaceBgrDefinition) => {
                 self.mapSurfacesBgrDefs[SurfaceBgrKey[definition.mapObjKey]] = definition;
+                self.mapSurfaceBgrDefsBySpriteNameMap[definition.spriteName] = definition;
             });
 
             // Definice mapových objektů
             MAP_OBJECT_DEFS.forEach((definition: MapObjDefinition) => {
                 self.mapObjectDefs[definition.mapObjKey] = definition;
+                self.mapObjectDefsBySpriteNameMap[definition.spriteName] = definition;
                 if (definition.seedCooldown > 0) {
                     self.mapObjectDefsFreqPool.insert(definition);
                 }
@@ -325,6 +363,7 @@ namespace Lich {
             // Definice inventárních objektů 
             INVENTORY_DEFS(self).forEach((definition: InvObjDefinition) => {
                 self.invObjectDefs[definition.invKey] = definition;
+                self.invObjectDefsBySpriteNameMap[definition.spriteName] = definition;
             });
 
             // Definice achievementů
@@ -335,7 +374,7 @@ namespace Lich {
             // Definice animací
             ANIMATION_DEFS.forEach((definition: AnimationSetDefinition) => {
                 self.animationSetDefsByKey[AnimationSetKey[definition.animationSetKey]] = definition;
-                self.animationSetDefsBySubSheetName[definition.subSpritesheetName] = definition;
+                self.animationSetDefsBySpriteName[definition.spriteName] = definition;
             });
 
             // Definice spells
@@ -368,7 +407,7 @@ namespace Lich {
         getSurfaceDef(key: SurfaceKey) {
             // nejprve zkus, zda to není přechodový povrch, 
             // který by se měl přeložit na jeho reálný povrch
-            let transition: MapSurfaceTransitionDefinition = this.mapTransitionSrfcs[SurfaceKey[key]];
+            let transition: MapSurfaceTransitionDefinition = this.mapTransitionSrfcDefs[SurfaceKey[key]];
             if (transition)
                 key = transition.diggableSrfc;
             return this.mapSurfaceDefs[SurfaceKey[key]];
