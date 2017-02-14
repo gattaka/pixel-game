@@ -122,7 +122,7 @@ var Lich;
         __extends(MapObjDefinition, _super);
         function MapObjDefinition(
             // údaje o objektu na mapě
-            mapObjKey, mapSpriteWidth, mapSpriteHeight, 
+            mapObjKey, spriteName, mapSpriteWidth, mapSpriteHeight, 
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 
             invObj, 
             // kolik INV objektů vznikne po vytěžení (kusů dřeva z jednoho stromu)
@@ -133,6 +133,7 @@ var Lich;
             rmbAction) {
             var _this = _super.call(this, mapObjKey, invObj, quant) || this;
             _this.mapObjKey = mapObjKey;
+            _this.spriteName = spriteName;
             _this.mapSpriteWidth = mapSpriteWidth;
             _this.mapSpriteHeight = mapSpriteHeight;
             _this.invObj = invObj;

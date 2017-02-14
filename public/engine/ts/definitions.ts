@@ -122,6 +122,7 @@ namespace Lich {
         constructor(
             // údaje o objektu na mapě
             public mapObjKey: MapObjectKey,
+            public spriteName: string,
             public mapSpriteWidth: number,
             public mapSpriteHeight: number,
             // id objektu, který má vypadnout do světa po vytěžení (třeba dřevo) 

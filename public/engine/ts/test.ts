@@ -74,16 +74,22 @@ namespace Lich {
                 // 20 000 ~ 40 FPS
                 // 10 000 ~ 54 FPS
                 // 5 000 ~ 59 FPS
-                for (let i = 0; i < 5000; i++) {
-                    let sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_TILES_KEY, "fireplace");
-                    sprite.gotoAndPlay("fireplace" + "-FRAGMENT-" + Math.floor(Math.random() * 4) + "-" + Math.floor(Math.random() * 2));
-                    container.addChild(sprite);
-                    sprite.x = Math.random() * (self.canvas.width - 16);
-                    sprite.y = Math.random() * (self.canvas.height - 16);
-                    sprite["xs"] = Math.random() * 300 + 50;
-                    sprite["ys"] = Math.random() * 300 + 50;
-                    self.sprites.push(sprite);
-                }
+                // for (let i = 0; i < 5000; i++) {
+                //     let sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_TILES_KEY, "fireplace");
+                //     sprite.gotoAndPlay("fireplace" + "-FRAGMENT-" + Math.floor(Math.random() * 4) + "-" + Math.floor(Math.random() * 2));
+                //     container.addChild(sprite);
+                //     sprite.x = Math.random() * (self.canvas.width - 16);
+                //     sprite.y = Math.random() * (self.canvas.height - 16);
+                //     sprite["xs"] = Math.random() * 300 + 50;
+                //     sprite["ys"] = Math.random() * 300 + 50;
+                //     self.sprites.push(sprite);
+                // }
+
+                let sprite = Resources.getInstance().getObjectSprite(AnimationSetKey.BUNNY_ANIMATION_KEY);
+                sprite.gotoAndPlay(AnimationKey[AnimationKey.ANM_BUNNY_JUMPL_KEY]);
+                sprite.x = 50;
+                sprite.y = 50;
+                container.addChild(sprite);
 
                 let container3 = new createjs.SpriteContainer();
                 self.text = Resources.getInstance().getText("");

@@ -116,15 +116,23 @@ namespace Lich {
         public mapTransitionSrfcs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
+        // definice achievementů 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
-        public animationsBySetDefs: { [k: string]: AnimationDefinition } = {};
-        public animationsBySheetDefs: { [k: string]: AnimationDefinition } = {};
+        // definice objektů
         public mapObjectDefs = new Array<MapObjDefinition>();
+
+        // Frekvenční pooly pro losování při vytváření/osazování světa 
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
 
-        public spritesheetsMap: { [k: string]: createjs.SpriteSheet } = {};
-        public spritesheetsDefsMap: { [k: string]: { [k: string]: SpriteItemDef } } = {};
+        // Mapa spritesheets dle klíče 
+        public spritesheetByKeyMap: { [k: string]: createjs.SpriteSheet } = {};
+        // Mapa sprites dle jejich souborového jména ve spritesheet dle jeho klíče
+        public spriteItemDefsBySheetByNameMap: { [k: string]: { [k: string]: SpriteItemDef } } = {};
+        // Mapa definic animací dle klíče animační sady
+        public animationSetDefsByKey: { [k: string]: AnimationSetDefinition } = {};
+        // Mapa definic animací dle souborového jména sub-spritesheet
+        public animationSetDefsBySubSheetName: { [k: string]: AnimationSetDefinition } = {};
 
         // definice inv položek
         public invObjectDefs = new Array<InvObjDefinition>();
@@ -203,11 +211,12 @@ namespace Lich {
 
                 // SpriteSheet definice
                 SPRITESHEETS_PATHS.forEach((path) => {
-                    let key = SpritesheetKey[path[2]];
-                    let spritesheetImg = self.getImage(key + Resources.SPRITESHEET_IMAGE_SUFFIX);
-                    let spritesheetDefsArr: Array<SpriteItemDef> = self.loader.getResult(key + Resources.SPRITESHEET_MAP_SUFFIX);
+                    let key: SpritesheetKey = <SpritesheetKey>path[2];
+                    let stringKey = SpritesheetKey[path[2]];
+                    let spritesheetImg = self.getImage(stringKey + Resources.SPRITESHEET_IMAGE_SUFFIX);
+                    let spritesheetDefsArr: Array<SpriteItemDef> = self.loader.getResult(stringKey + Resources.SPRITESHEET_MAP_SUFFIX);
                     let spritesheetDefsMap = {};
-                    self.spritesheetsDefsMap[key] = spritesheetDefsMap;
+                    self.spriteItemDefsBySheetByNameMap[stringKey] = spritesheetDefsMap;
                     let frames = [];
                     let animations = {};
                     for (let i = 0; i < spritesheetDefsArr.length; i++) {
@@ -218,9 +227,9 @@ namespace Lich {
                         animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
 
                         // Objekty nech v celku, akorát animace rozděl
-                        if (SpritesheetKey.SPST_OBJECTS_KEY == path[2]) {
+                        if (SpritesheetKey.SPST_OBJECTS_KEY == key) {
                             // Pokud se jedná o animaci, rozděl ji dle rozměrů
-                            let animationDef = self.animationsBySheetDefs[sDef.name];
+                            let animationDef = self.animationSetDefsBySubSheetName[sDef.name];
                             if (animationDef) {
                                 let frCnt = 0; // počítadlo snímků animace
                                 let wSplicing = sDef.width / animationDef.width;
@@ -238,7 +247,7 @@ namespace Lich {
                                     animations[AnimationKey[animDef.animation]] = [
                                         frames.length - frCnt + animDef.startFrame,
                                         frames.length - frCnt - 1 + animDef.endFrame,
-                                        animDef.nextAnimation,
+                                        AnimationKey[animDef.nextAnimation],
                                         animDef.time
                                     ];
                                 }
@@ -246,30 +255,30 @@ namespace Lich {
                         }
 
                         // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
-                        if (SpritesheetKey.SPST_TILES_KEY == path[2]) {
-                        }
-
-                        // Připraví rozložení animace pro sektory
-                        // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
-                        // DEV test
-                        if (sDef.name == "fireplace") {
-                            let frCnt = 4; // počet snímků animace
-                            let w = 8 * 8; // šířka snímku animace
-                            let h = 4 * 8; // výška snímku animace
-                            let spliceSide = 2 * 8; // velikost výřezu 
-                            let wSplicing = w / spliceSide;
-                            let hSplicing = h / spliceSide;
-                            for (let y = 0; y < hSplicing; y++) {
-                                for (let x = 0; x < wSplicing; x++) {
-                                    for (let f = 0; f < frCnt; f++) {
-                                        // počítá se s tím, že snímky jsou zleva doprava za sebou
-                                        frames.push([sDef.x + x * spliceSide + w * f, sDef.y + y * spliceSide, spliceSide, spliceSide]);
+                        if (SpritesheetKey.SPST_TILES_KEY == key) {
+                            // Připraví rozložení animace pro sektory
+                            // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
+                            // DEV test
+                            if (sDef.name == "fireplace") {
+                                let frCnt = 4; // počet snímků animace
+                                let w = 8 * 8; // šířka snímku animace
+                                let h = 4 * 8; // výška snímku animace
+                                let spliceSide = 2 * 8; // velikost výřezu 
+                                let wSplicing = w / spliceSide;
+                                let hSplicing = h / spliceSide;
+                                for (let y = 0; y < hSplicing; y++) {
+                                    for (let x = 0; x < wSplicing; x++) {
+                                        for (let f = 0; f < frCnt; f++) {
+                                            // počítá se s tím, že snímky jsou zleva doprava za sebou
+                                            frames.push([sDef.x + x * spliceSide + w * f, sDef.y + y * spliceSide, spliceSide, spliceSide]);
+                                        }
+                                        let name = sDef.name + "-FRAGMENT-" + x + "-" + y;
+                                        animations[name] = [frames.length - frCnt, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
                                     }
-                                    let name = sDef.name + "-FRAGMENT-" + x + "-" + y;
-                                    animations[name] = [frames.length - frCnt, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
                                 }
                             }
                         }
+
                     }
 
                     let sheet = new createjs.SpriteSheet({
@@ -278,7 +287,7 @@ namespace Lich {
                         frames: frames,
                         animations: animations
                     });
-                    self.spritesheetsMap[key] = sheet;
+                    self.spritesheetByKeyMap[stringKey] = sheet;
                 });
 
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
@@ -324,9 +333,9 @@ namespace Lich {
             });
 
             // Definice animací
-            ANIMATION_DEFS.forEach((definition: AnimationDefinition) => {
-                self.animationsBySetDefs[AnimationSetKey[definition.animationSetKey]] = definition;
-                self.animationsBySheetDefs[definition.subSpritesheetName] = definition;
+            ANIMATION_DEFS.forEach((definition: AnimationSetDefinition) => {
+                self.animationSetDefsByKey[AnimationSetKey[definition.animationSetKey]] = definition;
+                self.animationSetDefsBySubSheetName[definition.subSpritesheetName] = definition;
             });
 
             // Definice spells
@@ -408,27 +417,25 @@ namespace Lich {
 
         getText(text: string) {
             let self = this;
-            let bitmapText = new createjs.BitmapText(text, self.spritesheetsMap[SpritesheetKey[SpritesheetKey.SPST_FONTS_KEY]]);
+            let bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[SpritesheetKey[SpritesheetKey.SPST_FONTS_KEY]]);
             return bitmapText;
         }
 
         getTileSprite(spriteKey: string, positionIndex?: number): createjs.Sprite {
             let self = this;
             let key = SpritesheetKey[SpritesheetKey.SPST_TILES_KEY];
-            let sprite = new createjs.Sprite(self.spritesheetsMap[key]);
+            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[key]);
             if (positionIndex)
                 sprite.gotoAndPlay(spriteKey + "-FRAGMENT-" + positionIndex);
             else
-                sprite.gotoAndPlay(self.spritesheetsDefsMap[key][spriteKey].frame);
+                sprite.gotoAndPlay(self.spriteItemDefsBySheetByNameMap[key][spriteKey].frame);
             return sprite;
         };
 
-        getSprite(spritesheetKey: SpritesheetKey, spriteKey: string): createjs.Sprite {
+        getObjectSprite(animationSetKey: AnimationSetKey): createjs.Sprite {
             let self = this;
-            let key = SpritesheetKey[spritesheetKey];
-            let sprite = new createjs.Sprite(self.spritesheetsMap[key]);
-            sprite.gotoAndStop(self.spritesheetsDefsMap[key][spriteKey].frame);
-            return sprite;
+            let sheetKey = SpritesheetKey[SpritesheetKey.SPST_OBJECTS_KEY];
+            return new createjs.Sprite(self.spritesheetByKeyMap[sheetKey]);
         };
 
     }

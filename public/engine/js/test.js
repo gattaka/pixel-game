@@ -65,16 +65,21 @@ var Lich;
                 // 20 000 ~ 40 FPS
                 // 10 000 ~ 54 FPS
                 // 5 000 ~ 59 FPS
-                for (var i = 0; i < 5000; i++) {
-                    var sprite = Lich.Resources.getInstance().getSprite(Lich.SpritesheetKey.SPST_TILES_KEY, "fireplace");
-                    sprite.gotoAndPlay("fireplace" + "-FRAGMENT-" + Math.floor(Math.random() * 4) + "-" + Math.floor(Math.random() * 2));
-                    container.addChild(sprite);
-                    sprite.x = Math.random() * (self.canvas.width - 16);
-                    sprite.y = Math.random() * (self.canvas.height - 16);
-                    sprite["xs"] = Math.random() * 300 + 50;
-                    sprite["ys"] = Math.random() * 300 + 50;
-                    self.sprites.push(sprite);
-                }
+                // for (let i = 0; i < 5000; i++) {
+                //     let sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_TILES_KEY, "fireplace");
+                //     sprite.gotoAndPlay("fireplace" + "-FRAGMENT-" + Math.floor(Math.random() * 4) + "-" + Math.floor(Math.random() * 2));
+                //     container.addChild(sprite);
+                //     sprite.x = Math.random() * (self.canvas.width - 16);
+                //     sprite.y = Math.random() * (self.canvas.height - 16);
+                //     sprite["xs"] = Math.random() * 300 + 50;
+                //     sprite["ys"] = Math.random() * 300 + 50;
+                //     self.sprites.push(sprite);
+                // }
+                var sprite = Lich.Resources.getInstance().getObjectSprite(Lich.AnimationSetKey.BUNNY_ANIMATION_KEY);
+                sprite.gotoAndPlay(Lich.AnimationKey[Lich.AnimationKey.ANM_BUNNY_JUMPL_KEY]);
+                sprite.x = 50;
+                sprite.y = 50;
+                container.addChild(sprite);
                 var container3 = new createjs.SpriteContainer();
                 self.text = Lich.Resources.getInstance().getText("");
                 container3.addChild(self.text);

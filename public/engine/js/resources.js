@@ -94,14 +94,21 @@ var Lich;
             // dle trans povrchu
             this.mapTransitionSrfcs = {};
             this.mapTransitionSrfcBgrs = {};
+            // definice achievementů 
             this.achievementsDefs = {};
-            this.animationsBySetDefs = {};
-            this.animationsBySheetDefs = {};
+            // definice objektů
             this.mapObjectDefs = new Array();
+            // Frekvenční pooly pro losování při vytváření/osazování světa 
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
-            this.spritesheetsMap = {};
-            this.spritesheetsDefsMap = {};
+            // Mapa spritesheets dle klíče 
+            this.spritesheetByKeyMap = {};
+            // Mapa sprites dle jejich souborového jména ve spritesheet dle jeho klíče
+            this.spriteItemDefsBySheetByNameMap = {};
+            // Mapa definic animací dle klíče animační sady
+            this.animationSetDefsByKey = {};
+            // Mapa definic animací dle souborového jména sub-spritesheet
+            this.animationSetDefsBySubSheetName = {};
             // definice inv položek
             this.invObjectDefs = new Array();
             // definice spells
@@ -155,11 +162,12 @@ var Lich;
             self.loader.addEventListener("complete", function () {
                 // SpriteSheet definice
                 Lich.SPRITESHEETS_PATHS.forEach(function (path) {
-                    var key = Lich.SpritesheetKey[path[2]];
-                    var spritesheetImg = self.getImage(key + Resources.SPRITESHEET_IMAGE_SUFFIX);
-                    var spritesheetDefsArr = self.loader.getResult(key + Resources.SPRITESHEET_MAP_SUFFIX);
+                    var key = path[2];
+                    var stringKey = Lich.SpritesheetKey[path[2]];
+                    var spritesheetImg = self.getImage(stringKey + Resources.SPRITESHEET_IMAGE_SUFFIX);
+                    var spritesheetDefsArr = self.loader.getResult(stringKey + Resources.SPRITESHEET_MAP_SUFFIX);
                     var spritesheetDefsMap = {};
-                    self.spritesheetsDefsMap[key] = spritesheetDefsMap;
+                    self.spriteItemDefsBySheetByNameMap[stringKey] = spritesheetDefsMap;
                     var frames = [];
                     var animations = {};
                     for (var i = 0; i < spritesheetDefsArr.length; i++) {
@@ -169,9 +177,9 @@ var Lich;
                         frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
                         animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
                         // Objekty nech v celku, akorát animace rozděl
-                        if (Lich.SpritesheetKey.SPST_OBJECTS_KEY == path[2]) {
+                        if (Lich.SpritesheetKey.SPST_OBJECTS_KEY == key) {
                             // Pokud se jedná o animaci, rozděl ji dle rozměrů
-                            var animationDef = self.animationsBySheetDefs[sDef.name];
+                            var animationDef = self.animationSetDefsBySubSheetName[sDef.name];
                             if (animationDef) {
                                 var frCnt = 0; // počítadlo snímků animace
                                 var wSplicing = sDef.width / animationDef.width;
@@ -189,33 +197,33 @@ var Lich;
                                     animations[Lich.AnimationKey[animDef.animation]] = [
                                         frames.length - frCnt + animDef.startFrame,
                                         frames.length - frCnt - 1 + animDef.endFrame,
-                                        animDef.nextAnimation,
+                                        Lich.AnimationKey[animDef.nextAnimation],
                                         animDef.time
                                     ];
                                 }
                             }
                         }
                         // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
-                        if (Lich.SpritesheetKey.SPST_TILES_KEY == path[2]) {
-                        }
-                        // Připraví rozložení animace pro sektory
-                        // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
-                        // DEV test
-                        if (sDef.name == "fireplace") {
-                            var frCnt = 4; // počet snímků animace
-                            var w = 8 * 8; // šířka snímku animace
-                            var h = 4 * 8; // výška snímku animace
-                            var spliceSide = 2 * 8; // velikost výřezu 
-                            var wSplicing = w / spliceSide;
-                            var hSplicing = h / spliceSide;
-                            for (var y = 0; y < hSplicing; y++) {
-                                for (var x = 0; x < wSplicing; x++) {
-                                    for (var f = 0; f < frCnt; f++) {
-                                        // počítá se s tím, že snímky jsou zleva doprava za sebou
-                                        frames.push([sDef.x + x * spliceSide + w * f, sDef.y + y * spliceSide, spliceSide, spliceSide]);
+                        if (Lich.SpritesheetKey.SPST_TILES_KEY == key) {
+                            // Připraví rozložení animace pro sektory
+                            // tohle by se mělo spustit pro každý rozřezatelný objekt/povrch
+                            // DEV test
+                            if (sDef.name == "fireplace") {
+                                var frCnt = 4; // počet snímků animace
+                                var w = 8 * 8; // šířka snímku animace
+                                var h = 4 * 8; // výška snímku animace
+                                var spliceSide = 2 * 8; // velikost výřezu 
+                                var wSplicing = w / spliceSide;
+                                var hSplicing = h / spliceSide;
+                                for (var y = 0; y < hSplicing; y++) {
+                                    for (var x = 0; x < wSplicing; x++) {
+                                        for (var f = 0; f < frCnt; f++) {
+                                            // počítá se s tím, že snímky jsou zleva doprava za sebou
+                                            frames.push([sDef.x + x * spliceSide + w * f, sDef.y + y * spliceSide, spliceSide, spliceSide]);
+                                        }
+                                        var name_1 = sDef.name + "-FRAGMENT-" + x + "-" + y;
+                                        animations[name_1] = [frames.length - frCnt, frames.length - 1, name_1, Resources.SPRITE_FRAMERATE];
                                     }
-                                    var name_1 = sDef.name + "-FRAGMENT-" + x + "-" + y;
-                                    animations[name_1] = [frames.length - frCnt, frames.length - 1, name_1, Resources.SPRITE_FRAMERATE];
                                 }
                             }
                         }
@@ -226,7 +234,7 @@ var Lich;
                         frames: frames,
                         animations: animations
                     });
-                    self.spritesheetsMap[key] = sheet;
+                    self.spritesheetByKeyMap[stringKey] = sheet;
                 });
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });
@@ -264,8 +272,8 @@ var Lich;
             });
             // Definice animací
             Lich.ANIMATION_DEFS.forEach(function (definition) {
-                self.animationsBySetDefs[Lich.AnimationSetKey[definition.animationSetKey]] = definition;
-                self.animationsBySheetDefs[definition.subSpritesheetName] = definition;
+                self.animationSetDefsByKey[Lich.AnimationSetKey[definition.animationSetKey]] = definition;
+                self.animationSetDefsBySubSheetName[definition.subSpritesheetName] = definition;
             });
             // Definice spells
             var SPELL_DEFS = [
@@ -350,26 +358,24 @@ var Lich;
         };
         Resources.prototype.getText = function (text) {
             var self = this;
-            var bitmapText = new createjs.BitmapText(text, self.spritesheetsMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FONTS_KEY]]);
+            var bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FONTS_KEY]]);
             return bitmapText;
         };
         Resources.prototype.getTileSprite = function (spriteKey, positionIndex) {
             var self = this;
             var key = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_TILES_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetsMap[key]);
+            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[key]);
             if (positionIndex)
                 sprite.gotoAndPlay(spriteKey + "-FRAGMENT-" + positionIndex);
             else
-                sprite.gotoAndPlay(self.spritesheetsDefsMap[key][spriteKey].frame);
+                sprite.gotoAndPlay(self.spriteItemDefsBySheetByNameMap[key][spriteKey].frame);
             return sprite;
         };
         ;
-        Resources.prototype.getSprite = function (spritesheetKey, spriteKey) {
+        Resources.prototype.getObjectSprite = function (animationSetKey) {
             var self = this;
-            var key = Lich.SpritesheetKey[spritesheetKey];
-            var sprite = new createjs.Sprite(self.spritesheetsMap[key]);
-            sprite.gotoAndStop(self.spritesheetsDefsMap[key][spriteKey].frame);
-            return sprite;
+            var sheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_OBJECTS_KEY];
+            return new createjs.Sprite(self.spritesheetByKeyMap[sheetKey]);
         };
         ;
         return Resources;
