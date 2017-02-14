@@ -1,10 +1,11 @@
 namespace Lich {
 
     export enum SpritesheetKey {
-        SPST_FONTS_KEY,
-        SPST_OBJECTS_KEY,
-        SPST_TILES_KEY,
-        SPST_UI_KEY
+        // SPST_FONTS_KEY,
+        // SPST_OBJECTS_KEY,
+        // SPST_TILES_KEY,
+        // SPST_UI_KEY
+        SPST_MAIN_KEY
     }
 
     export enum BackgroundKey {

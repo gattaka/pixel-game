@@ -2,10 +2,11 @@ var Lich;
 (function (Lich) {
     var SpritesheetKey;
     (function (SpritesheetKey) {
-        SpritesheetKey[SpritesheetKey["SPST_FONTS_KEY"] = 0] = "SPST_FONTS_KEY";
-        SpritesheetKey[SpritesheetKey["SPST_OBJECTS_KEY"] = 1] = "SPST_OBJECTS_KEY";
-        SpritesheetKey[SpritesheetKey["SPST_TILES_KEY"] = 2] = "SPST_TILES_KEY";
-        SpritesheetKey[SpritesheetKey["SPST_UI_KEY"] = 3] = "SPST_UI_KEY";
+        // SPST_FONTS_KEY,
+        // SPST_OBJECTS_KEY,
+        // SPST_TILES_KEY,
+        // SPST_UI_KEY
+        SpritesheetKey[SpritesheetKey["SPST_MAIN_KEY"] = 0] = "SPST_MAIN_KEY";
     })(SpritesheetKey = Lich.SpritesheetKey || (Lich.SpritesheetKey = {}));
     var BackgroundKey;
     (function (BackgroundKey) {

@@ -197,89 +197,85 @@ var Lich;
                         frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
                         animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
                         // Objekty nech v celku, akorát animace rozděl
-                        if (Lich.SpritesheetKey.SPST_OBJECTS_KEY == key) {
-                            var animationDef = self.animationSetDefsBySpriteName[sDef.name];
-                            if (animationDef) {
-                                // Pokud se jedná o animaci, rozděl ji dle rozměrů
-                                var frCnt = 0; // počítadlo snímků animace
-                                var wSplicing = sDef.width / animationDef.width;
-                                var hSplicing = sDef.height / animationDef.height;
-                                // Připrav snímky
-                                for (var y = 0; y < hSplicing; y++) {
-                                    for (var x = 0; x < wSplicing; x++) {
-                                        frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
-                                        frCnt++;
-                                    }
+                        var animationDef = self.animationSetDefsBySpriteName[sDef.name];
+                        if (animationDef) {
+                            // Pokud se jedná o animaci, rozděl ji dle rozměrů
+                            var frCnt = 0; // počítadlo snímků animace
+                            var wSplicing = sDef.width / animationDef.width;
+                            var hSplicing = sDef.height / animationDef.height;
+                            // Připrav snímky
+                            for (var y = 0; y < hSplicing; y++) {
+                                for (var x = 0; x < wSplicing; x++) {
+                                    frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
+                                    frCnt++;
                                 }
-                                // Ze snímků sestav animace dle definic
-                                for (var a = 0; a < animationDef.animations.length; a++) {
-                                    var animDef = animationDef.animations[a];
-                                    animations[Lich.AnimationKey[animDef.animationKey]] = [
-                                        frames.length - frCnt + animDef.startFrame,
-                                        frames.length - frCnt - 1 + animDef.endFrame,
-                                        Lich.AnimationKey[animDef.nextAnimationKey],
-                                        animDef.time
-                                    ];
-                                }
+                            }
+                            // Ze snímků sestav animace dle definic
+                            for (var a = 0; a < animationDef.animations.length; a++) {
+                                var animDef = animationDef.animations[a];
+                                animations[Lich.AnimationKey[animDef.animationKey]] = [
+                                    frames.length - frCnt + animDef.startFrame,
+                                    frames.length - frCnt - 1 + animDef.endFrame,
+                                    Lich.AnimationKey[animDef.nextAnimationKey],
+                                    animDef.time
+                                ];
                             }
                         }
                         // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
-                        if (Lich.SpritesheetKey.SPST_TILES_KEY == key) {
-                            // zkus sprite zpracovat jako tile -- stačí, aby položka existovala
-                            // jako povrch, přechod povrchu, pozadí povrchu nebo přechod pozadí 
-                            // povrchu a můžu jednotně rozsekat zaregistrovat, rozměry jsou stejné
-                            var surfaceDef = self.mapSurfaceDefsBySpriteNameMap[sDef.name];
-                            var surfaceBgrDef = self.mapSurfaceBgrDefsBySpriteNameMap[sDef.name];
-                            var surfaceTransDef = self.mapSurfaceTransitionsDefs[sDef.name];
-                            var surfaceBgrTransDef = self.mapSurfaceBgrTransitionsDefs[sDef.name];
-                            if (surfaceDef || surfaceBgrDef || surfaceTransDef || surfaceBgrTransDef) {
-                                var wSplicing = sDef.width / Resources.TILE_SIZE;
-                                var hSplicing = sDef.height / Resources.TILE_SIZE;
-                                for (var y = 0; y < hSplicing; y++) {
-                                    for (var x = 0; x < wSplicing; x++) {
-                                        // tím, že se prostě jenom snímek přidá do již existující fronty, 
-                                        // je dáno, že pro získání fragmentů stačí vzít původní číslo celého
-                                        // sprite a jenom k němu přičíst vnitřní index fragmentu 
-                                        frames.push([sDef.x + x * Resources.TILE_SIZE, sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE]);
-                                    }
+                        // zkus sprite zpracovat jako tile -- stačí, aby položka existovala
+                        // jako povrch, přechod povrchu, pozadí povrchu nebo přechod pozadí 
+                        // povrchu a můžu jednotně rozsekat zaregistrovat, rozměry jsou stejné
+                        var surfaceDef = self.mapSurfaceDefsBySpriteNameMap[sDef.name];
+                        var surfaceBgrDef = self.mapSurfaceBgrDefsBySpriteNameMap[sDef.name];
+                        var surfaceTransDef = self.mapSurfaceTransitionsDefs[sDef.name];
+                        var surfaceBgrTransDef = self.mapSurfaceBgrTransitionsDefs[sDef.name];
+                        if (surfaceDef || surfaceBgrDef || surfaceTransDef || surfaceBgrTransDef) {
+                            var wSplicing = sDef.width / Resources.TILE_SIZE;
+                            var hSplicing = sDef.height / Resources.TILE_SIZE;
+                            for (var y = 0; y < hSplicing; y++) {
+                                for (var x = 0; x < wSplicing; x++) {
+                                    // tím, že se prostě jenom snímek přidá do již existující fronty, 
+                                    // je dáno, že pro získání fragmentů stačí vzít původní číslo celého
+                                    // sprite a jenom k němu přičíst vnitřní index fragmentu 
+                                    frames.push([sDef.x + x * Resources.TILE_SIZE, sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE]);
                                 }
                             }
-                            else if (sDef.name == Lich.FOG_DEF[0]) {
-                                var wSplicing = sDef.width / Resources.PARTS_SIZE;
-                                var hSplicing = sDef.height / Resources.PARTS_SIZE;
-                                for (var y = 0; y < hSplicing; y++) {
-                                    for (var x = 0; x < wSplicing; x++) {
-                                        // tím, že se prostě jenom snímek přidá do již existující fronty, 
-                                        // je dáno, že pro získání fragmentů stačí vzít původní číslo celého
-                                        // sprite a jenom k němu přičíst vnitřní index fragmentu 
-                                        frames.push([sDef.x + x * Resources.PARTS_SIZE, sDef.y + y * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE]);
-                                    }
+                        }
+                        else if (sDef.name == Lich.FOG_DEF[0]) {
+                            var wSplicing = sDef.width / Resources.PARTS_SIZE;
+                            var hSplicing = sDef.height / Resources.PARTS_SIZE;
+                            for (var y = 0; y < hSplicing; y++) {
+                                for (var x = 0; x < wSplicing; x++) {
+                                    // tím, že se prostě jenom snímek přidá do již existující fronty, 
+                                    // je dáno, že pro získání fragmentů stačí vzít původní číslo celého
+                                    // sprite a jenom k němu přičíst vnitřní index fragmentu 
+                                    frames.push([sDef.x + x * Resources.PARTS_SIZE, sDef.y + y * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE]);
                                 }
                             }
-                            else {
-                                // zkus sprite zpracovat jako mapobject
-                                var mapObjectDef = self.mapObjectDefsBySpriteNameMap[sDef.name];
-                                if (mapObjectDef) {
-                                    // může být animován    
-                                    // rozděl dle sektorů
-                                    for (var y = 0; y < mapObjectDef.mapSpriteHeight; y++) {
-                                        for (var x = 0; x < mapObjectDef.mapSpriteWidth; x++) {
-                                            if (mapObjectDef.frames > 1) {
-                                                for (var f = 0; f < mapObjectDef.frames; f++) {
-                                                    frames.push([
-                                                        // animace map-objektů je vždy rozbalená doprava na jednom řádku
-                                                        sDef.x + x * Resources.TILE_SIZE + Resources.TILE_SIZE * mapObjectDef.mapSpriteWidth * f,
-                                                        sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE
-                                                    ]);
-                                                }
-                                                var name_1 = sDef.name + Resources.FRAGMENT_SEPARATOR + (x + y * mapObjectDef.mapSpriteWidth);
-                                                animations[name_1] = [frames.length - mapObjectDef.frames, frames.length - 1, name_1, Resources.SPRITE_FRAMERATE];
-                                            }
-                                            else {
+                        }
+                        else {
+                            // zkus sprite zpracovat jako mapobject
+                            var mapObjectDef = self.mapObjectDefsBySpriteNameMap[sDef.name];
+                            if (mapObjectDef) {
+                                // může být animován    
+                                // rozděl dle sektorů
+                                for (var y = 0; y < mapObjectDef.mapSpriteHeight; y++) {
+                                    for (var x = 0; x < mapObjectDef.mapSpriteWidth; x++) {
+                                        if (mapObjectDef.frames > 1) {
+                                            for (var f = 0; f < mapObjectDef.frames; f++) {
                                                 frames.push([
-                                                    sDef.x + x * Resources.TILE_SIZE, sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE
+                                                    // animace map-objektů je vždy rozbalená doprava na jednom řádku
+                                                    sDef.x + x * Resources.TILE_SIZE + Resources.TILE_SIZE * mapObjectDef.mapSpriteWidth * f,
+                                                    sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE
                                                 ]);
                                             }
+                                            var name_1 = sDef.name + Resources.FRAGMENT_SEPARATOR + (x + y * mapObjectDef.mapSpriteWidth);
+                                            animations[name_1] = [frames.length - mapObjectDef.frames, frames.length - 1, name_1, Resources.SPRITE_FRAMERATE];
+                                        }
+                                        else {
+                                            frames.push([
+                                                sDef.x + x * Resources.TILE_SIZE, sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE
+                                            ]);
                                         }
                                     }
                                 }
@@ -398,34 +394,14 @@ var Lich;
             return new createjs.Bitmap(this.getImage(key));
         };
         ;
-        Resources.prototype.getSpritePart = function (key, tileX, tileY, count, width, height) {
-            var frames = [];
-            for (var i = 0; i < count; i++) {
-                frames.push([
-                    tileX * Resources.TILE_SIZE + i * width * Resources.TILE_SIZE,
-                    tileY * Resources.TILE_SIZE,
-                    Resources.TILE_SIZE,
-                    Resources.TILE_SIZE
-                ]);
-            }
-            var sheet = new createjs.SpriteSheet({
-                framerate: 10,
-                images: [this.getImage(key)],
-                frames: frames,
-                animations: { "idle": [0, count - 1, "idle", Resources.SPRITE_FRAMERATE] }
-            });
-            var sprite = new createjs.Sprite(sheet, "idle");
-            sprite.gotoAndPlay("idle");
-            return sprite;
-        };
         Resources.prototype.getText = function (text) {
             var self = this;
-            var bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FONTS_KEY]]);
+            var bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY]]);
             return bitmapText;
         };
         Resources.prototype.getSurfaceTileSprite = function (surfaceKey, positionIndex) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_TILES_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex);
@@ -434,7 +410,7 @@ var Lich;
         ;
         Resources.prototype.getSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_TILES_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex);
@@ -443,7 +419,7 @@ var Lich;
         ;
         Resources.prototype.getFogSprite = function (positionIndex) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_TILES_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][Lich.FOG_DEF[0]].frame + positionIndex);
             return sprite;
@@ -451,7 +427,7 @@ var Lich;
         ;
         Resources.prototype.getMapObjectTileSprite = function (mapObjectKey, positionIndex) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_TILES_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var mapObjectDef = self.mapObjectDefs[mapObjectKey];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             if (mapObjectDef.frames > 1) {
@@ -467,7 +443,7 @@ var Lich;
         ;
         Resources.prototype.getInvObjectSprite = function (key) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_OBJECTS_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var invDef = self.invObjectDefs[key];
             var frameBySpriteName = self.spriteItemDefsBySheetByNameMap[stringSheetKey][invDef.spriteName].frame;
@@ -479,18 +455,13 @@ var Lich;
         Resources.prototype.getAnimatedObjectSprite = function (animation) {
             var self = this;
             var animationDef = self.animationSetDefsByKey[animation];
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_OBJECTS_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var startFrame = self.spriteItemDefsBySheetByNameMap[stringSheetKey][animationDef.spriteName].frame;
             sprite.gotoAndPlay(Lich.AnimationKey[animationDef.animations[0].animationKey]);
             return sprite;
         };
         ;
-        Resources.prototype.getSpriteBySheetKey = function (sheetKey) {
-            var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[sheetKey];
-            return new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-        };
         return Resources;
     }());
     Resources.REVEAL_SIZE = 13; // musí být liché

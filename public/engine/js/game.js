@@ -124,9 +124,10 @@ var Lich;
                         // podařilo se něco nahrát?
                         if (data) {
                             var obj_1 = JSON.parse(data);
-                            self.loadUI.reset();
-                            self.stage.addChild(self.loadUI);
-                            self.loadUI.alpha = 1;
+                            // TODO
+                            // self.loadUI.reset();
+                            // self.stage.addChild(self.loadUI);
+                            // self.loadUI.alpha = 1;
                             if (obj_1.map) {
                                 Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
                                     populateContent(tilesMap);
@@ -153,21 +154,23 @@ var Lich;
                     Lich.EventBus.getInstance().clear();
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
-                    self.ui = new Lich.UI(self.canvas, tilesMap, mobile);
+                    // TODO
+                    // self.ui = new UI(self.canvas, tilesMap, mobile);
                     self.background = new Lich.Background(self);
                     self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
-                        setTimeout(function () {
-                            var idb = Lich.IndexedDB.getInstance();
-                            var data = {
-                                map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                                inv: self.ui.inventoryUI.serialize()
-                            };
-                            idb.saveData(JSON.stringify(data));
-                            self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
-                        }, 1);
+                        // TODO
+                        // setTimeout(() => {
+                        //     let idb = IndexedDB.getInstance();
+                        //     let data = {
+                        //         map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                        //         inv: self.ui.inventoryUI.serialize()
+                        //     };
+                        //     idb.saveData(JSON.stringify(data));
+                        //     self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
+                        // }, 1);
                         return true;
                     });
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
@@ -194,13 +197,15 @@ var Lich;
                         }
                         return false;
                     });
-                    createjs.Tween.get(self.loadUI)
-                        .to({
-                        alpha: 0
-                    }, 1500).call(function () {
-                        self.stage.removeChild(self.loadUI);
-                    });
+                    // TODO
+                    // createjs.Tween.get(self.loadUI)
+                    //     .to({
+                    //         alpha: 0
+                    //     }, 1500).call(function () {
+                    //         self.stage.removeChild(self.loadUI);
+                    //     });
                     self.initialized = true;
+                    self.stage.addChild(self.content);
                 };
                 setInterval(function () {
                     if (self.playerReadyToAutosave) {
@@ -214,7 +219,6 @@ var Lich;
                 loadWorld();
             };
             self.content = new createjs.SpriteContainer();
-            self.stage.addChild(self.content);
             if (Lich.Resources.getInstance().isLoaderDone()) {
                 init();
             }
@@ -225,7 +229,6 @@ var Lich;
                     Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.LOAD_FINISHED, listener_1);
                     return false;
                 });
-                self.stage.addChild(self.loadUI = new Lich.LoaderUI(self));
             }
             /*-----------*/
             /* Time init */

@@ -50,7 +50,7 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_MAGENTA_PLANT_KEY, "plant2" + tsf, 2, 2, Lich.InventoryKey.INV_MAGENTA_PLANT_KEY, 1, 60).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CYAN_PLANT_KEY, "plant3" + tsf, 2, 2, Lich.InventoryKey.INV_CYAN_PLANT_KEY, 1, 60).setDepth(0, 10),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_YELLOW_PLANT_KEY, "plant4" + tsf, 2, 2, Lich.InventoryKey.INV_YELLOW_PLANT_KEY, 1, 60).setDepth(0, 10),
-        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FLORITE_KEY, "florite", 2, 2, Lich.InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100),
+        new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FLORITE_KEY, "florite_chunk", 2, 2, Lich.InventoryKey.INV_FLORITE_KEY, 5, 100).setDepth(70, 100),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_CAMPFIRE_KEY, "campfire", 2, 2, Lich.InventoryKey.INV_CAMPFIRE_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_FIREPLACE_KEY, "fireplace", 4, 2, Lich.InventoryKey.INV_FIREPLACE_KEY, 1, 0).setFrames(4),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_DEAD_FIREPLACE_KEY, "dead_fireplace", 4, 2, Lich.InventoryKey.INV_FIREPLACE_KEY, 1, 0),

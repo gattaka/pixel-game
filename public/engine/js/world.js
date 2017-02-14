@@ -13,19 +13,20 @@ var Lich;
 (function (Lich) {
     var WorldObject = (function (_super) {
         __extends(WorldObject, _super);
-        function WorldObject(item, width, height, spriteSheet, initState, states, collXOffset, collYOffset, notificationTimer) {
-            var _this = _super.call(this, width, height, spriteSheet, initState, collXOffset, collYOffset) || this;
+        function WorldObject(item, collXOffset, collYOffset, notificationTimer) {
+            var _this = _super.call(this, collXOffset, collYOffset) || this;
             _this.item = item;
-            _this.width = width;
-            _this.height = height;
-            _this.spriteSheet = spriteSheet;
-            _this.initState = initState;
-            _this.states = states;
             _this.collXOffset = collXOffset;
             _this.collYOffset = collYOffset;
             _this.notificationTimer = notificationTimer;
             return _this;
         }
+        WorldObject.prototype.initSprite = function () {
+            this.width = Lich.Resources.PARTS_SIZE;
+            this.height = Lich.Resources.PARTS_SIZE;
+            this.sprite = Lich.Resources.getInstance().getInvObjectSprite(this.item.invObj);
+            this.addChild(this.sprite);
+        };
         ;
         return WorldObject;
     }(Lich.AbstractWorldObject));
@@ -145,12 +146,13 @@ var Lich;
             shape.x = 0;
             shape.y = 0;
             deadInfo.addChild(shape);
-            var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.GAME_OVER_KEY]);
-            var bounds = bitmap.getBounds();
-            bitmap.x = shape.width / 2 - bounds.width / 2;
-            bitmap.y = shape.height / 2 - bounds.height / 2;
-            deadInfo.addChild(bitmap);
-            deadInfo.alpha = 0;
+            // TODO
+            // let bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.GAME_OVER_KEY]);
+            // let bounds = bitmap.getBounds();
+            // bitmap.x = shape.width / 2 - bounds.width / 2;
+            // bitmap.y = shape.height / 2 - bounds.height / 2;
+            // deadInfo.addChild(bitmap);
+            // deadInfo.alpha = 0;
             createjs.Tween.get(deadInfo)
                 .to({
                 alpha: 1
@@ -204,9 +206,7 @@ var Lich;
             else {
                 frames = invDef.frames;
             }
-            var image = Lich.Resources.getInstance().getImage(Lich.InventoryKey[invItem.invObj]);
-            var object = new WorldObject(invItem, image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-            image.height, Lich.Resources.getInstance().getSpriteSheet(Lich.InventoryKey[invItem.invObj], frames), "idle", { "idle": "idle" }, 2, 0, World.OBJECT_NOTIFY_TIME);
+            var object = new WorldObject(invItem, 2, 0, World.OBJECT_NOTIFY_TIME);
             object.speedx = 0;
             object.speedy = (Math.random() * 2 + 1) * World.OBJECT_NOTIFY_BOUNCE_SPEED;
             if (inTiles) {

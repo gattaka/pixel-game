@@ -30,7 +30,7 @@ namespace Lich {
             this.recipesDiv.id = "recipes-list-div";
 
             // URL grafiky položek
-            INVENTORY_PATHS.forEach((path) => {
+            INVENTORY_DEFS.forEach((path) => {
                 this.recipeImgMap[path[1]] = path[0];
             });
 

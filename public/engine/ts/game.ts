@@ -161,9 +161,10 @@ namespace Lich {
                         // podařilo se něco nahrát?
                         if (data) {
                             let obj = JSON.parse(data);
-                            self.loadUI.reset();
-                            self.stage.addChild(self.loadUI);
-                            self.loadUI.alpha = 1;
+                            // TODO
+                            // self.loadUI.reset();
+                            // self.stage.addChild(self.loadUI);
+                            // self.loadUI.alpha = 1;
                             if (obj.map) {
                                 TilesMapGenerator.deserialize(obj.map, (tilesMap) => {
                                     populateContent(tilesMap);
@@ -191,22 +192,24 @@ namespace Lich {
                     Mixer.stopAllSounds();
 
                     // (re)-init
-                    self.ui = new UI(self.canvas, tilesMap, mobile);
+                    // TODO
+                    // self.ui = new UI(self.canvas, tilesMap, mobile);
                     self.background = new Background(self);
                     self.world = new World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
-                        setTimeout(() => {
-                            let idb = IndexedDB.getInstance();
-                            let data = {
-                                map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                                inv: self.ui.inventoryUI.serialize()
-                            };
-                            idb.saveData(JSON.stringify(data));
-                            self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
-                        }, 1);
+                        // TODO
+                        // setTimeout(() => {
+                        //     let idb = IndexedDB.getInstance();
+                        //     let data = {
+                        //         map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                        //         inv: self.ui.inventoryUI.serialize()
+                        //     };
+                        //     idb.saveData(JSON.stringify(data));
+                        //     self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
+                        // }, 1);
                         return true;
                     });
 
@@ -237,14 +240,16 @@ namespace Lich {
                         return false;
                     });
 
-                    createjs.Tween.get(self.loadUI)
-                        .to({
-                            alpha: 0
-                        }, 1500).call(function () {
-                            self.stage.removeChild(self.loadUI);
-                        });
+                    // TODO
+                    // createjs.Tween.get(self.loadUI)
+                    //     .to({
+                    //         alpha: 0
+                    //     }, 1500).call(function () {
+                    //         self.stage.removeChild(self.loadUI);
+                    //     });
 
                     self.initialized = true;
+                    self.stage.addChild(self.content);
                 };
 
                 setInterval(() => {
@@ -260,7 +265,6 @@ namespace Lich {
             }
 
             self.content = new createjs.SpriteContainer();
-            self.stage.addChild(self.content);
 
             if (Resources.getInstance().isLoaderDone()) {
                 init();
@@ -271,7 +275,8 @@ namespace Lich {
                     EventBus.getInstance().unregisterConsumer(EventType.LOAD_FINISHED, listener);
                     return false;
                 });
-                self.stage.addChild(self.loadUI = new LoaderUI(self));
+                // TODO
+                // self.stage.addChild(self.loadUI = new LoaderUI(self));
             }
 
             /*-----------*/

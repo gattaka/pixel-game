@@ -304,46 +304,10 @@ namespace Lich {
 
         }
 
-        setSurfaceSourceRect(tile: createjs.Bitmap, positionIndex: number, bgr: boolean) {
-            let v;
-            if (bgr) {
-                v = Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
-            } else {
-                v = Resources.getInstance().surfaceIndex.getPosition(positionIndex);
-            }
-            this.setSourceRect(tile, v);
-        }
-
-        setSourceRect(tile: createjs.Bitmap, v: number) {
-            let side = Resources.TILE_SIZE;
-            let tileCols = tile.image.width / side;
-            // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            tile.sourceRect = new createjs.Rectangle(
-                ((v - 1) % tileCols) * side,
-                Math.floor((v - 1) / tileCols) * side,
-                side,
-                side
-            );
-        }
-
-        setFogSourceRect(tile: createjs.Bitmap, positionIndex: number) {
-            let side = Resources.PARTS_SIZE;
-            let v = positionIndex || positionIndex == 0 ? positionIndex : FogTile.MM;
-            let tileCols = tile.image.width / side;
-            // Otestováno: tohle je rychlejší než extract ze Spritesheet
-            tile.sourceRect = new createjs.Rectangle(
-                (v % tileCols) * side,
-                Math.floor(v / tileCols) * side,
-                side,
-                side
-            );
-        }
-
         createFogTile(positionIndex: number) {
             var self = this;
             let rsc = Resources.getInstance();
-            let tile = rsc.getSprite(SpritesheetKey.SPST_TILES_KEY, FogKey[FogKey.FOG_KEY]);
-            self.setFogSourceRect(tile, positionIndex);
+            let tile = rsc.getFogSprite(positionIndex);
             return tile;
         }
 
@@ -353,33 +317,20 @@ namespace Lich {
             let typ, tile;
             if (bgr) {
                 typ = rsc.surfaceBgrIndex.getType(positionIndex);
-                tile = rsc.getSprite(SurfaceBgrKey[typ]);
+                let v = Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
+                tile = rsc.getSurfaceBgrTileSprite(typ, v - 1);
             } else {
                 typ = rsc.surfaceIndex.getType(positionIndex);
-                tile = rsc.getBitmap(SurfaceKey[typ]);
+                let v = Resources.getInstance().surfaceIndex.getPosition(positionIndex);
+                tile = rsc.getSurfaceTileSprite(typ, v - 1);
             }
-            this.setSurfaceSourceRect(tile, positionIndex, bgr);
             return tile;
         }
 
         createObject(objectTile: MapObjectTile) {
             var self = this;
             var objDef: MapObjDefinition = Resources.getInstance().mapObjectDefs[objectTile.mapKey];
-            var object: any;
-            if (objDef.frames > 1) {
-                object = Resources.getInstance().getSpritePart(MapObjectKey[objDef.mapObjKey], objectTile.objTileX, objectTile.objTileY, objDef.frames, objDef.mapSpriteWidth, objDef.mapSpriteHeight);
-                return object;
-            } else {
-                object = Resources.getInstance().getBitmap(MapObjectKey[objectTile.mapKey]);
-                // Otestováno: tohle je rychlejší než extract ze Spritesheet
-                object.sourceRect = new createjs.Rectangle(
-                    objectTile.objTileX * Resources.TILE_SIZE,
-                    objectTile.objTileY * Resources.TILE_SIZE,
-                    Resources.TILE_SIZE,
-                    Resources.TILE_SIZE
-                );
-                return object;
-            }
+            return Resources.getInstance().getMapObjectTileSprite(objDef.mapObjKey, objectTile.objTileX + objectTile.objTileY * objDef.mapSpriteWidth);
         }
 
         /**
@@ -554,7 +505,8 @@ namespace Lich {
                     let tile = sceneMap.getValue(x, y);
                     if (tile !== null) {
                         let v = record.getValue(x, y);
-                        self.setFogSourceRect(tile, v);
+                        tile = Resources.getInstance().getFogSprite(v);
+                        sceneMap.setValue(x, y, tile);
                     }
                 });
 
@@ -718,11 +670,12 @@ namespace Lich {
                         var v = record.getValue(x, y);
                         let type = index.getType(v);
                         if (bgr) {
-                            tile.image = rsc.getImage(SurfaceBgrKey[type]);
+                            tile = Resources.getInstance().getSurfaceBgrTileSprite(type, v);
+                            sceneMap.setValue(x, y, tile);
                         } else {
-                            tile.image = rsc.getImage(SurfaceKey[type]);
+                            tile = Resources.getInstance().getSurfaceTileSprite(type, v);
+                            sceneMap.setValue(x, y, tile);
                         }
-                        self.setSurfaceSourceRect(tile, v, bgr);
                     }
                 });
             })();

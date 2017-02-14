@@ -173,6 +173,9 @@ namespace Lich {
 
         static writeObjectRecord(tilesMap: TilesMap, cx: number, cy: number, object: MapObjDefinition) {
             var self = this;
+            if (!object) {
+                console.log("eeee");
+            }
             // zapiš objekt 
             tilesMap.mapObjRecord.setValue(cx, cy, object.mapObjKey);
             // zapiš obsazení jednotlivými dílky objektu

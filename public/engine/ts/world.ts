@@ -7,17 +7,20 @@
 namespace Lich {
 
     class WorldObject extends AbstractWorldObject {
+
+        initSprite() {
+            this.width = Resources.PARTS_SIZE;
+            this.height = Resources.PARTS_SIZE;
+            this.sprite = Resources.getInstance().getInvObjectSprite(this.item.invObj);
+            this.addChild(this.sprite);
+        }
+
         constructor(
             public item: DugObjDefinition,
-            public width: number,
-            public height: number,
-            public spriteSheet: createjs.SpriteSheet,
-            public initState: string,
-            public states: Object,
             public collXOffset: number,
             public collYOffset: number,
             public notificationTimer: number) {
-            super(width, height, spriteSheet, initState, collXOffset, collYOffset);
+            super(collXOffset, collYOffset);
         };
     }
 
@@ -174,12 +177,13 @@ namespace Lich {
             shape.y = 0;
             deadInfo.addChild(shape);
 
-            let bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.GAME_OVER_KEY]);
-            let bounds = bitmap.getBounds();
-            bitmap.x = shape.width / 2 - bounds.width / 2;
-            bitmap.y = shape.height / 2 - bounds.height / 2;
-            deadInfo.addChild(bitmap);
-            deadInfo.alpha = 0;
+            // TODO
+            // let bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.GAME_OVER_KEY]);
+            // let bounds = bitmap.getBounds();
+            // bitmap.x = shape.width / 2 - bounds.width / 2;
+            // bitmap.y = shape.height / 2 - bounds.height / 2;
+            // deadInfo.addChild(bitmap);
+            // deadInfo.alpha = 0;
 
             createjs.Tween.get(deadInfo)
                 .to({
@@ -230,14 +234,8 @@ namespace Lich {
             } else {
                 frames = invDef.frames;
             }
-            var image = Resources.getInstance().getImage(InventoryKey[invItem.invObj]);
             var object = new WorldObject(
                 invItem,
-                image.width / frames, // aby se nepoužila délka všech snímků vedle sebe
-                image.height,
-                Resources.getInstance().getSpriteSheet(InventoryKey[invItem.invObj], frames),
-                "idle",
-                { "idle": "idle" },
                 2,
                 0,
                 World.OBJECT_NOTIFY_TIME);
