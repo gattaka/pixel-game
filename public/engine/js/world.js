@@ -417,7 +417,8 @@ var Lich;
             // if (self.hero.y < 0) self.hero.y = - self.hero.collYOffset;
             // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
-            self.game.getBackground().shift(sceneShiftX, sceneShiftY);
+            // TODO
+            // self.game.getBackground().shift(sceneShiftX, sceneShiftY);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
             self.checkReveal();
             self.labelObjects.forEach(function (item) {

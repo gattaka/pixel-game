@@ -154,6 +154,8 @@ namespace Lich {
          * Animace
          */
 
+        // Mapa definic animací dle klíče
+        public animationSetDefsByKey: { [k: string]: AnimationSetDefinition } = {};
         // Mapa definic animací dle souborového jména sub-spritesheet
         public animationSetDefsBySpriteName: { [k: string]: AnimationSetDefinition } = {};
 
@@ -267,10 +269,10 @@ namespace Lich {
                                 // Ze snímků sestav animace dle definic
                                 for (let a = 0; a < animationDef.animations.length; a++) {
                                     let animDef = animationDef.animations[a];
-                                    animations[AnimationKey[animDef.animation]] = [
+                                    animations[AnimationKey[animDef.animationKey]] = [
                                         frames.length - frCnt + animDef.startFrame,
                                         frames.length - frCnt - 1 + animDef.endFrame,
-                                        AnimationKey[animDef.nextAnimation],
+                                        AnimationKey[animDef.nextAnimationKey],
                                         animDef.time
                                     ];
                                 }
@@ -397,6 +399,7 @@ namespace Lich {
             // Definice animací
             ANIMATION_DEFS.forEach((definition: AnimationSetDefinition) => {
                 self.animationSetDefsBySpriteName[definition.spriteName] = definition;
+                self.animationSetDefsByKey[definition.animationSetKey] = definition;
             });
 
             // Definice spells
@@ -534,14 +537,13 @@ namespace Lich {
             return sprite;
         };
 
-        getAnimatedObjectSprite(animationKey: AnimationKey, play = true): createjs.Sprite {
+        getAnimatedObjectSprite(animation: AnimationSetKey): createjs.Sprite {
             let self = this;
-            let sheetKey = SpritesheetKey[SpritesheetKey.SPST_OBJECTS_KEY];
-            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[sheetKey]);
-            if (play)
-                sprite.gotoAndPlay(AnimationKey[animationKey]);
-            else
-                sprite.gotoAndStop(AnimationKey[animationKey]);
+            let animationDef = self.animationSetDefsByKey[animation];
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_OBJECTS_KEY];
+            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let startFrame = self.spriteItemDefsBySheetByNameMap[stringSheetKey][animationDef.spriteName].frame;
+            sprite.gotoAndPlay(AnimationKey[animationDef.animations[0].animationKey]);
             return sprite;
         };
 

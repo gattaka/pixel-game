@@ -1,11 +1,11 @@
 var Lich;
 (function (Lich) {
     var Animation = (function () {
-        function Animation(animation, startFrame, endFrame, nextAnimation, time) {
-            this.animation = animation;
+        function Animation(animationKey, startFrame, endFrame, nextAnimationKey, time) {
+            this.animationKey = animationKey;
             this.startFrame = startFrame;
             this.endFrame = endFrame;
-            this.nextAnimation = nextAnimation;
+            this.nextAnimationKey = nextAnimationKey;
             this.time = time;
         }
         return Animation;
@@ -37,7 +37,7 @@ var Lich;
         AnimationSetDefinition.prototype.serialize = function () {
             var obj = {};
             this.animations.forEach(function (ani) {
-                obj[ani.animation] = [ani.startFrame, ani.endFrame, ani.nextAnimation, ani.time];
+                obj[ani.animationKey] = [ani.startFrame, ani.endFrame, ani.nextAnimationKey, ani.time];
             });
             return obj;
         };

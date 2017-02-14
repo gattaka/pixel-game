@@ -2,10 +2,10 @@ namespace Lich {
 
     class Animation {
         constructor(
-            public animation: AnimationKey,
+            public animationKey: AnimationKey,
             public startFrame: number,
             public endFrame: number,
-            public nextAnimation: AnimationKey,
+            public nextAnimationKey: AnimationKey,
             public time: number) { }
     }
 
@@ -39,7 +39,7 @@ namespace Lich {
         serialize() {
             let obj = {};
             this.animations.forEach((ani: Animation) => {
-                obj[ani.animation] = [ani.startFrame, ani.endFrame, ani.nextAnimation, ani.time];
+                obj[ani.animationKey] = [ani.startFrame, ani.endFrame, ani.nextAnimationKey, ani.time];
             });
             return obj;
         }

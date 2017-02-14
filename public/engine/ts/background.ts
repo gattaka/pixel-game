@@ -57,50 +57,48 @@ namespace Lich {
             self.content = game.getContent();
             self.canvas = game.getCanvas();
 
-            Background.BGR_ORDER.forEach((b: BackgroundKey) => {
-                let img = Resources.getInstance().getImage(BackgroundKey[b]);
-                let shape = new createjs.Shape();
-                shape.graphics.beginBitmapFill(img, "repeat-x").drawRect(0, 0, self.canvas.width + img.width * 2, img.height);
-                self.bgrShapes.push(shape);
-                self.bgrImages.push(img);
-            });
+            // TODO 
+            // Background.BGR_ORDER.forEach((b: BackgroundKey) => {
+            //     let img = Resources.getInstance().getImage(BackgroundKey[b]);
+            //     let shape = new createjs.Shape();
+            //     shape.graphics.beginBitmapFill(img, "repeat-x").drawRect(0, 0, self.canvas.width + img.width * 2, img.height);
+            //     self.bgrShapes.push(shape);
+            //     self.bgrImages.push(img);
+            // });
 
-            Background.CLOUDS_KEYS.forEach((c) => {
-                self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[c]));
-            });
+            // Background.CLOUDS_KEYS.forEach((c) => {
+            //     self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[c]));
+            // });
 
-            self.sky = new createjs.Shape();
-            // TODO
+            // self.sky = new createjs.Shape();
             // self.content.addChild(self.sky);
-            self.sky.x = 0;
-            self.sky.y = 0;
-            self.sky.graphics.beginBitmapFill(Resources.getInstance().getImage(BackgroundKey[BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
+            // self.sky.x = 0;
+            // self.sky.y = 0;
+            // self.sky.graphics.beginBitmapFill(Resources.getInstance().getImage(BackgroundKey[BackgroundKey.SKY_KEY]), 'repeat').drawRect(0, 0, self.canvas.width, 250);
 
-            self.bgrShapes.forEach((entry, i) => {
-                self.content.addChild(entry);
-                entry.y = Background.BGR_STARTS[i];
-                entry.x = -self.bgrImages[i].width;
-            });
+            // self.bgrShapes.forEach((entry, i) => {
+            //     self.content.addChild(entry);
+            //     entry.y = Background.BGR_STARTS[i];
+            //     entry.x = -self.bgrImages[i].width;
+            // });
 
-            self.clouds.forEach(function (item) {
-                item.y = Math.random() * Background.CLOUDS_SPACE;
-                item.x = Math.random() * self.canvas.width;
-            });
+            // self.clouds.forEach(function (item) {
+            //     item.y = Math.random() * Background.CLOUDS_SPACE;
+            //     item.x = Math.random() * self.canvas.width;
+            // });
 
-            self.dirt_back_startImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]);
-            self.dirt_back_start = new createjs.Shape();
-            self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, self.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
-            self.dirt_back_start.x = 0;
-            self.dirt_back_start.y = Background.DIRT_START;
-            // TODO
+            // self.dirt_back_startImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRT_BACK_START_KEY]);
+            // self.dirt_back_start = new createjs.Shape();
+            // self.dirt_back_start.graphics.beginBitmapFill(self.dirt_back_startImg, "repeat-x").drawRect(0, 0, self.canvas.width + self.dirt_back_startImg.width * 2, self.dirt_back_startImg.height);
+            // self.dirt_back_start.x = 0;
+            // self.dirt_back_start.y = Background.DIRT_START;
             // self.content.addChild(self.dirt_back_start);
 
-            self.dirt_backImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRTBACK_KEY]);
-            self.dirt_back = new createjs.Shape();
-            self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, self.canvas.width + self.dirt_backImg.width * 2, self.canvas.height + self.dirt_backImg.height * 2);
-            self.dirt_back.x = 0;
-            self.dirt_back.y = self.dirt_back_start.y + self.dirt_back_startImg.height - 4;
-            // TODO
+            // self.dirt_backImg = Resources.getInstance().getImage(BackgroundKey[BackgroundKey.DIRTBACK_KEY]);
+            // self.dirt_back = new createjs.Shape();
+            // self.dirt_back.graphics.beginBitmapFill(self.dirt_backImg, "repeat").drawRect(0, 0, self.canvas.width + self.dirt_backImg.width * 2, self.canvas.height + self.dirt_backImg.height * 2);
+            // self.dirt_back.x = 0;
+            // self.dirt_back.y = self.dirt_back_start.y + self.dirt_back_startImg.height - 4;
             // self.content.addChild(self.dirt_back);
 
             console.log("background ready");

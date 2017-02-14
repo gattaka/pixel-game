@@ -76,7 +76,8 @@ var Lich;
                 //     self.sprites.push(sprite);
                 // }
                 // Test volného objektu (nepřátel, projektilu)
-                var sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationKey.ANM_BUNNY_JUMPR_KEY, true);
+                var sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationSetKey.BUNNY_ANIMATION_KEY);
+                // AnimationKey.ANM_BUNNY_JUMPR_KEY
                 sprite.x = 50;
                 sprite.y = 50;
                 container.addChild(sprite);
@@ -103,13 +104,13 @@ var Lich;
                 container2.addChild(sprite5);
                 // Test statického mapového objektu
                 var sprite6 = Lich.Resources.getInstance().getMapObjectTileSprite(Lich.MapObjectKey.MAP_XMAS_CHAIN_KEY, 2);
-                sprite6.x = 100;
-                sprite6.y = 100;
+                sprite6.x = 50;
+                sprite6.y = 150;
                 container2.addChild(sprite6);
                 // Test statického mapového objektu
                 var sprite7 = Lich.Resources.getInstance().getFogSprite(2);
-                sprite7.x = 150;
-                sprite7.y = 100;
+                sprite7.x = 100;
+                sprite7.y = 150;
                 container2.addChild(sprite7);
                 // Test textu
                 var container3 = new createjs.SpriteContainer();

@@ -124,6 +124,8 @@ var Lich;
             /**
              * Animace
              */
+            // Mapa definic animací dle klíče
+            this.animationSetDefsByKey = {};
             // Mapa definic animací dle souborového jména sub-spritesheet
             this.animationSetDefsBySpriteName = {};
             // definice inv položek dle klíče (int)
@@ -212,10 +214,10 @@ var Lich;
                                 // Ze snímků sestav animace dle definic
                                 for (var a = 0; a < animationDef.animations.length; a++) {
                                     var animDef = animationDef.animations[a];
-                                    animations[Lich.AnimationKey[animDef.animation]] = [
+                                    animations[Lich.AnimationKey[animDef.animationKey]] = [
                                         frames.length - frCnt + animDef.startFrame,
                                         frames.length - frCnt - 1 + animDef.endFrame,
-                                        Lich.AnimationKey[animDef.nextAnimation],
+                                        Lich.AnimationKey[animDef.nextAnimationKey],
                                         animDef.time
                                     ];
                                 }
@@ -333,6 +335,7 @@ var Lich;
             // Definice animací
             Lich.ANIMATION_DEFS.forEach(function (definition) {
                 self.animationSetDefsBySpriteName[definition.spriteName] = definition;
+                self.animationSetDefsByKey[definition.animationSetKey] = definition;
             });
             // Definice spells
             var SPELL_DEFS = [
@@ -473,15 +476,13 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.getAnimatedObjectSprite = function (animationKey, play) {
-            if (play === void 0) { play = true; }
+        Resources.prototype.getAnimatedObjectSprite = function (animation) {
             var self = this;
-            var sheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_OBJECTS_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[sheetKey]);
-            if (play)
-                sprite.gotoAndPlay(Lich.AnimationKey[animationKey]);
-            else
-                sprite.gotoAndStop(Lich.AnimationKey[animationKey]);
+            var animationDef = self.animationSetDefsByKey[animation];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_OBJECTS_KEY];
+            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var startFrame = self.spriteItemDefsBySheetByNameMap[stringSheetKey][animationDef.spriteName].frame;
+            sprite.gotoAndPlay(Lich.AnimationKey[animationDef.animations[0].animationKey]);
             return sprite;
         };
         ;

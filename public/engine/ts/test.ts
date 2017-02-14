@@ -86,7 +86,8 @@ namespace Lich {
                 // }
 
                 // Test volného objektu (nepřátel, projektilu)
-                let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationKey.ANM_BUNNY_JUMPR_KEY, true);
+                let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.BUNNY_ANIMATION_KEY);
+                // AnimationKey.ANM_BUNNY_JUMPR_KEY
                 sprite.x = 50;
                 sprite.y = 50;
                 container.addChild(sprite);
@@ -118,14 +119,14 @@ namespace Lich {
 
                 // Test statického mapového objektu
                 let sprite6 = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_XMAS_CHAIN_KEY, 2);
-                sprite6.x = 100;
-                sprite6.y = 100;
+                sprite6.x = 50;
+                sprite6.y = 150;
                 container2.addChild(sprite6);
 
                 // Test statického mapového objektu
                 let sprite7 = Resources.getInstance().getFogSprite(2);
-                sprite7.x = 150;
-                sprite7.y = 100;
+                sprite7.x = 100;
+                sprite7.y = 150;
                 container2.addChild(sprite7);
 
                 // Test textu
