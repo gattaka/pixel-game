@@ -85,12 +85,50 @@ namespace Lich {
                 //     self.sprites.push(sprite);
                 // }
 
-                let sprite = Resources.getInstance().getObjectSprite(AnimationSetKey.BUNNY_ANIMATION_KEY);
-                sprite.gotoAndPlay(AnimationKey[AnimationKey.ANM_BUNNY_JUMPL_KEY]);
+                // Test volného objektu (nepřátel, projektilu)
+                let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationKey.ANM_BUNNY_JUMPR_KEY, true);
                 sprite.x = 50;
                 sprite.y = 50;
                 container.addChild(sprite);
 
+                // Test volného objektu (inventárního objektu)
+                let sprite2 = Resources.getInstance().getInvObjectSprite(InventoryKey.INV_BOOKSHELF_KEY);
+                sprite2.x = 100;
+                sprite2.y = 50;
+                container.addChild(sprite2);
+
+                // Test povrchu 
+                let container2 = new createjs.SpriteContainer();
+                let sprite3 = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_DIRT_KEY, 2);
+                sprite3.x = 10;
+                sprite3.y = 100;
+                container2.addChild(sprite3);
+
+                // Test pozadí povrchu
+                let sprite4 = Resources.getInstance().getSurfaceBgrTileSprite(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, 2);
+                sprite4.x = 50;
+                sprite4.y = 100;
+                container2.addChild(sprite4);
+
+                // Test animovaného mapového objektu
+                let sprite5 = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_FIREPLACE_KEY, 2);
+                sprite5.x = 100;
+                sprite5.y = 100;
+                container2.addChild(sprite5);
+
+                // Test statického mapového objektu
+                let sprite6 = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_XMAS_CHAIN_KEY, 2);
+                sprite6.x = 100;
+                sprite6.y = 100;
+                container2.addChild(sprite6);
+
+                // Test statického mapového objektu
+                let sprite7 = Resources.getInstance().getFogSprite(2);
+                sprite7.x = 150;
+                sprite7.y = 100;
+                container2.addChild(sprite7);
+
+                // Test textu
                 let container3 = new createjs.SpriteContainer();
                 self.text = Resources.getInstance().getText("");
                 container3.addChild(self.text);
@@ -100,6 +138,7 @@ namespace Lich {
 
                 self.stage.updateViewport(self.canvas.width, self.canvas.height);
                 self.stage.addChild(container);
+                self.stage.addChild(container2);
                 self.stage.addChild(container3);
             }
 

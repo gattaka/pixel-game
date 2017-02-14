@@ -48,7 +48,6 @@ namespace Lich {
         public enemyPiercingTimeouts: { [k: string]: number } = {};
 
         initSprite() {
-            let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
             this.width = animationDef.width;
             this.height = animationDef.height;
             this.sprite = Resources.getInstance().getSprite(SpritesheetKey.SPST_OBJECTS_KEY, animationDef.spriteName);
