@@ -1,5 +1,5 @@
 namespace Lich {
-    export class Label extends createjs.SpriteContainer {
+    export class Label extends SheetContainer {
 
         label: createjs.BitmapText;
 

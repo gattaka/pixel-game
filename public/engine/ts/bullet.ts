@@ -1,12 +1,10 @@
 namespace Lich {
 
-    export abstract class AbstractWorldObject extends createjs.SpriteContainer {
+    export abstract class AbstractWorldObject extends SheetContainer {
 
         public speedx: number = 0;
         public speedy: number = 0;
         protected sprite: createjs.Sprite;
-
-        protected abstract initSprite();
 
         constructor(
             public collXOffset: number,
@@ -47,14 +45,6 @@ namespace Lich {
         // zásahu jiného nepřítele, který je těsném závěsu za zasaženým
         public enemyPiercingTimeouts: { [k: string]: number } = {};
 
-        initSprite() {
-            let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
-            this.width = animationDef.width;
-            this.height = animationDef.height;
-            this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
-            this.addChild(this.sprite);
-        }
-
         constructor(
             // čí je to střela
             public owner: string,
@@ -77,6 +67,12 @@ namespace Lich {
             public damage: number
         ) {
             super(collXOffset, collYOffset);
+
+            let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
+            this.width = animationDef.width;
+            this.height = animationDef.height;
+            this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
+            this.addChild(this.sprite);
         };
 
         public abstract update(sDelta: number, game: Game);

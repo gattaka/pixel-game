@@ -55,6 +55,11 @@ var Lich;
             _this.movementTypeY = MovementTypeY.NONE;
             _this.isClimbing = false;
             _this.spellCooldowns = new Lich.Table();
+            var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[_this.animationSetKey];
+            _this.width = animationDef.width;
+            _this.height = animationDef.height;
+            _this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
+            _this.addChild(_this.sprite);
             _this.healthBar = new createjs.Shape();
             _this.healthBar.width = _this.width;
             _this.healthBar.height = 4;
@@ -64,13 +69,6 @@ var Lich;
             _this.addChild(_this.healthBar);
             return _this;
         }
-        Character.prototype.initSprite = function () {
-            var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
-            this.width = animationDef.width;
-            this.height = animationDef.height;
-            this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
-            this.addChild(this.sprite);
-        };
         Character.prototype.updateHealthBar = function () {
             if (this.currentHealth == this.maxHealth || this.currentHealth == 0) {
                 this.healthBar.visible = false;

@@ -31,7 +31,7 @@ var Lich;
         AbstractWorldObject.prototype.updateAnimations = function () { };
         ;
         return AbstractWorldObject;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     Lich.AbstractWorldObject = AbstractWorldObject;
     var BulletObject = (function (_super) {
         __extends(BulletObject, _super);
@@ -74,15 +74,13 @@ var Lich;
             // zásahem jednoho nepřítele mohlo způsobit nezapočítání prvního 
             // zásahu jiného nepřítele, který je těsném závěsu za zasaženým
             _this.enemyPiercingTimeouts = {};
+            var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[_this.animationSetKey];
+            _this.width = animationDef.width;
+            _this.height = animationDef.height;
+            _this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
+            _this.addChild(_this.sprite);
             return _this;
         }
-        BulletObject.prototype.initSprite = function () {
-            var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
-            this.width = animationDef.width;
-            this.height = animationDef.height;
-            this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
-            this.addChild(this.sprite);
-        };
         ;
         return BulletObject;
     }(AbstractWorldObject));

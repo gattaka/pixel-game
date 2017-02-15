@@ -61,7 +61,7 @@ var Lich;
                 //     images: ["images/ui/inventory/inv_red_flask.png"],
                 //     frames: { width: 32, height: 32 },
                 // });
-                var container = new createjs.SpriteContainer();
+                var container = new Lich.SheetContainer();
                 // 20 000 ~ 40 FPS
                 // 10 000 ~ 54 FPS
                 // 5 000 ~ 59 FPS
@@ -76,7 +76,9 @@ var Lich;
                 //     self.sprites.push(sprite);
                 // }
                 // Test volného objektu (nepřátel, projektilu)
-                var sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationSetKey.BUNNY_ANIMATION_KEY);
+                var sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationSetKey.LICH_ANIMATION_KEY);
+                // let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.BUNNY_ANIMATION_KEY);
+                // sprite.gotoAndPlay(AnimationKey[AnimationKey.ANM_BUNNY_EATL_KEY]);
                 // AnimationKey.ANM_BUNNY_JUMPR_KEY
                 sprite.x = 50;
                 sprite.y = 50;
@@ -87,7 +89,7 @@ var Lich;
                 sprite2.y = 50;
                 container.addChild(sprite2);
                 // Test povrchu 
-                var container2 = new createjs.SpriteContainer();
+                var container2 = new Lich.SheetContainer();
                 var sprite3 = Lich.Resources.getInstance().getSurfaceTileSprite(Lich.SurfaceKey.SRFC_DIRT_KEY, 2);
                 sprite3.x = 10;
                 sprite3.y = 100;
@@ -113,7 +115,7 @@ var Lich;
                 sprite7.y = 150;
                 container2.addChild(sprite7);
                 // Test textu
-                var container3 = new createjs.SpriteContainer();
+                var container3 = new Lich.SheetContainer();
                 self.text = Lich.Resources.getInstance().getText("");
                 container3.addChild(self.text);
                 self.text.x = 10;

@@ -36,7 +36,7 @@ var Lich;
                 helpBtn.y = UI.SCREEN_SPACING;
             }
             else {
-                var menuCont_1 = new createjs.SpriteContainer;
+                var menuCont_1 = new Lich.SheetContainer();
                 menuCont_1.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuCont_1.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 menuCont_1.visible = false;
@@ -141,7 +141,7 @@ var Lich;
             // self.musicUI = musicUI;
             // Achievements info
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.ACHIEVEMENT_DONE, function (payload) {
-                var achvCont = new createjs.SpriteContainer();
+                var achvCont = new Lich.SheetContainer();
                 var achvImgSide = 80;
                 var w = 300;
                 var h = achvImgSide + 2 * AbstractUI.BORDER;
@@ -215,7 +215,7 @@ var Lich;
                 }, null, false);
             }
             if (mobile) {
-                var movementCont_1 = new createjs.SpriteContainer;
+                var movementCont_1 = new Lich.SheetContainer();
                 movementCont_1.x = UI.SCREEN_SPACING;
                 movementCont_1.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont_1);
@@ -347,7 +347,7 @@ var Lich;
             return uiHit;
         };
         return UI;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     UI.SCREEN_SPACING = 20;
     Lich.UI = UI;
     var UIBackground = (function (_super) {
@@ -412,7 +412,7 @@ var Lich;
             this.toggleFlag = true;
         };
         return AbstractUI;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     AbstractUI.BORDER = 10;
     AbstractUI.TEXT_SIZE = 15;
     Lich.AbstractUI = AbstractUI;
@@ -479,7 +479,7 @@ var Lich;
             return _this;
         }
         return Button;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     Button.sideSize = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
     Lich.Button = Button;
 })(Lich || (Lich = {}));

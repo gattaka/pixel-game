@@ -23,7 +23,7 @@ var Lich;
         ;
         SurfaceBgrIndex.prototype.isTransitionSrfc = function (index) {
             var key = this.getType(index);
-            if (Lich.Resources.getInstance().mapTransitionSrfcBgrs[Lich.SurfaceBgrKey[key]])
+            if (Lich.Resources.getInstance().mapTransitionSrfcBgrsDefs[Lich.SurfaceBgrKey[key]])
                 return true;
             return false;
         };

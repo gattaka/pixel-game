@@ -1,10 +1,10 @@
 namespace Lich {
 
-    export class UI extends createjs.SpriteContainer {
+    export class UI extends SheetContainer {
 
         static SCREEN_SPACING = 20;
 
-        charCont: createjs.SpriteContainer;
+        charCont: SheetContainer;
 
         debugUI: DebugLogUI;
         inventoryUI: InventoryUI;
@@ -58,7 +58,7 @@ namespace Lich {
                 helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.width - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             } else {
-                let menuCont = new createjs.SpriteContainer;
+                let menuCont = new SheetContainer();
                 menuCont.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuCont.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 menuCont.visible = false;
@@ -177,7 +177,7 @@ namespace Lich {
 
             // Achievements info
             EventBus.getInstance().registerConsumer(EventType.ACHIEVEMENT_DONE, (payload: StringEventPayload): boolean => {
-                let achvCont = new createjs.SpriteContainer();
+                let achvCont = new SheetContainer();
 
                 let achvImgSide = 80;
                 let w = 300;
@@ -261,7 +261,7 @@ namespace Lich {
             }
 
             if (mobile) {
-                let movementCont = new createjs.SpriteContainer;
+                let movementCont = new SheetContainer();
                 movementCont.x = UI.SCREEN_SPACING;
                 movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont);
@@ -367,13 +367,13 @@ namespace Lich {
         }
     }
 
-    export class AbstractUI extends createjs.SpriteContainer {
+    export class AbstractUI extends SheetContainer {
 
         static BORDER = 10;
         static TEXT_SIZE = 15;
 
         protected toggleFlag = true;
-        protected parentRef: createjs.SpriteContainer = null;
+        protected parentRef: SheetContainer= null;
 
         outerShape: UIBackground = new UIBackground();
 
@@ -390,7 +390,7 @@ namespace Lich {
 
         hide() {
             if (this.parent) {
-                this.parentRef = <createjs.SpriteContainer>this.parent;
+                this.parentRef = <SheetContainer>this.parent;
                 this.parent.removeChild(this);
             }
         }
@@ -456,7 +456,7 @@ namespace Lich {
 
     }
 
-    export class Button extends createjs.SpriteContainer {
+    export class Button extends SheetContainer {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
         constructor(bitmap: UIGFXKey) {
             super();

@@ -115,7 +115,7 @@ namespace Lich {
         private mapSurfaceBgrTransitionsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
         // dle trans povrchu
         public mapTransitionSrfcDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
-        public mapTransitionSrfcBgrs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
+        public mapTransitionSrfcBgrsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         // definice achievementů 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
@@ -261,8 +261,11 @@ namespace Lich {
                             // Připrav snímky
                             for (let y = 0; y < hSplicing; y++) {
                                 for (let x = 0; x < wSplicing; x++) {
-                                    frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
-                                    frCnt++;
+                                    // kontroluj jestli ještě beru obsazené pozice ze sprite
+                                    if (frCnt < animationDef.frames) {
+                                        frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
+                                        frCnt++;
+                                    }
                                 }
                             }
                             // Ze snímků sestav animace dle definic
@@ -270,7 +273,7 @@ namespace Lich {
                                 let animDef = animationDef.animations[a];
                                 animations[AnimationKey[animDef.animationKey]] = [
                                     frames.length - frCnt + animDef.startFrame,
-                                    frames.length - frCnt - 1 + animDef.endFrame,
+                                    frames.length - frCnt + animDef.endFrame,
                                     AnimationKey[animDef.nextAnimationKey],
                                     animDef.time
                                 ];
@@ -372,6 +375,9 @@ namespace Lich {
                 self.mapSurfaceBgrDefsBySpriteNameMap[definition.spriteName] = definition;
             });
 
+            // TODO Definice přechodů pozadí mapových povrchů
+            // mapTransitionSrfcBgrDefsBySpriteNameMap
+
             // Definice mapových objektů
             MAP_OBJECT_DEFS.forEach((definition: MapObjDefinition) => {
                 self.mapObjectDefs[definition.mapObjKey] = definition;
@@ -463,8 +469,11 @@ namespace Lich {
         getSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
-            let srfcDef = self.mapSurfaceDefs[SurfaceKey[surfaceKey]];
+            let srfcDef = self.mapSurfaceDefs[SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[SurfaceKey[surfaceKey]];
             let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            if (!srfcDef) {
+                console.log("d");
+            }
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex);
             return sprite;
         };
@@ -472,8 +481,11 @@ namespace Lich {
         getSurfaceBgrTileSprite(surfaceBgrKey: SurfaceBgrKey, positionIndex: number): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
-            let srfcBgrDef = self.mapSurfaceBgrDefs[SurfaceBgrKey[surfaceBgrKey]];
+            let srfcBgrDef = self.mapSurfaceBgrDefs[SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[SurfaceBgrKey[surfaceBgrKey]];
             let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            if (!srfcBgrDef) {
+                console.log("d");
+            }
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex);
             return sprite;
         };
@@ -521,6 +533,12 @@ namespace Lich {
             sprite.gotoAndPlay(AnimationKey[animationDef.animations[0].animationKey]);
             return sprite;
         };
+
+        getSpriteSheet() {
+            let self = this;
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
+            return self.spritesheetByKeyMap[stringSheetKey];
+        }
 
     }
 }

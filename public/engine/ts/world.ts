@@ -8,19 +8,17 @@ namespace Lich {
 
     class WorldObject extends AbstractWorldObject {
 
-        initSprite() {
-            this.width = Resources.PARTS_SIZE;
-            this.height = Resources.PARTS_SIZE;
-            this.sprite = Resources.getInstance().getInvObjectSprite(this.item.invObj);
-            this.addChild(this.sprite);
-        }
-
         constructor(
             public item: DugObjDefinition,
             public collXOffset: number,
             public collYOffset: number,
             public notificationTimer: number) {
             super(collXOffset, collYOffset);
+
+            this.width = Resources.PARTS_SIZE;
+            this.height = Resources.PARTS_SIZE;
+            this.sprite = Resources.getInstance().getInvObjectSprite(this.item.invObj);
+            this.addChild(this.sprite);
         };
     }
 
@@ -44,7 +42,7 @@ namespace Lich {
         ) { }
     }
 
-    export class World extends createjs.SpriteContainer {
+    export class World extends SheetContainer {
 
         /*-----------*/
         /* CONSTANTS */
@@ -78,17 +76,17 @@ namespace Lich {
         render: Render;
 
         // kontejnery
-        tilesSectorsCont = new createjs.SpriteContainer();
-        entitiesCont = new createjs.SpriteContainer();
+        tilesSectorsCont = new SheetContainer();
+        entitiesCont = new SheetContainer();
         weather: Weather;
-        fogSectorsCont = new createjs.SpriteContainer();
-        messagesCont = new createjs.SpriteContainer();
+        fogSectorsCont = new SheetContainer();
+        messagesCont = new SheetContainer();
 
         hero: Hero;
         enemiesCount = 0;
         enemies = new Array<AbstractEnemy>();
 
-        private initFullScaleCont(cont: createjs.SpriteContainer) {
+        private initFullScaleCont(cont: SheetContainer) {
             var self = this;
             cont.x = 0;
             cont.y = 0;
@@ -1245,31 +1243,32 @@ namespace Lich {
 
                 // je vybrán spell?
                 // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
-                var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
-                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
-                    var spellDef: SpellDefinition = Resources.getInstance().spellDefs.byKey(SpellKey[choosenSpell]);
-                    // provádím spell za hráče, takže kontroluji jeho cooldown
-                    var cooldown = self.hero.spellCooldowns[choosenSpell];
-                    // ještě nebyl použit? Takže je v pořádku a může se provést
-                    if (typeof cooldown === "undefined") {
-                        cooldown = 0;
-                        self.hero.spellCooldowns[choosenSpell] = 0;
-                    }
-                    // Sniž dle delay
-                    self.hero.spellCooldowns[choosenSpell] -= delta;
-                    // Může se provést (cooldown je pryč, mám will a chci cast) ?
-                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                        let heroCenterX = self.hero.x + self.hero.width / 2;
-                        let heroCenterY = self.hero.y + self.hero.height / 4;
+                // TODO (plus UI by mělo fakt fungovat separátně)
+                // var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
+                // if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                //     var spellDef: SpellDefinition = Resources.getInstance().spellDefs.byKey(SpellKey[choosenSpell]);
+                //     // provádím spell za hráče, takže kontroluji jeho cooldown
+                //     var cooldown = self.hero.spellCooldowns[choosenSpell];
+                //     // ještě nebyl použit? Takže je v pořádku a může se provést
+                //     if (typeof cooldown === "undefined") {
+                //         cooldown = 0;
+                //         self.hero.spellCooldowns[choosenSpell] = 0;
+                //     }
+                //     // Sniž dle delay
+                //     self.hero.spellCooldowns[choosenSpell] -= delta;
+                //     // Může se provést (cooldown je pryč, mám will a chci cast) ?
+                //     if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
+                //         let heroCenterX = self.hero.x + self.hero.width / 2;
+                //         let heroCenterY = self.hero.y + self.hero.height / 4;
 
-                        // zkus cast
-                        if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
-                            // ok, cast se provedl, nastav nový cooldown a odeber will
-                            self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
-                            self.hero.decreseWill(spellDef.cost);
-                        }
-                    }
-                }
+                //         // zkus cast
+                //         if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                //             // ok, cast se provedl, nastav nový cooldown a odeber will
+                //             self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                //             self.hero.decreseWill(spellDef.cost);
+                //         }
+                //     }
+                // }
             }
 
             let coord = self.render.pixelsToTiles(mouse.x, mouse.y);
@@ -1304,7 +1303,8 @@ namespace Lich {
             var self = this;
             self.render.handleTick();
             self.weather.update(delta);
-            self.game.getBackground().handleTick(delta);
+            // TODO
+            // self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)

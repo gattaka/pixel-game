@@ -25,7 +25,7 @@ namespace Lich {
 
         isTransitionSrfc(index: number): boolean {
             let key: SurfaceBgrKey = this.getType(index);
-            if (Resources.getInstance().mapTransitionSrfcBgrs[SurfaceBgrKey[key]])
+            if (Resources.getInstance().mapTransitionSrfcBgrsDefs[SurfaceBgrKey[key]])
                 return true;
             return false;
         }

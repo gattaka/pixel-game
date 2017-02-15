@@ -13,7 +13,7 @@ var Lich;
             _this.spellContent = new Array();
             _this.spellIndex = new Array();
             _this.alternativeSpellIndex = new Array();
-            _this.itemsCont = new createjs.SpriteContainer();
+            _this.itemsCont = new Lich.SheetContainer();
             _this.itemHighlightShape = new createjs.Shape();
             var self = _this;
             // skill bude nastavitelné, takže zatím je možné ho přednastavit

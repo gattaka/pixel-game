@@ -12,7 +12,7 @@ namespace Lich {
         spellIndex = new Array<SpellKey>();
         alternativeSpellIndex = new Array<SpellKey>();
 
-        itemsCont = new createjs.SpriteContainer();
+        itemsCont = new SheetContainer();
         itemHighlightShape = new createjs.Shape();
 
         constructor() {

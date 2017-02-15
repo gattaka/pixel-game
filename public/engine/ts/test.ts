@@ -6,7 +6,7 @@ namespace Lich {
 
         private canvas: HTMLCanvasElement;
         private stage: createjs.SpriteStage;
-        private content: createjs.SpriteContainer;
+        private content: SheetContainer;
 
         private text: createjs.BitmapText;
         private sprites = Array<createjs.Sprite>();
@@ -70,7 +70,7 @@ namespace Lich {
                 //     images: ["images/ui/inventory/inv_red_flask.png"],
                 //     frames: { width: 32, height: 32 },
                 // });
-                let container = new createjs.SpriteContainer();
+                let container = new SheetContainer();
                 // 20 000 ~ 40 FPS
                 // 10 000 ~ 54 FPS
                 // 5 000 ~ 59 FPS
@@ -86,7 +86,9 @@ namespace Lich {
                 // }
 
                 // Test volného objektu (nepřátel, projektilu)
-                let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.BUNNY_ANIMATION_KEY);
+                let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.LICH_ANIMATION_KEY);
+                // let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.BUNNY_ANIMATION_KEY);
+                // sprite.gotoAndPlay(AnimationKey[AnimationKey.ANM_BUNNY_EATL_KEY]);
                 // AnimationKey.ANM_BUNNY_JUMPR_KEY
                 sprite.x = 50;
                 sprite.y = 50;
@@ -99,7 +101,7 @@ namespace Lich {
                 container.addChild(sprite2);
 
                 // Test povrchu 
-                let container2 = new createjs.SpriteContainer();
+                let container2 = new SheetContainer();
                 let sprite3 = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_DIRT_KEY, 2);
                 sprite3.x = 10;
                 sprite3.y = 100;
@@ -130,7 +132,7 @@ namespace Lich {
                 container2.addChild(sprite7);
 
                 // Test textu
-                let container3 = new createjs.SpriteContainer();
+                let container3 = new SheetContainer();
                 self.text = Resources.getInstance().getText("");
                 container3.addChild(self.text);
                 self.text.x = 10;

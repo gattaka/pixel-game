@@ -1,5 +1,11 @@
 namespace Lich {
 
+    export class SheetContainer extends createjs.SpriteContainer {
+        constructor() {
+            super(Resources.getInstance().getSpriteSheet());
+        }
+    }
+
     export class HashMap<V> {
         [key: string]: V;
     }

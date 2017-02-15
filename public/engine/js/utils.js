@@ -1,5 +1,18 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var Lich;
 (function (Lich) {
+    var SheetContainer = (function (_super) {
+        __extends(SheetContainer, _super);
+        function SheetContainer() {
+            return _super.call(this, Lich.Resources.getInstance().getSpriteSheet()) || this;
+        }
+        return SheetContainer;
+    }(createjs.SpriteContainer));
+    Lich.SheetContainer = SheetContainer;
     var HashMap = (function () {
         function HashMap() {
         }

@@ -35,6 +35,6 @@ var Lich;
             return _this;
         }
         return ItemUI;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     Lich.ItemUI = ItemUI;
 })(Lich || (Lich = {}));

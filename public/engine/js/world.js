@@ -19,14 +19,12 @@ var Lich;
             _this.collXOffset = collXOffset;
             _this.collYOffset = collYOffset;
             _this.notificationTimer = notificationTimer;
+            _this.width = Lich.Resources.PARTS_SIZE;
+            _this.height = Lich.Resources.PARTS_SIZE;
+            _this.sprite = Lich.Resources.getInstance().getInvObjectSprite(_this.item.invObj);
+            _this.addChild(_this.sprite);
             return _this;
         }
-        WorldObject.prototype.initSprite = function () {
-            this.width = Lich.Resources.PARTS_SIZE;
-            this.height = Lich.Resources.PARTS_SIZE;
-            this.sprite = Lich.Resources.getInstance().getInvObjectSprite(this.item.invObj);
-            this.addChild(this.sprite);
-        };
         ;
         return WorldObject;
     }(Lich.AbstractWorldObject));
@@ -69,10 +67,10 @@ var Lich;
             _this.bulletObjects = Array();
             _this.labelObjects = new Array();
             // kontejnery
-            _this.tilesSectorsCont = new createjs.SpriteContainer();
-            _this.entitiesCont = new createjs.SpriteContainer();
-            _this.fogSectorsCont = new createjs.SpriteContainer();
-            _this.messagesCont = new createjs.SpriteContainer();
+            _this.tilesSectorsCont = new Lich.SheetContainer();
+            _this.entitiesCont = new Lich.SheetContainer();
+            _this.fogSectorsCont = new Lich.SheetContainer();
+            _this.messagesCont = new Lich.SheetContainer();
             _this.enemiesCount = 0;
             _this.enemies = new Array();
             var self = _this;
@@ -1157,32 +1155,6 @@ var Lich;
                         }
                     }
                 }
-                // je vybrán spell?
-                // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
-                var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
-                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
-                    var spellDef = Lich.Resources.getInstance().spellDefs.byKey(Lich.SpellKey[choosenSpell]);
-                    // provádím spell za hráče, takže kontroluji jeho cooldown
-                    var cooldown = self.hero.spellCooldowns[choosenSpell];
-                    // ještě nebyl použit? Takže je v pořádku a může se provést
-                    if (typeof cooldown === "undefined") {
-                        cooldown = 0;
-                        self.hero.spellCooldowns[choosenSpell] = 0;
-                    }
-                    // Sniž dle delay
-                    self.hero.spellCooldowns[choosenSpell] -= delta;
-                    // Může se provést (cooldown je pryč, mám will a chci cast) ?
-                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                        var heroCenterX_1 = self.hero.x + self.hero.width / 2;
-                        var heroCenterY_1 = self.hero.y + self.hero.height / 4;
-                        // zkus cast
-                        if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
-                            // ok, cast se provedl, nastav nový cooldown a odeber will
-                            self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
-                            self.hero.decreseWill(spellDef.cost);
-                        }
-                    }
-                }
             }
             var coord = self.render.pixelsToTiles(mouse.x, mouse.y);
             var clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY);
@@ -1214,7 +1186,8 @@ var Lich;
             var self = this;
             self.render.handleTick();
             self.weather.update(delta);
-            self.game.getBackground().handleTick(delta);
+            // TODO
+            // self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)
@@ -1235,7 +1208,7 @@ var Lich;
         };
         ;
         return World;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     /*-----------*/
     /* CONSTANTS */
     /*-----------*/

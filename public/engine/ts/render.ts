@@ -41,8 +41,8 @@ namespace Lich {
         sectorsToUpdate = new Array<SectorUpdateRequest>();
         fogSectorsToUpdate = new Array<FogSectorUpdateRequest>();
         // Kontejnery na sektory
-        sectorsCont: createjs.SpriteContainer;
-        fogSectorsCont: createjs.SpriteContainer;
+        sectorsCont: SheetContainer;
+        fogSectorsCont: SheetContainer;
         // Mapy sektorů
         sectorsMap = new Array2D<Sector>();
         fogSectorsMap = new Array2D<FogSector>();

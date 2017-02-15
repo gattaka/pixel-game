@@ -48,7 +48,7 @@ namespace Lich {
         offsetY = 0;
 
         private canvas: HTMLCanvasElement;
-        private content: createjs.SpriteContainer;
+        private content: SheetContainer;
 
         constructor(public game: Game) {
 

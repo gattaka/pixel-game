@@ -1,6 +1,6 @@
 namespace Lich {
 
-    class ParticleLayer extends createjs.SpriteContainer {
+    class ParticleLayer extends SheetContainer {
         constructor(public speed: number) {
             super();
         }
@@ -13,7 +13,7 @@ namespace Lich {
         SNOW_RAIN_STOP
     }
 
-    export class Weather extends createjs.SpriteContainer {
+    export class Weather extends SheetContainer {
 
         private static MAX_WIND = 10;
         private static SNOW_RAIN_AMOUNT = 500;

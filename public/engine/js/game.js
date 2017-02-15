@@ -132,7 +132,6 @@ var Lich;
                                 Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
                                     populateContent(tilesMap);
                                     if (obj_1.inv) {
-                                        self.ui.inventoryUI.deserialize(obj_1.inv);
                                     }
                                 });
                             }
@@ -156,7 +155,7 @@ var Lich;
                     // (re)-init
                     // TODO
                     // self.ui = new UI(self.canvas, tilesMap, mobile);
-                    self.background = new Lich.Background(self);
+                    // self.background = new Background(self);
                     self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
@@ -218,7 +217,7 @@ var Lich;
                 }, 60 * 1000);
                 loadWorld();
             };
-            self.content = new createjs.SpriteContainer();
+            self.content = new Lich.SheetContainer();
             if (Lich.Resources.getInstance().isLoaderDone()) {
                 init();
             }
@@ -301,57 +300,6 @@ var Lich;
                             controls.right = true;
                         if (self.keys[83])
                             controls.down = true;
-                        if (self.keys[67]) {
-                            self.ui.craftingUI.toggle();
-                        }
-                        else {
-                            self.ui.craftingUI.prepareForToggle();
-                        }
-                        if (self.keys[27]) {
-                            if (self.ui.craftingUI.parent) {
-                                self.ui.craftingUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            }
-                            else if (self.ui.mapUI.parent) {
-                                self.ui.mapUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            }
-                            else {
-                                self.ui.splashScreenUI.toggle();
-                            }
-                        }
-                        else {
-                            self.ui.splashScreenUI.prepareForToggle();
-                        }
-                        if (self.keys[73]) {
-                            self.ui.inventoryUI.toggle();
-                        }
-                        else {
-                            self.ui.inventoryUI.prepareForToggle();
-                        }
-                        if (self.keys[77]) {
-                            self.ui.mapUI.toggle();
-                        }
-                        else {
-                            self.ui.mapUI.prepareForToggle();
-                        }
-                        if (self.keys[78]) {
-                            self.ui.minimapUI.toggle();
-                        }
-                        else {
-                            self.ui.minimapUI.prepareForToggle();
-                        }
-                        if (self.keys[16]) {
-                            self.ui.spellsUI.toggleShift();
-                        }
-                        else {
-                            self.ui.spellsUI.prepareForToggleShift();
-                        }
-                        for (var i = 0; i < self.ui.spellsUI.spellIndex.length; i++) {
-                            if (self.keys[49 + i]) {
-                                self.ui.spellsUI.selectSpell(i);
-                            }
-                        }
                     }
                     self.getWorld().update(delta, controls);
                 }

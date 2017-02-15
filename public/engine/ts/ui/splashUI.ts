@@ -234,7 +234,7 @@ namespace Lich {
         static SCROLL_LINES = 2;
 
         private lines = new Array<string>();
-        private cont = new createjs.SpriteContainer();
+        private cont = new SheetContainer();
         private currentLine = 0;
 
         public print() {

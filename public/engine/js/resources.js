@@ -93,7 +93,7 @@ var Lich;
             this.mapSurfaceBgrTransitionsDefs = {};
             // dle trans povrchu
             this.mapTransitionSrfcDefs = {};
-            this.mapTransitionSrfcBgrs = {};
+            this.mapTransitionSrfcBgrsDefs = {};
             // definice achievementů 
             this.achievementsDefs = {};
             // definice objektů
@@ -206,8 +206,11 @@ var Lich;
                             // Připrav snímky
                             for (var y = 0; y < hSplicing; y++) {
                                 for (var x = 0; x < wSplicing; x++) {
-                                    frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
-                                    frCnt++;
+                                    // kontroluj jestli ještě beru obsazené pozice ze sprite
+                                    if (frCnt < animationDef.frames) {
+                                        frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
+                                        frCnt++;
+                                    }
                                 }
                             }
                             // Ze snímků sestav animace dle definic
@@ -215,7 +218,7 @@ var Lich;
                                 var animDef = animationDef.animations[a];
                                 animations[Lich.AnimationKey[animDef.animationKey]] = [
                                     frames.length - frCnt + animDef.startFrame,
-                                    frames.length - frCnt - 1 + animDef.endFrame,
+                                    frames.length - frCnt + animDef.endFrame,
                                     Lich.AnimationKey[animDef.nextAnimationKey],
                                     animDef.time
                                 ];
@@ -311,6 +314,8 @@ var Lich;
                 self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[definition.mapObjKey]] = definition;
                 self.mapSurfaceBgrDefsBySpriteNameMap[definition.spriteName] = definition;
             });
+            // TODO Definice přechodů pozadí mapových povrchů
+            // mapTransitionSrfcBgrDefsBySpriteNameMap
             // Definice mapových objektů
             Lich.MAP_OBJECT_DEFS.forEach(function (definition) {
                 self.mapObjectDefs[definition.mapObjKey] = definition;
@@ -402,8 +407,11 @@ var Lich;
         Resources.prototype.getSurfaceTileSprite = function (surfaceKey, positionIndex) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]];
+            var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[Lich.SurfaceKey[surfaceKey]];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            if (!srfcDef) {
+                console.log("d");
+            }
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex);
             return sprite;
         };
@@ -411,8 +419,11 @@ var Lich;
         Resources.prototype.getSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
+            var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            if (!srfcBgrDef) {
+                console.log("d");
+            }
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex);
             return sprite;
         };
@@ -462,6 +473,11 @@ var Lich;
             return sprite;
         };
         ;
+        Resources.prototype.getSpriteSheet = function () {
+            var self = this;
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            return self.spritesheetByKeyMap[stringSheetKey];
+        };
         return Resources;
     }());
     Resources.REVEAL_SIZE = 13; // musí být liché

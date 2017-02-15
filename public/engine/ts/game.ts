@@ -16,7 +16,7 @@ namespace Lich {
 
         private canvas: HTMLCanvasElement;
         private stage: createjs.SpriteStage;
-        private content: createjs.SpriteContainer;
+        private content: SheetContainer;
         private background: Background;
         private world: World;
         private ui: UI;
@@ -32,7 +32,7 @@ namespace Lich {
         mouse = new Mouse();
 
         public getCanvas(): HTMLCanvasElement { return this.canvas; }
-        public getContent(): createjs.SpriteContainer { return this.content; }
+        public getContent(): SheetContainer { return this.content; }
         public getBackground(): Background { return this.background; }
         public getWorld(): World { return this.world; }
         public getUI(): UI { return this.ui; }
@@ -169,7 +169,8 @@ namespace Lich {
                                 TilesMapGenerator.deserialize(obj.map, (tilesMap) => {
                                     populateContent(tilesMap);
                                     if (obj.inv) {
-                                        self.ui.inventoryUI.deserialize(obj.inv);
+                                        // TODO
+                                        // self.ui.inventoryUI.deserialize(obj.inv);
                                     }
                                 });
                             }
@@ -194,7 +195,7 @@ namespace Lich {
                     // (re)-init
                     // TODO
                     // self.ui = new UI(self.canvas, tilesMap, mobile);
-                    self.background = new Background(self);
+                    // self.background = new Background(self);
                     self.world = new World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
@@ -264,7 +265,7 @@ namespace Lich {
                 loadWorld();
             }
 
-            self.content = new createjs.SpriteContainer();
+            self.content = new SheetContainer();
 
             if (Resources.getInstance().isLoaderDone()) {
                 init();
@@ -359,49 +360,50 @@ namespace Lich {
                             controls.right = true;
                         if (self.keys[83])
                             controls.down = true;
-                        if (self.keys[67]) {
-                            self.ui.craftingUI.toggle();
-                        } else {
-                            self.ui.craftingUI.prepareForToggle();
-                        }
-                        if (self.keys[27]) {
-                            if (self.ui.craftingUI.parent) {
-                                self.ui.craftingUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            } else if (self.ui.mapUI.parent) {
-                                self.ui.mapUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            } else {
-                                self.ui.splashScreenUI.toggle();
-                            }
-                        } else {
-                            self.ui.splashScreenUI.prepareForToggle();
-                        }
-                        if (self.keys[73]) {
-                            self.ui.inventoryUI.toggle();
-                        } else {
-                            self.ui.inventoryUI.prepareForToggle();
-                        }
-                        if (self.keys[77]) {
-                            self.ui.mapUI.toggle();
-                        } else {
-                            self.ui.mapUI.prepareForToggle();
-                        }
-                        if (self.keys[78]) {
-                            self.ui.minimapUI.toggle();
-                        } else {
-                            self.ui.minimapUI.prepareForToggle();
-                        }
-                        if (self.keys[16]) {
-                            self.ui.spellsUI.toggleShift();
-                        } else {
-                            self.ui.spellsUI.prepareForToggleShift();
-                        }
-                        for (var i = 0; i < self.ui.spellsUI.spellIndex.length; i++) {
-                            if (self.keys[49 + i]) {
-                                self.ui.spellsUI.selectSpell(i);
-                            }
-                        }
+                        // TODO
+                        // if (self.keys[67]) {
+                        //     self.ui.craftingUI.toggle();
+                        // } else {
+                        //     self.ui.craftingUI.prepareForToggle();
+                        // }
+                        // if (self.keys[27]) {
+                        //     if (self.ui.craftingUI.parent) {
+                        //         self.ui.craftingUI.hide();
+                        //         self.ui.splashScreenUI.suppressToggle();
+                        //     } else if (self.ui.mapUI.parent) {
+                        //         self.ui.mapUI.hide();
+                        //         self.ui.splashScreenUI.suppressToggle();
+                        //     } else {
+                        //         self.ui.splashScreenUI.toggle();
+                        //     }
+                        // } else {
+                        //     self.ui.splashScreenUI.prepareForToggle();
+                        // }
+                        // if (self.keys[73]) {
+                        //     self.ui.inventoryUI.toggle();
+                        // } else {
+                        //     self.ui.inventoryUI.prepareForToggle();
+                        // }
+                        // if (self.keys[77]) {
+                        //     self.ui.mapUI.toggle();
+                        // } else {
+                        //     self.ui.mapUI.prepareForToggle();
+                        // }
+                        // if (self.keys[78]) {
+                        //     self.ui.minimapUI.toggle();
+                        // } else {
+                        //     self.ui.minimapUI.prepareForToggle();
+                        // }
+                        // if (self.keys[16]) {
+                        //     self.ui.spellsUI.toggleShift();
+                        // } else {
+                        //     self.ui.spellsUI.prepareForToggleShift();
+                        // }
+                        // for (var i = 0; i < self.ui.spellsUI.spellIndex.length; i++) {
+                        //     if (self.keys[49 + i]) {
+                        //         self.ui.spellsUI.selectSpell(i);
+                        //     }
+                        // }
                     }
 
                     self.getWorld().update(delta, controls);

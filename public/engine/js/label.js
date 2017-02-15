@@ -16,6 +16,6 @@ var Lich;
             return _this;
         }
         return Label;
-    }(createjs.SpriteContainer));
+    }(Lich.SheetContainer));
     Lich.Label = Label;
 })(Lich || (Lich = {}));

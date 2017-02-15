@@ -49,14 +49,6 @@ namespace Lich {
 
         public spellCooldowns = new Table<number>();
 
-        initSprite() {
-            let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
-            this.width = animationDef.width;
-            this.height = animationDef.height;
-            this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
-            this.addChild(this.sprite);
-        }
-
         constructor(
             public ownerId: string,
             private animationSetKey: AnimationSetKey,
@@ -66,6 +58,12 @@ namespace Lich {
             public accelerationY: number,
             hovers = false) {
             super(collXOffset, collYOffset, hovers);
+
+            let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
+            this.width = animationDef.width;
+            this.height = animationDef.height;
+            this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
+            this.addChild(this.sprite);
 
             this.healthBar = new createjs.Shape();
             this.healthBar.width = this.width;
