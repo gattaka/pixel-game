@@ -71,7 +71,8 @@ namespace Lich {
             this.healthBar.x = 0;
             this.healthBar.y = -this.healthBar.height;
             this.healthBar.visible = false;
-            this.addChild(this.healthBar);
+            // TODO
+            // this.addChild(this.healthBar);
         }
 
         private updateHealthBar() {

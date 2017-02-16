@@ -45,7 +45,8 @@ namespace Lich {
             super();
             this.width = game.getCanvas().width;
             this.height = game.getCanvas().height;
-            this.addChild(this.lightScreen);
+            // TODO
+            // this.addChild(this.lightScreen);
         }
 
         updateLight(r: number, g: number, b: number, a: number) {

@@ -82,10 +82,12 @@ var Lich;
             self.addChild(self.entitiesCont);
             // Weather
             self.weather = new Lich.Weather(game);
-            self.addChild(self.weather);
+            // TODO
+            // self.addChild(self.weather);
             // Fog cont
             self.initFullScaleCont(self.fogSectorsCont);
-            self.addChild(self.fogSectorsCont);
+            // TODO
+            // self.addChild(self.fogSectorsCont);
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);
             self.addChild(self.messagesCont);

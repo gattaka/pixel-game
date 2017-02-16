@@ -109,11 +109,13 @@ namespace Lich {
 
             // Weather
             self.weather = new Weather(game);
-            self.addChild(self.weather);
+            // TODO
+            // self.addChild(self.weather);
 
             // Fog cont
             self.initFullScaleCont(self.fogSectorsCont);
-            self.addChild(self.fogSectorsCont);
+            // TODO
+            // self.addChild(self.fogSectorsCont);
 
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);

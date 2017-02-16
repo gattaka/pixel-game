@@ -66,8 +66,9 @@ var Lich;
             _this.healthBar.x = 0;
             _this.healthBar.y = -_this.healthBar.height;
             _this.healthBar.visible = false;
-            _this.addChild(_this.healthBar);
             return _this;
+            // TODO
+            // this.addChild(this.healthBar);
         }
         Character.prototype.updateHealthBar = function () {
             if (this.currentHealth == this.maxHealth || this.currentHealth == 0) {

@@ -311,17 +311,19 @@ namespace Lich {
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
                     // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
-                    if (self.mouse.down && self.mouse.clickChanged) {
-                        if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                            // blokuj akci světa
-                            self.mouse.consumedByUI = true;
-                            self.mouse.clickChanged = false;
-                        }
-                    }
+                    // TODO
+                    // if (self.mouse.down && self.mouse.clickChanged) {
+                    //     if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
+                    //         // blokuj akci světa
+                    //         self.mouse.consumedByUI = true;
+                    //         self.mouse.clickChanged = false;
+                    //     }
+                    // }
 
-                    if (!self.mouse.down && self.mouse.clickChanged) {
-                        self.ui.controls = new Controls();
-                    }
+                    // TODO
+                    // if (!self.mouse.down && self.mouse.clickChanged) {
+                    //     self.ui.controls = new Controls();
+                    // }
 
                     // Akce světa mají nižší prioritu, akce myši se projeví pouze 
                     // pokud je již nezpracovalo UI 

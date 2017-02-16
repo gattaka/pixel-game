@@ -37,8 +37,9 @@ var Lich;
             _this.mode = WeatherMode.NONE;
             _this.width = game.getCanvas().width;
             _this.height = game.getCanvas().height;
-            _this.addChild(_this.lightScreen);
             return _this;
+            // TODO
+            // this.addChild(this.lightScreen);
         }
         Weather.prototype.updateLight = function (r, g, b, a) {
             this.lightScreen.graphics.clear().beginFill("rgba(" + r + "," + g + "," + b + "," + a + ")").drawRect(0, 0, this.width, this.height);

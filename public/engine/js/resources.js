@@ -112,6 +112,8 @@ var Lich;
             this.mapSurfaceDefsBySpriteNameMap = {};
             // Mapa pozadí povrchů dle jejich sprite jména
             this.mapSurfaceBgrDefsBySpriteNameMap = {};
+            // Mapa přechodových povrchů dle jejich sprite jména
+            this.mapTransitionSrfcDefsBySpriteNameMap = {};
             // Mapa přechodových pozadí povrchů dle jejich sprite jména
             this.mapTransitionSrfcBgrDefsBySpriteNameMap = {};
             /**
@@ -230,8 +232,8 @@ var Lich;
                         // povrchu a můžu jednotně rozsekat zaregistrovat, rozměry jsou stejné
                         var surfaceDef = self.mapSurfaceDefsBySpriteNameMap[sDef.name];
                         var surfaceBgrDef = self.mapSurfaceBgrDefsBySpriteNameMap[sDef.name];
-                        var surfaceTransDef = self.mapSurfaceTransitionsDefs[sDef.name];
-                        var surfaceBgrTransDef = self.mapSurfaceBgrTransitionsDefs[sDef.name];
+                        var surfaceTransDef = self.mapTransitionSrfcDefsBySpriteNameMap[sDef.name];
+                        var surfaceBgrTransDef = self.mapTransitionSrfcBgrDefsBySpriteNameMap[sDef.name];
                         if (surfaceDef || surfaceBgrDef || surfaceTransDef || surfaceBgrTransDef) {
                             var wSplicing = sDef.width / Resources.TILE_SIZE;
                             var hSplicing = sDef.height / Resources.TILE_SIZE;
@@ -308,6 +310,7 @@ var Lich;
             Lich.SURFACE_TRANSITION_DEFS.forEach(function (definition) {
                 self.mapSurfaceTransitionsDefs[Lich.SurfaceKey[definition.diggableSrfc]] = definition;
                 self.mapTransitionSrfcDefs[Lich.SurfaceKey[definition.transitionKey]] = definition;
+                self.mapTransitionSrfcDefsBySpriteNameMap[definition.spriteName] = definition;
             });
             // Definice pozadí mapových povrchů
             Lich.SURFACE_BGR_DEFS.forEach(function (definition) {
@@ -409,10 +412,8 @@ var Lich;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[Lich.SurfaceKey[surfaceKey]];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            if (!srfcDef) {
-                console.log("d");
-            }
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex);
+            // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
+            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex + 1);
             return sprite;
         };
         ;
@@ -421,10 +422,8 @@ var Lich;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            if (!srfcBgrDef) {
-                console.log("d");
-            }
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex);
+            // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
+            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex + 1);
             return sprite;
         };
         ;
@@ -432,7 +431,8 @@ var Lich;
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][Lich.FOG_DEF[0]].frame + positionIndex);
+            // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
+            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][Lich.FOG_DEF[0]].frame + positionIndex + 1);
             return sprite;
         };
         ;
@@ -447,7 +447,8 @@ var Lich;
             }
             else {
                 // jdi na konkrétní snímek a tam stůj
-                sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][mapObjectDef.spriteName].frame + positionIndex);
+                // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
+                sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][mapObjectDef.spriteName].frame + positionIndex + 1);
             }
             return sprite;
         };
