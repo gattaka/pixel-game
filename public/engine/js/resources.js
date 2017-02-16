@@ -407,32 +407,33 @@ var Lich;
             var bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY]]);
             return bitmapText;
         };
-        Resources.prototype.getSurfaceTileSprite = function (surfaceKey, positionIndex) {
+        Resources.prototype.processSurfaceTileSprite = function (surfaceKey, positionIndex, originalSprite) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[Lich.SurfaceKey[surfaceKey]];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex + 1);
             return sprite;
         };
         ;
-        Resources.prototype.getSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex) {
+        Resources.prototype.processSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex, originalSprite) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex + 1);
             return sprite;
         };
         ;
-        Resources.prototype.getFogSprite = function (positionIndex) {
+        Resources.prototype.processFogSprite = function (positionIndex, originalSprite) {
             var self = this;
+            var v = positionIndex || positionIndex == 0 ? positionIndex : Lich.FogTile.MM;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][Lich.FOG_DEF[0]].frame + positionIndex + 1);
+            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][Lich.FOG_DEF[0]].frame + v + 1);
             return sprite;
         };
         ;

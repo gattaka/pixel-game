@@ -102,13 +102,13 @@ namespace Lich {
 
                 // Test povrchu 
                 let container2 = new SheetContainer();
-                let sprite3 = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY, 0);
+                let sprite3 = Resources.getInstance().processSurfaceTileSprite(SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY, 0);
                 sprite3.x = 10;
                 sprite3.y = 100;
                 container2.addChild(sprite3);
 
                 // Test pozadí povrchu
-                let sprite4 = Resources.getInstance().getSurfaceBgrTileSprite(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, 0);
+                let sprite4 = Resources.getInstance().processSurfaceBgrTileSprite(SurfaceBgrKey.SRFC_BGR_BRICK_KEY, 0);
                 sprite4.x = 50;
                 sprite4.y = 100;
                 container2.addChild(sprite4);
@@ -126,7 +126,7 @@ namespace Lich {
                 container2.addChild(sprite6);
 
                 // Test statického mapového objektu
-                let sprite7 = Resources.getInstance().getFogSprite(2);
+                let sprite7 = Resources.getInstance().processFogSprite(2);
                 sprite7.x = 100;
                 sprite7.y = 150;
                 container2.addChild(sprite7);

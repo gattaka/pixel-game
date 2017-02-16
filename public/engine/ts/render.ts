@@ -307,7 +307,7 @@ namespace Lich {
         createFogTile(positionIndex: number) {
             var self = this;
             let rsc = Resources.getInstance();
-            let tile = rsc.getFogSprite(positionIndex);
+            let tile = rsc.processFogSprite(positionIndex);
             return tile;
         }
 
@@ -318,11 +318,11 @@ namespace Lich {
             if (bgr) {
                 typ = rsc.surfaceBgrIndex.getType(positionIndex);
                 let v = Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
-                tile = rsc.getSurfaceBgrTileSprite(typ, v - 1);
+                tile = rsc.processSurfaceBgrTileSprite(typ, v - 1);
             } else {
                 typ = rsc.surfaceIndex.getType(positionIndex);
                 let v = Resources.getInstance().surfaceIndex.getPosition(positionIndex);
-                tile = rsc.getSurfaceTileSprite(typ, v - 1);
+                tile = rsc.processSurfaceTileSprite(typ, v - 1);
             }
             return tile;
         }
@@ -505,8 +505,7 @@ namespace Lich {
                     let tile = sceneMap.getValue(x, y);
                     if (tile !== null) {
                         let v = record.getValue(x, y);
-                        tile = Resources.getInstance().getFogSprite(v);
-                        sceneMap.setValue(x, y, tile);
+                        Resources.getInstance().processFogSprite(v, tile);
                     }
                 });
 
@@ -670,11 +669,9 @@ namespace Lich {
                         var v = record.getValue(x, y);
                         let type = index.getType(v);
                         if (bgr) {
-                            tile = Resources.getInstance().getSurfaceBgrTileSprite(type, v);
-                            sceneMap.setValue(x, y, tile);
+                            Resources.getInstance().processSurfaceBgrTileSprite(type, v, tile);
                         } else {
-                            tile = Resources.getInstance().getSurfaceTileSprite(type, v);
-                            sceneMap.setValue(x, y, tile);
+                            Resources.getInstance().processSurfaceTileSprite(type, v, tile);
                         }
                     }
                 });

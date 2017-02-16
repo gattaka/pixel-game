@@ -114,8 +114,7 @@ namespace Lich {
 
             // Fog cont
             self.initFullScaleCont(self.fogSectorsCont);
-            // TODO
-            // self.addChild(self.fogSectorsCont);
+            self.addChild(self.fogSectorsCont);
 
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);

@@ -469,32 +469,33 @@ namespace Lich {
             return bitmapText;
         }
 
-        getSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number): createjs.Sprite {
+        processSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             let srfcDef = self.mapSurfaceDefs[SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[SurfaceKey[surfaceKey]];
-            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcDef.spriteName].frame + positionIndex + 1);
             return sprite;
         };
 
-        getSurfaceBgrTileSprite(surfaceBgrKey: SurfaceBgrKey, positionIndex: number): createjs.Sprite {
+        processSurfaceBgrTileSprite(surfaceBgrKey: SurfaceBgrKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             let srfcBgrDef = self.mapSurfaceBgrDefs[SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[SurfaceBgrKey[surfaceBgrKey]];
-            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
             sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex + 1);
             return sprite;
         };
 
-        getFogSprite(positionIndex: number): createjs.Sprite {
+        processFogSprite(positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
+            let v = positionIndex || positionIndex == 0 ? positionIndex : FogTile.MM;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
-            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][FOG_DEF[0]].frame + positionIndex + 1);
+            sprite.gotoAndStop(self.spriteItemDefsBySheetByNameMap[stringSheetKey][FOG_DEF[0]].frame + v + 1);
             return sprite;
         };
 
