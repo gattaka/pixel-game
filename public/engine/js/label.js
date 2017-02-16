@@ -15,6 +15,9 @@ var Lich;
             _this.width = _this.label.getBounds().width;
             return _this;
         }
+        Label.prototype.setText = function (text) {
+            this.label.text = text;
+        };
         return Label;
     }(Lich.SheetContainer));
     Lich.Label = Label;

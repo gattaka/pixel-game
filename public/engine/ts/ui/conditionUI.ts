@@ -101,13 +101,13 @@ namespace Lich {
 
             // zdraví
             this.addChild(this.healthBar);
-            this.healthText = new Label(" ", PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.healthText = new Label(" ");
             this.healthText.y = ConditionUI.INNER_BORDER;
             this.addChild(this.healthText);
 
             // vůle
             this.addChild(this.willBar);
-            this.willText = new Label(" ", PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.willText = new Label(" ");
             this.willText.y = this.height / 2 + ConditionUI.SPACING / 2;
             this.addChild(this.willText);
 

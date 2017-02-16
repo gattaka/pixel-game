@@ -16,5 +16,9 @@ namespace Lich {
             this.width = this.label.getBounds().width;
         }
 
+        setText(text: string) {
+            this.label.text = text;
+        }
+
     }
 }

@@ -25,6 +25,8 @@ namespace Lich {
         constructor(
             // id spellu
             public key: SpellKey,
+            // název sprite ikony 
+            public iconSpriteName: string,
             // náročnost na will
             public cost: number,
             // prodleva před dalším použitím
@@ -44,6 +46,7 @@ namespace Lich {
 
         constructor(
             key: SpellKey,
+            iconSpriteName: string,
             cost: number,
             cooldown: number,
             private animationSetKey: AnimationSetKey,
@@ -60,7 +63,7 @@ namespace Lich {
             private colloffsetY = 20,
 
         ) {
-            super(key, cost, cooldown);
+            super(key, iconSpriteName, cost, cooldown);
         }
 
         protected adjustObjectSpeed(context: SpellContext, object: AbstractWorldObject) {
@@ -121,6 +124,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_FIREBALL_KEY,
+                "fireball_spell",
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
                 AnimationSetKey.FIREBALL_ANIMATION_KEY,
@@ -152,6 +156,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_METEOR_KEY,
+                "meteor_spell",
                 10, // COST,
                 200, // COOLDOWN,
                 AnimationSetKey.METEOR_ANIMATION_KEY,
@@ -175,12 +180,14 @@ namespace Lich {
     export abstract class AbstractLoveSpellDef extends BulletSpellDef {
         constructor(
             spellKey: SpellKey,
+            iconSpriteName: string,
             animationSetKey: AnimationSetKey,
             initAnimation: AnimationKey,
             endAnimation: AnimationKey,
             damage: number) {
             super(
                 spellKey, // SpellKey
+                iconSpriteName,
                 10, // COST
                 200, // COOLDOWN
                 animationSetKey,
@@ -206,6 +213,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_LOVELETTER, // SpellKey
+                "loveletter_spell",
                 AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
                 AnimationKey.ANM_LOVELETTER_FLY_KEY,
                 AnimationKey.ANM_LOVELETTER_DONE_KEY,
@@ -221,6 +229,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_LOVEARROW, // SpellKey
+                "lovearrow_spell",
                 AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
                 AnimationKey.ANM_LOVEARROW_FLY_KEY,
                 AnimationKey.ANM_LOVEARROW_DONE_KEY,
@@ -237,6 +246,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_ICEBOLT_KEY,
+                "bolt_spell",
                 2, // COST,
                 100, // COOLDOWN,
                 AnimationSetKey.ICEBOLT_ANIMATION_KEY,
@@ -258,8 +268,8 @@ namespace Lich {
      */
     export abstract class HeroReachSpellDef extends SpellDefinition {
 
-        constructor(key: SpellKey, cost: number, cooldown: number) {
-            super(key, cost, cooldown);
+        constructor(key: SpellKey, iconSpriteName: string, cost: number, cooldown: number) {
+            super(key, iconSpriteName, cost, cooldown);
         }
 
         public abstract castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean;
@@ -286,7 +296,7 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_USE_ITEM_KEY, "use_spell", UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -314,7 +324,7 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_REVEAL_FOG_KEY, "place_spell", RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -331,7 +341,7 @@ namespace Lich {
         static COST = 2; // DEV cost :)
 
         constructor() {
-            super(SpellKey.SPELL_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_TELEPORT_KEY, "teleport_spell", TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -354,7 +364,7 @@ namespace Lich {
         static COST = 20;
 
         constructor() {
-            super(SpellKey.SPELL_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_HOME_KEY, "home_spell", HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -376,7 +386,7 @@ namespace Lich {
         static COOLDOWN = 200;
 
         constructor() {
-            super(SpellKey.SPELL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_INTERACT_KEY, "place_spell", 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -392,9 +402,10 @@ namespace Lich {
         static COOLDOWN = 100;
 
         constructor(key: SpellKey,
+            iconSpriteName: string,
             // kope se povrch jako podklad?
             private asBackground) {
-            super(key, 0, AbstractDigSpellDef.COOLDOWN);
+            super(key, iconSpriteName, 0, AbstractDigSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -418,13 +429,13 @@ namespace Lich {
 
     export class DigSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_KEY, false);
+            super(SpellKey.SPELL_DIG_KEY, "dig_spell", false);
         }
     }
 
     export class DigBgrSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_BGR_KEY, true);
+            super(SpellKey.SPELL_DIG_BGR_KEY, "dig_bgr_spell", true);
         }
     }
 
@@ -437,10 +448,11 @@ namespace Lich {
 
         constructor(
             key: SpellKey,
+            iconSpriteName: string,
             // pokládá se povrch/objekt jako podklad/alterantiva?
             private alternative
         ) {
-            super(key, 0, AbstractPlaceSpellDef.COOLDOWN);
+            super(key, iconSpriteName, 0, AbstractPlaceSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -469,13 +481,13 @@ namespace Lich {
 
     export class PlaceSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_KEY, false);
+            super(SpellKey.SPELL_PLACE_KEY, "place_spell", false);
         }
     }
 
     export class PlaceBgrSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_BGR_KEY, true);
+            super(SpellKey.SPELL_PLACE_BGR_KEY, "place_bgr_spell", true);
         }
     }
 
@@ -486,7 +498,7 @@ namespace Lich {
     export class EnemySpellDef extends SpellDefinition {
 
         constructor() {
-            super(SpellKey.SPELL_ENEMY_KEY, 0, 200);
+            super(SpellKey.SPELL_ENEMY_KEY, "enemy_spell", 0, 200);
         }
 
         public cast(context: SpellContext): boolean {

@@ -74,7 +74,8 @@ namespace Lich {
 
             var self = this;
 
-            this.workstationIcon = Resources.getInstance().getBitmap(SpellKey[SpellKey.SPELL_PLACE_KEY]);
+            // TODO udělat UI definice, kde budou UI klíče se spritenames
+            this.workstationIcon = Resources.getInstance().getInvObjectSprite(SpellKey[SpellKey.SPELL_PLACE_KEY]);
             let bounds = this.workstationIcon.getBounds();
             this.workstationIconBgr = new UIBackground();
             this.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);

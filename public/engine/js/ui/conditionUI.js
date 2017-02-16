@@ -31,12 +31,12 @@ var Lich;
             _this.addChild(willBgrBar);
             // zdraví
             _this.addChild(_this.healthBar);
-            _this.healthText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.healthText = new Lich.Label(" ");
             _this.healthText.y = ConditionUI.INNER_BORDER;
             _this.addChild(_this.healthText);
             // vůle
             _this.addChild(_this.willBar);
-            _this.willText = new Lich.Label(" ", Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            _this.willText = new Lich.Label(" ");
             _this.willText.y = _this.height / 2 + ConditionUI.SPACING / 2;
             _this.addChild(_this.willText);
             _this.updateHealthBar();

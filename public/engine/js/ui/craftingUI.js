@@ -33,7 +33,8 @@ var Lich;
             _this.itemsUIMap = new Lich.HashMap();
             _this.itemsCont = new Lich.SheetContainer();
             var self = _this;
-            _this.workstationIcon = Lich.Resources.getInstance().getBitmap(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+            // TODO udělat UI definice, kde budou UI klíče se spritenames
+            _this.workstationIcon = Lich.Resources.getInstance().getInvObjectSprite(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
             var bounds = _this.workstationIcon.getBounds();
             _this.workstationIconBgr = new Lich.UIBackground();
             _this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
