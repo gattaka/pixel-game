@@ -55,8 +55,8 @@ namespace Lich {
 
         // override
         public updateCache(compositeOperation?: string): void {
-            this.backgroundCont.updateCache();
-            this.cacheableCont.updateCache();
+            // this.backgroundCont.updateCache();
+            // this.cacheableCont.updateCache();
         }
 
         public addBackgroundChild(child) {

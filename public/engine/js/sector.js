@@ -60,8 +60,8 @@ var Lich;
         };
         // override
         Sector.prototype.updateCache = function (compositeOperation) {
-            this.backgroundCont.updateCache();
-            this.cacheableCont.updateCache();
+            // this.backgroundCont.updateCache();
+            // this.cacheableCont.updateCache();
         };
         Sector.prototype.addBackgroundChild = function (child) {
             this.backgroundCont.addChild(child);

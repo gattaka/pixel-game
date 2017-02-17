@@ -207,8 +207,8 @@ var Lich;
                                 fogSector.addChild(testShape);
                             }
                             // proveď cache na sektoru
-                            sector.cache(0, 0, sector.width, sector.height);
-                            fogSector.cache(0, 0, fogSector.width, fogSector.height);
+                            // sector.cache(0, 0, sector.width, sector.height);
+                            // fogSector.cache(0, 0, fogSector.width, fogSector.height);
                             if (Lich.Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Alokován sektor: " + x + ":" + y);
                             }
@@ -836,19 +836,20 @@ var Lich;
             return false;
         };
         Render.prototype.handleTick = function () {
-            var self = this;
-            for (var i = 0; i < self.sectorsToUpdate.length; i++) {
-                var item = self.sectorsToUpdate.pop();
-                if (typeof item !== "undefined") {
-                    item.sector.updateCache();
-                }
-            }
-            for (var i = 0; i < self.fogSectorsToUpdate.length; i++) {
-                var item = self.fogSectorsToUpdate.pop();
-                if (typeof item !== "undefined") {
-                    item.fogSector.updateCache();
-                }
-            }
+            // TODO?
+            // let self = this;
+            // for (let i = 0; i < self.sectorsToUpdate.length; i++) {
+            //     let item = self.sectorsToUpdate.pop();
+            //     if (typeof item !== "undefined") {
+            //         item.sector.updateCache();
+            //     }
+            // }
+            // for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
+            //     let item = self.fogSectorsToUpdate.pop();
+            //     if (typeof item !== "undefined") {
+            //         item.fogSector.updateCache();
+            //     }
+            // }
         };
         Render.prototype.addOnDigObjectListener = function (f) {
             var self = this;

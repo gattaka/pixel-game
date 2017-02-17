@@ -13,6 +13,7 @@ var Lich;
     }());
     Lich.Controls = Controls;
     ;
+    ;
     var Game = (function () {
         function Game(canvasId) {
             this.initialized = false;
@@ -22,6 +23,10 @@ var Lich;
             this.mouse = new Lich.Mouse();
             var self = this;
             Game.CURRENT_GAME = self;
+            // stats
+            var stats = new Stats();
+            stats.showPanel(0);
+            document.body.appendChild(stats.dom);
             // mobile?
             var md = new MobileDetect(window.navigator.userAgent);
             var mobile;
@@ -236,6 +241,7 @@ var Lich;
             createjs.Ticker.addEventListener("tick", handleTick);
             createjs.Ticker.setFPS(60);
             function handleTick(event) {
+                stats.begin();
                 var delta = event.delta;
                 window.onbeforeunload = function (e) {
                     var e = e || window.event;
@@ -306,6 +312,7 @@ var Lich;
                     self.getWorld().update(delta, controls);
                 }
                 self.stage.update();
+                stats.end();
             }
         }
         Game.prototype.getCanvas = function () { return this.canvas; };

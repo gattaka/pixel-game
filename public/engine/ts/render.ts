@@ -261,8 +261,8 @@ namespace Lich {
                             }
 
                             // proveď cache na sektoru
-                            sector.cache(0, 0, sector.width, sector.height);
-                            fogSector.cache(0, 0, fogSector.width, fogSector.height);
+                            // sector.cache(0, 0, sector.width, sector.height);
+                            // fogSector.cache(0, 0, fogSector.width, fogSector.height);
 
                             if (Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Alokován sektor: " + x + ":" + y);
@@ -952,19 +952,20 @@ namespace Lich {
         }
 
         handleTick() {
-            let self = this;
-            for (let i = 0; i < self.sectorsToUpdate.length; i++) {
-                let item = self.sectorsToUpdate.pop();
-                if (typeof item !== "undefined") {
-                    item.sector.updateCache();
-                }
-            }
-            for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
-                let item = self.fogSectorsToUpdate.pop();
-                if (typeof item !== "undefined") {
-                    item.fogSector.updateCache();
-                }
-            }
+            // TODO?
+            // let self = this;
+            // for (let i = 0; i < self.sectorsToUpdate.length; i++) {
+            //     let item = self.sectorsToUpdate.pop();
+            //     if (typeof item !== "undefined") {
+            //         item.sector.updateCache();
+            //     }
+            // }
+            // for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
+            //     let item = self.fogSectorsToUpdate.pop();
+            //     if (typeof item !== "undefined") {
+            //         item.fogSector.updateCache();
+            //     }
+            // }
         }
 
         addOnDigObjectListener(f: (objType: Diggable, x: number, y: number) => any) {

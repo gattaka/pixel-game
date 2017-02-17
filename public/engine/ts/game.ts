@@ -10,6 +10,14 @@ namespace Lich {
         public levitate = false;
     };
 
+    declare class Stats {
+        dom;
+        constructor();
+        showPanel(n: number);
+        begin();
+        end();
+    };
+
     export class Game {
 
         static CURRENT_GAME: Game;
@@ -42,6 +50,11 @@ namespace Lich {
             var self = this;
 
             Game.CURRENT_GAME = self;
+
+            // stats
+            var stats = new Stats();
+            stats.showPanel(0);
+            document.body.appendChild(stats.dom);
 
             // mobile?
             let md = new MobileDetect(window.navigator.userAgent);
@@ -288,6 +301,7 @@ namespace Lich {
             createjs.Ticker.setFPS(60);
 
             function handleTick(event) {
+                stats.begin();
                 var delta = event.delta;
 
                 window.onbeforeunload = function (e) {
@@ -412,6 +426,7 @@ namespace Lich {
                 }
 
                 self.stage.update();
+                stats.end();
             }
         };
     }
