@@ -88,7 +88,12 @@ namespace Lich {
             }
             resizeCanvas();
 
-            self.stage = new createjs.SpriteStage(self.canvas);
+            self.canvas = <HTMLCanvasElement>document.getElementById(canvasId);
+            self.canvas.style.backgroundColor = "#cce1e8";
+            // preserveDrawingBuffer = true (2. argument) značeně zhorší FPS
+            // antialising = true (3. argument) také značně zhorší FPS
+            self.stage = new createjs.SpriteStage(self.canvas, false, false);
+            let webGL = self.stage.isWebGL;
 
             if (mobile) {
                 createjs.Touch.enable(self.stage);

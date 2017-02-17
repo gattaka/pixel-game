@@ -55,7 +55,12 @@ var Lich;
                 self.canvas.height = window.innerHeight;
             }
             resizeCanvas();
-            self.stage = new createjs.SpriteStage(self.canvas);
+            self.canvas = document.getElementById(canvasId);
+            self.canvas.style.backgroundColor = "#cce1e8";
+            // preserveDrawingBuffer = true (2. argument) značeně zhorší FPS
+            // antialising = true (3. argument) také značně zhorší FPS
+            self.stage = new createjs.SpriteStage(self.canvas, false, false);
+            var webGL = self.stage.isWebGL;
             if (mobile) {
                 createjs.Touch.enable(self.stage);
                 self.stage.enableMouseOver(10);
