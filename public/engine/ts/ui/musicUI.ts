@@ -20,7 +20,7 @@ namespace Lich {
 
             let trackInsert = (track: MusicKey, volume?: number) => {
                 var self = this;
-                var bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.UI_SOUND_KEY]);
+                var bitmap = Resources.getInstance().getBitmap(UISpriteKey[UISpriteKey.UI_SOUND_KEY]);
                 self.itemsCont.addChild(bitmap);
                 bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
                 bitmap.y = 0;

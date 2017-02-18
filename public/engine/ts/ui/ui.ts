@@ -21,7 +21,7 @@ namespace Lich {
         public controls = new Controls();
 
         private createHelpButton() {
-            let helpBtn = new Button(UIGFXKey.UI_HELP_KEY);
+            let helpBtn = new Button(UISpriteKey.UI_HELP_KEY);
             helpBtn.on("mousedown", function (evt) {
                 window.open("help.html", "_blank");
             }, null, false);
@@ -64,7 +64,7 @@ namespace Lich {
                 menuCont.visible = false;
                 self.addChild(menuCont);
 
-                let saveBtn = new Button(UIGFXKey.UI_SAVE_KEY);
+                let saveBtn = new Button(UISpriteKey.UI_SAVE_KEY);
                 menuCont.addChild(saveBtn);
                 saveBtn.on("click", function (evt) {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
@@ -72,7 +72,7 @@ namespace Lich {
                     menuCont.visible = false;
                 }, null, false);
 
-                let loadBtn = new Button(UIGFXKey.UI_LOAD_KEY);
+                let loadBtn = new Button(UISpriteKey.UI_LOAD_KEY);
                 loadBtn.y = Button.sideSize + PartsUI.SPACING;
                 menuCont.addChild(loadBtn);
                 loadBtn.on("click", function (evt) {
@@ -80,7 +80,7 @@ namespace Lich {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }, null, false);
 
-                let newbtn = new Button(UIGFXKey.UI_NEW_WORLD_KEY);
+                let newbtn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
                 newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
                 menuCont.addChild(newbtn);
                 menuCont.on("click", function (evt) {
@@ -92,7 +92,7 @@ namespace Lich {
                 menuCont.addChild(helpBtn);
                 helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
 
-                let menuBtn = new Button(UIGFXKey.UI_MENU_KEY);
+                let menuBtn = new Button(UISpriteKey.UI_MENU_KEY);
                 self.addChild(menuBtn);
                 menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
@@ -230,7 +230,7 @@ namespace Lich {
             });
 
             if (mobile) {
-                let invBtn = new Button(UIGFXKey.UI_BACKPACK_KEY);
+                let invBtn = new Button(UISpriteKey.UI_BACKPACK_KEY);
                 invBtn.x = UI.SCREEN_SPACING;
                 invBtn.y = UI.SCREEN_SPACING;
                 self.addChild(invBtn);
@@ -240,7 +240,7 @@ namespace Lich {
                     self.inventoryUI.toggle();
                 }, null, false);
 
-                let craftBtn = new Button(UIGFXKey.UI_CRAFT_KEY);
+                let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY);
                 craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
@@ -250,7 +250,7 @@ namespace Lich {
                     self.craftingUI.toggle();
                 }, null, false);
 
-                let minimapBtn = new Button(UIGFXKey.UI_MINIMAP_KEY);
+                let minimapBtn = new Button(UISpriteKey.UI_MINIMAP_KEY);
                 minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
@@ -282,16 +282,16 @@ namespace Lich {
                     let y = radius + iconRadius * Math.sin(angle);
                     let key;
                     switch (i) {
-                        case 0: key = UIGFXKey.UI_RIGHT_KEY; break;
-                        case 1: key = UIGFXKey.UI_RIGHT_UP_KEY; break;
-                        case 2: key = UIGFXKey.UI_UP_KEY; break;
-                        case 3: key = UIGFXKey.UI_LEFT_UP_KEY; break;
-                        case 4: key = UIGFXKey.UI_LEFT_KEY; break;
-                        case 5: key = UIGFXKey.UI_LEFT_DOWN_KEY; break;
-                        case 6: key = UIGFXKey.UI_DOWN_KEY; break;
-                        case 7: key = UIGFXKey.UI_RIGHT_DOWN_KEY; break;
+                        case 0: key = UISpriteKey.UI_RIGHT_KEY; break;
+                        case 1: key = UISpriteKey.UI_RIGHT_UP_KEY; break;
+                        case 2: key = UISpriteKey.UI_UP_KEY; break;
+                        case 3: key = UISpriteKey.UI_LEFT_UP_KEY; break;
+                        case 4: key = UISpriteKey.UI_LEFT_KEY; break;
+                        case 5: key = UISpriteKey.UI_LEFT_DOWN_KEY; break;
+                        case 6: key = UISpriteKey.UI_DOWN_KEY; break;
+                        case 7: key = UISpriteKey.UI_RIGHT_DOWN_KEY; break;
                     }
-                    let bitmap = Resources.getInstance().getBitmap(UIGFXKey[key]);
+                    let bitmap = Resources.getInstance().getBitmap(UISpriteKey[key]);
                     bitmap.alpha = 0.7;
                     bitmap.x = x - Resources.TILE_SIZE;
                     bitmap.y = y - Resources.TILE_SIZE;
@@ -458,7 +458,7 @@ namespace Lich {
 
     export class Button extends SheetContainer {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-        constructor(bitmap: UIGFXKey) {
+        constructor(bitmap: UISpriteKey) {
             super();
 
             let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
@@ -467,7 +467,7 @@ namespace Lich {
             bgr.y = 0;
 
             if (bitmap) {
-                let btmp = Resources.getInstance().getBitmap(UIGFXKey[bitmap]);
+                let btmp = Resources.getInstance().getBitmap(UISpriteKey[bitmap]);
                 this.addChild(btmp);
                 btmp.x = PartsUI.SELECT_BORDER;
                 btmp.y = PartsUI.SELECT_BORDER;

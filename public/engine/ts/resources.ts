@@ -79,6 +79,11 @@ namespace Lich {
 
         private static INSTANCE: Resources;
 
+        static FONT = "expressway";
+        static TEXT_COLOR = "#FF0";
+        static WORLD_LOADER_COLOR = "#84ff00";
+        static DEBUG_TEXT_COLOR = "#FF0";
+
         static REVEAL_SIZE = 13; // musí být liché
         static REACH_TILES_RADIUS = 10;
         static SPRITESHEET_IMAGE_SUFFIX = ".png";
@@ -222,6 +227,15 @@ namespace Lich {
                         });
             */
 
+            // nejprve font (nahrává se mimo loader)
+            var config: WebFont.Config = {
+                custom: {
+                    families: ['expressway'],
+                    urls: ['/css/fonts.css']
+                },
+            }
+            WebFont.load(config);
+
             // pak loader 
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
@@ -353,6 +367,7 @@ namespace Lich {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
             });
 
+            EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_START));
             self.loader.loadManifest(manifest, true);
 
             // background

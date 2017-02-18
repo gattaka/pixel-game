@@ -41,21 +41,21 @@ var Lich;
                 menuCont_1.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 menuCont_1.visible = false;
                 self.addChild(menuCont_1);
-                var saveBtn = new Button(Lich.UIGFXKey.UI_SAVE_KEY);
+                var saveBtn = new Button(Lich.UISpriteKey.UI_SAVE_KEY);
                 menuCont_1.addChild(saveBtn);
                 saveBtn.on("click", function (evt) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     menuCont_1.visible = false;
                 }, null, false);
-                var loadBtn = new Button(Lich.UIGFXKey.UI_LOAD_KEY);
+                var loadBtn = new Button(Lich.UISpriteKey.UI_LOAD_KEY);
                 loadBtn.y = Button.sideSize + PartsUI.SPACING;
                 menuCont_1.addChild(loadBtn);
                 loadBtn.on("click", function (evt) {
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }, null, false);
-                var newbtn = new Button(Lich.UIGFXKey.UI_NEW_WORLD_KEY);
+                var newbtn = new Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY);
                 newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
                 menuCont_1.addChild(newbtn);
                 menuCont_1.on("click", function (evt) {
@@ -65,7 +65,7 @@ var Lich;
                 var helpBtn = _this.createHelpButton();
                 menuCont_1.addChild(helpBtn);
                 helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
-                var menuBtn = new Button(Lich.UIGFXKey.UI_MENU_KEY);
+                var menuBtn = new Button(Lich.UISpriteKey.UI_MENU_KEY);
                 self.addChild(menuBtn);
                 menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
@@ -187,7 +187,7 @@ var Lich;
                 return false;
             });
             if (mobile) {
-                var invBtn = new Button(Lich.UIGFXKey.UI_BACKPACK_KEY);
+                var invBtn = new Button(Lich.UISpriteKey.UI_BACKPACK_KEY);
                 invBtn.x = UI.SCREEN_SPACING;
                 invBtn.y = UI.SCREEN_SPACING;
                 self.addChild(invBtn);
@@ -196,7 +196,7 @@ var Lich;
                     self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
                 }, null, false);
-                var craftBtn = new Button(Lich.UIGFXKey.UI_CRAFT_KEY);
+                var craftBtn = new Button(Lich.UISpriteKey.UI_CRAFT_KEY);
                 craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
@@ -205,7 +205,7 @@ var Lich;
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
                 }, null, false);
-                var minimapBtn = new Button(Lich.UIGFXKey.UI_MINIMAP_KEY);
+                var minimapBtn = new Button(Lich.UISpriteKey.UI_MINIMAP_KEY);
                 minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
@@ -235,31 +235,31 @@ var Lich;
                     var key = void 0;
                     switch (i) {
                         case 0:
-                            key = Lich.UIGFXKey.UI_RIGHT_KEY;
+                            key = Lich.UISpriteKey.UI_RIGHT_KEY;
                             break;
                         case 1:
-                            key = Lich.UIGFXKey.UI_RIGHT_UP_KEY;
+                            key = Lich.UISpriteKey.UI_RIGHT_UP_KEY;
                             break;
                         case 2:
-                            key = Lich.UIGFXKey.UI_UP_KEY;
+                            key = Lich.UISpriteKey.UI_UP_KEY;
                             break;
                         case 3:
-                            key = Lich.UIGFXKey.UI_LEFT_UP_KEY;
+                            key = Lich.UISpriteKey.UI_LEFT_UP_KEY;
                             break;
                         case 4:
-                            key = Lich.UIGFXKey.UI_LEFT_KEY;
+                            key = Lich.UISpriteKey.UI_LEFT_KEY;
                             break;
                         case 5:
-                            key = Lich.UIGFXKey.UI_LEFT_DOWN_KEY;
+                            key = Lich.UISpriteKey.UI_LEFT_DOWN_KEY;
                             break;
                         case 6:
-                            key = Lich.UIGFXKey.UI_DOWN_KEY;
+                            key = Lich.UISpriteKey.UI_DOWN_KEY;
                             break;
                         case 7:
-                            key = Lich.UIGFXKey.UI_RIGHT_DOWN_KEY;
+                            key = Lich.UISpriteKey.UI_RIGHT_DOWN_KEY;
                             break;
                     }
-                    var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[key]);
+                    var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UISpriteKey[key]);
                     bitmap.alpha = 0.7;
                     bitmap.x = x - Lich.Resources.TILE_SIZE;
                     bitmap.y = y - Lich.Resources.TILE_SIZE;
@@ -329,7 +329,7 @@ var Lich;
             return _this;
         }
         UI.prototype.createHelpButton = function () {
-            var helpBtn = new Button(Lich.UIGFXKey.UI_HELP_KEY);
+            var helpBtn = new Button(Lich.UISpriteKey.UI_HELP_KEY);
             helpBtn.on("mousedown", function (evt) {
                 window.open("help.html", "_blank");
             }, null, false);
@@ -468,7 +468,7 @@ var Lich;
             bgr.x = 0;
             bgr.y = 0;
             if (bitmap) {
-                var btmp = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[bitmap]);
+                var btmp = Lich.Resources.getInstance().getBitmap(Lich.UISpriteKey[bitmap]);
                 _this.addChild(btmp);
                 btmp.x = PartsUI.SELECT_BORDER;
                 btmp.y = PartsUI.SELECT_BORDER;

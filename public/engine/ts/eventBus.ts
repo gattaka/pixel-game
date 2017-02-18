@@ -5,6 +5,7 @@ namespace Lich {
         ACHIEVEMENT_DONE,
         LOADER_COLOR_CHANGE,
         LOADER_NAME_CHANGE,
+        LOAD_START,
         LOAD_PROGRESS,
         LOAD_ITEM,
         LOAD_FINISHED,

@@ -29,34 +29,34 @@ var Lich;
         // Fog
         BackgroundKey[BackgroundKey["FOG_KEY"] = 16] = "FOG_KEY";
     })(BackgroundKey = Lich.BackgroundKey || (Lich.BackgroundKey = {}));
-    var UIGFXKey;
-    (function (UIGFXKey) {
-        UIGFXKey[UIGFXKey["PLAYER_ICON_KEY"] = 0] = "PLAYER_ICON_KEY";
+    var UISpriteKey;
+    (function (UISpriteKey) {
+        UISpriteKey[UISpriteKey["PLAYER_ICON_KEY"] = 0] = "PLAYER_ICON_KEY";
         // misc.
-        UIGFXKey[UIGFXKey["SKULL_KEY"] = 1] = "SKULL_KEY";
-        UIGFXKey[UIGFXKey["GAME_OVER_KEY"] = 2] = "GAME_OVER_KEY";
-        UIGFXKey[UIGFXKey["HELMET_KEY"] = 3] = "HELMET_KEY";
-        UIGFXKey[UIGFXKey["TORSO_KEY"] = 4] = "TORSO_KEY";
-        UIGFXKey[UIGFXKey["GAUNTLET_KEY"] = 5] = "GAUNTLET_KEY";
+        UISpriteKey[UISpriteKey["SKULL_KEY"] = 1] = "SKULL_KEY";
+        UISpriteKey[UISpriteKey["GAME_OVER_KEY"] = 2] = "GAME_OVER_KEY";
+        UISpriteKey[UISpriteKey["HELMET_KEY"] = 3] = "HELMET_KEY";
+        UISpriteKey[UISpriteKey["TORSO_KEY"] = 4] = "TORSO_KEY";
+        UISpriteKey[UISpriteKey["GAUNTLET_KEY"] = 5] = "GAUNTLET_KEY";
         // buttons
-        UIGFXKey[UIGFXKey["UI_SOUND_KEY"] = 6] = "UI_SOUND_KEY";
-        UIGFXKey[UIGFXKey["UI_UP_KEY"] = 7] = "UI_UP_KEY";
-        UIGFXKey[UIGFXKey["UI_DOWN_KEY"] = 8] = "UI_DOWN_KEY";
-        UIGFXKey[UIGFXKey["UI_LEFT_KEY"] = 9] = "UI_LEFT_KEY";
-        UIGFXKey[UIGFXKey["UI_RIGHT_KEY"] = 10] = "UI_RIGHT_KEY";
-        UIGFXKey[UIGFXKey["UI_LEFT_UP_KEY"] = 11] = "UI_LEFT_UP_KEY";
-        UIGFXKey[UIGFXKey["UI_RIGHT_UP_KEY"] = 12] = "UI_RIGHT_UP_KEY";
-        UIGFXKey[UIGFXKey["UI_LEFT_DOWN_KEY"] = 13] = "UI_LEFT_DOWN_KEY";
-        UIGFXKey[UIGFXKey["UI_RIGHT_DOWN_KEY"] = 14] = "UI_RIGHT_DOWN_KEY";
-        UIGFXKey[UIGFXKey["UI_CRAFT_KEY"] = 15] = "UI_CRAFT_KEY";
-        UIGFXKey[UIGFXKey["UI_SAVE_KEY"] = 16] = "UI_SAVE_KEY";
-        UIGFXKey[UIGFXKey["UI_LOAD_KEY"] = 17] = "UI_LOAD_KEY";
-        UIGFXKey[UIGFXKey["UI_NEW_WORLD_KEY"] = 18] = "UI_NEW_WORLD_KEY";
-        UIGFXKey[UIGFXKey["UI_HELP_KEY"] = 19] = "UI_HELP_KEY";
-        UIGFXKey[UIGFXKey["UI_BACKPACK_KEY"] = 20] = "UI_BACKPACK_KEY";
-        UIGFXKey[UIGFXKey["UI_MENU_KEY"] = 21] = "UI_MENU_KEY";
-        UIGFXKey[UIGFXKey["UI_MINIMAP_KEY"] = 22] = "UI_MINIMAP_KEY";
-    })(UIGFXKey = Lich.UIGFXKey || (Lich.UIGFXKey = {}));
+        UISpriteKey[UISpriteKey["UI_SOUND_KEY"] = 6] = "UI_SOUND_KEY";
+        UISpriteKey[UISpriteKey["UI_UP_KEY"] = 7] = "UI_UP_KEY";
+        UISpriteKey[UISpriteKey["UI_DOWN_KEY"] = 8] = "UI_DOWN_KEY";
+        UISpriteKey[UISpriteKey["UI_LEFT_KEY"] = 9] = "UI_LEFT_KEY";
+        UISpriteKey[UISpriteKey["UI_RIGHT_KEY"] = 10] = "UI_RIGHT_KEY";
+        UISpriteKey[UISpriteKey["UI_LEFT_UP_KEY"] = 11] = "UI_LEFT_UP_KEY";
+        UISpriteKey[UISpriteKey["UI_RIGHT_UP_KEY"] = 12] = "UI_RIGHT_UP_KEY";
+        UISpriteKey[UISpriteKey["UI_LEFT_DOWN_KEY"] = 13] = "UI_LEFT_DOWN_KEY";
+        UISpriteKey[UISpriteKey["UI_RIGHT_DOWN_KEY"] = 14] = "UI_RIGHT_DOWN_KEY";
+        UISpriteKey[UISpriteKey["UI_CRAFT_KEY"] = 15] = "UI_CRAFT_KEY";
+        UISpriteKey[UISpriteKey["UI_SAVE_KEY"] = 16] = "UI_SAVE_KEY";
+        UISpriteKey[UISpriteKey["UI_LOAD_KEY"] = 17] = "UI_LOAD_KEY";
+        UISpriteKey[UISpriteKey["UI_NEW_WORLD_KEY"] = 18] = "UI_NEW_WORLD_KEY";
+        UISpriteKey[UISpriteKey["UI_HELP_KEY"] = 19] = "UI_HELP_KEY";
+        UISpriteKey[UISpriteKey["UI_BACKPACK_KEY"] = 20] = "UI_BACKPACK_KEY";
+        UISpriteKey[UISpriteKey["UI_MENU_KEY"] = 21] = "UI_MENU_KEY";
+        UISpriteKey[UISpriteKey["UI_MINIMAP_KEY"] = 22] = "UI_MINIMAP_KEY";
+    })(UISpriteKey = Lich.UISpriteKey || (Lich.UISpriteKey = {}));
     var AchievementKey;
     (function (AchievementKey) {
         AchievementKey[AchievementKey["ACHV_FALLING_DOWN_KEY"] = 0] = "ACHV_FALLING_DOWN_KEY";

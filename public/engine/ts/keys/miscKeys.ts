@@ -29,7 +29,7 @@ namespace Lich {
         FOG_KEY
     }
 
-    export enum UIGFXKey {
+    export enum UISpriteKey {
         PLAYER_ICON_KEY,
         // misc.
         SKULL_KEY,

@@ -265,7 +265,7 @@ var Lich;
         };
         SplashScreenUI.prototype.createUpButton = function () {
             var self = this;
-            var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
+            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
             self.addChild(upBtn);
             upBtn.on("click", function (evt) {
                 if (self.currentLine > 0) {
@@ -279,7 +279,7 @@ var Lich;
         };
         SplashScreenUI.prototype.createDownButton = function () {
             var self = this;
-            var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
+            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
             self.addChild(downBtn);
             downBtn.on("click", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
@@ -293,7 +293,7 @@ var Lich;
         };
         SplashScreenUI.prototype.createSaveButton = function () {
             var self = this;
-            var btn = new Lich.Button(Lich.UIGFXKey.UI_SAVE_KEY);
+            var btn = new Lich.Button(Lich.UISpriteKey.UI_SAVE_KEY);
             self.addChild(btn);
             btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
@@ -304,7 +304,7 @@ var Lich;
         };
         SplashScreenUI.prototype.createLoadButton = function () {
             var self = this;
-            var btn = new Lich.Button(Lich.UIGFXKey.UI_LOAD_KEY);
+            var btn = new Lich.Button(Lich.UISpriteKey.UI_LOAD_KEY);
             self.addChild(btn);
             btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
@@ -314,7 +314,7 @@ var Lich;
         };
         SplashScreenUI.prototype.createNewWorldButton = function () {
             var self = this;
-            var btn = new Lich.Button(Lich.UIGFXKey.UI_NEW_WORLD_KEY);
+            var btn = new Lich.Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY);
             self.addChild(btn);
             btn.on("click", function (evt) {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));

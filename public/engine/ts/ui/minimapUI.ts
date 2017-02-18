@@ -122,7 +122,7 @@ namespace Lich {
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
 
-            self.playerIcon = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]);
+            self.playerIcon = Resources.getInstance().getBitmap(UISpriteKey[UISpriteKey.PLAYER_ICON_KEY]);
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
@@ -230,7 +230,7 @@ namespace Lich {
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
 
-            self.playerIcon = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.PLAYER_ICON_KEY]);
+            self.playerIcon = Resources.getInstance().getBitmap(UISpriteKey[UISpriteKey.PLAYER_ICON_KEY]);
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);

@@ -169,6 +169,14 @@ var Lich;
                             manifest.push(new Load(path[0], MusicKey[path[1]]));
                         });
             */
+            // nejprve font (nahrává se mimo loader)
+            var config = {
+                custom: {
+                    families: ['expressway'],
+                    urls: ['/css/fonts.css']
+                }
+            };
+            WebFont.load(config);
             // pak loader 
             self.loader = new createjs.LoadQueue(false);
             createjs.Sound.alternateExtensions = ["mp3"];
@@ -296,6 +304,7 @@ var Lich;
                 });
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });
+            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_START));
             self.loader.loadManifest(manifest, true);
             // background
             Lich.BACKGROUND_PATHS.forEach(function (path) {
@@ -486,6 +495,10 @@ var Lich;
         };
         return Resources;
     }());
+    Resources.FONT = "expressway";
+    Resources.TEXT_COLOR = "#FF0";
+    Resources.WORLD_LOADER_COLOR = "#84ff00";
+    Resources.DEBUG_TEXT_COLOR = "#FF0";
     Resources.REVEAL_SIZE = 13; // musí být liché
     Resources.REACH_TILES_RADIUS = 10;
     Resources.SPRITESHEET_IMAGE_SUFFIX = ".png";

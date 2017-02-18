@@ -1,22 +1,25 @@
-html, body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	cursor: url(../images/ui_cursor.png), auto;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: url(../images/ui_cursor.png), auto;
 }
 
 body {
-	font-family: Arial;
-	margin: 0;
+    font-family: Arial;
+    margin: 0;
 }
 
 h1 {
-	color: blue;
+    color: blue;
 }
 
 canvas {
-	display: block;
-	image-rendering:pixelated;
-	
+    display: block;
+    image-rendering: pixelated;
+    position: absolute;
+    top: 0;
+    left: 0;
 }

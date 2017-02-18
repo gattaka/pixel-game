@@ -75,7 +75,7 @@ namespace Lich {
             var self = this;
 
             // TODO udělat UI definice, kde budou UI klíče se spritenames
-            this.workstationIcon = Resources.getInstance().getInvObjectSprite(SpellKey[SpellKey.SPELL_PLACE_KEY]);
+            this.workstationIcon = Resources.getInstance().getInvObjectSprite(SpellKey.SPELL_PLACE_KEY);
             let bounds = this.workstationIcon.getBounds();
             this.workstationIconBgr = new UIBackground();
             this.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
@@ -125,8 +125,8 @@ namespace Lich {
             self.addChild(self.itemsCont);
 
             // tlačítka
-            let upBtn = new Button(UIGFXKey.UI_UP_KEY);
-            let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
+            let upBtn = new Button(UISpriteKey.UI_UP_KEY);
+            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
             self.addChild(upBtn);
             self.addChild(downBtn);
             upBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
@@ -158,7 +158,7 @@ namespace Lich {
             self.ingredientsCont.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
 
             // craft tlačítko
-            let craftBtn = new Button(UIGFXKey.UI_CRAFT_KEY);
+            let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY);
             self.addChild(craftBtn);
             craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
             craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;

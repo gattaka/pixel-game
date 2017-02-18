@@ -45,8 +45,8 @@ var Lich;
             self.collapsedHighlight.y = Lich.PartsUI.SELECT_BORDER;
             self.collapsedCont.addChild(self.collapsedHighlight);
             // tlačítka
-            var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
-            var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
+            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
+            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
             self.upBtn = upBtn;
             self.downBtn = downBtn;
             self.addChild(upBtn);

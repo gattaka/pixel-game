@@ -27,7 +27,6 @@
 	<script src="engine/js/keys/animationKeys.js"></script>
 	<!--paths-->
 	<script src="engine/js/paths/spritesheetsPaths.js"></script>
-	<script src="engine/js/paths/uiPaths.js"></script>
 	<script src="engine/js/paths/soundPaths.js"></script>
 	<script src="engine/js/paths/musicPaths.js"></script>
 	<script src="engine/js/paths/backgroundPaths.js"></script>
@@ -35,6 +34,7 @@
 	<script src="engine/js/tiles.js"></script>
 	<script src="engine/js/definitions.js"></script>
 	<!--definitions-->
+	<script src="engine/js/definitions/uiDefs.js"></script>
 	<script src="engine/js/definitions/animationDefs.js"></script>
 	<script src="engine/js/definitions/recipeDefs.js"></script>
 	<script src="engine/js/definitions/surfaceDefs.js"></script>
@@ -42,6 +42,7 @@
 	<script src="engine/js/definitions/mapObjectDefs.js"></script>
 	<script src="engine/js/definitions/inventoryDefs.js"></script>
 	<script src="engine/js/definitions/achievementsDefs.js"></script>
+	<script src="engine/js/definitions/spellsDefs.js"></script>
 	<!--core deps-->
 	<script src="engine/js/surfaceBgrIndex.js"></script>
 	<script src="engine/js/surfaceIndex.js"></script>
@@ -55,7 +56,6 @@
 	<script src="engine/js/sector.js"></script>
 	<script src="engine/js/mixer.js"></script>
 	<script src="engine/js/bullet.js"></script>
-	<script src="engine/js/spell.js"></script>
 	<script src="engine/js/label.js"></script>
 	<script src="engine/js/recipeManager.js"></script>
 	<!--ui-->
@@ -94,12 +94,15 @@
 	<script src="engine/js/game.js"></script>
 </head>
 
-<body onload="new Lich.Game('theCanvas');" oncontextmenu="return false;">
-	<canvas id="theCanvas">
-		alternate content
+<body onload="new Lich.Game('mainCanvas', 'mapCanvas', 'loadCanvas');" oncontextmenu="return false;">
+	<canvas id="mainCanvas">
+		Main canvas failed to load
 	</canvas>
 	<canvas id="mapCanvas" style="display: none">
-		alternate content
+		Minimap canvas failed to load
+	</canvas>
+	<canvas id="loadCanvas" style="display: none">
+		Load canvas failed to load
 	</canvas>
 </body>
 

@@ -251,7 +251,7 @@ namespace Lich {
 
         protected createUpButton(): Button {
             var self = this;
-            let upBtn = new Button(UIGFXKey.UI_UP_KEY);
+            let upBtn = new Button(UISpriteKey.UI_UP_KEY);
             self.addChild(upBtn);
             upBtn.on("click", function (evt) {
                 if (self.currentLine > 0) {
@@ -266,7 +266,7 @@ namespace Lich {
 
         protected createDownButton(): Button {
             var self = this;
-            let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
+            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
             self.addChild(downBtn);
             downBtn.on("click", function (evt) {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
@@ -281,7 +281,7 @@ namespace Lich {
 
         protected createSaveButton(): Button {
             var self = this;
-            let btn = new Button(UIGFXKey.UI_SAVE_KEY);
+            let btn = new Button(UISpriteKey.UI_SAVE_KEY);
             self.addChild(btn);
             btn.on("click", function (evt) {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
@@ -293,7 +293,7 @@ namespace Lich {
 
         protected createLoadButton(): Button {
             var self = this;
-            let btn = new Button(UIGFXKey.UI_LOAD_KEY);
+            let btn = new Button(UISpriteKey.UI_LOAD_KEY);
             self.addChild(btn);
             btn.on("click", function (evt) {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
@@ -304,7 +304,7 @@ namespace Lich {
 
         protected createNewWorldButton(): Button {
             var self = this;
-            let btn = new Button(UIGFXKey.UI_NEW_WORLD_KEY);
+            let btn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
             self.addChild(btn);
             btn.on("click", function (evt) {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));

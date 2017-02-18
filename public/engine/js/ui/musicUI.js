@@ -18,7 +18,7 @@ var Lich;
             var self = _this;
             var trackInsert = function (track, volume) {
                 var self = _this;
-                var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UIGFXKey[Lich.UIGFXKey.UI_SOUND_KEY]);
+                var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UISpriteKey[Lich.UISpriteKey.UI_SOUND_KEY]);
                 self.itemsCont.addChild(bitmap);
                 bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
                 bitmap.y = 0;

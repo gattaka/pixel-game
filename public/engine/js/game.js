@@ -15,7 +15,7 @@ var Lich;
     ;
     ;
     var Game = (function () {
-        function Game(canvasId) {
+        function Game(mainCanvasId, minimapCanvasId, loaderCanvasId) {
             this.initialized = false;
             this.keys = {};
             this.playerReadyToAutosave = true;
@@ -40,7 +40,7 @@ var Lich;
             /* Stage init */
             /*------------*/
             console.log("running");
-            self.canvas = document.getElementById(canvasId);
+            self.canvas = document.getElementById(mainCanvasId);
             switch (Lich.ThemeWatch.getCurrentTheme()) {
                 case Lich.Theme.WINTER:
                     self.canvas.style.backgroundColor = "#cce1e8";
@@ -55,7 +55,7 @@ var Lich;
                 self.canvas.height = window.innerHeight;
             }
             resizeCanvas();
-            self.canvas = document.getElementById(canvasId);
+            self.canvas = document.getElementById(mainCanvasId);
             self.canvas.style.backgroundColor = "#cce1e8";
             // preserveDrawingBuffer = true (2. argument) značeně zhorší FPS
             // antialising = true (3. argument) také značně zhorší FPS
@@ -133,23 +133,24 @@ var Lich;
                     idb.loadData(function (data) {
                         // podařilo se něco nahrát?
                         if (data) {
+                            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_START));
                             var obj_1 = JSON.parse(data);
-                            // TODO
-                            // self.loadUI.reset();
-                            // self.stage.addChild(self.loadUI);
-                            // self.loadUI.alpha = 1;
+                            self.loadUI.reset();
                             if (obj_1.map) {
                                 Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
                                     populateContent(tilesMap);
                                     if (obj_1.inv) {
                                     }
+                                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
                                 });
                             }
                         }
                         else {
                             // pokud neexistuje save, vytvoř ho
+                            Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_START));
                             Lich.TilesMapGenerator.createNew(function (tilesMap) {
                                 populateContent(tilesMap);
+                                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
                                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                             });
                         }
@@ -188,8 +189,6 @@ var Lich;
                     });
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
                         self.loadUI.reset();
-                        self.stage.addChild(self.loadUI);
-                        self.loadUI.alpha = 1;
                         setTimeout(function () {
                             Lich.TilesMapGenerator.createNew(function (tilesMap) {
                                 populateContent(tilesMap);
@@ -206,13 +205,6 @@ var Lich;
                         }
                         return false;
                     });
-                    // TODO
-                    // createjs.Tween.get(self.loadUI)
-                    //     .to({
-                    //         alpha: 0
-                    //     }, 1500).call(function () {
-                    //         self.stage.removeChild(self.loadUI);
-                    //     });
                     self.initialized = true;
                     self.stage.addChild(self.content);
                 };
@@ -238,6 +230,7 @@ var Lich;
                     Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.LOAD_FINISHED, listener_1);
                     return false;
                 });
+                self.loadUI = new Lich.LoaderUI(loaderCanvasId);
             }
             /*-----------*/
             /* Time init */
@@ -316,6 +309,7 @@ var Lich;
                     }
                     self.getWorld().update(delta, controls);
                 }
+                self.loadUI.update();
                 self.stage.update();
                 stats.end();
             }

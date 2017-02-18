@@ -81,8 +81,8 @@ namespace Lich {
             self.collapsedCont.addChild(self.collapsedHighlight);
 
             // tlačítka
-            let upBtn = new Button(UIGFXKey.UI_UP_KEY);
-            let downBtn = new Button(UIGFXKey.UI_DOWN_KEY);
+            let upBtn = new Button(UISpriteKey.UI_UP_KEY);
+            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
             self.upBtn = upBtn;
             self.downBtn = downBtn;
             self.addChild(upBtn);

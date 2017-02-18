@@ -34,7 +34,7 @@ var Lich;
             _this.itemsCont = new Lich.SheetContainer();
             var self = _this;
             // TODO udělat UI definice, kde budou UI klíče se spritenames
-            _this.workstationIcon = Lich.Resources.getInstance().getInvObjectSprite(Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+            _this.workstationIcon = Lich.Resources.getInstance().getInvObjectSprite(Lich.SpellKey.SPELL_PLACE_KEY);
             var bounds = _this.workstationIcon.getBounds();
             _this.workstationIconBgr = new Lich.UIBackground();
             _this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
@@ -75,8 +75,8 @@ var Lich;
             self.itemsCont.y = Lich.PartsUI.BORDER;
             self.addChild(self.itemsCont);
             // tlačítka
-            var upBtn = new Lich.Button(Lich.UIGFXKey.UI_UP_KEY);
-            var downBtn = new Lich.Button(Lich.UIGFXKey.UI_DOWN_KEY);
+            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
+            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
             self.addChild(upBtn);
             self.addChild(downBtn);
             upBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
@@ -104,7 +104,7 @@ var Lich;
             self.ingredientsCont.x = 0;
             self.ingredientsCont.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             // craft tlačítko
-            var craftBtn = new Lich.Button(Lich.UIGFXKey.UI_CRAFT_KEY);
+            var craftBtn = new Lich.Button(Lich.UISpriteKey.UI_CRAFT_KEY);
             self.addChild(craftBtn);
             craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
