@@ -6,8 +6,10 @@ var Lich;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
-            this.bgrImages = [];
-            this.dirtBack = [];
+            this.bgrSprites = [];
+            this.bgrConts = [];
+            this.dirtBackCont = new Lich.SheetContainer();
+            this.dirtBackStartCont = new Lich.SheetContainer();
             this.clouds = [];
             // celkový posun
             this.offsetX = 0;
@@ -15,10 +17,6 @@ var Lich;
             var self = this;
             self.content = game.getContent();
             self.canvas = game.getCanvas();
-            Background.BGR_ORDER.forEach(function (b) {
-                var sprite = Lich.Resources.getInstance().getBackgroundSprite(b);
-                self.bgrImages.push(sprite);
-            });
             // Background.CLOUDS_KEYS.forEach((c) => {
             //     self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[c]));
             // });
@@ -33,39 +31,60 @@ var Lich;
                 sprite.x = i * sprite.width;
                 self.content.addChild(sprite);
             }
-            self.bgrImages.forEach(function (entry, i) {
-                entry.y = Background.BGR_STARTS[i];
-                entry.x = entry.width;
-                self.content.addChild(entry);
+            Background.BGR_ORDER.forEach(function (b, i) {
+                var sampleSprite = Lich.Resources.getInstance().getBackgroundSprite(b);
+                self.bgrSprites.push(sampleSprite);
+                var cont = new Lich.SheetContainer();
+                self.bgrConts.push(cont);
+                var repeat = Math.floor(self.canvas.width / (sampleSprite.width - 1)) + 3;
+                cont.x = 0;
+                cont.y = Background.BGR_STARTS[i];
+                cont.width = repeat * (sampleSprite.width - 1);
+                self.content.addChild(cont);
+                for (var j = 0; j < repeat; j++) {
+                    var sprite = sampleSprite.clone();
+                    // tohle clone prostě nezkopíruje
+                    sprite.width = sampleSprite.width;
+                    sprite.height = sampleSprite.height;
+                    sprite.x = j * (sprite.width - 1);
+                    sprite.y = 0;
+                    cont.addChild(sprite);
+                }
             });
             // self.clouds.forEach(function (item) {
             //     item.y = Math.random() * Background.CLOUDS_SPACE;
             //     item.x = Math.random() * self.canvas.width;
             // });
-            var dirtStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_START_KEY);
-            var dirtSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_KEY);
-            var dirtSpriteRepeatX = self.canvas.width / (dirtStartSprite.width - 1) + 2;
-            var dirtSpriteRepeatY = self.canvas.height / (dirtStartSprite.height - 1) + 2;
+            self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_START_KEY);
+            self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_KEY);
+            var dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 3;
+            var dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 3;
+            self.dirtBackCont.x = 0;
+            self.dirtBackCont.y = Background.DIRT_START;
+            self.dirtBackCont.width = dirtSpriteRepeatX * self.dirtBackSprite.width;
+            self.dirtBackCont.height = dirtSpriteRepeatY * self.dirtBackSprite.height;
+            self.content.addChild(self.dirtBackCont);
+            self.dirtBackStartCont.x = 0;
+            self.dirtBackStartCont.y = self.dirtBackCont.y - self.dirtBackCont.height;
+            self.dirtBackStartCont.width = self.dirtBackCont.width;
+            self.dirtBackStartCont.height = self.dirtBackStartSprite.height;
+            self.content.addChild(self.dirtBackStartCont);
             for (var i = 0; i < dirtSpriteRepeatX; i++) {
-                var startSprite = dirtStartSprite.clone();
+                var startSprite = self.dirtBackStartSprite.clone();
                 // tohle clone prostě nezkopíruje
-                startSprite.width = dirtStartSprite.width;
-                startSprite.height = dirtStartSprite.height;
-                startSprite.x = i * (startSprite.width - 1);
-                startSprite.y = Background.DIRT_START;
-                var arr = [];
-                arr.push(startSprite);
-                self.dirtBack.push(arr);
-                self.content.addChild(startSprite);
+                startSprite.width = self.dirtBackStartSprite.width;
+                startSprite.height = self.dirtBackStartSprite.height;
+                startSprite.x = i * startSprite.width;
+                startSprite.y = 0;
+                self.dirtBackStartCont.addChild(startSprite);
                 for (var j = 0; j < dirtSpriteRepeatY; j++) {
-                    var sprite = dirtSprite.clone();
+                    var sprite = self.dirtBackSprite.clone();
                     // tohle clone prostě nezkopíruje
-                    sprite.width = dirtSprite.width;
-                    sprite.height = dirtSprite.height;
+                    sprite.width = self.dirtBackSprite.width;
+                    sprite.height = self.dirtBackSprite.height;
                     sprite.x = startSprite.x;
-                    sprite.y = startSprite.y + (startSprite.height - 1) + (j - 1) * (sprite.height - 1);
-                    arr.push(sprite);
-                    self.content.addChild(sprite);
+                    sprite.y = j * sprite.height;
+                    self.dirtBackCont.addChild(sprite);
                 }
             }
             console.log("background ready");
@@ -75,35 +94,22 @@ var Lich;
             var canvas = self.canvas;
             self.offsetX += distanceX;
             self.offsetY += distanceY;
-            self.bgrImages.forEach(function (part, i) {
-                var dividerX = Background.BGR_DIVIDERS_X[i];
-                var dividerY = Background.BGR_DIVIDERS_Y[i];
-                part.x += distanceX / dividerX;
-                if (part.x > 0 || part.x < -part.width * 2)
-                    part.x = -part.width;
-                part.y += distanceY / dividerY;
+            self.bgrConts.forEach(function (part, i) {
+                part.x = Math.floor(((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].width) - self.bgrSprites[i].width);
+                part.y = Math.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
             });
-            var dirtBackStartSprite = self.dirtBack[0][0];
-            dirtBackStartSprite.x = ((self.offsetX / Background.DIRT_DIVIDER_X) % (dirtBackStartSprite.width - 1)) - (dirtBackStartSprite.width - 1);
-            var tillRepeatPointY = self.offsetY + Background.DIRT_START * Background.DIRT_DIVIDER_Y;
-            dirtBackStartSprite.y = self.offsetY / Background.DIRT_DIVIDER_Y;
-            dirtBackStartSprite.y += Background.DIRT_START * Background.DIRT_DIVIDER_Y;
+            // Dirt back
+            self.dirtBackCont.x = Math.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.width) - self.dirtBackSprite.width);
+            var tillRepeatPointY = self.offsetY + Background.DIRT_START * Background.DIRT_MULT;
+            self.dirtBackCont.y = self.offsetY * Background.DIRT_MULT + Background.DIRT_START * Background.DIRT_MULT;
             if (tillRepeatPointY < 0) {
-                dirtBackStartSprite.y = dirtBackStartSprite.y % (dirtBackStartSprite.height - 1);
+                self.dirtBackCont.y = self.dirtBackCont.y % self.dirtBackSprite.height;
             }
-            dirtBackStartSprite.y -= (dirtBackStartSprite.height - 1);
-            // někde tady dát k y +4 ??
-            for (var i_1 = 0; i_1 < self.dirtBack.length; i_1++) {
-                var col = self.dirtBack[i_1];
-                for (var j = 0; j < col.length; j++) {
-                    var sprite = self.dirtBack[i_1][j];
-                    sprite.x = dirtBackStartSprite.x + i_1 * (dirtBackStartSprite.width - 1);
-                    if (j > 0)
-                        sprite.y = dirtBackStartSprite.y + (j - 1) * (sprite.height - 1) + (dirtBackStartSprite.height - 1);
-                    else
-                        sprite.y = dirtBackStartSprite.y;
-                }
-            }
+            self.dirtBackCont.y = Math.floor(self.dirtBackCont.y - self.dirtBackSprite.height);
+            // Start pozadí hlíny kopíruje hlavní část pozadí
+            // navíc je přilepen před počátek hlavní části
+            self.dirtBackStartCont.x = self.dirtBackCont.x;
+            self.dirtBackStartCont.y = self.dirtBackCont.y - self.dirtBackStartCont.height;
             // Clouds
             for (var i = 0; i < self.clouds.length; i++) {
                 var item = self.clouds[i];
@@ -155,11 +161,9 @@ var Lich;
         Lich.BackgroundKey.WOODLAND3_KEY,
         Lich.BackgroundKey.WOODLAND4_KEY,
     ];
-    Background.BGR_STARTS = [50, 200, 400, 450, 560, 620];
-    Background.BGR_DIVIDERS_X = [5, 4, 3.8, 3.6, 3.4, 3];
-    Background.BGR_DIVIDERS_Y = [10, 8, 6, 5.5, 5, 4];
-    Background.DIRT_DIVIDER_X = 1.1;
-    Background.DIRT_DIVIDER_Y = 1.1;
-    Background.DIRT_START = 1800;
+    Background.BGR_STARTS = [180, 600, 1200, 1200, 1220, 1240];
+    Background.BGR_MULT = [.3, .4, .5, .55, .6, .7];
+    Background.DIRT_MULT = .9;
+    Background.DIRT_START = 1900;
     Lich.Background = Background;
 })(Lich || (Lich = {}));
