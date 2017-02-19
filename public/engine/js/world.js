@@ -416,8 +416,7 @@ var Lich;
             // if (self.hero.y < 0) self.hero.y = - self.hero.collYOffset;
             // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
-            // TODO
-            // self.game.getBackground().shift(sceneShiftX, sceneShiftY);
+            self.game.getBackground().shift(sceneShiftX, sceneShiftY);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
             self.checkReveal();
             self.labelObjects.forEach(function (item) {
@@ -1187,8 +1186,7 @@ var Lich;
             var self = this;
             self.render.handleTick();
             self.weather.update(delta);
-            // TODO
-            // self.game.getBackground().handleTick(delta);
+            self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)

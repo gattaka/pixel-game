@@ -166,7 +166,7 @@ var Lich;
                     // (re)-init
                     // TODO
                     // self.ui = new UI(self.canvas, tilesMap, mobile);
-                    // self.background = new Background(self);
+                    self.background = new Lich.Background(self);
                     self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);

@@ -123,8 +123,8 @@ namespace Lich {
         public mapTransitionSrfcBgrsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         // definice pozadí scény
-        public mapBgrDefs: { [k: string]: string } = {};
-        public mapBgrDefsBySpriteName: { [k: string]: BackgroundKey } = {};
+        public backgroundDefs: { [k: string]: string } = {};
+        public backgroundDefsBySpriteName: { [k: string]: BackgroundKey } = {};
 
         // definice achievementů 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
@@ -372,8 +372,8 @@ namespace Lich {
 
             // background
             BACKGROUND_PATHS.forEach((path) => {
-                self.mapBgrDefs[BackgroundKey[path[1]]] = path[0];
-                self.mapBgrDefsBySpriteName[path[0]] = path[1];
+                self.backgroundDefs[BackgroundKey[path[1]]] = path[0];
+                self.backgroundDefsBySpriteName[path[0]] = path[1];
             });
 
             // Definice mapových povrchů
@@ -532,6 +532,18 @@ namespace Lich {
                 // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
                 sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName].frame + positionIndex + 1);
             }
+            return sprite;
+        };
+
+        getBackgroundSprite(key: BackgroundKey): createjs.Sprite {
+            let self = this;
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
+            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let bgrSprite = self.backgroundDefs[BackgroundKey[key]];
+            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
+            sprite.gotoAndStop(spriteDef.frame);
+            sprite.width = spriteDef.width;
+            sprite.height = spriteDef.height;
             return sprite;
         };
 

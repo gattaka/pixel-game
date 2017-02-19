@@ -95,8 +95,8 @@ var Lich;
             this.mapTransitionSrfcDefs = {};
             this.mapTransitionSrfcBgrsDefs = {};
             // definice pozadí scény
-            this.mapBgrDefs = {};
-            this.mapBgrDefsBySpriteName = {};
+            this.backgroundDefs = {};
+            this.backgroundDefsBySpriteName = {};
             // definice achievementů 
             this.achievementsDefs = {};
             // definice objektů
@@ -308,8 +308,8 @@ var Lich;
             self.loader.loadManifest(manifest, true);
             // background
             Lich.BACKGROUND_PATHS.forEach(function (path) {
-                self.mapBgrDefs[Lich.BackgroundKey[path[1]]] = path[0];
-                self.mapBgrDefsBySpriteName[path[0]] = path[1];
+                self.backgroundDefs[Lich.BackgroundKey[path[1]]] = path[0];
+                self.backgroundDefsBySpriteName[path[0]] = path[1];
             });
             // Definice mapových povrchů
             Lich.SURFACE_DEFS.forEach(function (definition) {
@@ -464,6 +464,18 @@ var Lich;
                 // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
                 sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName].frame + positionIndex + 1);
             }
+            return sprite;
+        };
+        ;
+        Resources.prototype.getBackgroundSprite = function (key) {
+            var self = this;
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var bgrSprite = self.backgroundDefs[Lich.BackgroundKey[key]];
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
+            sprite.gotoAndStop(spriteDef.frame);
+            sprite.width = spriteDef.width;
+            sprite.height = spriteDef.height;
             return sprite;
         };
         ;

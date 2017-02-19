@@ -455,8 +455,7 @@ namespace Lich {
             // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
 
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
-            // TODO
-            // self.game.getBackground().shift(sceneShiftX, sceneShiftY);
+            self.game.getBackground().shift(sceneShiftX, sceneShiftY);
 
             let toShift = [self.freeObjects, self.bulletObjects, self.enemies];
 
@@ -1304,8 +1303,7 @@ namespace Lich {
             var self = this;
             self.render.handleTick();
             self.weather.update(delta);
-            // TODO
-            // self.game.getBackground().handleTick(delta);
+            self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)

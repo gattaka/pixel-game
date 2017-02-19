@@ -14,8 +14,6 @@ namespace Lich {
         SKY_KEY,
         FAR_MOUNTAIN_KEY,
         MOUNTAIN_KEY,
-        DIRTBACK_KEY,
-        DARKNESS_KEY,
         WOODLAND1_KEY,
         WOODLAND2_KEY,
         WOODLAND3_KEY,
@@ -86,7 +84,7 @@ namespace Lich {
         // Reveal
         SPELL_REVEAL_FOG_KEY
     }
-
+ 
     export enum SoundKey {
         SND_FIREBALL_KEY,
         SND_BURN_KEY,

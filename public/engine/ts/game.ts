@@ -214,7 +214,7 @@ namespace Lich {
                     // (re)-init
                     // TODO
                     // self.ui = new UI(self.canvas, tilesMap, mobile);
-                    // self.background = new Background(self);
+                    self.background = new Background(self);
                     self.world = new World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
