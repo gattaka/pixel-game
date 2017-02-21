@@ -1,5 +1,5 @@
 namespace Lich {
-    export let UI_PATHS: Array<[string, UISpriteKey]> = [
+    export let UI_DEFS: Array<[string, UISpriteKey]> = [
         // misc
         ["ui_player_icon", UISpriteKey.PLAYER_ICON_KEY],
         ["ui_skull", UISpriteKey.SKULL_KEY],

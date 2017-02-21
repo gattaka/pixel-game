@@ -20,19 +20,19 @@ namespace Lich {
 
             let trackInsert = (track: MusicKey, volume?: number) => {
                 var self = this;
-                var bitmap = Resources.getInstance().getBitmap(UISpriteKey[UISpriteKey.UI_SOUND_KEY]);
-                self.itemsCont.addChild(bitmap);
-                bitmap.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
-                bitmap.y = 0;
+                var sprite = Resources.getInstance().getUISprite(UISpriteKey.UI_SOUND_KEY);
+                self.itemsCont.addChild(sprite);
+                sprite.x = self.trackContent.length * (Resources.PARTS_SIZE + PartsUI.SPACING);
+                sprite.y = 0;
                 self.trackIndex[track] = self.trackContent.length;
                 self.reversedTrackIndex[self.trackContent.length] = track;
-                self.trackContent.push(bitmap);
+                self.trackContent.push(sprite);
 
                 var hitArea = new createjs.Shape();
                 hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-                bitmap.hitArea = hitArea;
+                sprite.hitArea = hitArea;
 
-                bitmap.on("mousedown", function () {
+                sprite.on("mousedown", function () {
                     self.selectTrack(track, volume);
                 }, null, false);
             }

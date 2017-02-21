@@ -17,9 +17,6 @@ var Lich;
             var self = this;
             self.content = game.getContent();
             self.canvas = game.getCanvas();
-            // Background.CLOUDS_KEYS.forEach((c) => {
-            //     self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[c]));
-            // });
             var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.SKY_KEY);
             var skySpriteRepeat = self.canvas.width / skySprite.width + 1;
             for (var i = 0; i < skySpriteRepeat; i++) {
@@ -51,10 +48,13 @@ var Lich;
                     cont.addChild(sprite);
                 }
             });
-            // self.clouds.forEach(function (item) {
-            //     item.y = Math.random() * Background.CLOUDS_SPACE;
-            //     item.x = Math.random() * self.canvas.width;
-            // });
+            Background.CLOUDS_KEYS.forEach(function (c) {
+                var sprite = Lich.Resources.getInstance().getBackgroundSprite(c);
+                sprite["yCloudOffset"] = Math.random() * Background.CLOUDS_SPACE;
+                sprite["xCloudOffset"] = Math.random() * self.canvas.width;
+                self.clouds.push(sprite);
+                self.content.addChild(sprite);
+            });
             self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_START_KEY);
             self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_KEY);
             var dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 3;
@@ -111,18 +111,20 @@ var Lich;
             self.dirtBackStartCont.x = self.dirtBackCont.x;
             self.dirtBackStartCont.y = self.dirtBackCont.y - self.dirtBackStartCont.height;
             // Clouds
-            for (var i = 0; i < self.clouds.length; i++) {
-                var item = self.clouds[i];
-                item.x += distanceX / (8 + (1 / (i + 1)));
-                item.y += distanceY / 7;
-                if (item.x + item.image.width <= 0) {
-                    // Musí být -1, aby ho hnedka "nesežrala"
-                    // kontrola druhého směru a nepřesunula mrak
-                    // zpátky doleva
-                    item.x = canvas.width - 1; // FIXME
-                    item.y = Math.random() * Background.CLOUDS_SPACE;
-                }
-            }
+            // for (var i = 0; i < self.clouds.length; i++) {
+            //     var item = self.clouds[i];
+            //     let changeX = Math.floor(distanceX / (8 + (1 / (i + 1))));
+            //     item.x += changeX != 0 ? changeX : Utils.sign(distanceX); 
+            //     let changeY = Math.floor( distanceY / 7)
+            //     item.y += changeY != 0 ? changeY : Utils.sign(distanceY); ;
+            //     if (item.x + item.width <= 0) {
+            //         // Musí být -1, aby ho hnedka "nesežrala"
+            //         // kontrola druhého směru a nepřesunula mrak
+            //         // zpátky doleva
+            //         item.x = canvas.width - 1; // FIXME
+            //         item.y = Math.floor(Math.random() * Background.CLOUDS_SPACE);
+            //     }
+            // }
         };
         ;
         Background.prototype.handleTick = function (rawShift) {
@@ -130,14 +132,15 @@ var Lich;
             var canvas = self.canvas;
             var shift = rawShift / 10;
             // Clouds
-            for (var i = 0; i < self.clouds.length; i++) {
-                var item = self.clouds[i];
-                item.x += shift / (8 + (1 / (i + 1)));
-                if (item.x >= canvas.width) {
-                    item.x = -item.image.width;
-                    item.y = Math.random() * Background.CLOUDS_SPACE;
-                }
-            }
+            // for (var i = 0; i < self.clouds.length; i++) {
+            //     var item = self.clouds[i];
+            //     let changeX = Math.floor(shift / (8 + (1 / (i + 1))));
+            //     item.x += changeX != 0 ? changeX : Utils.sign(shift); 
+            //     if (item.x >= canvas.width) {
+            //         item.x = -item.width;
+            //         item.y = Math.floor(Math.random() * Background.CLOUDS_SPACE);
+            //     }
+            // }
         };
         ;
         return Background;

@@ -126,6 +126,10 @@ namespace Lich {
         public backgroundDefs: { [k: string]: string } = {};
         public backgroundDefsBySpriteName: { [k: string]: BackgroundKey } = {};
 
+        // definice ui prvků
+        public uiSpriteDefs: { [k: string]: string } = {};
+        public uiSpriteDefsBySpriteName: { [k: string]: UISpriteKey } = {};
+
         // definice achievementů 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
         // definice objektů
@@ -371,9 +375,15 @@ namespace Lich {
             self.loader.loadManifest(manifest, true);
 
             // background
-            BACKGROUND_PATHS.forEach((path) => {
-                self.backgroundDefs[BackgroundKey[path[1]]] = path[0];
-                self.backgroundDefsBySpriteName[path[0]] = path[1];
+            BACKGROUND_DEFS.forEach((def) => {
+                self.backgroundDefs[BackgroundKey[def[1]]] = def[0];
+                self.backgroundDefsBySpriteName[def[0]] = def[1];
+            });
+
+            // ui
+            UI_DEFS.forEach((def) => {
+                self.uiSpriteDefs[UISpriteKey[def[1]]] = def[0];
+                self.uiSpriteDefsBySpriteName[def[0]] = def[1];
             });
 
             // Definice mapových povrchů
@@ -544,6 +554,17 @@ namespace Lich {
             sprite.gotoAndStop(spriteDef.frame);
             sprite.width = spriteDef.width;
             sprite.height = spriteDef.height;
+            return sprite;
+        };
+
+        getUISprite(key: UISpriteKey): createjs.Sprite {
+            let self = this;
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
+            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let uiSpriteDef = self.uiSpriteDefs[key];
+            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
+            // ui není animovaný, takže vždy předávám číslo snímku
+            sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
 

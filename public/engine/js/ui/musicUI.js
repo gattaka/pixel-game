@@ -18,17 +18,17 @@ var Lich;
             var self = _this;
             var trackInsert = function (track, volume) {
                 var self = _this;
-                var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UISpriteKey[Lich.UISpriteKey.UI_SOUND_KEY]);
-                self.itemsCont.addChild(bitmap);
-                bitmap.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-                bitmap.y = 0;
+                var sprite = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_SOUND_KEY);
+                self.itemsCont.addChild(sprite);
+                sprite.x = self.trackContent.length * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
+                sprite.y = 0;
                 self.trackIndex[track] = self.trackContent.length;
                 self.reversedTrackIndex[self.trackContent.length] = track;
-                self.trackContent.push(bitmap);
+                self.trackContent.push(sprite);
                 var hitArea = new createjs.Shape();
                 hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-                bitmap.hitArea = hitArea;
-                bitmap.on("mousedown", function () {
+                sprite.hitArea = hitArea;
+                sprite.on("mousedown", function () {
                     self.selectTrack(track, volume);
                 }, null, false);
             };

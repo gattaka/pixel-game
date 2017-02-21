@@ -1,6 +1,6 @@
 var Lich;
 (function (Lich) {
-    Lich.UI_PATHS = [
+    Lich.UI_DEFS = [
         // misc
         ["ui_player_icon", Lich.UISpriteKey.PLAYER_ICON_KEY],
         ["ui_skull", Lich.UISpriteKey.SKULL_KEY],

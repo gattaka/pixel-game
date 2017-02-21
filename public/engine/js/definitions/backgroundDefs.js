@@ -1,7 +1,7 @@
 var Lich;
 (function (Lich) {
     var tsf = Lich.ThemeWatch.getThemeSuffix();
-    Lich.BACKGROUND_PATHS = [
+    Lich.BACKGROUND_DEFS = [
         ["bgr_sky", Lich.BackgroundKey.SKY_KEY],
         ["bgr_far_mountain" + tsf, Lich.BackgroundKey.FAR_MOUNTAIN_KEY],
         ["bgr_mountain" + tsf, Lich.BackgroundKey.MOUNTAIN_KEY],
@@ -12,9 +12,9 @@ var Lich;
         ["bgr_woodland3" + tsf, Lich.BackgroundKey.WOODLAND3_KEY],
         ["bgr_woodland4" + tsf, Lich.BackgroundKey.WOODLAND4_KEY],
         ["bgr_cloud1", Lich.BackgroundKey.CLOUD1_KEY],
-        ["bgr_cloud1", Lich.BackgroundKey.CLOUD2_KEY],
-        ["bgr_cloud1", Lich.BackgroundKey.CLOUD3_KEY],
-        ["bgr_cloud1", Lich.BackgroundKey.CLOUD4_KEY],
-        ["bgr_cloud1", Lich.BackgroundKey.CLOUD5_KEY]
+        ["bgr_cloud2", Lich.BackgroundKey.CLOUD2_KEY],
+        ["bgr_cloud3", Lich.BackgroundKey.CLOUD3_KEY],
+        ["bgr_cloud4", Lich.BackgroundKey.CLOUD4_KEY],
+        ["bgr_cloud5", Lich.BackgroundKey.CLOUD5_KEY]
     ];
 })(Lich || (Lich = {}));

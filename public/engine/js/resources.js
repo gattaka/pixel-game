@@ -97,6 +97,9 @@ var Lich;
             // definice pozadí scény
             this.backgroundDefs = {};
             this.backgroundDefsBySpriteName = {};
+            // definice ui prvků
+            this.uiSpriteDefs = {};
+            this.uiSpriteDefsBySpriteName = {};
             // definice achievementů 
             this.achievementsDefs = {};
             // definice objektů
@@ -307,9 +310,14 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_START));
             self.loader.loadManifest(manifest, true);
             // background
-            Lich.BACKGROUND_PATHS.forEach(function (path) {
-                self.backgroundDefs[Lich.BackgroundKey[path[1]]] = path[0];
-                self.backgroundDefsBySpriteName[path[0]] = path[1];
+            Lich.BACKGROUND_DEFS.forEach(function (def) {
+                self.backgroundDefs[Lich.BackgroundKey[def[1]]] = def[0];
+                self.backgroundDefsBySpriteName[def[0]] = def[1];
+            });
+            // ui
+            Lich.UI_DEFS.forEach(function (def) {
+                self.uiSpriteDefs[Lich.UISpriteKey[def[1]]] = def[0];
+                self.uiSpriteDefsBySpriteName[def[0]] = def[1];
             });
             // Definice mapových povrchů
             Lich.SURFACE_DEFS.forEach(function (definition) {
@@ -476,6 +484,17 @@ var Lich;
             sprite.gotoAndStop(spriteDef.frame);
             sprite.width = spriteDef.width;
             sprite.height = spriteDef.height;
+            return sprite;
+        };
+        ;
+        Resources.prototype.getUISprite = function (key) {
+            var self = this;
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var uiSpriteDef = self.uiSpriteDefs[key];
+            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
+            // ui není animovaný, takže vždy předávám číslo snímku
+            sprite.gotoAndStop(frameBySpriteName);
             return sprite;
         };
         ;

@@ -53,10 +53,6 @@ namespace Lich {
             self.content = game.getContent();
             self.canvas = game.getCanvas();
 
-            // Background.CLOUDS_KEYS.forEach((c) => {
-            //     self.clouds.push(Resources.getInstance().getBitmap(BackgroundKey[c]));
-            // });
-
             let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.SKY_KEY);
             let skySpriteRepeat = self.canvas.width / skySprite.width + 1;
             for (let i = 0; i < skySpriteRepeat; i++) {
@@ -92,10 +88,13 @@ namespace Lich {
                 }
             });
 
-            // self.clouds.forEach(function (item) {
-            //     item.y = Math.random() * Background.CLOUDS_SPACE;
-            //     item.x = Math.random() * self.canvas.width;
-            // });
+            Background.CLOUDS_KEYS.forEach((c) => {
+                let sprite = Resources.getInstance().getBackgroundSprite(c);
+                sprite["yCloudOffset"] = Math.random() * Background.CLOUDS_SPACE;
+                sprite["xCloudOffset"] = Math.random() * self.canvas.width;
+                self.clouds.push(sprite);
+                self.content.addChild(sprite);
+            });
 
             self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.DIRT_BACK_START_KEY);
             self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.DIRT_BACK_KEY);
@@ -162,18 +161,20 @@ namespace Lich {
             self.dirtBackStartCont.y = self.dirtBackCont.y - self.dirtBackStartCont.height;
 
             // Clouds
-            for (var i = 0; i < self.clouds.length; i++) {
-                var item = self.clouds[i];
-                item.x += distanceX / (8 + (1 / (i + 1)));
-                item.y += distanceY / 7;
-                if (item.x + item.image.width <= 0) {
-                    // Musí být -1, aby ho hnedka "nesežrala"
-                    // kontrola druhého směru a nepřesunula mrak
-                    // zpátky doleva
-                    item.x = canvas.width - 1; // FIXME
-                    item.y = Math.random() * Background.CLOUDS_SPACE;
-                }
-            }
+            // for (var i = 0; i < self.clouds.length; i++) {
+            //     var item = self.clouds[i];
+            //     let changeX = Math.floor(distanceX / (8 + (1 / (i + 1))));
+            //     item.x += changeX != 0 ? changeX : Utils.sign(distanceX); 
+            //     let changeY = Math.floor( distanceY / 7)
+            //     item.y += changeY != 0 ? changeY : Utils.sign(distanceY); ;
+            //     if (item.x + item.width <= 0) {
+            //         // Musí být -1, aby ho hnedka "nesežrala"
+            //         // kontrola druhého směru a nepřesunula mrak
+            //         // zpátky doleva
+            //         item.x = canvas.width - 1; // FIXME
+            //         item.y = Math.floor(Math.random() * Background.CLOUDS_SPACE);
+            //     }
+            // }
         };
 
         handleTick(rawShift) {
@@ -182,14 +183,15 @@ namespace Lich {
             var shift = rawShift / 10;
 
             // Clouds
-            for (var i = 0; i < self.clouds.length; i++) {
-                var item = self.clouds[i];
-                item.x += shift / (8 + (1 / (i + 1)));
-                if (item.x >= canvas.width) {
-                    item.x = -item.image.width;
-                    item.y = Math.random() * Background.CLOUDS_SPACE;
-                }
-            }
+            // for (var i = 0; i < self.clouds.length; i++) {
+            //     var item = self.clouds[i];
+            //     let changeX = Math.floor(shift / (8 + (1 / (i + 1))));
+            //     item.x += changeX != 0 ? changeX : Utils.sign(shift); 
+            //     if (item.x >= canvas.width) {
+            //         item.x = -item.width;
+            //         item.y = Math.floor(Math.random() * Background.CLOUDS_SPACE);
+            //     }
+            // }
         };
 
     }
