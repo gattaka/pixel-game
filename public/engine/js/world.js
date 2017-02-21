@@ -164,13 +164,10 @@ var Lich;
                 self.messagesCont.removeChild(deadInfo);
             });
         };
-        World.prototype.fadeText = function (text, px, py, size, color, outlineColor, time) {
-            if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
-            if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
-            if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
+        World.prototype.fadeText = function (text, px, py, time) {
             if (time === void 0) { time = 1000; }
             var self = this;
-            var label = new Lich.Label(text, size + "px " + Lich.Resources.FONT, color, true, outlineColor, 1);
+            var label = new Lich.Label(text);
             self.messagesCont.addChild(label);
             label.x = px;
             label.y = py;
@@ -416,7 +413,6 @@ var Lich;
             // if (self.hero.y < 0) self.hero.y = - self.hero.collYOffset;
             // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
-            self.game.getBackground().shift(sceneShiftX, sceneShiftY);
             var toShift = [self.freeObjects, self.bulletObjects, self.enemies];
             self.checkReveal();
             self.labelObjects.forEach(function (item) {
@@ -1186,7 +1182,6 @@ var Lich;
             var self = this;
             self.render.handleTick();
             self.weather.update(delta);
-            self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)

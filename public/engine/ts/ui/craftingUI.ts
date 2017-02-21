@@ -41,7 +41,7 @@ namespace Lich {
         ingredientsCont: IngredientsCont;
         inventoryUI: InventoryUI;
 
-        workstationIcon: createjs.Bitmap;
+        workstationIcon: createjs.Sprite;
         workstationIconBgr: UIBackground;
         workstation: MapObjectKey;
 
@@ -75,7 +75,7 @@ namespace Lich {
             var self = this;
 
             // TODO udělat UI definice, kde budou UI klíče se spritenames
-            this.workstationIcon = Resources.getInstance().getInvObjectSprite(SpellKey.SPELL_PLACE_KEY);
+            this.workstationIcon = Resources.getInstance().getSpellUISprite(SpellKey.SPELL_PLACE_KEY);
             let bounds = this.workstationIcon.getBounds();
             this.workstationIconBgr = new UIBackground();
             this.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
@@ -102,7 +102,11 @@ namespace Lich {
                     self.show();
                 }
 
-                self.workstationIcon.image = Resources.getInstance().getImage(payload.payload ? InventoryKey[WORKSTATIONS_ICONS[payload.payload]] : SpellKey[SpellKey.SPELL_PLACE_KEY]);
+                if (payload.payload) {
+                    Resources.getInstance().getInvObjectSprite(WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
+                } else {
+                    Resources.getInstance().getSpellUISprite(SpellKey.SPELL_PLACE_KEY, self.workstationIcon);
+                }
                 let bounds = self.workstationIcon.getBounds();
                 self.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
                 self.workstationIconBgr.x = - (bounds.width + 3 * PartsUI.SELECT_BORDER);

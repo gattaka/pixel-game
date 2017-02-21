@@ -242,7 +242,7 @@ namespace Lich {
             for (var i = 0; i < SplashScreenUI.LINES; i++) {
                 if (this.lines[i + this.currentLine] == null)
                     break;
-                var child = new Label(this.lines[i + this.currentLine], SplashScreenUI.FONT_HEIGHT + "px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, SplashScreenUI.OUTLINE);
+                var child = new Label(this.lines[i + this.currentLine]);
                 this.cont.addChild(child);
                 child.x = SplashScreenUI.MARGIN;
                 child.y = SplashScreenUI.TOP_OFFSET + i * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING);
@@ -320,7 +320,7 @@ namespace Lich {
 
             var changelog = new Changelog();
 
-            var label = new Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka", "20px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            var label = new Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka");
             label.x = SplashScreenUI.MARGIN;
             label.y = SplashScreenUI.MARGIN;
             super.addChild(label);

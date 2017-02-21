@@ -302,6 +302,7 @@ namespace Lich {
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
             var uiItem = context.game.getUI().inventoryUI.choosenItem;
+            
             if (uiItem) {
                 var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
                 if (object.consumeAction) {

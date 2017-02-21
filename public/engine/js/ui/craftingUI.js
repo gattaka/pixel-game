@@ -34,7 +34,7 @@ var Lich;
             _this.itemsCont = new Lich.SheetContainer();
             var self = _this;
             // TODO udělat UI definice, kde budou UI klíče se spritenames
-            _this.workstationIcon = Lich.Resources.getInstance().getInvObjectSprite(Lich.SpellKey.SPELL_PLACE_KEY);
+            _this.workstationIcon = Lich.Resources.getInstance().getSpellUISprite(Lich.SpellKey.SPELL_PLACE_KEY);
             var bounds = _this.workstationIcon.getBounds();
             _this.workstationIconBgr = new Lich.UIBackground();
             _this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
@@ -57,7 +57,12 @@ var Lich;
                 if (payload.payload && !self.parent) {
                     self.show();
                 }
-                self.workstationIcon.image = Lich.Resources.getInstance().getImage(payload.payload ? Lich.InventoryKey[Lich.WORKSTATIONS_ICONS[payload.payload]] : Lich.SpellKey[Lich.SpellKey.SPELL_PLACE_KEY]);
+                if (payload.payload) {
+                    Lich.Resources.getInstance().getInvObjectSprite(Lich.WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
+                }
+                else {
+                    Lich.Resources.getInstance().getSpellUISprite(Lich.SpellKey.SPELL_PLACE_KEY, self.workstationIcon);
+                }
                 var bounds = self.workstationIcon.getBounds();
                 self.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
                 self.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);

@@ -30,10 +30,6 @@ namespace Lich {
         SRFC_TRANS_DIRT_FLORITE_KEY
     }
 
-    export enum FogKey {
-        FOG_KEY
-    }
-
     export enum SurfaceBgrKey {
         SRFC_BGR_BRICK_KEY,
         SRFC_BGR_WOODWALL_KEY,

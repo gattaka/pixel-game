@@ -9,32 +9,34 @@ namespace Lich {
     }
 
     export enum BackgroundKey {
-        DIRT_BACK_START_KEY,
-        DIRT_BACK_KEY,
-        SKY_KEY,
-        FAR_MOUNTAIN_KEY,
-        MOUNTAIN_KEY,
-        WOODLAND1_KEY,
-        WOODLAND2_KEY,
-        WOODLAND3_KEY,
-        WOODLAND4_KEY,
-        CLOUD1_KEY,
-        CLOUD2_KEY,
-        CLOUD3_KEY,
-        CLOUD4_KEY,
-        CLOUD5_KEY,
-        // Fog
+        BGR_DIRT_BACK_START_KEY,
+        BGR_DIRT_BACK_KEY,
+        BGR_SKY_KEY,
+        BGR_FAR_MOUNTAIN_KEY,
+        BGR_MOUNTAIN_KEY,
+        BGR_WOODLAND1_KEY,
+        BGR_WOODLAND2_KEY,
+        BGR_WOODLAND3_KEY,
+        BGR_WOODLAND4_KEY,
+        BGR_CLOUD1_KEY,
+        BGR_CLOUD2_KEY,
+        BGR_CLOUD3_KEY,
+        BGR_CLOUD4_KEY,
+        BGR_CLOUD5_KEY,
+    }
+
+    export enum FogKey {
         FOG_KEY
     }
 
+    export enum FontKey {
+        FNT_SMALL_YELLOW_KEY
+    }
+
     export enum UISpriteKey {
-        PLAYER_ICON_KEY,
-        // misc.
-        SKULL_KEY,
-        GAME_OVER_KEY,
-        HELMET_KEY,
-        TORSO_KEY,
-        GAUNTLET_KEY,
+        UI_PLAYER_ICON_KEY,
+        UI_SKULL_KEY,
+        UI_GAME_OVER_KEY,
         // buttons
         UI_SOUND_KEY,
         UI_UP_KEY,
@@ -84,7 +86,7 @@ namespace Lich {
         // Reveal
         SPELL_REVEAL_FOG_KEY
     }
- 
+
     export enum SoundKey {
         SND_FIREBALL_KEY,
         SND_BURN_KEY,

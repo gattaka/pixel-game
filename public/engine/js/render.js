@@ -245,7 +245,7 @@ var Lich;
         Render.prototype.createFogTile = function (positionIndex) {
             var self = this;
             var rsc = Lich.Resources.getInstance();
-            var tile = rsc.processFogSprite(positionIndex);
+            var tile = rsc.getFogSprite(positionIndex);
             return tile;
         };
         Render.prototype.createTile = function (positionIndex, bgr) {
@@ -255,12 +255,12 @@ var Lich;
             if (bgr) {
                 typ = rsc.surfaceBgrIndex.getType(positionIndex);
                 var v = Lich.Resources.getInstance().surfaceBgrIndex.getPosition(positionIndex);
-                tile = rsc.processSurfaceBgrTileSprite(typ, v - 1);
+                tile = rsc.getSurfaceBgrTileSprite(typ, v - 1);
             }
             else {
                 typ = rsc.surfaceIndex.getType(positionIndex);
                 var v = Lich.Resources.getInstance().surfaceIndex.getPosition(positionIndex);
-                tile = rsc.processSurfaceTileSprite(typ, v - 1);
+                tile = rsc.getSurfaceTileSprite(typ, v - 1);
             }
             return tile;
         };
@@ -437,7 +437,7 @@ var Lich;
                     var tile = sceneMap_1.getValue(x, y);
                     if (tile !== null) {
                         var v = record.getValue(x, y);
-                        Lich.Resources.getInstance().processFogSprite(v, tile);
+                        Lich.Resources.getInstance().getFogSprite(v, tile);
                     }
                 });
                 Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx * 2, ry * 2));
@@ -580,10 +580,10 @@ var Lich;
                         var v = record.getValue(x, y);
                         var type = index.getType(v);
                         if (bgr) {
-                            Lich.Resources.getInstance().processSurfaceBgrTileSprite(type, v, tile);
+                            Lich.Resources.getInstance().getSurfaceBgrTileSprite(type, v, tile);
                         }
                         else {
-                            Lich.Resources.getInstance().processSurfaceTileSprite(type, v, tile);
+                            Lich.Resources.getInstance().getSurfaceTileSprite(type, v, tile);
                         }
                     }
                 });

@@ -26,6 +26,7 @@ namespace Lich {
         WORKSTATION_CHANGE,
         WORKSTATION_UNREACHABLE,
         SURFACE_REVEAL,
+        INV_CHANGE,
     }
 
     abstract class EventPayload {
@@ -46,6 +47,10 @@ namespace Lich {
 
     export class TupleEventPayload extends EventPayload {
         constructor(type: EventType, public x: number, public y: number) { super(type); }
+    }
+
+    export class InvChangeEventPayload extends EventPayload {
+        constructor(public key: InventoryKey, public amount: number) { super(EventType.INV_CHANGE); }
     }
 
     export class PointedAreaEventPayload extends EventPayload {

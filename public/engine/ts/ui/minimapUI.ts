@@ -99,7 +99,7 @@ namespace Lich {
 
         static MAP_SIDE = 200;
 
-        playerIcon: createjs.Bitmap;
+        playerIcon: createjs.Sprite;
         bitmap: createjs.Bitmap;
 
         shiftX: number = 0;
@@ -122,7 +122,7 @@ namespace Lich {
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
 
-            self.playerIcon = Resources.getInstance().getBitmap(UISpriteKey[UISpriteKey.PLAYER_ICON_KEY]);
+            self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
@@ -203,7 +203,7 @@ namespace Lich {
 
     export class MapUI extends AbstractUI {
 
-        playerIcon: createjs.Bitmap;
+        playerIcon: createjs.Sprite;
         bitmap: createjs.Bitmap;
 
         shiftX: number = 0;
@@ -230,7 +230,7 @@ namespace Lich {
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
 
-            self.playerIcon = Resources.getInstance().getBitmap(UISpriteKey[UISpriteKey.PLAYER_ICON_KEY]);
+            self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);

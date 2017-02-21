@@ -177,7 +177,7 @@ namespace Lich {
         // definice inv položek dle klíče (int)
         public invObjectDefs = new Array<InvObjDefinition>();
         // definice spells
-        public spellDefs = new Table<SpellDefinition>();
+        private spellDefs: { [k: string]: SpellDefinition } = {};
         public interactSpellDef = new MapObjectsInteractionSpellDef();
 
         // definice receptů
@@ -455,7 +455,7 @@ namespace Lich {
                 new RevealFogSpellDef()
             ];
             SPELL_DEFS.forEach((definition) => {
-                self.spellDefs.insert(SpellKey[definition.key], definition);
+                self.spellDefs[SpellKey[definition.key]] = definition;
             });
 
         };
@@ -485,6 +485,10 @@ namespace Lich {
             return transDef.transitionKey;
         }
 
+        getSpellDef(key: SpellKey): SpellDefinition {
+            return this.spellDefs[SpellKey[key]];
+        };
+
         private getImage(key: string): HTMLImageElement {
             return <HTMLImageElement>this.loader.getResult(key);
         };
@@ -499,7 +503,7 @@ namespace Lich {
             return bitmapText;
         }
 
-        processSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
+        getSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             let srfcDef = self.mapSurfaceDefs[SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[SurfaceKey[surfaceKey]];
@@ -509,7 +513,7 @@ namespace Lich {
             return sprite;
         };
 
-        processSurfaceBgrTileSprite(surfaceBgrKey: SurfaceBgrKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
+        getSurfaceBgrTileSprite(surfaceBgrKey: SurfaceBgrKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             let srfcBgrDef = self.mapSurfaceBgrDefs[SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[SurfaceBgrKey[surfaceBgrKey]];
@@ -519,7 +523,7 @@ namespace Lich {
             return sprite;
         };
 
-        processFogSprite(positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
+        getFogSprite(positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
             let v = positionIndex || positionIndex == 0 ? positionIndex : FogTile.MM;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
@@ -557,24 +561,46 @@ namespace Lich {
             return sprite;
         };
 
-        getUISprite(key: UISpriteKey): createjs.Sprite {
+        getAchvUISprite(key: AchievementKey): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            let uiSpriteDef = self.uiSpriteDefs[key];
-            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
-            // ui není animovaný, takže vždy předávám číslo snímku
+            let achvDef = self.achievementsDefs[AchievementKey[key]];
+            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][achvDef.spriteName].frame;
+            // není animovaný, takže vždy předávám číslo snímku
             sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
 
-        getInvObjectSprite(key: InventoryKey): createjs.Sprite {
+        getUISprite(key: UISpriteKey): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let uiSpriteDef = self.uiSpriteDefs[UISpriteKey[key]];
+            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
+            // není animovaný, takže vždy předávám číslo snímku
+            sprite.gotoAndStop(frameBySpriteName)
+            return sprite;
+        };
+
+        getSpellUISprite(key: SpellKey, originalSprite?: createjs.Sprite): createjs.Sprite {
+            let self = this;
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
+            let sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let spellDef = self.spellDefs[SpellKey[key]];
+            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][spellDef.iconSpriteName].frame;
+            // není animovaný, takže vždy předávám číslo snímku
+            sprite.gotoAndStop(frameBySpriteName)
+            return sprite;
+        };
+
+        getInvObjectSprite(key: InventoryKey, originalSprite?: createjs.Sprite): createjs.Sprite {
+            let self = this;
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
+            let sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             let invDef = self.invObjectDefs[key];
             let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][invDef.spriteName].frame;
-            // inv není animovaný, takže vždy předávám číslo snímku
+            // není animovaný, takže vždy předávám číslo snímku
             sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
@@ -589,7 +615,7 @@ namespace Lich {
             return sprite;
         };
 
-        getSpriteSheet() {
+        private getSpriteSheet() {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             return self.spritesheetByKeyMap[stringSheetKey];

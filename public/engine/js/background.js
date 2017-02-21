@@ -1,8 +1,7 @@
 var Lich;
 (function (Lich) {
     var Background = (function () {
-        function Background(game) {
-            this.game = game;
+        function Background(content, canvas) {
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
@@ -15,9 +14,9 @@ var Lich;
             this.offsetX = 0;
             this.offsetY = 0;
             var self = this;
-            self.content = game.getContent();
-            self.canvas = game.getCanvas();
-            var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.SKY_KEY);
+            self.content = content;
+            self.canvas = canvas;
+            var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_SKY_KEY);
             var skySpriteRepeat = self.canvas.width / skySprite.width + 1;
             for (var i = 0; i < skySpriteRepeat; i++) {
                 var sprite = skySprite.clone();
@@ -55,8 +54,8 @@ var Lich;
                 self.clouds.push(sprite);
                 self.content.addChild(sprite);
             });
-            self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_START_KEY);
-            self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.DIRT_BACK_KEY);
+            self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_START_KEY);
+            self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_KEY);
             var dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 3;
             var dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 3;
             self.dirtBackCont.x = 0;
@@ -87,6 +86,14 @@ var Lich;
                     self.dirtBackCont.addChild(sprite);
                 }
             }
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
+                self.shift(payload.payload, 0);
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_Y, function (payload) {
+                self.shift(0, payload.payload);
+                return false;
+            });
             console.log("background ready");
         }
         Background.prototype.shift = function (distanceX, distanceY) {
@@ -127,7 +134,7 @@ var Lich;
             // }
         };
         ;
-        Background.prototype.handleTick = function (rawShift) {
+        Background.prototype.update = function (rawShift) {
             var self = this;
             var canvas = self.canvas;
             var shift = rawShift / 10;
@@ -150,19 +157,19 @@ var Lich;
     /*-----------*/
     Background.CLOUDS_SPACE = 150;
     Background.CLOUDS_KEYS = [
-        Lich.BackgroundKey.CLOUD1_KEY,
-        Lich.BackgroundKey.CLOUD2_KEY,
-        Lich.BackgroundKey.CLOUD3_KEY,
-        Lich.BackgroundKey.CLOUD4_KEY,
-        Lich.BackgroundKey.CLOUD5_KEY
+        Lich.BackgroundKey.BGR_CLOUD1_KEY,
+        Lich.BackgroundKey.BGR_CLOUD2_KEY,
+        Lich.BackgroundKey.BGR_CLOUD3_KEY,
+        Lich.BackgroundKey.BGR_CLOUD4_KEY,
+        Lich.BackgroundKey.BGR_CLOUD5_KEY
     ];
     Background.BGR_ORDER = [
-        Lich.BackgroundKey.FAR_MOUNTAIN_KEY,
-        Lich.BackgroundKey.MOUNTAIN_KEY,
-        Lich.BackgroundKey.WOODLAND1_KEY,
-        Lich.BackgroundKey.WOODLAND2_KEY,
-        Lich.BackgroundKey.WOODLAND3_KEY,
-        Lich.BackgroundKey.WOODLAND4_KEY,
+        Lich.BackgroundKey.BGR_FAR_MOUNTAIN_KEY,
+        Lich.BackgroundKey.BGR_MOUNTAIN_KEY,
+        Lich.BackgroundKey.BGR_WOODLAND1_KEY,
+        Lich.BackgroundKey.BGR_WOODLAND2_KEY,
+        Lich.BackgroundKey.BGR_WOODLAND3_KEY,
+        Lich.BackgroundKey.BGR_WOODLAND4_KEY,
     ];
     Background.BGR_STARTS = [180, 600, 1200, 1200, 1220, 1240];
     Background.BGR_MULT = [.3, .4, .5, .55, .6, .7];

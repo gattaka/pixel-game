@@ -6,7 +6,7 @@ namespace Lich {
         public height: number;
         public width: number;
 
-        constructor(text: string) {
+        constructor(text: string, font = FontKey.FNT_SMALL_YELLOW_KEY) {
             super();
 
             this.label = Resources.getInstance().getText(text);
@@ -16,8 +16,16 @@ namespace Lich {
             this.width = this.label.getBounds().width;
         }
 
-        setText(text: string) {
-            this.label.text = text;
+        setText(text: string | number) {
+            this.label.text = text + "";
+        }
+
+        setLineHeight(value: number) {
+            // TODO
+        }
+
+        setLineWidth(value: number) {
+            // TODO
         }
 
     }

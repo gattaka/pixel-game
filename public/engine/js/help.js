@@ -26,7 +26,7 @@ var Lich;
             this.recipesDiv = document.createElement("div");
             this.recipesDiv.id = "recipes-list-div";
             // URL grafiky položek
-            Lich.INVENTORY_DEFS.forEach(function (path) {
+            Lich.INVENTORY_DEFS(function (path) {
                 _this.recipeImgMap[path[1]] = path[0];
             });
             // Přehled receptů dle položky

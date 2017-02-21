@@ -40,10 +40,7 @@ namespace Lich {
         mouse = new Mouse();
 
         public getCanvas(): HTMLCanvasElement { return this.canvas; }
-        public getContent(): SheetContainer { return this.content; }
-        public getBackground(): Background { return this.background; }
         public getWorld(): World { return this.world; }
-        public getUI(): UI { return this.ui; }
 
         constructor(mainCanvasId: string, minimapCanvasId: string, loaderCanvasId: string) {
 
@@ -207,14 +204,14 @@ namespace Lich {
                     // clean 
                     self.content.removeAllChildren();
                     delete self.world;
-                    delete self.background;
+                    // delete self.background;
                     EventBus.getInstance().clear();
                     Mixer.stopAllSounds();
 
                     // (re)-init
                     // TODO
                     // self.ui = new UI(self.canvas, tilesMap, mobile);
-                    self.background = new Background(self);
+                    // self.background = new Background(self);
                     self.world = new World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
@@ -421,6 +418,7 @@ namespace Lich {
                 }
                 self.loadUI.update();
                 self.stage.update();
+                self.background.update(delta);
                 stats.end();
             }
         };

@@ -160,13 +160,13 @@ var Lich;
                     // clean 
                     self.content.removeAllChildren();
                     delete self.world;
-                    delete self.background;
+                    // delete self.background;
                     Lich.EventBus.getInstance().clear();
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
                     // TODO
                     // self.ui = new UI(self.canvas, tilesMap, mobile);
-                    self.background = new Lich.Background(self);
+                    // self.background = new Background(self);
                     self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
@@ -311,14 +311,12 @@ var Lich;
                 }
                 self.loadUI.update();
                 self.stage.update();
+                self.background.update(delta);
                 stats.end();
             }
         }
         Game.prototype.getCanvas = function () { return this.canvas; };
-        Game.prototype.getContent = function () { return this.content; };
-        Game.prototype.getBackground = function () { return this.background; };
         Game.prototype.getWorld = function () { return this.world; };
-        Game.prototype.getUI = function () { return this.ui; };
         ;
         return Game;
     }());

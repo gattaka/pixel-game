@@ -213,7 +213,7 @@ var Lich;
             _this.currentLine = 0;
             var self = _this;
             var changelog = new Changelog();
-            var label = new Lich.Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka", "20px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            var label = new Lich.Label("LichEngine " + changelog.versions.byIndex(0).version + " by Gattaka");
             label.x = SplashScreenUI.MARGIN;
             label.y = SplashScreenUI.MARGIN;
             _super.prototype.addChild.call(_this, label);
@@ -257,7 +257,7 @@ var Lich;
             for (var i = 0; i < SplashScreenUI.LINES; i++) {
                 if (this.lines[i + this.currentLine] == null)
                     break;
-                var child = new Lich.Label(this.lines[i + this.currentLine], SplashScreenUI.FONT_HEIGHT + "px " + Lich.Resources.FONT, Lich.Resources.DEBUG_TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, SplashScreenUI.OUTLINE);
+                var child = new Lich.Label(this.lines[i + this.currentLine]);
                 this.cont.addChild(child);
                 child.x = SplashScreenUI.MARGIN;
                 child.y = SplashScreenUI.TOP_OFFSET + i * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING);

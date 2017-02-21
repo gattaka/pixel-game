@@ -90,12 +90,12 @@ var Lich;
                 container.addChild(sprite2);
                 // Test povrchu 
                 var container2 = new Lich.SheetContainer();
-                var sprite3 = Lich.Resources.getInstance().processSurfaceTileSprite(Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY, 0);
+                var sprite3 = Lich.Resources.getInstance().getSurfaceTileSprite(Lich.SurfaceKey.SRFC_TRANS_DIRT_ROCK_KEY, 0);
                 sprite3.x = 10;
                 sprite3.y = 100;
                 container2.addChild(sprite3);
                 // Test pozadí povrchu
-                var sprite4 = Lich.Resources.getInstance().processSurfaceBgrTileSprite(Lich.SurfaceBgrKey.SRFC_BGR_BRICK_KEY, 0);
+                var sprite4 = Lich.Resources.getInstance().getSurfaceBgrTileSprite(Lich.SurfaceBgrKey.SRFC_BGR_BRICK_KEY, 0);
                 sprite4.x = 50;
                 sprite4.y = 100;
                 container2.addChild(sprite4);
@@ -110,7 +110,7 @@ var Lich;
                 sprite6.y = 150;
                 container2.addChild(sprite6);
                 // Test statického mapového objektu
-                var sprite7 = Lich.Resources.getInstance().processFogSprite(2);
+                var sprite7 = Lich.Resources.getInstance().getFogSprite(2);
                 sprite7.x = 100;
                 sprite7.y = 150;
                 container2.addChild(sprite7);

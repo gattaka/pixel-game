@@ -15,23 +15,23 @@ namespace Lich {
             super(width, height);
             let self = this;
 
-            this.fpsLabel = new Label("-- fps", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.fpsLabel = new Label("-- fps");
             this.addNextChild(this.fpsLabel);
             EventBus.getInstance().registerConsumer(EventType.FPS_CHANGE, (data: NumberEventPayload) => {
                 self.fpsLabel.setText(Math.round(data.payload) + " fps");
                 return false;
             });
 
-            this.mouseLabel = new Label("PIXELS x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.mouseLabel = new Label("PIXELS x: - y: -");
             this.addNextChild(this.mouseLabel);
             EventBus.getInstance().registerConsumer(EventType.MOUSE_MOVE, (data: TupleEventPayload) => {
                 self.mouseLabel.setText("PIXELS x: " + data.x + " y: " + data.y);
                 return false;
             });
 
-            this.tilesLabel = new Label("TILES x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.tilesLabel = new Label("TILES x: - y: -");
             this.addNextChild(this.tilesLabel);
-            this.sectorLabel = new Label("SECTOR: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.sectorLabel = new Label("SECTOR: -");
             this.addNextChild(this.sectorLabel);
             EventBus.getInstance().registerConsumer(EventType.POINTED_AREA_CHANGE, (data: PointedAreaEventPayload) => {
                 self.tilesLabel.setText("TILES x: " + data.clsnx + " y: " + data.clsny
@@ -48,14 +48,14 @@ namespace Lich {
                 return false;
             });
 
-            this.playerLabel = new Label("SPEED x: - y: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.playerLabel = new Label("SPEED x: - y: -");
             EventBus.getInstance().registerConsumer(EventType.PLAYER_SPEED_CHANGE, (data: TupleEventPayload) => {
                 self.playerLabel.setText("SPEED x: " + Math.floor(data.x) + " y: " + Math.floor(data.y));
                 return false;
             });
             this.addNextChild(this.playerLabel);
 
-            this.enemiesLabel = new Label("ENEMIES LEFT: -", "15px " + Resources.FONT, Resources.DEBUG_TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            this.enemiesLabel = new Label("ENEMIES LEFT: -");
             EventBus.getInstance().registerConsumer(EventType.ENEMY_COUNT_CHANGE, (data: NumberEventPayload) => {
                 self.enemiesLabel.setText("ENEMIES LEFT: " + data.payload);
                 return false;

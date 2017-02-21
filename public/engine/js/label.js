@@ -7,7 +7,8 @@ var Lich;
 (function (Lich) {
     var Label = (function (_super) {
         __extends(Label, _super);
-        function Label(text) {
+        function Label(text, font) {
+            if (font === void 0) { font = Lich.FontKey.FNT_SMALL_YELLOW_KEY; }
             var _this = _super.call(this) || this;
             _this.label = Lich.Resources.getInstance().getText(text);
             _this.addChild(_this.label);
@@ -16,7 +17,13 @@ var Lich;
             return _this;
         }
         Label.prototype.setText = function (text) {
-            this.label.text = text;
+            this.label.text = text + "";
+        };
+        Label.prototype.setLineHeight = function (value) {
+            // TODO
+        };
+        Label.prototype.setLineWidth = function (value) {
+            // TODO
         };
         return Label;
     }(Lich.SheetContainer));

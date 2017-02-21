@@ -32,6 +32,7 @@ var Lich;
         EventType[EventType["WORKSTATION_CHANGE"] = 22] = "WORKSTATION_CHANGE";
         EventType[EventType["WORKSTATION_UNREACHABLE"] = 23] = "WORKSTATION_UNREACHABLE";
         EventType[EventType["SURFACE_REVEAL"] = 24] = "SURFACE_REVEAL";
+        EventType[EventType["INV_CHANGE"] = 25] = "INV_CHANGE";
     })(EventType = Lich.EventType || (Lich.EventType = {}));
     var EventPayload = (function () {
         function EventPayload(type) {
@@ -78,6 +79,17 @@ var Lich;
         return TupleEventPayload;
     }(EventPayload));
     Lich.TupleEventPayload = TupleEventPayload;
+    var InvChangeEventPayload = (function (_super) {
+        __extends(InvChangeEventPayload, _super);
+        function InvChangeEventPayload(key, amount) {
+            var _this = _super.call(this, EventType.INV_CHANGE) || this;
+            _this.key = key;
+            _this.amount = amount;
+            return _this;
+        }
+        return InvChangeEventPayload;
+    }(EventPayload));
+    Lich.InvChangeEventPayload = InvChangeEventPayload;
     var PointedAreaEventPayload = (function (_super) {
         __extends(PointedAreaEventPayload, _super);
         function PointedAreaEventPayload(clsnx, clsny, clsnHit, partsOffsetX, partsOffsetY, tileType, tileVariant, secx, secy) {

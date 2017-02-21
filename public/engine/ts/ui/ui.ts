@@ -187,19 +187,19 @@ namespace Lich {
                 achvCont.addChild(bgr);
 
                 let achvDef = Resources.getInstance().achievementsDefs[payload.payload];
-                let bmp = Resources.getInstance().getBitmap(payload.payload);
-                achvCont.addChild(bmp);
-                bmp.x = AbstractUI.BORDER;
-                bmp.y = AbstractUI.BORDER;
+                let sprite = Resources.getInstance().getAchvUISprite(achvDef.key);
+                achvCont.addChild(sprite);
+                sprite.x = AbstractUI.BORDER;
+                sprite.y = AbstractUI.BORDER;
 
                 let nameLabelSize = 20;
-                let nameLabel = new Label(achvDef.name, nameLabelSize + "px " + Resources.FONT, "#0E0");
+                let nameLabel = new Label(achvDef.name);
                 achvCont.addChild(nameLabel);
                 nameLabel.x = achvImgSide + AbstractUI.BORDER + PartsUI.SPACING;
                 nameLabel.y = AbstractUI.BORDER;
 
                 let mottoLabelSize = 17;
-                let mottoLabel = new Label("\"" + achvDef.motto + "\"", "italic " + mottoLabelSize + "px " + Resources.FONT, "#EEE");
+                let mottoLabel = new Label("\"" + achvDef.motto + "\"");
                 achvCont.addChild(mottoLabel);
                 mottoLabel.x = nameLabel.x;
                 mottoLabel.y = nameLabel.y + nameLabelSize + PartsUI.SPACING;
@@ -291,11 +291,11 @@ namespace Lich {
                         case 6: key = UISpriteKey.UI_DOWN_KEY; break;
                         case 7: key = UISpriteKey.UI_RIGHT_DOWN_KEY; break;
                     }
-                    let bitmap = Resources.getInstance().getBitmap(UISpriteKey[key]);
-                    bitmap.alpha = 0.7;
-                    bitmap.x = x - Resources.TILE_SIZE;
-                    bitmap.y = y - Resources.TILE_SIZE;
-                    movementCont.addChild(bitmap);
+                    let sprite = Resources.getInstance().getUISprite(key);
+                    sprite.alpha = 0.7;
+                    sprite.x = x - Resources.TILE_SIZE;
+                    sprite.y = y - Resources.TILE_SIZE;
+                    movementCont.addChild(sprite);
                 }
 
                 let directionByTouch = (x: number, y: number) => {
@@ -458,7 +458,7 @@ namespace Lich {
 
     export class Button extends SheetContainer {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-        constructor(bitmap: UISpriteKey) {
+        constructor(uiKey: UISpriteKey) {
             super();
 
             let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
@@ -466,11 +466,11 @@ namespace Lich {
             bgr.x = 0;
             bgr.y = 0;
 
-            if (bitmap) {
-                let btmp = Resources.getInstance().getBitmap(UISpriteKey[bitmap]);
-                this.addChild(btmp);
-                btmp.x = PartsUI.SELECT_BORDER;
-                btmp.y = PartsUI.SELECT_BORDER;
+            if (uiKey) {
+                let sprite = Resources.getInstance().getUISprite(uiKey);
+                this.addChild(sprite);
+                sprite.x = PartsUI.SELECT_BORDER;
+                sprite.y = PartsUI.SELECT_BORDER;
             }
 
             let hitArea = new createjs.Shape();

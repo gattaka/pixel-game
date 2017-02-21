@@ -7,19 +7,19 @@ namespace Lich {
         static CLOUDS_SPACE = 150;
 
         static CLOUDS_KEYS = [
-            BackgroundKey.CLOUD1_KEY,
-            BackgroundKey.CLOUD2_KEY,
-            BackgroundKey.CLOUD3_KEY,
-            BackgroundKey.CLOUD4_KEY,
-            BackgroundKey.CLOUD5_KEY
+            BackgroundKey.BGR_CLOUD1_KEY,
+            BackgroundKey.BGR_CLOUD2_KEY,
+            BackgroundKey.BGR_CLOUD3_KEY,
+            BackgroundKey.BGR_CLOUD4_KEY,
+            BackgroundKey.BGR_CLOUD5_KEY
         ];
         static BGR_ORDER = [
-            BackgroundKey.FAR_MOUNTAIN_KEY,
-            BackgroundKey.MOUNTAIN_KEY,
-            BackgroundKey.WOODLAND1_KEY,
-            BackgroundKey.WOODLAND2_KEY,
-            BackgroundKey.WOODLAND3_KEY,
-            BackgroundKey.WOODLAND4_KEY,
+            BackgroundKey.BGR_FAR_MOUNTAIN_KEY,
+            BackgroundKey.BGR_MOUNTAIN_KEY,
+            BackgroundKey.BGR_WOODLAND1_KEY,
+            BackgroundKey.BGR_WOODLAND2_KEY,
+            BackgroundKey.BGR_WOODLAND3_KEY,
+            BackgroundKey.BGR_WOODLAND4_KEY,
         ];
         static BGR_STARTS = [180, 600, 1200, 1200, 1220, 1240];
         static BGR_MULT = [.3, .4, .5, .55, .6, .7];
@@ -46,14 +46,14 @@ namespace Lich {
         private canvas: HTMLCanvasElement;
         private content: SheetContainer;
 
-        constructor(public game: Game) {
+        constructor(content, canvas) {
 
             var self = this;
 
-            self.content = game.getContent();
-            self.canvas = game.getCanvas();
+            self.content = content;
+            self.canvas = canvas;
 
-            let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.SKY_KEY);
+            let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_SKY_KEY);
             let skySpriteRepeat = self.canvas.width / skySprite.width + 1;
             for (let i = 0; i < skySpriteRepeat; i++) {
                 let sprite = skySprite.clone();
@@ -96,8 +96,8 @@ namespace Lich {
                 self.content.addChild(sprite);
             });
 
-            self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.DIRT_BACK_START_KEY);
-            self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.DIRT_BACK_KEY);
+            self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_START_KEY);
+            self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_KEY);
             let dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 3;
             let dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 3;
             self.dirtBackCont.x = 0;
@@ -130,11 +130,20 @@ namespace Lich {
                 }
             }
 
+            EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
+                self.shift(payload.payload, 0);
+                return false;
+            });
+            EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
+                self.shift(0, payload.payload);
+                return false;
+            });
+
             console.log("background ready");
         }
 
 
-        shift(distanceX, distanceY) {
+        private shift(distanceX, distanceY) {
             var self = this;
             var canvas = self.canvas;
 
@@ -177,7 +186,7 @@ namespace Lich {
             // }
         };
 
-        handleTick(rawShift) {
+        update(rawShift) {
             var self = this;
             var canvas = self.canvas;
             var shift = rawShift / 10;

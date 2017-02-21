@@ -139,7 +139,7 @@ var Lich;
             // definice inv položek dle klíče (int)
             this.invObjectDefs = new Array();
             // definice spells
-            this.spellDefs = new Lich.Table();
+            this.spellDefs = {};
             this.interactSpellDef = new Lich.MapObjectsInteractionSpellDef();
             // definice receptů
             /*
@@ -380,7 +380,7 @@ var Lich;
                 new Lich.RevealFogSpellDef()
             ];
             SPELL_DEFS.forEach(function (definition) {
-                self.spellDefs.insert(Lich.SpellKey[definition.key], definition);
+                self.spellDefs[Lich.SpellKey[definition.key]] = definition;
             });
         }
         Resources.prototype.isLoaderDone = function () { return this.loaderDone; };
@@ -415,6 +415,10 @@ var Lich;
                 return undefined;
             return transDef.transitionKey;
         };
+        Resources.prototype.getSpellDef = function (key) {
+            return this.spellDefs[Lich.SpellKey[key]];
+        };
+        ;
         Resources.prototype.getImage = function (key) {
             return this.loader.getResult(key);
         };
@@ -428,7 +432,7 @@ var Lich;
             var bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY]]);
             return bitmapText;
         };
-        Resources.prototype.processSurfaceTileSprite = function (surfaceKey, positionIndex, originalSprite) {
+        Resources.prototype.getSurfaceTileSprite = function (surfaceKey, positionIndex, originalSprite) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[Lich.SurfaceKey[surfaceKey]];
@@ -438,7 +442,7 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.processSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex, originalSprite) {
+        Resources.prototype.getSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex, originalSprite) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
@@ -448,7 +452,7 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.processFogSprite = function (positionIndex, originalSprite) {
+        Resources.prototype.getFogSprite = function (positionIndex, originalSprite) {
             var self = this;
             var v = positionIndex || positionIndex == 0 ? positionIndex : Lich.FogTile.MM;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
@@ -487,24 +491,46 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.getUISprite = function (key) {
+        Resources.prototype.getAchvUISprite = function (key) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            var uiSpriteDef = self.uiSpriteDefs[key];
-            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
-            // ui není animovaný, takže vždy předávám číslo snímku
+            var achvDef = self.achievementsDefs[Lich.AchievementKey[key]];
+            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][achvDef.spriteName].frame;
+            // není animovaný, takže vždy předávám číslo snímku
             sprite.gotoAndStop(frameBySpriteName);
             return sprite;
         };
         ;
-        Resources.prototype.getInvObjectSprite = function (key) {
+        Resources.prototype.getUISprite = function (key) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
             var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var uiSpriteDef = self.uiSpriteDefs[Lich.UISpriteKey[key]];
+            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
+            // není animovaný, takže vždy předávám číslo snímku
+            sprite.gotoAndStop(frameBySpriteName);
+            return sprite;
+        };
+        ;
+        Resources.prototype.getSpellUISprite = function (key, originalSprite) {
+            var self = this;
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var spellDef = self.spellDefs[Lich.SpellKey[key]];
+            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][spellDef.iconSpriteName].frame;
+            // není animovaný, takže vždy předávám číslo snímku
+            sprite.gotoAndStop(frameBySpriteName);
+            return sprite;
+        };
+        ;
+        Resources.prototype.getInvObjectSprite = function (key, originalSprite) {
+            var self = this;
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var invDef = self.invObjectDefs[key];
             var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][invDef.spriteName].frame;
-            // inv není animovaný, takže vždy předávám číslo snímku
+            // není animovaný, takže vždy předávám číslo snímku
             sprite.gotoAndStop(frameBySpriteName);
             return sprite;
         };

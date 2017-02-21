@@ -14,20 +14,12 @@ var Lich;
             _this.height = _this.width;
             var invDef = Lich.Resources.getInstance().invObjectDefs[item];
             _this.invDef = invDef;
-            var frames = 1;
-            if (typeof invDef === "undefined" || invDef == null) {
-                frames = 1;
-            }
-            else {
-                frames = invDef.frames;
-            }
-            _this.frames = frames;
-            var sprite = Lich.Resources.getInstance().getSprite(Lich.InventoryKey[item], frames);
+            var sprite = Lich.Resources.getInstance().getInvObjectSprite(item);
             _this.sprite = sprite;
             _this.addChild(sprite);
             sprite.x = _this.width / 2 - sprite.width / 2;
             sprite.y = _this.height / 2 - sprite.height / 2;
-            var text = new Lich.Label("" + quant, Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT, Lich.Resources.TEXT_COLOR, true, Lich.Resources.OUTLINE_COLOR, 1);
+            var text = new Lich.Label("" + quant);
             _this.count = text;
             _this.addChild(text);
             text.x = 0;

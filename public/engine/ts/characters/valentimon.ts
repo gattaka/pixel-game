@@ -44,7 +44,7 @@ namespace Lich {
                             this.performAnimation(AnimationKey.ANM_VALENTIMON_ATTACK_KEY);
                             this.currentAttackCooldown = 0;
                         } else {
-                            let spell = Resources.getInstance().spellDefs.byKey(SpellKey[SpellKey.SPELL_LOVELETTER]);
+                            let spell = Resources.getInstance().getSpellDef(SpellKey.SPELL_LOVELETTER);
                             let context = new SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
                             this.performAnimation(AnimationKey.ANM_VALENTIMON_ATTACK_KEY);

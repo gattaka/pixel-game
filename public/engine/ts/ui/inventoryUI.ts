@@ -1,23 +1,122 @@
 namespace Lich {
 
+    // --- Virtuální inventář ---
+    export class Inventory {
+        // pole obsazení položkami
+        private itemsTypeArray = new Array<InventoryKey>();
+        // mapa pořadí typů položek
+        private itemsTypeIndexMap = new HashMap<number>();
+        // mapa počtů dle typu položky
+        private itemsQuantityMap = new HashMap<number>();
+
+        private choosenItem: InventoryKey = null;
+
+        public serialize() {
+            let array = [];
+            this.itemsTypeArray.forEach((i) => {
+                if (i == 0 || i) {
+                    array.push(this.itemsQuantityMap[i]);
+                    array.push(i);
+                }
+            });
+            return array;
+        }
+
+        public deserialize(array) {
+            for (let i = 0; i < array.length; i += 2) {
+                let amount = array[i];
+                let item = array[i + 1];
+                EventBus.getInstance().fireEvent(new InvChangeEventPayload(item, amount));
+            }
+        }
+
+        public getLength() { return this.itemsTypeArray.length; }
+
+        public getItem(i: number) { return this.itemsTypeArray[i]; }
+
+        getChoosenItem() { return this.choosenItem; }
+
+        setChoosenItem(item: InventoryKey) { this.choosenItem = item; }
+
+        invRemove(item: InventoryKey, quantChange: number) {
+            var self = this;
+            var itemUI = self.itemsUIMap[item];
+            if (itemUI) {
+                var quant = self.itemsQuantityMap[item];
+                quant -= quantChange;
+                self.itemsQuantityMap[item] = quant;
+                self.recipeManager.updateQuant(item, quant);
+                itemUI.count.setText(quant);
+                if (self.collapsedItem != null) {
+                    self.collapsedItem.count.setText(quant);
+                }
+                if (quant == 0) {
+                    if (self.collapsedItem != null) {
+                        self.collapsedCont.removeChild(self.collapsedItem);
+                        self.collapsedItem = null;
+                        self.collapsedHighlight.visible = false;
+                    }
+                    self.itemsCont.removeChild(itemUI);
+                    self.choosenItem = null;
+                    self.itemHighlight.visible = false;
+                    self.itemsQuantityMap[item] = null;
+                    self.itemsUIMap[item] = null
+                    let index = self.itemsTypeIndexMap[item];
+                    self.itemsTypeArray.splice(index, 1);
+                    self.itemsTypeIndexMap[item] = null;
+                    for (let i = index; i < self.itemsTypeArray.length; i++) {
+                        self.itemsTypeIndexMap[self.itemsTypeArray[i]]--;
+                    }
+
+                    self.render();
+                } else {
+                    self.updateCache();
+                }
+            }
+        }
+
+        invInsert(item: InventoryKey, quantChange: number) {
+            let self = this;
+            let quant = quantChange;
+            if (self.itemsTypeIndexMap[item] || self.itemsTypeIndexMap[item] == 0) {
+                // pokud už existuje zvyš počet
+                quant = self.itemsQuantityMap[item];
+                quant += quantChange;
+                self.itemsQuantityMap[item] = quant;
+                self.recipeManager.updateQuant(item, quant);
+                // pokud je ve viditelné části INV, rovnou aktualizuj popisek množství
+                let itemUI = self.itemsUIMap[item];
+                if (itemUI) {
+                    itemUI.count.setText(quant);
+                    if (self.choosenItem === item) {
+                        self.collapsedItem.count.setText(quant);
+                    }
+                }
+            } else {
+                let i = self.itemsTypeArray.length;
+                self.itemsTypeArray[i] = item;
+                self.itemsTypeIndexMap[item] = i;
+                self.itemsQuantityMap[item] = quant;
+                self.recipeManager.updateQuant(item, quant);
+
+                let itemsOffset = self.lineOffset * self.n;
+                if (i >= itemsOffset
+                    && i < self.n * self.m + itemsOffset) {
+                    self.createUIItem(item, i - itemsOffset);
+                }
+            }
+            self.updateCache();
+        }
+    }
+
+    // --- UI ----
     export class InventoryUI extends PartsUI {
 
         static DEFAULT_N = 4;
         static DEFAULT_M = 8;
 
-        choosenItem: InventoryKey = null;
-
         lineOffset = 0;
 
-        // --- Virtuální inventář ---
-        // pole obsazení položkami
-        itemsTypeArray = new Array<InventoryKey>();
-        // mapa pořadí typů položek
-        itemsTypeIndexMap = new HashMap<number>();
-        // mapa počtů dle typu položky
-        itemsQuantityMap = new HashMap<number>();
-
-        // --- UI ----
         // mapa existujících UI prvků dle typu položky
         itemsUIMap = new HashMap<ItemUI>();
         itemHighlight: createjs.Shape;
@@ -38,26 +137,7 @@ namespace Lich {
         collapsedX: number;
         collapsedY: number;
 
-        public serialize() {
-            let array = [];
-            this.itemsTypeArray.forEach((i) => {
-                if (i == 0 || i) {
-                    array.push(this.itemsQuantityMap[i]);
-                    array.push(i);
-                }
-            });
-            return array;
-        }
-
-        public deserialize(array) {
-            for (let i = 0; i < array.length; i += 2) {
-                let amount = array[i];
-                let item = array[i + 1];
-                this.invInsert(item, amount);
-            }
-        }
-
-        constructor(private recipeManager: RecipeManager, n = InventoryUI.DEFAULT_N, m = InventoryUI.DEFAULT_M) {
+        constructor(private inventory: Inventory, private recipeManager: RecipeManager, n = InventoryUI.DEFAULT_N, m = InventoryUI.DEFAULT_M) {
             super(n, m);
 
             var self = this;
@@ -101,7 +181,7 @@ namespace Lich {
             }, null, false);
 
             downBtn.on("mousedown", function (evt) {
-                let occupLines = Math.ceil(self.itemsTypeArray.length / self.n);
+                let occupLines = Math.ceil(self.inventory.getLength() / self.n);
                 if (self.lineOffset < occupLines - self.m) {
                     self.lineOffset++;
                     self.render();
@@ -114,6 +194,15 @@ namespace Lich {
                 self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
                 self.height + offset * 2);
 
+            EventBus.getInstance().registerConsumer(EventType.INV_CHANGE, (payload: InvChangeEventPayload) => {
+                if (payload.amount > 0) {
+                    self.invInsert(payload.key, payload.amount);
+                } else if (payload.amount < 0) {
+                    self.invRemove(payload.key, payload.amount);
+                }
+                return false;
+            });
+
         }
 
         render() {
@@ -122,10 +211,10 @@ namespace Lich {
             this.itemHighlight.visible = false;
             let itemsOffset = this.lineOffset * self.n;
             for (let i = itemsOffset;
-                i < self.n * self.m + itemsOffset && i < this.itemsTypeArray.length;
+                i < self.n * self.m + itemsOffset && i < this.inventory.getLength();
                 i++) {
-                if (this.itemsTypeArray[i] != null) {
-                    this.createUIItem(this.itemsTypeArray[i], i - itemsOffset);
+                if (this.inventory.getItem(i) != null) {
+                    this.createUIItem(this.inventory.getItem(i), i - itemsOffset);
                 }
             }
             this.updateCache();
@@ -261,7 +350,7 @@ namespace Lich {
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
             itemUI.hitArea = hitArea;
 
-            if (self.choosenItem == item) {
+            if (self.inventory.getChoosenItem() == item) {
                 self.itemHighlight.visible = true;
                 self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                 self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
@@ -273,7 +362,7 @@ namespace Lich {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
-                    self.choosenItem = item;
+                    self.inventory.setChoosenItem(item);
 
                     self.collapsedCont.removeChild(self.collapsedItem);
                     self.collapsedHighlight.visible = true;

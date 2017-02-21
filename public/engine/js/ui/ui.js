@@ -149,17 +149,17 @@ var Lich;
                 bgr.drawBackground(w, h);
                 achvCont.addChild(bgr);
                 var achvDef = Lich.Resources.getInstance().achievementsDefs[payload.payload];
-                var bmp = Lich.Resources.getInstance().getBitmap(payload.payload);
-                achvCont.addChild(bmp);
-                bmp.x = AbstractUI.BORDER;
-                bmp.y = AbstractUI.BORDER;
+                var sprite = Lich.Resources.getInstance().getAchvUISprite(achvDef.key);
+                achvCont.addChild(sprite);
+                sprite.x = AbstractUI.BORDER;
+                sprite.y = AbstractUI.BORDER;
                 var nameLabelSize = 20;
-                var nameLabel = new Lich.Label(achvDef.name, nameLabelSize + "px " + Lich.Resources.FONT, "#0E0");
+                var nameLabel = new Lich.Label(achvDef.name);
                 achvCont.addChild(nameLabel);
                 nameLabel.x = achvImgSide + AbstractUI.BORDER + PartsUI.SPACING;
                 nameLabel.y = AbstractUI.BORDER;
                 var mottoLabelSize = 17;
-                var mottoLabel = new Lich.Label("\"" + achvDef.motto + "\"", "italic " + mottoLabelSize + "px " + Lich.Resources.FONT, "#EEE");
+                var mottoLabel = new Lich.Label("\"" + achvDef.motto + "\"");
                 achvCont.addChild(mottoLabel);
                 mottoLabel.x = nameLabel.x;
                 mottoLabel.y = nameLabel.y + nameLabelSize + PartsUI.SPACING;
@@ -259,11 +259,11 @@ var Lich;
                             key = Lich.UISpriteKey.UI_RIGHT_DOWN_KEY;
                             break;
                     }
-                    var bitmap = Lich.Resources.getInstance().getBitmap(Lich.UISpriteKey[key]);
-                    bitmap.alpha = 0.7;
-                    bitmap.x = x - Lich.Resources.TILE_SIZE;
-                    bitmap.y = y - Lich.Resources.TILE_SIZE;
-                    movementCont_1.addChild(bitmap);
+                    var sprite = Lich.Resources.getInstance().getUISprite(key);
+                    sprite.alpha = 0.7;
+                    sprite.x = x - Lich.Resources.TILE_SIZE;
+                    sprite.y = y - Lich.Resources.TILE_SIZE;
+                    movementCont_1.addChild(sprite);
                 }
                 var directionByTouch_1 = function (x, y) {
                     var angle;
@@ -461,17 +461,17 @@ var Lich;
     Lich.PartsUI = PartsUI;
     var Button = (function (_super) {
         __extends(Button, _super);
-        function Button(bitmap) {
+        function Button(uiKey) {
             var _this = _super.call(this) || this;
             var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
             _this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;
-            if (bitmap) {
-                var btmp = Lich.Resources.getInstance().getBitmap(Lich.UISpriteKey[bitmap]);
-                _this.addChild(btmp);
-                btmp.x = PartsUI.SELECT_BORDER;
-                btmp.y = PartsUI.SELECT_BORDER;
+            if (uiKey) {
+                var sprite = Lich.Resources.getInstance().getUISprite(uiKey);
+                _this.addChild(sprite);
+                sprite.x = PartsUI.SELECT_BORDER;
+                sprite.y = PartsUI.SELECT_BORDER;
             }
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Button.sideSize, Button.sideSize);

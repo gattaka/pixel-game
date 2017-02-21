@@ -8,7 +8,7 @@ namespace Lich {
         toggleFlag = false;
 
         choosenItemNumber: number;
-        spellContent = new Array<createjs.Bitmap>();
+        spellContent = new Array<createjs.Sprite>();
         spellIndex = new Array<SpellKey>();
         alternativeSpellIndex = new Array<SpellKey>();
 
@@ -53,7 +53,7 @@ namespace Lich {
                 for (var i = 0; i < this.spellIndex.length; i++) {
                     var alt = this.alternativeSpellIndex[i];
                     if (alt) {
-                        this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[alt]);
+                        Resources.getInstance().getSpellUISprite(alt, this.spellContent[i]);
                     }
                 }
                 self.updateCache();
@@ -64,7 +64,7 @@ namespace Lich {
         prepareForToggleShift() {
             if (this.toggleFlag) {
                 for (var i = 0; i < this.spellIndex.length; i++) {
-                    this.spellContent[i].image = Resources.getInstance().getImage(SpellKey[this.spellIndex[i]]);
+                    Resources.getInstance().getSpellUISprite(this.spellIndex[i],this.spellContent[i]);
                 }
                 this.updateCache();
                 this.toggleFlag = false;
@@ -92,25 +92,25 @@ namespace Lich {
 
         spellInsert(spell: SpellKey, altSpell?: SpellKey) {
             var self = this;
-            var bitmap = Resources.getInstance().getBitmap(SpellKey[spell]);
-            self.itemsCont.addChild(bitmap);
-            bitmap.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
-            bitmap.y = 0;
+            var spellIcon = Resources.getInstance().getSpellUISprite(spell);
+            self.itemsCont.addChild(spellIcon);
+            spellIcon.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
+            spellIcon.y = 0;
             var index = self.spellIndex.length;
             self.spellIndex[index] = spell;
             self.alternativeSpellIndex[index] = altSpell;
-            self.spellContent.push(bitmap);
+            self.spellContent.push(spellIcon);
 
-            var text = new Label("" + self.spellContent.length, PartsUI.TEXT_SIZE + "px " + Resources.FONT, Resources.TEXT_COLOR, true, Resources.OUTLINE_COLOR, 1);
+            var text = new Label("" + self.spellContent.length);
             self.itemsCont.addChild(text);
-            text.x = bitmap.x;
-            text.y = bitmap.y + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
+            text.x = spellIcon.x;
+            text.y = spellIcon.y + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
 
             var hitArea = new createjs.Shape();
             hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-            bitmap.hitArea = hitArea;
+            spellIcon.hitArea = hitArea;
 
-            bitmap.on("mousedown", function () {
+            spellIcon.on("mousedown", function () {
                 self.selectSpell(index);
             }, null, false);
         }

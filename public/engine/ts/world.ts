@@ -197,9 +197,9 @@ namespace Lich {
                 })
         }
 
-        fadeText(text: string, px: number, py: number, size = PartsUI.TEXT_SIZE, color = Resources.TEXT_COLOR, outlineColor = Resources.OUTLINE_COLOR, time = 1000) {
+        fadeText(text: string, px: number, py: number, time = 1000) {
             let self = this;
-            let label = new Label(text, size + "px " + Resources.FONT, color, true, outlineColor, 1);
+            let label = new Label(text);
             self.messagesCont.addChild(label);
             label.x = px;
             label.y = py;
@@ -455,7 +455,6 @@ namespace Lich {
             // if (self.hero.y > self.game.getCanvas().height) self.hero.y = self.game.getCanvas().height - self.hero.height + self.hero.collYOffset;
 
             self.render.shiftSectorsBy(sceneShiftX, sceneShiftY);
-            self.game.getBackground().shift(sceneShiftX, sceneShiftY);
 
             let toShift = [self.freeObjects, self.bulletObjects, self.enemies];
 
@@ -1303,7 +1302,6 @@ namespace Lich {
             var self = this;
             self.render.handleTick();
             self.weather.update(delta);
-            self.game.getBackground().handleTick(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)

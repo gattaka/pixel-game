@@ -15,7 +15,7 @@ namespace Lich {
         return true;
     };
 
-    export let INVENTORY_DEFS = (res: Resources) => {
+    export let INVENTORY_DEFS = (res: Resources): Array<InvObjDefinition> => {
         return [
             // neusaditelných
             new InvObjDefinition(InventoryKey.INV_BONES_KEY, "inv_bones"),
