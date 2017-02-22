@@ -14,7 +14,6 @@ namespace Lich {
         public tweenedOpacity: number = 100;
 
         update() {
-            // TODO sledovat, zda se něco nahrává a dočasně vypnout
             if (this.inLoadState)
                 this.stage.update();
         }

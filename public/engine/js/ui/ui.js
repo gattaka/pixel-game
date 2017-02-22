@@ -92,19 +92,17 @@ var Lich;
             var craftingUI = new Lich.CraftingUI();
             self.addChild(craftingUI);
             self.craftingUI = craftingUI;
-            // Crafting recipes 
-            var recipeListener = new Lich.RecipeManager(craftingUI.createRecipeAvailChangeListener());
             // Inventář
             var inventoryUI;
             if (mobile) {
                 var n = Math.floor(canvas.width / (Lich.Resources.PARTS_SIZE + PartsUI.SPACING)) - 4 - 1 - 3;
                 var m = Math.floor(canvas.height / (Lich.Resources.PARTS_SIZE + PartsUI.SPACING)) - 4;
-                inventoryUI = new Lich.InventoryUI(recipeListener, n, m);
+                inventoryUI = new Lich.InventoryUI(n, m);
                 inventoryUI.x = inventoryUI.expandedX = 4 * Button.sideSize + 2 * UI.SCREEN_SPACING;
                 inventoryUI.y = inventoryUI.expandedY = canvas.height / 2 - inventoryUI.height / 2;
             }
             else {
-                inventoryUI = new Lich.InventoryUI(recipeListener);
+                inventoryUI = new Lich.InventoryUI();
                 inventoryUI.x = inventoryUI.expandedX = UI.SCREEN_SPACING;
                 inventoryUI.y = inventoryUI.expandedY = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             }
@@ -416,33 +414,15 @@ var Lich;
     AbstractUI.BORDER = 10;
     AbstractUI.TEXT_SIZE = 15;
     Lich.AbstractUI = AbstractUI;
-    var UIShape = (function (_super) {
-        __extends(UIShape, _super);
-        function UIShape(red, green, blue, red2, green2, blue2, op, op2) {
-            if (red2 === void 0) { red2 = red; }
-            if (green2 === void 0) { green2 = green; }
-            if (blue2 === void 0) { blue2 = blue; }
-            if (op === void 0) { op = 0.2; }
-            if (op2 === void 0) { op2 = 0.5; }
-            var _this = _super.call(this) || this;
-            _this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
-            _this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
-            _this.graphics.setStrokeStyle(2);
-            var side = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-            _this.graphics.drawRoundRect(0, 0, side, side, 3);
-            return _this;
+    var UIUtils = (function () {
+        function UIUtils() {
         }
-        return UIShape;
-    }(createjs.Shape));
-    Lich.UIShape = UIShape;
-    var Highlight = (function (_super) {
-        __extends(Highlight, _super);
-        function Highlight() {
-            return _super.call(this, 250, 250, 10) || this;
-        }
-        return Highlight;
-    }(UIShape));
-    Lich.Highlight = Highlight;
+        UIUtils.createHighlight = function () {
+            return Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_HIGHLIGHT_KEY);
+        };
+        return UIUtils;
+    }());
+    Lich.UIUtils = UIUtils;
     var PartsUI = (function (_super) {
         __extends(PartsUI, _super);
         function PartsUI(n, m) {
@@ -463,7 +443,7 @@ var Lich;
         __extends(Button, _super);
         function Button(uiKey) {
             var _this = _super.call(this) || this;
-            var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
+            var bgr = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_BUTTON_KEY);
             _this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;

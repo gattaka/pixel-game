@@ -54,10 +54,22 @@ namespace Lich {
     }
 
     export class RecipeManager {
-        public ingredientByKey = new IngredientByKey();
+
+        private static INSTANCE: RecipeManager;
+
+        private ingredientByKey = new IngredientByKey();
         private recipes = new Array<Recipe>();
 
-        constructor(private recipeListener: (recipes: Array<Recipe>) => void) {
+        public static getInstance() {
+            if (!RecipeManager.INSTANCE) {
+                RecipeManager.INSTANCE = new RecipeManager();
+            }
+            return RecipeManager.INSTANCE;
+        }
+
+        getRecipes() { return this.recipes; }
+
+        private constructor() {
             RECIPE_DEFS.forEach((recipe) => {
                 this.buildRecipe(recipe);
             });
@@ -70,8 +82,18 @@ namespace Lich {
                         recipe.tryToChangeAvailability(recipe.requiredWorkstation == payload.payload);
                     }
                 });
-                // překresli UI 
-                this.recipeListener(this.recipes);
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.RECIPES_CHANGE));
+                return false;
+            });
+
+            EventBus.getInstance().registerConsumer(EventType.INV_CHANGE, (payload: InvChangeEventPayload) => {
+                let ingredients = this.ingredientByKey[payload.key];
+                if (ingredients) {
+                    ingredients.forEach((i) => {
+                        i.check(Math.abs(payload.amount));
+                    });
+                    EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.RECIPES_CHANGE));
+                }
                 return false;
             });
         }
@@ -98,17 +120,5 @@ namespace Lich {
             });
             self.recipes.push(recipe);
         }
-
-        public updateQuant(ingredientKey: InventoryKey, currentQuant: number) {
-            let ingredients = this.ingredientByKey[ingredientKey];
-            if (ingredients) {
-                ingredients.forEach((i) => {
-                    i.check(currentQuant);
-                });
-                // překresli UI 
-                this.recipeListener(this.recipes);
-            }
-        }
     }
-
 }

@@ -124,7 +124,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_FIREBALL_KEY,
-                "fireball_spell",
+                "ui_fireball_spell",
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
                 AnimationSetKey.FIREBALL_ANIMATION_KEY,
@@ -156,7 +156,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_METEOR_KEY,
-                "meteor_spell",
+                "ui_meteor_spell",
                 10, // COST,
                 200, // COOLDOWN,
                 AnimationSetKey.METEOR_ANIMATION_KEY,
@@ -213,7 +213,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_LOVELETTER, // SpellKey
-                "loveletter_spell",
+                "ui_loveletter_spell",
                 AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
                 AnimationKey.ANM_LOVELETTER_FLY_KEY,
                 AnimationKey.ANM_LOVELETTER_DONE_KEY,
@@ -229,7 +229,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_LOVEARROW, // SpellKey
-                "lovearrow_spell",
+                "ui_lovearrow_spell",
                 AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
                 AnimationKey.ANM_LOVEARROW_FLY_KEY,
                 AnimationKey.ANM_LOVEARROW_DONE_KEY,
@@ -246,7 +246,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_ICEBOLT_KEY,
-                "bolt_spell",
+                "ui_bolt_spell",
                 2, // COST,
                 100, // COOLDOWN,
                 AnimationSetKey.ICEBOLT_ANIMATION_KEY,
@@ -296,18 +296,18 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_USE_ITEM_KEY, "use_spell", UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_USE_ITEM_KEY, "ui_use_spell", UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
-            var uiItem = context.game.getUI().inventoryUI.choosenItem;
+            var uiItem = Inventory.getInstance().getChoosenItem();
             
             if (uiItem) {
                 var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
                 if (object.consumeAction) {
                     if (object.consumeAction(world)) {
-                        context.game.getUI().inventoryUI.invRemove(uiItem, 1);
+                        Inventory.getInstance().invRemove(uiItem, 1);
                         return true;
                     }
                 }
@@ -325,7 +325,7 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_REVEAL_FOG_KEY, "place_spell", RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_REVEAL_FOG_KEY, "ui_place_spell", RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -342,7 +342,7 @@ namespace Lich {
         static COST = 2; // DEV cost :)
 
         constructor() {
-            super(SpellKey.SPELL_TELEPORT_KEY, "teleport_spell", TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_TELEPORT_KEY, "ui_teleport_spell", TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -365,7 +365,7 @@ namespace Lich {
         static COST = 20;
 
         constructor() {
-            super(SpellKey.SPELL_HOME_KEY, "home_spell", HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_HOME_KEY, "ui_home_spell", HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -387,7 +387,7 @@ namespace Lich {
         static COOLDOWN = 200;
 
         constructor() {
-            super(SpellKey.SPELL_INTERACT_KEY, "place_spell", 0, MapObjectsInteractionSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_INTERACT_KEY, "ui_place_spell", 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -430,13 +430,13 @@ namespace Lich {
 
     export class DigSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_KEY, "dig_spell", false);
+            super(SpellKey.SPELL_DIG_KEY, "ui_dig_spell", false);
         }
     }
 
     export class DigBgrSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_BGR_KEY, "dig_bgr_spell", true);
+            super(SpellKey.SPELL_DIG_BGR_KEY, "ui_dig_bgr_spell", true);
         }
     }
 
@@ -457,7 +457,7 @@ namespace Lich {
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
-            var uiItem = context.game.getUI().inventoryUI.choosenItem;
+            var uiItem = Inventory.getInstance().getChoosenItem();
             var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
@@ -472,7 +472,7 @@ namespace Lich {
                 // pokud vkládám objekt nebo pozadí povrchu, je to jedno, zda koliduju s hráčem
                 if (context.game.getWorld().render.place(context.xAim, context.yAim, object, this.alternative)) {
                     Mixer.playSound(SoundKey.SND_PLACE_KEY);
-                    context.game.getUI().inventoryUI.invRemove(uiItem, 1);
+                    Inventory.getInstance().invRemove(uiItem, 1);
                     return true;
                 }
                 return false;
@@ -482,13 +482,13 @@ namespace Lich {
 
     export class PlaceSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_KEY, "place_spell", false);
+            super(SpellKey.SPELL_PLACE_KEY, "ui_place_spell", false);
         }
     }
 
     export class PlaceBgrSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_BGR_KEY, "place_bgr_spell", true);
+            super(SpellKey.SPELL_PLACE_BGR_KEY, "ui_place_bgr_spell", true);
         }
     }
 
@@ -499,7 +499,7 @@ namespace Lich {
     export class EnemySpellDef extends SpellDefinition {
 
         constructor() {
-            super(SpellKey.SPELL_ENEMY_KEY, "enemy_spell", 0, 200);
+            super(SpellKey.SPELL_ENEMY_KEY, "ui_enemy_spell", 0, 200);
         }
 
         public cast(context: SpellContext): boolean {

@@ -54,7 +54,18 @@ namespace Lich {
         UI_HELP_KEY,
         UI_BACKPACK_KEY,
         UI_MENU_KEY,
-        UI_MINIMAP_KEY
+        UI_MINIMAP_KEY,
+        UI_HIGHLIGHT_KEY,
+        UI_PANEL_MIDDLE_KEY,
+        UI_PANEL_TOP_KEY,
+        UI_PANEL_RIGHT_KEY,
+        UI_PANEL_BOTTOM_KEY,
+        UI_PANEL_LEFT_KEY,
+        UI_PANEL_TL_KEY,
+        UI_PANEL_TR_KEY,
+        UI_PANEL_BR_KEY,
+        UI_PANEL_BL_KEY,
+        UI_BUTTON_KEY,
     }
 
     export enum AchievementKey {

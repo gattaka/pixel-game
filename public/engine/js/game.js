@@ -165,7 +165,7 @@ var Lich;
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
                     // TODO
-                    // self.ui = new UI(self.canvas, tilesMap, mobile);
+                    self.ui = new Lich.UI(self.canvas, tilesMap, mobile);
                     // self.background = new Background(self);
                     self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
@@ -258,18 +258,16 @@ var Lich;
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
                     // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
-                    // TODO
-                    // if (self.mouse.down && self.mouse.clickChanged) {
-                    //     if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                    //         // blokuj akci světa
-                    //         self.mouse.consumedByUI = true;
-                    //         self.mouse.clickChanged = false;
-                    //     }
-                    // }
-                    // TODO
-                    // if (!self.mouse.down && self.mouse.clickChanged) {
-                    //     self.ui.controls = new Controls();
-                    // }
+                    if (self.mouse.down && self.mouse.clickChanged) {
+                        if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
+                            // blokuj akci světa
+                            self.mouse.consumedByUI = true;
+                            self.mouse.clickChanged = false;
+                        }
+                    }
+                    if (!self.mouse.down && self.mouse.clickChanged) {
+                        self.ui.controls = new Controls();
+                    }
                     // Akce světa mají nižší prioritu, akce myši se projeví pouze 
                     // pokud je již nezpracovalo UI 
                     // Svět bere nejen mousedown akce, ale u mousedown musí dát přednost UI
@@ -306,12 +304,64 @@ var Lich;
                             controls.right = true;
                         if (self.keys[83])
                             controls.down = true;
+                        if (self.keys[67]) {
+                            self.ui.craftingUI.toggle();
+                        }
+                        else {
+                            self.ui.craftingUI.prepareForToggle();
+                        }
+                        if (self.keys[27]) {
+                            if (self.ui.craftingUI.parent) {
+                                self.ui.craftingUI.hide();
+                                self.ui.splashScreenUI.suppressToggle();
+                            }
+                            else if (self.ui.mapUI.parent) {
+                                self.ui.mapUI.hide();
+                                self.ui.splashScreenUI.suppressToggle();
+                            }
+                            else {
+                                self.ui.splashScreenUI.toggle();
+                            }
+                        }
+                        else {
+                            self.ui.splashScreenUI.prepareForToggle();
+                        }
+                        if (self.keys[73]) {
+                            self.ui.inventoryUI.toggle();
+                        }
+                        else {
+                            self.ui.inventoryUI.prepareForToggle();
+                        }
+                        if (self.keys[77]) {
+                            self.ui.mapUI.toggle();
+                        }
+                        else {
+                            self.ui.mapUI.prepareForToggle();
+                        }
+                        if (self.keys[78]) {
+                            self.ui.minimapUI.toggle();
+                        }
+                        else {
+                            self.ui.minimapUI.prepareForToggle();
+                        }
+                        if (self.keys[16]) {
+                            self.ui.spellsUI.toggleShift();
+                        }
+                        else {
+                            self.ui.spellsUI.prepareForToggleShift();
+                        }
+                        // TODO
+                        for (var i = 0; i < Lich.Spellbook.getInstance().spellIndex.length; i++) {
+                            if (self.keys[49 + i]) {
+                                self.ui.spellsUI.selectSpell(i);
+                            }
+                        }
                     }
                     self.getWorld().update(delta, controls);
                 }
                 self.loadUI.update();
                 self.stage.update();
-                self.background.update(delta);
+                // self.background.update(delta);
                 stats.end();
             }
         }

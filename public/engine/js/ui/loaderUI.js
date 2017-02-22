@@ -26,7 +26,6 @@ var Lich;
             self.reset();
         }
         LoaderUI.prototype.update = function () {
-            // TODO sledovat, zda se něco nahrává a dočasně vypnout
             if (this.inLoadState)
                 this.stage.update();
         };

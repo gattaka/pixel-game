@@ -19,10 +19,10 @@ var Lich;
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_GRAVE_KEY, "mpo_grave", 2, 2, Lich.InventoryKey.INV_GRAVE_KEY, 1, 160, function (game, tx, ty, obj, objType) {
             var pCoord = game.getWorld().render.tilesToPixel(tx, ty);
             if (game.getWorld().setSpawnPoint(tx, ty)) {
-                game.getWorld().fadeText("Spawn point created", pCoord.x, pCoord.y, 25, "#0B0", "#030");
+                game.getWorld().fadeText("Spawn point created", pCoord.x, pCoord.y);
             }
             else {
-                game.getWorld().fadeText("Invalid spawn point", pCoord.x, pCoord.y, 25, "#B00", "#300");
+                game.getWorld().fadeText("Invalid spawn point", pCoord.x, pCoord.y);
             }
         }).setDepth(0, 5),
         new Lich.MapObjDefinition(Lich.MapObjectKey.MAP_BERRY_KEY, "mpo_berry" + tsf, 2, 2, Lich.InventoryKey.INV_BERRY_KEY, 1, 100).setDepth(0, 10),

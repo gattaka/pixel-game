@@ -56,6 +56,17 @@ var Lich;
         UISpriteKey[UISpriteKey["UI_BACKPACK_KEY"] = 17] = "UI_BACKPACK_KEY";
         UISpriteKey[UISpriteKey["UI_MENU_KEY"] = 18] = "UI_MENU_KEY";
         UISpriteKey[UISpriteKey["UI_MINIMAP_KEY"] = 19] = "UI_MINIMAP_KEY";
+        UISpriteKey[UISpriteKey["UI_HIGHLIGHT_KEY"] = 20] = "UI_HIGHLIGHT_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_MIDDLE_KEY"] = 21] = "UI_PANEL_MIDDLE_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_TOP_KEY"] = 22] = "UI_PANEL_TOP_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_RIGHT_KEY"] = 23] = "UI_PANEL_RIGHT_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_BOTTOM_KEY"] = 24] = "UI_PANEL_BOTTOM_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_LEFT_KEY"] = 25] = "UI_PANEL_LEFT_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_TL_KEY"] = 26] = "UI_PANEL_TL_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_TR_KEY"] = 27] = "UI_PANEL_TR_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_BR_KEY"] = 28] = "UI_PANEL_BR_KEY";
+        UISpriteKey[UISpriteKey["UI_PANEL_BL_KEY"] = 29] = "UI_PANEL_BL_KEY";
+        UISpriteKey[UISpriteKey["UI_BUTTON_KEY"] = 30] = "UI_BUTTON_KEY";
     })(UISpriteKey = Lich.UISpriteKey || (Lich.UISpriteKey = {}));
     var AchievementKey;
     (function (AchievementKey) {

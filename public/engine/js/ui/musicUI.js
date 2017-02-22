@@ -14,7 +14,6 @@ var Lich;
             _this.trackIndex = {};
             _this.reversedTrackIndex = [];
             _this.itemsCont = new Lich.SheetContainer();
-            _this.itemHighlightShape = new createjs.Shape();
             var self = _this;
             var trackInsert = function (track, volume) {
                 var self = _this;
@@ -40,9 +39,9 @@ var Lich;
             trackInsert(Lich.MusicKey.MSC_FLOOD_THEME_KEY);
             trackInsert(Lich.MusicKey.MSC_LAVA_THEME_KEY);
             // zvýraznění vybrané položky
-            self.itemHighlightShape = new Lich.Highlight();
-            self.itemHighlightShape.visible = false;
-            self.addChild(self.itemHighlightShape);
+            self.itemHighlightSprite = Lich.UIUtils.createHighlight();
+            self.itemHighlightSprite.visible = false;
+            self.addChild(self.itemHighlightSprite);
             // kontejner položek
             self.itemsCont.x = Lich.AbstractUI.BORDER;
             self.itemsCont.y = Lich.AbstractUI.BORDER;
@@ -54,9 +53,9 @@ var Lich;
         MusicUI.prototype.selectTrack = function (track, volume) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
-            self.itemHighlightShape.visible = true;
-            self.itemHighlightShape.x = bitmap.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
-            self.itemHighlightShape.y = bitmap.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+            self.itemHighlightSprite.visible = true;
+            self.itemHighlightSprite.x = bitmap.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+            self.itemHighlightSprite.y = bitmap.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
             self.choosenItem = track;
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {
                 Lich.Mixer.stopMusic(self.reversedTrackIndex[i]);

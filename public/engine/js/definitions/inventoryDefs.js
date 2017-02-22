@@ -99,7 +99,7 @@ var Lich;
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
                     var health = 10;
                     world.hero.fillHealth(health);
-                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y, 25, "#0E3", "#030");
+                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y);
                     return true;
                 }
                 else {
@@ -112,7 +112,7 @@ var Lich;
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
                     var health = 30;
                     world.hero.fillHealth(health);
-                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y, 25, "#0E3", "#030");
+                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y);
                     return true;
                 }
                 else {

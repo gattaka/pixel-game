@@ -124,11 +124,12 @@ namespace Lich {
 
         // definice pozadí scény
         public backgroundDefs: { [k: string]: string } = {};
-        public backgroundDefsBySpriteName: { [k: string]: BackgroundKey } = {};
 
         // definice ui prvků
         public uiSpriteDefs: { [k: string]: string } = {};
-        public uiSpriteDefsBySpriteName: { [k: string]: UISpriteKey } = {};
+
+        // definice fontů 
+        public fontsSpriteDefs: { [k: string]: { [k: string]: string } } = {};
 
         // definice achievementů 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
@@ -377,13 +378,20 @@ namespace Lich {
             // background
             BACKGROUND_DEFS.forEach((def) => {
                 self.backgroundDefs[BackgroundKey[def[1]]] = def[0];
-                self.backgroundDefsBySpriteName[def[0]] = def[1];
             });
 
             // ui
             UI_DEFS.forEach((def) => {
                 self.uiSpriteDefs[UISpriteKey[def[1]]] = def[0];
-                self.uiSpriteDefsBySpriteName[def[0]] = def[1];
+            });
+
+            // fonts
+            FONT_DEFS.forEach((def) => {
+                let index = {};
+                def[1].forEach((char) => {
+                    index[char[0]] = char[1];
+                });
+                self.fontsSpriteDefs[FontKey[def[0]]] = index;
             });
 
             // Definice mapových povrchů
@@ -493,16 +501,6 @@ namespace Lich {
             return <HTMLImageElement>this.loader.getResult(key);
         };
 
-        private getBitmap(key: string): createjs.Bitmap {
-            return new createjs.Bitmap(this.getImage(key));
-        };
-
-        getText(text: string) {
-            let self = this;
-            let bitmapText = new createjs.BitmapText(text, self.spritesheetByKeyMap[SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY]]);
-            return bitmapText;
-        }
-
         getSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number, originalSprite?: createjs.Sprite): createjs.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
@@ -555,6 +553,19 @@ namespace Lich {
             let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             let bgrSprite = self.backgroundDefs[BackgroundKey[key]];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
+            sprite.gotoAndStop(spriteDef.frame);
+            sprite.width = spriteDef.width;
+            sprite.height = spriteDef.height;
+            return sprite;
+        };
+
+        getFontSprite(key: FontKey, char: string): createjs.Sprite {
+            let self = this;
+            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
+            let sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let fontDef = self.fontsSpriteDefs[FontKey[key]];
+            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
+            // není animovaný, takže vždy předávám číslo snímku
             sprite.gotoAndStop(spriteDef.frame);
             sprite.width = spriteDef.width;
             sprite.height = spriteDef.height;
@@ -615,7 +626,7 @@ namespace Lich {
             return sprite;
         };
 
-        private getSpriteSheet() {
+        getSpriteSheet() {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MAIN_KEY];
             return self.spritesheetByKeyMap[stringSheetKey];

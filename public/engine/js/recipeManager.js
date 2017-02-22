@@ -64,9 +64,8 @@ var Lich;
         return IngredientByKey;
     }());
     var RecipeManager = (function () {
-        function RecipeManager(recipeListener) {
+        function RecipeManager() {
             var _this = this;
-            this.recipeListener = recipeListener;
             this.ingredientByKey = new IngredientByKey();
             this.recipes = new Array();
             Lich.RECIPE_DEFS.forEach(function (recipe) {
@@ -80,11 +79,27 @@ var Lich;
                         recipe.tryToChangeAvailability(recipe.requiredWorkstation == payload.payload);
                     }
                 });
-                // překresli UI 
-                _this.recipeListener(_this.recipes);
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.RECIPES_CHANGE));
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.INV_CHANGE, function (payload) {
+                var ingredients = _this.ingredientByKey[payload.key];
+                if (ingredients) {
+                    ingredients.forEach(function (i) {
+                        i.check(Math.abs(payload.amount));
+                    });
+                    Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.RECIPES_CHANGE));
+                }
                 return false;
             });
         }
+        RecipeManager.getInstance = function () {
+            if (!RecipeManager.INSTANCE) {
+                RecipeManager.INSTANCE = new RecipeManager();
+            }
+            return RecipeManager.INSTANCE;
+        };
+        RecipeManager.prototype.getRecipes = function () { return this.recipes; };
         RecipeManager.prototype.buildRecipe = function (json) {
             var self = this;
             var outcome = json[0][0];
@@ -105,16 +120,6 @@ var Lich;
                 arr.push(ingredient);
             });
             self.recipes.push(recipe);
-        };
-        RecipeManager.prototype.updateQuant = function (ingredientKey, currentQuant) {
-            var ingredients = this.ingredientByKey[ingredientKey];
-            if (ingredients) {
-                ingredients.forEach(function (i) {
-                    i.check(currentQuant);
-                });
-                // překresli UI 
-                this.recipeListener(this.recipes);
-            }
         };
         return RecipeManager;
     }());

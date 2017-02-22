@@ -22,7 +22,7 @@ namespace Lich {
 
         lineOffset = 0;
 
-        itemHighlight: createjs.Shape;
+        itemHighlight: createjs.Sprite;
         choosenItem: string = null;
 
         // --- Virtuální seznam ---
@@ -74,7 +74,6 @@ namespace Lich {
 
             var self = this;
 
-            // TODO udělat UI definice, kde budou UI klíče se spritenames
             this.workstationIcon = Resources.getInstance().getSpellUISprite(SpellKey.SPELL_PLACE_KEY);
             let bounds = this.workstationIcon.getBounds();
             this.workstationIconBgr = new UIBackground();
@@ -118,8 +117,40 @@ namespace Lich {
                 return false;
             });
 
+            EventBus.getInstance().registerConsumer(EventType.RECIPES_CHANGE, (payload: SimpleEventPayload) => {
+                self.itemsTypeArray = new Array();
+                // Klíč se vytváří takhle, recepty nemůžou mít unikátní klíč, 
+                // protože tentýž výrobek lze někdy vyrobit rozdílnými ingrediencemi
+                RecipeManager.getInstance().getRecipes().forEach((recipe: Recipe) => {
+                    let key = JSON.stringify(recipe, self.replacer);
+                    if (recipe.available) {
+                        let i = 0;
+                        for (i = 0; i < self.itemsTypeArray.length; i++) {
+                            // buď najdi volné místo...
+                            if (!self.itemsTypeArray[i]) {
+                                break;
+                            }
+                        }
+                        // ...nebo vlož položku na konec pole
+                        self.itemsTypeArray[i] = recipe;
+                        self.itemsTypeIndexMap[key] = i;
+                    } else {
+                        // Pokud tento recept zmizel a byl přitom vybrán,
+                        // zajisti, aby se odebral z výběru a zmizel pak
+                        // i přehled jeho ingrediencí
+                        self.itemsTypeIndexMap[key] = undefined;
+                        if (self.choosenItem == key) {
+                            self.ingredientsCont.itemsCont.removeAllChildren();
+                            self.choosenItem = undefined;
+                        }
+                    }
+                });
+                self.render();
+                return false;
+            });
+
             // zvýraznění vybrané položky
-            self.itemHighlight = new Highlight();
+            self.itemHighlight = UIUtils.createHighlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
 
@@ -250,40 +281,6 @@ namespace Lich {
             if (key == "recipe") return undefined;
             if (key == "available") return undefined;
             else return value;
-        }
-
-        public createRecipeAvailChangeListener(): (recipes: Array<Recipe>) => void {
-            let self = this;
-            return function (recipes: Array<Recipe>) {
-                self.itemsTypeArray = new Array();
-                // Klíč se vytváří takhle, recepty nemůžou mít unikátní klíč, 
-                // protože tentýž výrobek lze někdy vyrobit rozdílnými ingrediencemi
-                recipes.forEach((recipe: Recipe) => {
-                    let key = JSON.stringify(recipe, self.replacer);
-                    if (recipe.available) {
-                        let i = 0;
-                        for (i = 0; i < self.itemsTypeArray.length; i++) {
-                            // buď najdi volné místo...
-                            if (!self.itemsTypeArray[i]) {
-                                break;
-                            }
-                        }
-                        // ...nebo vlož položku na konec pole
-                        self.itemsTypeArray[i] = recipe;
-                        self.itemsTypeIndexMap[key] = i;
-                    } else {
-                        // Pokud tento recept zmizel a byl přitom vybrán,
-                        // zajisti, aby se odebral z výběru a zmizel pak
-                        // i přehled jeho ingrediencí
-                        self.itemsTypeIndexMap[key] = undefined;
-                        if (self.choosenItem == key) {
-                            self.ingredientsCont.itemsCont.removeAllChildren();
-                            self.choosenItem = undefined;
-                        }
-                    }
-                });
-                self.render();
-            };
         }
 
         handleMouse(mouse) {

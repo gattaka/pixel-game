@@ -145,13 +145,12 @@ var Lich;
             shape.x = 0;
             shape.y = 0;
             deadInfo.addChild(shape);
-            // TODO
-            // let bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.GAME_OVER_KEY]);
-            // let bounds = bitmap.getBounds();
-            // bitmap.x = shape.width / 2 - bounds.width / 2;
-            // bitmap.y = shape.height / 2 - bounds.height / 2;
-            // deadInfo.addChild(bitmap);
-            // deadInfo.alpha = 0;
+            var gameOverSprite = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_GAME_OVER_KEY);
+            var bounds = gameOverSprite.getBounds();
+            gameOverSprite.x = shape.width / 2 - bounds.width / 2;
+            gameOverSprite.y = shape.height / 2 - bounds.height / 2;
+            deadInfo.addChild(gameOverSprite);
+            deadInfo.alpha = 0;
             createjs.Tween.get(deadInfo)
                 .to({
                 alpha: 1
@@ -758,7 +757,7 @@ var Lich;
                         var itemCenterX = object.x + object.width / 2;
                         var itemCenterY = object.y + object.height / 2;
                         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                            self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
+                            Lich.Inventory.getInstance().invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
                             self.entitiesCont.removeChild(object);
                             Lich.Mixer.playSound(Lich.SoundKey.SND_PICK_KEY, 0.2);
@@ -1148,6 +1147,32 @@ var Lich;
                         if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown 
                             self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
+                        }
+                    }
+                }
+                // je vybrán spell?
+                // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
+                var choosenSpell = Lich.Spellbook.getInstance().getChoosenSpell();
+                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                    var spellDef = Lich.Resources.getInstance().getSpellDef(choosenSpell);
+                    // provádím spell za hráče, takže kontroluji jeho cooldown
+                    var cooldown = self.hero.spellCooldowns[choosenSpell];
+                    // ještě nebyl použit? Takže je v pořádku a může se provést
+                    if (typeof cooldown === "undefined") {
+                        cooldown = 0;
+                        self.hero.spellCooldowns[choosenSpell] = 0;
+                    }
+                    // Sniž dle delay
+                    self.hero.spellCooldowns[choosenSpell] -= delta;
+                    // Může se provést (cooldown je pryč, mám will a chci cast) ?
+                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
+                        var heroCenterX_1 = self.hero.x + self.hero.width / 2;
+                        var heroCenterY_1 = self.hero.y + self.hero.height / 4;
+                        // zkus cast
+                        if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
+                            // ok, cast se provedl, nastav nový cooldown a odeber will
+                            self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                            self.hero.decreseWill(spellDef.cost);
                         }
                     }
                 }

@@ -33,7 +33,6 @@ var Lich;
             _this.itemsUIMap = new Lich.HashMap();
             _this.itemsCont = new Lich.SheetContainer();
             var self = _this;
-            // TODO udělat UI definice, kde budou UI klíče se spritenames
             _this.workstationIcon = Lich.Resources.getInstance().getSpellUISprite(Lich.SpellKey.SPELL_PLACE_KEY);
             var bounds = _this.workstationIcon.getBounds();
             _this.workstationIconBgr = new Lich.UIBackground();
@@ -71,8 +70,40 @@ var Lich;
                 self.measureCacheArea();
                 return false;
             });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.RECIPES_CHANGE, function (payload) {
+                self.itemsTypeArray = new Array();
+                // Klíč se vytváří takhle, recepty nemůžou mít unikátní klíč, 
+                // protože tentýž výrobek lze někdy vyrobit rozdílnými ingrediencemi
+                Lich.RecipeManager.getInstance().getRecipes().forEach(function (recipe) {
+                    var key = JSON.stringify(recipe, self.replacer);
+                    if (recipe.available) {
+                        var i = 0;
+                        for (i = 0; i < self.itemsTypeArray.length; i++) {
+                            // buď najdi volné místo...
+                            if (!self.itemsTypeArray[i]) {
+                                break;
+                            }
+                        }
+                        // ...nebo vlož položku na konec pole
+                        self.itemsTypeArray[i] = recipe;
+                        self.itemsTypeIndexMap[key] = i;
+                    }
+                    else {
+                        // Pokud tento recept zmizel a byl přitom vybrán,
+                        // zajisti, aby se odebral z výběru a zmizel pak
+                        // i přehled jeho ingrediencí
+                        self.itemsTypeIndexMap[key] = undefined;
+                        if (self.choosenItem == key) {
+                            self.ingredientsCont.itemsCont.removeAllChildren();
+                            self.choosenItem = undefined;
+                        }
+                    }
+                });
+                self.render();
+                return false;
+            });
             // zvýraznění vybrané položky
-            self.itemHighlight = new Lich.Highlight();
+            self.itemHighlight = Lich.UIUtils.createHighlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
             // kontejner položek
@@ -212,40 +243,6 @@ var Lich;
                 return undefined;
             else
                 return value;
-        };
-        CraftingUI.prototype.createRecipeAvailChangeListener = function () {
-            var self = this;
-            return function (recipes) {
-                self.itemsTypeArray = new Array();
-                // Klíč se vytváří takhle, recepty nemůžou mít unikátní klíč, 
-                // protože tentýž výrobek lze někdy vyrobit rozdílnými ingrediencemi
-                recipes.forEach(function (recipe) {
-                    var key = JSON.stringify(recipe, self.replacer);
-                    if (recipe.available) {
-                        var i = 0;
-                        for (i = 0; i < self.itemsTypeArray.length; i++) {
-                            // buď najdi volné místo...
-                            if (!self.itemsTypeArray[i]) {
-                                break;
-                            }
-                        }
-                        // ...nebo vlož položku na konec pole
-                        self.itemsTypeArray[i] = recipe;
-                        self.itemsTypeIndexMap[key] = i;
-                    }
-                    else {
-                        // Pokud tento recept zmizel a byl přitom vybrán,
-                        // zajisti, aby se odebral z výběru a zmizel pak
-                        // i přehled jeho ingrediencí
-                        self.itemsTypeIndexMap[key] = undefined;
-                        if (self.choosenItem == key) {
-                            self.ingredientsCont.itemsCont.removeAllChildren();
-                            self.choosenItem = undefined;
-                        }
-                    }
-                });
-                self.render();
-            };
         };
         CraftingUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {

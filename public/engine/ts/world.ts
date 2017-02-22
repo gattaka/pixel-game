@@ -176,13 +176,12 @@ namespace Lich {
             shape.y = 0;
             deadInfo.addChild(shape);
 
-            // TODO
-            // let bitmap = Resources.getInstance().getBitmap(UIGFXKey[UIGFXKey.GAME_OVER_KEY]);
-            // let bounds = bitmap.getBounds();
-            // bitmap.x = shape.width / 2 - bounds.width / 2;
-            // bitmap.y = shape.height / 2 - bounds.height / 2;
-            // deadInfo.addChild(bitmap);
-            // deadInfo.alpha = 0;
+            let gameOverSprite = Resources.getInstance().getUISprite(UISpriteKey.UI_GAME_OVER_KEY);
+            let bounds = gameOverSprite.getBounds();
+            gameOverSprite.x = shape.width / 2 - bounds.width / 2;
+            gameOverSprite.y = shape.height / 2 - bounds.height / 2;
+            deadInfo.addChild(gameOverSprite);
+            deadInfo.alpha = 0;
 
             createjs.Tween.get(deadInfo)
                 .to({
@@ -858,7 +857,7 @@ namespace Lich {
                         var itemCenterY = object.y + object.height / 2;
 
                         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                            self.game.getUI().inventoryUI.invInsert(object.item.invObj, 1);
+                            Inventory.getInstance().invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
                             self.entitiesCont.removeChild(object);
                             Mixer.playSound(SoundKey.SND_PICK_KEY, 0.2);
@@ -1242,32 +1241,31 @@ namespace Lich {
 
                 // je vybrán spell?
                 // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
-                // TODO (plus UI by mělo fakt fungovat separátně)
-                // var choosenSpell = self.game.getUI().spellsUI.getChoosenSpell();
-                // if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
-                //     var spellDef: SpellDefinition = Resources.getInstance().spellDefs.byKey(SpellKey[choosenSpell]);
-                //     // provádím spell za hráče, takže kontroluji jeho cooldown
-                //     var cooldown = self.hero.spellCooldowns[choosenSpell];
-                //     // ještě nebyl použit? Takže je v pořádku a může se provést
-                //     if (typeof cooldown === "undefined") {
-                //         cooldown = 0;
-                //         self.hero.spellCooldowns[choosenSpell] = 0;
-                //     }
-                //     // Sniž dle delay
-                //     self.hero.spellCooldowns[choosenSpell] -= delta;
-                //     // Může se provést (cooldown je pryč, mám will a chci cast) ?
-                //     if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                //         let heroCenterX = self.hero.x + self.hero.width / 2;
-                //         let heroCenterY = self.hero.y + self.hero.height / 4;
+                var choosenSpell = Spellbook.getInstance().getChoosenSpell();
+                if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
+                    var spellDef: SpellDefinition = Resources.getInstance().getSpellDef(choosenSpell);
+                    // provádím spell za hráče, takže kontroluji jeho cooldown
+                    var cooldown = self.hero.spellCooldowns[choosenSpell];
+                    // ještě nebyl použit? Takže je v pořádku a může se provést
+                    if (typeof cooldown === "undefined") {
+                        cooldown = 0;
+                        self.hero.spellCooldowns[choosenSpell] = 0;
+                    }
+                    // Sniž dle delay
+                    self.hero.spellCooldowns[choosenSpell] -= delta;
+                    // Může se provést (cooldown je pryč, mám will a chci cast) ?
+                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
+                        let heroCenterX = self.hero.x + self.hero.width / 2;
+                        let heroCenterY = self.hero.y + self.hero.height / 4;
 
-                //         // zkus cast
-                //         if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
-                //             // ok, cast se provedl, nastav nový cooldown a odeber will
-                //             self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
-                //             self.hero.decreseWill(spellDef.cost);
-                //         }
-                //     }
-                // }
+                        // zkus cast
+                        if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                            // ok, cast se provedl, nastav nový cooldown a odeber will
+                            self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
+                            self.hero.decreseWill(spellDef.cost);
+                        }
+                    }
+                }
             }
 
             let coord = self.render.pixelsToTiles(mouse.x, mouse.y);

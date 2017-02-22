@@ -7,17 +7,31 @@ var Lich;
 (function (Lich) {
     var Label = (function (_super) {
         __extends(Label, _super);
-        function Label(text, font) {
+        function Label(text, font, charSpacing) {
             if (font === void 0) { font = Lich.FontKey.FNT_SMALL_YELLOW_KEY; }
+            if (charSpacing === void 0) { charSpacing = 1; }
             var _this = _super.call(this) || this;
-            _this.label = Lich.Resources.getInstance().getText(text);
-            _this.addChild(_this.label);
-            _this.height = _this.label.getBounds().height;
-            _this.width = _this.label.getBounds().width;
+            _this.text = text;
+            _this.font = font;
+            _this.charSpacing = charSpacing;
+            _this.setText(text);
             return _this;
         }
         Label.prototype.setText = function (text) {
-            this.label.text = text + "";
+            var sText = (text + "").toLowerCase();
+            var charSprite;
+            for (var i = 0; i < sText.length; i++) {
+                var char = sText.charAt(i);
+                if (char != ' ') {
+                    charSprite = Lich.Resources.getInstance().getFontSprite(this.font, char);
+                    charSprite.x = i * (charSprite.width + this.charSpacing);
+                    this.addChild(charSprite);
+                }
+            }
+            if (charSprite) {
+                this.height = charSprite.height;
+                this.width = sText.length * (charSprite.width + this.charSpacing);
+            }
         };
         Label.prototype.setLineHeight = function (value) {
             // TODO

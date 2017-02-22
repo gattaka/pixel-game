@@ -123,19 +123,16 @@ namespace Lich {
             self.addChild(craftingUI);
             self.craftingUI = craftingUI;
 
-            // Crafting recipes 
-            let recipeListener = new RecipeManager(craftingUI.createRecipeAvailChangeListener());
-
             // Inventář
             let inventoryUI;
             if (mobile) {
                 let n = Math.floor(canvas.width / (Resources.PARTS_SIZE + PartsUI.SPACING)) - 4 - 1 - 3;
                 let m = Math.floor(canvas.height / (Resources.PARTS_SIZE + PartsUI.SPACING)) - 4;
-                inventoryUI = new InventoryUI(recipeListener, n, m);
+                inventoryUI = new InventoryUI(n, m);
                 inventoryUI.x = inventoryUI.expandedX = 4 * Button.sideSize + 2 * UI.SCREEN_SPACING;
                 inventoryUI.y = inventoryUI.expandedY = canvas.height / 2 - inventoryUI.height / 2;
             } else {
-                inventoryUI = new InventoryUI(recipeListener);
+                inventoryUI = new InventoryUI();
                 inventoryUI.x = inventoryUI.expandedX = UI.SCREEN_SPACING;
                 inventoryUI.y = inventoryUI.expandedY = canvas.height - inventoryUI.height - UI.SCREEN_SPACING;
             }
@@ -422,22 +419,10 @@ namespace Lich {
 
     }
 
-    export class UIShape extends createjs.Shape {
-        constructor(red: number, green: number, blue: number,
-            red2 = red, green2 = green, blue2 = blue, op = 0.2, op2 = 0.5) {
-            super();
+    export class UIUtils {
 
-            this.graphics.beginFill("rgba(" + red + "," + green + "," + blue + "," + op + ")");
-            this.graphics.beginStroke("rgba(" + red2 + "," + green2 + "," + blue2 + "," + op2 + ")");
-            this.graphics.setStrokeStyle(2);
-            let side = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-            this.graphics.drawRoundRect(0, 0, side, side, 3);
-        }
-    }
-
-    export class Highlight extends UIShape {
-        constructor() {
-            super(250, 250, 10);
+        static createHighlight(): createjs.Sprite {
+            return Resources.getInstance().getUISprite(UISpriteKey.UI_HIGHLIGHT_KEY);
         }
     }
 
@@ -461,7 +446,7 @@ namespace Lich {
         constructor(uiKey: UISpriteKey) {
             super();
 
-            let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
+            let bgr = Resources.getInstance().getUISprite(UISpriteKey.UI_BUTTON_KEY);
             this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;

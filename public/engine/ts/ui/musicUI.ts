@@ -11,7 +11,7 @@ namespace Lich {
         reversedTrackIndex = [];
 
         itemsCont = new SheetContainer();
-        itemHighlightShape = new createjs.Shape();
+        itemHighlightSprite : createjs.Sprite;
 
         constructor() {
             super(MusicUI.N, MusicUI.M);
@@ -46,9 +46,9 @@ namespace Lich {
             trackInsert(MusicKey.MSC_LAVA_THEME_KEY);
 
             // zvýraznění vybrané položky
-            self.itemHighlightShape = new Highlight();
-            self.itemHighlightShape.visible = false;
-            self.addChild(self.itemHighlightShape);
+            self.itemHighlightSprite = UIUtils.createHighlight();
+            self.itemHighlightSprite.visible = false;
+            self.addChild(self.itemHighlightSprite);
 
             // kontejner položek
             self.itemsCont.x = AbstractUI.BORDER;
@@ -63,9 +63,9 @@ namespace Lich {
         selectTrack(track: MusicKey, volume?: number) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
-            self.itemHighlightShape.visible = true;
-            self.itemHighlightShape.x = bitmap.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
-            self.itemHighlightShape.y = bitmap.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+            self.itemHighlightSprite.visible = true;
+            self.itemHighlightSprite.x = bitmap.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+            self.itemHighlightSprite.y = bitmap.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
             self.choosenItem = track;
 
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {

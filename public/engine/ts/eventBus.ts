@@ -25,6 +25,7 @@ namespace Lich {
         SURFACE_CHANGE,
         WORKSTATION_CHANGE,
         WORKSTATION_UNREACHABLE,
+        RECIPES_CHANGE,
         SURFACE_REVEAL,
         INV_CHANGE,
     }
