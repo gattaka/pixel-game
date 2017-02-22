@@ -210,10 +210,11 @@ namespace Lich {
 
                     // (re)-init
                     self.ui = new UI(self.canvas, tilesMap, mobile);
-                    self.background = new Background(self.content, self.canvas);
+                    self.background = new Background(self.canvas);
                     self.world = new World(self, tilesMap);
+                    self.content.addChild(self.background);
                     self.content.addChild(self.world);
-                    self.content.addChild(self.ui);
+                    // self.content.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
                         // TODO

@@ -60,8 +60,10 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             }, null, false);
-            var offset = 5;
-            self.cache(-offset, -offset, self.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset * 2, self.height + offset * 2);
+            // let offset = 5;
+            // self.cache(-offset, -offset,
+            //     self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
+            //     self.height + offset * 2);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.INV_CHANGE, function (payload) {
                 if (payload.amount > 0) {
                     self.invInsert(payload.key, payload.amount);
@@ -84,7 +86,7 @@ var Lich;
                     this.createUIItem(inventory.getItem(i), i - itemsOffset);
                 }
             }
-            this.updateCache();
+            // this.updateCache();
         };
         InventoryUI.prototype.toggle = function () {
             var self = this;
@@ -126,7 +128,6 @@ var Lich;
                 }
                 self.collapsed = !self.collapsed;
                 self.toggleFlag = false;
-                self.updateCache();
             }
         };
         InventoryUI.prototype.prepareForToggle = function () {
@@ -152,7 +153,6 @@ var Lich;
                     self.render();
                 }
                 else {
-                    self.updateCache();
                 }
             }
         };
@@ -179,7 +179,7 @@ var Lich;
                     self.createUIItem(item, i - itemsOffset);
                 }
             }
-            self.updateCache();
+            // self.updateCache();
         };
         InventoryUI.prototype.createUIItem = function (item, i) {
             var self = this;
@@ -213,7 +213,7 @@ var Lich;
                     self.collapsedItem.x = Lich.PartsUI.BORDER;
                     self.collapsedItem.y = Lich.PartsUI.BORDER;
                     self.collapsedCont.visible = false;
-                    self.updateCache();
+                    // self.updateCache();
                 }, null, false);
             })();
         };

@@ -1,5 +1,5 @@
 namespace Lich {
-    export class Background {
+    export class Background extends SheetContainer {
 
         /*-----------*/
         /* CONSTANTS */
@@ -43,11 +43,10 @@ namespace Lich {
         offsetX = 0;
         offsetY = 0;
 
-        constructor(private content: SheetContainer, private canvas: HTMLCanvasElement) {
-
+        constructor(private canvas: HTMLCanvasElement) {
+            super();
             var self = this;
 
-            self.content = content;
             self.canvas = canvas;
 
             let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_SKY_KEY);
@@ -59,7 +58,7 @@ namespace Lich {
                 sprite.height = skySprite.height;
                 sprite.y = 0;
                 sprite.x = i * sprite.width;
-                self.content.addChild(sprite);
+                self.addChild(sprite);
             }
 
             Background.BGR_ORDER.forEach((b: BackgroundKey, i) => {
@@ -72,7 +71,7 @@ namespace Lich {
                 cont.x = 0;
                 cont.y = Background.BGR_STARTS[i];
                 cont.width = repeat * sampleSprite.width;
-                self.content.addChild(cont);
+                self.addChild(cont);
 
                 for (let j = 0; j < repeat; j++) {
                     let sprite = sampleSprite.clone();
@@ -101,12 +100,12 @@ namespace Lich {
             self.dirtBackCont.y = Background.DIRT_START;
             self.dirtBackCont.width = dirtSpriteRepeatX * self.dirtBackSprite.width;
             self.dirtBackCont.height = dirtSpriteRepeatY * self.dirtBackSprite.height;
-            self.content.addChild(self.dirtBackCont);
+            self.addChild(self.dirtBackCont);
             self.dirtBackStartCont.x = 0;
             self.dirtBackStartCont.y = self.dirtBackCont.y - self.dirtBackCont.height;
             self.dirtBackStartCont.width = self.dirtBackCont.width
             self.dirtBackStartCont.height = self.dirtBackStartSprite.height;
-            self.content.addChild(self.dirtBackStartCont);
+            self.addChild(self.dirtBackStartCont);
             for (let i = 0; i < dirtSpriteRepeatX; i++) {
                 let startSprite = self.dirtBackStartSprite.clone();
                 // tohle clone prostě nezkopíruje

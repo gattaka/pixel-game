@@ -55,8 +55,8 @@ namespace Lich {
             self.itemsCont.y = AbstractUI.BORDER;
             self.addChild(self.itemsCont);
 
-            let offset = 5;
-            self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
+            // let offset = 5;
+            // self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
         }
 
 
@@ -72,7 +72,7 @@ namespace Lich {
                 Mixer.stopMusic(self.reversedTrackIndex[i]);
             }
             Mixer.playMusic(track, volume);
-            self.updateCache();
+            // self.updateCache();
         }
 
     }

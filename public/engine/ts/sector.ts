@@ -49,8 +49,8 @@ namespace Lich {
 
         // override
         public cache(x: number, y: number, width: number, height: number, scale?: number): void {
-            this.backgroundCont.cache(x, y, width, height);
-            this.cacheableCont.cache(x, y, width, height);
+            // this.backgroundCont.cache(x, y, width, height);
+            // this.cacheableCont.cache(x, y, width, height);
         }
 
         // override

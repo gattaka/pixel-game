@@ -55,8 +55,8 @@ var Lich;
         }
         // override
         Sector.prototype.cache = function (x, y, width, height, scale) {
-            this.backgroundCont.cache(x, y, width, height);
-            this.cacheableCont.cache(x, y, width, height);
+            // this.backgroundCont.cache(x, y, width, height);
+            // this.cacheableCont.cache(x, y, width, height);
         };
         // override
         Sector.prototype.updateCache = function (compositeOperation) {

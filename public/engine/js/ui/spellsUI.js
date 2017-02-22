@@ -45,8 +45,8 @@ var Lich;
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
             self.addChild(self.itemsCont);
-            var offset = 5;
-            self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
+            // let offset = 5;
+            // self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
             self.selectSpell(0);
             return _this;
         }
@@ -60,7 +60,7 @@ var Lich;
                         Lich.Resources.getInstance().getSpellUISprite(alt, this.spellContent[i]);
                     }
                 }
-                self.updateCache();
+                // self.updateCache();
                 self.toggleFlag = true;
             }
         };
@@ -69,7 +69,7 @@ var Lich;
                 for (var i = 0; i < Spellbook.getInstance().spellIndex.length; i++) {
                     Lich.Resources.getInstance().getSpellUISprite(Spellbook.getInstance().spellIndex[i], this.spellContent[i]);
                 }
-                this.updateCache();
+                // this.updateCache();
                 this.toggleFlag = false;
             }
         };
@@ -80,7 +80,7 @@ var Lich;
             self.itemHighlightSprite.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             self.itemHighlightSprite.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             Spellbook.getInstance().choosenItemNumber = spellNumber;
-            self.updateCache();
+            // self.updateCache();
         };
         SpellsUI.prototype.getChoosenSpell = function () {
             var alt = Spellbook.getInstance().alternativeSpellIndex[Spellbook.getInstance().choosenItemNumber];

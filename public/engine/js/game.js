@@ -165,10 +165,11 @@ var Lich;
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
                     self.ui = new Lich.UI(self.canvas, tilesMap, mobile);
-                    self.background = new Lich.Background(self.content, self.canvas);
+                    self.background = new Lich.Background(self.canvas);
                     self.world = new Lich.World(self, tilesMap);
+                    self.content.addChild(self.background);
                     self.content.addChild(self.world);
-                    self.content.addChild(self.ui);
+                    // self.content.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         // TODO
                         // setTimeout(() => {

@@ -46,9 +46,9 @@ var Lich;
             self.itemsCont.x = Lich.AbstractUI.BORDER;
             self.itemsCont.y = Lich.AbstractUI.BORDER;
             self.addChild(self.itemsCont);
-            var offset = 5;
-            self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
             return _this;
+            // let offset = 5;
+            // self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
         }
         MusicUI.prototype.selectTrack = function (track, volume) {
             var self = this;
@@ -61,7 +61,7 @@ var Lich;
                 Lich.Mixer.stopMusic(self.reversedTrackIndex[i]);
             }
             Lich.Mixer.playMusic(track, volume);
-            self.updateCache();
+            // self.updateCache();
         };
         return MusicUI;
     }(Lich.PartsUI));

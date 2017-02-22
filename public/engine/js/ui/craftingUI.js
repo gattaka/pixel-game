@@ -67,7 +67,7 @@ var Lich;
                 self.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
                 self.workstationIcon.x = self.workstationIconBgr.x + Lich.PartsUI.SELECT_BORDER;
                 _this.workstation = payload.payload;
-                self.measureCacheArea();
+                // self.measureCacheArea();
                 return false;
             });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.RECIPES_CHANGE, function (payload) {
@@ -157,8 +157,8 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CRAFT_KEY);
                 }
             }, null, false);
-            self.measureCacheArea();
             return _this;
+            // self.measureCacheArea();
         }
         CraftingUI.prototype.setInventoryUI = function (inventoryUI) {
             this.inventoryUI = inventoryUI;
@@ -183,8 +183,10 @@ var Lich;
             }
         };
         CraftingUI.prototype.measureCacheArea = function () {
-            var offset = this.workstationIconBgr.width + Lich.PartsUI.SELECT_BORDER + 5;
-            this.cache(-offset, -offset, this.width + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset + 5, this.height + Lich.Button.sideSize + Lich.PartsUI.SELECT_BORDER + offset + 5);
+            // let offset = this.workstationIconBgr.width + PartsUI.SELECT_BORDER + 5;
+            // this.cache(-offset, -offset,
+            //     this.width + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5,
+            //     this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
         };
         CraftingUI.prototype.render = function () {
             this.itemsCont.removeAllChildren();
@@ -196,7 +198,7 @@ var Lich;
                     this.createUIItem(item, i - itemsOffset);
                 }
             }
-            this.updateCache();
+            // this.updateCache();
         };
         CraftingUI.prototype.createUIItem = function (item, i) {
             var self = this;
@@ -232,7 +234,7 @@ var Lich;
                         ingredUI.y = 0;
                         self.ingredientsCont.itemsCont.addChild(ingredUI);
                     }
-                    self.updateCache();
+                    // self.updateCache();
                 }, null, false);
             })();
         };

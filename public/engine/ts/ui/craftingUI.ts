@@ -113,7 +113,7 @@ namespace Lich {
 
                 this.workstation = payload.payload;
 
-                self.measureCacheArea();
+                // self.measureCacheArea();
                 return false;
             });
 
@@ -210,14 +210,14 @@ namespace Lich {
                 }
             }, null, false);
 
-            self.measureCacheArea();
+            // self.measureCacheArea();
         }
 
         private measureCacheArea() {
-            let offset = this.workstationIconBgr.width + PartsUI.SELECT_BORDER + 5;
-            this.cache(-offset, -offset,
-                this.width + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5,
-                this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
+            // let offset = this.workstationIconBgr.width + PartsUI.SELECT_BORDER + 5;
+            // this.cache(-offset, -offset,
+            //     this.width + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5,
+            //     this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
         }
 
         render() {
@@ -232,7 +232,7 @@ namespace Lich {
                     this.createUIItem(item, i - itemsOffset);
                 }
             }
-            this.updateCache();
+            // this.updateCache();
         }
 
         createUIItem(item: Recipe, i: number) {
@@ -272,7 +272,7 @@ namespace Lich {
                         ingredUI.y = 0;
                         self.ingredientsCont.itemsCont.addChild(ingredUI);
                     }
-                    self.updateCache();
+                    // self.updateCache();
                 }, null, false);
             })();
         }

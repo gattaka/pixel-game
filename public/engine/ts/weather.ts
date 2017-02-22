@@ -94,7 +94,7 @@ namespace Lich {
             for (let i = 0; i < this.particleLayers.length; i++) {
                 let l = this.particleLayers[i];
                 if (l) {
-                    l.cache(0, 0, l.width, l.height);
+                    // l.cache(0, 0, l.width, l.height);
                     l.y = -this.height;
                     if (i >= Weather.PARTICLE_LAYERS) {
                         l.y *= 2;

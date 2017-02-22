@@ -79,10 +79,10 @@ namespace Lich {
                 }
             }, null, false);
 
-            let offset = 5;
-            self.cache(-offset, -offset,
-                self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
-                self.height + offset * 2);
+            // let offset = 5;
+            // self.cache(-offset, -offset,
+            //     self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
+            //     self.height + offset * 2);
 
             EventBus.getInstance().registerConsumer(EventType.INV_CHANGE, (payload: InvChangeEventPayload) => {
                 if (payload.amount > 0) {
@@ -108,7 +108,7 @@ namespace Lich {
                     this.createUIItem(inventory.getItem(i), i - itemsOffset);
                 }
             }
-            this.updateCache();
+            // this.updateCache();
         }
 
         toggle() {
@@ -150,7 +150,7 @@ namespace Lich {
                 }
                 self.collapsed = !self.collapsed;
                 self.toggleFlag = false;
-                self.updateCache();
+                // self.updateCache();
             }
         }
 
@@ -177,7 +177,7 @@ namespace Lich {
                     self.itemsUIMap[item] = null
                     self.render();
                 } else {
-                    self.updateCache();
+                    // self.updateCache();
                 }
             }
         }
@@ -204,7 +204,7 @@ namespace Lich {
                     self.createUIItem(item, i - itemsOffset);
                 }
             }
-            self.updateCache();
+            // self.updateCache();
         }
 
         createUIItem(item: InventoryKey, i: number) {
@@ -243,7 +243,7 @@ namespace Lich {
                     self.collapsedItem.x = PartsUI.BORDER;
                     self.collapsedItem.y = PartsUI.BORDER;
                     self.collapsedCont.visible = false;
-                    self.updateCache();
+                    // self.updateCache();
                 }, null, false);
             })();
         }
