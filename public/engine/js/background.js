@@ -2,6 +2,8 @@ var Lich;
 (function (Lich) {
     var Background = (function () {
         function Background(content, canvas) {
+            this.content = content;
+            this.canvas = canvas;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
@@ -32,32 +34,32 @@ var Lich;
                 self.bgrSprites.push(sampleSprite);
                 var cont = new Lich.SheetContainer();
                 self.bgrConts.push(cont);
-                var repeat = Math.floor(self.canvas.width / (sampleSprite.width - 1)) + 3;
+                var repeat = Math.floor(self.canvas.width / sampleSprite.width) + 2;
                 cont.x = 0;
                 cont.y = Background.BGR_STARTS[i];
-                cont.width = repeat * (sampleSprite.width - 1);
+                cont.width = repeat * sampleSprite.width;
                 self.content.addChild(cont);
                 for (var j = 0; j < repeat; j++) {
                     var sprite = sampleSprite.clone();
                     // tohle clone prostě nezkopíruje
                     sprite.width = sampleSprite.width;
                     sprite.height = sampleSprite.height;
-                    sprite.x = j * (sprite.width - 1);
+                    sprite.x = j * sprite.width;
                     sprite.y = 0;
                     cont.addChild(sprite);
                 }
             });
-            Background.CLOUDS_KEYS.forEach(function (c) {
-                var sprite = Lich.Resources.getInstance().getBackgroundSprite(c);
-                sprite["yCloudOffset"] = Math.random() * Background.CLOUDS_SPACE;
-                sprite["xCloudOffset"] = Math.random() * self.canvas.width;
-                self.clouds.push(sprite);
-                self.content.addChild(sprite);
-            });
+            // Background.CLOUDS_KEYS.forEach((c) => {
+            //     let sprite = Resources.getInstance().getBackgroundSprite(c);
+            //     sprite["yCloudOffset"] = Math.random() * Background.CLOUDS_SPACE;
+            //     sprite["xCloudOffset"] = Math.random() * self.canvas.width;
+            //     self.clouds.push(sprite);
+            //     self.content.addChild(sprite);
+            // });
             self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_START_KEY);
             self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_KEY);
-            var dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 3;
-            var dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 3;
+            var dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 2;
+            var dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 2;
             self.dirtBackCont.x = 0;
             self.dirtBackCont.y = Background.DIRT_START;
             self.dirtBackCont.width = dirtSpriteRepeatX * self.dirtBackSprite.width;
@@ -87,20 +89,20 @@ var Lich;
                 }
             }
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
-                self.shift(payload.payload, 0);
+                self.offsetX = payload.payload;
+                self.shift();
                 return false;
             });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_Y, function (payload) {
-                self.shift(0, payload.payload);
+                self.offsetY = payload.payload;
+                self.shift();
                 return false;
             });
             console.log("background ready");
         }
-        Background.prototype.shift = function (distanceX, distanceY) {
+        Background.prototype.shift = function () {
             var self = this;
             var canvas = self.canvas;
-            self.offsetX += distanceX;
-            self.offsetY += distanceY;
             self.bgrConts.forEach(function (part, i) {
                 part.x = Math.floor(((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].width) - self.bgrSprites[i].width);
                 part.y = Math.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);

@@ -19,15 +19,15 @@ var Lich;
             var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, minimapRender);
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
             minimapUI.y = UI.SCREEN_SPACING;
-            self.addChild(minimapUI);
             self.minimapUI = minimapUI;
+            // self.addChild(minimapUI);
             // mapa
             var mapUI = new Lich.MapUI(canvas.width, canvas.height, minimapRender);
             mapUI.x = UI.SCREEN_SPACING;
             mapUI.y = UI.SCREEN_SPACING;
-            self.addChild(mapUI);
             self.mapUI = mapUI;
             mapUI.hide();
+            // self.addChild(mapUI);
             // Help btn
             if (!mobile) {
                 var helpBtn = _this.createHelpButton();
@@ -123,14 +123,14 @@ var Lich;
             var spellsUI = new Lich.SpellsUI();
             spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = UI.SCREEN_SPACING;
-            self.addChild(spellsUI);
             self.spellsUI = spellsUI;
+            // self.addChild(spellsUI);
             // Stav (mana, zdraví)
             var conditionUI = new Lich.ConditionUI();
             conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
             conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
-            self.addChild(conditionUI);
             self.conditionUI = conditionUI;
+            // self.addChild(conditionUI);
             // Hudba
             // let musicUI = new MusicUI();
             // musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
@@ -356,14 +356,29 @@ var Lich;
         UIBackground.prototype.drawBackground = function (width, height) {
             this.width = width;
             this.height = height;
-            this.graphics.clear();
-            this.graphics.setStrokeStyle(2);
-            this.graphics.beginStroke("rgba(0,0,0,0.7)");
-            this.graphics.beginFill("rgba(10,50,10,0.5)");
-            this.graphics.drawRoundRect(0, 0, width, height, 3);
+            // TL
+            var tl = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PANEL_TL_KEY);
+            tl.x = 0;
+            tl.y = 0;
+            this.addChild(tl);
+            // TR
+            var tr = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PANEL_TR_KEY);
+            tr.x = width - tr.width;
+            tr.y = 0;
+            this.addChild(tr);
+            // BR
+            var br = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PANEL_BR_KEY);
+            br.x = width - br.width;
+            br.y = height - br.height;
+            this.addChild(br);
+            // BL
+            var bl = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PANEL_BL_KEY);
+            bl.x = 0;
+            bl.y = height - bl.height;
+            this.addChild(bl);
         };
         return UIBackground;
-    }(createjs.Shape));
+    }(Lich.SheetContainer));
     Lich.UIBackground = UIBackground;
     var AbstractUI = (function (_super) {
         __extends(AbstractUI, _super);
@@ -373,13 +388,13 @@ var Lich;
             _this.height = height;
             _this.toggleFlag = true;
             _this.parentRef = null;
-            _this.outerShape = new UIBackground();
+            _this.bgr = new UIBackground();
             _this.drawBackground();
-            _this.addChild(_this.outerShape);
+            _this.addChild(_this.bgr);
             return _this;
         }
         AbstractUI.prototype.drawBackground = function () {
-            this.outerShape.drawBackground(this.width, this.height);
+            this.bgr.drawBackground(this.width, this.height);
         };
         AbstractUI.prototype.hide = function () {
             if (this.parent) {

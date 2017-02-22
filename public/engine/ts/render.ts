@@ -247,17 +247,17 @@ namespace Lich {
 
                             // debug
                             if (Resources.SHOW_SECTORS) {
-                                var testShape = new createjs.Shape();
-                                testShape.graphics.setStrokeStyle(1);
-                                testShape.graphics.beginStroke("#f00");
-                                testShape.graphics.drawRect(0, 0, sector.width, sector.height);
-                                sector.addChild(testShape);
+                                // var testShape = new createjs.Shape();
+                                // testShape.graphics.setStrokeStyle(1);
+                                // testShape.graphics.beginStroke("#f00");
+                                // testShape.graphics.drawRect(0, 0, sector.width, sector.height);
+                                // sector.addChild(testShape);
 
-                                testShape = new createjs.Shape();
-                                testShape.graphics.setStrokeStyle(1);
-                                testShape.graphics.beginStroke("#f00");
-                                testShape.graphics.drawRect(0, 0, fogSector.width, fogSector.height);
-                                fogSector.addChild(testShape);
+                                // testShape = new createjs.Shape();
+                                // testShape.graphics.setStrokeStyle(1);
+                                // testShape.graphics.beginStroke("#f00");
+                                // testShape.graphics.drawRect(0, 0, fogSector.width, fogSector.height);
+                                // fogSector.addChild(testShape);
                             }
 
                             // proveď cache na sektoru

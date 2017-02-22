@@ -43,10 +43,7 @@ namespace Lich {
         offsetX = 0;
         offsetY = 0;
 
-        private canvas: HTMLCanvasElement;
-        private content: SheetContainer;
-
-        constructor(content, canvas) {
+        constructor(private content: SheetContainer, private canvas: HTMLCanvasElement) {
 
             var self = this;
 
@@ -71,10 +68,10 @@ namespace Lich {
                 let cont = new SheetContainer();
                 self.bgrConts.push(cont);
 
-                let repeat = Math.floor(self.canvas.width / (sampleSprite.width - 1)) + 3;
+                let repeat = Math.floor(self.canvas.width / sampleSprite.width) + 2;
                 cont.x = 0;
                 cont.y = Background.BGR_STARTS[i];
-                cont.width = repeat * (sampleSprite.width - 1);
+                cont.width = repeat * sampleSprite.width;
                 self.content.addChild(cont);
 
                 for (let j = 0; j < repeat; j++) {
@@ -82,24 +79,24 @@ namespace Lich {
                     // tohle clone prostě nezkopíruje
                     sprite.width = sampleSprite.width;
                     sprite.height = sampleSprite.height;
-                    sprite.x = j * (sprite.width - 1);
+                    sprite.x = j * sprite.width;
                     sprite.y = 0;
                     cont.addChild(sprite);
                 }
             });
 
-            Background.CLOUDS_KEYS.forEach((c) => {
-                let sprite = Resources.getInstance().getBackgroundSprite(c);
-                sprite["yCloudOffset"] = Math.random() * Background.CLOUDS_SPACE;
-                sprite["xCloudOffset"] = Math.random() * self.canvas.width;
-                self.clouds.push(sprite);
-                self.content.addChild(sprite);
-            });
+            // Background.CLOUDS_KEYS.forEach((c) => {
+            //     let sprite = Resources.getInstance().getBackgroundSprite(c);
+            //     sprite["yCloudOffset"] = Math.random() * Background.CLOUDS_SPACE;
+            //     sprite["xCloudOffset"] = Math.random() * self.canvas.width;
+            //     self.clouds.push(sprite);
+            //     self.content.addChild(sprite);
+            // });
 
             self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_START_KEY);
             self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_KEY);
-            let dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 3;
-            let dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 3;
+            let dirtSpriteRepeatX = Math.floor(self.canvas.width / self.dirtBackSprite.width) + 2;
+            let dirtSpriteRepeatY = Math.floor(self.canvas.height / self.dirtBackSprite.height) + 2;
             self.dirtBackCont.x = 0;
             self.dirtBackCont.y = Background.DIRT_START;
             self.dirtBackCont.width = dirtSpriteRepeatX * self.dirtBackSprite.width;
@@ -131,11 +128,13 @@ namespace Lich {
             }
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
-                self.shift(payload.payload, 0);
+                self.offsetX = payload.payload;
+                self.shift();
                 return false;
             });
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
-                self.shift(0, payload.payload);
+                self.offsetY = payload.payload;
+                self.shift();
                 return false;
             });
 
@@ -143,12 +142,9 @@ namespace Lich {
         }
 
 
-        private shift(distanceX, distanceY) {
+        private shift() {
             var self = this;
             var canvas = self.canvas;
-
-            self.offsetX += distanceX;
-            self.offsetY += distanceY;
 
             self.bgrConts.forEach((part, i) => {
                 part.x = Math.floor(((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].width) - self.bgrSprites[i].width);

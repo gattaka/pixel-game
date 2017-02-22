@@ -160,13 +160,12 @@ var Lich;
                     // clean 
                     self.content.removeAllChildren();
                     delete self.world;
-                    // delete self.background;
+                    delete self.background;
                     Lich.EventBus.getInstance().clear();
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
-                    // TODO
                     self.ui = new Lich.UI(self.canvas, tilesMap, mobile);
-                    // self.background = new Background(self);
+                    self.background = new Lich.Background(self.content, self.canvas);
                     self.world = new Lich.World(self, tilesMap);
                     self.content.addChild(self.world);
                     self.content.addChild(self.ui);
@@ -243,7 +242,7 @@ var Lich;
                 var delta = event.delta;
                 window.onbeforeunload = function (e) {
                     var e = e || window.event;
-                    //IE & Firefox
+                    // IE & Firefox
                     if (e) {
                         e.returnValue = 'Are you sure?';
                     }
@@ -361,7 +360,8 @@ var Lich;
                 }
                 self.loadUI.update();
                 self.stage.update();
-                // self.background.update(delta);
+                if (self.background)
+                    self.background.update(delta);
                 stats.end();
             }
         }

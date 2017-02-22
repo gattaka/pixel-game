@@ -15,14 +15,17 @@ namespace Lich {
             for (let i = 0; i < sText.length; i++) {
                 let char = sText.charAt(i);
                 if (char != ' ') {
-                    charSprite = Resources.getInstance().getFontSprite(this.font, char);
-                    charSprite.x = i * (charSprite.width + this.charSpacing);
-                    this.addChild(charSprite);
+                    // charSprite = Resources.getInstance().getFontSprite(this.font, char);
+                    // charSprite.x = i * (charSprite.width + this.charSpacing);
+                    // this.addChild(charSprite);
                 }
             }
             if (charSprite) {
                 this.height = charSprite.height;
                 this.width = sText.length * (charSprite.width + this.charSpacing);
+            } else {
+                this.height = 1;
+                this.width = 1;
             }
         }
 

@@ -40,16 +40,16 @@ namespace Lich {
             let minimapUI = new MinimapUI(canvas.width, canvas.height, minimapRender);
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
             minimapUI.y = UI.SCREEN_SPACING;
-            self.addChild(minimapUI);
             self.minimapUI = minimapUI;
+            // self.addChild(minimapUI);
 
             // mapa
             let mapUI = new MapUI(canvas.width, canvas.height, minimapRender);
             mapUI.x = UI.SCREEN_SPACING;
             mapUI.y = UI.SCREEN_SPACING;
-            self.addChild(mapUI);
             self.mapUI = mapUI;
             mapUI.hide();
+            // self.addChild(mapUI);
 
             // Help btn
             if (!mobile) {
@@ -155,15 +155,15 @@ namespace Lich {
             let spellsUI = new SpellsUI();
             spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
             spellsUI.y = UI.SCREEN_SPACING;
-            self.addChild(spellsUI);
             self.spellsUI = spellsUI;
+            // self.addChild(spellsUI);
 
             // Stav (mana, zdraví)
             let conditionUI = new ConditionUI();
             conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
             conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
-            self.addChild(conditionUI);
             self.conditionUI = conditionUI;
+            // self.addChild(conditionUI);
 
             // Hudba
             // let musicUI = new MusicUI();
@@ -350,17 +350,36 @@ namespace Lich {
 
     }
 
-    export class UIBackground extends createjs.Shape {
+    export class UIBackground extends SheetContainer {
         public width: number;
         public height: number;
         public drawBackground(width: number, height: number) {
             this.width = width;
             this.height = height;
-            this.graphics.clear();
-            this.graphics.setStrokeStyle(2);
-            this.graphics.beginStroke("rgba(0,0,0,0.7)");
-            this.graphics.beginFill("rgba(10,50,10,0.5)");
-            this.graphics.drawRoundRect(0, 0, width, height, 3);
+
+            // TL
+            let tl = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_TL_KEY);
+            tl.x = 0;
+            tl.y = 0;
+            this.addChild(tl);
+
+            // TR
+            let tr = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_TR_KEY);
+            tr.x = width - tr.width;
+            tr.y = 0;
+            this.addChild(tr);
+
+            // BR
+            let br = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_BR_KEY);
+            br.x = width - br.width;
+            br.y = height - br.height;
+            this.addChild(br);
+
+            // BL
+            let bl = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_BL_KEY);
+            bl.x = 0;
+            bl.y = height - bl.height;
+            this.addChild(bl);
         }
     }
 
@@ -370,19 +389,19 @@ namespace Lich {
         static TEXT_SIZE = 15;
 
         protected toggleFlag = true;
-        protected parentRef: SheetContainer= null;
+        protected parentRef: SheetContainer = null;
 
-        outerShape: UIBackground = new UIBackground();
+        bgr: UIBackground = new UIBackground();
 
         constructor(public width: number, public height: number) {
             super();
 
             this.drawBackground();
-            this.addChild(this.outerShape);
+            this.addChild(this.bgr);
         }
 
         protected drawBackground() {
-            this.outerShape.drawBackground(this.width, this.height);
+            this.bgr.drawBackground(this.width, this.height);
         }
 
         hide() {

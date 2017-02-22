@@ -62,7 +62,7 @@ namespace Lich {
             this.healthBar.graphics.drawRoundRect(x, ConditionUI.INNER_BORDER, width, this.barHeight, 3);
 
             this.healthText.setText(this.currentHealth + "/" + this.maxHealth);
-            this.healthText.x = this.width / 2 - this.healthText.getBounds().width / 2;
+            this.healthText.x = this.width / 2 - this.healthText.width / 2;
         }
 
         private updateWillBar() {
@@ -75,7 +75,7 @@ namespace Lich {
             this.willBar.graphics.drawRoundRect(x, this.height / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
 
             this.willText.setText(this.currentWill + "/" + this.maxWill);
-            this.willText.x = this.width / 2 - this.willText.getBounds().width / 2;
+            this.willText.x = this.width / 2 - this.willText.width / 2;
         }
 
         constructor() {
@@ -91,22 +91,22 @@ namespace Lich {
             healthBgrBar.graphics.setStrokeStyle(2);
             healthBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
             healthBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, ConditionUI.INNER_BORDER, this.barWidth, this.barHeight, 3);
-            this.addChild(healthBgrBar);
+            // this.addChild(healthBgrBar);
 
             var willBgrBar = new createjs.Shape();
             willBgrBar.graphics.setStrokeStyle(2);
             willBgrBar.graphics.beginStroke("rgba(0,0,0,0.7)");
             willBgrBar.graphics.drawRoundRect(ConditionUI.INNER_BORDER, this.height / 2 + ConditionUI.SPACING / 2, this.barWidth, this.barHeight, 3);
-            this.addChild(willBgrBar);
+            // this.addChild(willBgrBar);
 
             // zdraví
-            this.addChild(this.healthBar);
+            // this.addChild(this.healthBar);
             this.healthText = new Label(" ");
             this.healthText.y = ConditionUI.INNER_BORDER;
             this.addChild(this.healthText);
 
             // vůle
-            this.addChild(this.willBar);
+            // this.addChild(this.willBar);
             this.willText = new Label(" ");
             this.willText.y = this.height / 2 + ConditionUI.SPACING / 2;
             this.addChild(this.willText);

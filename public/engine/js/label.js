@@ -23,14 +23,15 @@ var Lich;
             for (var i = 0; i < sText.length; i++) {
                 var char = sText.charAt(i);
                 if (char != ' ') {
-                    charSprite = Lich.Resources.getInstance().getFontSprite(this.font, char);
-                    charSprite.x = i * (charSprite.width + this.charSpacing);
-                    this.addChild(charSprite);
                 }
             }
             if (charSprite) {
                 this.height = charSprite.height;
                 this.width = sText.length * (charSprite.width + this.charSpacing);
+            }
+            else {
+                this.height = 1;
+                this.width = 1;
             }
         };
         Label.prototype.setLineHeight = function (value) {

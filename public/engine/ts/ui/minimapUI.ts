@@ -112,12 +112,12 @@ namespace Lich {
 
             let self = this;
 
-            let border = new createjs.Shape();
-            border.graphics.setStrokeStyle(1);
-            border.graphics.beginStroke("rgba(0,0,0,255)");
-            border.graphics.beginFill("rgba(209,251,255,255)");
-            border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
-            self.addChild(border);
+            // let border = new createjs.Shape();
+            // border.graphics.setStrokeStyle(1);
+            // border.graphics.beginStroke("rgba(0,0,0,255)");
+            // border.graphics.beginFill("rgba(209,251,255,255)");
+            // border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
+            // self.addChild(border);
 
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
@@ -220,12 +220,12 @@ namespace Lich {
                 self.hide();
             }, null, false);
 
-            let border = new createjs.Shape();
-            border.graphics.setStrokeStyle(1);
-            border.graphics.beginStroke("rgba(0,0,0,255)");
-            border.graphics.beginFill("rgba(209,251,255,255)");
-            border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
-            self.addChild(border);
+            // let border = new createjs.Shape();
+            // border.graphics.setStrokeStyle(1);
+            // border.graphics.beginStroke("rgba(0,0,0,255)");
+            // border.graphics.beginFill("rgba(209,251,255,255)");
+            // border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
+            // self.addChild(border);
 
             self.bitmap = new createjs.Bitmap(mapRender.canvas);
             self.addChild(self.bitmap);
