@@ -13,7 +13,6 @@ var Lich;
     }());
     Lich.Controls = Controls;
     ;
-    ;
     var Game = (function () {
         function Game(mainCanvasId, minimapCanvasId, loaderCanvasId) {
             this.initialized = false;
@@ -219,7 +218,7 @@ var Lich;
                 }, 60 * 1000);
                 loadWorld();
             };
-            self.content = new Lich.SheetContainer();
+            self.content = new SheetContainer();
             if (Lich.Resources.getInstance().isLoaderDone()) {
                 init();
             }

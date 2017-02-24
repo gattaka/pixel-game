@@ -26,7 +26,7 @@ var Lich;
             var _this = _super.call(this, SpellsUI.N, SpellsUI.M) || this;
             _this.toggleFlag = false;
             _this.spellContent = new Array();
-            _this.itemsCont = new Lich.SheetContainer();
+            _this.itemsCont = new SheetContainer();
             var self = _this;
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);

@@ -27,6 +27,6 @@ var Lich;
             return _this;
         }
         return ItemUI;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     Lich.ItemUI = ItemUI;
 })(Lich || (Lich = {}));

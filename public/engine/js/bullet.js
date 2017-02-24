@@ -31,7 +31,7 @@ var Lich;
         AbstractWorldObject.prototype.updateAnimations = function () { };
         ;
         return AbstractWorldObject;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     Lich.AbstractWorldObject = AbstractWorldObject;
     var BulletObject = (function (_super) {
         __extends(BulletObject, _super);

@@ -10,14 +10,6 @@ namespace Lich {
         public levitate = false;
     };
 
-    declare class Stats {
-        dom;
-        constructor();
-        showPanel(n: number);
-        begin();
-        end();
-    };
-
     export class Game {
 
         static CURRENT_GAME: Game;

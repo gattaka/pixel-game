@@ -2,11 +2,16 @@ var Lich;
 (function (Lich) {
     var SpritesheetKey;
     (function (SpritesheetKey) {
-        // SPST_FONTS_KEY,
-        // SPST_OBJECTS_KEY,
-        // SPST_TILES_KEY,
-        // SPST_UI_KEY
-        SpritesheetKey[SpritesheetKey["SPST_MAIN_KEY"] = 0] = "SPST_MAIN_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_ACHV_KEY"] = 0] = "SPST_ACHV_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_ANM_KEY"] = 1] = "SPST_ANM_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_BGR_KEY"] = 2] = "SPST_BGR_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_FNT_KEY"] = 3] = "SPST_FNT_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_FOG_KEY"] = 4] = "SPST_FOG_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_INV_KEY"] = 5] = "SPST_INV_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_MPO_KEY"] = 6] = "SPST_MPO_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_SRFC_KEY"] = 7] = "SPST_SRFC_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_SRFC_BGR_KEY"] = 8] = "SPST_SRFC_BGR_KEY";
+        SpritesheetKey[SpritesheetKey["SPST_UI_KEY"] = 9] = "SPST_UI_KEY";
     })(SpritesheetKey = Lich.SpritesheetKey || (Lich.SpritesheetKey = {}));
     var BackgroundKey;
     (function (BackgroundKey) {

@@ -67,10 +67,10 @@ var Lich;
             _this.bulletObjects = Array();
             _this.labelObjects = new Array();
             // kontejnery
-            _this.tilesSectorsCont = new Lich.SheetContainer();
-            _this.entitiesCont = new Lich.SheetContainer();
-            _this.fogSectorsCont = new Lich.SheetContainer();
-            _this.messagesCont = new Lich.SheetContainer();
+            _this.tilesSectorsCont = new SheetContainer();
+            _this.entitiesCont = new SheetContainer();
+            _this.fogSectorsCont = new SheetContainer();
+            _this.messagesCont = new SheetContainer();
             _this.enemiesCount = 0;
             _this.enemies = new Array();
             var self = _this;
@@ -1227,7 +1227,7 @@ var Lich;
         };
         ;
         return World;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     /*-----------*/
     /* CONSTANTS */
     /*-----------*/

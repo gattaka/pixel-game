@@ -2,9 +2,22 @@
 
 namespace Lich {
 
+    declare class Stats {
+        dom;
+        constructor();
+        showPanel(n: number);
+        begin();
+        end();
+    };
+
     export class Test {
 
         constructor() {
+
+            var stats = new Stats();
+            stats.showPanel(0);
+            document.body.appendChild(stats.dom);
+
             let type = "WebGL"
             if (!PIXI.utils.isWebGLSupported()) {
                 type = "canvas"
@@ -24,47 +37,78 @@ namespace Lich {
             // Add the canvas to the HTML document
             document.body.appendChild(renderer.view);
 
-            let loader = PIXI.loader;
-            let resources = PIXI.loader.resources;
-            loader
-                .add([
-                    "images/anm_blast.png"
-                ])
-                .on("progress", (loader, resource) => {
-                    console.log("loading: " + resource.url);
-                    console.log("progress: " + loader.progress + "%");
-                })
-                .load(() => {
-                    // Create a container object called the `stage`
-                    let stage = new PIXI.Container();
+            // Create a container object called the `stage`
+            let stage = new PIXI.Container();
 
-                    var texture = resources["images/anm_blast.png"].texture;
+            function gameLoop(time?: number) {
+                stats.begin();
+                requestAnimationFrame(gameLoop);
+                renderer.render(stage);
+                stats.end();
+            }
+            // Start the game loop
+            // Loop this function at 60 frames per second
+            gameLoop();
 
-                    // create an array of textures from an image path
-                    var frames = [];
-                    for (let i = 0; i < 5; i++) {
-                        let frameTex = new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(i * 60, 0, 60, 60));
-                        frames.push(frameTex);
+            let init = () => {
+                let w = window.innerWidth / Resources.TILE_SIZE;
+                let h = window.innerHeight / Resources.TILE_SIZE;
+
+                // let srfcBgrSpriteCont = new PIXI.particles.ParticleContainer(w * h, {
+                //     scale: false,
+                //     position: true,
+                //     rotation: false,
+                //     uvs: false,
+                //     alpha: true
+                // });
+
+                let srfcBgrSpriteCont = new PIXI.Container();
+                for (let i = 0; i < w; i++) {
+                    for (let j = 0; j < h; j++) {
+                        let srfcBgrSprite = Resources.getInstance().getSurfaceBgrTileSprite(SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, Math.floor(Math.random() * 42));
+                        srfcBgrSprite.x = i * Resources.TILE_SIZE;
+                        srfcBgrSprite.y = j * Resources.TILE_SIZE;
+                        srfcBgrSpriteCont.addChild(srfcBgrSprite);
                     }
-                    var anim = new PIXI.extras.AnimatedSprite(frames);
+                }
+                stage.addChild(srfcBgrSpriteCont);
 
-                    anim.x = 150;
-                    anim.y = 150;
-                    anim.anchor.set(0.5); // rotate anchor
-                    anim.animationSpeed = 0.2;
-                    anim.play();
-
-                    stage.addChild(anim);
-
-                    function gameLoop(time?: number) {
-                        requestAnimationFrame(gameLoop);
-                        anim.rotation += 0.01;
-                        renderer.render(stage);
+                let srfcSpriteCont = new PIXI.Container();
+                for (let i = 0; i < w; i++) {
+                    for (let j = 0; j < h; j++) {
+                        let srfcSprite = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_GOLD_KEY, Math.floor(Math.random() * 42));
+                        srfcSprite.x = i * Resources.TILE_SIZE;
+                        srfcSprite.y = j * Resources.TILE_SIZE;
+                        srfcSpriteCont.addChild(srfcSprite);
                     }
-                    // Start the game loop
-                    // Loop this function at 60 frames per second
-                    gameLoop();
+                }
+                stage.addChild(srfcSpriteCont);
+
+                w = window.innerWidth / Resources.PARTS_SIZE;
+                h = window.innerHeight / Resources.PARTS_SIZE;
+                let fogSpriteCont = new PIXI.Container();
+                for (let i = 0; i < w; i++) {
+                    for (let j = 0; j < h; j++) {
+                        let fogSprite = Resources.getInstance().getFogSprite(Math.floor(Math.random() * 18));
+                        fogSprite.x = i * Resources.PARTS_SIZE;
+                        fogSprite.y = j * Resources.PARTS_SIZE;
+                        fogSpriteCont.addChild(fogSprite);
+                    }
+                }
+                stage.addChild(fogSpriteCont);
+            }
+
+            if (Resources.getInstance().isLoaderDone()) {
+                init();
+            } else {
+                let listener;
+                EventBus.getInstance().registerConsumer(EventType.LOAD_FINISHED, listener = (): boolean => {
+                    init();
+                    EventBus.getInstance().unregisterConsumer(EventType.LOAD_FINISHED, listener);
+                    return false;
                 });
-        };
+                // self.stage.addChild(self.loadUI = new LoaderUI(self));
+            }
+        }
     }
 }

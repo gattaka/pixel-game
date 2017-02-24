@@ -41,6 +41,6 @@ var Lich;
             // TODO
         };
         return Label;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     Lich.Label = Label;
 })(Lich || (Lich = {}));

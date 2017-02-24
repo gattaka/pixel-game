@@ -36,7 +36,7 @@ var Lich;
                 helpBtn.y = UI.SCREEN_SPACING;
             }
             else {
-                var menuCont_1 = new Lich.SheetContainer();
+                var menuCont_1 = new SheetContainer();
                 menuCont_1.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuCont_1.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 menuCont_1.visible = false;
@@ -139,7 +139,7 @@ var Lich;
             // self.musicUI = musicUI;
             // Achievements info
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.ACHIEVEMENT_DONE, function (payload) {
-                var achvCont = new Lich.SheetContainer();
+                var achvCont = new SheetContainer();
                 var achvImgSide = 80;
                 var w = 300;
                 var h = achvImgSide + 2 * AbstractUI.BORDER;
@@ -213,7 +213,7 @@ var Lich;
                 }, null, false);
             }
             if (mobile) {
-                var movementCont_1 = new Lich.SheetContainer();
+                var movementCont_1 = new SheetContainer();
                 movementCont_1.x = UI.SCREEN_SPACING;
                 movementCont_1.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont_1);
@@ -345,7 +345,7 @@ var Lich;
             return uiHit;
         };
         return UI;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     UI.SCREEN_SPACING = 20;
     Lich.UI = UI;
     var UIBackground = (function (_super) {
@@ -378,7 +378,7 @@ var Lich;
             this.addChild(bl);
         };
         return UIBackground;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     Lich.UIBackground = UIBackground;
     var AbstractUI = (function (_super) {
         __extends(AbstractUI, _super);
@@ -425,7 +425,7 @@ var Lich;
             this.toggleFlag = true;
         };
         return AbstractUI;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     AbstractUI.BORDER = 10;
     AbstractUI.TEXT_SIZE = 15;
     Lich.AbstractUI = AbstractUI;
@@ -474,7 +474,7 @@ var Lich;
             return _this;
         }
         return Button;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     Button.sideSize = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
     Lich.Button = Button;
 })(Lich || (Lich = {}));

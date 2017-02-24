@@ -15,8 +15,8 @@ var Lich;
             /*-----------*/
             _this.bgrSprites = [];
             _this.bgrConts = [];
-            _this.dirtBackCont = new Lich.SheetContainer();
-            _this.dirtBackStartCont = new Lich.SheetContainer();
+            _this.dirtBackCont = new SheetContainer();
+            _this.dirtBackStartCont = new SheetContainer();
             _this.clouds = [];
             // celkový posun
             _this.offsetX = 0;
@@ -37,7 +37,7 @@ var Lich;
             Background.BGR_ORDER.forEach(function (b, i) {
                 var sampleSprite = Lich.Resources.getInstance().getBackgroundSprite(b);
                 self.bgrSprites.push(sampleSprite);
-                var cont = new Lich.SheetContainer();
+                var cont = new SheetContainer();
                 self.bgrConts.push(cont);
                 var repeat = Math.floor(self.canvas.width / sampleSprite.width) + 2;
                 cont.x = 0;
@@ -159,7 +159,7 @@ var Lich;
         };
         ;
         return Background;
-    }(Lich.SheetContainer));
+    }(SheetContainer));
     /*-----------*/
     /* CONSTANTS */
     /*-----------*/

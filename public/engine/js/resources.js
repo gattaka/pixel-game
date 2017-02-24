@@ -198,112 +198,14 @@ var Lich;
                     var spritesheetImg = self.getImage(stringKey + Resources.SPRITESHEET_IMAGE_SUFFIX);
                     var spritesheetDefsArr = self.loader.getResult(stringKey + Resources.SPRITESHEET_MAP_SUFFIX);
                     var spritesheetDefsMap = {};
-                    self.spriteItemDefsBySheetByName[stringKey] = spritesheetDefsMap;
-                    var frames = [];
-                    var animations = {};
                     for (var i = 0; i < spritesheetDefsArr.length; i++) {
                         // každý sprite rovnou zaregistruj pod jeho jménem a číslem
                         var sd = spritesheetDefsArr[i];
                         var sDef = new SpriteItemDef(frames.length, sd["name"], sd["x"], sd["y"], sd["width"], sd["height"]);
                         spritesheetDefsMap[sd["name"]] = sDef;
-                        frames.push([sDef.x, sDef.y, sDef.width, sDef.height]);
-                        animations[sDef.name] = [frames.length - 1, frames.length - 1, name, Resources.SPRITE_FRAMERATE];
-                        // Objekty nech v celku, akorát animace rozděl
-                        var animationDef = self.animationSetDefsBySpriteName[sDef.name];
-                        if (animationDef) {
-                            // Pokud se jedná o animaci, rozděl ji dle rozměrů
-                            var frCnt = 0; // počítadlo snímků animace
-                            var wSplicing = sDef.width / animationDef.width;
-                            var hSplicing = sDef.height / animationDef.height;
-                            // Připrav snímky
-                            for (var y = 0; y < hSplicing; y++) {
-                                for (var x = 0; x < wSplicing; x++) {
-                                    // kontroluj jestli ještě beru obsazené pozice ze sprite
-                                    if (frCnt < animationDef.frames) {
-                                        frames.push([sDef.x + x * animationDef.width, sDef.y + y * animationDef.height, animationDef.width, animationDef.height]);
-                                        frCnt++;
-                                    }
-                                }
-                            }
-                            // Ze snímků sestav animace dle definic
-                            for (var a = 0; a < animationDef.animations.length; a++) {
-                                var animDef = animationDef.animations[a];
-                                animations[Lich.AnimationKey[animDef.animationKey]] = [
-                                    frames.length - frCnt + animDef.startFrame,
-                                    frames.length - frCnt + animDef.endFrame,
-                                    Lich.AnimationKey[animDef.nextAnimationKey],
-                                    animDef.time
-                                ];
-                            }
-                        }
-                        // Tiles rozřež a pokud jsou animované, tak ještě rozděl na animace
-                        // zkus sprite zpracovat jako tile -- stačí, aby položka existovala
-                        // jako povrch, přechod povrchu, pozadí povrchu nebo přechod pozadí 
-                        // povrchu a můžu jednotně rozsekat zaregistrovat, rozměry jsou stejné
-                        var surfaceDef = self.mapSurfaceDefsBySpriteName[sDef.name];
-                        var surfaceBgrDef = self.mapSurfaceBgrDefsBySpriteName[sDef.name];
-                        var surfaceTransDef = self.mapTransitionSrfcDefsBySpriteName[sDef.name];
-                        var surfaceBgrTransDef = self.mapTransitionSrfcBgrDefsBySpriteNameMap[sDef.name];
-                        if (surfaceDef || surfaceBgrDef || surfaceTransDef || surfaceBgrTransDef) {
-                            var wSplicing = sDef.width / Resources.TILE_SIZE;
-                            var hSplicing = sDef.height / Resources.TILE_SIZE;
-                            for (var y = 0; y < hSplicing; y++) {
-                                for (var x = 0; x < wSplicing; x++) {
-                                    // tím, že se prostě jenom snímek přidá do již existující fronty, 
-                                    // je dáno, že pro získání fragmentů stačí vzít původní číslo celého
-                                    // sprite a jenom k němu přičíst vnitřní index fragmentu 
-                                    frames.push([sDef.x + x * Resources.TILE_SIZE, sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE]);
-                                }
-                            }
-                        }
-                        else if (sDef.name == Lich.FOG_DEF[0]) {
-                            var wSplicing = sDef.width / Resources.PARTS_SIZE;
-                            var hSplicing = sDef.height / Resources.PARTS_SIZE;
-                            for (var y = 0; y < hSplicing; y++) {
-                                for (var x = 0; x < wSplicing; x++) {
-                                    // tím, že se prostě jenom snímek přidá do již existující fronty, 
-                                    // je dáno, že pro získání fragmentů stačí vzít původní číslo celého
-                                    // sprite a jenom k němu přičíst vnitřní index fragmentu 
-                                    frames.push([sDef.x + x * Resources.PARTS_SIZE, sDef.y + y * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE]);
-                                }
-                            }
-                        }
-                        else {
-                            // zkus sprite zpracovat jako mapobject
-                            var mapObjectDef = self.mapObjectDefsBySpriteName[sDef.name];
-                            if (mapObjectDef) {
-                                // může být animován    
-                                // rozděl dle sektorů
-                                for (var y = 0; y < mapObjectDef.mapSpriteHeight; y++) {
-                                    for (var x = 0; x < mapObjectDef.mapSpriteWidth; x++) {
-                                        if (mapObjectDef.frames > 1) {
-                                            for (var f = 0; f < mapObjectDef.frames; f++) {
-                                                frames.push([
-                                                    // animace map-objektů je vždy rozbalená doprava na jednom řádku
-                                                    sDef.x + x * Resources.TILE_SIZE + Resources.TILE_SIZE * mapObjectDef.mapSpriteWidth * f,
-                                                    sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE
-                                                ]);
-                                            }
-                                            var name_1 = sDef.name + Resources.FRAGMENT_SEPARATOR + (x + y * mapObjectDef.mapSpriteWidth);
-                                            animations[name_1] = [frames.length - mapObjectDef.frames, frames.length - 1, name_1, Resources.SPRITE_FRAMERATE];
-                                        }
-                                        else {
-                                            frames.push([
-                                                sDef.x + x * Resources.TILE_SIZE, sDef.y + y * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE
-                                            ]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
-                    var sheet = new createjs.SpriteSheet({
-                        framerate: 10,
-                        images: [spritesheetImg],
-                        frames: frames,
-                        animations: animations
-                    });
-                    self.spritesheetByKeyMap[stringKey] = sheet;
+                    self.spritesheetByKeyMap[stringKey] = PIXI.Texture.from(spritesheetImg);
+                    self.spriteItemDefsBySheetByName[stringKey] = spritesheetDefsMap;
                 });
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
             });
@@ -431,58 +333,62 @@ var Lich;
         ;
         Resources.prototype.getSurfaceTileSprite = function (surfaceKey, positionIndex, originalSprite) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_SRFC_KEY];
             var srfcDef = self.mapSurfaceDefs[Lich.SurfaceKey[surfaceKey]] || self.mapTransitionSrfcDefs[Lich.SurfaceKey[surfaceKey]];
-            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][srfcDef.spriteName].frame + positionIndex + 1);
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][srfcDef.spriteName];
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            var wSplicing = spriteDef.width / Resources.TILE_SIZE;
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
+            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(spriteSheet);
+            sprite.texture = spriteSheet;
             return sprite;
         };
         ;
         Resources.prototype.getSurfaceBgrTileSprite = function (surfaceBgrKey, positionIndex, originalSprite) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_SRFC_BGR_KEY];
             var srfcBgrDef = self.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[surfaceBgrKey]] || self.mapTransitionSrfcBgrsDefs[Lich.SurfaceBgrKey[surfaceBgrKey]];
-            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][srfcBgrDef.spriteName].frame + positionIndex + 1);
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][srfcBgrDef.spriteName];
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            var wSplicing = spriteDef.width / Resources.TILE_SIZE;
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
+            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(spriteSheet);
+            sprite.texture = spriteSheet;
             return sprite;
         };
         ;
         Resources.prototype.getFogSprite = function (positionIndex, originalSprite) {
             var self = this;
             var v = positionIndex || positionIndex == 0 ? positionIndex : Lich.FogTile.MM;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-            sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][Lich.FOG_DEF[0]].frame + v + 1);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FOG_KEY];
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][Lich.FOG_DEF[0]];
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            var wSplicing = spriteDef.width / Resources.PARTS_SIZE;
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.PARTS_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
+            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(spriteSheet);
+            sprite.texture = spriteSheet;
             return sprite;
         };
         ;
         Resources.prototype.getMapObjectTileSprite = function (mapObjectKey, positionIndex) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MPO_KEY];
             var mapObjectDef = self.mapObjectDefs[mapObjectKey];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             if (mapObjectDef.frames > 1) {
-                // pusť konkrétní animaci (kokrétního position Indexu)
-                sprite.gotoAndPlay(mapObjectDef.spriteName + Resources.FRAGMENT_SEPARATOR + positionIndex);
             }
             else {
-                // jdi na konkrétní snímek a tam stůj
-                // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-                sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName].frame + positionIndex + 1);
             }
             return sprite;
         };
         ;
         Resources.prototype.getBackgroundSprite = function (key) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
+            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var bgrSprite = self.backgroundDefs[Lich.BackgroundKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
-            sprite.gotoAndStop(spriteDef.frame);
+            // sprite.gotoAndStop(spriteDef.frame);
             sprite.width = spriteDef.width;
             sprite.height = spriteDef.height;
             return sprite;
@@ -490,12 +396,12 @@ var Lich;
         ;
         Resources.prototype.getFontSprite = function (key, char) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FNT_KEY];
+            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var fontDef = self.fontsSpriteDefs[Lich.FontKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
             // není animovaný, takže vždy předávám číslo snímku
-            sprite.gotoAndStop(spriteDef.frame);
+            // sprite.gotoAndStop(spriteDef.frame);
             sprite.width = spriteDef.width;
             sprite.height = spriteDef.height;
             return sprite;
@@ -503,63 +409,58 @@ var Lich;
         ;
         Resources.prototype.getAchvUISprite = function (key) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_ACHV_KEY];
+            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var achvDef = self.achievementsDefs[Lich.AchievementKey[key]];
             var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][achvDef.spriteName].frame;
             // není animovaný, takže vždy předávám číslo snímku
-            sprite.gotoAndStop(frameBySpriteName);
+            // sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
         ;
         Resources.prototype.getUISprite = function (key) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_UI_KEY];
+            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var uiSpriteDef = self.uiSpriteDefs[Lich.UISpriteKey[key]];
             var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
             // není animovaný, takže vždy předávám číslo snímku
-            sprite.gotoAndStop(frameBySpriteName);
+            // sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
         ;
         Resources.prototype.getSpellUISprite = function (key, originalSprite) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_UI_KEY];
+            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var spellDef = self.spellDefs[Lich.SpellKey[key]];
             var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][spellDef.iconSpriteName].frame;
             // není animovaný, takže vždy předávám číslo snímku
-            sprite.gotoAndStop(frameBySpriteName);
+            // sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
         ;
         Resources.prototype.getInvObjectSprite = function (key, originalSprite) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = originalSprite ? originalSprite : new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_INV_KEY];
+            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var invDef = self.invObjectDefs[key];
             var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][invDef.spriteName].frame;
             // není animovaný, takže vždy předávám číslo snímku
-            sprite.gotoAndStop(frameBySpriteName);
+            // sprite.gotoAndStop(frameBySpriteName)
             return sprite;
         };
         ;
         Resources.prototype.getAnimatedObjectSprite = function (animation) {
             var self = this;
             var animationDef = self.animationSetDefsByKey[animation];
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            var sprite = new createjs.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_ANM_KEY];
+            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var startFrame = self.spriteItemDefsBySheetByName[stringSheetKey][animationDef.spriteName].frame;
-            sprite.gotoAndPlay(Lich.AnimationKey[animationDef.animations[0].animationKey]);
+            // sprite.gotoAndPlay(AnimationKey[animationDef.animations[0].animationKey]);
             return sprite;
         };
         ;
-        Resources.prototype.getSpriteSheet = function () {
-            var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MAIN_KEY];
-            return self.spritesheetByKeyMap[stringSheetKey];
-        };
         return Resources;
     }());
     Resources.FONT = "expressway";

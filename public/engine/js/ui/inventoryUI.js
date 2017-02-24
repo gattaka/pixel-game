@@ -15,9 +15,9 @@ var Lich;
             // mapa existujících UI prvků dle typu položky
             _this.itemsUIMap = new Lich.HashMap();
             _this.itemHighlightVisibleBeforeCollapse = true;
-            _this.itemsCont = new Lich.SheetContainer();
+            _this.itemsCont = new SheetContainer();
             _this.collapsed = false;
-            _this.collapsedCont = new Lich.SheetContainer();
+            _this.collapsedCont = new SheetContainer();
             var self = _this;
             // zvýraznění vybrané položky
             self.itemHighlight = Lich.UIUtils.createHighlight();

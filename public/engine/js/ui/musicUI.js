@@ -13,7 +13,7 @@ var Lich;
             _this.trackContent = [];
             _this.trackIndex = {};
             _this.reversedTrackIndex = [];
-            _this.itemsCont = new Lich.SheetContainer();
+            _this.itemsCont = new SheetContainer();
             var self = _this;
             var trackInsert = function (track, volume) {
                 var self = _this;

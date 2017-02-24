@@ -9,7 +9,7 @@ var Lich;
         __extends(IngredientsCont, _super);
         function IngredientsCont() {
             var _this = _super.call(this, CraftingUI.N * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING) - Lich.PartsUI.SPACING + 2 * Lich.AbstractUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.PartsUI.SELECT_BORDER) || this;
-            _this.itemsCont = new Lich.SheetContainer();
+            _this.itemsCont = new SheetContainer();
             _this.itemsCont.x = Lich.PartsUI.BORDER;
             _this.itemsCont.y = Lich.PartsUI.SELECT_BORDER;
             _this.addChild(_this.itemsCont);
@@ -31,7 +31,7 @@ var Lich;
             // --- UI ----
             // mapa existujících UI prvků dle typu položky
             _this.itemsUIMap = new Lich.HashMap();
-            _this.itemsCont = new Lich.SheetContainer();
+            _this.itemsCont = new SheetContainer();
             var self = _this;
             _this.workstationIcon = Lich.Resources.getInstance().getSpellUISprite(Lich.SpellKey.SPELL_PLACE_KEY);
             var bounds = _this.workstationIcon.getBounds();
