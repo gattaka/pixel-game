@@ -459,28 +459,45 @@ namespace Lich {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MPO_KEY];
             let mapObjectDef = self.mapObjectDefs[mapObjectKey];
-            let sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName];
+            let wSplicing = spriteDef.width / Resources.TILE_SIZE;
             if (mapObjectDef.frames > 1) {
-                // pusť konkrétní animaci (kokrétního position Indexu)
-                // sprite.gotoAndPlay(mapObjectDef.spriteName + Resources.FRAGMENT_SEPARATOR + positionIndex);
+                var frames = [];
+                for (let i = 0; i < mapObjectDef.frames; i++) {
+                    let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    texture.frame = new PIXI.Rectangle(
+                        spriteDef.x + (positionIndex % wSplicing + i * mapObjectDef.mapSpriteWidth) * Resources.TILE_SIZE,
+                        spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE,
+                        Resources.TILE_SIZE,
+                        Resources.TILE_SIZE);
+                    frames.push(texture);
+                }
+                var anim = new PIXI.extras.AnimatedSprite(frames);
+                anim.animationSpeed = 0.2;
+                anim.play();
+                return anim;
             } else {
-                // jdi na konkrétní snímek a tam stůj
-                // vždy +1 protože základní frame obsahuje celý sprite, nikoliv jen jeho fragment
-                // sprite.gotoAndStop(self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName].frame + positionIndex + 1);
+                let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture.frame = new PIXI.Rectangle(
+                    spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE,
+                    spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE,
+                    Resources.TILE_SIZE,
+                    Resources.TILE_SIZE);
+                let sprite = new PIXI.Sprite(texture);
+                sprite.texture = texture;
+                return sprite;
             }
-            return sprite;
         };
 
-        getBackgroundSprite(key: BackgroundKey): PIXI.Sprite {
+        getBackgroundSprite(key: BackgroundKey): PIXI.extras.TilingSprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_BGR_KEY];
-            let sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             let bgrSprite = self.backgroundDefs[BackgroundKey[key]];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
-            // sprite.gotoAndStop(spriteDef.frame);
-            sprite.width = spriteDef.width;
-            sprite.height = spriteDef.height;
-            return sprite;
+            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            let tilingSprite = new PIXI.extras.TilingSprite(spriteSheet);
+            return tilingSprite;
         };
 
         getFontSprite(key: FontKey, char: string): PIXI.Sprite {
@@ -496,58 +513,57 @@ namespace Lich {
             return sprite;
         };
 
-        getAchvUISprite(key: AchievementKey): PIXI.Sprite {
+        private getBasicSprite(sheetKey: SpritesheetKey, spriteName: string): PIXI.Sprite {
             let self = this;
-            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_ACHV_KEY];
-            let sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            let achvDef = self.achievementsDefs[AchievementKey[key]];
-            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][achvDef.spriteName].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
+            let stringSheetKey = SpritesheetKey[sheetKey];
+            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
+            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            let sprite = new PIXI.Sprite(spriteSheet);
             return sprite;
+        };
+
+        getAchvUISprite(key: AchievementKey): PIXI.Sprite {
+            return this.getBasicSprite(SpritesheetKey.SPST_ACHV_KEY, this.achievementsDefs[AchievementKey[key]].spriteName);
         };
 
         getUISprite(key: UISpriteKey): PIXI.Sprite {
-            let self = this;
-            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_UI_KEY];
-            let sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            let uiSpriteDef = self.uiSpriteDefs[UISpriteKey[key]];
-            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
-            return sprite;
+            return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[UISpriteKey[key]]);
         };
 
         getSpellUISprite(key: SpellKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
-            let self = this;
-            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_UI_KEY];
-            let sprite = originalSprite ? originalSprite : new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            let spellDef = self.spellDefs[SpellKey[key]];
-            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][spellDef.iconSpriteName].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
-            return sprite;
+            return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.spellDefs[SpellKey[key]].iconSpriteName);
         };
 
         getInvObjectSprite(key: InventoryKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
-            let self = this;
-            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_INV_KEY];
-            let sprite = originalSprite ? originalSprite : new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            let invDef = self.invObjectDefs[key];
-            let frameBySpriteName: number = self.spriteItemDefsBySheetByName[stringSheetKey][invDef.spriteName].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
-            return sprite;
+            return this.getBasicSprite(SpritesheetKey.SPST_INV_KEY, this.invObjectDefs[key].spriteName);
         };
 
         getAnimatedObjectSprite(animation: AnimationSetKey): PIXI.Sprite {
             let self = this;
             let animationDef = self.animationSetDefsByKey[animation];
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_ANM_KEY];
-            let sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            let startFrame = self.spriteItemDefsBySheetByName[stringSheetKey][animationDef.spriteName].frame;
-            // sprite.gotoAndPlay(AnimationKey[animationDef.animations[0].animationKey]);
-            return sprite;
+            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][animationDef.spriteName];
+            var frames = [];
+            let xFrames = spriteDef.width / animationDef.width;
+            let yFrames = spriteDef.height / animationDef.height;
+            for (let j = 0; j < yFrames; j++) {
+                for (let i = 0; i < xFrames; i++) {
+                    if (frames.length >= animationDef.frames)
+                        break;
+                    let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    texture.frame = new PIXI.Rectangle(
+                        spriteDef.x + i * animationDef.width,
+                        spriteDef.y + j * animationDef.height,
+                        animationDef.width,
+                        animationDef.height);
+                    frames.push(texture);
+                }
+            }
+            var anim = new PIXI.extras.AnimatedSprite(frames);
+            anim.animationSpeed = 0.2;
+            anim.play();
+            return anim;
         };
 
     }

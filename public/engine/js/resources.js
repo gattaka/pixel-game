@@ -374,24 +374,38 @@ var Lich;
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MPO_KEY];
             var mapObjectDef = self.mapObjectDefs[mapObjectKey];
-            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName];
+            var wSplicing = spriteDef.width / Resources.TILE_SIZE;
             if (mapObjectDef.frames > 1) {
+                var frames = [];
+                for (var i = 0; i < mapObjectDef.frames; i++) {
+                    var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing + i * mapObjectDef.mapSpriteWidth) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
+                    frames.push(texture);
+                }
+                var anim = new PIXI.extras.AnimatedSprite(frames);
+                anim.animationSpeed = 0.2;
+                anim.play();
+                return anim;
             }
             else {
+                var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
+                var sprite = new PIXI.Sprite(texture);
+                sprite.texture = texture;
+                return sprite;
             }
-            return sprite;
         };
         ;
         Resources.prototype.getBackgroundSprite = function (key) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
-            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
             var bgrSprite = self.backgroundDefs[Lich.BackgroundKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
-            // sprite.gotoAndStop(spriteDef.frame);
-            sprite.width = spriteDef.width;
-            sprite.height = spriteDef.height;
-            return sprite;
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            var tilingSprite = new PIXI.extras.TilingSprite(spriteSheet);
+            return tilingSprite;
         };
         ;
         Resources.prototype.getFontSprite = function (key, char) {
@@ -407,58 +421,53 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.getAchvUISprite = function (key) {
+        Resources.prototype.getBasicSprite = function (sheetKey, spriteName) {
             var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_ACHV_KEY];
-            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            var achvDef = self.achievementsDefs[Lich.AchievementKey[key]];
-            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][achvDef.spriteName].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
+            var stringSheetKey = Lich.SpritesheetKey[sheetKey];
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            var sprite = new PIXI.Sprite(spriteSheet);
             return sprite;
+        };
+        ;
+        Resources.prototype.getAchvUISprite = function (key) {
+            return this.getBasicSprite(Lich.SpritesheetKey.SPST_ACHV_KEY, this.achievementsDefs[Lich.AchievementKey[key]].spriteName);
         };
         ;
         Resources.prototype.getUISprite = function (key) {
-            var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_UI_KEY];
-            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            var uiSpriteDef = self.uiSpriteDefs[Lich.UISpriteKey[key]];
-            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][uiSpriteDef].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
-            return sprite;
+            return this.getBasicSprite(Lich.SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[Lich.UISpriteKey[key]]);
         };
         ;
         Resources.prototype.getSpellUISprite = function (key, originalSprite) {
-            var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_UI_KEY];
-            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            var spellDef = self.spellDefs[Lich.SpellKey[key]];
-            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][spellDef.iconSpriteName].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
-            return sprite;
+            return this.getBasicSprite(Lich.SpritesheetKey.SPST_UI_KEY, this.spellDefs[Lich.SpellKey[key]].iconSpriteName);
         };
         ;
         Resources.prototype.getInvObjectSprite = function (key, originalSprite) {
-            var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_INV_KEY];
-            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            var invDef = self.invObjectDefs[key];
-            var frameBySpriteName = self.spriteItemDefsBySheetByName[stringSheetKey][invDef.spriteName].frame;
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(frameBySpriteName)
-            return sprite;
+            return this.getBasicSprite(Lich.SpritesheetKey.SPST_INV_KEY, this.invObjectDefs[key].spriteName);
         };
         ;
         Resources.prototype.getAnimatedObjectSprite = function (animation) {
             var self = this;
             var animationDef = self.animationSetDefsByKey[animation];
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_ANM_KEY];
-            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
-            var startFrame = self.spriteItemDefsBySheetByName[stringSheetKey][animationDef.spriteName].frame;
-            // sprite.gotoAndPlay(AnimationKey[animationDef.animations[0].animationKey]);
-            return sprite;
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][animationDef.spriteName];
+            var frames = [];
+            var xFrames = spriteDef.width / animationDef.width;
+            var yFrames = spriteDef.height / animationDef.height;
+            for (var j = 0; j < yFrames; j++) {
+                for (var i = 0; i < xFrames; i++) {
+                    if (frames.length >= animationDef.frames)
+                        break;
+                    var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    texture.frame = new PIXI.Rectangle(spriteDef.x + i * animationDef.width, spriteDef.y + j * animationDef.height, animationDef.width, animationDef.height);
+                    frames.push(texture);
+                }
+            }
+            var anim = new PIXI.extras.AnimatedSprite(frames);
+            anim.animationSpeed = 0.2;
+            anim.play();
+            return anim;
         };
         ;
         return Resources;

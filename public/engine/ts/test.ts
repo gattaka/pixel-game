@@ -40,15 +40,7 @@ namespace Lich {
             // Create a container object called the `stage`
             let stage = new PIXI.Container();
 
-            function gameLoop(time?: number) {
-                stats.begin();
-                requestAnimationFrame(gameLoop);
-                renderer.render(stage);
-                stats.end();
-            }
-            // Start the game loop
-            // Loop this function at 60 frames per second
-            gameLoop();
+            let bgrSprites = [];
 
             let init = () => {
                 let w = window.innerWidth / Resources.TILE_SIZE;
@@ -62,9 +54,20 @@ namespace Lich {
                 //     alpha: true
                 // });
 
+                let bgrSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_FAR_MOUNTAIN_KEY);
+                bgrSprite.width = renderer.width;
+                bgrSprites.push(bgrSprite);
+                stage.addChild(bgrSprite);
+
+                bgrSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_WOODLAND1_KEY);
+                bgrSprite.width = renderer.width;
+                bgrSprites.push(bgrSprite);
+                stage.addChild(bgrSprite);
+
                 let srfcBgrSpriteCont = new PIXI.Container();
                 for (let i = 0; i < w; i++) {
                     for (let j = 0; j < h; j++) {
+                        if (Math.random() < 0.2) continue;
                         let srfcBgrSprite = Resources.getInstance().getSurfaceBgrTileSprite(SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, Math.floor(Math.random() * 42));
                         srfcBgrSprite.x = i * Resources.TILE_SIZE;
                         srfcBgrSprite.y = j * Resources.TILE_SIZE;
@@ -76,6 +79,7 @@ namespace Lich {
                 let srfcSpriteCont = new PIXI.Container();
                 for (let i = 0; i < w; i++) {
                     for (let j = 0; j < h; j++) {
+                        if (Math.random() < 0.2) continue;
                         let srfcSprite = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_GOLD_KEY, Math.floor(Math.random() * 42));
                         srfcSprite.x = i * Resources.TILE_SIZE;
                         srfcSprite.y = j * Resources.TILE_SIZE;
@@ -89,6 +93,7 @@ namespace Lich {
                 let fogSpriteCont = new PIXI.Container();
                 for (let i = 0; i < w; i++) {
                     for (let j = 0; j < h; j++) {
+                        if (Math.random() < 0.2) continue;
                         let fogSprite = Resources.getInstance().getFogSprite(Math.floor(Math.random() * 18));
                         fogSprite.x = i * Resources.PARTS_SIZE;
                         fogSprite.y = j * Resources.PARTS_SIZE;
@@ -96,6 +101,34 @@ namespace Lich {
                     }
                 }
                 stage.addChild(fogSpriteCont);
+
+                for (let i = 0; i < 2000; i++) {
+                    let sprite = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_FIREPLACE_KEY, Math.floor(Math.random() * 4));
+                    sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                    sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                    stage.addChild(sprite);
+                }
+
+                for (let i = 0; i < 2000; i++) {
+                    let sprite = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_TREE3_KEY, Math.floor(Math.random() * 4));
+                    sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                    sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                    stage.addChild(sprite);
+                }
+
+                for (let i = 0; i < 10; i++) {
+                    let sprite = Resources.getInstance().getInvObjectSprite(InventoryKey.INV_BOOKSHELF_KEY);
+                    sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                    sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                    stage.addChild(sprite);
+                }
+
+                for (let i = 0; i < 10; i++) {
+                    let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.LICH_ANIMATION_KEY);
+                    sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                    sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                    stage.addChild(sprite);
+                }
             }
 
             if (Resources.getInstance().isLoaderDone()) {
@@ -109,6 +142,22 @@ namespace Lich {
                 });
                 // self.stage.addChild(self.loadUI = new LoaderUI(self));
             }
+
+            function gameLoop(time?: number) {
+                stats.begin();
+
+                bgrSprites.forEach(bgrSprite => {
+                    bgrSprite.tilePosition.x += 1;
+                });
+
+                requestAnimationFrame(gameLoop);
+                renderer.render(stage);
+
+                stats.end();
+            }
+            // Start the game loop
+            // Loop this function at 60 frames per second
+            gameLoop();
         }
     }
 }
