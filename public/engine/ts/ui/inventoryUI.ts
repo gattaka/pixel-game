@@ -118,9 +118,9 @@ namespace Lich {
                 // jsem zabalen?
                 if (self.collapsed) {
                     var newHeight = PartsUI.pixelsByX(self.m);
-                    self.y = self.y - (newHeight - self.height);
-                    self.width = PartsUI.pixelsByX(self.n);
-                    self.height = newHeight;
+                    self.y = self.y - (newHeight - self.fixedHeight);
+                    self.fixedWidth = PartsUI.pixelsByX(self.n);
+                    self.fixedHeight = newHeight;
                     self.drawBackground();
                     self.itemHighlight.visible = self.itemHighlightVisibleBeforeCollapse;
                     self.upBtn.visible = true;
@@ -131,9 +131,9 @@ namespace Lich {
                     }
                 } else {
                     var newHeight = PartsUI.pixelsByX(1);
-                    self.y = self.y + (self.height - newHeight);
-                    self.width = PartsUI.pixelsByX(1);
-                    self.height = newHeight;
+                    self.y = self.y + (self.fixedHeight - newHeight);
+                    self.fixedWidth = PartsUI.pixelsByX(1);
+                    self.fixedHeight = newHeight;
                     self.drawBackground();
                     self.itemHighlightVisibleBeforeCollapse = self.itemHighlight.visible;
                     self.itemHighlight.visible = false;

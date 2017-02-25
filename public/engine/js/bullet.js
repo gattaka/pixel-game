@@ -87,8 +87,8 @@ var Lich;
             // zásahu jiného nepřítele, který je těsném závěsu za zasaženým
             _this.enemyPiercingTimeouts = {};
             var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[_this.animationSetKey];
-            _this.width = animationDef.width;
-            _this.height = animationDef.height;
+            _this.fixedWidth = animationDef.width;
+            _this.fixedHeight = animationDef.height;
             _this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
             _this.addChild(_this.sprite);
             return _this;
@@ -131,8 +131,8 @@ var Lich;
                     var target = targets[t];
                     if (target) {
                         if (target.getCurrentHealth() > 0
-                            && x > target.x && x < target.x + target.width
-                            && y > target.y && y < target.y + target.height
+                            && x > target.x && x < target.x + target.fixedWidth
+                            && y > target.y && y < target.y + target.fixedHeight
                             && target.ownerId != self.owner
                             && (target.ownerId == Lich.Hero.OWNER_ID || self.owner == Lich.Hero.OWNER_ID)) {
                             // => CollisionType.SOLID -- takže hned dojde k ukončení isBoundsInCollision
@@ -173,8 +173,8 @@ var Lich;
                     self.ending = true;
                     self.gotoAndPlay("hit");
                     if (self.mapDestroy) {
-                        var centX = self.x + self.width / 2;
-                        var centY = self.y + self.height / 2;
+                        var centX = self.x + self.fixedWidth / 2;
+                        var centY = self.y + self.fixedHeight / 2;
                         var rad = Lich.Resources.TILE_SIZE * self.radius;
                         for (var rx = centX - rad; rx <= centX + rad; rx += Lich.Resources.TILE_SIZE) {
                             for (var ry = centY - rad; ry <= centY + rad; ry += Lich.Resources.TILE_SIZE) {
@@ -193,10 +193,10 @@ var Lich;
             if (self.speedy !== 0) {
                 var distanceY = self.speedy * sDelta;
                 // Nenarazím na překážku?
-                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, 0, distanceY, function (x, y) { return hitTargetOrCollide(x, y); }, true);
+                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.fixedWidth - self.collXOffset * 2, self.fixedHeight - self.collYOffset * 2, 0, distanceY, function (x, y) { return hitTargetOrCollide(x, y); }, true);
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
-                    if (self.y > game.getRender().height * 2 || self.y < -game.getRender().height) {
+                    if (self.y > game.getSceneHeight() * 2 || self.y < -game.getSceneHeight()) {
                         self.done = true;
                         return;
                     }
@@ -209,10 +209,10 @@ var Lich;
             if (self.speedx !== 0) {
                 var distanceX = sDelta * self.speedx;
                 // Nenarazím na překážku?
-                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, distanceX, 0, function (x, y) { return hitTargetOrCollide(x, y); }, true);
+                clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.fixedWidth - self.collXOffset * 2, self.fixedHeight - self.collYOffset * 2, distanceX, 0, function (x, y) { return hitTargetOrCollide(x, y); }, true);
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;
-                    if (self.x > game.getRender().width * 2 || self.x < -game.getRender().width)
+                    if (self.x > game.getSceneWidth() * 2 || self.x < -game.getSceneWidth())
                         self.done = true;
                     return;
                 }

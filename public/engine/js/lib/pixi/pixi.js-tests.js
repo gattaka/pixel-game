@@ -61,8 +61,8 @@ var basics;
             }
             this.container.x = this.app.renderer.width / 2;
             this.container.y = this.app.renderer.height / 2;
-            this.container.pivot.x = this.container.width / 2;
-            this.container.pivot.y = this.container.height / 2;
+            this.container.pivot.x = this.container.fixedWidth / 2;
+            this.container.pivot.y = this.container.fixedHeight / 2;
             this.app.ticker.add(function (delta) {
                 _this.container.rotation -= 0.01 / delta;
             });
@@ -109,8 +109,8 @@ var basics;
             this.app = new PIXI.Application(800, 600, { backgroundColor: 0x1099bb });
             document.body.appendChild(this.app.view);
             this.background = PIXI.Sprite.fromImage("required/assets/bkg-grass.jpg");
-            this.background.width = this.app.renderer.width;
-            this.background.height = this.app.renderer.height;
+            this.background.fixedWidth = this.app.renderer.width;
+            this.background.fixedHeight = this.app.renderer.height;
             this.app.stage.addChild(this.background);
             this.app.stop();
             PIXI.loader.add("shader", "_assets/basics/shader.frag")
@@ -324,8 +324,8 @@ var basics;
                 .lineTo(36, 70)
                 .lineTo(70, 50);
             // Position the button
-            this.button.x = (this.app.renderer.width - this.button.width) / 2;
-            this.button.y = (this.app.renderer.height - this.button.height) / 2;
+            this.button.x = (this.app.renderer.width - this.button.fixedWidth) / 2;
+            this.button.y = (this.app.renderer.height - this.button.fixedHeight) / 2;
             // Enable interactivity on the button
             this.button.interactive = true;
             this.button.buttonMode = true;
@@ -335,8 +335,8 @@ var basics;
                 _this.button.destroy();
                 var texture = PIXI.Texture.fromVideo("required/assets/testVideo.mp4");
                 _this.videoSprite = new PIXI.Sprite(texture);
-                _this.videoSprite.width = _this.app.renderer.width;
-                _this.videoSprite.height = _this.app.renderer.height;
+                _this.videoSprite.fixedWidth = _this.app.renderer.width;
+                _this.videoSprite.fixedHeight = _this.app.renderer.height;
                 _this.app.stage.addChild(_this.videoSprite);
             });
         }
@@ -703,8 +703,8 @@ var demos;
             this.app = new PIXI.Application();
             document.body.appendChild(this.app.view);
             var background = PIXI.Sprite.fromImage("required/assets/button_test_BG.jpg");
-            background.width = this.app.renderer.width;
-            background.height = this.app.renderer.height;
+            background.fixedWidth = this.app.renderer.width;
+            background.fixedHeight = this.app.renderer.height;
             this.background = background;
             this.app.stage.addChild(this.background);
             this.buttons = [];
@@ -915,8 +915,8 @@ var demos;
                 _this.app.stage.addChild(_this.bitmapFontText);
             });
             this.background = PIXI.Sprite.fromImage("required/assets/textDemoBG.jpg");
-            this.background.width = this.app.renderer.width;
-            this.background.height = this.app.renderer.height;
+            this.background.fixedWidth = this.app.renderer.width;
+            this.background.fixedHeight = this.app.renderer.height;
             this.app.stage.addChild(this.background);
             this.textSample = new PIXI.Text("Pixi.js can has\n multiline text!", {
                 fontFamily: "Snippet",
@@ -1117,8 +1117,8 @@ var filters;
             this.app = new PIXI.Application(800, 600);
             document.body.appendChild(this.app.view);
             this.bg = PIXI.Sprite.fromImage("required/assets/depth_blur_BG.jpg");
-            this.bg.width = this.app.renderer.width;
-            this.bg.height = this.app.renderer.height;
+            this.bg.fixedWidth = this.app.renderer.width;
+            this.bg.fixedHeight = this.app.renderer.height;
             this.app.stage.addChild(this.bg);
             this.littleDudes = PIXI.Sprite.fromImage("required/assets/depth_blur_dudes.jpg");
             this.littleDudes.x = (this.app.renderer.width / 2) - 315;
@@ -1150,7 +1150,7 @@ var filters;
             this.onPointerMove = function (eventData) {
                 _this.ring.visible = true;
                 _this.displacementSprite.x = eventData.data.global.x - 100;
-                _this.displacementSprite.y = eventData.data.global.y - _this.displacementSprite.height / 2;
+                _this.displacementSprite.y = eventData.data.global.y - _this.displacementSprite.fixedHeight / 2;
                 _this.ring.x = eventData.data.global.x - 25;
                 _this.ring.y = eventData.data.global.y;
             };
@@ -1186,8 +1186,8 @@ var filters;
             this.ring.visible = false;
             this.app.stage.addChild(this.ring);
             this.bg = PIXI.Sprite.fromImage("required/assets/bkg-grass.jpg");
-            this.bg.width = this.app.renderer.width;
-            this.bg.height = this.app.renderer.height;
+            this.bg.fixedWidth = this.app.renderer.width;
+            this.bg.fixedHeight = this.app.renderer.height;
             this.bg.alpha = 0.4;
             this.container.addChild(this.bg);
             this.count = 0;

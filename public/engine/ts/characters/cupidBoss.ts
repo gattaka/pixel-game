@@ -42,8 +42,8 @@ namespace Lich {
                     true // hovers
                 );
                 this.maxHealth = this.currentHealth = 5000;
-                this.healthBar.height = 10;
-                this.healthBar.y = -this.healthBar.height;
+                this.healthBar.fixedHeight = 10;
+                this.healthBar.y = -this.healthBar.fixedHeight;
 
                 // stále jsem v hover pohybu
                 this.movementTypeX = MovementTypeX.HOVER;
@@ -66,8 +66,8 @@ namespace Lich {
 
                     let processSpeed = () => {
                         // snaž se dosáhnout místo středem
-                        targetX -= this.width / 2;
-                        targetY -= this.height / 2;
+                        targetX -= this.fixedWidth / 2;
+                        targetY -= this.fixedHeight / 2;
 
                         // nastav rychlost dle vzdálenosti
                         var b = targetX - this.x;
@@ -103,7 +103,7 @@ namespace Lich {
                         this.currentSpawnCooldown = 0;
                     }
 
-                    targetX = world.hero.x + world.hero.width / 2;
+                    targetX = world.hero.x + world.hero.fixedWidth / 2;
                     targetY = world.hero.y - CupidBoss.HOVER_ALT;
 
                     switch (this.currentMode) {
@@ -112,8 +112,8 @@ namespace Lich {
                         case AI_MODE.RAIN:
                             if (this.currentAttackCooldown >= this.attackCooldown) {
                                 let spell = Resources.getInstance().getSpellDef(SpellKey.SPELL_LOVEARROW);
-                                let castX = this.x + Math.random() * this.width;
-                                let castY = this.y + this.height;
+                                let castX = this.x + Math.random() * this.fixedWidth;
+                                let castY = this.y + this.fixedHeight;
                                 let context = new SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
                                 spell.cast(context);
                                 this.performAnimation(AnimationKey.ANM_CUPID_ATTACK_KEY);
@@ -128,12 +128,12 @@ namespace Lich {
                                     this.performAnimation(AnimationKey.ANM_CUPID_ATTACK_KEY);
                                     this.currentSpawnCooldown = 0;
                                     let angle = Math.random() * Math.PI * 2;
-                                    let radius = Math.max(this.width / 2, this.height / 2);
+                                    let radius = Math.max(this.fixedWidth / 2, this.fixedHeight / 2);
                                     let enemy = SpawnPool.getInstance().spawnAt(
                                         Enemy.Valentimon,
                                         world,
-                                        this.x + this.width / 2 + Math.cos(angle) * radius,
-                                        this.y + this.height / 2 + Math.sin(angle) * radius
+                                        this.x + this.fixedWidth / 2 + Math.cos(angle) * radius,
+                                        this.y + this.fixedHeight / 2 + Math.sin(angle) * radius
                                     );
                                     return enemy;
                                 }

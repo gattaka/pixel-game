@@ -82,8 +82,8 @@ namespace Lich {
             super(collXOffset, collYOffset);
 
             let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
-            this.width = animationDef.width;
-            this.height = animationDef.height;
+            this.fixedWidth = animationDef.width;
+            this.fixedHeight = animationDef.height;
             this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
             this.addChild(this.sprite);
         };
@@ -136,8 +136,8 @@ namespace Lich {
                     var target = targets[t];
                     if (target) {
                         if (target.getCurrentHealth() > 0
-                            && x > target.x && x < target.x + target.width
-                            && y > target.y && y < target.y + target.height
+                            && x > target.x && x < target.x + target.fixedWidth
+                            && y > target.y && y < target.y + target.fixedHeight
                             && target.ownerId != self.owner
                             && (target.ownerId == Hero.OWNER_ID || self.owner == Hero.OWNER_ID)) {
                             // => CollisionType.SOLID -- takže hned dojde k ukončení isBoundsInCollision
@@ -178,8 +178,8 @@ namespace Lich {
                     self.gotoAndPlay("hit");
 
                     if (self.mapDestroy) {
-                        var centX = self.x + self.width / 2;
-                        var centY = self.y + self.height / 2;
+                        var centX = self.x + self.fixedWidth / 2;
+                        var centY = self.y + self.fixedHeight / 2;
                         var rad = Resources.TILE_SIZE * self.radius;
                         for (var rx = centX - rad; rx <= centX + rad; rx += Resources.TILE_SIZE) {
                             for (var ry = centY - rad; ry <= centY + rad; ry += Resources.TILE_SIZE) {
@@ -204,8 +204,8 @@ namespace Lich {
                 clsnTest = game.getWorld().isBoundsInCollision(
                     self.x + self.collXOffset,
                     self.y + self.collYOffset,
-                    self.width - self.collXOffset * 2,
-                    self.height - self.collYOffset * 2,
+                    self.fixedWidth - self.collXOffset * 2,
+                    self.fixedHeight - self.collYOffset * 2,
                     0,
                     distanceY,
                     function (x: number, y: number) { return hitTargetOrCollide(x, y); },
@@ -213,7 +213,7 @@ namespace Lich {
                 );
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
-                    if (self.y > game.getRender().height * 2 || self.y < -game.getRender().height) {
+                    if (self.y > game.getSceneHeight() * 2 || self.y < -game.getSceneHeight()) {
                         self.done = true;
                         return;
                     }
@@ -230,8 +230,8 @@ namespace Lich {
                 clsnTest = game.getWorld().isBoundsInCollision(
                     self.x + self.collXOffset,
                     self.y + self.collYOffset,
-                    self.width - self.collXOffset * 2,
-                    self.height - self.collYOffset * 2,
+                    self.fixedWidth - self.collXOffset * 2,
+                    self.fixedHeight - self.collYOffset * 2,
                     distanceX,
                     0,
                     function (x: number, y: number) { return hitTargetOrCollide(x, y); },
@@ -239,7 +239,7 @@ namespace Lich {
                 );
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;
-                    if (self.x > game.getRender().width * 2 || self.x < -game.getRender().width)
+                    if (self.x > game.getSceneWidth() * 2 || self.x < -game.getSceneWidth())
                         self.done = true;
                     return;
                 } else {

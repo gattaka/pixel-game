@@ -61,7 +61,7 @@ namespace Lich {
             this.healthBar.drawRoundedRect(x, ConditionUI.INNER_BORDER, width, this.barHeight, 3);
 
             this.healthText.setText(this.currentHealth + "/" + this.maxHealth);
-            this.healthText.x = this.width / 2 - this.healthText.width / 2;
+            this.healthText.x = this.fixedWidth / 2 - this.healthText.fixedWidth / 2;
         }
 
         private updateWillBar() {
@@ -70,10 +70,10 @@ namespace Lich {
             this.willBar.beginFill(0x461EFF, 0.7);
             var width = this.barWidth * (this.currentWill / this.maxWill);
             var x = ConditionUI.INNER_BORDER + this.barWidth - width;
-            this.willBar.drawRoundedRect(x, this.height / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
+            this.willBar.drawRoundedRect(x, this.fixedHeight / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
 
             this.willText.setText(this.currentWill + "/" + this.maxWill);
-            this.willText.x = this.width / 2 - this.willText.width / 2;
+            this.willText.x = this.fixedWidth / 2 - this.willText.fixedWidth / 2;
         }
 
         constructor() {
@@ -81,8 +81,8 @@ namespace Lich {
 
             let self = this;
 
-            this.barWidth = this.width - ConditionUI.INNER_BORDER * 2;
-            this.barHeight = this.height / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
+            this.barWidth = this.fixedWidth - ConditionUI.INNER_BORDER * 2;
+            this.barHeight = this.fixedHeight / 2 - ConditionUI.INNER_BORDER - ConditionUI.SPACING / 2;
 
             // podklady 
             var healthBgrBar = new PIXI.Graphics();
@@ -92,7 +92,7 @@ namespace Lich {
 
             var willBgrBar = new PIXI.Graphics();
             willBgrBar.lineStyle(2, 0x000000, 0.7);
-            willBgrBar.drawRoundedRect(ConditionUI.INNER_BORDER, this.height / 2 + ConditionUI.SPACING / 2, this.barWidth, this.barHeight, 3);
+            willBgrBar.drawRoundedRect(ConditionUI.INNER_BORDER, this.fixedHeight / 2 + ConditionUI.SPACING / 2, this.barWidth, this.barHeight, 3);
             this.addChild(willBgrBar);
 
             // zdraví
@@ -104,7 +104,7 @@ namespace Lich {
             // vůle
             this.addChild(this.willBar);
             this.willText = new Label(" ");
-            this.willText.y = this.height / 2 + ConditionUI.SPACING / 2;
+            this.willText.y = this.fixedHeight / 2 + ConditionUI.SPACING / 2;
             this.addChild(this.willText);
 
             this.updateHealthBar();

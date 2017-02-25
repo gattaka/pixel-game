@@ -101,8 +101,8 @@ namespace Lich {
             // obecnosti cast metody to zatím nechávám celé v režii cast metody
             context.game.getWorld().bulletObjects.push(object);
             context.game.getWorld().entitiesCont.addChild(object);
-            object.x = context.xCast - object.width / 2;
-            object.y = context.yCast - object.height / 2;
+            object.x = context.xCast - object.fixedWidth / 2;
+            object.y = context.yCast - object.fixedHeight / 2;
 
             Mixer.playSound(self.castSoundKey, 0.2);
             return true;

@@ -19,10 +19,11 @@ var Lich;
         };
         SpawnPool.prototype.createContext = function (world) {
             var ctx = new SpawnContext();
-            ctx.canvas = world.game.getRender();
+            ctx.sceneWidth = world.game.getSceneWidth();
+            ctx.sceneHeight = world.game.getSceneHeight();
             // délky
-            ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
-            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;
+            ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.sceneWidth) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
+            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.sceneHeight) + SpawnPool.SPAWN_ZONE_SIZE;
             // počátek 
             ctx.startTiles = world.render.pixelsToTiles(0, 0);
             ctx.startTiles.x -= SpawnPool.SPAWN_ZONE_SIZE;
@@ -60,8 +61,8 @@ var Lich;
             // staticky adresovat (nemám abstract static property). Bude potřeba vytvořit
             // nějaký statický enemy-dimensions rejstřík
             var enemy = new enemyClass();
-            var enWidth = world.render.pixelsDistanceToTiles(enemy.width);
-            var enHeight = world.render.pixelsDistanceToTiles(enemy.height);
+            var enWidth = world.render.pixelsDistanceToTiles(enemy.fixedWidth);
+            var enHeight = world.render.pixelsDistanceToTiles(enemy.fixedHeight);
             // je možné nepřítele někam usadit?
             // projdi vnější okraj obrazovky (tam kde hráč nevidí) a pokud nadješ prostor, 
             // kam se nepřítel vejde, proveď spawn.

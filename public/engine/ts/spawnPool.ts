@@ -1,6 +1,7 @@
 namespace Lich {
     class SpawnContext {
-        public canvas: PIXI.WebGLRenderer;
+        public sceneWidth: number;
+        public sceneHeight: number;
         public borderWidthInTiles: number;
         public borderHeightInTiles: number;
         public startTiles: Coord2D;
@@ -30,10 +31,11 @@ namespace Lich {
 
         private createContext(world: World): SpawnContext {
             let ctx = new SpawnContext();
-            ctx.canvas = world.game.getRender();
+            ctx.sceneWidth = world.game.getSceneWidth();
+            ctx.sceneHeight = world.game.getSceneHeight();
             // délky
-            ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
-            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;
+            ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.sceneWidth) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
+            ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.sceneHeight) + SpawnPool.SPAWN_ZONE_SIZE;
             // počátek 
             ctx.startTiles = world.render.pixelsToTiles(0, 0);
             ctx.startTiles.x -= SpawnPool.SPAWN_ZONE_SIZE;
@@ -75,8 +77,8 @@ namespace Lich {
             // staticky adresovat (nemám abstract static property). Bude potřeba vytvořit
             // nějaký statický enemy-dimensions rejstřík
             let enemy: AbstractEnemy = new enemyClass();
-            let enWidth = world.render.pixelsDistanceToTiles(enemy.width);
-            let enHeight = world.render.pixelsDistanceToTiles(enemy.height);
+            let enWidth = world.render.pixelsDistanceToTiles(enemy.fixedWidth);
+            let enHeight = world.render.pixelsDistanceToTiles(enemy.fixedHeight);
 
             // je možné nepřítele někam usadit?
             // projdi vnější okraj obrazovky (tam kde hráč nevidí) a pokud nadješ prostor, 

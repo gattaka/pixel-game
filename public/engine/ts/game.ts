@@ -39,7 +39,12 @@ namespace Lich {
         mouse = new Mouse();
 
         public getWorld(): World { return this.world; }
-        public getRender(): PIXI.WebGLRenderer { return this.renderer; }
+        public getSceneWidth(): number {
+            return window.innerWidth; //this.renderer.view.width; 
+        }
+        public getSceneHeight(): number {
+            return window.innerHeight; //this.renderer.view.height; 
+        }
 
         constructor(minimapCanvasId: string, loaderCanvasId: string) {
 
@@ -64,7 +69,7 @@ namespace Lich {
             console.log("running");
 
             // Create the renderer
-            self.renderer = new PIXI.WebGLRenderer();
+            self.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
             self.renderer.view.style.position = "absolute";
             self.renderer.view.style.display = "block";
             self.renderer.backgroundColor = 0xfafaea;
@@ -74,20 +79,22 @@ namespace Lich {
                 default:
                     self.renderer.backgroundColor = 0x839e61;
             }
-            self.renderer.autoResize = true;
+            self.renderer.autoResize = false;
 
-            function resizeCanvas() {
-                self.renderer.resize(window.innerWidth, window.innerHeight);
-            }
-            resizeCanvas();
-            // resize the canvas to fill browser window dynamically
-            window.addEventListener('resize', resizeCanvas, false);
+            // function resizeCanvas() {
+            //     self.renderer.resize(window.innerWidth, window.innerHeight);
+            // }
+            // resizeCanvas();
+            // // resize the canvas to fill browser window dynamically
+            // window.addEventListener('resize', resizeCanvas, false);
 
             // Add the canvas to the HTML document
             document.body.appendChild(self.renderer.view);
 
             // Create a container object called the `stage`
-            let stage = new PIXI.Container();
+            self.stage = new PIXI.Container();
+            self.stage.fixedWidth = window.innerWidth;
+            self.stage.fixedHeight = window.innerHeight;
 
             /*----------*/
             /* Controls */
@@ -279,8 +286,8 @@ namespace Lich {
                 self.loadUI = new LoaderUI(self);
             }
 
-            window.onbeforeunload = function (e) {
-                var e = e || window.event;
+            window.onbeforeunload = function (evn) {
+                let e = evn || window.event;
                 // IE & Firefox
                 if (e) {
                     e.returnValue = 'Are you sure?';
@@ -289,10 +296,20 @@ namespace Lich {
                 return 'Are you sure?';
             };
 
-            function gameLoop(delta?: number) {
-                stats.begin();
 
-                if (self.initialized && delta) {
+            // Je potřeba omezit FPS pro výpočty, jinak se budou provádět 
+            // při každém drobném snímku a to není potřeba
+            let fps = 60;
+            let interval = 1000 / fps;
+            let delta = 0;
+
+            let ticker = PIXI.ticker.shared;
+            ticker.add(() => {
+                stats.begin();
+                let renderDelta = ticker.deltaTime;
+                delta = renderDelta * 10;
+
+                if (self.initialized) {
 
                     // Idle
                     self.getWorld().handleTick(delta);
@@ -396,16 +413,12 @@ namespace Lich {
                     }
 
                     self.getWorld().update(delta, controls);
+                    delta = 0;
                 }
 
-                requestAnimationFrame(gameLoop);
-                self.renderer.render(stage);
+                self.renderer.render(self.stage);
                 stats.end();
-            }
-
-            // Start the game loop
-            // Loop this function at 60 frames per second
-            gameLoop();
+            });
         };
     }
 }

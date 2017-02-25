@@ -343,13 +343,13 @@ namespace Lich {
 
             var up = this.createUpButton();
             super.addChild(up);
-            up.x = self.width + PartsUI.SELECT_BORDER;
+            up.x = self.fixedWidth + PartsUI.SELECT_BORDER;
             up.y = 0;
 
             var down = this.createDownButton();
             super.addChild(down);
-            down.x = self.width + PartsUI.SELECT_BORDER;
-            down.y = self.height - Resources.PARTS_SIZE - PartsUI.BORDER;
+            down.x = self.fixedWidth + PartsUI.SELECT_BORDER;
+            down.y = self.fixedHeight - Resources.PARTS_SIZE - PartsUI.BORDER;
 
             var save = this.createSaveButton();
             super.addChild(save);

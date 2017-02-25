@@ -77,7 +77,7 @@ var Lich;
                 startSecX = startSecX >= Render.BUFFER_SECTORS_X ? startSecX - Render.BUFFER_SECTORS_X : startSecX;
                 applyXdither = startSecX != 0;
             }
-            var countSectX = Math.floor(self.sectorsCont.width / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
+            var countSectX = Math.floor(self.sectorsCont.fixedWidth / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
             applyXdither = applyXdither && startSecX + countSectX != maxSecCountX;
             // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
             var startSecY = 0;
@@ -95,7 +95,7 @@ var Lich;
                 startSecY = startSecY >= Render.BUFFER_SECTORS_Y ? startSecY - Render.BUFFER_SECTORS_Y : startSecY;
                 applyYdither = startSecY != 0;
             }
-            var countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
+            var countSectY = Math.floor(self.sectorsCont.fixedHeight / (Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
             applyYdither = applyYdither && startSecY + countSectY != maxSecCountY;
             // změnilo se něco? Pokud není potřeba pře-alokovávat sektory, ukonči fci
             if (self.currentStartHalfSecX === halfStartSecX && self.currentStartHalfSecY === halfStartSecY)
@@ -195,6 +195,14 @@ var Lich;
                             }
                             // debug
                             if (Lich.Resources.SHOW_SECTORS) {
+                                var testShape = new PIXI.Graphics();
+                                testShape.lineStyle(1, 0xff0000);
+                                testShape.drawRect(0, 0, sector.fixedWidth, sector.fixedHeight);
+                                sector.addChild(testShape);
+                                testShape = new PIXI.Graphics();
+                                testShape.lineStyle(1, 0x00ff00);
+                                testShape.drawRect(0, 0, fogSector.fixedWidth, fogSector.fixedHeight);
+                                fogSector.addChild(testShape);
                             }
                             // proveď cache na sektoru
                             // sector.cache(0, 0, sector.width, sector.height);
@@ -268,8 +276,8 @@ var Lich;
             if (self.screenOffsetX + dst > 0)
                 return -self.screenOffsetX;
             // terén by se odlepil od pravého konce směrem doleva (dst < 0)
-            if (self.screenOffsetX + dst < self.game.getRender().width - self.tilesMap.width * Lich.Resources.TILE_SIZE)
-                return self.game.getRender().width - self.tilesMap.width * Lich.Resources.TILE_SIZE - self.screenOffsetX;
+            if (self.screenOffsetX + dst < self.game.getSceneWidth() - self.tilesMap.width * Lich.Resources.TILE_SIZE)
+                return self.game.getSceneWidth() - self.tilesMap.width * Lich.Resources.TILE_SIZE - self.screenOffsetX;
             return dst;
         };
         /**
@@ -281,8 +289,8 @@ var Lich;
             if (self.screenOffsetY + dst > 0)
                 return -self.screenOffsetY;
             // terén by se odlepil od spodního konce směrem nahoru (dst < 0)
-            if (self.screenOffsetY + dst < self.game.getRender().height - self.tilesMap.height * Lich.Resources.TILE_SIZE)
-                return self.game.getRender().height - self.tilesMap.height * Lich.Resources.TILE_SIZE - self.screenOffsetY;
+            if (self.screenOffsetY + dst < self.game.getSceneHeight() - self.tilesMap.height * Lich.Resources.TILE_SIZE)
+                return self.game.getSceneHeight() - self.tilesMap.height * Lich.Resources.TILE_SIZE - self.screenOffsetY;
             return dst;
         };
         Render.prototype.shiftSectorsBy = function (shiftX, shiftY) {

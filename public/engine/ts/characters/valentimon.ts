@@ -34,8 +34,8 @@ namespace Lich {
 
             runAI(world: World, delta: number) {
                 let hero = world.hero;
-                let heroTargetX = world.hero.x + world.hero.width / 2;
-                let heroTargetY = world.hero.y + world.hero.height / 2;
+                let heroTargetX = world.hero.x + world.hero.fixedWidth / 2;
+                let heroTargetY = world.hero.y + world.hero.fixedHeight / 2;
 
                 if (this.getCurrentHealth() > 0) {
                     if (this.currentAttackCooldown >= this.attackCooldown) {
@@ -45,7 +45,7 @@ namespace Lich {
                             this.currentAttackCooldown = 0;
                         } else {
                             let spell = Resources.getInstance().getSpellDef(SpellKey.SPELL_LOVELETTER);
-                            let context = new SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
+                            let context = new SpellContext(Valentimon.OWNER_ID, this.x + this.fixedWidth / 2, this.y + this.fixedHeight / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
                             this.performAnimation(AnimationKey.ANM_VALENTIMON_ATTACK_KEY);
                             this.currentAttackCooldown = 0;
@@ -54,8 +54,8 @@ namespace Lich {
                         this.currentAttackCooldown += delta;
                         let processSpeed = () => {
                             // snaž se dosáhnout místo středem
-                            let targetX = heroTargetX - this.width / 2;
-                            let targetY = heroTargetY - this.height / 2;
+                            let targetX = heroTargetX - this.fixedWidth / 2;
+                            let targetY = heroTargetY - this.fixedHeight / 2;
 
                             // nastav rychlost dle vzdálenosti
                             var b = targetX - this.x;

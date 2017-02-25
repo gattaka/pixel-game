@@ -56,12 +56,12 @@ namespace Lich {
                         if (this.lastOrientationLeft) {
                             nextX = this.x + this.collXOffset - Resources.TILE_SIZE;
                         } else {
-                            nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
+                            nextX = this.x + this.fixedWidth - this.collXOffset + Resources.TILE_SIZE;
                         }
 
-                        if (world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE - this.collYOffset).hit) {
+                        if (world.isCollision(nextX, this.y + this.fixedHeight - Resources.TILE_SIZE - this.collYOffset).hit) {
                             // pokud je přede mnou překážka
-                            if (world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
+                            if (world.isCollision(nextX, this.y + this.fixedHeight - Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
                                 // kterou mám šanci přeskočit, zkus vyskočit
                                 this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
                             } else {

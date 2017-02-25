@@ -15,8 +15,8 @@ namespace Lich {
             public notificationTimer: number) {
             super(collXOffset, collYOffset);
 
-            this.width = Resources.PARTS_SIZE;
-            this.height = Resources.PARTS_SIZE;
+            this.fixedWidth = Resources.PARTS_SIZE;
+            this.fixedHeight = Resources.PARTS_SIZE;
             this.sprite = Resources.getInstance().getInvObjectSprite(this.item.invObj);
             this.addChild(this.sprite);
         };
@@ -90,8 +90,8 @@ namespace Lich {
             var self = this;
             cont.x = 0;
             cont.y = 0;
-            cont.width = self.game.getRender().width;
-            cont.height = self.game.getRender().height;
+            cont.fixedWidth = self.game.getSceneWidth();
+            cont.fixedHeight = self.game.getSceneHeight();
         }
 
         constructor(public game: Game, public tilesMap: TilesMap) {
@@ -125,8 +125,8 @@ namespace Lich {
 
             // Hráč
             self.hero = new Hero();
-            self.hero.x = game.getRender().width / 2;
-            self.hero.y = game.getRender().height / 2;
+            self.hero.x = game.getSceneWidth() / 2;
+            self.hero.y = game.getSceneHeight() / 2;
             self.entitiesCont.addChild(self.hero);
             self.placePlayerOnSpawnPoint();
 
@@ -168,18 +168,18 @@ namespace Lich {
             this.messagesCont.addChild(deadInfo);
 
             let shape = new PIXI.Graphics();
-            shape.width = this.game.getRender().width;
-            shape.height = this.game.getRender().height;
+            shape.fixedWidth = this.game.getSceneWidth();
+            shape.fixedHeight = this.game.getSceneHeight();
             shape.beginFill(0x0a0a0a, 0.9);
-            shape.drawRect(0, 0, shape.width, shape.height);
+            shape.drawRect(0, 0, shape.fixedWidth, shape.fixedHeight);
             shape.x = 0;
             shape.y = 0;
             deadInfo.addChild(shape);
 
             let gameOverSprite = Resources.getInstance().getUISprite(UISpriteKey.UI_GAME_OVER_KEY);
             let bounds = gameOverSprite.getBounds();
-            gameOverSprite.x = shape.width / 2 - bounds.width / 2;
-            gameOverSprite.y = shape.height / 2 - bounds.height / 2;
+            gameOverSprite.x = shape.fixedWidth / 2 - bounds.width / 2;
+            gameOverSprite.y = shape.fixedHeight / 2 - bounds.height / 2;
             deadInfo.addChild(gameOverSprite);
             deadInfo.alpha = 0;
 
@@ -254,8 +254,8 @@ namespace Lich {
         setSpawnPoint(tx: number, ty: number): boolean {
             var self = this;
             let hero = self.hero;
-            let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
-            let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            let heroWidth = self.render.pixelsDistanceToTiles(hero.fixedWidth);
+            let heroHeight = self.render.pixelsDistanceToTiles(hero.fixedHeight);
             // posuv nahoru o výšku hráče, aby u spawn pointu stál nohama
             ty -= heroHeight - 2;
             // je hráče kam umístit?
@@ -280,9 +280,9 @@ namespace Lich {
         placePlayerOnScreen(xp: number, yp: number) {
             var self = this;
             let hero = self.hero;
-            let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
-            let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
-            let tCoord = self.render.pixelsToTiles(xp - hero.width / 2, yp - hero.height / 2);
+            let heroWidth = self.render.pixelsDistanceToTiles(hero.fixedWidth);
+            let heroHeight = self.render.pixelsDistanceToTiles(hero.fixedHeight);
+            let tCoord = self.render.pixelsToTiles(xp - hero.fixedWidth / 2, yp - hero.fixedHeight / 2);
             if (self.fits(tCoord.x, tCoord.y, heroWidth, heroHeight)) {
                 self.placePlayerOn(tCoord.x, tCoord.y, hero);
                 return true;
@@ -328,8 +328,8 @@ namespace Lich {
             let tilesMap = self.tilesMap;
             let hero = self.hero;
 
-            let heroWidth = self.render.pixelsDistanceToTiles(hero.width);
-            let heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            let heroWidth = self.render.pixelsDistanceToTiles(hero.fixedWidth);
+            let heroHeight = self.render.pixelsDistanceToTiles(hero.fixedHeight);
             let pCoord;
             if (tilesMap.spawnPoint) {
                 self.placePlayerOn(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y, hero);
@@ -378,8 +378,8 @@ namespace Lich {
                 let radius = Resources.PARTS_SIZE * Resources.REVEAL_SIZE;
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
-                let cx = Math.floor(self.hero.x + self.hero.width / 2);
-                let cy = Math.floor(self.hero.y + self.hero.height / 2);
+                let cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
+                let cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
                 let d2 = Math.pow(radius, 2);
                 for (let y = cy - radius; y < cy + radius; y += Resources.PARTS_SIZE * 2) {
                     for (let x = cx - radius; x < cx + radius; x += Resources.PARTS_SIZE * 2) {
@@ -409,8 +409,8 @@ namespace Lich {
             // požadovaný posuv
             let rndShiftX = Utils.floor(shiftX);
             let rndShiftY = Utils.floor(shiftY);
-            let canvasCenterX = self.game.getRender().width / 2;
-            let canvasCenterY = self.game.getRender().height / 2;
+            let canvasCenterX = self.game.getSceneWidth() / 2;
+            let canvasCenterY = self.game.getSceneHeight() / 2;
 
             let playerShiftX, sceneShiftX;
             let playerShiftY, sceneShiftY;
@@ -498,8 +498,8 @@ namespace Lich {
                 let distanceY;
                 let boundsX = object.x + object.collXOffset;
                 let boundsY = object.y + object.collYOffset;
-                let boundsWidth = object.width - object.collXOffset * 2;
-                let boundsHeight = object.height - object.collYOffset * 2;
+                let boundsWidth = object.fixedWidth - object.collXOffset * 2;
+                let boundsHeight = object.fixedHeight - object.collYOffset * 2;
                 if (isCurrentlyClimbing && forceJump || object.hovers) {
                     // ignoruj gravitaci
                     distanceY = object.speedy * sDelta;
@@ -587,7 +587,7 @@ namespace Lich {
                             // makeShift(0, y);
                         } else {
                             // záporné, budu dopadat dolů
-                            y = object.y + object.height - object.collYOffset - (clsnPosition.y + clsnTest.partOffsetY);
+                            y = object.y + object.fixedHeight - object.collYOffset - (clsnPosition.y + clsnTest.partOffsetY);
                             makeShift(0, y);
                         }
                         object.speedy = 0;
@@ -603,8 +603,8 @@ namespace Lich {
                 clsnTest = self.isBoundsInCollision(
                     object.x + object.collXOffset,
                     object.y + object.collYOffset,
-                    object.width - object.collXOffset * 2,
-                    object.height - object.collYOffset * 2,
+                    object.fixedWidth - object.collXOffset * 2,
+                    object.fixedHeight - object.collYOffset * 2,
                     0,
                     -1,
                     self.isCollision.bind(this),
@@ -640,8 +640,8 @@ namespace Lich {
                     clsnTest = self.isBoundsInCollision(
                         object.x + object.collXOffset,
                         object.y + object.collYOffset,
-                        object.width - object.collXOffset * 2,
-                        object.height - object.collYOffset * 2,
+                        object.fixedWidth - object.collXOffset * 2,
+                        object.fixedHeight - object.collYOffset * 2,
                         distanceX,
                         0,
                         self.isCollision.bind(self),
@@ -667,13 +667,13 @@ namespace Lich {
                             makeShift(x, 0);
                         } else {
                             // narazil jsem do něj zleva
-                            let x = -1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset));
+                            let x = -1 * (clsnPosition.x + clsnTest.partOffsetX - (object.x + object.fixedWidth - object.collXOffset));
                             makeShift(x, 0);
                         }
 
                         if (collisionSteps) {
                             // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
-                            let baseDist = object.y + object.height - object.collYOffset - clsnPosition.y;
+                            let baseDist = object.y + object.fixedHeight - object.collYOffset - clsnPosition.y;
 
                             // automatické stoupání při chůzí po zkosené rampě
                             if (distanceX > 0 &&
@@ -804,10 +804,10 @@ namespace Lich {
                         enemy.y -= rndY;
 
                         if (enemy.unspawns) {
-                            if (enemy.x < -self.game.getRender().width * 2
-                                || enemy.x > self.game.getRender().width * 2
-                                || enemy.y < -self.game.getRender().height * 2
-                                || enemy.y > self.game.getRender().height * 2) {
+                            if (enemy.x < -self.game.getSceneWidth() * 2
+                                || enemy.x > self.game.getSceneWidth() * 2
+                                || enemy.y < -self.game.getSceneHeight() * 2
+                                || enemy.y > self.game.getSceneHeight() * 2) {
                                 // dealokace
                                 self.removeEnemy(enemy);
                             }
@@ -851,10 +851,10 @@ namespace Lich {
 
                     // zjisti, zda hráč objekt nesebral
                     if (self.hero.getCurrentHealth() > 0) {
-                        var heroCenterX = self.hero.x + self.hero.width / 2;
-                        var heroCenterY = self.hero.y + self.hero.height / 2;
-                        var itemCenterX = object.x + object.width / 2;
-                        var itemCenterY = object.y + object.height / 2;
+                        var heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
+                        var heroCenterY = self.hero.y + self.hero.fixedHeight / 2;
+                        var itemCenterX = object.x + object.fixedWidth / 2;
+                        var itemCenterY = object.y + object.fixedHeight / 2;
 
                         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
                             Inventory.getInstance().invInsert(object.item.invObj, 1);
@@ -866,8 +866,8 @@ namespace Lich {
                         if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
                             createjs.Tween.get(object)
                                 .to({
-                                    x: heroCenterX - object.width / 2,
-                                    y: heroCenterY - object.height / 2
+                                    x: heroCenterX - object.fixedWidth / 2,
+                                    y: heroCenterY - object.fixedHeight / 2
                                 }, World.OBJECT_PICKUP_FORCE_TIME);
                         }
                     }
@@ -1228,8 +1228,8 @@ namespace Lich {
                     // Může se provést (cooldown je pryč)?
                     var rmbCooldown = self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY];
                     if (!rmbCooldown || rmbCooldown <= 0) {
-                        var heroCenterX = self.hero.x + self.hero.width / 2;
-                        var heroCenterY = self.hero.y + self.hero.height / 4;
+                        var heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
+                        var heroCenterY = self.hero.y + self.hero.fixedHeight / 4;
 
                         // zkus cast
                         if (rmbSpellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
@@ -1255,8 +1255,8 @@ namespace Lich {
                     self.hero.spellCooldowns[choosenSpell] -= delta;
                     // Může se provést (cooldown je pryč, mám will a chci cast) ?
                     if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                        let heroCenterX = self.hero.x + self.hero.width / 2;
-                        let heroCenterY = self.hero.y + self.hero.height / 4;
+                        let heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
+                        let heroCenterY = self.hero.y + self.hero.fixedHeight / 4;
 
                         // zkus cast
                         if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
@@ -1284,9 +1284,9 @@ namespace Lich {
             // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
             // změna projeví i na pixel místech, kde už je například kolize
             var characterCoordTL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.collYOffset);
-            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.collYOffset);
-            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.height - character.collYOffset);
-            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.height - character.collYOffset);
+            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.collYOffset);
+            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
+            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
             var coord = inTiles ? new Coord2D(Utils.even(x), Utils.even(y)) : this.render.pixelsToEvenTiles(x, y);
             // kontroluj rádius od každého rohu
             let inReach = Utils.distance(coord.x, coord.y, characterCoordTL.x, characterCoordTL.y) < Resources.REACH_TILES_RADIUS
@@ -1318,7 +1318,7 @@ namespace Lich {
             }
 
             Nature.getInstance().handleTick(delta, self);
-            SpawnPool.getInstance().update(delta, self);
+            // SpawnPool.getInstance().update(delta, self);
         };
     }
 

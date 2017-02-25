@@ -38,7 +38,7 @@ var Lich;
             }
             console.log("running");
             // Create the renderer
-            self.renderer = new PIXI.WebGLRenderer();
+            self.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
             self.renderer.view.style.position = "absolute";
             self.renderer.view.style.display = "block";
             self.renderer.backgroundColor = 0xfafaea;
@@ -48,17 +48,19 @@ var Lich;
                 default:
                     self.renderer.backgroundColor = 0x839e61;
             }
-            self.renderer.autoResize = true;
-            function resizeCanvas() {
-                self.renderer.resize(window.innerWidth, window.innerHeight);
-            }
-            resizeCanvas();
-            // resize the canvas to fill browser window dynamically
-            window.addEventListener('resize', resizeCanvas, false);
+            self.renderer.autoResize = false;
+            // function resizeCanvas() {
+            //     self.renderer.resize(window.innerWidth, window.innerHeight);
+            // }
+            // resizeCanvas();
+            // // resize the canvas to fill browser window dynamically
+            // window.addEventListener('resize', resizeCanvas, false);
             // Add the canvas to the HTML document
             document.body.appendChild(self.renderer.view);
             // Create a container object called the `stage`
-            var stage = new PIXI.Container();
+            self.stage = new PIXI.Container();
+            self.stage.fixedWidth = window.innerWidth;
+            self.stage.fixedHeight = window.innerHeight;
             /*----------*/
             /* Controls */
             /*----------*/
@@ -229,8 +231,8 @@ var Lich;
                 });
                 self.loadUI = new Lich.LoaderUI(self);
             }
-            window.onbeforeunload = function (e) {
-                var e = e || window.event;
+            window.onbeforeunload = function (evn) {
+                var e = evn || window.event;
                 // IE & Firefox
                 if (e) {
                     e.returnValue = 'Are you sure?';
@@ -238,9 +240,17 @@ var Lich;
                 // For Safari
                 return 'Are you sure?';
             };
-            function gameLoop(delta) {
+            // Je potřeba omezit FPS pro výpočty, jinak se budou provádět 
+            // při každém drobném snímku a to není potřeba
+            var fps = 60;
+            var interval = 1000 / fps;
+            var delta = 0;
+            var ticker = PIXI.ticker.shared;
+            ticker.add(function () {
                 stats.begin();
-                if (self.initialized && delta) {
+                var renderDelta = ticker.deltaTime;
+                delta = renderDelta * 10;
+                if (self.initialized) {
                     // Idle
                     self.getWorld().handleTick(delta);
                     // UI má při akcích myši přednost
@@ -346,17 +356,19 @@ var Lich;
                         }
                     }
                     self.getWorld().update(delta, controls);
+                    delta = 0;
                 }
-                requestAnimationFrame(gameLoop);
-                self.renderer.render(stage);
+                self.renderer.render(self.stage);
                 stats.end();
-            }
-            // Start the game loop
-            // Loop this function at 60 frames per second
-            gameLoop();
+            });
         }
         Game.prototype.getWorld = function () { return this.world; };
-        Game.prototype.getRender = function () { return this.renderer; };
+        Game.prototype.getSceneWidth = function () {
+            return window.innerWidth; //this.renderer.view.width; 
+        };
+        Game.prototype.getSceneHeight = function () {
+            return window.innerHeight; //this.renderer.view.height; 
+        };
         ;
         return Game;
     }());

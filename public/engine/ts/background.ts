@@ -48,11 +48,11 @@ namespace Lich {
             self.canvas = canvas;
 
             let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_SKY_KEY);
-            skySprite.width = self.canvas.width;
+            skySprite.fixedWidth = self.canvas.width;
 
             Background.BGR_ORDER.forEach((b: BackgroundKey, i) => {
                 let sprite = Resources.getInstance().getBackgroundSprite(b);
-                sprite.width = self.canvas.width;
+                sprite.fixedWidth = self.canvas.width;
                 self.bgrSprites.push(sprite);
             });
 

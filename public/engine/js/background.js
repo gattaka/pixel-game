@@ -22,10 +22,10 @@ var Lich;
             var self = _this;
             self.canvas = canvas;
             var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_SKY_KEY);
-            skySprite.width = self.canvas.width;
+            skySprite.fixedWidth = self.canvas.width;
             Background.BGR_ORDER.forEach(function (b, i) {
                 var sprite = Lich.Resources.getInstance().getBackgroundSprite(b);
-                sprite.width = self.canvas.width;
+                sprite.fixedWidth = self.canvas.width;
                 self.bgrSprites.push(sprite);
             });
             // Background.CLOUDS_KEYS.forEach((c) => {

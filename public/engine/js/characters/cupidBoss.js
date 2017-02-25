@@ -31,8 +31,8 @@ var Lich;
                 _this.currentSpawnCooldown = 0;
                 _this.spawnedEnemies = new Array();
                 _this.maxHealth = _this.currentHealth = 5000;
-                _this.healthBar.height = 10;
-                _this.healthBar.y = -_this.healthBar.height;
+                _this.healthBar.fixedHeight = 10;
+                _this.healthBar.y = -_this.healthBar.fixedHeight;
                 // stále jsem v hover pohybu
                 _this.movementTypeX = Lich.MovementTypeX.HOVER;
                 _this.movementTypeY = Lich.MovementTypeY.HOVER;
@@ -50,8 +50,8 @@ var Lich;
                     var targetY_1 = 0;
                     var processSpeed = function () {
                         // snaž se dosáhnout místo středem
-                        targetX_1 -= _this.width / 2;
-                        targetY_1 -= _this.height / 2;
+                        targetX_1 -= _this.fixedWidth / 2;
+                        targetY_1 -= _this.fixedHeight / 2;
                         // nastav rychlost dle vzdálenosti
                         var b = targetX_1 - _this.x;
                         var a = targetY_1 - _this.y;
@@ -88,7 +88,7 @@ var Lich;
                         }
                         this.currentSpawnCooldown = 0;
                     }
-                    targetX_1 = world.hero.x + world.hero.width / 2;
+                    targetX_1 = world.hero.x + world.hero.fixedWidth / 2;
                     targetY_1 = world.hero.y - CupidBoss.HOVER_ALT;
                     switch (this.currentMode) {
                         case AI_MODE.IDLE:
@@ -96,8 +96,8 @@ var Lich;
                         case AI_MODE.RAIN:
                             if (this.currentAttackCooldown >= this.attackCooldown) {
                                 var spell = Lich.Resources.getInstance().getSpellDef(Lich.SpellKey.SPELL_LOVEARROW);
-                                var castX = this.x + Math.random() * this.width;
-                                var castY = this.y + this.height;
+                                var castX = this.x + Math.random() * this.fixedWidth;
+                                var castY = this.y + this.fixedHeight;
                                 var context = new Lich.SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);
                                 spell.cast(context);
                                 this.performAnimation(Lich.AnimationKey.ANM_CUPID_ATTACK_KEY);
@@ -113,8 +113,8 @@ var Lich;
                                     _this.performAnimation(Lich.AnimationKey.ANM_CUPID_ATTACK_KEY);
                                     _this.currentSpawnCooldown = 0;
                                     var angle = Math.random() * Math.PI * 2;
-                                    var radius = Math.max(_this.width / 2, _this.height / 2);
-                                    var enemy = Lich.SpawnPool.getInstance().spawnAt(Enemy.Valentimon, world, _this.x + _this.width / 2 + Math.cos(angle) * radius, _this.y + _this.height / 2 + Math.sin(angle) * radius);
+                                    var radius = Math.max(_this.fixedWidth / 2, _this.fixedHeight / 2);
+                                    var enemy = Lich.SpawnPool.getInstance().spawnAt(Enemy.Valentimon, world, _this.x + _this.fixedWidth / 2 + Math.cos(angle) * radius, _this.y + _this.fixedHeight / 2 + Math.sin(angle) * radius);
                                     return enemy;
                                 };
                                 // pokud je to první spawnování, spawnuje, dokud není můžeš

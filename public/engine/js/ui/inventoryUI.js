@@ -95,9 +95,9 @@ var Lich;
                 // jsem zabalen?
                 if (self.collapsed) {
                     var newHeight = Lich.PartsUI.pixelsByX(self.m);
-                    self.y = self.y - (newHeight - self.height);
-                    self.width = Lich.PartsUI.pixelsByX(self.n);
-                    self.height = newHeight;
+                    self.y = self.y - (newHeight - self.fixedHeight);
+                    self.fixedWidth = Lich.PartsUI.pixelsByX(self.n);
+                    self.fixedHeight = newHeight;
                     self.drawBackground();
                     self.itemHighlight.visible = self.itemHighlightVisibleBeforeCollapse;
                     self.upBtn.visible = true;
@@ -109,9 +109,9 @@ var Lich;
                 }
                 else {
                     var newHeight = Lich.PartsUI.pixelsByX(1);
-                    self.y = self.y + (self.height - newHeight);
-                    self.width = Lich.PartsUI.pixelsByX(1);
-                    self.height = newHeight;
+                    self.y = self.y + (self.fixedHeight - newHeight);
+                    self.fixedWidth = Lich.PartsUI.pixelsByX(1);
+                    self.fixedHeight = newHeight;
                     self.drawBackground();
                     self.itemHighlightVisibleBeforeCollapse = self.itemHighlight.visible;
                     self.itemHighlight.visible = false;

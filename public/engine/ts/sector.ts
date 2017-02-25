@@ -10,8 +10,8 @@ namespace Lich {
             public secId: number,
             public map_x: number,
             public map_y: number,
-            public width: number,
-            public height: number) {
+            public fixedWidth: number,
+            public fixedHeight: number) {
             super();
         }
     }
@@ -29,18 +29,18 @@ namespace Lich {
             public secId: number,
             public map_x: number,
             public map_y: number,
-            public width: number,
-            public height: number) {
-            super(secId, map_x, map_y, width, height);
+            public fixedWidth: number,
+            public fixedHeight: number) {
+            super(secId, map_x, map_y, fixedWidth, fixedHeight);
 
-            this.backgroundCont.width = this.width;
-            this.backgroundCont.height = this.height;
+            this.backgroundCont.fixedWidth = this.fixedWidth;
+            this.backgroundCont.fixedHeight = this.fixedHeight;
 
-            this.cacheableCont.width = this.width;
-            this.cacheableCont.height = this.height;
+            this.cacheableCont.fixedWidth = this.fixedWidth;
+            this.cacheableCont.fixedHeight = this.fixedHeight;
 
-            this.animatedCont.width = this.width;
-            this.animatedCont.height = this.height;
+            this.animatedCont.fixedWidth = this.fixedWidth;
+            this.animatedCont.fixedHeight = this.fixedHeight;
 
             this.addChild(this.backgroundCont);
             this.addChild(this.cacheableCont);

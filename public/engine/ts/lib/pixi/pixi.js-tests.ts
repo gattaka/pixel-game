@@ -82,8 +82,8 @@ namespace basics {
             this.container.x = this.app.renderer.width / 2;
             this.container.y = this.app.renderer.height / 2;
 
-            this.container.pivot.x = this.container.width / 2;
-            this.container.pivot.y = this.container.height / 2;
+            this.container.pivot.x = this.container.fixedWidth / 2;
+            this.container.pivot.y = this.container.fixedHeight / 2;
 
             this.app.ticker.add((delta: number): void => {
                 this.container.rotation -= 0.01 / delta;
@@ -147,8 +147,8 @@ namespace basics {
             document.body.appendChild(this.app.view);
 
             this.background = PIXI.Sprite.fromImage("required/assets/bkg-grass.jpg");
-            this.background.width = this.app.renderer.width;
-            this.background.height = this.app.renderer.height;
+            this.background.fixedWidth = this.app.renderer.width;
+            this.background.fixedHeight = this.app.renderer.height;
             this.app.stage.addChild(this.background);
 
             this.app.stop();
@@ -461,8 +461,8 @@ namespace basics {
                 .lineTo(70, 50);
 
             // Position the button
-            this.button.x = (this.app.renderer.width - this.button.width) / 2;
-            this.button.y = (this.app.renderer.height - this.button.height) / 2;
+            this.button.x = (this.app.renderer.width - this.button.fixedWidth) / 2;
+            this.button.y = (this.app.renderer.height - this.button.fixedHeight) / 2;
 
             // Enable interactivity on the button
             this.button.interactive = true;
@@ -478,8 +478,8 @@ namespace basics {
                 let texture = PIXI.Texture.fromVideo("required/assets/testVideo.mp4");
 
                 this.videoSprite = new PIXI.Sprite(texture);
-                this.videoSprite.width = this.app.renderer.width;
-                this.videoSprite.height = this.app.renderer.height;
+                this.videoSprite.fixedWidth = this.app.renderer.width;
+                this.videoSprite.fixedHeight = this.app.renderer.height;
                 this.app.stage.addChild(this.videoSprite);
 
             });
@@ -1024,8 +1024,8 @@ namespace demos {
             document.body.appendChild(this.app.view);
 
             let background = PIXI.Sprite.fromImage("required/assets/button_test_BG.jpg");
-            background.width = this.app.renderer.width;
-            background.height = this.app.renderer.height;
+            background.fixedWidth = this.app.renderer.width;
+            background.fixedHeight = this.app.renderer.height;
             this.background = background;
             this.app.stage.addChild(this.background);
 
@@ -1342,8 +1342,8 @@ namespace demos {
                 });
 
             this.background = PIXI.Sprite.fromImage("required/assets/textDemoBG.jpg");
-            this.background.width = this.app.renderer.width;
-            this.background.height = this.app.renderer.height;
+            this.background.fixedWidth = this.app.renderer.width;
+            this.background.fixedHeight = this.app.renderer.height;
             this.app.stage.addChild(this.background);
 
             this.textSample = new PIXI.Text("Pixi.js can has\n multiline text!", {
@@ -1629,8 +1629,8 @@ namespace filters {
             document.body.appendChild(this.app.view);
 
             this.bg = PIXI.Sprite.fromImage("required/assets/depth_blur_BG.jpg");
-            this.bg.width = this.app.renderer.width;
-            this.bg.height = this.app.renderer.height;
+            this.bg.fixedWidth = this.app.renderer.width;
+            this.bg.fixedHeight = this.app.renderer.height;
             this.app.stage.addChild(this.bg);
 
             this.littleDudes = PIXI.Sprite.fromImage("required/assets/depth_blur_dudes.jpg");
@@ -1730,8 +1730,8 @@ namespace filters {
             this.app.stage.addChild(this.ring);
 
             this.bg = PIXI.Sprite.fromImage("required/assets/bkg-grass.jpg");
-            this.bg.width = this.app.renderer.width;
-            this.bg.height = this.app.renderer.height;
+            this.bg.fixedWidth = this.app.renderer.width;
+            this.bg.fixedHeight = this.app.renderer.height;
             this.bg.alpha = 0.4;
             this.container.addChild(this.bg);
 
@@ -1779,7 +1779,7 @@ namespace filters {
 
             this.ring.visible = true;
             this.displacementSprite.x = eventData.data.global.x - 100;
-            this.displacementSprite.y = eventData.data.global.y - this.displacementSprite.height / 2;
+            this.displacementSprite.y = eventData.data.global.y - this.displacementSprite.fixedHeight / 2;
             this.ring.x = eventData.data.global.x - 25;
             this.ring.y = eventData.data.global.y;
 

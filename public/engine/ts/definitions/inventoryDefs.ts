@@ -83,7 +83,7 @@ namespace Lich {
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
                     let health = 10;
                     world.hero.fillHealth(health);
-                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y);
+                    world.fadeText("+" + health, world.hero.x + world.hero.fixedWidth * Math.random(), world.hero.y);
                     return true;
                 } else {
                     return false;
@@ -95,7 +95,7 @@ namespace Lich {
                 if (world.hero.getCurrentHealth() < world.hero.getMaxHealth()) {
                     let health = 30;
                     world.hero.fillHealth(health);
-                    world.fadeText("+" + health, world.hero.x + world.hero.width * Math.random(), world.hero.y);
+                    world.fadeText("+" + health, world.hero.x + world.hero.fixedWidth * Math.random(), world.hero.y);
                     return true;
                 } else {
                     return false;

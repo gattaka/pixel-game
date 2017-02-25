@@ -56,15 +56,15 @@ var Lich;
             _this.isClimbing = false;
             _this.spellCooldowns = new Lich.Table();
             var animationDef = Lich.Resources.getInstance().animationSetDefsByKey[_this.animationSetKey];
-            _this.width = animationDef.width;
-            _this.height = animationDef.height;
+            _this.fixedWidth = animationDef.width;
+            _this.fixedHeight = animationDef.height;
             _this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
             _this.addChild(_this.sprite);
             _this.healthBar = new PIXI.Graphics();
-            _this.healthBar.width = _this.width;
-            _this.healthBar.height = 4;
+            _this.healthBar.fixedWidth = _this.fixedWidth;
+            _this.healthBar.fixedHeight = 4;
             _this.healthBar.x = 0;
-            _this.healthBar.y = -_this.healthBar.height;
+            _this.healthBar.y = -_this.healthBar.fixedHeight;
             _this.healthBar.visible = false;
             return _this;
             // TODO
@@ -78,10 +78,10 @@ var Lich;
                 this.healthBar.visible = true;
                 this.healthBar.clear();
                 this.healthBar.beginFill(0x00FF00, 0.7);
-                this.healthBar.drawRect(0, 0, this.width, this.healthBar.height);
-                var width = this.width * (1 - this.currentHealth / this.maxHealth);
+                this.healthBar.drawRect(0, 0, this.fixedWidth, this.healthBar.fixedHeight);
+                var width = this.fixedWidth * (1 - this.currentHealth / this.maxHealth);
                 this.healthBar.beginFill(0xFF0000, 0.7);
-                this.healthBar.drawRect(0, 0, width, this.healthBar.height);
+                this.healthBar.drawRect(0, 0, width, this.healthBar.fixedHeight);
             }
         };
         Character.prototype.onHealthChange = function (difference) {
@@ -107,7 +107,7 @@ var Lich;
                 this.currentHealth -= effectiveDamage;
                 // TODO zatím nemá armor, takže se aplikuje vše
                 this.onHealthChange(this.currentHealth - oldValue);
-                world.fadeText("-" + effectiveDamage, this.x + this.width * Math.random(), this.y);
+                world.fadeText("-" + effectiveDamage, this.x + this.fixedWidth * Math.random(), this.y);
                 this.hitSound();
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;

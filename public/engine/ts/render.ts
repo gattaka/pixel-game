@@ -96,7 +96,7 @@ namespace Lich {
                 startSecX = startSecX >= Render.BUFFER_SECTORS_X ? startSecX - Render.BUFFER_SECTORS_X : startSecX;
                 applyXdither = startSecX != 0;
             }
-            let countSectX = Math.floor(self.sectorsCont.width / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
+            let countSectX = Math.floor(self.sectorsCont.fixedWidth / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
             applyXdither = applyXdither && startSecX + countSectX != maxSecCountX;
 
             // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
@@ -115,7 +115,7 @@ namespace Lich {
                 startSecY = startSecY >= Render.BUFFER_SECTORS_Y ? startSecY - Render.BUFFER_SECTORS_Y : startSecY;
                 applyYdither = startSecY != 0;
             }
-            let countSectY = Math.floor(self.sectorsCont.height / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
+            let countSectY = Math.floor(self.sectorsCont.fixedHeight / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
             applyYdither = applyYdither && startSecY + countSectY != maxSecCountY;
 
             // změnilo se něco? Pokud není potřeba pře-alokovávat sektory, ukonči fci
@@ -247,17 +247,15 @@ namespace Lich {
 
                             // debug
                             if (Resources.SHOW_SECTORS) {
-                                // var testShape = new createjs.Shape();
-                                // testShape.graphics.setStrokeStyle(1);
-                                // testShape.graphics.beginStroke("#f00");
-                                // testShape.graphics.drawRect(0, 0, sector.width, sector.height);
-                                // sector.addChild(testShape);
+                                var testShape = new PIXI.Graphics();
+                                testShape.lineStyle(1, 0xff0000);
+                                testShape.drawRect(0, 0, sector.fixedWidth, sector.fixedHeight);
+                                sector.addChild(testShape);
 
-                                // testShape = new createjs.Shape();
-                                // testShape.graphics.setStrokeStyle(1);
-                                // testShape.graphics.beginStroke("#f00");
-                                // testShape.graphics.drawRect(0, 0, fogSector.width, fogSector.height);
-                                // fogSector.addChild(testShape);
+                                testShape = new PIXI.Graphics();
+                                testShape.lineStyle(1, 0x00ff00);
+                                testShape.drawRect(0, 0, fogSector.fixedWidth, fogSector.fixedHeight);
+                                fogSector.addChild(testShape);
                             }
 
                             // proveď cache na sektoru
@@ -342,8 +340,8 @@ namespace Lich {
             if (self.screenOffsetX + dst > 0)
                 return -self.screenOffsetX;
             // terén by se odlepil od pravého konce směrem doleva (dst < 0)
-            if (self.screenOffsetX + dst < self.game.getRender().width - self.tilesMap.width * Resources.TILE_SIZE)
-                return self.game.getRender().width - self.tilesMap.width * Resources.TILE_SIZE - self.screenOffsetX;
+            if (self.screenOffsetX + dst < self.game.getSceneWidth() - self.tilesMap.width * Resources.TILE_SIZE)
+                return self.game.getSceneWidth() - self.tilesMap.width * Resources.TILE_SIZE - self.screenOffsetX;
             return dst;
         }
 
@@ -356,8 +354,8 @@ namespace Lich {
             if (self.screenOffsetY + dst > 0)
                 return -self.screenOffsetY;
             // terén by se odlepil od spodního konce směrem nahoru (dst < 0)
-            if (self.screenOffsetY + dst < self.game.getRender().height - self.tilesMap.height * Resources.TILE_SIZE)
-                return self.game.getRender().height - self.tilesMap.height * Resources.TILE_SIZE - self.screenOffsetY;
+            if (self.screenOffsetY + dst < self.game.getSceneHeight() - self.tilesMap.height * Resources.TILE_SIZE)
+                return self.game.getSceneHeight() - self.tilesMap.height * Resources.TILE_SIZE - self.screenOffsetY;
             return dst;
         }
 

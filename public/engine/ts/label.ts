@@ -3,8 +3,8 @@ namespace Lich {
 
         label: PIXI.Text;
 
-        public height: number;
-        public width: number;
+        public fixedHeight: number;
+        public fixedWidth: number;
 
         constructor(text: string,
             font = PartsUI.TEXT_SIZE + "px " + Resources.FONT,
@@ -17,8 +17,8 @@ namespace Lich {
             this.label = new PIXI.Text(text, { fontFamily: font, fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
             this.addChild(this.label);
 
-            this.height = this.label.getBounds().height;
-            this.width = this.label.getBounds().width;
+            this.fixedHeight = this.label.getBounds().height;
+            this.fixedWidth = this.label.getBounds().width;
         }
 
         setLineWidth(value) {

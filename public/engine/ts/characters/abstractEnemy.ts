@@ -26,23 +26,23 @@ namespace Lich {
         protected isPlayerInReach(world: World) {
             // enemy
             let ex1 = this.x + this.collXOffset;
-            let ex2 = this.x + this.width - this.collXOffset;
+            let ex2 = this.x + this.fixedWidth - this.collXOffset;
             let ey1 = this.y + this.collYOffset;
-            let ey2 = this.y + this.height - this.collYOffset;
+            let ey2 = this.y + this.fixedHeight - this.collYOffset;
             // player
             let hero = world.hero;
             let px1 = hero.x + hero.collXOffset;
-            let px2 = hero.x + hero.width - hero.collXOffset;
+            let px2 = hero.x + hero.fixedWidth - hero.collXOffset;
             let py1 = hero.y + hero.collYOffset;
-            let py2 = hero.y + hero.height - hero.collYOffset;
+            let py2 = hero.y + hero.fixedHeight - hero.collYOffset;
             // hráč a nepřítel jsou zaklesnuti v x a y 
             if ((ex1 >= px1 && ex1 <= px2 || ex2 >= px1 && ex2 <= px2 || px1 >= ex1 && px1 <= ex2 || px2 >= ex1 && px2 <= ex2)
                 && (ey1 >= py1 && ey1 <= py2 || ey2 >= py1 && ey2 <= py2 || py1 >= ey1 && py1 <= ey2 || py2 >= ey1 && py2 <= ey2)) {
                 // zásah hráče?
                 let heroHead = world.hero.y + world.hero.collYOffset;
-                let heroFeet = world.hero.y + world.hero.height - world.hero.collYOffset;
+                let heroFeet = world.hero.y + world.hero.fixedHeight - world.hero.collYOffset;
                 let enemyHead = this.y;
-                let enemyFeet = this.y + this.height;
+                let enemyFeet = this.y + this.fixedHeight;
                 if (enemyHead >= heroHead && enemyHead < heroFeet || enemyFeet >= heroHead && enemyFeet < heroFeet
                     || heroHead >= enemyHead && heroHead < enemyFeet || heroFeet >= enemyHead && heroFeet < enemyFeet) {
                     return true;
@@ -55,8 +55,8 @@ namespace Lich {
             for (let i = 0; i < quant; i++) {
                 // Random spawn přes celou plochu nepřítele, mimo poslení PART části,
                 // za kterou by se mohl loot spawnou do stěny, případně podlahy
-                let xjitter = Math.random() * (this.width - Resources.PARTS_SIZE);
-                let yjitter = Math.random() * (this.height - Resources.PARTS_SIZE);
+                let xjitter = Math.random() * (this.fixedWidth - Resources.PARTS_SIZE);
+                let yjitter = Math.random() * (this.fixedHeight - Resources.PARTS_SIZE);
                 world.spawnObject(new DugObjDefinition(invKey, batch), this.x + xjitter, this.y + yjitter, false);
             }
         }
@@ -73,9 +73,9 @@ namespace Lich {
                     }
                 } else {
                     let verticalStrategy = (nextX: number) => {
-                        if ((world.hero.y + world.hero.height) > (this.y + this.height)) {
+                        if ((world.hero.y + world.hero.fixedHeight) > (this.y + this.fixedHeight)) {
                             // pokud je hráč níž než já (vzdálenost je obrácená)
-                            let col = world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE);
+                            let col = world.isCollision(nextX, this.y + this.fixedHeight - Resources.TILE_SIZE);
                             if (nextX != 0 && col.hit && col.collisionType != CollisionType.LADDER && col.collisionType != CollisionType.PLATFORM) {
                                 // pokud je přede mnou překážka a hráč už není přímo podemnou, přeskoč     
                                 this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
@@ -85,14 +85,14 @@ namespace Lich {
                             }
                         } else {
                             // hráč je výš nebo stejně jako já
-                            if (nextX != 0 && (world.isCollision(nextX, this.y + this.height + Resources.TILE_SIZE).hit == false
-                                || world.isCollision(nextX, this.y + this.height - Resources.TILE_SIZE).hit)) {
+                            if (nextX != 0 && (world.isCollision(nextX, this.y + this.fixedHeight + Resources.TILE_SIZE).hit == false
+                                || world.isCollision(nextX, this.y + this.fixedHeight - Resources.TILE_SIZE).hit)) {
                                 // pokud bych spadl nebo je přede mnou překážka a hráč už 
                                 // není přímo podemnou, přeskoč, zkus vyskočit
                                 this.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
                             } else {
                                 // nepadám, nemám překážky
-                                if ((world.hero.y + world.hero.height) == (this.y + this.height)) {
+                                if ((world.hero.y + world.hero.fixedHeight) == (this.y + this.fixedHeight)) {
                                     // hráč je stejně jako já, nic nedělej
                                     this.movementTypeY = MovementTypeY.NONE;
                                 } else {
@@ -108,11 +108,11 @@ namespace Lich {
 
                     let nextX = 0;
                     let xJitter = Math.random() * Resources.TILE_SIZE * 2;
-                    if (world.hero.x > this.x + this.width / 2 - xJitter) {
+                    if (world.hero.x > this.x + this.fixedWidth / 2 - xJitter) {
                         // hráč je vpravo od nepřítele - jdi doprava           
                         this.movementTypeX = MovementTypeX.WALK_RIGHT;
-                        nextX = this.x + this.width - this.collXOffset + Resources.TILE_SIZE;
-                    } else if (world.hero.x + world.hero.width < this.x + this.width / 2 + xJitter) {
+                        nextX = this.x + this.fixedWidth - this.collXOffset + Resources.TILE_SIZE;
+                    } else if (world.hero.x + world.hero.fixedWidth < this.x + this.fixedWidth / 2 + xJitter) {
                         // hráč je vlevo od nepřítele - jdi doleva
                         this.movementTypeX = MovementTypeX.WALK_LEFT;
                         nextX = this.x + this.collXOffset - Resources.TILE_SIZE;

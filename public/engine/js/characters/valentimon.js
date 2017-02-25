@@ -30,8 +30,8 @@ var Lich;
             Valentimon.prototype.runAI = function (world, delta) {
                 var _this = this;
                 var hero = world.hero;
-                var heroTargetX = world.hero.x + world.hero.width / 2;
-                var heroTargetY = world.hero.y + world.hero.height / 2;
+                var heroTargetX = world.hero.x + world.hero.fixedWidth / 2;
+                var heroTargetY = world.hero.y + world.hero.fixedHeight / 2;
                 if (this.getCurrentHealth() > 0) {
                     if (this.currentAttackCooldown >= this.attackCooldown) {
                         if (this.isPlayerInReach(world)) {
@@ -41,7 +41,7 @@ var Lich;
                         }
                         else {
                             var spell = Lich.Resources.getInstance().getSpellDef(Lich.SpellKey.SPELL_LOVELETTER);
-                            var context = new Lich.SpellContext(Valentimon.OWNER_ID, this.x + this.width / 2, this.y + this.height / 2, heroTargetX, heroTargetY, world.game);
+                            var context = new Lich.SpellContext(Valentimon.OWNER_ID, this.x + this.fixedWidth / 2, this.y + this.fixedHeight / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
                             this.performAnimation(Lich.AnimationKey.ANM_VALENTIMON_ATTACK_KEY);
                             this.currentAttackCooldown = 0;
@@ -51,8 +51,8 @@ var Lich;
                         this.currentAttackCooldown += delta;
                         var processSpeed = function () {
                             // snaž se dosáhnout místo středem
-                            var targetX = heroTargetX - _this.width / 2;
-                            var targetY = heroTargetY - _this.height / 2;
+                            var targetX = heroTargetX - _this.fixedWidth / 2;
+                            var targetY = heroTargetY - _this.fixedHeight / 2;
                             // nastav rychlost dle vzdálenosti
                             var b = targetX - _this.x;
                             var a = targetY - _this.y;

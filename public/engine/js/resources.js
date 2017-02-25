@@ -421,8 +421,8 @@ var Lich;
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
             // není animovaný, takže vždy předávám číslo snímku
             // sprite.gotoAndStop(spriteDef.frame);
-            sprite.width = spriteDef.width;
-            sprite.height = spriteDef.height;
+            sprite.fixedWidth = spriteDef.width;
+            sprite.fixedHeight = spriteDef.height;
             return sprite;
         };
         ;
@@ -491,7 +491,7 @@ var Lich;
     /*
      * Přepínače
      */
-    Resources.SHOW_SECTORS = false;
+    Resources.SHOW_SECTORS = true;
     Resources.PRINT_SECTOR_ALLOC = false;
     /*
      * Velikosti
@@ -499,7 +499,6 @@ var Lich;
     Resources.TILE_SIZE = 16;
     Resources.PARTS_SIZE = 2 * Resources.TILE_SIZE;
     Resources.PARTS_SHEET_WIDTH = 20;
-    Resources.FRAGMENT_SEPARATOR = "-FRAGMENT-";
     Lich.Resources = Resources;
     var AniSprite = (function (_super) {
         __extends(AniSprite, _super);
@@ -508,14 +507,16 @@ var Lich;
             _this.animationDef = animationDef;
             // TOTO nebude potřeba hlídat oldFrame?
             _this.onFrameChange = function (currentFrame) {
-                if (_this.checkFrame == currentFrame)
+                if (_this.checkFrame != undefined && _this.checkFrame == _this.lastFrame)
                     _this.gotoAndPlay(Lich.AnimationKey[_this.nextAnimation]);
+                _this.lastFrame = currentFrame;
             };
             return _this;
         }
         AniSprite.prototype.gotoAndPlay = function (arg) {
             if (typeof arg === "string") {
                 var animation = this.animationDef.animations[arg];
+                this.lastFrame = null;
                 this.currentAnimation = arg;
                 this.checkFrame = animation.endFrame;
                 this.nextAnimation = animation.nextAnimationKey;

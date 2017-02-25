@@ -43,14 +43,14 @@ namespace Lich {
 
         constructor(public game: Game) {
             super();
-            this.width = game.getRender().width;
-            this.height = game.getRender().height;
+            this.fixedWidth = game.getSceneWidth();
+            this.fixedHeight = game.getSceneHeight();
             // TODO
             // this.addChild(this.lightScreen);
         }
 
         updateLight(r: number, g: number, b: number, a: number) {
-            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.width, this.height);
+            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.fixedWidth, this.fixedHeight);
         }
 
         switchMode(mode: WeatherMode) {
@@ -71,8 +71,8 @@ namespace Lich {
                     acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 300;
                 }
                 let layer = new ParticleLayer(acc);
-                layer.width = this.width;
-                layer.height = this.height;
+                layer.fixedWidth = this.fixedWidth;
+                layer.fixedHeight = this.fixedHeight;
                 this.particleLayers.push(layer);
             }
             for (let i = 0; i < Weather.SNOW_RAIN_AMOUNT * 2; i++) {
@@ -83,8 +83,8 @@ namespace Lich {
                 } else {
                     p.beginFill(0xa0a0f0).drawRect(0, 0, 1, z * 5 + 1);
                 }
-                p.x = Math.random() * this.width;
-                p.y = Math.random() * this.height;
+                p.x = Math.random() * this.fixedWidth;
+                p.y = Math.random() * this.fixedHeight;
                 let x = z;
                 if (i >= Weather.SNOW_RAIN_AMOUNT) {
                     x += Weather.PARTICLE_LAYERS;
@@ -95,7 +95,7 @@ namespace Lich {
                 let l = this.particleLayers[i];
                 if (l) {
                     // l.cache(0, 0, l.width, l.height);
-                    l.y = -this.height;
+                    l.y = -this.fixedHeight;
                     if (i >= Weather.PARTICLE_LAYERS) {
                         l.y *= 2;
                     }
@@ -183,7 +183,7 @@ namespace Lich {
                             continue;
                         p.y += Utils.floor(p.speed * sDelta);
                         p.x += Utils.floor(this.windSpeed * sDelta);
-                        if (p.y > this.height) {
+                        if (p.y > this.fixedHeight) {
                             let partnerLayer;
                             if (i < Weather.PARTICLE_LAYERS) {
                                 partnerLayer = this.particleLayers[i + Weather.PARTICLE_LAYERS];

@@ -19,8 +19,8 @@ var Lich;
             _this.collXOffset = collXOffset;
             _this.collYOffset = collYOffset;
             _this.notificationTimer = notificationTimer;
-            _this.width = Lich.Resources.PARTS_SIZE;
-            _this.height = Lich.Resources.PARTS_SIZE;
+            _this.fixedWidth = Lich.Resources.PARTS_SIZE;
+            _this.fixedHeight = Lich.Resources.PARTS_SIZE;
             _this.sprite = Lich.Resources.getInstance().getInvObjectSprite(_this.item.invObj);
             _this.addChild(_this.sprite);
             return _this;
@@ -94,8 +94,8 @@ var Lich;
             self.render = new Lich.Render(game, self);
             // Hráč
             self.hero = new Lich.Hero();
-            self.hero.x = game.getRender().width / 2;
-            self.hero.y = game.getRender().height / 2;
+            self.hero.x = game.getSceneWidth() / 2;
+            self.hero.y = game.getSceneHeight() / 2;
             self.entitiesCont.addChild(self.hero);
             self.placePlayerOnSpawnPoint();
             // Dig events 
@@ -114,8 +114,8 @@ var Lich;
             var self = this;
             cont.x = 0;
             cont.y = 0;
-            cont.width = self.game.getRender().width;
-            cont.height = self.game.getRender().height;
+            cont.fixedWidth = self.game.getSceneWidth();
+            cont.fixedHeight = self.game.getSceneHeight();
         };
         World.prototype.fadeEnemy = function (enemy) {
             var self = this;
@@ -138,17 +138,17 @@ var Lich;
             var deadInfo = new PIXI.Container();
             this.messagesCont.addChild(deadInfo);
             var shape = new PIXI.Graphics();
-            shape.width = this.game.getRender().width;
-            shape.height = this.game.getRender().height;
+            shape.fixedWidth = this.game.getSceneWidth();
+            shape.fixedHeight = this.game.getSceneHeight();
             shape.beginFill(0x0a0a0a, 0.9);
-            shape.drawRect(0, 0, shape.width, shape.height);
+            shape.drawRect(0, 0, shape.fixedWidth, shape.fixedHeight);
             shape.x = 0;
             shape.y = 0;
             deadInfo.addChild(shape);
             var gameOverSprite = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_GAME_OVER_KEY);
             var bounds = gameOverSprite.getBounds();
-            gameOverSprite.x = shape.width / 2 - bounds.width / 2;
-            gameOverSprite.y = shape.height / 2 - bounds.height / 2;
+            gameOverSprite.x = shape.fixedWidth / 2 - bounds.width / 2;
+            gameOverSprite.y = shape.fixedHeight / 2 - bounds.height / 2;
             deadInfo.addChild(gameOverSprite);
             deadInfo.alpha = 0;
             createjs.Tween.get(deadInfo)
@@ -220,8 +220,8 @@ var Lich;
         World.prototype.setSpawnPoint = function (tx, ty) {
             var self = this;
             var hero = self.hero;
-            var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
-            var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            var heroWidth = self.render.pixelsDistanceToTiles(hero.fixedWidth);
+            var heroHeight = self.render.pixelsDistanceToTiles(hero.fixedHeight);
             // posuv nahoru o výšku hráče, aby u spawn pointu stál nohama
             ty -= heroHeight - 2;
             // je hráče kam umístit?
@@ -245,9 +245,9 @@ var Lich;
         World.prototype.placePlayerOnScreen = function (xp, yp) {
             var self = this;
             var hero = self.hero;
-            var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
-            var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
-            var tCoord = self.render.pixelsToTiles(xp - hero.width / 2, yp - hero.height / 2);
+            var heroWidth = self.render.pixelsDistanceToTiles(hero.fixedWidth);
+            var heroHeight = self.render.pixelsDistanceToTiles(hero.fixedHeight);
+            var tCoord = self.render.pixelsToTiles(xp - hero.fixedWidth / 2, yp - hero.fixedHeight / 2);
             if (self.fits(tCoord.x, tCoord.y, heroWidth, heroHeight)) {
                 self.placePlayerOn(tCoord.x, tCoord.y, hero);
                 return true;
@@ -287,8 +287,8 @@ var Lich;
             var game = self.game;
             var tilesMap = self.tilesMap;
             var hero = self.hero;
-            var heroWidth = self.render.pixelsDistanceToTiles(hero.width);
-            var heroHeight = self.render.pixelsDistanceToTiles(hero.height);
+            var heroWidth = self.render.pixelsDistanceToTiles(hero.fixedWidth);
+            var heroHeight = self.render.pixelsDistanceToTiles(hero.fixedHeight);
             var pCoord;
             if (tilesMap.spawnPoint) {
                 self.placePlayerOn(tilesMap.spawnPoint.x, tilesMap.spawnPoint.y, hero);
@@ -340,8 +340,8 @@ var Lich;
                 var radius = Lich.Resources.PARTS_SIZE * Lich.Resources.REVEAL_SIZE;
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
-                var cx = Math.floor(self.hero.x + self.hero.width / 2);
-                var cy = Math.floor(self.hero.y + self.hero.height / 2);
+                var cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
+                var cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
                 var d2 = Math.pow(radius, 2);
                 for (var y = cy - radius; y < cy + radius; y += Lich.Resources.PARTS_SIZE * 2) {
                     for (var x = cx - radius; x < cx + radius; x += Lich.Resources.PARTS_SIZE * 2) {
@@ -368,8 +368,8 @@ var Lich;
             // požadovaný posuv
             var rndShiftX = Lich.Utils.floor(shiftX);
             var rndShiftY = Lich.Utils.floor(shiftY);
-            var canvasCenterX = self.game.getRender().width / 2;
-            var canvasCenterY = self.game.getRender().height / 2;
+            var canvasCenterX = self.game.getSceneWidth() / 2;
+            var canvasCenterY = self.game.getSceneHeight() / 2;
             var playerShiftX, sceneShiftX;
             var playerShiftY, sceneShiftY;
             // kolik zbývá hráčovi z cesty na střed směrem v pohybu
@@ -449,8 +449,8 @@ var Lich;
                 var distanceY = void 0;
                 var boundsX = object.x + object.collXOffset;
                 var boundsY = object.y + object.collYOffset;
-                var boundsWidth = object.width - object.collXOffset * 2;
-                var boundsHeight = object.height - object.collYOffset * 2;
+                var boundsWidth = object.fixedWidth - object.collXOffset * 2;
+                var boundsHeight = object.fixedHeight - object.collYOffset * 2;
                 if (isCurrentlyClimbing && forceJump || object.hovers) {
                     // ignoruj gravitaci
                     distanceY = object.speedy * sDelta;
@@ -520,7 +520,7 @@ var Lich;
                         }
                         else {
                             // záporné, budu dopadat dolů
-                            y = object.y + object.height - object.collYOffset - (clsnPosition_1.y + clsnTest.partOffsetY);
+                            y = object.y + object.fixedHeight - object.collYOffset - (clsnPosition_1.y + clsnTest.partOffsetY);
                             makeShift(0, y);
                         }
                         object.speedy = 0;
@@ -530,7 +530,7 @@ var Lich;
             // pokud nejsem zrovna uprostřed skoku 
             if (object.speedy == 0 && !object.hovers) {
                 // ...a mám kam padat
-                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
+                clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.fixedWidth - object.collXOffset * 2, object.fixedHeight - object.collYOffset * 2, 0, -1, self.isCollision.bind(this), 
                 // pád z klidu se vždy musí zaseknout o oneWay kolize 
                 // výjimkou je, když hráč chce propadnou níž
                 forceFall);
@@ -557,7 +557,7 @@ var Lich;
                 }
                 if (distanceX != 0 && !object.hovers) {
                     // Nenarazím na překážku?
-                    clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.width - object.collXOffset * 2, object.height - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self), 
+                    clsnTest = self.isBoundsInCollision(object.x + object.collXOffset, object.y + object.collYOffset, object.fixedWidth - object.collXOffset * 2, object.fixedHeight - object.collYOffset * 2, distanceX, 0, self.isCollision.bind(self), 
                     // horizontální pohyb vždy ignoruje oneWay kolize
                     true);
                     // bez kolize, proveď posun
@@ -580,12 +580,12 @@ var Lich;
                         }
                         else {
                             // narazil jsem do něj zleva
-                            var x = -1 * (clsnPosition_2.x + clsnTest.partOffsetX - (object.x + object.width - object.collXOffset));
+                            var x = -1 * (clsnPosition_2.x + clsnTest.partOffsetX - (object.x + object.fixedWidth - object.collXOffset));
                             makeShift(x, 0);
                         }
                         if (collisionSteps) {
                             // zabrání "vyskakování" na rampu, která je o víc než PART výš než mám nohy
-                            var baseDist = object.y + object.height - object.collYOffset - clsnPosition_2.y;
+                            var baseDist = object.y + object.fixedHeight - object.collYOffset - clsnPosition_2.y;
                             // automatické stoupání při chůzí po zkosené rampě
                             if (distanceX > 0 &&
                                 ((clsnTest.collisionType == Lich.CollisionType.SOLID_TR && baseDist <= Lich.Resources.PARTS_SIZE)
@@ -710,10 +710,10 @@ var Lich;
                         enemy.x -= rndX;
                         enemy.y -= rndY;
                         if (enemy.unspawns) {
-                            if (enemy.x < -self.game.getRender().width * 2
-                                || enemy.x > self.game.getRender().width * 2
-                                || enemy.y < -self.game.getRender().height * 2
-                                || enemy.y > self.game.getRender().height * 2) {
+                            if (enemy.x < -self.game.getSceneWidth() * 2
+                                || enemy.x > self.game.getSceneWidth() * 2
+                                || enemy.y < -self.game.getSceneHeight() * 2
+                                || enemy.y > self.game.getSceneHeight() * 2) {
                                 // dealokace
                                 self.removeEnemy(enemy);
                             }
@@ -752,10 +752,10 @@ var Lich;
                     object.updateAnimations();
                     // zjisti, zda hráč objekt nesebral
                     if (self.hero.getCurrentHealth() > 0) {
-                        var heroCenterX = self.hero.x + self.hero.width / 2;
-                        var heroCenterY = self.hero.y + self.hero.height / 2;
-                        var itemCenterX = object.x + object.width / 2;
-                        var itemCenterY = object.y + object.height / 2;
+                        var heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
+                        var heroCenterY = self.hero.y + self.hero.fixedHeight / 2;
+                        var itemCenterX = object.x + object.fixedWidth / 2;
+                        var itemCenterY = object.y + object.fixedHeight / 2;
                         if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
                             Lich.Inventory.getInstance().invInsert(object.item.invObj, 1);
                             self.freeObjects.splice(i, 1);
@@ -766,8 +766,8 @@ var Lich;
                         if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
                             createjs.Tween.get(object)
                                 .to({
-                                x: heroCenterX - object.width / 2,
-                                y: heroCenterY - object.height / 2
+                                x: heroCenterX - object.fixedWidth / 2,
+                                y: heroCenterY - object.fixedHeight / 2
                             }, World.OBJECT_PICKUP_FORCE_TIME);
                         }
                     }
@@ -1141,8 +1141,8 @@ var Lich;
                     // Může se provést (cooldown je pryč)?
                     var rmbCooldown = self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY];
                     if (!rmbCooldown || rmbCooldown <= 0) {
-                        var heroCenterX = self.hero.x + self.hero.width / 2;
-                        var heroCenterY = self.hero.y + self.hero.height / 4;
+                        var heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
+                        var heroCenterY = self.hero.y + self.hero.fixedHeight / 4;
                         // zkus cast
                         if (rmbSpellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown 
@@ -1166,8 +1166,8 @@ var Lich;
                     self.hero.spellCooldowns[choosenSpell] -= delta;
                     // Může se provést (cooldown je pryč, mám will a chci cast) ?
                     if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
-                        var heroCenterX_1 = self.hero.x + self.hero.width / 2;
-                        var heroCenterY_1 = self.hero.y + self.hero.height / 4;
+                        var heroCenterX_1 = self.hero.x + self.hero.fixedWidth / 2;
+                        var heroCenterY_1 = self.hero.y + self.hero.fixedHeight / 4;
                         // zkus cast
                         if (spellDef.cast(new Lich.SpellContext(Lich.Hero.OWNER_ID, heroCenterX_1, heroCenterY_1, mouse.x, mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown a odeber will
@@ -1192,9 +1192,9 @@ var Lich;
             // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
             // změna projeví i na pixel místech, kde už je například kolize
             var characterCoordTL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.collYOffset);
-            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.collYOffset);
-            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.width - character.collXOffset, character.y + character.height - character.collYOffset);
-            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.height - character.collYOffset);
+            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.collYOffset);
+            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
+            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
             var coord = inTiles ? new Lich.Coord2D(Lich.Utils.even(x), Lich.Utils.even(y)) : this.render.pixelsToEvenTiles(x, y);
             // kontroluj rádius od každého rohu
             var inReach = Lich.Utils.distance(coord.x, coord.y, characterCoordTL.x, characterCoordTL.y) < Lich.Resources.REACH_TILES_RADIUS
@@ -1223,7 +1223,7 @@ var Lich;
                 self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
             Lich.Nature.getInstance().handleTick(delta, self);
-            Lich.SpawnPool.getInstance().update(delta, self);
+            // SpawnPool.getInstance().update(delta, self);
         };
         ;
         return World;

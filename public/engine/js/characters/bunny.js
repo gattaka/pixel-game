@@ -57,11 +57,11 @@ var Lich;
                             nextX = this.x + this.collXOffset - Lich.Resources.TILE_SIZE;
                         }
                         else {
-                            nextX = this.x + this.width - this.collXOffset + Lich.Resources.TILE_SIZE;
+                            nextX = this.x + this.fixedWidth - this.collXOffset + Lich.Resources.TILE_SIZE;
                         }
-                        if (world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE - this.collYOffset).hit) {
+                        if (world.isCollision(nextX, this.y + this.fixedHeight - Lich.Resources.TILE_SIZE - this.collYOffset).hit) {
                             // pokud je přede mnou překážka
-                            if (world.isCollision(nextX, this.y + this.height - Lich.Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
+                            if (world.isCollision(nextX, this.y + this.fixedHeight - Lich.Resources.TILE_SIZE * 3 - this.collYOffset).hit == false) {
                                 // kterou mám šanci přeskočit, zkus vyskočit
                                 this.movementTypeY = Lich.MovementTypeY.JUMP_OR_CLIMB;
                             }

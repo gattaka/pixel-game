@@ -255,8 +255,8 @@ declare namespace PIXI {
         // end extras.getChildByName
 
         children: DisplayObject[];
-        width: number;
-        height: number;
+        fixedWidth: number;
+        fixedHeight: number;
 
         protected onChildrenChange: (...args: any[]) => void;
         addChild<T extends DisplayObject>(child: T, ...additionalChildren: DisplayObject[]): T;
@@ -1248,8 +1248,8 @@ declare namespace PIXI {
         protected _transformID: number;
         protected vertexTrimmedData: Float32Array;
         vertexData: Float32Array;
-        width: number;
-        height: number;
+        fixedWidth: number;
+        fixedHeight: number;
 
         protected _onTextureUpdate(): void;
         calculateVertices(): void;
@@ -1444,8 +1444,8 @@ declare namespace PIXI {
         static fontPropertiesCanvas: HTMLCanvasElement;
         static fontPropertiesContext: CanvasRenderingContext2D;
 
-        width: number;
-        height: number;
+        fixedWidth: number;
+        fixedHeight: number;
         style: TextStyle;
         text: string;
 
@@ -1875,8 +1875,8 @@ declare namespace PIXI {
             static fromImage(imageId: string, crossorigin?: boolean, scaleMode?: number): Sprite;
             static fromImage(imageId: string, width?: number, height?: number, crossorigin?: boolean, scaleMode?: number): TilingSprite;
 
-            width: number;
-            height: number;
+            fixedWidth: number;
+            fixedHeight: number;
 
         }
         export class TilingSpriteRenderer extends ObjectRenderer {
@@ -2422,8 +2422,8 @@ declare namespace PIXI {
 
             constructor(texture: Texture, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number);
 
-            width: number;
-            height: number;
+            fixedWidth: number;
+            fixedHeight: number;
             leftWidth: number;
             rightWidth: number;
             topHeight: number;

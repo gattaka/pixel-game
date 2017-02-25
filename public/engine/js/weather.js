@@ -35,14 +35,14 @@ var Lich;
             _this.windSpeed = 0;
             _this.lightScreen = new PIXI.Graphics();
             _this.mode = WeatherMode.NONE;
-            _this.width = game.getRender().width;
-            _this.height = game.getRender().height;
+            _this.fixedWidth = game.getSceneWidth();
+            _this.fixedHeight = game.getSceneHeight();
             return _this;
             // TODO
             // this.addChild(this.lightScreen);
         }
         Weather.prototype.updateLight = function (r, g, b, a) {
-            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.width, this.height);
+            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.fixedWidth, this.fixedHeight);
         };
         Weather.prototype.switchMode = function (mode) {
             this.mode = mode;
@@ -62,8 +62,8 @@ var Lich;
                     acc = ((l % Weather.PARTICLE_LAYERS) + 1) * 300;
                 }
                 var layer = new ParticleLayer(acc);
-                layer.width = this.width;
-                layer.height = this.height;
+                layer.fixedWidth = this.fixedWidth;
+                layer.fixedHeight = this.fixedHeight;
                 this.particleLayers.push(layer);
             }
             for (var i = 0; i < Weather.SNOW_RAIN_AMOUNT * 2; i++) {
@@ -75,8 +75,8 @@ var Lich;
                 else {
                     p.beginFill(0xa0a0f0).drawRect(0, 0, 1, z * 5 + 1);
                 }
-                p.x = Math.random() * this.width;
-                p.y = Math.random() * this.height;
+                p.x = Math.random() * this.fixedWidth;
+                p.y = Math.random() * this.fixedHeight;
                 var x = z;
                 if (i >= Weather.SNOW_RAIN_AMOUNT) {
                     x += Weather.PARTICLE_LAYERS;
@@ -87,7 +87,7 @@ var Lich;
                 var l = this.particleLayers[i];
                 if (l) {
                     // l.cache(0, 0, l.width, l.height);
-                    l.y = -this.height;
+                    l.y = -this.fixedHeight;
                     if (i >= Weather.PARTICLE_LAYERS) {
                         l.y *= 2;
                     }
@@ -180,7 +180,7 @@ var Lich;
                             continue;
                         p.y += Lich.Utils.floor(p.speed * sDelta);
                         p.x += Lich.Utils.floor(this.windSpeed * sDelta);
-                        if (p.y > this.height) {
+                        if (p.y > this.fixedHeight) {
                             var partnerLayer = void 0;
                             if (i < Weather.PARTICLE_LAYERS) {
                                 partnerLayer = this.particleLayers[i + Weather.PARTICLE_LAYERS];

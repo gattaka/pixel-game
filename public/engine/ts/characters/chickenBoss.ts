@@ -62,8 +62,8 @@ namespace Lich {
                     true // hovers
                 );
                 this.maxHealth = this.currentHealth = 5000;
-                this.healthBar.height = 10;
-                this.healthBar.y = -this.healthBar.height;
+                this.healthBar.fixedHeight = 10;
+                this.healthBar.y = -this.healthBar.fixedHeight;
 
                 // stále jsem v hover pohybu
                 this.movementTypeX = MovementTypeX.HOVER;
@@ -83,8 +83,8 @@ namespace Lich {
                     let targetY = 0;
 
                     let setXYByAngle = () => {
-                        targetX = world.hero.x + world.hero.width / 2 + Math.cos(Utils.toRad(this.angle)) * ChickenBoss.PULL_RADIUS;
-                        targetY = world.hero.y + world.hero.height / 2 + Math.sin(Utils.toRad(this.angle)) * ChickenBoss.PULL_RADIUS;
+                        targetX = world.hero.x + world.hero.fixedWidth / 2 + Math.cos(Utils.toRad(this.angle)) * ChickenBoss.PULL_RADIUS;
+                        targetY = world.hero.y + world.hero.fixedHeight / 2 + Math.sin(Utils.toRad(this.angle)) * ChickenBoss.PULL_RADIUS;
                     };
 
                     let stopCharging = () => {
@@ -100,8 +100,8 @@ namespace Lich {
 
                     let processSpeed = () => {
                         // snaž se dosáhnout místo středem
-                        targetX -= this.width / 2;
-                        targetY -= this.height / 2;
+                        targetX -= this.fixedWidth / 2;
+                        targetY -= this.fixedHeight / 2;
 
                         // nastav rychlost dle vzdálenosti
                         var b = targetX - this.x;
@@ -142,8 +142,8 @@ namespace Lich {
                                 this.performAnimation(AnimationKey.ANM_MURHUN_ATTACK_KEY);
                                 Mixer.playSound(SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);
                                 this.lockedTime = 0;
-                                targetX = world.hero.x + world.hero.width / 2;
-                                targetY = world.hero.y + world.hero.height / 2;
+                                targetX = world.hero.x + world.hero.fixedWidth / 2;
+                                targetY = world.hero.y + world.hero.fixedHeight / 2;
                                 this.charging = true;
                                 processSpeed();
                             }
@@ -152,14 +152,14 @@ namespace Lich {
 
                     if (!this.charging) {
                         let hero = world.hero;
-                        let dist = Math.sqrt(Math.pow(this.x + this.width / 2 - hero.x + hero.width / 2, 2) +
-                            Math.pow(this.y + this.height / 2 - hero.y + hero.height / 2, 2));
+                        let dist = Math.sqrt(Math.pow(this.x + this.fixedWidth / 2 - hero.x + hero.fixedWidth / 2, 2) +
+                            Math.pow(this.y + this.fixedHeight / 2 - hero.y + hero.fixedHeight / 2, 2));
                         // hystereze 
                         let threshold = this.sprinting ? ChickenBoss.RADIUS : ChickenBoss.PULL_RADIUS;
                         if (dist > threshold) {
                             // hráč je moc daleko, neobíhej, ale dosprintuj k němu
-                            targetX = world.hero.x + world.hero.width / 2;
-                            targetY = world.hero.y + world.hero.height / 2;
+                            targetX = world.hero.x + world.hero.fixedWidth / 2;
+                            targetY = world.hero.y + world.hero.fixedHeight / 2;
                             this.sprinting = true;
                         } else {
                             // jsem v obíhací vzdálenosti, obíhej hráče a připravuj se k útoku

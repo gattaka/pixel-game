@@ -60,16 +60,16 @@ namespace Lich {
             super(collXOffset, collYOffset, hovers);
 
             let animationDef = Resources.getInstance().animationSetDefsByKey[this.animationSetKey];
-            this.width = animationDef.width;
-            this.height = animationDef.height;
+            this.fixedWidth = animationDef.width;
+            this.fixedHeight = animationDef.height;
             this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
             this.addChild(this.sprite);
 
             this.healthBar = new PIXI.Graphics();
-            this.healthBar.width = this.width;
-            this.healthBar.height = 4;
+            this.healthBar.fixedWidth = this.fixedWidth;
+            this.healthBar.fixedHeight = 4;
             this.healthBar.x = 0;
-            this.healthBar.y = -this.healthBar.height;
+            this.healthBar.y = -this.healthBar.fixedHeight;
             this.healthBar.visible = false;
             // TODO
             // this.addChild(this.healthBar);
@@ -82,10 +82,10 @@ namespace Lich {
                 this.healthBar.visible = true;
                 this.healthBar.clear();
                 this.healthBar.beginFill(0x00FF00, 0.7);
-                this.healthBar.drawRect(0, 0, this.width, this.healthBar.height);
-                var width = this.width * (1 - this.currentHealth / this.maxHealth);
+                this.healthBar.drawRect(0, 0, this.fixedWidth, this.healthBar.fixedHeight);
+                var width = this.fixedWidth * (1 - this.currentHealth / this.maxHealth);
                 this.healthBar.beginFill(0xFF0000, 0.7);
-                this.healthBar.drawRect(0, 0, width, this.healthBar.height);
+                this.healthBar.drawRect(0, 0, width, this.healthBar.fixedHeight);
             }
         }
 
@@ -126,7 +126,7 @@ namespace Lich {
                 this.currentHealth -= effectiveDamage;
                 // TODO zatím nemá armor, takže se aplikuje vše
                 this.onHealthChange(this.currentHealth - oldValue);
-                world.fadeText("-" + effectiveDamage, this.x + this.width * Math.random(), this.y);
+                world.fadeText("-" + effectiveDamage, this.x + this.fixedWidth * Math.random(), this.y);
 
                 this.hitSound();
 

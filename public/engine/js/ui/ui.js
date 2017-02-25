@@ -17,7 +17,7 @@ var Lich;
             var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
             // Minimapa
             var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, minimapRender);
-            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.width;
+            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
             minimapUI.y = UI.SCREEN_SPACING;
             self.minimapUI = minimapUI;
             // self.addChild(minimapUI);
@@ -32,7 +32,7 @@ var Lich;
             if (!mobile) {
                 var helpBtn = _this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.width - PartsUI.SPACING;
+                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             }
             else {
@@ -83,8 +83,8 @@ var Lich;
             }
             // SplashScreen
             self.splashScreenUI = new Lich.SplashScreenUI();
-            self.splashScreenUI.x = canvas.width / 2 - self.splashScreenUI.width / 2;
-            self.splashScreenUI.y = canvas.height / 2 - self.splashScreenUI.height / 2;
+            self.splashScreenUI.x = canvas.width / 2 - self.splashScreenUI.fixedWidth / 2;
+            self.splashScreenUI.y = canvas.height / 2 - self.splashScreenUI.fixedHeight / 2;
             if (!mobile) {
                 self.addChild(self.splashScreenUI);
             }
@@ -116,19 +116,19 @@ var Lich;
             craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
             // musí se posunout víc, protože má externí řádek pro ingredience
-            craftingUI.x = canvas.width / 2 - craftingUI.width / 2;
-            craftingUI.y = canvas.height / 2 - craftingUI.height / 2 - Lich.Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 2;
+            craftingUI.x = canvas.width / 2 - craftingUI.fixedWidth / 2;
+            craftingUI.y = canvas.height / 2 - craftingUI.fixedHeight / 2 - Lich.Resources.PARTS_SIZE - PartsUI.SELECT_BORDER * 2;
             craftingUI.hide();
             // Schopnosti
             var spellsUI = new Lich.SpellsUI();
-            spellsUI.x = canvas.width / 2 - spellsUI.width / 2;
+            spellsUI.x = canvas.width / 2 - spellsUI.fixedWidth / 2;
             spellsUI.y = UI.SCREEN_SPACING;
             self.spellsUI = spellsUI;
             // self.addChild(spellsUI);
             // Stav (mana, zdraví)
             var conditionUI = new Lich.ConditionUI();
-            conditionUI.x = canvas.width - conditionUI.width - UI.SCREEN_SPACING;
-            conditionUI.y = canvas.height - conditionUI.height - UI.SCREEN_SPACING;
+            conditionUI.x = canvas.width - conditionUI.fixedWidth - UI.SCREEN_SPACING;
+            conditionUI.y = canvas.height - conditionUI.fixedHeight - UI.SCREEN_SPACING;
             self.conditionUI = conditionUI;
             // self.addChild(conditionUI);
             // Hudba
@@ -343,8 +343,8 @@ var Lich;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         UIBackground.prototype.drawBackground = function (width, height) {
-            this.width = width;
-            this.height = height;
+            this.fixedWidth = width;
+            this.fixedHeight = height;
             this.clear();
             this.lineStyle(2, 0x000000, 0.7);
             this.beginFill(0x0a320a, 0.5);
@@ -355,10 +355,10 @@ var Lich;
     Lich.UIBackground = UIBackground;
     var AbstractUI = (function (_super) {
         __extends(AbstractUI, _super);
-        function AbstractUI(width, height) {
+        function AbstractUI(fixedWidth, fixedHeight) {
             var _this = _super.call(this) || this;
-            _this.width = width;
-            _this.height = height;
+            _this.fixedWidth = fixedWidth;
+            _this.fixedHeight = fixedHeight;
             _this.toggleFlag = true;
             _this.parentRef = null;
             _this.outerShape = new UIBackground();
@@ -367,7 +367,7 @@ var Lich;
             return _this;
         }
         AbstractUI.prototype.drawBackground = function () {
-            this.outerShape.drawBackground(this.width, this.height);
+            this.outerShape.drawBackground(this.fixedWidth, this.fixedHeight);
         };
         AbstractUI.prototype.hide = function () {
             if (this.parent) {

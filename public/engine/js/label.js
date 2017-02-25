@@ -16,8 +16,8 @@ var Lich;
             var _this = _super.call(this) || this;
             _this.label = new PIXI.Text(text, { fontFamily: font, fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
             _this.addChild(_this.label);
-            _this.height = _this.label.getBounds().height;
-            _this.width = _this.label.getBounds().width;
+            _this.fixedHeight = _this.label.getBounds().height;
+            _this.fixedWidth = _this.label.getBounds().width;
             return _this;
         }
         Label.prototype.setLineWidth = function (value) {

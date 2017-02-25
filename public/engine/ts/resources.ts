@@ -98,7 +98,7 @@ namespace Lich {
         /*
          * Přepínače
          */
-        static SHOW_SECTORS = false;
+        static SHOW_SECTORS = true;
         static PRINT_SECTOR_ALLOC = false;
 
         /*
@@ -107,7 +107,6 @@ namespace Lich {
         static TILE_SIZE = 16;
         static PARTS_SIZE = 2 * Resources.TILE_SIZE;
         static PARTS_SHEET_WIDTH = 20;
-        static FRAGMENT_SEPARATOR = "-FRAGMENT-";
 
         /**
          * DEFINICE
@@ -509,8 +508,8 @@ namespace Lich {
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
             // není animovaný, takže vždy předávám číslo snímku
             // sprite.gotoAndStop(spriteDef.frame);
-            sprite.width = spriteDef.width;
-            sprite.height = spriteDef.height;
+            sprite.fixedWidth = spriteDef.width;
+            sprite.fixedHeight = spriteDef.height;
             return sprite;
         };
 
@@ -570,6 +569,7 @@ namespace Lich {
     export class AniSprite extends PIXI.extras.AnimatedSprite {
 
         private checkFrame: number;
+        private lastFrame: number;
         private nextAnimation: AnimationKey;
         public currentAnimation: string;
 
@@ -577,14 +577,16 @@ namespace Lich {
             super(frames);
             // TOTO nebude potřeba hlídat oldFrame?
             this.onFrameChange = (currentFrame: number) => {
-                if (this.checkFrame == currentFrame)
+                if (this.checkFrame != undefined && this.checkFrame == this.lastFrame)
                     this.gotoAndPlay(AnimationKey[this.nextAnimation]);
+                this.lastFrame = currentFrame;
             };
         }
 
         gotoAndPlay(arg: string | number): void {
             if (typeof arg === "string") {
                 let animation = this.animationDef.animations[arg];
+                this.lastFrame = null;
                 this.currentAnimation = arg;
                 this.checkFrame = animation.endFrame;
                 this.nextAnimation = animation.nextAnimationKey

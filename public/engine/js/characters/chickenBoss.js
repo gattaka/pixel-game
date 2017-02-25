@@ -29,8 +29,8 @@ var Lich;
                 _this.lockedSpeedY = 0;
                 _this.lockedTime = 0;
                 _this.maxHealth = _this.currentHealth = 5000;
-                _this.healthBar.height = 10;
-                _this.healthBar.y = -_this.healthBar.height;
+                _this.healthBar.fixedHeight = 10;
+                _this.healthBar.y = -_this.healthBar.fixedHeight;
                 // stále jsem v hover pohybu
                 _this.movementTypeX = Lich.MovementTypeX.HOVER;
                 _this.movementTypeY = Lich.MovementTypeY.HOVER;
@@ -46,8 +46,8 @@ var Lich;
                     var targetX_1 = 0;
                     var targetY_1 = 0;
                     var setXYByAngle_1 = function () {
-                        targetX_1 = world.hero.x + world.hero.width / 2 + Math.cos(Lich.Utils.toRad(_this.angle)) * ChickenBoss.PULL_RADIUS;
-                        targetY_1 = world.hero.y + world.hero.height / 2 + Math.sin(Lich.Utils.toRad(_this.angle)) * ChickenBoss.PULL_RADIUS;
+                        targetX_1 = world.hero.x + world.hero.fixedWidth / 2 + Math.cos(Lich.Utils.toRad(_this.angle)) * ChickenBoss.PULL_RADIUS;
+                        targetY_1 = world.hero.y + world.hero.fixedHeight / 2 + Math.sin(Lich.Utils.toRad(_this.angle)) * ChickenBoss.PULL_RADIUS;
                     };
                     var stopCharging = function () {
                         _this.currentChargeCooldown = 0;
@@ -61,8 +61,8 @@ var Lich;
                     };
                     var processSpeed = function () {
                         // snaž se dosáhnout místo středem
-                        targetX_1 -= _this.width / 2;
-                        targetY_1 -= _this.height / 2;
+                        targetX_1 -= _this.fixedWidth / 2;
+                        targetY_1 -= _this.fixedHeight / 2;
                         // nastav rychlost dle vzdálenosti
                         var b = targetX_1 - _this.x;
                         var a = targetY_1 - _this.y;
@@ -100,8 +100,8 @@ var Lich;
                                 this.performAnimation(Lich.AnimationKey.ANM_MURHUN_ATTACK_KEY);
                                 Lich.Mixer.playSound(Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY);
                                 this.lockedTime = 0;
-                                targetX_1 = world.hero.x + world.hero.width / 2;
-                                targetY_1 = world.hero.y + world.hero.height / 2;
+                                targetX_1 = world.hero.x + world.hero.fixedWidth / 2;
+                                targetY_1 = world.hero.y + world.hero.fixedHeight / 2;
                                 this.charging = true;
                                 processSpeed();
                             }
@@ -109,14 +109,14 @@ var Lich;
                     }
                     if (!this.charging) {
                         var hero = world.hero;
-                        var dist = Math.sqrt(Math.pow(this.x + this.width / 2 - hero.x + hero.width / 2, 2) +
-                            Math.pow(this.y + this.height / 2 - hero.y + hero.height / 2, 2));
+                        var dist = Math.sqrt(Math.pow(this.x + this.fixedWidth / 2 - hero.x + hero.fixedWidth / 2, 2) +
+                            Math.pow(this.y + this.fixedHeight / 2 - hero.y + hero.fixedHeight / 2, 2));
                         // hystereze 
                         var threshold = this.sprinting ? ChickenBoss.RADIUS : ChickenBoss.PULL_RADIUS;
                         if (dist > threshold) {
                             // hráč je moc daleko, neobíhej, ale dosprintuj k němu
-                            targetX_1 = world.hero.x + world.hero.width / 2;
-                            targetY_1 = world.hero.y + world.hero.height / 2;
+                            targetX_1 = world.hero.x + world.hero.fixedWidth / 2;
+                            targetY_1 = world.hero.y + world.hero.fixedHeight / 2;
                             this.sprinting = true;
                         }
                         else {

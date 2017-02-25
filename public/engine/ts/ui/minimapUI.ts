@@ -123,8 +123,8 @@ namespace Lich {
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
-            self.playerIcon.width = self.playerIcon.getBounds().width;
-            self.playerIcon.height = self.playerIcon.getBounds().height;
+            self.playerIcon.fixedWidth = self.playerIcon.getBounds().width;
+            self.playerIcon.fixedHeight = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
 
             let adjustMinimapView = () => {
@@ -143,13 +143,13 @@ namespace Lich {
 
                 let iconX, viewX;
                 // mapRender.tilesMap.width je v tiles, já tady počítám v parts (/2)
-                if (miniXPlayer - miniXShift >= self.width / 2 && miniXPlayer - miniXShift <= mapRender.tilesMap.width / 2 - self.width / 2) {
-                    iconX = self.width / 2;
-                    viewX = miniXPlayer - miniXShift - self.width / 2;
+                if (miniXPlayer - miniXShift >= self.fixedWidth / 2 && miniXPlayer - miniXShift <= mapRender.tilesMap.width / 2 - self.fixedWidth / 2) {
+                    iconX = self.fixedWidth / 2;
+                    viewX = miniXPlayer - miniXShift - self.fixedWidth / 2;
                 } else {
-                    if (miniXPlayer - miniXShift > self.width / 2) {
-                        iconX = self.width / 2 + miniXPlayer - miniXShift - (mapRender.tilesMap.width / 2 - self.width / 2);
-                        viewX = mapRender.tilesMap.width / 2 - self.width;
+                    if (miniXPlayer - miniXShift > self.fixedWidth / 2) {
+                        iconX = self.fixedWidth / 2 + miniXPlayer - miniXShift - (mapRender.tilesMap.width / 2 - self.fixedWidth / 2);
+                        viewX = mapRender.tilesMap.width / 2 - self.fixedWidth;
                     } else {
                         iconX = miniXPlayer - miniXShift;
                         viewX = 0;
@@ -158,13 +158,13 @@ namespace Lich {
 
                 let iconY, viewY;
                 // mapRender.tilesMap.height je v tiles, já tady počítám v parts (/2)
-                if (miniYPlayer - miniYShift >= self.height / 2 && miniYPlayer - miniYShift <= mapRender.tilesMap.height / 2 - self.height / 2) {
-                    iconY = self.height / 2;
-                    viewY = miniYPlayer - miniYShift - self.height / 2;
+                if (miniYPlayer - miniYShift >= self.fixedHeight / 2 && miniYPlayer - miniYShift <= mapRender.tilesMap.height / 2 - self.fixedHeight / 2) {
+                    iconY = self.fixedHeight / 2;
+                    viewY = miniYPlayer - miniYShift - self.fixedHeight / 2;
                 } else {
-                    if (miniYPlayer - miniYShift > self.height / 2) {
-                        iconY = self.height / 2 + miniYPlayer - miniYShift - (mapRender.tilesMap.height / 2 - self.height / 2);
-                        viewY = mapRender.tilesMap.height / 2 - self.height;
+                    if (miniYPlayer - miniYShift > self.fixedHeight / 2) {
+                        iconY = self.fixedHeight / 2 + miniYPlayer - miniYShift - (mapRender.tilesMap.height / 2 - self.fixedHeight / 2);
+                        viewY = mapRender.tilesMap.height / 2 - self.fixedHeight;
                     } else {
                         iconY = miniYPlayer - miniYShift;
                         viewY = 0;
@@ -172,8 +172,8 @@ namespace Lich {
                 }
 
                 // pozice ikony
-                self.playerIcon.x = iconX - self.playerIcon.width / 2;
-                self.playerIcon.y = iconY - self.playerIcon.height / 2;
+                self.playerIcon.x = iconX - self.playerIcon.fixedWidth / 2;
+                self.playerIcon.y = iconY - self.playerIcon.fixedHeight / 2;
 
                 // pozice minimapy
                 self.bitmap.texture.frame = new PIXI.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
@@ -231,8 +231,8 @@ namespace Lich {
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
-            self.playerIcon.width = self.playerIcon.getBounds().width;
-            self.playerIcon.height = self.playerIcon.getBounds().height;
+            self.playerIcon.fixedWidth = self.playerIcon.getBounds().width;
+            self.playerIcon.fixedHeight = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
 
             self.bitmap.scale.x = (mainCanvasWidth - UI.SCREEN_SPACING * 2) / mapRender.canvas.width;
@@ -244,8 +244,8 @@ namespace Lich {
                 self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Resources.TILE_SIZE)) * self.bitmap.scale.x;
                 self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Resources.TILE_SIZE)) * self.bitmap.scale.y;
                 // a pak se ještě vycentruje ikona
-                self.playerIcon.x -= self.playerIcon.width / 2;
-                self.playerIcon.y -= self.playerIcon.height / 2
+                self.playerIcon.x -= self.playerIcon.fixedWidth / 2;
+                self.playerIcon.y -= self.playerIcon.fixedHeight / 2
             };
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {

@@ -41,6 +41,10 @@ namespace Lich {
             let stage = new PIXI.Container();
 
             let bgrSprites = [];
+            let srfcBgrSpriteCont = new PIXI.Container();
+            let srfcSpriteCont = new PIXI.Container();
+            let mixSprite;
+            let fogSpriteCont;
 
             let init = () => {
                 let w = window.innerWidth / Resources.TILE_SIZE;
@@ -55,16 +59,15 @@ namespace Lich {
                 // });
 
                 let bgrSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_FAR_MOUNTAIN_KEY);
-                bgrSprite.width = renderer.width;
+                bgrSprite.fixedWidth = renderer.width;
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);
 
                 bgrSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_WOODLAND1_KEY);
-                bgrSprite.width = renderer.width;
+                bgrSprite.fixedWidth = renderer.width;
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);
 
-                let srfcBgrSpriteCont = new PIXI.Container();
                 for (let i = 0; i < w; i++) {
                     for (let j = 0; j < h; j++) {
                         if (Math.random() < 0.2) continue;
@@ -76,21 +79,30 @@ namespace Lich {
                 }
                 stage.addChild(srfcBgrSpriteCont);
 
-                let srfcSpriteCont = new PIXI.Container();
+                let srfcSprite;
                 for (let i = 0; i < w; i++) {
                     for (let j = 0; j < h; j++) {
                         if (Math.random() < 0.2) continue;
-                        let srfcSprite = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_GOLD_KEY, Math.floor(Math.random() * 42));
+                        srfcSprite = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_GOLD_KEY, Math.floor(Math.random() * 42));
                         srfcSprite.x = i * Resources.TILE_SIZE;
                         srfcSprite.y = j * Resources.TILE_SIZE;
                         srfcSpriteCont.addChild(srfcSprite);
                     }
                 }
-                stage.addChild(srfcSpriteCont);
+                // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
+                let baseRenderTexture = new PIXI.BaseRenderTexture(window.innerWidth - 2, window.innerHeight);
+                let smallTexture = new PIXI.RenderTexture(baseRenderTexture);
+
+                // instead of rendering your containerOfThings to the reeal scene, render it to the texture
+                renderer.render(srfcSpriteCont, smallTexture);
+
+                // now you also have a sprite that uses that texture, rendered in the normal scene
+                mixSprite = new PIXI.Sprite(smallTexture);
+                stage.addChild(mixSprite);
 
                 w = window.innerWidth / Resources.PARTS_SIZE;
                 h = window.innerHeight / Resources.PARTS_SIZE;
-                let fogSpriteCont = new PIXI.Container();
+                fogSpriteCont = new PIXI.Container();
                 for (let i = 0; i < w; i++) {
                     for (let j = 0; j < h; j++) {
                         if (Math.random() < 0.2) continue;
@@ -149,6 +161,13 @@ namespace Lich {
                 bgrSprites.forEach(bgrSprite => {
                     bgrSprite.tilePosition.x += 1;
                 });
+
+                // nic
+                // srfcSpriteCont.x += 1;
+                if (mixSprite)
+                    mixSprite.x += 1;
+                if (fogSpriteCont)
+                    fogSpriteCont.x -= 1;
 
                 requestAnimationFrame(gameLoop);
                 renderer.render(stage);
