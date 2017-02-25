@@ -9,7 +9,7 @@ var Lich;
         __extends(IngredientsCont, _super);
         function IngredientsCont() {
             var _this = _super.call(this, CraftingUI.N * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING) - Lich.PartsUI.SPACING + 2 * Lich.AbstractUI.BORDER, Lich.Resources.PARTS_SIZE + 2 * Lich.PartsUI.SELECT_BORDER) || this;
-            _this.itemsCont = new SheetContainer();
+            _this.itemsCont = new PIXI.Container();
             _this.itemsCont.x = Lich.PartsUI.BORDER;
             _this.itemsCont.y = Lich.PartsUI.SELECT_BORDER;
             _this.addChild(_this.itemsCont);
@@ -31,7 +31,7 @@ var Lich;
             // --- UI ----
             // mapa existujících UI prvků dle typu položky
             _this.itemsUIMap = new Lich.HashMap();
-            _this.itemsCont = new SheetContainer();
+            _this.itemsCont = new PIXI.Container();
             var self = _this;
             _this.workstationIcon = Lich.Resources.getInstance().getSpellUISprite(Lich.SpellKey.SPELL_PLACE_KEY);
             var bounds = _this.workstationIcon.getBounds();
@@ -94,7 +94,7 @@ var Lich;
                         // i přehled jeho ingrediencí
                         self.itemsTypeIndexMap[key] = undefined;
                         if (self.choosenItem == key) {
-                            self.ingredientsCont.itemsCont.removeAllChildren();
+                            self.ingredientsCont.itemsCont.removeChildren();
                             self.choosenItem = undefined;
                         }
                     }
@@ -103,7 +103,7 @@ var Lich;
                 return false;
             });
             // zvýraznění vybrané položky
-            self.itemHighlight = Lich.UIUtils.createHighlight();
+            self.itemHighlight = new Lich.Highlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
             // kontejner položek
@@ -119,21 +119,21 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            upBtn.on("mousedown", function (evt) {
+            upBtn.on("mousedown", function () {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
-            downBtn.on("mousedown", function (evt) {
+            });
+            downBtn.on("mousedown", function () {
                 var occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
                     self.render();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
             // Přehled ingrediencí
             self.ingredientsCont = new IngredientsCont();
             self.addChild(self.ingredientsCont);
@@ -144,7 +144,7 @@ var Lich;
             self.addChild(craftBtn);
             craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
-            craftBtn.on("mousedown", function (evt) {
+            craftBtn.on("mousedown", function () {
                 if (self.choosenItem) {
                     var oldItem = self.choosenItem;
                     var index = self.itemsTypeIndexMap[oldItem];
@@ -156,7 +156,7 @@ var Lich;
                     self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CRAFT_KEY);
                 }
-            }, null, false);
+            });
             return _this;
             // self.measureCacheArea();
         }
@@ -189,7 +189,7 @@ var Lich;
             //     this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
         };
         CraftingUI.prototype.render = function () {
-            this.itemsCont.removeAllChildren();
+            this.itemsCont.removeChildren();
             this.itemHighlight.visible = false;
             var itemsOffset = this.lineOffset * CraftingUI.N;
             for (var i = itemsOffset; i < CraftingUI.N * CraftingUI.M + itemsOffset && i < this.itemsTypeArray.length; i++) {
@@ -208,9 +208,8 @@ var Lich;
             self.itemsCont.addChild(itemUI);
             itemUI.x = (i % CraftingUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             itemUI.y = Math.floor(i / CraftingUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-            itemUI.hitArea = hitArea;
+            var hitArea = new PIXI.Graphics();
+            itemUI.hitArea = new PIXI.Rectangle(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
             if (self.choosenItem == key) {
                 self.itemHighlight.visible = true;
                 self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
@@ -218,13 +217,13 @@ var Lich;
             }
             (function () {
                 var currentItem = self.itemsUIMap[key];
-                itemUI.on("mousedown", function (evt) {
+                itemUI.on("mousedown", function () {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.choosenItem = key;
                     // vypiš ingredience
-                    self.ingredientsCont.itemsCont.removeAllChildren();
+                    self.ingredientsCont.itemsCont.removeChildren();
                     var index = self.itemsTypeIndexMap[self.choosenItem];
                     var recipe = self.itemsTypeArray[index];
                     for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
@@ -235,7 +234,7 @@ var Lich;
                         self.ingredientsCont.itemsCont.addChild(ingredUI);
                     }
                     // self.updateCache();
-                }, null, false);
+                });
             })();
         };
         CraftingUI.prototype.replacer = function (key, value) {

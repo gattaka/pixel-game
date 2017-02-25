@@ -27,9 +27,9 @@ namespace Lich {
 
         toggleFlag = false;
 
-        spellContent = new Array<createjs.Sprite>();
-        itemsCont = new SheetContainer();
-        itemHighlightSprite: createjs.Sprite;
+        spellContent = new Array<PIXI.Sprite>();
+        itemsCont = new PIXI.Container();
+        itemHighlight: PIXI.Graphics;
 
         constructor() {
             super(SpellsUI.N, SpellsUI.M);
@@ -47,9 +47,9 @@ namespace Lich {
             self.spellInsert(SpellKey.SPELL_METEOR_KEY);
 
             // zvýraznění vybrané položky
-            self.itemHighlightSprite = UIUtils.createHighlight();
-            self.itemHighlightSprite.visible = false;
-            self.addChild(self.itemHighlightSprite);
+            self.itemHighlight = new Highlight();
+            self.itemHighlight.visible = false;
+            self.addChild(self.itemHighlight);
 
             // kontejner položek
             self.itemsCont.x = SpellsUI.BORDER;
@@ -90,9 +90,9 @@ namespace Lich {
         selectSpell(spellNumber: number) {
             var self = this;
             var bitmap = self.spellContent[spellNumber];
-            self.itemHighlightSprite.visible = true;
-            self.itemHighlightSprite.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.itemHighlightSprite.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.itemHighlight.visible = true;
+            self.itemHighlight.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.itemHighlight.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             Spellbook.getInstance().choosenItemNumber = spellNumber;
             // self.updateCache();
         }
@@ -122,13 +122,11 @@ namespace Lich {
             text.x = spellIcon.x;
             text.y = spellIcon.y + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
 
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-            spellIcon.hitArea = hitArea;
+            spellIcon.hitArea = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
 
-            spellIcon.on("mousedown", function () {
+            spellIcon.on("mousedown", () => {
                 self.selectSpell(index);
-            }, null, false);
+            });
         }
     }
 

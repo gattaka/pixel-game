@@ -7,40 +7,32 @@ var Lich;
 (function (Lich) {
     var Label = (function (_super) {
         __extends(Label, _super);
-        function Label(text, font, charSpacing) {
-            if (font === void 0) { font = Lich.FontKey.FNT_SMALL_YELLOW_KEY; }
-            if (charSpacing === void 0) { charSpacing = 1; }
+        function Label(text, font, color, outline, outlineColor, outlineWidth) {
+            if (font === void 0) { font = Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT; }
+            if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
+            if (outline === void 0) { outline = true; }
+            if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
+            if (outlineWidth === void 0) { outlineWidth = 1; }
             var _this = _super.call(this) || this;
-            _this.text = text;
-            _this.font = font;
-            _this.charSpacing = charSpacing;
-            _this.setText(text);
+            _this.label = new PIXI.Text(text, { fontFamily: font, fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
+            _this.addChild(_this.label);
+            _this.height = _this.label.getBounds().height;
+            _this.width = _this.label.getBounds().width;
             return _this;
         }
-        Label.prototype.setText = function (text) {
-            var sText = (text + "").toLowerCase();
-            var charSprite;
-            for (var i = 0; i < sText.length; i++) {
-                var char = sText.charAt(i);
-                if (char != ' ') {
-                }
-            }
-            if (charSprite) {
-                this.height = charSprite.height;
-                this.width = sText.length * (charSprite.width + this.charSpacing);
-            }
-            else {
-                this.height = 1;
-                this.width = 1;
-            }
+        Label.prototype.setLineWidth = function (value) {
+            // this.label.lineWidth = value
         };
         Label.prototype.setLineHeight = function (value) {
-            // TODO
+            // this.label.lineHeight = value
         };
-        Label.prototype.setLineWidth = function (value) {
-            // TODO
+        Label.prototype.setText = function (value) {
+            this.label.text = value;
+        };
+        Label.prototype.setColor = function (value) {
+            this.label.style.fill = value;
         };
         return Label;
-    }(SheetContainer));
+    }(PIXI.Container));
     Lich.Label = Label;
 })(Lich || (Lich = {}));

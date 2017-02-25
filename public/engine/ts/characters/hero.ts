@@ -55,8 +55,8 @@ namespace Lich {
         performAnimation(desiredAnimation: AnimationKey) {
             var self = this;
             let stringKey = AnimationKey[desiredAnimation];
-            if (self.sprite.currentAnimation !== stringKey && (this.currentHealth > 0 || stringKey == AnimationKey[AnimationKey.ANM_HERO_DIE_KEY])
-                && self.sprite.currentAnimation != AnimationKey[AnimationKey.ANM_HERO_TELEPORT_KEY]) {
+            if (self.getCurrentAnimation() !== stringKey && (this.currentHealth > 0 || stringKey == AnimationKey[AnimationKey.ANM_HERO_DIE_KEY])
+                && self.getCurrentAnimation() != AnimationKey[AnimationKey.ANM_HERO_TELEPORT_KEY]) {
                 self.gotoAndPlay(stringKey);
             }
         }

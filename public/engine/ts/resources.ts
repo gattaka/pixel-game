@@ -81,6 +81,7 @@ namespace Lich {
 
         static FONT = "expressway";
         static TEXT_COLOR = "#FF0";
+        static OUTLINE_COLOR = "#000";
         static WORLD_LOADER_COLOR = "#84ff00";
         static DEBUG_TEXT_COLOR = "#FF0";
 
@@ -539,7 +540,7 @@ namespace Lich {
             return this.getBasicSprite(SpritesheetKey.SPST_INV_KEY, this.invObjectDefs[key].spriteName);
         };
 
-        getAnimatedObjectSprite(animation: AnimationSetKey): PIXI.Sprite {
+        getAnimatedObjectSprite(animation: AnimationSetKey): AniSprite {
             let self = this;
             let animationDef = self.animationSetDefsByKey[animation];
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_ANM_KEY];
@@ -560,11 +561,39 @@ namespace Lich {
                     frames.push(texture);
                 }
             }
-            var anim = new PIXI.extras.AnimatedSprite(frames);
-            anim.animationSpeed = 0.2;
-            anim.play();
+            var anim = new AniSprite(frames, animationDef);
             return anim;
         };
+
+    }
+
+    export class AniSprite extends PIXI.extras.AnimatedSprite {
+
+        private checkFrame: number;
+        private nextAnimation: AnimationKey;
+        public currentAnimation: string;
+
+        constructor(frames: PIXI.Texture[], private animationDef: AnimationSetDefinition) {
+            super(frames);
+            // TOTO nebude potřeba hlídat oldFrame?
+            this.onFrameChange = (currentFrame: number) => {
+                if (this.checkFrame == currentFrame)
+                    this.gotoAndPlay(AnimationKey[this.nextAnimation]);
+            };
+        }
+
+        gotoAndPlay(arg: string | number): void {
+            if (typeof arg === "string") {
+                let animation = this.animationDef.animations[arg];
+                this.currentAnimation = arg;
+                this.checkFrame = animation.endFrame;
+                this.nextAnimation = animation.nextAnimationKey
+                this.animationSpeed = animation.speed;
+                super.gotoAndPlay(animation.startFrame);
+            } else {
+                super.gotoAndPlay(arg);
+            }
+        }
 
     }
 }

@@ -10,13 +10,20 @@ namespace Lich {
         public levitate = false;
     };
 
+    declare class Stats {
+        dom;
+        constructor();
+        showPanel(n: number);
+        begin();
+        end();
+    };
+
     export class Game {
 
         static CURRENT_GAME: Game;
 
-        private canvas: HTMLCanvasElement;
-        private stage: createjs.SpriteStage;
-        private content: SheetContainer;
+        private renderer: PIXI.WebGLRenderer;
+        private stage: PIXI.Container;
         private background: Background;
         private world: World;
         private ui: UI;
@@ -31,10 +38,10 @@ namespace Lich {
 
         mouse = new Mouse();
 
-        public getCanvas(): HTMLCanvasElement { return this.canvas; }
         public getWorld(): World { return this.world; }
+        public getRender(): PIXI.WebGLRenderer { return this.renderer; }
 
-        constructor(mainCanvasId: string, minimapCanvasId: string, loaderCanvasId: string) {
+        constructor(minimapCanvasId: string, loaderCanvasId: string) {
 
             var self = this;
 
@@ -54,40 +61,33 @@ namespace Lich {
                 mobile = false;
             }
 
-            /*------------*/
-            /* Stage init */
-            /*------------*/
-
             console.log("running");
 
-            self.canvas = <HTMLCanvasElement>document.getElementById(mainCanvasId);
+            // Create the renderer
+            self.renderer = new PIXI.WebGLRenderer();
+            self.renderer.view.style.position = "absolute";
+            self.renderer.view.style.display = "block";
+            self.renderer.backgroundColor = 0xfafaea;
             switch (ThemeWatch.getCurrentTheme()) {
                 case Theme.WINTER:
-                    self.canvas.style.backgroundColor = "#cce1e8"; break;
+                    self.renderer.backgroundColor = 0xcce1e8;
                 default:
-                    self.canvas.style.backgroundColor = "#839e61";
+                    self.renderer.backgroundColor = 0x839e61;
             }
+            self.renderer.autoResize = true;
 
+            function resizeCanvas() {
+                self.renderer.resize(window.innerWidth, window.innerHeight);
+            }
+            resizeCanvas();
             // resize the canvas to fill browser window dynamically
             window.addEventListener('resize', resizeCanvas, false);
 
-            function resizeCanvas() {
-                self.canvas.width = window.innerWidth;
-                self.canvas.height = window.innerHeight;
-            }
-            resizeCanvas();
+            // Add the canvas to the HTML document
+            document.body.appendChild(self.renderer.view);
 
-            self.canvas = <HTMLCanvasElement>document.getElementById(mainCanvasId);
-            self.canvas.style.backgroundColor = "#cce1e8";
-            // preserveDrawingBuffer = true (2. argument) značeně zhorší FPS
-            // antialising = true (3. argument) také značně zhorší FPS
-            self.stage = new createjs.SpriteStage(self.canvas, false, false);
-            let webGL = self.stage.isWebGL;
-
-            if (mobile) {
-                createjs.Touch.enable(self.stage);
-                self.stage.enableMouseOver(10);
-            }
+            // Create a container object called the `stage`
+            let stage = new PIXI.Container();
 
             /*----------*/
             /* Controls */
@@ -111,51 +111,56 @@ namespace Lich {
             /*--------------*/
 
             if (mobile) {
-                self.stage.on("mousedown", function (evt: createjs.MouseEvent) {
+                self.stage.on("pointerdown", () => {
+                    var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.down = true;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                    self.mouse.x = evt.stageX;
-                    self.mouse.y = evt.stageY;
-                }, null, false);
+                    self.mouse.x = mouseData.x;
+                    self.mouse.y = mouseData.y;
+                });
 
-                self.stage.on("pressmove", function (evt: createjs.MouseEvent) {
-                    self.mouse.x = evt.stageX;
-                    self.mouse.y = evt.stageY;
+                self.stage.on("pressmove", () => {
+                    var mouseData = self.renderer.plugins.interaction.mouse.global;
+                    self.mouse.x = mouseData.x;
+                    self.mouse.y = mouseData.y;
                     EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
-                }, null, false);
+                });
 
-                self.stage.on("pressup", function (evt: createjs.MouseEvent) {
+                self.stage.on("pressup", () => {
                     self.mouse.down = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                }, null, false);
+                });
             } else {
-                self.canvas.onmousedown = (event: MouseEvent) => {
-                    if (event.button == 0) {
+                self.stage.on("mousedown", () => {
+                    var mouseData = self.renderer.plugins.interaction.mouse;
+                    if (mouseData.button == 0) {
                         self.mouse.down = true;
                     } else {
                         self.mouse.rightDown = true;
                     }
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                };
+                });
 
-                self.canvas.onmousemove = (event: MouseEvent) => {
-                    self.mouse.x = event.clientX;
-                    self.mouse.y = event.clientY;
+                self.stage.on("mousemove", () => {
+                    var mouseData = self.renderer.plugins.interaction.mouse.global;
+                    self.mouse.x = mouseData.x;
+                    self.mouse.y = mouseData.y;
                     EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
-                };
+                });
 
-                self.canvas.onmouseup = (event: MouseEvent) => {
-                    if (event.button == 0) {
+                self.stage.on("mouseup", () => {
+                    var mouseData = self.renderer.plugins.interaction.mouse;
+                    if (mouseData.button == 0) {
                         self.mouse.down = false;
                     } else {
                         self.mouse.rightDown = false;
                     }
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                }
+                });
             }
 
             let init = function () {
@@ -194,18 +199,18 @@ namespace Lich {
 
                 let populateContent = (tilesMap: TilesMap) => {
                     // clean 
-                    self.content.removeAllChildren();
+                    self.stage.removeChildren();
                     delete self.world;
                     delete self.background;
                     EventBus.getInstance().clear();
                     Mixer.stopAllSounds();
 
                     // (re)-init
-                    self.ui = new UI(self.canvas, tilesMap, mobile);
-                    self.background = new Background(self.canvas);
+                    self.ui = new UI(self.renderer.view, tilesMap, mobile);
+                    self.background = new Background(self.renderer.view);
                     self.world = new World(self, tilesMap);
-                    self.content.addChild(self.background);
-                    self.content.addChild(self.world);
+                    self.stage.addChild(self.background);
+                    self.stage.addChild(self.world);
                     // self.content.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
@@ -248,7 +253,6 @@ namespace Lich {
                     });
 
                     self.initialized = true;
-                    self.stage.addChild(self.content);
                 };
 
                 setInterval(() => {
@@ -263,8 +267,6 @@ namespace Lich {
                 loadWorld();
             }
 
-            self.content = new SheetContainer();
-
             if (Resources.getInstance().isLoaderDone()) {
                 init();
             } else {
@@ -274,34 +276,23 @@ namespace Lich {
                     EventBus.getInstance().unregisterConsumer(EventType.LOAD_FINISHED, listener);
                     return false;
                 });
-                self.loadUI = new LoaderUI(loaderCanvasId);
+                self.loadUI = new LoaderUI(self);
             }
 
-            /*-----------*/
-            /* Time init */
-            /*-----------*/
-            createjs.Ticker.timingMode = createjs.Ticker.RAF;
-            createjs.Ticker.addEventListener("tick", handleTick);
-            createjs.Ticker.setFPS(60);
+            window.onbeforeunload = function (e) {
+                var e = e || window.event;
+                // IE & Firefox
+                if (e) {
+                    e.returnValue = 'Are you sure?';
+                }
+                // For Safari
+                return 'Are you sure?';
+            };
 
-            function handleTick(event) {
+            function gameLoop(delta?: number) {
                 stats.begin();
-                var delta = event.delta;
 
-                window.onbeforeunload = function (e) {
-                    var e = e || window.event;
-                    // IE & Firefox
-                    if (e) {
-                        e.returnValue = 'Are you sure?';
-                    }
-                    // For Safari
-                    return 'Are you sure?';
-                };
-
-                if (self.initialized) {
-
-                    // Measurements
-                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.FPS_CHANGE, createjs.Ticker.getMeasuredFPS()));
+                if (self.initialized && delta) {
 
                     // Idle
                     self.getWorld().handleTick(delta);
@@ -406,12 +397,15 @@ namespace Lich {
 
                     self.getWorld().update(delta, controls);
                 }
-                self.loadUI.update();
-                self.stage.update();
-                if (self.background)
-                    self.background.update(delta);
+
+                requestAnimationFrame(gameLoop);
+                self.renderer.render(stage);
                 stats.end();
             }
+
+            // Start the game loop
+            // Loop this function at 60 frames per second
+            gameLoop();
         };
     }
 }

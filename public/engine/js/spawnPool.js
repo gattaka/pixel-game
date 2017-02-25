@@ -19,7 +19,7 @@ var Lich;
         };
         SpawnPool.prototype.createContext = function (world) {
             var ctx = new SpawnContext();
-            ctx.canvas = world.game.getCanvas();
+            ctx.canvas = world.game.getRender();
             // délky
             ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
             ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;

@@ -1,10 +1,10 @@
 namespace Lich {
 
-    export abstract class AbstractSector extends SheetContainer {
+    export abstract class AbstractSector extends PIXI.Container {
 
-        public backgroundCont = new SheetContainer();
-        public cacheableCont = new SheetContainer();
-        public animatedCont = new SheetContainer();
+        public backgroundCont = new PIXI.Container();
+        public cacheableCont = new PIXI.Container();
+        public animatedCont = new PIXI.Container();
 
         constructor(
             public secId: number,
@@ -21,9 +21,9 @@ namespace Lich {
 
     export class Sector extends AbstractSector {
 
-        public backgroundCont = new SheetContainer();
-        public cacheableCont = new SheetContainer();
-        public animatedCont = new SheetContainer();
+        public backgroundCont = new PIXI.Container();
+        public cacheableCont = new PIXI.Container();
+        public animatedCont = new PIXI.Container();
 
         constructor(
             public secId: number,
@@ -71,15 +71,15 @@ namespace Lich {
             this.animatedCont.addChild(child);
         }
 
-        public removeBackgroundChild(child): boolean {
+        public removeBackgroundChild(child: PIXI.DisplayObject): PIXI.DisplayObject {
             return this.backgroundCont.removeChild(child);
         }
 
-        public removeCacheableChild(child): boolean {
+        public removeCacheableChild(child: PIXI.DisplayObject): PIXI.DisplayObject {
             return this.cacheableCont.removeChild(child);
         }
 
-        public removeAnimatedChild(child): boolean {
+        public removeAnimatedChild(child: PIXI.DisplayObject): PIXI.DisplayObject {
             return this.animatedCont.removeChild(child);
         }
     }

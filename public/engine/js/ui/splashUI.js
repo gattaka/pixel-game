@@ -209,7 +209,7 @@ var Lich;
         function SplashScreenUI() {
             var _this = _super.call(this, SplashScreenUI.WIDTH, 20 + (SplashScreenUI.LINES + 1) * (SplashScreenUI.FONT_HEIGHT + SplashScreenUI.PADDING + SplashScreenUI.OUTLINE * 2)) || this;
             _this.lines = new Array();
-            _this.cont = new SheetContainer();
+            _this.cont = new PIXI.Container();
             _this.currentLine = 0;
             var self = _this;
             var changelog = new Changelog();
@@ -255,7 +255,7 @@ var Lich;
             //     self.height + 20);
         }
         SplashScreenUI.prototype.print = function () {
-            this.cont.removeAllChildren();
+            this.cont.removeChildren();
             for (var i = 0; i < SplashScreenUI.LINES; i++) {
                 if (this.lines[i + this.currentLine] == null)
                     break;
@@ -269,59 +269,59 @@ var Lich;
             var self = this;
             var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
             self.addChild(upBtn);
-            upBtn.on("click", function (evt) {
+            upBtn.on("click", function () {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     // self.updateCache();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
             return upBtn;
         };
         SplashScreenUI.prototype.createDownButton = function () {
             var self = this;
             var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
             self.addChild(downBtn);
-            downBtn.on("click", function (evt) {
+            downBtn.on("click", function () {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     // self.updateCache();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
             return downBtn;
         };
         SplashScreenUI.prototype.createSaveButton = function () {
             var self = this;
             var btn = new Lich.Button(Lich.UISpriteKey.UI_SAVE_KEY);
             self.addChild(btn);
-            btn.on("click", function (evt) {
+            btn.on("click", function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 self.hide();
-            }, null, false);
+            });
             return btn;
         };
         SplashScreenUI.prototype.createLoadButton = function () {
             var self = this;
             var btn = new Lich.Button(Lich.UISpriteKey.UI_LOAD_KEY);
             self.addChild(btn);
-            btn.on("click", function (evt) {
+            btn.on("click", function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-            }, null, false);
+            });
             return btn;
         };
         SplashScreenUI.prototype.createNewWorldButton = function () {
             var self = this;
             var btn = new Lich.Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY);
             self.addChild(btn);
-            btn.on("click", function (evt) {
+            btn.on("click", function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-            }, null, false);
+            });
             return btn;
         };
         return SplashScreenUI;

@@ -67,10 +67,10 @@ var Lich;
             _this.bulletObjects = Array();
             _this.labelObjects = new Array();
             // kontejnery
-            _this.tilesSectorsCont = new SheetContainer();
-            _this.entitiesCont = new SheetContainer();
-            _this.fogSectorsCont = new SheetContainer();
-            _this.messagesCont = new SheetContainer();
+            _this.tilesSectorsCont = new PIXI.Container();
+            _this.entitiesCont = new PIXI.Container();
+            _this.fogSectorsCont = new PIXI.Container();
+            _this.messagesCont = new PIXI.Container();
             _this.enemiesCount = 0;
             _this.enemies = new Array();
             var self = _this;
@@ -94,8 +94,8 @@ var Lich;
             self.render = new Lich.Render(game, self);
             // Hráč
             self.hero = new Lich.Hero();
-            self.hero.x = game.getCanvas().width / 2;
-            self.hero.y = game.getCanvas().height / 2;
+            self.hero.x = game.getRender().width / 2;
+            self.hero.y = game.getRender().height / 2;
             self.entitiesCont.addChild(self.hero);
             self.placePlayerOnSpawnPoint();
             // Dig events 
@@ -114,8 +114,8 @@ var Lich;
             var self = this;
             cont.x = 0;
             cont.y = 0;
-            cont.width = self.game.getCanvas().width;
-            cont.height = self.game.getCanvas().height;
+            cont.width = self.game.getRender().width;
+            cont.height = self.game.getRender().height;
         };
         World.prototype.fadeEnemy = function (enemy) {
             var self = this;
@@ -135,13 +135,13 @@ var Lich;
         };
         World.prototype.showDeadInfo = function () {
             var self = this;
-            var deadInfo = new createjs.SpriteContainer();
+            var deadInfo = new PIXI.Container();
             this.messagesCont.addChild(deadInfo);
-            var shape = new createjs.Shape();
-            shape.width = this.game.getCanvas().width;
-            shape.height = this.game.getCanvas().height;
-            shape.graphics.beginFill("rgba(10,10,10,0.9)");
-            shape.graphics.drawRect(0, 0, shape.width, shape.height);
+            var shape = new PIXI.Graphics();
+            shape.width = this.game.getRender().width;
+            shape.height = this.game.getRender().height;
+            shape.beginFill(0x0a0a0a, 0.9);
+            shape.drawRect(0, 0, shape.width, shape.height);
             shape.x = 0;
             shape.y = 0;
             deadInfo.addChild(shape);
@@ -368,8 +368,8 @@ var Lich;
             // požadovaný posuv
             var rndShiftX = Lich.Utils.floor(shiftX);
             var rndShiftY = Lich.Utils.floor(shiftY);
-            var canvasCenterX = self.game.getCanvas().width / 2;
-            var canvasCenterY = self.game.getCanvas().height / 2;
+            var canvasCenterX = self.game.getRender().width / 2;
+            var canvasCenterY = self.game.getRender().height / 2;
             var playerShiftX, sceneShiftX;
             var playerShiftY, sceneShiftY;
             // kolik zbývá hráčovi z cesty na střed směrem v pohybu
@@ -710,10 +710,10 @@ var Lich;
                         enemy.x -= rndX;
                         enemy.y -= rndY;
                         if (enemy.unspawns) {
-                            if (enemy.x < -self.game.getCanvas().width * 2
-                                || enemy.x > self.game.getCanvas().width * 2
-                                || enemy.y < -self.game.getCanvas().height * 2
-                                || enemy.y > self.game.getCanvas().height * 2) {
+                            if (enemy.x < -self.game.getRender().width * 2
+                                || enemy.x > self.game.getRender().width * 2
+                                || enemy.y < -self.game.getRender().height * 2
+                                || enemy.y > self.game.getRender().height * 2) {
                                 // dealokace
                                 self.removeEnemy(enemy);
                             }
@@ -1227,7 +1227,7 @@ var Lich;
         };
         ;
         return World;
-    }(SheetContainer));
+    }(PIXI.Container));
     /*-----------*/
     /* CONSTANTS */
     /*-----------*/

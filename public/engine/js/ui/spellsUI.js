@@ -26,7 +26,7 @@ var Lich;
             var _this = _super.call(this, SpellsUI.N, SpellsUI.M) || this;
             _this.toggleFlag = false;
             _this.spellContent = new Array();
-            _this.itemsCont = new SheetContainer();
+            _this.itemsCont = new PIXI.Container();
             var self = _this;
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);
@@ -38,9 +38,9 @@ var Lich;
             self.spellInsert(Lich.SpellKey.SPELL_TELEPORT_KEY, Lich.SpellKey.SPELL_HOME_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_METEOR_KEY);
             // zvýraznění vybrané položky
-            self.itemHighlightSprite = Lich.UIUtils.createHighlight();
-            self.itemHighlightSprite.visible = false;
-            self.addChild(self.itemHighlightSprite);
+            self.itemHighlight = new Lich.Highlight();
+            self.itemHighlight.visible = false;
+            self.addChild(self.itemHighlight);
             // kontejner položek
             self.itemsCont.x = SpellsUI.BORDER;
             self.itemsCont.y = SpellsUI.BORDER;
@@ -76,9 +76,9 @@ var Lich;
         SpellsUI.prototype.selectSpell = function (spellNumber) {
             var self = this;
             var bitmap = self.spellContent[spellNumber];
-            self.itemHighlightSprite.visible = true;
-            self.itemHighlightSprite.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.itemHighlightSprite.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.itemHighlight.visible = true;
+            self.itemHighlight.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
+            self.itemHighlight.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
             Spellbook.getInstance().choosenItemNumber = spellNumber;
             // self.updateCache();
         };
@@ -105,12 +105,10 @@ var Lich;
             self.itemsCont.addChild(text);
             text.x = spellIcon.x;
             text.y = spellIcon.y + Lich.Resources.PARTS_SIZE - Lich.PartsUI.TEXT_SIZE;
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-            spellIcon.hitArea = hitArea;
+            spellIcon.hitArea = new PIXI.Rectangle(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
             spellIcon.on("mousedown", function () {
                 self.selectSpell(index);
-            }, null, false);
+            });
         };
         return SpellsUI;
     }(Lich.PartsUI));

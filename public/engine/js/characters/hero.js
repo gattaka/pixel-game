@@ -47,8 +47,8 @@ var Lich;
         Hero.prototype.performAnimation = function (desiredAnimation) {
             var self = this;
             var stringKey = Lich.AnimationKey[desiredAnimation];
-            if (self.sprite.currentAnimation !== stringKey && (this.currentHealth > 0 || stringKey == Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_DIE_KEY])
-                && self.sprite.currentAnimation != Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_TELEPORT_KEY]) {
+            if (self.getCurrentAnimation() !== stringKey && (this.currentHealth > 0 || stringKey == Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_DIE_KEY])
+                && self.getCurrentAnimation() != Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_TELEPORT_KEY]) {
                 self.gotoAndPlay(stringKey);
             }
         };

@@ -1,10 +1,10 @@
 namespace Lich {
 
-    export class UI extends SheetContainer {
+    export class UI extends PIXI.Container {
 
         static SCREEN_SPACING = 20;
 
-        charCont: SheetContainer;
+        charCont: PIXI.Container;
 
         debugUI: DebugLogUI;
         inventoryUI: InventoryUI;
@@ -22,9 +22,9 @@ namespace Lich {
 
         private createHelpButton() {
             let helpBtn = new Button(UISpriteKey.UI_HELP_KEY);
-            helpBtn.on("mousedown", function (evt) {
+            helpBtn.on("mousedown", () => {
                 window.open("help.html", "_blank");
-            }, null, false);
+            });
             return helpBtn;
         }
 
@@ -58,7 +58,7 @@ namespace Lich {
                 helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.width - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             } else {
-                let menuCont = new SheetContainer();
+                let menuCont = new PIXI.Container();
                 menuCont.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuCont.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 menuCont.visible = false;
@@ -66,27 +66,27 @@ namespace Lich {
 
                 let saveBtn = new Button(UISpriteKey.UI_SAVE_KEY);
                 menuCont.addChild(saveBtn);
-                saveBtn.on("click", function (evt) {
+                saveBtn.on("click", () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = false;
-                }, null, false);
+                });
 
                 let loadBtn = new Button(UISpriteKey.UI_LOAD_KEY);
                 loadBtn.y = Button.sideSize + PartsUI.SPACING;
                 menuCont.addChild(loadBtn);
-                loadBtn.on("click", function (evt) {
+                loadBtn.on("click", () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                }, null, false);
+                });
 
                 let newbtn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
                 newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
                 menuCont.addChild(newbtn);
-                menuCont.on("click", function (evt) {
+                menuCont.on("click", () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                }, null, false);
+                });
 
                 let helpBtn = this.createHelpButton();
                 menuCont.addChild(helpBtn);
@@ -96,10 +96,10 @@ namespace Lich {
                 self.addChild(menuBtn);
                 menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
-                menuBtn.on("click", function (evt) {
+                menuBtn.on("click", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = !menuCont.visible;
-                }, null, false);
+                });
             }
 
             // Debug and loging
@@ -174,7 +174,7 @@ namespace Lich {
 
             // Achievements info
             EventBus.getInstance().registerConsumer(EventType.ACHIEVEMENT_DONE, (payload: StringEventPayload): boolean => {
-                let achvCont = new SheetContainer();
+                let achvCont = new PIXI.Container();
 
                 let achvImgSide = 80;
                 let w = 300;
@@ -231,43 +231,42 @@ namespace Lich {
                 invBtn.x = UI.SCREEN_SPACING;
                 invBtn.y = UI.SCREEN_SPACING;
                 self.addChild(invBtn);
-                invBtn.on("click", function (evt) {
+                invBtn.on("click", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
-                }, null, false);
+                });
 
                 let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY);
                 craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
-                craftBtn.on("click", function (evt) {
+                craftBtn.on("click", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
-                }, null, false);
+                });
 
                 let minimapBtn = new Button(UISpriteKey.UI_MINIMAP_KEY);
                 minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
-                minimapBtn.on("click", function (evt) {
+                minimapBtn.on("click", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.mapUI.show();
-                }, null, false);
+                });
             }
 
             if (mobile) {
-                let movementCont = new SheetContainer();
+                let movementCont = new PIXI.Container();
                 movementCont.x = UI.SCREEN_SPACING;
                 movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont);
 
-                let shape = new createjs.Shape();
-                shape.graphics.beginStroke("rgba(0,0,0,0.7)");
-                shape.graphics.setStrokeStyle(2);
+                let shape = new PIXI.Graphics();
+                shape.lineStyle(2, 0x000000, 0.7);
                 let radius = 2 * Button.sideSize;
-                shape.graphics.beginFill("rgba(10,50,10,0.5)").drawCircle(0, 0, radius);
+                shape.beginFill(0x0a320a, 0.5).drawCircle(0, 0, radius);
                 shape.x = radius;
                 shape.y = radius;
                 movementCont.addChild(shape);
@@ -319,18 +318,19 @@ namespace Lich {
                     }
                 };
 
-                movementCont.on("mousedown", function (evt: createjs.MouseEvent) {
-                    self.controls = new Controls();
-                    directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
-                }, null, false);
-                movementCont.on("pressup", function (evt) {
-                    self.controls = new Controls();
-                }, null, false);
-                movementCont.on("pressmove", function (evt: createjs.MouseEvent) {
-                    self.controls = new Controls();
-                    directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
-                }, null, false);
-
+                // TODO touch
+                // movementCont.on("mousedown",  (evt: createjs.MouseEvent) {
+                //     var mouseData = game.ge.renderer.plugins.interaction.mouse.;
+                //     self.controls = new Controls();
+                //     directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
+                // }, null, false);
+                // movementCont.on("pressup", function (evt) {
+                //     self.controls = new Controls();
+                // }, null, false);
+                // movementCont.on("pressmove", function (evt: createjs.MouseEvent) {
+                //     self.controls = new Controls();
+                //     directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
+                // }, null, false);
 
             }
 
@@ -340,73 +340,54 @@ namespace Lich {
             let self = this;
             let uiHit = false;
             self.children.forEach(function (item) {
-                if (item.hitTest(x - item.x, y - item.y) === true) {
-                    uiHit = true;
-                    return;
-                }
+                // TODO?
+                // if (item.hit(x - item.x, y - item.y) === true) {
+                //     uiHit = true;
+                //     return;
+                // }
             });
             return uiHit;
         }
 
     }
 
-    export class UIBackground extends SheetContainer {
+    export class UIBackground extends PIXI.Graphics {
         public width: number;
         public height: number;
         public drawBackground(width: number, height: number) {
             this.width = width;
             this.height = height;
-
-            // TL
-            let tl = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_TL_KEY);
-            tl.x = 0;
-            tl.y = 0;
-            this.addChild(tl);
-
-            // TR
-            let tr = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_TR_KEY);
-            tr.x = width - tr.width;
-            tr.y = 0;
-            this.addChild(tr);
-
-            // BR
-            let br = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_BR_KEY);
-            br.x = width - br.width;
-            br.y = height - br.height;
-            this.addChild(br);
-
-            // BL
-            let bl = Resources.getInstance().getUISprite(UISpriteKey.UI_PANEL_BL_KEY);
-            bl.x = 0;
-            bl.y = height - bl.height;
-            this.addChild(bl);
+            this.clear();
+            this.lineStyle(2, 0x000000, 0.7);
+            this.beginFill(0x0a320a, 0.5);
+            this.drawRoundedRect(0, 0, width, height, 3);
         }
     }
 
-    export class AbstractUI extends SheetContainer {
+    export class AbstractUI extends PIXI.Container {
 
         static BORDER = 10;
         static TEXT_SIZE = 15;
 
         protected toggleFlag = true;
-        protected parentRef: SheetContainer = null;
+        protected parentRef: PIXI.Container = null;
 
-        bgr: UIBackground = new UIBackground();
+        outerShape: UIBackground = new UIBackground();
 
         constructor(public width: number, public height: number) {
             super();
 
             this.drawBackground();
-            this.addChild(this.bgr);
+            this.addChild(this.outerShape);
         }
 
         protected drawBackground() {
-            this.bgr.drawBackground(this.width, this.height);
+            this.outerShape.drawBackground(this.width, this.height);
         }
 
         hide() {
             if (this.parent) {
-                this.parentRef = <SheetContainer>this.parent;
+                this.parentRef = this.parent;
                 this.parent.removeChild(this);
             }
         }
@@ -438,10 +419,21 @@ namespace Lich {
 
     }
 
-    export class UIUtils {
+    export class UIShape extends PIXI.Graphics {
+        constructor(red: number, green: number, blue: number,
+            red2 = red, green2 = green, blue2 = blue, op = 0.2, op2 = 0.5) {
+            super();
 
-        static createHighlight(): createjs.Sprite {
-            return Resources.getInstance().getUISprite(UISpriteKey.UI_HIGHLIGHT_KEY);
+            this.beginFill(red << 4 + green << 2 + blue, op);
+            this.lineStyle(2, red2 << 4 + green2 << 2 + blue2, op2);
+            let side = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+            this.drawRoundedRect(0, 0, side, side, 3);
+        }
+    }
+
+    export class Highlight extends UIShape {
+        constructor() {
+            super(250, 250, 10);
         }
     }
 
@@ -460,7 +452,7 @@ namespace Lich {
 
     }
 
-    export class Button extends SheetContainer {
+    export class Button extends PIXI.Container {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
         constructor(uiKey: UISpriteKey) {
             super();
@@ -477,9 +469,7 @@ namespace Lich {
                 sprite.y = PartsUI.SELECT_BORDER;
             }
 
-            let hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, Button.sideSize, Button.sideSize);
-            this.hitArea = hitArea;
+            this.hitArea = new PIXI.Rectangle(0, 0, Button.sideSize, Button.sideSize);
 
         }
     }

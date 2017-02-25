@@ -234,11 +234,11 @@ namespace Lich {
         static SCROLL_LINES = 2;
 
         private lines = new Array<string>();
-        private cont = new SheetContainer();
+        private cont = new PIXI.Container();
         private currentLine = 0;
 
         public print() {
-            this.cont.removeAllChildren();
+            this.cont.removeChildren();
             for (var i = 0; i < SplashScreenUI.LINES; i++) {
                 if (this.lines[i + this.currentLine] == null)
                     break;
@@ -253,14 +253,14 @@ namespace Lich {
             var self = this;
             let upBtn = new Button(UISpriteKey.UI_UP_KEY);
             self.addChild(upBtn);
-            upBtn.on("click", function (evt) {
+            upBtn.on("click", () => {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     // self.updateCache();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
             return upBtn;
         }
 
@@ -268,14 +268,14 @@ namespace Lich {
             var self = this;
             let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
             self.addChild(downBtn);
-            downBtn.on("click", function (evt) {
+            downBtn.on("click", () => {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
                     // self.updateCache();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
             return downBtn;
         }
 
@@ -283,11 +283,11 @@ namespace Lich {
             var self = this;
             let btn = new Button(UISpriteKey.UI_SAVE_KEY);
             self.addChild(btn);
-            btn.on("click", function (evt) {
+            btn.on("click", () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 self.hide();
-            }, null, false);
+            });
             return btn;
         }
 
@@ -295,10 +295,10 @@ namespace Lich {
             var self = this;
             let btn = new Button(UISpriteKey.UI_LOAD_KEY);
             self.addChild(btn);
-            btn.on("click", function (evt) {
+            btn.on("click", () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
-            }, null, false);
+            });
             return btn;
         }
 
@@ -306,10 +306,10 @@ namespace Lich {
             var self = this;
             let btn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
             self.addChild(btn);
-            btn.on("click", function (evt) {
+            btn.on("click", () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
-            }, null, false);
+            });
             return btn;
         }
 

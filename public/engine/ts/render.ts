@@ -41,19 +41,19 @@ namespace Lich {
         sectorsToUpdate = new Array<SectorUpdateRequest>();
         fogSectorsToUpdate = new Array<FogSectorUpdateRequest>();
         // Kontejnery na sektory
-        sectorsCont: SheetContainer;
-        fogSectorsCont: SheetContainer;
+        sectorsCont: PIXI.Container;
+        fogSectorsCont: PIXI.Container;
         // Mapy sektorů
         sectorsMap = new Array2D<Sector>();
         fogSectorsMap = new Array2D<FogSector>();
         // Mapa dílků
         tilesMap: TilesMap;
         // Vykreslené dílky povrchu a pozadí
-        sceneTilesMap = new Array2D<createjs.Sprite>();
-        sceneBgrTilesMap = new Array2D<createjs.Sprite>();
-        sceneFogTilesMap = new Array2D<createjs.Sprite>();
+        sceneTilesMap = new Array2D<PIXI.Sprite>();
+        sceneBgrTilesMap = new Array2D<PIXI.Sprite>();
+        sceneFogTilesMap = new Array2D<PIXI.Sprite>();
         // Vykreslené dílky objektů
-        sceneObjectsMap = new Array2D<createjs.Sprite>();
+        sceneObjectsMap = new Array2D<PIXI.Sprite>();
 
         constructor(public game: Game, public world: World) {
             var self = this;
@@ -231,7 +231,7 @@ namespace Lich {
                                         var object = self.createObject(objectElement);
 
                                         // přidej dílek do sektoru
-                                        if (object instanceof createjs.Sprite) {
+                                        if (object instanceof PIXI.Sprite) {
                                             sector.addAnimatedChild(object);
                                         } else {
                                             sector.addCacheableChild(object);
@@ -282,13 +282,13 @@ namespace Lich {
 
                             // vymaž sektor
                             let ss = self.sectorsMap.getValue(x, y);
-                            ss.removeAllChildren();
+                            ss.removeChildren();
                             self.sectorsCont.removeChild(ss);
                             self.sectorsMap.setValue(x, y, null);
 
                             // vymaž mlhu
                             let fs = self.fogSectorsMap.getValue(x, y);
-                            fs.removeAllChildren();
+                            fs.removeChildren();
                             self.fogSectorsCont.removeChild(fs);
                             self.fogSectorsMap.setValue(x, y, null);
 
@@ -342,8 +342,8 @@ namespace Lich {
             if (self.screenOffsetX + dst > 0)
                 return -self.screenOffsetX;
             // terén by se odlepil od pravého konce směrem doleva (dst < 0)
-            if (self.screenOffsetX + dst < self.game.getCanvas().width - self.tilesMap.width * Resources.TILE_SIZE)
-                return self.game.getCanvas().width - self.tilesMap.width * Resources.TILE_SIZE - self.screenOffsetX;
+            if (self.screenOffsetX + dst < self.game.getRender().width - self.tilesMap.width * Resources.TILE_SIZE)
+                return self.game.getRender().width - self.tilesMap.width * Resources.TILE_SIZE - self.screenOffsetX;
             return dst;
         }
 
@@ -356,8 +356,8 @@ namespace Lich {
             if (self.screenOffsetY + dst > 0)
                 return -self.screenOffsetY;
             // terén by se odlepil od spodního konce směrem nahoru (dst < 0)
-            if (self.screenOffsetY + dst < self.game.getCanvas().height - self.tilesMap.height * Resources.TILE_SIZE)
-                return self.game.getCanvas().height - self.tilesMap.height * Resources.TILE_SIZE - self.screenOffsetY;
+            if (self.screenOffsetY + dst < self.game.getRender().height - self.tilesMap.height * Resources.TILE_SIZE)
+                return self.game.getRender().height - self.tilesMap.height * Resources.TILE_SIZE - self.screenOffsetY;
             return dst;
         }
 
@@ -594,7 +594,7 @@ namespace Lich {
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = sceneMap.getValue(x, y);
                                         if (!bgr) {
-                                            if (child instanceof createjs.Sprite) {
+                                            if (child instanceof PIXI.Sprite) {
                                                 targetSector.removeAnimatedChild(child);
                                             } else {
                                                 targetSector.removeCacheableChild(child);
@@ -875,7 +875,7 @@ namespace Lich {
                     var sector = self.getSectorByTiles(tx0 + tx, ty0 + ty);
 
                     // přidej dílek do sektoru
-                    if (tile instanceof createjs.Sprite) {
+                    if (tile instanceof PIXI.Sprite) {
                         sector.addAnimatedChild(tile);
                     } else {
                         sector.addCacheableChild(tile);

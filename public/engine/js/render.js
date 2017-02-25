@@ -180,7 +180,7 @@ var Lich;
                                         // Sheet index dílku objektu
                                         var object = self.createObject(objectElement);
                                         // přidej dílek do sektoru
-                                        if (object instanceof createjs.Sprite) {
+                                        if (object instanceof PIXI.Sprite) {
                                             sector.addAnimatedChild(object);
                                         }
                                         else {
@@ -216,12 +216,12 @@ var Lich;
                             }
                             // vymaž sektor
                             var ss = self.sectorsMap.getValue(x, y);
-                            ss.removeAllChildren();
+                            ss.removeChildren();
                             self.sectorsCont.removeChild(ss);
                             self.sectorsMap.setValue(x, y, null);
                             // vymaž mlhu
                             var fs = self.fogSectorsMap.getValue(x, y);
-                            fs.removeAllChildren();
+                            fs.removeChildren();
                             self.fogSectorsCont.removeChild(fs);
                             self.fogSectorsMap.setValue(x, y, null);
                             if (Lich.Resources.PRINT_SECTOR_ALLOC) {
@@ -268,8 +268,8 @@ var Lich;
             if (self.screenOffsetX + dst > 0)
                 return -self.screenOffsetX;
             // terén by se odlepil od pravého konce směrem doleva (dst < 0)
-            if (self.screenOffsetX + dst < self.game.getCanvas().width - self.tilesMap.width * Lich.Resources.TILE_SIZE)
-                return self.game.getCanvas().width - self.tilesMap.width * Lich.Resources.TILE_SIZE - self.screenOffsetX;
+            if (self.screenOffsetX + dst < self.game.getRender().width - self.tilesMap.width * Lich.Resources.TILE_SIZE)
+                return self.game.getRender().width - self.tilesMap.width * Lich.Resources.TILE_SIZE - self.screenOffsetX;
             return dst;
         };
         /**
@@ -281,8 +281,8 @@ var Lich;
             if (self.screenOffsetY + dst > 0)
                 return -self.screenOffsetY;
             // terén by se odlepil od spodního konce směrem nahoru (dst < 0)
-            if (self.screenOffsetY + dst < self.game.getCanvas().height - self.tilesMap.height * Lich.Resources.TILE_SIZE)
-                return self.game.getCanvas().height - self.tilesMap.height * Lich.Resources.TILE_SIZE - self.screenOffsetY;
+            if (self.screenOffsetY + dst < self.game.getRender().height - self.tilesMap.height * Lich.Resources.TILE_SIZE)
+                return self.game.getRender().height - self.tilesMap.height * Lich.Resources.TILE_SIZE - self.screenOffsetY;
             return dst;
         };
         Render.prototype.shiftSectorsBy = function (shiftX, shiftY) {
@@ -501,7 +501,7 @@ var Lich;
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = sceneMap.getValue(x, y);
                                         if (!bgr) {
-                                            if (child instanceof createjs.Sprite) {
+                                            if (child instanceof PIXI.Sprite) {
                                                 targetSector.removeAnimatedChild(child);
                                             }
                                             else {
@@ -750,7 +750,7 @@ var Lich;
                     var tile = self.createObject(objectTile);
                     var sector = self.getSectorByTiles(tx0 + tx, ty0 + ty);
                     // přidej dílek do sektoru
-                    if (tile instanceof createjs.Sprite) {
+                    if (tile instanceof PIXI.Sprite) {
                         sector.addAnimatedChild(tile);
                     }
                     else {

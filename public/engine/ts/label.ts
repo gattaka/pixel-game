@@ -1,40 +1,40 @@
 namespace Lich {
-    export class Label extends SheetContainer {
+    export class Label extends PIXI.Container {
+
+        label: PIXI.Text;
 
         public height: number;
         public width: number;
 
-        constructor(private text: string, private font = FontKey.FNT_SMALL_YELLOW_KEY, private charSpacing = 1) {
+        constructor(text: string,
+            font = PartsUI.TEXT_SIZE + "px " + Resources.FONT,
+            color = Resources.TEXT_COLOR,
+            outline = true,
+            outlineColor = Resources.OUTLINE_COLOR,
+            outlineWidth = 1) {
             super();
-            this.setText(text);
+
+            this.label = new PIXI.Text(text, { fontFamily: font, fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
+            this.addChild(this.label);
+
+            this.height = this.label.getBounds().height;
+            this.width = this.label.getBounds().width;
         }
 
-        setText(text: string | number) {
-            let sText = (text + "").toLowerCase();
-            let charSprite;
-            for (let i = 0; i < sText.length; i++) {
-                let char = sText.charAt(i);
-                if (char != ' ') {
-                    // charSprite = Resources.getInstance().getFontSprite(this.font, char);
-                    // charSprite.x = i * (charSprite.width + this.charSpacing);
-                    // this.addChild(charSprite);
-                }
-            }
-            if (charSprite) {
-                this.height = charSprite.height;
-                this.width = sText.length * (charSprite.width + this.charSpacing);
-            } else {
-                this.height = 1;
-                this.width = 1;
-            }
+        setLineWidth(value) {
+            // this.label.lineWidth = value
         }
 
-        setLineHeight(value: number) {
-            // TODO
+        setLineHeight(value) {
+            // this.label.lineHeight = value
         }
 
-        setLineWidth(value: number) {
-            // TODO
+        setText(value) {
+            this.label.text = value;
+        }
+
+        setColor(value) {
+            this.label.style.fill = value;
         }
 
     }

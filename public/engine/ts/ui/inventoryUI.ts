@@ -9,14 +9,14 @@ namespace Lich {
 
         // mapa existujících UI prvků dle typu položky
         itemsUIMap = new HashMap<ItemUI>();
-        itemHighlight: createjs.Sprite;
+        itemHighlight: PIXI.Graphics;
         itemHighlightVisibleBeforeCollapse = true;
-        itemsCont = new SheetContainer();
+        itemsCont = new PIXI.Container();
 
         collapsed = false;
-        collapsedCont = new SheetContainer();
+        collapsedCont = new PIXI.Container();
         collapsedItem: ItemUI;
-        collapsedHighlight: createjs.Sprite;
+        collapsedHighlight: PIXI.Graphics;
 
         upBtn: Button;
         downBtn: Button;
@@ -33,7 +33,7 @@ namespace Lich {
             var self = this;
 
             // zvýraznění vybrané položky
-            self.itemHighlight = UIUtils.createHighlight();
+            self.itemHighlight = new Highlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
 
@@ -45,7 +45,7 @@ namespace Lich {
             // kontejner a zvýraznění zabaleného inventáře  
             self.addChild(self.collapsedCont);
             self.collapsedCont.visible = false;
-            self.collapsedHighlight = UIUtils.createHighlight();
+            self.collapsedHighlight = new Highlight();
             self.collapsedHighlight.x = PartsUI.SELECT_BORDER;
             self.collapsedHighlight.y = PartsUI.SELECT_BORDER;
             self.collapsedCont.addChild(self.collapsedHighlight);
@@ -62,22 +62,22 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(self.m) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            upBtn.on("mousedown", function (evt) {
+            upBtn.on("mousedown", () => {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
 
-            downBtn.on("mousedown", function (evt) {
+            downBtn.on("mousedown", () => {
                 let occupLines = Math.ceil(Inventory.getInstance().getLength() / self.n);
                 if (self.lineOffset < occupLines - self.m) {
                     self.lineOffset++;
                     self.render();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
 
             // let offset = 5;
             // self.cache(-offset, -offset,
@@ -98,7 +98,7 @@ namespace Lich {
         render() {
             let self = this;
             let inventory = Inventory.getInstance();
-            this.itemsCont.removeAllChildren();
+            this.itemsCont.removeChildren();
             this.itemHighlight.visible = false;
             let itemsOffset = this.lineOffset * self.n;
             for (let i = itemsOffset;
@@ -230,7 +230,7 @@ namespace Lich {
 
             (function () {
                 var currentItem = self.itemsUIMap[item];
-                itemUI.on("mousedown", function (evt) {
+                itemUI.on("mousedown", () => {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
@@ -244,7 +244,7 @@ namespace Lich {
                     self.collapsedItem.y = PartsUI.BORDER;
                     self.collapsedCont.visible = false;
                     // self.updateCache();
-                }, null, false);
+                });
             })();
         }
     }

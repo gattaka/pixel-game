@@ -60,7 +60,7 @@ var Lich;
             _this.height = animationDef.height;
             _this.sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
             _this.addChild(_this.sprite);
-            _this.healthBar = new createjs.Shape();
+            _this.healthBar = new PIXI.Graphics();
             _this.healthBar.width = _this.width;
             _this.healthBar.height = 4;
             _this.healthBar.x = 0;
@@ -76,12 +76,12 @@ var Lich;
             }
             else {
                 this.healthBar.visible = true;
-                this.healthBar.graphics.clear();
-                this.healthBar.graphics.beginFill("rgba(0,255,0,0.7)");
-                this.healthBar.graphics.drawRect(0, 0, this.width, this.healthBar.height);
+                this.healthBar.clear();
+                this.healthBar.beginFill(0x00FF00, 0.7);
+                this.healthBar.drawRect(0, 0, this.width, this.healthBar.height);
                 var width = this.width * (1 - this.currentHealth / this.maxHealth);
-                this.healthBar.graphics.beginFill("rgba(255,0,0,0.7)");
-                this.healthBar.graphics.drawRect(0, 0, width, this.healthBar.height);
+                this.healthBar.beginFill(0xFF0000, 0.7);
+                this.healthBar.drawRect(0, 0, width, this.healthBar.height);
             }
         };
         Character.prototype.onHealthChange = function (difference) {

@@ -1,10 +1,10 @@
 namespace Lich {
 
-    export abstract class AbstractWorldObject extends SheetContainer {
+    export abstract class AbstractWorldObject extends PIXI.Container {
 
         public speedx: number = 0;
         public speedy: number = 0;
-        protected sprite: createjs.Sprite;
+        protected sprite: PIXI.Sprite | AniSprite;
 
         constructor(
             public collXOffset: number,
@@ -13,17 +13,30 @@ namespace Lich {
             super();
         }
 
-        play() { this.sprite.play(); }
-        stop() { this.sprite.stop(); }
-        gotoAndPlay(desiredState: string) { this.sprite.gotoAndPlay(desiredState); }
-        getCurrentAnimation() { return this.sprite.currentAnimation; }
+        private callOnAnisprite(f: (s: AniSprite) => any) {
+            if (this.sprite instanceof AniSprite)
+                f(<AniSprite>this.sprite);
+        }
+
+        play() { this.callOnAnisprite((s: AniSprite) => { s.play() }); }
+        stop() { this.callOnAnisprite((s: AniSprite) => { s.stop() }); }
+        gotoAndPlay(desiredState: string) { this.callOnAnisprite((s: AniSprite) => { s.gotoAndPlay(desiredState) }); }
+        getCurrentAnimation(): string {
+            let currentAnimation;
+            this.callOnAnisprite((s: AniSprite) => {
+                currentAnimation = s.currentAnimation;
+            });
+            return currentAnimation;
+        }
 
         performAnimation(desiredAnimation: AnimationKey) {
             var self = this;
-            let stringKey = AnimationKey[desiredAnimation];
-            if (self.sprite.currentAnimation !== stringKey) {
-                self.gotoAndPlay(stringKey);
-            }
+            this.callOnAnisprite((s: AniSprite) => {
+                let stringKey = AnimationKey[desiredAnimation];
+                if (s.currentAnimation !== stringKey) {
+                    s.gotoAndPlay(stringKey);
+                }
+            });
         }
 
         updateAnimations() { };
@@ -78,6 +91,7 @@ namespace Lich {
         public abstract update(sDelta: number, game: Game);
 
         public abstract isDone(): boolean;
+
     }
 
     export class BasicBullet extends BulletObject {
@@ -100,7 +114,7 @@ namespace Lich {
         public update(sDelta: number, game: Game) {
             var self: BasicBullet = this;
             if (self.ending) {
-                if (self.sprite.currentAnimation === AnimationKey[self.endAnimation]) {
+                if (self.getCurrentAnimation() === AnimationKey[self.endAnimation]) {
                     self.done = true;
                 }
                 return;
@@ -161,7 +175,7 @@ namespace Lich {
                 if (self.ending === false) {
                     Mixer.playSound(self.hitSound, 0.1);
                     self.ending = true;
-                    self.sprite.gotoAndPlay("hit");
+                    self.gotoAndPlay("hit");
 
                     if (self.mapDestroy) {
                         var centX = self.x + self.width / 2;
@@ -199,7 +213,7 @@ namespace Lich {
                 );
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
-                    if (self.y > game.getCanvas().height * 2 || self.y < -game.getCanvas().height) {
+                    if (self.y > game.getRender().height * 2 || self.y < -game.getRender().height) {
                         self.done = true;
                         return;
                     }
@@ -225,7 +239,7 @@ namespace Lich {
                 );
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;
-                    if (self.x > game.getCanvas().width * 2 || self.x < -game.getCanvas().width)
+                    if (self.x > game.getRender().width * 2 || self.x < -game.getRender().width)
                         self.done = true;
                     return;
                 } else {

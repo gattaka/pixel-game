@@ -2,7 +2,7 @@ namespace Lich {
 
     class IngredientsCont extends AbstractUI {
 
-        public itemsCont = new SheetContainer();
+        public itemsCont = new PIXI.Container();
 
         constructor() {
             super(CraftingUI.N * (Resources.PARTS_SIZE + PartsUI.SPACING) - PartsUI.SPACING + 2 * AbstractUI.BORDER,
@@ -22,7 +22,7 @@ namespace Lich {
 
         lineOffset = 0;
 
-        itemHighlight: createjs.Sprite;
+        itemHighlight: PIXI.Graphics;
         choosenItem: string = null;
 
         // --- Virtuální seznam ---
@@ -35,13 +35,13 @@ namespace Lich {
         // mapa existujících UI prvků dle typu položky
         itemsUIMap = new HashMap<ItemUI>();
 
-        itemsCont = new SheetContainer();
+        itemsCont = new PIXI.Container();
 
         craftBtn: Button;
         ingredientsCont: IngredientsCont;
         inventoryUI: InventoryUI;
 
-        workstationIcon: createjs.Sprite;
+        workstationIcon: PIXI.Sprite;
         workstationIconBgr: UIBackground;
         workstation: MapObjectKey;
 
@@ -140,7 +140,7 @@ namespace Lich {
                         // i přehled jeho ingrediencí
                         self.itemsTypeIndexMap[key] = undefined;
                         if (self.choosenItem == key) {
-                            self.ingredientsCont.itemsCont.removeAllChildren();
+                            self.ingredientsCont.itemsCont.removeChildren();
                             self.choosenItem = undefined;
                         }
                     }
@@ -150,7 +150,7 @@ namespace Lich {
             });
 
             // zvýraznění vybrané položky
-            self.itemHighlight = UIUtils.createHighlight();
+            self.itemHighlight = new Highlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
 
@@ -169,22 +169,22 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(CraftingUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            upBtn.on("mousedown", function (evt) {
+            upBtn.on("mousedown", () => {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
 
-            downBtn.on("mousedown", function (evt) {
+            downBtn.on("mousedown", () => {
                 let occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
                     self.render();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            }, null, false);
+            });
 
             // Přehled ingrediencí
             self.ingredientsCont = new IngredientsCont();
@@ -197,7 +197,7 @@ namespace Lich {
             self.addChild(craftBtn);
             craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
             craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
-            craftBtn.on("mousedown", function (evt) {
+            craftBtn.on("mousedown", () => {
                 if (self.choosenItem) {
                     let oldItem = self.choosenItem;
                     let index = self.itemsTypeIndexMap[oldItem];
@@ -208,7 +208,7 @@ namespace Lich {
                     self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
                     Mixer.playSound(SoundKey.SND_CRAFT_KEY);
                 }
-            }, null, false);
+            });
 
             // self.measureCacheArea();
         }
@@ -221,7 +221,7 @@ namespace Lich {
         }
 
         render() {
-            this.itemsCont.removeAllChildren();
+            this.itemsCont.removeChildren();
             this.itemHighlight.visible = false;
             let itemsOffset = this.lineOffset * CraftingUI.N;
             for (let i = itemsOffset;
@@ -244,9 +244,8 @@ namespace Lich {
             itemUI.x = (i % CraftingUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
             itemUI.y = Math.floor(i / CraftingUI.N) * (Resources.PARTS_SIZE + PartsUI.SPACING);
 
-            let hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-            itemUI.hitArea = hitArea;
+            let hitArea = new PIXI.Graphics();
+            itemUI.hitArea = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
 
             if (self.choosenItem == key) {
                 self.itemHighlight.visible = true;
@@ -256,14 +255,14 @@ namespace Lich {
 
             (function () {
                 var currentItem = self.itemsUIMap[key];
-                itemUI.on("mousedown", function (evt) {
+                itemUI.on("mousedown", () => {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.choosenItem = key;
 
                     // vypiš ingredience
-                    self.ingredientsCont.itemsCont.removeAllChildren();
+                    self.ingredientsCont.itemsCont.removeChildren();
                     let index = self.itemsTypeIndexMap[self.choosenItem];
                     let recipe = self.itemsTypeArray[index];
                     for (let ingred of recipe.ingredients) {
@@ -273,7 +272,7 @@ namespace Lich {
                         self.ingredientsCont.itemsCont.addChild(ingredUI);
                     }
                     // self.updateCache();
-                }, null, false);
+                });
             })();
         }
 

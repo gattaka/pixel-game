@@ -99,8 +99,8 @@ namespace Lich {
 
         static MAP_SIDE = 200;
 
-        playerIcon: createjs.Sprite;
-        bitmap: createjs.Bitmap;
+        playerIcon: PIXI.Sprite;
+        bitmap: PIXI.Sprite;
 
         shiftX: number = 0;
         shiftY: number = 0;
@@ -119,7 +119,7 @@ namespace Lich {
             // border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
             // self.addChild(border);
 
-            self.bitmap = new createjs.Bitmap(mapRender.canvas);
+            self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
@@ -176,7 +176,7 @@ namespace Lich {
                 self.playerIcon.y = iconY - self.playerIcon.height / 2;
 
                 // pozice minimapy
-                self.bitmap.sourceRect = new createjs.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
+                self.bitmap.texture.frame = new PIXI.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
             };
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
@@ -203,8 +203,8 @@ namespace Lich {
 
     export class MapUI extends AbstractUI {
 
-        playerIcon: createjs.Sprite;
-        bitmap: createjs.Bitmap;
+        playerIcon: PIXI.Sprite;
+        bitmap: PIXI.Sprite;
 
         shiftX: number = 0;
         shiftY: number = 0;
@@ -215,10 +215,10 @@ namespace Lich {
             super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
             let self = this;
 
-            self.on("click", function (evt) {
+            self.on("click", function () {
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 self.hide();
-            }, null, false);
+            });
 
             // let border = new createjs.Shape();
             // border.graphics.setStrokeStyle(1);
@@ -227,7 +227,7 @@ namespace Lich {
             // border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
             // self.addChild(border);
 
-            self.bitmap = new createjs.Bitmap(mapRender.canvas);
+            self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
@@ -235,14 +235,14 @@ namespace Lich {
             self.playerIcon.height = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
 
-            self.bitmap.scaleX = (mainCanvasWidth - UI.SCREEN_SPACING * 2) / mapRender.canvas.width;
-            self.bitmap.scaleY = (mainCanvasHeight - UI.SCREEN_SPACING * 2) / mapRender.canvas.height;
+            self.bitmap.scale.x = (mainCanvasWidth - UI.SCREEN_SPACING * 2) / mapRender.canvas.width;
+            self.bitmap.scale.y = (mainCanvasHeight - UI.SCREEN_SPACING * 2) / mapRender.canvas.height;
 
             let adjustPlayerIcon = () => {
                 // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
                 // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
-                self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Resources.TILE_SIZE)) * self.bitmap.scaleX;
-                self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Resources.TILE_SIZE)) * self.bitmap.scaleY;
+                self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Resources.TILE_SIZE)) * self.bitmap.scale.x;
+                self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Resources.TILE_SIZE)) * self.bitmap.scale.y;
                 // a pak se ještě vycentruje ikona
                 self.playerIcon.x -= self.playerIcon.width / 2;
                 self.playerIcon.y -= self.playerIcon.height / 2

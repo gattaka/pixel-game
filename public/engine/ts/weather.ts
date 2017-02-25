@@ -1,6 +1,6 @@
 namespace Lich {
 
-    class ParticleLayer extends SheetContainer {
+    class ParticleLayer extends PIXI.Container {
         constructor(public speed: number) {
             super();
         }
@@ -13,7 +13,7 @@ namespace Lich {
         SNOW_RAIN_STOP
     }
 
-    export class Weather extends SheetContainer {
+    export class Weather extends PIXI.Container {
 
         private static MAX_WIND = 10;
         private static SNOW_RAIN_AMOUNT = 500;
@@ -37,20 +37,20 @@ namespace Lich {
         private particleLayers = new Array<ParticleLayer>();
         private windSpeed = 0;
 
-        private lightScreen = new createjs.Shape();
+        private lightScreen = new PIXI.Graphics();
 
         private mode = WeatherMode.NONE;
 
         constructor(public game: Game) {
             super();
-            this.width = game.getCanvas().width;
-            this.height = game.getCanvas().height;
+            this.width = game.getRender().width;
+            this.height = game.getRender().height;
             // TODO
             // this.addChild(this.lightScreen);
         }
 
         updateLight(r: number, g: number, b: number, a: number) {
-            this.lightScreen.graphics.clear().beginFill("rgba(" + r + "," + g + "," + b + "," + a + ")").drawRect(0, 0, this.width, this.height);
+            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.width, this.height);
         }
 
         switchMode(mode: WeatherMode) {
@@ -76,12 +76,12 @@ namespace Lich {
                 this.particleLayers.push(layer);
             }
             for (let i = 0; i < Weather.SNOW_RAIN_AMOUNT * 2; i++) {
-                let p = new createjs.Shape();
+                let p = new PIXI.Graphics();
                 let z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
                 if (ThemeWatch.getCurrentTheme() == Theme.WINTER) {
-                    p.graphics.beginFill("rgba(250,250,250,0.5)").drawCircle(0, 0, z + 2);
+                    p.beginFill(0xfafafa, 0.5).drawCircle(0, 0, z + 2);
                 } else {
-                    p.graphics.beginFill("#aaf").drawRect(0, 0, 1, z * 5 + 1);
+                    p.beginFill(0xa0a0f0).drawRect(0, 0, 1, z * 5 + 1);
                 }
                 p.x = Math.random() * this.width;
                 p.y = Math.random() * this.height;

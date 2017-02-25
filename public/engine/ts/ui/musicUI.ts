@@ -10,8 +10,8 @@ namespace Lich {
         trackIndex = {};
         reversedTrackIndex = [];
 
-        itemsCont = new SheetContainer();
-        itemHighlightSprite : createjs.Sprite;
+        itemsCont = new PIXI.Container();
+        itemHighlight: PIXI.Graphics;
 
         constructor() {
             super(MusicUI.N, MusicUI.M);
@@ -28,13 +28,11 @@ namespace Lich {
                 self.reversedTrackIndex[self.trackContent.length] = track;
                 self.trackContent.push(sprite);
 
-                var hitArea = new createjs.Shape();
-                hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-                sprite.hitArea = hitArea;
+                sprite.hitArea = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
 
-                sprite.on("mousedown", function () {
+                sprite.on("mousedown", () => {
                     self.selectTrack(track, volume);
-                }, null, false);
+                });
             }
 
             // zatím rovnou:
@@ -46,9 +44,9 @@ namespace Lich {
             trackInsert(MusicKey.MSC_LAVA_THEME_KEY);
 
             // zvýraznění vybrané položky
-            self.itemHighlightSprite = UIUtils.createHighlight();
-            self.itemHighlightSprite.visible = false;
-            self.addChild(self.itemHighlightSprite);
+            self.itemHighlight = new Highlight();
+            self.itemHighlight.visible = false;
+            self.addChild(self.itemHighlight);
 
             // kontejner položek
             self.itemsCont.x = AbstractUI.BORDER;
@@ -63,9 +61,9 @@ namespace Lich {
         selectTrack(track: MusicKey, volume?: number) {
             var self = this;
             var bitmap = self.trackContent[self.trackIndex[track]];
-            self.itemHighlightSprite.visible = true;
-            self.itemHighlightSprite.x = bitmap.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
-            self.itemHighlightSprite.y = bitmap.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+            self.itemHighlight.visible = true;
+            self.itemHighlight.x = bitmap.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
+            self.itemHighlight.y = bitmap.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;
             self.choosenItem = track;
 
             for (var i = 0; i < self.reversedTrackIndex.length; i++) {

@@ -13,8 +13,9 @@ var Lich;
     }());
     Lich.Controls = Controls;
     ;
+    ;
     var Game = (function () {
-        function Game(mainCanvasId, minimapCanvasId, loaderCanvasId) {
+        function Game(minimapCanvasId, loaderCanvasId) {
             this.initialized = false;
             this.keys = {};
             this.playerReadyToAutosave = true;
@@ -35,35 +36,29 @@ var Lich;
             else {
                 mobile = false;
             }
-            /*------------*/
-            /* Stage init */
-            /*------------*/
             console.log("running");
-            self.canvas = document.getElementById(mainCanvasId);
+            // Create the renderer
+            self.renderer = new PIXI.WebGLRenderer();
+            self.renderer.view.style.position = "absolute";
+            self.renderer.view.style.display = "block";
+            self.renderer.backgroundColor = 0xfafaea;
             switch (Lich.ThemeWatch.getCurrentTheme()) {
                 case Lich.Theme.WINTER:
-                    self.canvas.style.backgroundColor = "#cce1e8";
-                    break;
+                    self.renderer.backgroundColor = 0xcce1e8;
                 default:
-                    self.canvas.style.backgroundColor = "#839e61";
+                    self.renderer.backgroundColor = 0x839e61;
             }
-            // resize the canvas to fill browser window dynamically
-            window.addEventListener('resize', resizeCanvas, false);
+            self.renderer.autoResize = true;
             function resizeCanvas() {
-                self.canvas.width = window.innerWidth;
-                self.canvas.height = window.innerHeight;
+                self.renderer.resize(window.innerWidth, window.innerHeight);
             }
             resizeCanvas();
-            self.canvas = document.getElementById(mainCanvasId);
-            self.canvas.style.backgroundColor = "#cce1e8";
-            // preserveDrawingBuffer = true (2. argument) značeně zhorší FPS
-            // antialising = true (3. argument) také značně zhorší FPS
-            self.stage = new createjs.SpriteStage(self.canvas, false, false);
-            var webGL = self.stage.isWebGL;
-            if (mobile) {
-                createjs.Touch.enable(self.stage);
-                self.stage.enableMouseOver(10);
-            }
+            // resize the canvas to fill browser window dynamically
+            window.addEventListener('resize', resizeCanvas, false);
+            // Add the canvas to the HTML document
+            document.body.appendChild(self.renderer.view);
+            // Create a container object called the `stage`
+            var stage = new PIXI.Container();
             /*----------*/
             /* Controls */
             /*----------*/
@@ -80,27 +75,30 @@ var Lich;
             /* Mouse events */
             /*--------------*/
             if (mobile) {
-                self.stage.on("mousedown", function (evt) {
+                self.stage.on("pointerdown", function () {
+                    var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.down = true;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                    self.mouse.x = evt.stageX;
-                    self.mouse.y = evt.stageY;
-                }, null, false);
-                self.stage.on("pressmove", function (evt) {
-                    self.mouse.x = evt.stageX;
-                    self.mouse.y = evt.stageY;
+                    self.mouse.x = mouseData.x;
+                    self.mouse.y = mouseData.y;
+                });
+                self.stage.on("pressmove", function () {
+                    var mouseData = self.renderer.plugins.interaction.mouse.global;
+                    self.mouse.x = mouseData.x;
+                    self.mouse.y = mouseData.y;
                     Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
-                }, null, false);
-                self.stage.on("pressup", function (evt) {
+                });
+                self.stage.on("pressup", function () {
                     self.mouse.down = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                }, null, false);
+                });
             }
             else {
-                self.canvas.onmousedown = function (event) {
-                    if (event.button == 0) {
+                self.stage.on("mousedown", function () {
+                    var mouseData = self.renderer.plugins.interaction.mouse;
+                    if (mouseData.button == 0) {
                         self.mouse.down = true;
                     }
                     else {
@@ -108,14 +106,16 @@ var Lich;
                     }
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                };
-                self.canvas.onmousemove = function (event) {
-                    self.mouse.x = event.clientX;
-                    self.mouse.y = event.clientY;
+                });
+                self.stage.on("mousemove", function () {
+                    var mouseData = self.renderer.plugins.interaction.mouse.global;
+                    self.mouse.x = mouseData.x;
+                    self.mouse.y = mouseData.y;
                     Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
-                };
-                self.canvas.onmouseup = function (event) {
-                    if (event.button == 0) {
+                });
+                self.stage.on("mouseup", function () {
+                    var mouseData = self.renderer.plugins.interaction.mouse;
+                    if (mouseData.button == 0) {
                         self.mouse.down = false;
                     }
                     else {
@@ -123,7 +123,7 @@ var Lich;
                     }
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
-                };
+                });
             }
             var init = function () {
                 Lich.Mixer.playMusic(Lich.MusicKey.MSC_DIRT_THEME_KEY, 0.3);
@@ -157,17 +157,17 @@ var Lich;
                 };
                 var populateContent = function (tilesMap) {
                     // clean 
-                    self.content.removeAllChildren();
+                    self.stage.removeChildren();
                     delete self.world;
                     delete self.background;
                     Lich.EventBus.getInstance().clear();
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
-                    self.ui = new Lich.UI(self.canvas, tilesMap, mobile);
-                    self.background = new Lich.Background(self.canvas);
+                    self.ui = new Lich.UI(self.renderer.view, tilesMap, mobile);
+                    self.background = new Lich.Background(self.renderer.view);
                     self.world = new Lich.World(self, tilesMap);
-                    self.content.addChild(self.background);
-                    self.content.addChild(self.world);
+                    self.stage.addChild(self.background);
+                    self.stage.addChild(self.world);
                     // self.content.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         // TODO
@@ -205,7 +205,6 @@ var Lich;
                         return false;
                     });
                     self.initialized = true;
-                    self.stage.addChild(self.content);
                 };
                 setInterval(function () {
                     if (self.playerReadyToAutosave) {
@@ -218,7 +217,6 @@ var Lich;
                 }, 60 * 1000);
                 loadWorld();
             };
-            self.content = new SheetContainer();
             if (Lich.Resources.getInstance().isLoaderDone()) {
                 init();
             }
@@ -229,29 +227,20 @@ var Lich;
                     Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.LOAD_FINISHED, listener_1);
                     return false;
                 });
-                self.loadUI = new Lich.LoaderUI(loaderCanvasId);
+                self.loadUI = new Lich.LoaderUI(self);
             }
-            /*-----------*/
-            /* Time init */
-            /*-----------*/
-            createjs.Ticker.timingMode = createjs.Ticker.RAF;
-            createjs.Ticker.addEventListener("tick", handleTick);
-            createjs.Ticker.setFPS(60);
-            function handleTick(event) {
+            window.onbeforeunload = function (e) {
+                var e = e || window.event;
+                // IE & Firefox
+                if (e) {
+                    e.returnValue = 'Are you sure?';
+                }
+                // For Safari
+                return 'Are you sure?';
+            };
+            function gameLoop(delta) {
                 stats.begin();
-                var delta = event.delta;
-                window.onbeforeunload = function (e) {
-                    var e = e || window.event;
-                    // IE & Firefox
-                    if (e) {
-                        e.returnValue = 'Are you sure?';
-                    }
-                    // For Safari
-                    return 'Are you sure?';
-                };
-                if (self.initialized) {
-                    // Measurements
-                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.FPS_CHANGE, createjs.Ticker.getMeasuredFPS()));
+                if (self.initialized && delta) {
                     // Idle
                     self.getWorld().handleTick(delta);
                     // UI má při akcích myši přednost
@@ -358,15 +347,16 @@ var Lich;
                     }
                     self.getWorld().update(delta, controls);
                 }
-                self.loadUI.update();
-                self.stage.update();
-                if (self.background)
-                    self.background.update(delta);
+                requestAnimationFrame(gameLoop);
+                self.renderer.render(stage);
                 stats.end();
             }
+            // Start the game loop
+            // Loop this function at 60 frames per second
+            gameLoop();
         }
-        Game.prototype.getCanvas = function () { return this.canvas; };
         Game.prototype.getWorld = function () { return this.world; };
+        Game.prototype.getRender = function () { return this.renderer; };
         ;
         return Game;
     }());

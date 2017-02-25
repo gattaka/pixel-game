@@ -13,7 +13,7 @@ var Lich;
             return _this;
         }
         return ParticleLayer;
-    }(SheetContainer));
+    }(PIXI.Container));
     var WeatherMode;
     (function (WeatherMode) {
         WeatherMode[WeatherMode["NONE"] = 0] = "NONE";
@@ -33,16 +33,16 @@ var Lich;
             _this.spawnBatchDelayTimer = 0;
             _this.particleLayers = new Array();
             _this.windSpeed = 0;
-            _this.lightScreen = new createjs.Shape();
+            _this.lightScreen = new PIXI.Graphics();
             _this.mode = WeatherMode.NONE;
-            _this.width = game.getCanvas().width;
-            _this.height = game.getCanvas().height;
+            _this.width = game.getRender().width;
+            _this.height = game.getRender().height;
             return _this;
             // TODO
             // this.addChild(this.lightScreen);
         }
         Weather.prototype.updateLight = function (r, g, b, a) {
-            this.lightScreen.graphics.clear().beginFill("rgba(" + r + "," + g + "," + b + "," + a + ")").drawRect(0, 0, this.width, this.height);
+            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.width, this.height);
         };
         Weather.prototype.switchMode = function (mode) {
             this.mode = mode;
@@ -67,13 +67,13 @@ var Lich;
                 this.particleLayers.push(layer);
             }
             for (var i = 0; i < Weather.SNOW_RAIN_AMOUNT * 2; i++) {
-                var p = new createjs.Shape();
+                var p = new PIXI.Graphics();
                 var z = Math.floor(Math.random() * Weather.PARTICLE_LAYERS);
                 if (Lich.ThemeWatch.getCurrentTheme() == Lich.Theme.WINTER) {
-                    p.graphics.beginFill("rgba(250,250,250,0.5)").drawCircle(0, 0, z + 2);
+                    p.beginFill(0xfafafa, 0.5).drawCircle(0, 0, z + 2);
                 }
                 else {
-                    p.graphics.beginFill("#aaf").drawRect(0, 0, 1, z * 5 + 1);
+                    p.beginFill(0xa0a0f0).drawRect(0, 0, 1, z * 5 + 1);
                 }
                 p.x = Math.random() * this.width;
                 p.y = Math.random() * this.height;
@@ -204,7 +204,7 @@ var Lich;
             }
         };
         return Weather;
-    }(SheetContainer));
+    }(PIXI.Container));
     Weather.MAX_WIND = 10;
     Weather.SNOW_RAIN_AMOUNT = 500;
     Weather.SPAWN_BATCH_DELAY = 10000;

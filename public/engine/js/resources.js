@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /**
  * resources.js
  *
@@ -464,9 +469,7 @@ var Lich;
                     frames.push(texture);
                 }
             }
-            var anim = new PIXI.extras.AnimatedSprite(frames);
-            anim.animationSpeed = 0.2;
-            anim.play();
+            var anim = new AniSprite(frames, animationDef);
             return anim;
         };
         ;
@@ -474,6 +477,7 @@ var Lich;
     }());
     Resources.FONT = "expressway";
     Resources.TEXT_COLOR = "#FF0";
+    Resources.OUTLINE_COLOR = "#000";
     Resources.WORLD_LOADER_COLOR = "#84ff00";
     Resources.DEBUG_TEXT_COLOR = "#FF0";
     Resources.REVEAL_SIZE = 13; // musí být liché
@@ -497,4 +501,32 @@ var Lich;
     Resources.PARTS_SHEET_WIDTH = 20;
     Resources.FRAGMENT_SEPARATOR = "-FRAGMENT-";
     Lich.Resources = Resources;
+    var AniSprite = (function (_super) {
+        __extends(AniSprite, _super);
+        function AniSprite(frames, animationDef) {
+            var _this = _super.call(this, frames) || this;
+            _this.animationDef = animationDef;
+            // TOTO nebude potřeba hlídat oldFrame?
+            _this.onFrameChange = function (currentFrame) {
+                if (_this.checkFrame == currentFrame)
+                    _this.gotoAndPlay(Lich.AnimationKey[_this.nextAnimation]);
+            };
+            return _this;
+        }
+        AniSprite.prototype.gotoAndPlay = function (arg) {
+            if (typeof arg === "string") {
+                var animation = this.animationDef.animations[arg];
+                this.currentAnimation = arg;
+                this.checkFrame = animation.endFrame;
+                this.nextAnimation = animation.nextAnimationKey;
+                this.animationSpeed = animation.speed;
+                _super.prototype.gotoAndPlay.call(this, animation.startFrame);
+            }
+            else {
+                _super.prototype.gotoAndPlay.call(this, arg);
+            }
+        };
+        return AniSprite;
+    }(PIXI.extras.AnimatedSprite));
+    Lich.AniSprite = AniSprite;
 })(Lich || (Lich = {}));

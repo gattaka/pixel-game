@@ -109,7 +109,7 @@ var Lich;
             // border.graphics.beginFill("rgba(209,251,255,255)");
             // border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
             // self.addChild(border);
-            self.bitmap = new createjs.Bitmap(mapRender.canvas);
+            self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
             self.addChild(self.bitmap);
             self.playerIcon = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PLAYER_ICON_KEY);
             self.playerIcon.width = self.playerIcon.getBounds().width;
@@ -161,7 +161,7 @@ var Lich;
                 self.playerIcon.x = iconX - self.playerIcon.width / 2;
                 self.playerIcon.y = iconY - self.playerIcon.height / 2;
                 // pozice minimapy
-                self.bitmap.sourceRect = new createjs.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
+                self.bitmap.texture.frame = new PIXI.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
             };
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
                 self.shiftX = payload.payload;
@@ -195,29 +195,29 @@ var Lich;
             _this.playerX = 0;
             _this.playerY = 0;
             var self = _this;
-            self.on("click", function (evt) {
+            self.on("click", function () {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 self.hide();
-            }, null, false);
+            });
             // let border = new createjs.Shape();
             // border.graphics.setStrokeStyle(1);
             // border.graphics.beginStroke("rgba(0,0,0,255)");
             // border.graphics.beginFill("rgba(209,251,255,255)");
             // border.graphics.drawRect(-1, -1, this.width + 2, this.height + 2);
             // self.addChild(border);
-            self.bitmap = new createjs.Bitmap(mapRender.canvas);
+            self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
             self.addChild(self.bitmap);
             self.playerIcon = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PLAYER_ICON_KEY);
             self.playerIcon.width = self.playerIcon.getBounds().width;
             self.playerIcon.height = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
-            self.bitmap.scaleX = (mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2) / mapRender.canvas.width;
-            self.bitmap.scaleY = (mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2) / mapRender.canvas.height;
+            self.bitmap.scale.x = (mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2) / mapRender.canvas.width;
+            self.bitmap.scale.y = (mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2) / mapRender.canvas.height;
             var adjustPlayerIcon = function () {
                 // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
                 // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
-                self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Lich.Resources.TILE_SIZE)) * self.bitmap.scaleX;
-                self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Lich.Resources.TILE_SIZE)) * self.bitmap.scaleY;
+                self.playerIcon.x = ((self.playerX - self.shiftX) / (2 * Lich.Resources.TILE_SIZE)) * self.bitmap.scale.x;
+                self.playerIcon.y = ((self.playerY - self.shiftY) / (2 * Lich.Resources.TILE_SIZE)) * self.bitmap.scale.y;
                 // a pak se ještě vycentruje ikona
                 self.playerIcon.x -= self.playerIcon.width / 2;
                 self.playerIcon.y -= self.playerIcon.height / 2;

@@ -1,6 +1,6 @@
 namespace Lich {
     class SpawnContext {
-        public canvas: HTMLCanvasElement;
+        public canvas: PIXI.WebGLRenderer;
         public borderWidthInTiles: number;
         public borderHeightInTiles: number;
         public startTiles: Coord2D;
@@ -30,7 +30,7 @@ namespace Lich {
 
         private createContext(world: World): SpawnContext {
             let ctx = new SpawnContext();
-            ctx.canvas = world.game.getCanvas();
+            ctx.canvas = world.game.getRender();
             // délky
             ctx.borderWidthInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.width) + 2 * SpawnPool.SPAWN_ZONE_SIZE;
             ctx.borderHeightInTiles = world.render.pixelsDistanceToTiles(ctx.canvas.height) + SpawnPool.SPAWN_ZONE_SIZE;

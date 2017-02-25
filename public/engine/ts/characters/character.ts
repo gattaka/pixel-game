@@ -38,7 +38,7 @@ namespace Lich {
         protected hitTextColor = "#E3E";
         protected hitTextBorderColor = "#303";
 
-        protected healthBar: createjs.Shape;
+        protected healthBar: PIXI.Graphics;
 
         // Typy pohybu, u hráče odpovídá stisku klávesy, 
         // u nepřítele jeho AI nasměrování
@@ -65,7 +65,7 @@ namespace Lich {
             this.sprite = Resources.getInstance().getAnimatedObjectSprite(animationDef.animationSetKey);
             this.addChild(this.sprite);
 
-            this.healthBar = new createjs.Shape();
+            this.healthBar = new PIXI.Graphics();
             this.healthBar.width = this.width;
             this.healthBar.height = 4;
             this.healthBar.x = 0;
@@ -80,12 +80,12 @@ namespace Lich {
                 this.healthBar.visible = false;
             } else {
                 this.healthBar.visible = true;
-                this.healthBar.graphics.clear();
-                this.healthBar.graphics.beginFill("rgba(0,255,0,0.7)");
-                this.healthBar.graphics.drawRect(0, 0, this.width, this.healthBar.height);
+                this.healthBar.clear();
+                this.healthBar.beginFill(0x00FF00, 0.7);
+                this.healthBar.drawRect(0, 0, this.width, this.healthBar.height);
                 var width = this.width * (1 - this.currentHealth / this.maxHealth);
-                this.healthBar.graphics.beginFill("rgba(255,0,0,0.7)");
-                this.healthBar.graphics.drawRect(0, 0, width, this.healthBar.height);
+                this.healthBar.beginFill(0xFF0000, 0.7);
+                this.healthBar.drawRect(0, 0, width, this.healthBar.height);
             }
         }
 

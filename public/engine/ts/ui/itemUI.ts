@@ -1,8 +1,8 @@
 namespace Lich {
 
-    export class ItemUI extends SheetContainer {
+    export class ItemUI extends PIXI.Container {
 
-        public sprite: createjs.Sprite;
+        public sprite: PIXI.Sprite;
         public count: Label;
         public invDef: InvObjDefinition;
 

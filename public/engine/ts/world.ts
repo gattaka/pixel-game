@@ -42,7 +42,7 @@ namespace Lich {
         ) { }
     }
 
-    export class World extends SheetContainer {
+    export class World extends PIXI.Container {
 
         /*-----------*/
         /* CONSTANTS */
@@ -76,22 +76,22 @@ namespace Lich {
         render: Render;
 
         // kontejnery
-        tilesSectorsCont = new SheetContainer();
-        entitiesCont = new SheetContainer();
+        tilesSectorsCont = new PIXI.Container();
+        entitiesCont = new PIXI.Container();
         weather: Weather;
-        fogSectorsCont = new SheetContainer();
-        messagesCont = new SheetContainer();
+        fogSectorsCont = new PIXI.Container();
+        messagesCont = new PIXI.Container();
 
         hero: Hero;
         enemiesCount = 0;
         enemies = new Array<AbstractEnemy>();
 
-        private initFullScaleCont(cont: SheetContainer) {
+        private initFullScaleCont(cont: PIXI.Container) {
             var self = this;
             cont.x = 0;
             cont.y = 0;
-            cont.width = self.game.getCanvas().width;
-            cont.height = self.game.getCanvas().height;
+            cont.width = self.game.getRender().width;
+            cont.height = self.game.getRender().height;
         }
 
         constructor(public game: Game, public tilesMap: TilesMap) {
@@ -125,8 +125,8 @@ namespace Lich {
 
             // Hráč
             self.hero = new Hero();
-            self.hero.x = game.getCanvas().width / 2;
-            self.hero.y = game.getCanvas().height / 2;
+            self.hero.x = game.getRender().width / 2;
+            self.hero.y = game.getRender().height / 2;
             self.entitiesCont.addChild(self.hero);
             self.placePlayerOnSpawnPoint();
 
@@ -164,14 +164,14 @@ namespace Lich {
         showDeadInfo() {
             let self = this;
 
-            let deadInfo = new createjs.SpriteContainer();
+            let deadInfo = new PIXI.Container();
             this.messagesCont.addChild(deadInfo);
 
-            let shape = new createjs.Shape();
-            shape.width = this.game.getCanvas().width;
-            shape.height = this.game.getCanvas().height;
-            shape.graphics.beginFill("rgba(10,10,10,0.9)");
-            shape.graphics.drawRect(0, 0, shape.width, shape.height);
+            let shape = new PIXI.Graphics();
+            shape.width = this.game.getRender().width;
+            shape.height = this.game.getRender().height;
+            shape.beginFill(0x0a0a0a, 0.9);
+            shape.drawRect(0, 0, shape.width, shape.height);
             shape.x = 0;
             shape.y = 0;
             deadInfo.addChild(shape);
@@ -409,8 +409,8 @@ namespace Lich {
             // požadovaný posuv
             let rndShiftX = Utils.floor(shiftX);
             let rndShiftY = Utils.floor(shiftY);
-            let canvasCenterX = self.game.getCanvas().width / 2;
-            let canvasCenterY = self.game.getCanvas().height / 2;
+            let canvasCenterX = self.game.getRender().width / 2;
+            let canvasCenterY = self.game.getRender().height / 2;
 
             let playerShiftX, sceneShiftX;
             let playerShiftY, sceneShiftY;
@@ -804,10 +804,10 @@ namespace Lich {
                         enemy.y -= rndY;
 
                         if (enemy.unspawns) {
-                            if (enemy.x < -self.game.getCanvas().width * 2
-                                || enemy.x > self.game.getCanvas().width * 2
-                                || enemy.y < -self.game.getCanvas().height * 2
-                                || enemy.y > self.game.getCanvas().height * 2) {
+                            if (enemy.x < -self.game.getRender().width * 2
+                                || enemy.x > self.game.getRender().width * 2
+                                || enemy.y < -self.game.getRender().height * 2
+                                || enemy.y > self.game.getRender().height * 2) {
                                 // dealokace
                                 self.removeEnemy(enemy);
                             }

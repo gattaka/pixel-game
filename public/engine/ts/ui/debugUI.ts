@@ -63,7 +63,7 @@ namespace Lich {
             this.addNextChild(this.enemiesLabel);
 
         }
-        public addNextChild(child: createjs.DisplayObject) {
+        public addNextChild(child: Label) {
             if (this.height == 0) {
                 this.height = DebugLogUI.PADDING * 2;
             }

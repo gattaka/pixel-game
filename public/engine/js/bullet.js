@@ -17,21 +17,33 @@ var Lich;
             _this.speedy = 0;
             return _this;
         }
-        AbstractWorldObject.prototype.play = function () { this.sprite.play(); };
-        AbstractWorldObject.prototype.stop = function () { this.sprite.stop(); };
-        AbstractWorldObject.prototype.gotoAndPlay = function (desiredState) { this.sprite.gotoAndPlay(desiredState); };
-        AbstractWorldObject.prototype.getCurrentAnimation = function () { return this.sprite.currentAnimation; };
+        AbstractWorldObject.prototype.callOnAnisprite = function (f) {
+            if (this.sprite instanceof Lich.AniSprite)
+                f(this.sprite);
+        };
+        AbstractWorldObject.prototype.play = function () { this.callOnAnisprite(function (s) { s.play(); }); };
+        AbstractWorldObject.prototype.stop = function () { this.callOnAnisprite(function (s) { s.stop(); }); };
+        AbstractWorldObject.prototype.gotoAndPlay = function (desiredState) { this.callOnAnisprite(function (s) { s.gotoAndPlay(desiredState); }); };
+        AbstractWorldObject.prototype.getCurrentAnimation = function () {
+            var currentAnimation;
+            this.callOnAnisprite(function (s) {
+                currentAnimation = s.currentAnimation;
+            });
+            return currentAnimation;
+        };
         AbstractWorldObject.prototype.performAnimation = function (desiredAnimation) {
             var self = this;
-            var stringKey = Lich.AnimationKey[desiredAnimation];
-            if (self.sprite.currentAnimation !== stringKey) {
-                self.gotoAndPlay(stringKey);
-            }
+            this.callOnAnisprite(function (s) {
+                var stringKey = Lich.AnimationKey[desiredAnimation];
+                if (s.currentAnimation !== stringKey) {
+                    s.gotoAndPlay(stringKey);
+                }
+            });
         };
         AbstractWorldObject.prototype.updateAnimations = function () { };
         ;
         return AbstractWorldObject;
-    }(SheetContainer));
+    }(PIXI.Container));
     Lich.AbstractWorldObject = AbstractWorldObject;
     var BulletObject = (function (_super) {
         __extends(BulletObject, _super);
@@ -98,7 +110,7 @@ var Lich;
         BasicBullet.prototype.update = function (sDelta, game) {
             var self = this;
             if (self.ending) {
-                if (self.sprite.currentAnimation === Lich.AnimationKey[self.endAnimation]) {
+                if (self.getCurrentAnimation() === Lich.AnimationKey[self.endAnimation]) {
                     self.done = true;
                 }
                 return;
@@ -159,7 +171,7 @@ var Lich;
                 if (self.ending === false) {
                     Lich.Mixer.playSound(self.hitSound, 0.1);
                     self.ending = true;
-                    self.sprite.gotoAndPlay("hit");
+                    self.gotoAndPlay("hit");
                     if (self.mapDestroy) {
                         var centX = self.x + self.width / 2;
                         var centY = self.y + self.height / 2;
@@ -184,7 +196,7 @@ var Lich;
                 clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, 0, distanceY, function (x, y) { return hitTargetOrCollide(x, y); }, true);
                 if (clsnTest.hit === false) {
                     self.y -= distanceY;
-                    if (self.y > game.getCanvas().height * 2 || self.y < -game.getCanvas().height) {
+                    if (self.y > game.getRender().height * 2 || self.y < -game.getRender().height) {
                         self.done = true;
                         return;
                     }
@@ -200,7 +212,7 @@ var Lich;
                 clsnTest = game.getWorld().isBoundsInCollision(self.x + self.collXOffset, self.y + self.collYOffset, self.width - self.collXOffset * 2, self.height - self.collYOffset * 2, distanceX, 0, function (x, y) { return hitTargetOrCollide(x, y); }, true);
                 if (clsnTest.hit === false) {
                     self.x -= distanceX;
-                    if (self.x > game.getCanvas().width * 2 || self.x < -game.getCanvas().width)
+                    if (self.x > game.getRender().width * 2 || self.x < -game.getRender().width)
                         self.done = true;
                     return;
                 }
