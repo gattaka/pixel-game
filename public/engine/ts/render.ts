@@ -180,7 +180,7 @@ namespace Lich {
                                         let fogTile = self.createFogTile(fogElement);
 
                                         // přidej dílek do sektoru
-                                        fogSector.addChild(fogTile);
+                                        fogSector.addFogChild(fogTile);
                                         fogTile.x = (mx % Render.FOG_SECTOR_SIZE) * Resources.PARTS_SIZE;
                                         fogTile.y = (my % Render.FOG_SECTOR_SIZE) * Resources.PARTS_SIZE;
 
@@ -245,6 +245,11 @@ namespace Lich {
                                 }
                             }
 
+
+                            // proveď cache na sektoru
+                            sector.cache();
+                            fogSector.cache();
+
                             // debug
                             if (Resources.SHOW_SECTORS) {
                                 var testShape = new PIXI.Graphics();
@@ -254,13 +259,9 @@ namespace Lich {
 
                                 testShape = new PIXI.Graphics();
                                 testShape.lineStyle(1, 0x00ff00);
-                                testShape.drawRect(0, 0, fogSector.fixedWidth, fogSector.fixedHeight);
+                                testShape.drawRect(2, 2, fogSector.fixedWidth - 4, fogSector.fixedHeight - 4);
                                 fogSector.addChild(testShape);
                             }
-
-                            // proveď cache na sektoru
-                            // sector.cache(0, 0, sector.width, sector.height);
-                            // fogSector.cache(0, 0, fogSector.width, fogSector.height);
 
                             if (Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Alokován sektor: " + x + ":" + y);
@@ -431,7 +432,7 @@ namespace Lich {
                                     record.setValue(x, y, FogTile.I_MM);
                                     if (typeof fogSector !== "undefined" && fogSector !== null) {
                                         var child = sceneMap.getValue(x, y);
-                                        fogSector.removeChild(child);
+                                        fogSector.removeFogChild(child);
                                         self.markFogSector(fogSector);
                                     }
                                 }
@@ -951,19 +952,19 @@ namespace Lich {
 
         handleTick() {
             // TODO?
-            // let self = this;
-            // for (let i = 0; i < self.sectorsToUpdate.length; i++) {
-            //     let item = self.sectorsToUpdate.pop();
-            //     if (typeof item !== "undefined") {
-            //         item.sector.updateCache();
-            //     }
-            // }
-            // for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
-            //     let item = self.fogSectorsToUpdate.pop();
-            //     if (typeof item !== "undefined") {
-            //         item.fogSector.updateCache();
-            //     }
-            // }
+            let self = this;
+            for (let i = 0; i < self.sectorsToUpdate.length; i++) {
+                let item = self.sectorsToUpdate.pop();
+                if (typeof item !== "undefined") {
+                    item.sector.cache();
+                }
+            }
+            for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
+                let item = self.fogSectorsToUpdate.pop();
+                if (typeof item !== "undefined") {
+                    item.fogSector.cache();
+                }
+            }
         }
 
         addOnDigObjectListener(f: (objType: Diggable, x: number, y: number) => any) {

@@ -240,19 +240,12 @@ var Lich;
                 // For Safari
                 return 'Are you sure?';
             };
-            // Je potřeba omezit FPS pro výpočty, jinak se budou provádět 
-            // při každém drobném snímku a to není potřeba
-            var fps = 60;
-            var interval = 1000 / fps;
-            var delta = 0;
             var ticker = PIXI.ticker.shared;
             ticker.add(function () {
                 stats.begin();
-                var renderDelta = ticker.deltaTime;
-                delta = renderDelta * 10;
+                // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
+                var delta = ticker.elapsedMS;
                 if (self.initialized) {
-                    // Idle
-                    self.getWorld().handleTick(delta);
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
                     // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
@@ -355,8 +348,9 @@ var Lich;
                             }
                         }
                     }
+                    // Idle
+                    self.getWorld().handleTick(delta);
                     self.getWorld().update(delta, controls);
-                    delta = 0;
                 }
                 self.renderer.render(self.stage);
                 stats.end();

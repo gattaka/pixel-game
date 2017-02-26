@@ -22,7 +22,7 @@ namespace Lich {
 
         static CURRENT_GAME: Game;
 
-        private renderer: PIXI.WebGLRenderer;
+        public renderer: PIXI.WebGLRenderer;
         private stage: PIXI.Container;
         private background: Background;
         private world: World;
@@ -296,23 +296,13 @@ namespace Lich {
                 return 'Are you sure?';
             };
 
-
-            // Je potřeba omezit FPS pro výpočty, jinak se budou provádět 
-            // při každém drobném snímku a to není potřeba
-            let fps = 60;
-            let interval = 1000 / fps;
-            let delta = 0;
-
             let ticker = PIXI.ticker.shared;
             ticker.add(() => {
                 stats.begin();
-                let renderDelta = ticker.deltaTime;
-                delta = renderDelta * 10;
+                // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
+                let delta = ticker.elapsedMS;
 
                 if (self.initialized) {
-
-                    // Idle
-                    self.getWorld().handleTick(delta);
 
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
@@ -412,8 +402,9 @@ namespace Lich {
                         }
                     }
 
+                    // Idle
+                    self.getWorld().handleTick(delta);
                     self.getWorld().update(delta, controls);
-                    delta = 0;
                 }
 
                 self.renderer.render(self.stage);

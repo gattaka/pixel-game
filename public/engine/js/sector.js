@@ -14,19 +14,39 @@ var Lich;
             _this.map_y = map_y;
             _this.fixedWidth = fixedWidth;
             _this.fixedHeight = fixedHeight;
-            _this.backgroundCont = new PIXI.Container();
-            _this.cacheableCont = new PIXI.Container();
-            _this.animatedCont = new PIXI.Container();
             return _this;
         }
+        AbstractSector.prototype.cacheInner = function (cont, oldRendered) {
+            if (oldRendered)
+                this.removeChild(oldRendered);
+            // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
+            var renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);
+            // instead of rendering your containerOfThings to the reeal scene, render it to the texture
+            Lich.Game.CURRENT_GAME.renderer.render(cont, renderedTexture);
+            // now you also have a sprite that uses that texture, rendered in the normal scene
+            var newRendered = new PIXI.Sprite(renderedTexture);
+            this.addChild(newRendered);
+            return newRendered;
+        };
         return AbstractSector;
     }(PIXI.Container));
     Lich.AbstractSector = AbstractSector;
     var FogSector = (function (_super) {
         __extends(FogSector, _super);
         function FogSector() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.fogCont = new PIXI.Container();
+            return _this;
         }
+        FogSector.prototype.cache = function () {
+            this.fogRendered = this.cacheInner(this.fogCont, this.fogRendered);
+        };
+        FogSector.prototype.removeFogChild = function (obj) {
+            this.fogCont.removeChild(obj);
+        };
+        FogSector.prototype.addFogChild = function (obj) {
+            this.fogCont.addChild(obj);
+        };
         return FogSector;
     }(AbstractSector));
     Lich.FogSector = FogSector;
@@ -48,20 +68,12 @@ var Lich;
             _this.cacheableCont.fixedHeight = _this.fixedHeight;
             _this.animatedCont.fixedWidth = _this.fixedWidth;
             _this.animatedCont.fixedHeight = _this.fixedHeight;
-            _this.addChild(_this.backgroundCont);
-            _this.addChild(_this.cacheableCont);
             _this.addChild(_this.animatedCont);
             return _this;
         }
-        // override
-        Sector.prototype.cache = function (x, y, width, height, scale) {
-            // this.backgroundCont.cache(x, y, width, height);
-            // this.cacheableCont.cache(x, y, width, height);
-        };
-        // override
-        Sector.prototype.updateCache = function (compositeOperation) {
-            // this.backgroundCont.updateCache();
-            // this.cacheableCont.updateCache();
+        Sector.prototype.cache = function () {
+            this.backgroundRendered = this.cacheInner(this.backgroundCont, this.backgroundRendered);
+            this.cacheableRendered = this.cacheInner(this.cacheableCont, this.cacheableRendered);
         };
         Sector.prototype.addBackgroundChild = function (child) {
             this.backgroundCont.addChild(child);

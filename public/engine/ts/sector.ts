@@ -2,10 +2,6 @@ namespace Lich {
 
     export abstract class AbstractSector extends PIXI.Container {
 
-        public backgroundCont = new PIXI.Container();
-        public cacheableCont = new PIXI.Container();
-        public animatedCont = new PIXI.Container();
-
         constructor(
             public secId: number,
             public map_x: number,
@@ -14,9 +10,40 @@ namespace Lich {
             public fixedHeight: number) {
             super();
         }
+
+        protected cacheInner(cont: PIXI.Container, oldRendered: PIXI.Sprite): PIXI.Sprite {
+            if (oldRendered)
+                this.removeChild(oldRendered);
+
+            // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
+            let renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);
+
+            // instead of rendering your containerOfThings to the reeal scene, render it to the texture
+            Game.CURRENT_GAME.renderer.render(cont, renderedTexture);
+
+            // now you also have a sprite that uses that texture, rendered in the normal scene
+            let newRendered = new PIXI.Sprite(renderedTexture);
+            this.addChild(newRendered);
+            return newRendered;
+        }
     }
 
     export class FogSector extends AbstractSector {
+
+        public fogCont = new PIXI.Container();
+        public fogRendered: PIXI.Sprite;
+
+        public cache(): void {
+            this.fogRendered = this.cacheInner(this.fogCont, this.fogRendered);
+        }
+
+        public removeFogChild(obj: PIXI.DisplayObject) {
+            this.fogCont.removeChild(obj);
+        }
+
+        public addFogChild(obj: PIXI.DisplayObject) {
+            this.fogCont.addChild(obj);
+        }
     }
 
     export class Sector extends AbstractSector {
@@ -24,6 +51,9 @@ namespace Lich {
         public backgroundCont = new PIXI.Container();
         public cacheableCont = new PIXI.Container();
         public animatedCont = new PIXI.Container();
+
+        public backgroundRendered: PIXI.Sprite;
+        public cacheableRendered: PIXI.Sprite;
 
         constructor(
             public secId: number,
@@ -42,21 +72,12 @@ namespace Lich {
             this.animatedCont.fixedWidth = this.fixedWidth;
             this.animatedCont.fixedHeight = this.fixedHeight;
 
-            this.addChild(this.backgroundCont);
-            this.addChild(this.cacheableCont);
             this.addChild(this.animatedCont);
         }
 
-        // override
-        public cache(x: number, y: number, width: number, height: number, scale?: number): void {
-            // this.backgroundCont.cache(x, y, width, height);
-            // this.cacheableCont.cache(x, y, width, height);
-        }
-
-        // override
-        public updateCache(compositeOperation?: string): void {
-            // this.backgroundCont.updateCache();
-            // this.cacheableCont.updateCache();
+        public cache(): void {
+            this.backgroundRendered = this.cacheInner(this.backgroundCont, this.backgroundRendered);
+            this.cacheableRendered = this.cacheInner(this.cacheableCont, this.cacheableRendered);
         }
 
         public addBackgroundChild(child) {

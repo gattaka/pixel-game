@@ -45,6 +45,7 @@ namespace Lich {
             let srfcSpriteCont = new PIXI.Container();
             let mixSprite;
             let fogSpriteCont;
+            let lichSprite: AniSprite;
 
             let init = () => {
                 let w = window.innerWidth / Resources.TILE_SIZE;
@@ -135,12 +136,10 @@ namespace Lich {
                     stage.addChild(sprite);
                 }
 
-                for (let i = 0; i < 10; i++) {
-                    let sprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.LICH_ANIMATION_KEY);
-                    sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
-                    sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
-                    stage.addChild(sprite);
-                }
+                lichSprite = Resources.getInstance().getAnimatedObjectSprite(AnimationSetKey.LICH_ANIMATION_KEY);
+                lichSprite.x = window.innerWidth / 2;
+                lichSprite.y = window.innerHeight / 2;
+                stage.addChild(lichSprite);
             }
 
             if (Resources.getInstance().isLoaderDone()) {
@@ -155,7 +154,11 @@ namespace Lich {
                 // self.stage.addChild(self.loadUI = new LoaderUI(self));
             }
 
-            function gameLoop(time?: number) {
+            Keyboard.on(37, () => { fogSpriteCont.vx = -200 }, () => { fogSpriteCont.vx = 0 });
+            Keyboard.on(39, () => { fogSpriteCont.vx = 200 }, () => { fogSpriteCont.vx = 0 });
+
+            let ticker = PIXI.ticker.shared;
+            ticker.add(() => {
                 stats.begin();
 
                 bgrSprites.forEach(bgrSprite => {
@@ -166,17 +169,18 @@ namespace Lich {
                 // srfcSpriteCont.x += 1;
                 if (mixSprite)
                     mixSprite.x += 1;
-                if (fogSpriteCont)
-                    fogSpriteCont.x -= 1;
+                if (fogSpriteCont && fogSpriteCont.vx)
+                    fogSpriteCont.x += ticker.elapsedMS / 1000 * fogSpriteCont.vx;
 
-                requestAnimationFrame(gameLoop);
+                if (lichSprite) {
+                    if (lichSprite.currentAnimation != AnimationKey[AnimationKey.ANM_HERO_JUMPL_KEY])
+                        lichSprite.gotoAndPlay(AnimationKey[AnimationKey.ANM_HERO_JUMPL_KEY]);
+                }
+
                 renderer.render(stage);
 
                 stats.end();
-            }
-            // Start the game loop
-            // Loop this function at 60 frames per second
-            gameLoop();
+            });
         }
     }
 }

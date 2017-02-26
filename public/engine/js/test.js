@@ -29,6 +29,7 @@ var Lich;
             var srfcSpriteCont = new PIXI.Container();
             var mixSprite;
             var fogSpriteCont;
+            var lichSprite;
             var init = function () {
                 var w = window.innerWidth / Lich.Resources.TILE_SIZE;
                 var h = window.innerHeight / Lich.Resources.TILE_SIZE;
@@ -109,12 +110,10 @@ var Lich;
                     sprite.y = Math.random() * window.innerHeight - Lich.Resources.TILE_SIZE;
                     stage.addChild(sprite);
                 }
-                for (var i = 0; i < 10; i++) {
-                    var sprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationSetKey.LICH_ANIMATION_KEY);
-                    sprite.x = Math.random() * window.innerWidth - Lich.Resources.TILE_SIZE;
-                    sprite.y = Math.random() * window.innerHeight - Lich.Resources.TILE_SIZE;
-                    stage.addChild(sprite);
-                }
+                lichSprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationSetKey.LICH_ANIMATION_KEY);
+                lichSprite.x = window.innerWidth / 2;
+                lichSprite.y = window.innerHeight / 2;
+                stage.addChild(lichSprite);
             };
             if (Lich.Resources.getInstance().isLoaderDone()) {
                 init();
@@ -127,7 +126,10 @@ var Lich;
                     return false;
                 });
             }
-            function gameLoop(time) {
+            Lich.Keyboard.on(37, function () { fogSpriteCont.vx = -200; }, function () { fogSpriteCont.vx = 0; });
+            Lich.Keyboard.on(39, function () { fogSpriteCont.vx = 200; }, function () { fogSpriteCont.vx = 0; });
+            var ticker = PIXI.ticker.shared;
+            ticker.add(function () {
                 stats.begin();
                 bgrSprites.forEach(function (bgrSprite) {
                     bgrSprite.tilePosition.x += 1;
@@ -136,15 +138,15 @@ var Lich;
                 // srfcSpriteCont.x += 1;
                 if (mixSprite)
                     mixSprite.x += 1;
-                if (fogSpriteCont)
-                    fogSpriteCont.x -= 1;
-                requestAnimationFrame(gameLoop);
+                if (fogSpriteCont && fogSpriteCont.vx)
+                    fogSpriteCont.x += ticker.elapsedMS / 1000 * fogSpriteCont.vx;
+                if (lichSprite) {
+                    if (lichSprite.currentAnimation != Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_JUMPL_KEY])
+                        lichSprite.gotoAndPlay(Lich.AnimationKey[Lich.AnimationKey.ANM_HERO_JUMPL_KEY]);
+                }
                 renderer.render(stage);
                 stats.end();
-            }
-            // Start the game loop
-            // Loop this function at 60 frames per second
-            gameLoop();
+            });
         }
         return Test;
     }());

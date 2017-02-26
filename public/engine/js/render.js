@@ -139,7 +139,7 @@ var Lich;
                                         // vytvoř dílek
                                         var fogTile = self.createFogTile(fogElement);
                                         // přidej dílek do sektoru
-                                        fogSector.addChild(fogTile);
+                                        fogSector.addFogChild(fogTile);
                                         fogTile.x = (mx % Render.FOG_SECTOR_SIZE) * Lich.Resources.PARTS_SIZE;
                                         fogTile.y = (my % Render.FOG_SECTOR_SIZE) * Lich.Resources.PARTS_SIZE;
                                         // přidej dílek do globální mapy
@@ -193,6 +193,9 @@ var Lich;
                                     }
                                 }
                             }
+                            // proveď cache na sektoru
+                            sector.cache();
+                            fogSector.cache();
                             // debug
                             if (Lich.Resources.SHOW_SECTORS) {
                                 var testShape = new PIXI.Graphics();
@@ -201,12 +204,9 @@ var Lich;
                                 sector.addChild(testShape);
                                 testShape = new PIXI.Graphics();
                                 testShape.lineStyle(1, 0x00ff00);
-                                testShape.drawRect(0, 0, fogSector.fixedWidth, fogSector.fixedHeight);
+                                testShape.drawRect(2, 2, fogSector.fixedWidth - 4, fogSector.fixedHeight - 4);
                                 fogSector.addChild(testShape);
                             }
-                            // proveď cache na sektoru
-                            // sector.cache(0, 0, sector.width, sector.height);
-                            // fogSector.cache(0, 0, fogSector.width, fogSector.height);
                             if (Lich.Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Alokován sektor: " + x + ":" + y);
                             }
@@ -357,7 +357,7 @@ var Lich;
                                     record.setValue(x_1, y_1, Lich.FogTile.I_MM);
                                     if (typeof fogSector !== "undefined" && fogSector !== null) {
                                         var child = sceneMap_1.getValue(x_1, y_1);
-                                        fogSector.removeChild(child);
+                                        fogSector.removeFogChild(child);
                                         self.markFogSector(fogSector);
                                     }
                                 }
@@ -835,19 +835,19 @@ var Lich;
         };
         Render.prototype.handleTick = function () {
             // TODO?
-            // let self = this;
-            // for (let i = 0; i < self.sectorsToUpdate.length; i++) {
-            //     let item = self.sectorsToUpdate.pop();
-            //     if (typeof item !== "undefined") {
-            //         item.sector.updateCache();
-            //     }
-            // }
-            // for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
-            //     let item = self.fogSectorsToUpdate.pop();
-            //     if (typeof item !== "undefined") {
-            //         item.fogSector.updateCache();
-            //     }
-            // }
+            var self = this;
+            for (var i = 0; i < self.sectorsToUpdate.length; i++) {
+                var item = self.sectorsToUpdate.pop();
+                if (typeof item !== "undefined") {
+                    item.sector.cache();
+                }
+            }
+            for (var i = 0; i < self.fogSectorsToUpdate.length; i++) {
+                var item = self.fogSectorsToUpdate.pop();
+                if (typeof item !== "undefined") {
+                    item.fogSector.cache();
+                }
+            }
         };
         Render.prototype.addOnDigObjectListener = function (f) {
             var self = this;
