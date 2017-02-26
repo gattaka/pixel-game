@@ -31,29 +31,31 @@ namespace Lich {
         /* VARIABLES */
         /*-----------*/
 
-        bgrSprites = [];
-        bgrConts = [];
-        dirtBackSprite;
-        dirtBackStartSprite;
+        bgrSprites = new Array<BackgroundSprite>();
+        dirtBackSprite: BackgroundSprite;
+        dirtBackStartSprite: BackgroundSprite;
         clouds = [];
 
         // celkový posun
         offsetX = 0;
         offsetY = 0;
 
-        constructor(private canvas: HTMLCanvasElement) {
+        constructor() {
             super();
             var self = this;
 
-            self.canvas = canvas;
+            let cw = Game.CURRENT_GAME.getSceneWidth();
+            let ch = Game.CURRENT_GAME.getSceneHeight();
+            self.fixedWidth = ch;
+            self.fixedHeight = cw;
 
-            let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_SKY_KEY);
-            skySprite.fixedWidth = self.canvas.width;
+            let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_SKY_KEY, cw);
+            self.addChild(skySprite);
 
             Background.BGR_ORDER.forEach((b: BackgroundKey, i) => {
-                let sprite = Resources.getInstance().getBackgroundSprite(b);
-                sprite.fixedWidth = self.canvas.width;
+                let sprite = Resources.getInstance().getBackgroundSprite(b, cw);
                 self.bgrSprites.push(sprite);
+                self.addChild(sprite);
             });
 
             // Background.CLOUDS_KEYS.forEach((c) => {
@@ -64,10 +66,11 @@ namespace Lich {
             //     self.content.addChild(sprite);
             // });
 
-            self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_START_KEY);
-            self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_KEY);
-            self.dirtBackStartSprite.width = self.canvas.width;
-            self.dirtBackSprite.width = self.canvas.width;
+            self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_KEY, cw, ch);
+            self.addChild(self.dirtBackSprite);
+
+            self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_START_KEY, cw);
+            self.addChild(self.dirtBackStartSprite);
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
                 self.offsetX = payload.payload;
@@ -86,26 +89,26 @@ namespace Lich {
 
         private shift() {
             var self = this;
-            var canvas = self.canvas;
 
-            self.bgrConts.forEach((part: PIXI.extras.TilingSprite, i) => {
-                part.tilePosition.x = Math.floor(((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].width) - self.bgrSprites[i].width);
-                part.y = Math.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
+            self.bgrSprites.forEach((part: BackgroundSprite, i) => {
+                part.tilePosition.x = Utils.floor((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].originalWidth);
+                part.y = Utils.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
             });
 
             // Dirt back
-            self.dirtBackSprite.tilePosition.x = Math.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.width) - self.dirtBackSprite.width);
-            let tillRepeatPointY = self.offsetY + Background.DIRT_START * Background.DIRT_MULT;
-            self.dirtBackSprite.y = self.offsetY * Background.DIRT_MULT + Background.DIRT_START * Background.DIRT_MULT;
+            self.dirtBackSprite.tilePosition.x = Utils.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
+            let tillRepeatPointY = Utils.floor(self.offsetY + Background.DIRT_START * Background.DIRT_MULT);
             if (tillRepeatPointY < 0) {
-                self.dirtBackSprite.y = self.dirtBackSprite.y % self.dirtBackSprite.height;
+                self.dirtBackSprite.y = 0;
+                self.dirtBackSprite.tilePosition.y = Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight);
+            } else {
+                self.dirtBackSprite.y = tillRepeatPointY;
             }
-            self.dirtBackSprite.y = Math.floor(self.dirtBackSprite.y - self.dirtBackSprite.height);
 
             // Start pozadí hlíny kopíruje hlavní část pozadí
             // navíc je přilepen před počátek hlavní části
             self.dirtBackStartSprite.tilePosition.x = self.dirtBackSprite.tilePosition.x;
-            self.dirtBackStartSprite.y = self.dirtBackSprite.y - self.dirtBackStartSprite.height;
+            self.dirtBackStartSprite.y = self.dirtBackSprite.y - self.dirtBackStartSprite.originalHeight;
 
             // Clouds
             // for (var i = 0; i < self.clouds.length; i++) {
@@ -126,7 +129,6 @@ namespace Lich {
 
         update(rawShift) {
             var self = this;
-            var canvas = self.canvas;
             var shift = rawShift / 10;
 
             // Clouds

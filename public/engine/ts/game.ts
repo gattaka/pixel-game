@@ -69,7 +69,11 @@ namespace Lich {
             console.log("running");
 
             // Create the renderer
-            self.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
+            self.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, {
+                antialias: false,
+                roundPixels: false,
+                autoResize: false
+            });
             self.renderer.view.style.position = "absolute";
             self.renderer.view.style.display = "block";
             self.renderer.backgroundColor = 0xfafaea;
@@ -79,7 +83,6 @@ namespace Lich {
                 default:
                     self.renderer.backgroundColor = 0x839e61;
             }
-            self.renderer.autoResize = false;
 
             // function resizeCanvas() {
             //     self.renderer.resize(window.innerWidth, window.innerHeight);
@@ -214,7 +217,7 @@ namespace Lich {
 
                     // (re)-init
                     self.ui = new UI(self.renderer.view, tilesMap, mobile);
-                    self.background = new Background(self.renderer.view);
+                    self.background = new Background();
                     self.world = new World(self, tilesMap);
                     self.stage.addChild(self.background);
                     self.stage.addChild(self.world);

@@ -558,14 +558,16 @@ namespace Lich {
             }
         };
 
-        getBackgroundSprite(key: BackgroundKey): PIXI.extras.TilingSprite {
+        getBackgroundSprite(key: BackgroundKey, width: number, height?: number): BackgroundSprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_BGR_KEY];
             let bgrSprite = self.backgroundDefs[BackgroundKey[key]];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
             let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            let tilingSprite = new PIXI.extras.TilingSprite(spriteSheet);
+            let tilingSprite = new BackgroundSprite(spriteSheet, width, height ? height : spriteDef.height);
+            tilingSprite.originalHeight = spriteDef.height;
+            tilingSprite.originalWidth = spriteDef.width;
             return tilingSprite;
         };
 
@@ -633,6 +635,11 @@ namespace Lich {
             return anim;
         };
 
+    }
+
+    export class BackgroundSprite extends PIXI.extras.TilingSprite {
+        public originalWidth: number;
+        public originalHeight: number;
     }
 
     export class AniSprite extends PIXI.extras.AnimatedSprite {

@@ -1318,7 +1318,7 @@ namespace Lich {
             }
 
             Nature.getInstance().handleTick(delta, self);
-            // SpawnPool.getInstance().update(delta, self);
+            SpawnPool.getInstance().update(delta, self);
         };
     }
 

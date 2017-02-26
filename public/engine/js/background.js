@@ -7,26 +7,27 @@ var Lich;
 (function (Lich) {
     var Background = (function (_super) {
         __extends(Background, _super);
-        function Background(canvas) {
+        function Background() {
             var _this = _super.call(this) || this;
-            _this.canvas = canvas;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
-            _this.bgrSprites = [];
-            _this.bgrConts = [];
+            _this.bgrSprites = new Array();
             _this.clouds = [];
             // celkový posun
             _this.offsetX = 0;
             _this.offsetY = 0;
             var self = _this;
-            self.canvas = canvas;
-            var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_SKY_KEY);
-            skySprite.fixedWidth = self.canvas.width;
+            var cw = Lich.Game.CURRENT_GAME.getSceneWidth();
+            var ch = Lich.Game.CURRENT_GAME.getSceneHeight();
+            self.fixedWidth = ch;
+            self.fixedHeight = cw;
+            var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_SKY_KEY, cw);
+            self.addChild(skySprite);
             Background.BGR_ORDER.forEach(function (b, i) {
-                var sprite = Lich.Resources.getInstance().getBackgroundSprite(b);
-                sprite.fixedWidth = self.canvas.width;
+                var sprite = Lich.Resources.getInstance().getBackgroundSprite(b, cw);
                 self.bgrSprites.push(sprite);
+                self.addChild(sprite);
             });
             // Background.CLOUDS_KEYS.forEach((c) => {
             //     let sprite = Resources.getInstance().getBackgroundSprite(c);
@@ -35,10 +36,10 @@ var Lich;
             //     self.clouds.push(sprite);
             //     self.content.addChild(sprite);
             // });
-            self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_START_KEY);
-            self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_KEY);
-            self.dirtBackStartSprite.width = self.canvas.width;
-            self.dirtBackSprite.width = self.canvas.width;
+            self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_KEY, cw, ch);
+            self.addChild(self.dirtBackSprite);
+            self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_START_KEY, cw);
+            self.addChild(self.dirtBackStartSprite);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
                 self.offsetX = payload.payload;
                 self.shift();
@@ -54,23 +55,24 @@ var Lich;
         }
         Background.prototype.shift = function () {
             var self = this;
-            var canvas = self.canvas;
-            self.bgrConts.forEach(function (part, i) {
-                part.tilePosition.x = Math.floor(((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].width) - self.bgrSprites[i].width);
-                part.y = Math.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
+            self.bgrSprites.forEach(function (part, i) {
+                part.tilePosition.x = Lich.Utils.floor((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].originalWidth);
+                part.y = Lich.Utils.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
             });
             // Dirt back
-            self.dirtBackSprite.tilePosition.x = Math.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.width) - self.dirtBackSprite.width);
-            var tillRepeatPointY = self.offsetY + Background.DIRT_START * Background.DIRT_MULT;
-            self.dirtBackSprite.y = self.offsetY * Background.DIRT_MULT + Background.DIRT_START * Background.DIRT_MULT;
+            self.dirtBackSprite.tilePosition.x = Lich.Utils.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
+            var tillRepeatPointY = Lich.Utils.floor(self.offsetY + Background.DIRT_START * Background.DIRT_MULT);
             if (tillRepeatPointY < 0) {
-                self.dirtBackSprite.y = self.dirtBackSprite.y % self.dirtBackSprite.height;
+                self.dirtBackSprite.y = 0;
+                self.dirtBackSprite.tilePosition.y = Lich.Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight);
             }
-            self.dirtBackSprite.y = Math.floor(self.dirtBackSprite.y - self.dirtBackSprite.height);
+            else {
+                self.dirtBackSprite.y = tillRepeatPointY;
+            }
             // Start pozadí hlíny kopíruje hlavní část pozadí
             // navíc je přilepen před počátek hlavní části
             self.dirtBackStartSprite.tilePosition.x = self.dirtBackSprite.tilePosition.x;
-            self.dirtBackStartSprite.y = self.dirtBackSprite.y - self.dirtBackStartSprite.height;
+            self.dirtBackStartSprite.y = self.dirtBackSprite.y - self.dirtBackStartSprite.originalHeight;
             // Clouds
             // for (var i = 0; i < self.clouds.length; i++) {
             //     var item = self.clouds[i];
@@ -90,7 +92,6 @@ var Lich;
         ;
         Background.prototype.update = function (rawShift) {
             var self = this;
-            var canvas = self.canvas;
             var shift = rawShift / 10;
             // Clouds
             // for (var i = 0; i < self.clouds.length; i++) {

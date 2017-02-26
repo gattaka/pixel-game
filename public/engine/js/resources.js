@@ -459,14 +459,16 @@ var Lich;
             }
         };
         ;
-        Resources.prototype.getBackgroundSprite = function (key) {
+        Resources.prototype.getBackgroundSprite = function (key, width, height) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
             var bgrSprite = self.backgroundDefs[Lich.BackgroundKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
             var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            var tilingSprite = new PIXI.extras.TilingSprite(spriteSheet);
+            var tilingSprite = new BackgroundSprite(spriteSheet, width, height ? height : spriteDef.height);
+            tilingSprite.originalHeight = spriteDef.height;
+            tilingSprite.originalWidth = spriteDef.width;
             return tilingSprite;
         };
         ;
@@ -559,6 +561,14 @@ var Lich;
     Resources.PARTS_SIZE = 2 * Resources.TILE_SIZE;
     Resources.PARTS_SHEET_WIDTH = 20;
     Lich.Resources = Resources;
+    var BackgroundSprite = (function (_super) {
+        __extends(BackgroundSprite, _super);
+        function BackgroundSprite() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return BackgroundSprite;
+    }(PIXI.extras.TilingSprite));
+    Lich.BackgroundSprite = BackgroundSprite;
     var AniSprite = (function (_super) {
         __extends(AniSprite, _super);
         function AniSprite(frames, animationDef) {

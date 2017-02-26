@@ -40,76 +40,72 @@ var Lich;
                 //     uvs: false,
                 //     alpha: true
                 // });
-                var bgrSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_FAR_MOUNTAIN_KEY);
+                var bgrSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_FAR_MOUNTAIN_KEY, renderer.view.width);
+                bgrSprites.push(bgrSprite);
+                stage.addChild(bgrSprite);
+                bgrSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_WOODLAND1_KEY, renderer.view.width);
                 bgrSprite.fixedWidth = renderer.width;
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);
-                bgrSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_WOODLAND1_KEY);
-                bgrSprite.fixedWidth = renderer.width;
-                bgrSprites.push(bgrSprite);
-                stage.addChild(bgrSprite);
-                for (var i = 0; i < w; i++) {
-                    for (var j = 0; j < h; j++) {
-                        if (Math.random() < 0.2)
-                            continue;
-                        var srfcBgrSprite = Lich.Resources.getInstance().getSurfaceBgrTileSprite(Lich.SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, Math.floor(Math.random() * 42));
-                        srfcBgrSprite.x = i * Lich.Resources.TILE_SIZE;
-                        srfcBgrSprite.y = j * Lich.Resources.TILE_SIZE;
-                        srfcBgrSpriteCont.addChild(srfcBgrSprite);
-                    }
-                }
-                stage.addChild(srfcBgrSpriteCont);
-                var srfcSprite;
-                for (var i = 0; i < w; i++) {
-                    for (var j = 0; j < h; j++) {
-                        if (Math.random() < 0.2)
-                            continue;
-                        srfcSprite = Lich.Resources.getInstance().getSurfaceTileSprite(Lich.SurfaceKey.SRFC_GOLD_KEY, Math.floor(Math.random() * 42));
-                        srfcSprite.x = i * Lich.Resources.TILE_SIZE;
-                        srfcSprite.y = j * Lich.Resources.TILE_SIZE;
-                        srfcSpriteCont.addChild(srfcSprite);
-                    }
-                }
-                // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
-                var baseRenderTexture = new PIXI.BaseRenderTexture(window.innerWidth - 2, window.innerHeight);
-                var smallTexture = new PIXI.RenderTexture(baseRenderTexture);
-                // instead of rendering your containerOfThings to the reeal scene, render it to the texture
-                renderer.render(srfcSpriteCont, smallTexture);
-                // now you also have a sprite that uses that texture, rendered in the normal scene
-                mixSprite = new PIXI.Sprite(smallTexture);
-                stage.addChild(mixSprite);
-                w = window.innerWidth / Lich.Resources.PARTS_SIZE;
-                h = window.innerHeight / Lich.Resources.PARTS_SIZE;
-                fogSpriteCont = new PIXI.Container();
-                for (var i = 0; i < w; i++) {
-                    for (var j = 0; j < h; j++) {
-                        if (Math.random() < 0.2)
-                            continue;
-                        var fogSprite = Lich.Resources.getInstance().getFogSprite(Math.floor(Math.random() * 18));
-                        fogSprite.x = i * Lich.Resources.PARTS_SIZE;
-                        fogSprite.y = j * Lich.Resources.PARTS_SIZE;
-                        fogSpriteCont.addChild(fogSprite);
-                    }
-                }
-                stage.addChild(fogSpriteCont);
-                for (var i = 0; i < 2000; i++) {
-                    var sprite = Lich.Resources.getInstance().getMapObjectTileSprite(Lich.MapObjectKey.MAP_FIREPLACE_KEY, Math.floor(Math.random() * 4));
-                    sprite.x = Math.random() * window.innerWidth - Lich.Resources.TILE_SIZE;
-                    sprite.y = Math.random() * window.innerHeight - Lich.Resources.TILE_SIZE;
-                    stage.addChild(sprite);
-                }
-                for (var i = 0; i < 2000; i++) {
-                    var sprite = Lich.Resources.getInstance().getMapObjectTileSprite(Lich.MapObjectKey.MAP_TREE3_KEY, Math.floor(Math.random() * 4));
-                    sprite.x = Math.random() * window.innerWidth - Lich.Resources.TILE_SIZE;
-                    sprite.y = Math.random() * window.innerHeight - Lich.Resources.TILE_SIZE;
-                    stage.addChild(sprite);
-                }
-                for (var i = 0; i < 10; i++) {
-                    var sprite = Lich.Resources.getInstance().getInvObjectSprite(Lich.InventoryKey.INV_BOOKSHELF_KEY);
-                    sprite.x = Math.random() * window.innerWidth - Lich.Resources.TILE_SIZE;
-                    sprite.y = Math.random() * window.innerHeight - Lich.Resources.TILE_SIZE;
-                    stage.addChild(sprite);
-                }
+                // for (let i = 0; i < w; i++) {
+                //     for (let j = 0; j < h; j++) {
+                //         if (Math.random() < 0.2) continue;
+                //         let srfcBgrSprite = Resources.getInstance().getSurfaceBgrTileSprite(SurfaceBgrKey.SRFC_BGR_ROCK_BRICK_KEY, Math.floor(Math.random() * 42));
+                //         srfcBgrSprite.x = i * Resources.TILE_SIZE;
+                //         srfcBgrSprite.y = j * Resources.TILE_SIZE;
+                //         srfcBgrSpriteCont.addChild(srfcBgrSprite);
+                //     }
+                // }
+                // stage.addChild(srfcBgrSpriteCont);
+                // let srfcSprite;
+                // for (let i = 0; i < w; i++) {
+                //     for (let j = 0; j < h; j++) {
+                //         if (Math.random() < 0.2) continue;
+                //         srfcSprite = Resources.getInstance().getSurfaceTileSprite(SurfaceKey.SRFC_GOLD_KEY, Math.floor(Math.random() * 42));
+                //         srfcSprite.x = i * Resources.TILE_SIZE;
+                //         srfcSprite.y = j * Resources.TILE_SIZE;
+                //         srfcSpriteCont.addChild(srfcSprite);
+                //     }
+                // }
+                // // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
+                // let baseRenderTexture = new PIXI.BaseRenderTexture(window.innerWidth - 2, window.innerHeight);
+                // let smallTexture = new PIXI.RenderTexture(baseRenderTexture);
+                // // instead of rendering your containerOfThings to the reeal scene, render it to the texture
+                // renderer.render(srfcSpriteCont, smallTexture);
+                // // now you also have a sprite that uses that texture, rendered in the normal scene
+                // mixSprite = new PIXI.Sprite(smallTexture);
+                // stage.addChild(mixSprite);
+                // w = window.innerWidth / Resources.PARTS_SIZE;
+                // h = window.innerHeight / Resources.PARTS_SIZE;
+                // fogSpriteCont = new PIXI.Container();
+                // for (let i = 0; i < w; i++) {
+                //     for (let j = 0; j < h; j++) {
+                //         if (Math.random() < 0.2) continue;
+                //         let fogSprite = Resources.getInstance().getFogSprite(Math.floor(Math.random() * 18));
+                //         fogSprite.x = i * Resources.PARTS_SIZE;
+                //         fogSprite.y = j * Resources.PARTS_SIZE;
+                //         fogSpriteCont.addChild(fogSprite);
+                //     }
+                // }
+                // stage.addChild(fogSpriteCont);
+                // for (let i = 0; i < 2000; i++) {
+                //     let sprite = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_FIREPLACE_KEY, Math.floor(Math.random() * 4));
+                //     sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                //     sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                //     stage.addChild(sprite);
+                // }
+                // for (let i = 0; i < 2000; i++) {
+                //     let sprite = Resources.getInstance().getMapObjectTileSprite(MapObjectKey.MAP_TREE3_KEY, Math.floor(Math.random() * 4));
+                //     sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                //     sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                //     stage.addChild(sprite);
+                // }
+                // for (let i = 0; i < 10; i++) {
+                //     let sprite = Resources.getInstance().getInvObjectSprite(InventoryKey.INV_BOOKSHELF_KEY);
+                //     sprite.x = Math.random() * window.innerWidth - Resources.TILE_SIZE;
+                //     sprite.y = Math.random() * window.innerHeight - Resources.TILE_SIZE;
+                //     stage.addChild(sprite);
+                // }
                 lichSprite = Lich.Resources.getInstance().getAnimatedObjectSprite(Lich.AnimationSetKey.LICH_ANIMATION_KEY);
                 lichSprite.x = window.innerWidth / 2;
                 lichSprite.y = window.innerHeight / 2;
