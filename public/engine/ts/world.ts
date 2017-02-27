@@ -79,12 +79,7 @@ namespace Lich {
         tilesSectorsCont = new PIXI.Container();
         entitiesCont = new PIXI.Container();
         weather: Weather;
-        fogSectorsCont = new PIXI.particles.ParticleContainer(undefined, {
-            rotation: false,
-            alpha: true,
-            scale: true,
-            uvs: true
-        });
+        fogSectorsCont: PIXI.particles.ParticleContainer;
         messagesCont = new PIXI.Container();
 
         hero: Hero;
@@ -118,6 +113,14 @@ namespace Lich {
             // self.addChild(self.weather);
 
             // Fog cont
+            self.fogSectorsCont = new PIXI.particles.ParticleContainer(
+                Render.getFogContSizeW(self.game.getSceneWidth()) * Render.getFogContSizeH(self.game.getSceneHeight()),
+                {
+                    rotation: false,
+                    alpha: true,
+                    scale: true,
+                    uvs: true
+                });
             self.initFullScaleCont(self.fogSectorsCont);
             self.addChild(self.fogSectorsCont);
 

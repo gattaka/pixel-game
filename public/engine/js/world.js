@@ -69,12 +69,6 @@ var Lich;
             // kontejnery
             _this.tilesSectorsCont = new PIXI.Container();
             _this.entitiesCont = new PIXI.Container();
-            _this.fogSectorsCont = new PIXI.particles.ParticleContainer(undefined, {
-                rotation: false,
-                alpha: true,
-                scale: true,
-                uvs: true
-            });
             _this.messagesCont = new PIXI.Container();
             _this.enemiesCount = 0;
             _this.enemies = new Array();
@@ -90,6 +84,12 @@ var Lich;
             // TODO
             // self.addChild(self.weather);
             // Fog cont
+            self.fogSectorsCont = new PIXI.particles.ParticleContainer(Lich.Render.getFogContSizeW(self.game.getSceneWidth()) * Lich.Render.getFogContSizeH(self.game.getSceneHeight()), {
+                rotation: false,
+                alpha: true,
+                scale: true,
+                uvs: true
+            });
             self.initFullScaleCont(self.fogSectorsCont);
             self.addChild(self.fogSectorsCont);
             // Messages cont (damage pts texty, hlášení)
