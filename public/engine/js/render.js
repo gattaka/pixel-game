@@ -41,6 +41,9 @@ var Lich;
             // souřadnice aktuálního sektorového "okna" v půlsektorech
             this.currentStartHalfSecX = null;
             this.currentStartHalfSecY = null;
+            // souřadnice aktuálního fog okna
+            this.currentStartFogX = null;
+            this.currentStartFogY = null;
             // sector kontejnery
             this.sectorsToUpdate = new Array();
             this.fogSectorsToUpdate = new Array();
@@ -58,6 +61,7 @@ var Lich;
             self.fogSectorsCont = world.fogSectorsCont;
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();
+            self.updateFogSectors();
         }
         Render.prototype.getScreenOffsetX = function () {
             return this.screenOffsetX;
@@ -66,10 +70,10 @@ var Lich;
             return this.screenOffsetY;
         };
         Render.getFogContSizeW = function (contW) {
-            return Math.ceil(contW / Lich.Resources.PARTS_SIZE) + 2;
+            return Math.floor(contW / Lich.Resources.PARTS_SIZE) + 2;
         };
         Render.getFogContSizeH = function (contH) {
-            return Math.ceil(contH / Lich.Resources.PARTS_SIZE) + 2;
+            return Math.floor(contH / Lich.Resources.PARTS_SIZE) + 2;
         };
         Render.prototype.getFogInfo = function () {
             var self = this;
@@ -78,10 +82,7 @@ var Lich;
             if (self.screenOffsetX < 0) {
                 // Pokud došlo k nějakému posunu doprava, zjisti kolik sektorů by se do tohoto posuvu vešlo
                 // půlsektory pro dither
-                startFogSecX = Math.ceil(-1 * self.screenOffsetX / Lich.Resources.PARTS_SIZE);
-                // Vždy ponech BUFFER_SECTORS_X sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
-                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
-                startFogSecX = startFogSecX >= 1 ? startFogSecX - 1 : startFogSecX;
+                startFogSecX = Math.floor(-1 * self.screenOffsetX / Lich.Resources.PARTS_SIZE);
             }
             var countFogSecX = Render.getFogContSizeW(self.sectorsCont.fixedWidth);
             // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
@@ -89,10 +90,7 @@ var Lich;
             if (self.screenOffsetY < 0) {
                 // Pokud došlo k nějakému posunu dolů, zjisti kolik sektorů by se do tohoto posuvu vešlo
                 // půlsektory pro dither
-                startFogSecY = Math.ceil(-1 * self.screenOffsetY / Lich.Resources.PARTS_SIZE);
-                // Vždy ponech BUFFER_SECTORS_Y sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
-                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
-                startFogSecY = startFogSecY >= 1 ? startFogSecY - 1 : startFogSecY;
+                startFogSecY = Math.floor(-1 * self.screenOffsetY / Lich.Resources.PARTS_SIZE);
             }
             var countFogSecY = Render.getFogContSizeH(self.sectorsCont.fixedHeight);
             return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY);
@@ -100,15 +98,19 @@ var Lich;
         Render.prototype.updateFogSectors = function () {
             var self = this;
             var fogInfo = self.getFogInfo();
+            if (self.currentStartFogX == fogInfo.startFogSecX && self.currentStartFogY == fogInfo.startFogSecY)
+                return;
+            self.currentStartFogX = fogInfo.startFogSecX;
+            self.currentStartFogY = fogInfo.startFogSecY;
             // projdi sektory, nepoužité dealokuj, nové naplň
             for (var x = 0; x < fogInfo.countFogSecX; x++) {
                 for (var y = 0; y < fogInfo.countFogSecY; y++) {
                     var origSprite = self.sceneFogTilesMap.getValue(x, y);
                     var fogElement = self.tilesMap.fogTree.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
                     var updatedSprite = self.createFogTile(fogElement, origSprite);
-                    updatedSprite.x = x * Lich.Resources.PARTS_SIZE + self.screenOffsetX % Lich.Resources.PARTS_SIZE;
-                    updatedSprite.y = y * Lich.Resources.PARTS_SIZE + self.screenOffsetY % Lich.Resources.PARTS_SIZE;
                     if (!origSprite) {
+                        updatedSprite.x = x * Lich.Resources.PARTS_SIZE;
+                        updatedSprite.y = y * Lich.Resources.PARTS_SIZE;
                         self.fogSectorsCont.addChild(updatedSprite);
                         self.sceneFogTilesMap.setValue(x, y, updatedSprite);
                     }
@@ -266,7 +268,6 @@ var Lich;
                     }
                 }
             }
-            self.updateFogSectors();
         };
         Render.prototype.createFogTile = function (positionIndex, originalSprite) {
             var self = this;
@@ -327,11 +328,10 @@ var Lich;
                 sector.x += shiftX;
                 sector.y += shiftY;
             });
-            self.fogSectorsCont.children.forEach(function (fogSector) {
-                fogSector.x += shiftX;
-                fogSector.y += shiftY;
-            });
+            self.fogSectorsCont.x = (self.fogSectorsCont.x + shiftX) % Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
+            self.fogSectorsCont.y = (self.fogSectorsCont.y + shiftY) % Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
             self.updateSectors();
+            self.updateFogSectors();
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_X, self.screenOffsetX));
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_Y, self.screenOffsetY));
         };

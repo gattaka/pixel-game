@@ -91,6 +91,8 @@ var Lich;
                 uvs: true
             });
             self.initFullScaleCont(self.fogSectorsCont);
+            self.fogSectorsCont.x = -Lich.Resources.PARTS_SIZE;
+            self.fogSectorsCont.y = -Lich.Resources.PARTS_SIZE;
             self.addChild(self.fogSectorsCont);
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);

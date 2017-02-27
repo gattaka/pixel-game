@@ -122,6 +122,8 @@ namespace Lich {
                     uvs: true
                 });
             self.initFullScaleCont(self.fogSectorsCont);
+            self.fogSectorsCont.x = -Resources.PARTS_SIZE;
+            self.fogSectorsCont.y = -Resources.PARTS_SIZE;
             self.addChild(self.fogSectorsCont);
 
             // Messages cont (damage pts texty, hlášení)
