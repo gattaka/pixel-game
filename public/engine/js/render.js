@@ -32,11 +32,11 @@ var Lich;
             // souřadnice aktuálního sektorového "okna" v půlsektorech
             this.currentStartHalfSecX = null;
             this.currentStartHalfSecY = null;
+            // sector kontejnery
             this.sectorsToUpdate = new Array();
             this.fogSectorsToUpdate = new Array();
             // Mapy sektorů
             this.sectorsMap = new Lich.Array2D();
-            this.fogSectorsMap = new Lich.Array2D();
             // Vykreslené dílky povrchu a pozadí
             this.sceneTilesMap = new Lich.Array2D();
             this.sceneBgrTilesMap = new Lich.Array2D();
@@ -55,6 +55,69 @@ var Lich;
         };
         Render.prototype.getScreenOffsetY = function () {
             return this.screenOffsetY;
+        };
+        Render.prototype.updateFogSectors = function () {
+            var self = this;
+            // Fog sector = 1 part 
+            var maxFogSecCountX = self.tilesMap.fogTree.width;
+            var maxFogSecCountY = self.tilesMap.fogTree.height;
+            // Pokud jsem úplně vlevo, vykresluj od X sektoru 0
+            var startFogSecX = 0;
+            if (self.screenOffsetX < 0) {
+                // Pokud došlo k nějakému posunu doprava, zjisti kolik sektorů by se do tohoto posuvu vešlo
+                // půlsektory pro dither
+                startFogSecX = Math.floor(-1 * self.screenOffsetX / Lich.Resources.PARTS_SIZE);
+                // Vždy ponech BUFFER_SECTORS_X sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
+                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
+                startFogSecX = startFogSecX >= Render.BUFFER_SECTORS_X ? startFogSecX - Render.BUFFER_SECTORS_X : startFogSecX;
+            }
+            var countFogSecX = Math.floor(self.sectorsCont.fixedWidth / Lich.Resources.PARTS_SIZE) + Render.BUFFER_SECTORS_X + 2;
+            // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
+            var startFogSecY = 0;
+            if (self.screenOffsetY < 0) {
+                // Pokud došlo k nějakému posunu dolů, zjisti kolik sektorů by se do tohoto posuvu vešlo
+                // půlsektory pro dither
+                startFogSecY = Math.floor(-1 * self.screenOffsetY / Lich.Resources.PARTS_SIZE);
+                // Vždy ponech BUFFER_SECTORS_Y sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
+                // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
+                startFogSecY = startFogSecY >= Render.BUFFER_SECTORS_Y ? startFogSecY - Render.BUFFER_SECTORS_Y : startFogSecY;
+            }
+            var countFogSecY = Math.floor(self.sectorsCont.fixedHeight / Lich.Resources.PARTS_SIZE) + Render.BUFFER_SECTORS_Y + 2;
+            // projdi sektory, nepoužité dealokuj, nové naplň
+            for (var x = 0; x < maxFogSecCountX; x++) {
+                for (var y = 0; y < maxFogSecCountY; y++) {
+                    if (x >= startFogSecX && x <= startFogSecX + countFogSecX && y >= startFogSecY && y <= startFogSecY + countFogSecY) {
+                        // jde o platný sektor 
+                        // pokud ještě není alokován tak alokuj
+                        if (self.sceneFogTilesMap.getValue(x, y) == null) {
+                            var fogElement = self.tilesMap.fogTree.getValue(x, y);
+                            if (!fogElement || fogElement != Lich.FogTile.I_MM) {
+                                var fogSector = self.createFogTile(fogElement);
+                                fogSector.x = x * Lich.Resources.PARTS_SIZE + self.screenOffsetX;
+                                fogSector.y = y * Lich.Resources.PARTS_SIZE + self.screenOffsetY;
+                                self.fogSectorsCont.addChild(fogSector);
+                                self.sceneFogTilesMap.setValue(x, y, fogSector);
+                            }
+                            if (Lich.Resources.PRINT_SECTOR_ALLOC) {
+                                console.log("Alokován sektor: " + x + ":" + y);
+                            }
+                        }
+                    }
+                    else {
+                        // neplatný sektor
+                        // pokud je obsazeno dealokuj
+                        var fs = self.sceneFogTilesMap.getValue(x, y);
+                        if (fs) {
+                            // vymaž mlhu
+                            self.fogSectorsCont.removeChild(fs);
+                            self.sceneFogTilesMap.setValue(x, y, null);
+                            if (Lich.Resources.PRINT_SECTOR_ALLOC) {
+                                console.log("Dealokován sektor: " + x + ":" + y);
+                            }
+                        }
+                    }
+                }
+            }
         };
         // zkoumá, zda je potřeba přealokovat sektory 
         Render.prototype.updateSectors = function () {
@@ -125,28 +188,6 @@ var Lich;
                             sector.y = y * Render.SECTOR_SIZE * Lich.Resources.TILE_SIZE + self.screenOffsetY;
                             self.sectorsCont.addChild(sector);
                             self.sectorsMap.setValue(x, y, sector);
-                            var fogSector = new Lich.FogSector(y * maxSecCountX + x, x, y, Render.FOG_SECTOR_SIZE * Lich.Resources.PARTS_SIZE, Render.FOG_SECTOR_SIZE * Lich.Resources.PARTS_SIZE);
-                            fogSector.x = sector.x;
-                            fogSector.y = sector.y;
-                            self.fogSectorsCont.addChild(fogSector);
-                            self.fogSectorsMap.setValue(x, y, fogSector);
-                            // vytvoř jednotlivé dílky
-                            for (var mx = x * Render.FOG_SECTOR_SIZE; mx < (x + 1) * Render.FOG_SECTOR_SIZE; mx++) {
-                                for (var my = y * Render.FOG_SECTOR_SIZE; my < (y + 1) * Render.FOG_SECTOR_SIZE; my++) {
-                                    // vytvoř na dané souřadnici dílky mlhy
-                                    var fogElement = self.tilesMap.fogTree.getValue(mx, my);
-                                    if (!fogElement || fogElement != Lich.FogTile.I_MM) {
-                                        // vytvoř dílek
-                                        var fogTile = self.createFogTile(fogElement);
-                                        // přidej dílek do sektoru
-                                        fogSector.addFogChild(fogTile);
-                                        fogTile.x = (mx % Render.FOG_SECTOR_SIZE) * Lich.Resources.PARTS_SIZE;
-                                        fogTile.y = (my % Render.FOG_SECTOR_SIZE) * Lich.Resources.PARTS_SIZE;
-                                        // přidej dílek do globální mapy
-                                        self.sceneFogTilesMap.setValue(mx, my, fogTile);
-                                    }
-                                }
-                            }
                             // vytvoř jednotlivé dílky
                             for (var mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
                                 for (var my = y * Render.SECTOR_SIZE; my < (y + 1) * Render.SECTOR_SIZE; my++) {
@@ -195,17 +236,12 @@ var Lich;
                             }
                             // proveď cache na sektoru
                             sector.cache();
-                            fogSector.cache();
                             // debug
                             if (Lich.Resources.SHOW_SECTORS) {
                                 var testShape = new PIXI.Graphics();
                                 testShape.lineStyle(1, 0xff0000);
                                 testShape.drawRect(0, 0, sector.fixedWidth, sector.fixedHeight);
                                 sector.addChild(testShape);
-                                testShape = new PIXI.Graphics();
-                                testShape.lineStyle(1, 0x00ff00);
-                                testShape.drawRect(2, 2, fogSector.fixedWidth - 4, fogSector.fixedHeight - 4);
-                                fogSector.addChild(testShape);
                             }
                             if (Lich.Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Alokován sektor: " + x + ":" + y);
@@ -227,11 +263,6 @@ var Lich;
                             ss.removeChildren();
                             self.sectorsCont.removeChild(ss);
                             self.sectorsMap.setValue(x, y, null);
-                            // vymaž mlhu
-                            var fs = self.fogSectorsMap.getValue(x, y);
-                            fs.removeChildren();
-                            self.fogSectorsCont.removeChild(fs);
-                            self.fogSectorsMap.setValue(x, y, null);
                             if (Lich.Resources.PRINT_SECTOR_ALLOC) {
                                 console.log("Dealokován sektor: " + x + ":" + y);
                             }
@@ -239,6 +270,7 @@ var Lich;
                     }
                 }
             }
+            self.updateFogSectors();
         };
         Render.prototype.createFogTile = function (positionIndex) {
             var self = this;
@@ -309,13 +341,6 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_X, self.screenOffsetX));
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_Y, self.screenOffsetY));
         };
-        Render.prototype.markFogSector = function (fogSector) {
-            var self = this;
-            if (typeof self.fogSectorsToUpdate[fogSector.secId] === "undefined") {
-                self.fogSectorsToUpdate[fogSector.secId] = new FogSectorUpdateRequest(fogSector, Render.SECTOR_CACHE_COOLDOWN);
-            }
-        };
-        ;
         Render.prototype.markSector = function (sector) {
             var self = this;
             if (typeof self.sectorsToUpdate[sector.secId] === "undefined") {
@@ -340,25 +365,18 @@ var Lich;
                         for (var y_1 = ry - 1; y_1 <= ry + 2; y_1++) {
                             var val = record.getValue(x_1, y_1);
                             if (val != Lich.FogTile.I_MM) {
-                                var fogSector = self.getFogSectorByParts(x_1, y_1);
                                 // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
                                 if (x_1 === rx - 1 || x_1 === rx + 2 || y_1 === ry - 1 || y_1 === ry + 2) {
                                     // okraje vyresetuj
                                     record.setValue(x_1, y_1, Lich.FogTile.MM);
                                     fogTilesToReset.push([x_1, y_1]);
-                                    // zjisti sektor dílku, aby byl přidán do fronty 
-                                    // ke cache update (postačí to udělat dle tilesToReset,
-                                    // protože to jsou okrajové dílky z oblasti změn)
-                                    if (typeof fogSector !== "undefined" && fogSector !== null) {
-                                        self.markFogSector(fogSector);
-                                    }
                                 }
                                 else {
                                     record.setValue(x_1, y_1, Lich.FogTile.I_MM);
-                                    if (typeof fogSector !== "undefined" && fogSector !== null) {
-                                        var child = sceneMap_1.getValue(x_1, y_1);
-                                        fogSector.removeFogChild(child);
-                                        self.markFogSector(fogSector);
+                                    var child = sceneMap_1.getValue(x_1, y_1);
+                                    if (typeof child !== "undefined" && child !== null) {
+                                        self.fogSectorsCont.removeChild(child);
+                                        sceneMap_1.setValue(x_1, y_1, null);
                                     }
                                 }
                             }
@@ -892,18 +910,10 @@ var Lich;
             var sy = Math.floor(y / Render.SECTOR_SIZE);
             return self.sectorsMap.getValue(sx, sy);
         };
-        // dle souřadnic parts spočítá souřadnici fogSektoru
-        Render.prototype.getFogSectorByParts = function (x, y) {
-            var self = this;
-            var sx = Math.floor(x / Render.FOG_SECTOR_SIZE);
-            var sy = Math.floor(y / Render.FOG_SECTOR_SIZE);
-            return self.fogSectorsMap.getValue(sx, sy);
-        };
         return Render;
     }());
     // Velikost sektoru v dílcích
-    Render.FOG_SECTOR_SIZE = 8; // Musí být sudé
-    Render.SECTOR_SIZE = Render.FOG_SECTOR_SIZE * 2;
+    Render.SECTOR_SIZE = 16;
     // kolik překreslení se po změně nebude cachovat, protože 
     // je dost pravděpodobné, že se bude ještě měnit?
     Render.SECTOR_CACHE_COOLDOWN = 5;

@@ -90,8 +90,10 @@ namespace Lich {
         static SPRITESHEET_IMAGE_SUFFIX = ".png";
         static SPRITESHEET_MAP_SUFFIX = ".json";
         static SPRITE_FRAMERATE = 0.2;
-        static FRAGMENT_KEY = "fragment";
-        static FRAME_KEY = "frame";
+        static SHEET_KEY = "SHEET";
+        static SPRITE_KEY = "SPRITE";
+        static FRAGMENT_KEY = "FRAGMENT";
+        static FRAME_KEY = "FRAME";
 
         // Jméno klíče, pod kterým bude v cookies uložen USER DB 
         // klíč záznamu jeho SAVE na serveru  
@@ -101,6 +103,7 @@ namespace Lich {
          * Přepínače
          */
         static SHOW_SECTORS = false;
+        static SHOW_FOG_SECTORS = true;
         static PRINT_SECTOR_ALLOC = false;
 
         /*
@@ -179,7 +182,7 @@ namespace Lich {
          */
 
         // Mapa spritesheets dle klíče 
-        public spritesheetByKeyMap: { [k: string]: PIXI.Texture } = {};
+        public spritesheetByKeyMap: { [k: string]: PIXI.BaseTexture } = {};
         // Mapa sprites dle jejich souborového jména ve spritesheet dle jeho klíče
         public spriteItemDefsBySheetByName: { [k: string]: { [k: string]: SpriteItemDef } } = {};
 
@@ -285,7 +288,7 @@ namespace Lich {
                         spritesheetDefsMap[sd["name"]] = sDef;
                     }
 
-                    self.spritesheetByKeyMap[stringKey] = PIXI.Texture.from(spritesheetImg);
+                    self.spritesheetByKeyMap[stringKey] = new PIXI.BaseTexture(spritesheetImg);
                     self.spriteItemDefsBySheetByName[stringKey] = spritesheetDefsMap;
                 });
 
@@ -421,32 +424,16 @@ namespace Lich {
             return <HTMLImageElement>this.loader.getResult(key);
         };
 
-        private createFragmentFrameKey(frameId: number, fragmentId: number) {
-            return Resources.FRAME_KEY + "-" + frameId + "-" + Resources.FRAGMENT_KEY + "-" + fragmentId;
+        private createFragmentFrameKey(stringSheetKey: string, spriteName: string, frameId: number, fragmentId: number): string {
+            return Resources.SHEET_KEY + "$" + stringSheetKey + "$" + Resources.SPRITE_KEY + "$" + spriteName + Resources.FRAME_KEY + "$" + frameId + "$" + Resources.FRAGMENT_KEY + "$" + fragmentId;
         }
 
         private getFromTextureCache(stringSheetKey: string, spriteName: string, frameId: number, fragmentId: number) {
-            let spriteSheetNode = this.textureCache[stringSheetKey];
-            if (spriteSheetNode) {
-                let spriteNameNode = spriteSheetNode[spriteName];
-                if (spriteNameNode)
-                    return spriteNameNode[this.createFragmentFrameKey(frameId, fragmentId)];
-            }
-            return undefined;
+            return PIXI.utils.TextureCache[this.createFragmentFrameKey(stringSheetKey, spriteName, frameId, fragmentId)];
         }
 
         private putInTextureCache(stringSheetKey: string, spriteName: string, frameId: number, fragmentId: number, texture: PIXI.Texture) {
-            let spriteSheetNode = this.textureCache[stringSheetKey];
-            if (!spriteSheetNode) {
-                spriteSheetNode = {};
-                this.textureCache[stringSheetKey] = spriteSheetNode;
-            }
-            let spriteNameNode = spriteSheetNode[spriteName];
-            if (!spriteNameNode) {
-                spriteNameNode = {};
-                spriteSheetNode[spriteName] = spriteNameNode;
-            }
-            spriteNameNode[this.createFragmentFrameKey(frameId, fragmentId)] = texture;
+            PIXI.utils.TextureCache[this.createFragmentFrameKey(stringSheetKey, spriteName, frameId, fragmentId)] = texture;
         }
 
         getSurfaceTileSprite(surfaceKey: SurfaceKey, positionIndex: number, originalSprite?: PIXI.Sprite): PIXI.Sprite {
@@ -456,7 +443,7 @@ namespace Lich {
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][srfcDef.spriteName];
             let texture = this.getFromTextureCache(stringSheetKey, srfcDef.spriteName, 1, positionIndex);
             if (!texture) {
-                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 let wSplicing = spriteDef.width / Resources.TILE_SIZE;
                 texture.frame = new PIXI.Rectangle(
                     spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE,
@@ -477,7 +464,7 @@ namespace Lich {
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][srfcBgrDef.spriteName];
             let texture = this.getFromTextureCache(stringSheetKey, srfcBgrDef.spriteName, 1, positionIndex);
             if (!texture) {
-                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 let wSplicing = spriteDef.width / Resources.TILE_SIZE;
                 texture.frame = new PIXI.Rectangle(
                     spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE,
@@ -498,11 +485,12 @@ namespace Lich {
             } else {
                 positionIndex = FogTile.MM;
             }
+            // positionIndex = FogTile.MM;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_FOG_KEY];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][FOG_DEF[0]];
             let texture = this.getFromTextureCache(stringSheetKey, FOG_DEF[0], 1, positionIndex);
             if (!texture) {
-                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 let wSplicing = spriteDef.width / Resources.PARTS_SIZE;
                 texture.frame = new PIXI.Rectangle(
                     spriteDef.x + (positionIndex % wSplicing) * Resources.PARTS_SIZE,
@@ -527,7 +515,7 @@ namespace Lich {
                 for (let i = 0; i < mapObjectDef.frames; i++) {
                     let texture = this.getFromTextureCache(stringSheetKey, mapObjectDef.spriteName, i, positionIndex);
                     if (!texture) {
-                        texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                        texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                         texture.frame = new PIXI.Rectangle(
                             spriteDef.x + (positionIndex % wSplicing + i * mapObjectDef.mapSpriteWidth) * Resources.TILE_SIZE,
                             spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE,
@@ -544,7 +532,7 @@ namespace Lich {
             } else {
                 let texture = this.getFromTextureCache(stringSheetKey, mapObjectDef.spriteName, 1, positionIndex);
                 if (!texture) {
-                    texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                     texture.frame = new PIXI.Rectangle(
                         spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE,
                         spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE,
@@ -563,7 +551,7 @@ namespace Lich {
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_BGR_KEY];
             let bgrSprite = self.backgroundDefs[BackgroundKey[key]];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
-            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
             let tilingSprite = new BackgroundSprite(spriteSheet, width, height ? height : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
@@ -574,7 +562,7 @@ namespace Lich {
         getFontSprite(key: FontKey, char: string): PIXI.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_FNT_KEY];
-            let sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            let sprite = new PIXI.Sprite(new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]));
             let fontDef = self.fontsSpriteDefs[FontKey[key]];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
             // není animovaný, takže vždy předávám číslo snímku
@@ -588,7 +576,7 @@ namespace Lich {
             let self = this;
             let stringSheetKey = SpritesheetKey[sheetKey];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
             let sprite = new PIXI.Sprite(spriteSheet);
             return sprite;
@@ -622,7 +610,7 @@ namespace Lich {
                 for (let i = 0; i < xFrames; i++) {
                     if (frames.length >= animationDef.frames)
                         break;
-                    let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                     texture.frame = new PIXI.Rectangle(
                         spriteDef.x + i * animationDef.width,
                         spriteDef.y + j * animationDef.height,

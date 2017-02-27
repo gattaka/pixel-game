@@ -69,7 +69,12 @@ var Lich;
             // kontejnery
             _this.tilesSectorsCont = new PIXI.Container();
             _this.entitiesCont = new PIXI.Container();
-            _this.fogSectorsCont = new PIXI.Container();
+            _this.fogSectorsCont = new PIXI.particles.ParticleContainer(undefined, {
+                rotation: false,
+                alpha: true,
+                scale: true,
+                uvs: true
+            });
             _this.messagesCont = new PIXI.Container();
             _this.enemiesCount = 0;
             _this.enemies = new Array();

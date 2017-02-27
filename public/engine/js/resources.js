@@ -216,7 +216,7 @@ var Lich;
                         var sDef = new SpriteItemDef(frames.length, sd["name"], sd["x"], sd["y"], sd["width"], sd["height"]);
                         spritesheetDefsMap[sd["name"]] = sDef;
                     }
-                    self.spritesheetByKeyMap[stringKey] = PIXI.Texture.from(spritesheetImg);
+                    self.spritesheetByKeyMap[stringKey] = new PIXI.BaseTexture(spritesheetImg);
                     self.spriteItemDefsBySheetByName[stringKey] = spritesheetDefsMap;
                 });
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
@@ -343,30 +343,14 @@ var Lich;
             return this.loader.getResult(key);
         };
         ;
-        Resources.prototype.createFragmentFrameKey = function (frameId, fragmentId) {
-            return Resources.FRAME_KEY + "-" + frameId + "-" + Resources.FRAGMENT_KEY + "-" + fragmentId;
+        Resources.prototype.createFragmentFrameKey = function (stringSheetKey, spriteName, frameId, fragmentId) {
+            return Resources.SHEET_KEY + "$" + stringSheetKey + "$" + Resources.SPRITE_KEY + "$" + spriteName + Resources.FRAME_KEY + "$" + frameId + "$" + Resources.FRAGMENT_KEY + "$" + fragmentId;
         };
         Resources.prototype.getFromTextureCache = function (stringSheetKey, spriteName, frameId, fragmentId) {
-            var spriteSheetNode = this.textureCache[stringSheetKey];
-            if (spriteSheetNode) {
-                var spriteNameNode = spriteSheetNode[spriteName];
-                if (spriteNameNode)
-                    return spriteNameNode[this.createFragmentFrameKey(frameId, fragmentId)];
-            }
-            return undefined;
+            return PIXI.utils.TextureCache[this.createFragmentFrameKey(stringSheetKey, spriteName, frameId, fragmentId)];
         };
         Resources.prototype.putInTextureCache = function (stringSheetKey, spriteName, frameId, fragmentId, texture) {
-            var spriteSheetNode = this.textureCache[stringSheetKey];
-            if (!spriteSheetNode) {
-                spriteSheetNode = {};
-                this.textureCache[stringSheetKey] = spriteSheetNode;
-            }
-            var spriteNameNode = spriteSheetNode[spriteName];
-            if (!spriteNameNode) {
-                spriteNameNode = {};
-                spriteSheetNode[spriteName] = spriteNameNode;
-            }
-            spriteNameNode[this.createFragmentFrameKey(frameId, fragmentId)] = texture;
+            PIXI.utils.TextureCache[this.createFragmentFrameKey(stringSheetKey, spriteName, frameId, fragmentId)] = texture;
         };
         Resources.prototype.getSurfaceTileSprite = function (surfaceKey, positionIndex, originalSprite) {
             var self = this;
@@ -375,7 +359,7 @@ var Lich;
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][srfcDef.spriteName];
             var texture = this.getFromTextureCache(stringSheetKey, srfcDef.spriteName, 1, positionIndex);
             if (!texture) {
-                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 var wSplicing = spriteDef.width / Resources.TILE_SIZE;
                 texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
                 this.putInTextureCache(stringSheetKey, srfcDef.spriteName, 1, positionIndex, texture);
@@ -392,7 +376,7 @@ var Lich;
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][srfcBgrDef.spriteName];
             var texture = this.getFromTextureCache(stringSheetKey, srfcBgrDef.spriteName, 1, positionIndex);
             if (!texture) {
-                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 var wSplicing = spriteDef.width / Resources.TILE_SIZE;
                 texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
                 this.putInTextureCache(stringSheetKey, srfcBgrDef.spriteName, 1, positionIndex, texture);
@@ -410,11 +394,12 @@ var Lich;
             else {
                 positionIndex = Lich.FogTile.MM;
             }
+            // positionIndex = FogTile.MM;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FOG_KEY];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][Lich.FOG_DEF[0]];
             var texture = this.getFromTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, positionIndex);
             if (!texture) {
-                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 var wSplicing = spriteDef.width / Resources.PARTS_SIZE;
                 texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.PARTS_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
                 this.putInTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, positionIndex, texture);
@@ -435,7 +420,7 @@ var Lich;
                 for (var i = 0; i < mapObjectDef.frames; i++) {
                     var texture = this.getFromTextureCache(stringSheetKey, mapObjectDef.spriteName, i, positionIndex);
                     if (!texture) {
-                        texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                        texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                         texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing + i * mapObjectDef.mapSpriteWidth) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
                         this.putInTextureCache(stringSheetKey, mapObjectDef.spriteName, i, positionIndex, texture);
                     }
@@ -449,7 +434,7 @@ var Lich;
             else {
                 var texture = this.getFromTextureCache(stringSheetKey, mapObjectDef.spriteName, 1, positionIndex);
                 if (!texture) {
-                    texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                     texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.TILE_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.TILE_SIZE, Resources.TILE_SIZE, Resources.TILE_SIZE);
                     this.putInTextureCache(stringSheetKey, mapObjectDef.spriteName, 1, positionIndex, texture);
                 }
@@ -464,7 +449,7 @@ var Lich;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
             var bgrSprite = self.backgroundDefs[Lich.BackgroundKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
-            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
             var tilingSprite = new BackgroundSprite(spriteSheet, width, height ? height : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
@@ -475,7 +460,7 @@ var Lich;
         Resources.prototype.getFontSprite = function (key, char) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FNT_KEY];
-            var sprite = new PIXI.Sprite(self.spritesheetByKeyMap[stringSheetKey]);
+            var sprite = new PIXI.Sprite(new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]));
             var fontDef = self.fontsSpriteDefs[Lich.FontKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
             // není animovaný, takže vždy předávám číslo snímku
@@ -489,7 +474,7 @@ var Lich;
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[sheetKey];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
             var sprite = new PIXI.Sprite(spriteSheet);
             return sprite;
@@ -523,7 +508,7 @@ var Lich;
                 for (var i = 0; i < xFrames; i++) {
                     if (frames.length >= animationDef.frames)
                         break;
-                    var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey].baseTexture);
+                    var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                     texture.frame = new PIXI.Rectangle(spriteDef.x + i * animationDef.width, spriteDef.y + j * animationDef.height, animationDef.width, animationDef.height);
                     frames.push(texture);
                 }
@@ -544,8 +529,10 @@ var Lich;
     Resources.SPRITESHEET_IMAGE_SUFFIX = ".png";
     Resources.SPRITESHEET_MAP_SUFFIX = ".json";
     Resources.SPRITE_FRAMERATE = 0.2;
-    Resources.FRAGMENT_KEY = "fragment";
-    Resources.FRAME_KEY = "frame";
+    Resources.SHEET_KEY = "SHEET";
+    Resources.SPRITE_KEY = "SPRITE";
+    Resources.FRAGMENT_KEY = "FRAGMENT";
+    Resources.FRAME_KEY = "FRAME";
     // Jméno klíče, pod kterým bude v cookies uložen USER DB 
     // klíč záznamu jeho SAVE na serveru  
     Resources.COOKIE_KEY = "LICH_ENGINE_COOKIE_USER_KEY";
@@ -553,6 +540,7 @@ var Lich;
      * Přepínače
      */
     Resources.SHOW_SECTORS = false;
+    Resources.SHOW_FOG_SECTORS = true;
     Resources.PRINT_SECTOR_ALLOC = false;
     /*
      * Velikosti

@@ -79,7 +79,12 @@ namespace Lich {
         tilesSectorsCont = new PIXI.Container();
         entitiesCont = new PIXI.Container();
         weather: Weather;
-        fogSectorsCont = new PIXI.Container();
+        fogSectorsCont = new PIXI.particles.ParticleContainer(undefined, {
+            rotation: false,
+            alpha: true,
+            scale: true,
+            uvs: true
+        });
         messagesCont = new PIXI.Container();
 
         hero: Hero;

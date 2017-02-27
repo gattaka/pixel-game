@@ -33,13 +33,19 @@ var Lich;
     Lich.AbstractSector = AbstractSector;
     var FogSector = (function (_super) {
         __extends(FogSector, _super);
-        function FogSector() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.fogCont = new PIXI.Container();
+        function FogSector(secId, map_x, map_y, fixedWidth, fixedHeight) {
+            var _this = _super.call(this, secId, map_x, map_y, fixedWidth, fixedHeight) || this;
+            _this.fogCont = new PIXI.particles.ParticleContainer(undefined, {
+                rotation: false,
+                alpha: true,
+                scale: true,
+                uvs: true
+            });
+            _this.addChild(_this.fogCont);
             return _this;
         }
         FogSector.prototype.cache = function () {
-            this.fogRendered = this.cacheInner(this.fogCont, this.fogRendered);
+            // this.fogRendered = this.cacheInner(this.fogCont, this.fogRendered);
         };
         FogSector.prototype.removeFogChild = function (obj) {
             this.fogCont.removeChild(obj);
