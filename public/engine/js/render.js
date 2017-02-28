@@ -906,7 +906,7 @@ var Lich;
         return Render;
     }());
     // Velikost sektoru v dílcích
-    Render.SECTOR_SIZE = 16;
+    Render.SECTOR_SIZE = 8;
     // kolik překreslení se po změně nebude cachovat, protože 
     // je dost pravděpodobné, že se bude ještě měnit?
     Render.SECTOR_CACHE_COOLDOWN = 5;

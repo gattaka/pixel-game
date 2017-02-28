@@ -540,7 +540,6 @@ var Lich;
      * Přepínače
      */
     Resources.SHOW_SECTORS = false;
-    Resources.SHOW_FOG_SECTORS = true;
     Resources.PRINT_SECTOR_ALLOC = false;
     /*
      * Velikosti

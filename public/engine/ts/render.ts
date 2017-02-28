@@ -27,7 +27,7 @@ namespace Lich {
     export class Render {
 
         // Velikost sektoru v dílcích
-        static SECTOR_SIZE = 16;
+        static SECTOR_SIZE = 8;
         // kolik překreslení se po změně nebude cachovat, protože 
         // je dost pravděpodobné, že se bude ještě měnit?
         static SECTOR_CACHE_COOLDOWN = 5;

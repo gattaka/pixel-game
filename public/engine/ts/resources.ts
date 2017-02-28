@@ -103,7 +103,6 @@ namespace Lich {
          * Přepínače
          */
         static SHOW_SECTORS = false;
-        static SHOW_FOG_SECTORS = true;
         static PRINT_SECTOR_ALLOC = false;
 
         /*
