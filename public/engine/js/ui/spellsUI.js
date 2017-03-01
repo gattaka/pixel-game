@@ -106,7 +106,7 @@ var Lich;
             text.x = spellIcon.x;
             text.y = spellIcon.y + Lich.Resources.PARTS_SIZE - Lich.PartsUI.TEXT_SIZE;
             spellIcon.hitArea = new PIXI.Rectangle(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-            spellIcon.on("mousedown", function () {
+            spellIcon.on("pointerdown", function () {
                 self.selectSpell(index);
             });
         };

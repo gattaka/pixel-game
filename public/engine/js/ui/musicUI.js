@@ -25,7 +25,7 @@ var Lich;
                 self.reversedTrackIndex[self.trackContent.length] = track;
                 self.trackContent.push(sprite);
                 sprite.hitArea = new PIXI.Rectangle(0, 0, Lich.Resources.PARTS_SIZE, Lich.Resources.PARTS_SIZE);
-                sprite.on("mousedown", function () {
+                sprite.on("pointerdown", function () {
                     self.selectTrack(track, volume);
                 });
             };

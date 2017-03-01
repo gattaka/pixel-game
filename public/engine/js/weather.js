@@ -42,7 +42,7 @@ var Lich;
             // this.addChild(this.lightScreen);
         }
         Weather.prototype.updateLight = function (r, g, b, a) {
-            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.fixedWidth, this.fixedHeight);
+            this.lightScreen.clear().beginFill((r << 16) + (g << 8) + b, a).drawRect(0, 0, this.fixedWidth, this.fixedHeight);
         };
         Weather.prototype.switchMode = function (mode) {
             this.mode = mode;

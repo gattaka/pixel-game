@@ -195,7 +195,7 @@ var Lich;
             _this.playerX = 0;
             _this.playerY = 0;
             var self = _this;
-            self.on("click", function () {
+            self.on("pointerdown", function () {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 self.hide();
             });

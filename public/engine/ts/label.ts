@@ -7,14 +7,14 @@ namespace Lich {
         public fixedWidth: number;
 
         constructor(text: string,
-            font = PartsUI.TEXT_SIZE + "px " + Resources.FONT,
+            font = Resources.FONT,
+            size = PartsUI.TEXT_SIZE,
             color = Resources.TEXT_COLOR,
-            outline = true,
             outlineColor = Resources.OUTLINE_COLOR,
-            outlineWidth = 1) {
+            outlineWidth = 3) {
             super();
 
-            this.label = new PIXI.Text(text, { fontFamily: font, fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
+            this.label = new PIXI.Text(text, { fontFamily: font, fontSize: size + "px ", fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
             this.addChild(this.label);
 
             this.fixedHeight = this.label.getBounds().height;

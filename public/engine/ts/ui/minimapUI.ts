@@ -215,7 +215,7 @@ namespace Lich {
             super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
             let self = this;
 
-            self.on("click", function () {
+            self.on("pointerdown", function () {
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 self.hide();
             });

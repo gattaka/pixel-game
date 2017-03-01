@@ -45,14 +45,14 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(self.m) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            upBtn.on("mousedown", function () {
+            upBtn.on("pointerdown", function () {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             });
-            downBtn.on("mousedown", function () {
+            downBtn.on("pointerdown", function () {
                 var occupLines = Math.ceil(Lich.Inventory.getInstance().getLength() / self.n);
                 if (self.lineOffset < occupLines - self.m) {
                     self.lineOffset++;
@@ -201,7 +201,7 @@ var Lich;
             }
             (function () {
                 var currentItem = self.itemsUIMap[item];
-                itemUI.on("mousedown", function () {
+                itemUI.on("pointerdown", function () {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;

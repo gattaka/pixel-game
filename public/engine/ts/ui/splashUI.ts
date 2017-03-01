@@ -253,13 +253,19 @@ namespace Lich {
             var self = this;
             let upBtn = new Button(UISpriteKey.UI_UP_KEY);
             self.addChild(upBtn);
-            upBtn.on("click", () => {
-                if (self.currentLine > 0) {
-                    self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
-                    self.print();
-                    // self.updateCache();
-                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                }
+
+            upBtn.on("pointerdown", () => {
+                upBtn.interval = setInterval(() => {
+                    if (self.currentLine > 0) {
+                        self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
+                        self.print();
+                        // self.updateCache();
+                        Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                    }
+                }, 200);
+            });
+            upBtn.on("pointerup", () => {
+                clearInterval(upBtn.interval);
             });
             return upBtn;
         }
@@ -268,7 +274,7 @@ namespace Lich {
             var self = this;
             let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
             self.addChild(downBtn);
-            downBtn.on("click", () => {
+            downBtn.on("pointerdown", () => {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
@@ -283,7 +289,7 @@ namespace Lich {
             var self = this;
             let btn = new Button(UISpriteKey.UI_SAVE_KEY);
             self.addChild(btn);
-            btn.on("click", () => {
+            btn.on("pointerdown", () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 self.hide();
@@ -295,7 +301,7 @@ namespace Lich {
             var self = this;
             let btn = new Button(UISpriteKey.UI_LOAD_KEY);
             self.addChild(btn);
-            btn.on("click", () => {
+            btn.on("pointerdown", () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
             });
@@ -306,7 +312,7 @@ namespace Lich {
             var self = this;
             let btn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
             self.addChild(btn);
-            btn.on("click", () => {
+            btn.on("pointerdown", () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
             });

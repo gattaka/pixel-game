@@ -124,7 +124,7 @@ namespace Lich {
 
             spellIcon.hitArea = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
 
-            spellIcon.on("mousedown", () => {
+            spellIcon.on("pointerdown", () => {
                 self.selectSpell(index);
             });
         }

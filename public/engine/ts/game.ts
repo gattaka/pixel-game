@@ -31,7 +31,6 @@ namespace Lich {
         private loadUI: LoaderUI;
 
         private initialized = false;
-        private keys = {};
 
         private playerReadyToAutosave = true;
         private timerReadyToAutosave = false;
@@ -51,11 +50,6 @@ namespace Lich {
             var self = this;
 
             Game.CURRENT_GAME = self;
-
-            // stats
-            var stats = new Stats();
-            stats.showPanel(0);
-            document.body.appendChild(stats.dom);
 
             // mobile?
             let md = new MobileDetect(window.navigator.userAgent);
@@ -98,23 +92,6 @@ namespace Lich {
             self.stage = new PIXI.Container();
             self.stage.fixedWidth = window.innerWidth;
             self.stage.fixedHeight = window.innerHeight;
-
-            /*----------*/
-            /* Controls */
-            /*----------*/
-
-            self.keys = {};
-
-            function keydown(event) {
-                self.keys[event.keyCode] = true;
-            }
-
-            function keyup(event) {
-                delete self.keys[event.keyCode];
-            }
-
-            document.onkeydown = keydown;
-            document.onkeyup = keyup;
 
             /*--------------*/
             /* Mouse events */
@@ -221,7 +198,7 @@ namespace Lich {
                     self.world = new World(self, tilesMap);
                     self.stage.addChild(self.background);
                     self.stage.addChild(self.world);
-                    // self.content.addChild(self.ui);
+                    self.stage.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
                         // TODO
@@ -299,11 +276,44 @@ namespace Lich {
                 return 'Are you sure?';
             };
 
+            // Controls
+            // TODO mobile
+            // controls = self.ui.controls;
+            let controls = new Controls();
+            Keyboard.on(32, () => { controls.levitate = true; }, () => { controls.levitate = false; });
+            Keyboard.on(37, () => { controls.left = true; }, () => { controls.left = false; });
+            Keyboard.on(65, () => { controls.left = true; }, () => { controls.left = false; });
+            Keyboard.on(38, () => { controls.up = true; }, () => { controls.up = false; });
+            Keyboard.on(87, () => { controls.up = true; }, () => { controls.up = false; });
+            Keyboard.on(39, () => { controls.right = true; }, () => { controls.right = false; });
+            Keyboard.on(68, () => { controls.right = true; }, () => { controls.right = false; });
+            Keyboard.on(40, () => { controls.down = true; }, () => { controls.down = false; });
+            Keyboard.on(83, () => { controls.down = true; }, () => { controls.down = false; });
+            Keyboard.on(67, () => { self.ui.craftingUI.toggle(); }, () => { self.ui.craftingUI.prepareForToggle(); });
+            Keyboard.on(27, () => {
+                if (self.ui.craftingUI.parent) {
+                    self.ui.craftingUI.hide();
+                    self.ui.splashScreenUI.suppressToggle();
+                } else if (self.ui.mapUI.parent) {
+                    self.ui.mapUI.hide();
+                    self.ui.splashScreenUI.suppressToggle();
+                } else {
+                    self.ui.splashScreenUI.toggle();
+                }
+            }, () => { self.ui.splashScreenUI.prepareForToggle(); });
+            Keyboard.on(73, () => { self.ui.inventoryUI.toggle(); }, () => { self.ui.inventoryUI.prepareForToggle(); });
+            Keyboard.on(77, () => { self.ui.mapUI.toggle(); }, () => { self.ui.mapUI.prepareForToggle(); });
+            Keyboard.on(78, () => { self.ui.minimapUI.toggle(); }, () => { self.ui.minimapUI.prepareForToggle(); });
+            Keyboard.on(16, () => { self.ui.spellsUI.toggle(); }, () => { self.ui.spellsUI.prepareForToggle(); });
+            for (var i = 0; i < Spellbook.getInstance().spellIndex.length; i++) {
+                Keyboard.on(49 + i, () => { self.ui.spellsUI.selectSpell(i); });
+            }
+
             let ticker = PIXI.ticker.shared;
             ticker.add(() => {
-                stats.begin();
                 // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
                 let delta = ticker.elapsedMS;
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.FPS_CHANGE, ticker.FPS));
 
                 if (self.initialized) {
 
@@ -335,83 +345,12 @@ namespace Lich {
                     // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
                     // už nedrží např. šipku -- holt "LAG" :)
 
-                    // Controls
-                    let controls;
-                    if (mobile) {
-                        controls = self.ui.controls;
-                    } else {
-                        controls = new Controls();
-                        if (self.keys[32])
-                            controls.levitate = true;
-                        if (self.keys[37])
-                            controls.left = true;
-                        if (self.keys[38])
-                            controls.up = true;
-                        if (self.keys[39])
-                            controls.right = true;
-                        if (self.keys[40])
-                            controls.down = true;
-                        if (self.keys[65])
-                            controls.left = true;
-                        if (self.keys[87])
-                            controls.up = true;
-                        if (self.keys[68])
-                            controls.right = true;
-                        if (self.keys[83])
-                            controls.down = true;
-                        if (self.keys[67]) {
-                            self.ui.craftingUI.toggle();
-                        } else {
-                            self.ui.craftingUI.prepareForToggle();
-                        }
-                        if (self.keys[27]) {
-                            if (self.ui.craftingUI.parent) {
-                                self.ui.craftingUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            } else if (self.ui.mapUI.parent) {
-                                self.ui.mapUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            } else {
-                                self.ui.splashScreenUI.toggle();
-                            }
-                        } else {
-                            self.ui.splashScreenUI.prepareForToggle();
-                        }
-                        if (self.keys[73]) {
-                            self.ui.inventoryUI.toggle();
-                        } else {
-                            self.ui.inventoryUI.prepareForToggle();
-                        }
-                        if (self.keys[77]) {
-                            self.ui.mapUI.toggle();
-                        } else {
-                            self.ui.mapUI.prepareForToggle();
-                        }
-                        if (self.keys[78]) {
-                            self.ui.minimapUI.toggle();
-                        } else {
-                            self.ui.minimapUI.prepareForToggle();
-                        }
-                        if (self.keys[16]) {
-                            self.ui.spellsUI.toggleShift();
-                        } else {
-                            self.ui.spellsUI.prepareForToggleShift();
-                        }
-                        // TODO
-                        for (var i = 0; i < Spellbook.getInstance().spellIndex.length; i++) {
-                            if (self.keys[49 + i]) {
-                                self.ui.spellsUI.selectSpell(i);
-                            }
-                        }
-                    }
-
                     // Idle
                     self.getWorld().handleTick(delta);
                     self.getWorld().update(delta, controls);
                 }
 
                 self.renderer.render(self.stage);
-                stats.end();
             });
         };
     }

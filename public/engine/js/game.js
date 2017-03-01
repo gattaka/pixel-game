@@ -17,16 +17,11 @@ var Lich;
     var Game = (function () {
         function Game(minimapCanvasId, loaderCanvasId) {
             this.initialized = false;
-            this.keys = {};
             this.playerReadyToAutosave = true;
             this.timerReadyToAutosave = false;
             this.mouse = new Lich.Mouse();
             var self = this;
             Game.CURRENT_GAME = self;
-            // stats
-            var stats = new Stats();
-            stats.showPanel(0);
-            document.body.appendChild(stats.dom);
             // mobile?
             var md = new MobileDetect(window.navigator.userAgent);
             var mobile;
@@ -64,18 +59,6 @@ var Lich;
             self.stage = new PIXI.Container();
             self.stage.fixedWidth = window.innerWidth;
             self.stage.fixedHeight = window.innerHeight;
-            /*----------*/
-            /* Controls */
-            /*----------*/
-            self.keys = {};
-            function keydown(event) {
-                self.keys[event.keyCode] = true;
-            }
-            function keyup(event) {
-                delete self.keys[event.keyCode];
-            }
-            document.onkeydown = keydown;
-            document.onkeyup = keyup;
             /*--------------*/
             /* Mouse events */
             /*--------------*/
@@ -173,7 +156,7 @@ var Lich;
                     self.world = new Lich.World(self, tilesMap);
                     self.stage.addChild(self.background);
                     self.stage.addChild(self.world);
-                    // self.content.addChild(self.ui);
+                    self.stage.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         // TODO
                         // setTimeout(() => {
@@ -243,11 +226,45 @@ var Lich;
                 // For Safari
                 return 'Are you sure?';
             };
+            // Controls
+            // TODO mobile
+            // controls = self.ui.controls;
+            var controls = new Controls();
+            Lich.Keyboard.on(32, function () { controls.levitate = true; }, function () { controls.levitate = false; });
+            Lich.Keyboard.on(37, function () { controls.left = true; }, function () { controls.left = false; });
+            Lich.Keyboard.on(65, function () { controls.left = true; }, function () { controls.left = false; });
+            Lich.Keyboard.on(38, function () { controls.up = true; }, function () { controls.up = false; });
+            Lich.Keyboard.on(87, function () { controls.up = true; }, function () { controls.up = false; });
+            Lich.Keyboard.on(39, function () { controls.right = true; }, function () { controls.right = false; });
+            Lich.Keyboard.on(68, function () { controls.right = true; }, function () { controls.right = false; });
+            Lich.Keyboard.on(40, function () { controls.down = true; }, function () { controls.down = false; });
+            Lich.Keyboard.on(83, function () { controls.down = true; }, function () { controls.down = false; });
+            Lich.Keyboard.on(67, function () { self.ui.craftingUI.toggle(); }, function () { self.ui.craftingUI.prepareForToggle(); });
+            Lich.Keyboard.on(27, function () {
+                if (self.ui.craftingUI.parent) {
+                    self.ui.craftingUI.hide();
+                    self.ui.splashScreenUI.suppressToggle();
+                }
+                else if (self.ui.mapUI.parent) {
+                    self.ui.mapUI.hide();
+                    self.ui.splashScreenUI.suppressToggle();
+                }
+                else {
+                    self.ui.splashScreenUI.toggle();
+                }
+            }, function () { self.ui.splashScreenUI.prepareForToggle(); });
+            Lich.Keyboard.on(73, function () { self.ui.inventoryUI.toggle(); }, function () { self.ui.inventoryUI.prepareForToggle(); });
+            Lich.Keyboard.on(77, function () { self.ui.mapUI.toggle(); }, function () { self.ui.mapUI.prepareForToggle(); });
+            Lich.Keyboard.on(78, function () { self.ui.minimapUI.toggle(); }, function () { self.ui.minimapUI.prepareForToggle(); });
+            Lich.Keyboard.on(16, function () { self.ui.spellsUI.toggle(); }, function () { self.ui.spellsUI.prepareForToggle(); });
+            for (var i = 0; i < Lich.Spellbook.getInstance().spellIndex.length; i++) {
+                Lich.Keyboard.on(49 + i, function () { self.ui.spellsUI.selectSpell(i); });
+            }
             var ticker = PIXI.ticker.shared;
             ticker.add(function () {
-                stats.begin();
                 // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
                 var delta = ticker.elapsedMS;
+                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.FPS_CHANGE, ticker.FPS));
                 if (self.initialized) {
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
@@ -273,90 +290,11 @@ var Lich;
                     // Při delším prodlení (nízké FPS) bude akcelerace působit 
                     // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
                     // už nedrží např. šipku -- holt "LAG" :)
-                    // Controls
-                    var controls = void 0;
-                    if (mobile) {
-                        controls = self.ui.controls;
-                    }
-                    else {
-                        controls = new Controls();
-                        if (self.keys[32])
-                            controls.levitate = true;
-                        if (self.keys[37])
-                            controls.left = true;
-                        if (self.keys[38])
-                            controls.up = true;
-                        if (self.keys[39])
-                            controls.right = true;
-                        if (self.keys[40])
-                            controls.down = true;
-                        if (self.keys[65])
-                            controls.left = true;
-                        if (self.keys[87])
-                            controls.up = true;
-                        if (self.keys[68])
-                            controls.right = true;
-                        if (self.keys[83])
-                            controls.down = true;
-                        if (self.keys[67]) {
-                            self.ui.craftingUI.toggle();
-                        }
-                        else {
-                            self.ui.craftingUI.prepareForToggle();
-                        }
-                        if (self.keys[27]) {
-                            if (self.ui.craftingUI.parent) {
-                                self.ui.craftingUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            }
-                            else if (self.ui.mapUI.parent) {
-                                self.ui.mapUI.hide();
-                                self.ui.splashScreenUI.suppressToggle();
-                            }
-                            else {
-                                self.ui.splashScreenUI.toggle();
-                            }
-                        }
-                        else {
-                            self.ui.splashScreenUI.prepareForToggle();
-                        }
-                        if (self.keys[73]) {
-                            self.ui.inventoryUI.toggle();
-                        }
-                        else {
-                            self.ui.inventoryUI.prepareForToggle();
-                        }
-                        if (self.keys[77]) {
-                            self.ui.mapUI.toggle();
-                        }
-                        else {
-                            self.ui.mapUI.prepareForToggle();
-                        }
-                        if (self.keys[78]) {
-                            self.ui.minimapUI.toggle();
-                        }
-                        else {
-                            self.ui.minimapUI.prepareForToggle();
-                        }
-                        if (self.keys[16]) {
-                            self.ui.spellsUI.toggleShift();
-                        }
-                        else {
-                            self.ui.spellsUI.prepareForToggleShift();
-                        }
-                        // TODO
-                        for (var i = 0; i < Lich.Spellbook.getInstance().spellIndex.length; i++) {
-                            if (self.keys[49 + i]) {
-                                self.ui.spellsUI.selectSpell(i);
-                            }
-                        }
-                    }
                     // Idle
                     self.getWorld().handleTick(delta);
                     self.getWorld().update(delta, controls);
                 }
                 self.renderer.render(self.stage);
-                stats.end();
             });
         }
         Game.prototype.getWorld = function () { return this.world; };

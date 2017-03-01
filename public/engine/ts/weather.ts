@@ -50,7 +50,7 @@ namespace Lich {
         }
 
         updateLight(r: number, g: number, b: number, a: number) {
-            this.lightScreen.clear().beginFill(r << 4 + g << 2 + b, a).drawRect(0, 0, this.fixedWidth, this.fixedHeight);
+            this.lightScreen.clear().beginFill((r << 16) + (g << 8) + b, a).drawRect(0, 0, this.fixedWidth, this.fixedHeight);
         }
 
         switchMode(mode: WeatherMode) {

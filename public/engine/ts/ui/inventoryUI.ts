@@ -62,7 +62,7 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(self.m) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            upBtn.on("mousedown", () => {
+            upBtn.on("pointerdown", () => {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
@@ -70,7 +70,7 @@ namespace Lich {
                 }
             });
 
-            downBtn.on("mousedown", () => {
+            downBtn.on("pointerdown", () => {
                 let occupLines = Math.ceil(Inventory.getInstance().getLength() / self.n);
                 if (self.lineOffset < occupLines - self.m) {
                     self.lineOffset++;
@@ -230,7 +230,7 @@ namespace Lich {
 
             (function () {
                 var currentItem = self.itemsUIMap[item];
-                itemUI.on("mousedown", () => {
+                itemUI.on("pointerdown", () => {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;

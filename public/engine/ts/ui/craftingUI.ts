@@ -169,7 +169,7 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(CraftingUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            upBtn.on("mousedown", () => {
+            upBtn.on("pointerdown", () => {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
@@ -177,7 +177,7 @@ namespace Lich {
                 }
             });
 
-            downBtn.on("mousedown", () => {
+            downBtn.on("pointerdown", () => {
                 let occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
@@ -197,7 +197,7 @@ namespace Lich {
             self.addChild(craftBtn);
             craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
             craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
-            craftBtn.on("mousedown", () => {
+            craftBtn.on("pointerdown", () => {
                 if (self.choosenItem) {
                     let oldItem = self.choosenItem;
                     let index = self.itemsTypeIndexMap[oldItem];
@@ -255,7 +255,7 @@ namespace Lich {
 
             (function () {
                 var currentItem = self.itemsUIMap[key];
-                itemUI.on("mousedown", () => {
+                itemUI.on("pointerdown", () => {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - PartsUI.SELECT_BORDER + PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - PartsUI.SELECT_BORDER + PartsUI.BORDER;

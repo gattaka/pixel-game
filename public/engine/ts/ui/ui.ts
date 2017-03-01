@@ -66,7 +66,7 @@ namespace Lich {
 
                 let saveBtn = new Button(UISpriteKey.UI_SAVE_KEY);
                 menuCont.addChild(saveBtn);
-                saveBtn.on("click", () => {
+                saveBtn.on("pointerdown", () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = false;
@@ -75,7 +75,7 @@ namespace Lich {
                 let loadBtn = new Button(UISpriteKey.UI_LOAD_KEY);
                 loadBtn.y = Button.sideSize + PartsUI.SPACING;
                 menuCont.addChild(loadBtn);
-                loadBtn.on("click", () => {
+                loadBtn.on("pointerdown", () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 });
@@ -83,7 +83,7 @@ namespace Lich {
                 let newbtn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
                 newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
                 menuCont.addChild(newbtn);
-                menuCont.on("click", () => {
+                menuCont.on("pointerdown", () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 });
@@ -96,7 +96,7 @@ namespace Lich {
                 self.addChild(menuBtn);
                 menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
-                menuBtn.on("click", () => {
+                menuBtn.on("pointerdown", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = !menuCont.visible;
                 });
@@ -156,14 +156,14 @@ namespace Lich {
             spellsUI.x = canvas.width / 2 - spellsUI.fixedWidth / 2;
             spellsUI.y = UI.SCREEN_SPACING;
             self.spellsUI = spellsUI;
-            // self.addChild(spellsUI);
+            self.addChild(spellsUI);
 
             // Stav (mana, zdraví)
             let conditionUI = new ConditionUI();
             conditionUI.x = canvas.width - conditionUI.fixedWidth - UI.SCREEN_SPACING;
             conditionUI.y = canvas.height - conditionUI.fixedHeight - UI.SCREEN_SPACING;
             self.conditionUI = conditionUI;
-            // self.addChild(conditionUI);
+            self.addChild(conditionUI);
 
             // Hudba
             // let musicUI = new MusicUI();
@@ -231,7 +231,7 @@ namespace Lich {
                 invBtn.x = UI.SCREEN_SPACING;
                 invBtn.y = UI.SCREEN_SPACING;
                 self.addChild(invBtn);
-                invBtn.on("click", () => {
+                invBtn.on("pointerdown", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
@@ -241,7 +241,7 @@ namespace Lich {
                 craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
-                craftBtn.on("click", () => {
+                craftBtn.on("pointerdown", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
@@ -251,7 +251,7 @@ namespace Lich {
                 minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
-                minimapBtn.on("click", () => {
+                minimapBtn.on("pointerdown", () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.mapUI.show();
                 });
@@ -424,8 +424,8 @@ namespace Lich {
             red2 = red, green2 = green, blue2 = blue, op = 0.2, op2 = 0.5) {
             super();
 
-            this.beginFill(red << 4 + green << 2 + blue, op);
-            this.lineStyle(2, red2 << 4 + green2 << 2 + blue2, op2);
+            this.beginFill((red << 16) + (green << 8) + blue, op);
+            this.lineStyle(2, (red2 << 16) + (green2 << 8) + blue2, op2);
             let side = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
             this.drawRoundedRect(0, 0, side, side, 3);
         }
@@ -454,10 +454,14 @@ namespace Lich {
 
     export class Button extends PIXI.Container {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+        // pro opakované efekty 
+        public interval;
         constructor(uiKey: UISpriteKey) {
             super();
+            // this.buttonMode = true;
+            this.interactive = true;
 
-            let bgr = Resources.getInstance().getUISprite(UISpriteKey.UI_BUTTON_KEY);
+            let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
             this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;

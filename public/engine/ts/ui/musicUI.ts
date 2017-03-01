@@ -30,7 +30,7 @@ namespace Lich {
 
                 sprite.hitArea = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
 
-                sprite.on("mousedown", () => {
+                sprite.on("pointerdown", () => {
                     self.selectTrack(track, volume);
                 });
             }

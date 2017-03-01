@@ -7,14 +7,14 @@ var Lich;
 (function (Lich) {
     var Label = (function (_super) {
         __extends(Label, _super);
-        function Label(text, font, color, outline, outlineColor, outlineWidth) {
-            if (font === void 0) { font = Lich.PartsUI.TEXT_SIZE + "px " + Lich.Resources.FONT; }
+        function Label(text, font, size, color, outlineColor, outlineWidth) {
+            if (font === void 0) { font = Lich.Resources.FONT; }
+            if (size === void 0) { size = Lich.PartsUI.TEXT_SIZE; }
             if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
-            if (outline === void 0) { outline = true; }
             if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
-            if (outlineWidth === void 0) { outlineWidth = 1; }
+            if (outlineWidth === void 0) { outlineWidth = 3; }
             var _this = _super.call(this) || this;
-            _this.label = new PIXI.Text(text, { fontFamily: font, fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
+            _this.label = new PIXI.Text(text, { fontFamily: font, fontSize: size + "px ", fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
             _this.addChild(_this.label);
             _this.fixedHeight = _this.label.getBounds().height;
             _this.fixedWidth = _this.label.getBounds().width;

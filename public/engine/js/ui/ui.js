@@ -43,7 +43,7 @@ var Lich;
                 self.addChild(menuCont_1);
                 var saveBtn = new Button(Lich.UISpriteKey.UI_SAVE_KEY);
                 menuCont_1.addChild(saveBtn);
-                saveBtn.on("click", function () {
+                saveBtn.on("pointerdown", function () {
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     menuCont_1.visible = false;
@@ -51,14 +51,14 @@ var Lich;
                 var loadBtn = new Button(Lich.UISpriteKey.UI_LOAD_KEY);
                 loadBtn.y = Button.sideSize + PartsUI.SPACING;
                 menuCont_1.addChild(loadBtn);
-                loadBtn.on("click", function () {
+                loadBtn.on("pointerdown", function () {
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 });
                 var newbtn = new Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY);
                 newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
                 menuCont_1.addChild(newbtn);
-                menuCont_1.on("click", function () {
+                menuCont_1.on("pointerdown", function () {
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 });
@@ -69,7 +69,7 @@ var Lich;
                 self.addChild(menuBtn);
                 menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
-                menuBtn.on("click", function () {
+                menuBtn.on("pointerdown", function () {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     menuCont_1.visible = !menuCont_1.visible;
                 });
@@ -124,13 +124,13 @@ var Lich;
             spellsUI.x = canvas.width / 2 - spellsUI.fixedWidth / 2;
             spellsUI.y = UI.SCREEN_SPACING;
             self.spellsUI = spellsUI;
-            // self.addChild(spellsUI);
+            self.addChild(spellsUI);
             // Stav (mana, zdraví)
             var conditionUI = new Lich.ConditionUI();
             conditionUI.x = canvas.width - conditionUI.fixedWidth - UI.SCREEN_SPACING;
             conditionUI.y = canvas.height - conditionUI.fixedHeight - UI.SCREEN_SPACING;
             self.conditionUI = conditionUI;
-            // self.addChild(conditionUI);
+            self.addChild(conditionUI);
             // Hudba
             // let musicUI = new MusicUI();
             // musicUI.x = canvas.width - musicUI.width - UI.SCREEN_SPACING;
@@ -189,7 +189,7 @@ var Lich;
                 invBtn.x = UI.SCREEN_SPACING;
                 invBtn.y = UI.SCREEN_SPACING;
                 self.addChild(invBtn);
-                invBtn.on("click", function () {
+                invBtn.on("pointerdown", function () {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
@@ -198,7 +198,7 @@ var Lich;
                 craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
-                craftBtn.on("click", function () {
+                craftBtn.on("pointerdown", function () {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
@@ -207,7 +207,7 @@ var Lich;
                 minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
-                minimapBtn.on("click", function () {
+                minimapBtn.on("pointerdown", function () {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     self.mapUI.show();
                 });
@@ -411,8 +411,8 @@ var Lich;
             if (op === void 0) { op = 0.2; }
             if (op2 === void 0) { op2 = 0.5; }
             var _this = _super.call(this) || this;
-            _this.beginFill(red << 4 + green << 2 + blue, op);
-            _this.lineStyle(2, red2 << 4 + green2 << 2 + blue2, op2);
+            _this.beginFill((red << 16) + (green << 8) + blue, op);
+            _this.lineStyle(2, (red2 << 16) + (green2 << 8) + blue2, op2);
             var side = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
             _this.drawRoundedRect(0, 0, side, side, 3);
             return _this;
@@ -448,7 +448,9 @@ var Lich;
         __extends(Button, _super);
         function Button(uiKey) {
             var _this = _super.call(this) || this;
-            var bgr = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_BUTTON_KEY);
+            // this.buttonMode = true;
+            _this.interactive = true;
+            var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
             _this.addChild(bgr);
             bgr.x = 0;
             bgr.y = 0;

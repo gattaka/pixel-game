@@ -119,14 +119,14 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            upBtn.on("mousedown", function () {
+            upBtn.on("pointerdown", function () {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             });
-            downBtn.on("mousedown", function () {
+            downBtn.on("pointerdown", function () {
                 var occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
@@ -144,7 +144,7 @@ var Lich;
             self.addChild(craftBtn);
             craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
-            craftBtn.on("mousedown", function () {
+            craftBtn.on("pointerdown", function () {
                 if (self.choosenItem) {
                     var oldItem = self.choosenItem;
                     var index = self.itemsTypeIndexMap[oldItem];
@@ -217,7 +217,7 @@ var Lich;
             }
             (function () {
                 var currentItem = self.itemsUIMap[key];
-                itemUI.on("mousedown", function () {
+                itemUI.on("pointerdown", function () {
                     self.itemHighlight.visible = true;
                     self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                     self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;

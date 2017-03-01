@@ -20,12 +20,12 @@ namespace Lich {
             self.loadScreen.drawRect(0, 0, self.fixedWidth, self.fixedHeight);
             self.addChild(self.loadScreen);
 
-            self.progressLabel = new Label("Loading...", "30px " + Resources.FONT, Resources.TEXT_COLOR);
+            self.progressLabel = new Label("Loading...", Resources.FONT, 30, Resources.TEXT_COLOR);
             self.progressLabel.x = self.fixedWidth / 2 - 50;
             self.progressLabel.y = self.fixedHeight / 2 - 50;
             self.addChild(self.progressLabel);
 
-            self.currentItemLabel = new Label("-", "15px " + Resources.FONT, Resources.TEXT_COLOR);
+            self.currentItemLabel = new Label("-", Resources.FONT, 15, Resources.TEXT_COLOR);
             self.currentItemLabel.x = self.fixedWidth / 2 - 50;
             self.currentItemLabel.y = self.progressLabel.y + 40;
             self.addChild(self.currentItemLabel);
