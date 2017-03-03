@@ -21,8 +21,7 @@ namespace Lich {
         public controls = new Controls();
 
         private createHelpButton() {
-            let helpBtn = new Button(UISpriteKey.UI_HELP_KEY);
-            helpBtn.on("mousedown", () => {
+            let helpBtn = new Button(UISpriteKey.UI_HELP_KEY, () => {
                 window.open("help.html", "_blank");
             });
             return helpBtn;
@@ -64,42 +63,38 @@ namespace Lich {
                 menuCont.visible = false;
                 self.addChild(menuCont);
 
-                let saveBtn = new Button(UISpriteKey.UI_SAVE_KEY);
-                menuCont.addChild(saveBtn);
-                saveBtn.on("pointerdown", () => {
+                let saveBtn = new Button(UISpriteKey.UI_SAVE_KEY, () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = false;
                 });
+                menuCont.addChild(saveBtn);
 
-                let loadBtn = new Button(UISpriteKey.UI_LOAD_KEY);
-                loadBtn.y = Button.sideSize + PartsUI.SPACING;
-                menuCont.addChild(loadBtn);
-                loadBtn.on("pointerdown", () => {
+                let loadBtn = new Button(UISpriteKey.UI_LOAD_KEY, () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 });
+                loadBtn.y = Button.sideSize + PartsUI.SPACING;
+                menuCont.addChild(loadBtn);
 
-                let newbtn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
-                newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
-                menuCont.addChild(newbtn);
-                menuCont.on("pointerdown", () => {
+                let newbtn = new Button(UISpriteKey.UI_NEW_WORLD_KEY, () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 });
+                newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                menuCont.addChild(newbtn);
 
                 let helpBtn = this.createHelpButton();
                 menuCont.addChild(helpBtn);
                 helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
 
-                let menuBtn = new Button(UISpriteKey.UI_MENU_KEY);
-                self.addChild(menuBtn);
-                menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
-                menuBtn.y = UI.SCREEN_SPACING;
-                menuBtn.on("pointerdown", () => {
+                let menuBtn = new Button(UISpriteKey.UI_MENU_KEY, () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = !menuCont.visible;
                 });
+                self.addChild(menuBtn);
+                menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                menuBtn.y = UI.SCREEN_SPACING;
             }
 
             // Debug and loging
@@ -227,34 +222,31 @@ namespace Lich {
             });
 
             if (mobile) {
-                let invBtn = new Button(UISpriteKey.UI_BACKPACK_KEY);
-                invBtn.x = UI.SCREEN_SPACING;
-                invBtn.y = UI.SCREEN_SPACING;
-                self.addChild(invBtn);
-                invBtn.on("pointerdown", () => {
+                let invBtn = new Button(UISpriteKey.UI_BACKPACK_KEY, () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.inventoryUI.prepareForToggle();
                     self.inventoryUI.toggle();
                 });
+                invBtn.x = UI.SCREEN_SPACING;
+                invBtn.y = UI.SCREEN_SPACING;
+                self.addChild(invBtn);
 
-                let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY);
-                craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
-                craftBtn.y = UI.SCREEN_SPACING;
-                self.addChild(craftBtn);
-                craftBtn.on("pointerdown", () => {
+                let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY, () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
                 });
+                craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                craftBtn.y = UI.SCREEN_SPACING;
+                self.addChild(craftBtn);
 
-                let minimapBtn = new Button(UISpriteKey.UI_MINIMAP_KEY);
-                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
-                minimapBtn.y = UI.SCREEN_SPACING;
-                self.addChild(minimapBtn);
-                minimapBtn.on("pointerdown", () => {
+                let minimapBtn = new Button(UISpriteKey.UI_MINIMAP_KEY, () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.mapUI.show();
                 });
+                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
+                minimapBtn.y = UI.SCREEN_SPACING;
+                self.addChild(minimapBtn);
             }
 
             if (mobile) {
@@ -454,8 +446,16 @@ namespace Lich {
 
     export class Button extends PIXI.Container {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
-        // pro opakované efekty 
-        private interval;
+
+        // výchozí interval efektu tlačítka (ms)
+        private static DEFAULT_INTERVAL = 200;
+        // hodnota (ms) o kterou se interval sníží při delším držení
+        private static INTERVAL_DECREASE_TIME = 10;
+        // počet opakování akce, než je hodnota snížena
+        private static INTERVAL_DECREASE_STEPS = 5;
+        private intervalId;
+        private interval = Button.DEFAULT_INTERVAL;
+        private decreaseSteps = 0;
 
         constructor(uiKey: UISpriteKey, onPress: Function, onRelease?: Function) {
             super();
@@ -476,14 +476,28 @@ namespace Lich {
 
             this.hitArea = new PIXI.Rectangle(0, 0, Button.sideSize, Button.sideSize);
             let self = this;
-            
-            this.on("pointerdown", () => {
-                self.interval = setInterval(() => {
+
+            let repeatPress = () => {
+                self.intervalId = setInterval(() => {
                     onPress();
-                }, 200);
+                    self.decreaseSteps++;
+                    if (self.decreaseSteps >= Button.INTERVAL_DECREASE_STEPS) {
+                        self.decreaseSteps = 0;
+                        self.interval -= Button.INTERVAL_DECREASE_TIME;
+                        clearInterval(self.intervalId);
+                        repeatPress();
+                    }
+                }, self.interval);
+            }
+
+            this.on("pointerdown", () => {
+                onPress();
+                self.decreaseSteps = 0;
+                self.interval = Button.DEFAULT_INTERVAL;
+                repeatPress();
             });
             this.on("pointerup", () => {
-                clearInterval(self.interval);
+                clearInterval(self.intervalId);
                 if (onRelease) {
                     onRelease();
                 }
