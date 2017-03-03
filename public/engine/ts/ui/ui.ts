@@ -455,8 +455,9 @@ namespace Lich {
     export class Button extends PIXI.Container {
         public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
         // pro opakované efekty 
-        public interval;
-        constructor(uiKey: UISpriteKey) {
+        private interval;
+
+        constructor(uiKey: UISpriteKey, onPress: Function, onRelease?: Function) {
             super();
             // this.buttonMode = true;
             this.interactive = true;
@@ -474,6 +475,19 @@ namespace Lich {
             }
 
             this.hitArea = new PIXI.Rectangle(0, 0, Button.sideSize, Button.sideSize);
+            let self = this;
+            
+            this.on("pointerdown", () => {
+                self.interval = setInterval(() => {
+                    onPress();
+                }, 200);
+            });
+            this.on("pointerup", () => {
+                clearInterval(self.interval);
+                if (onRelease) {
+                    onRelease();
+                }
+            });
 
         }
     }

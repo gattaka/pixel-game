@@ -160,24 +160,14 @@ namespace Lich {
             self.addChild(self.itemsCont);
 
             // tlačítka
-            let upBtn = new Button(UISpriteKey.UI_UP_KEY);
-            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
-            self.addChild(upBtn);
-            self.addChild(downBtn);
-            upBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
-            upBtn.y = 0;
-            downBtn.x = upBtn.x;
-            downBtn.y = PartsUI.pixelsByX(CraftingUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
-
-            upBtn.on("pointerdown", () => {
+            let upBtn = new Button(UISpriteKey.UI_UP_KEY, () => {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             });
-
-            downBtn.on("pointerdown", () => {
+            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY, () => {
                 let occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
@@ -185,6 +175,13 @@ namespace Lich {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             });
+            self.addChild(upBtn);
+            self.addChild(downBtn);
+            upBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
+            upBtn.y = 0;
+            downBtn.x = upBtn.x;
+            downBtn.y = PartsUI.pixelsByX(CraftingUI.M) - Resources.PARTS_SIZE - PartsUI.BORDER;
+
 
             // Přehled ingrediencí
             self.ingredientsCont = new IngredientsCont();
@@ -193,11 +190,7 @@ namespace Lich {
             self.ingredientsCont.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
 
             // craft tlačítko
-            let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY);
-            self.addChild(craftBtn);
-            craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
-            craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
-            craftBtn.on("pointerdown", () => {
+            let craftBtn = new Button(UISpriteKey.UI_CRAFT_KEY, () => {
                 if (self.choosenItem) {
                     let oldItem = self.choosenItem;
                     let index = self.itemsTypeIndexMap[oldItem];
@@ -209,6 +202,9 @@ namespace Lich {
                     Mixer.playSound(SoundKey.SND_CRAFT_KEY);
                 }
             });
+            self.addChild(craftBtn);
+            craftBtn.x = PartsUI.pixelsByX(CraftingUI.N) + PartsUI.SELECT_BORDER;
+            craftBtn.y = PartsUI.pixelsByX(CraftingUI.M) + PartsUI.SELECT_BORDER;
 
             // self.measureCacheArea();
         }

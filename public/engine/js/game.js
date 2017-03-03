@@ -127,6 +127,8 @@ var Lich;
                                 Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
                                     populateContent(tilesMap);
                                     if (obj_1.inv) {
+                                        // TODO
+                                        // self.ui.inventoryUI.deserialize(obj.inv);
                                     }
                                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
                                 });

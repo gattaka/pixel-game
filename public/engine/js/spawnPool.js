@@ -158,6 +158,7 @@ var Lich;
                 Lich.Enemy.ChickenBoss.currentAngerCooldown = 0;
                 if (Lich.Enemy.ChickenBoss.chickenKills > 0)
                     Lich.Enemy.ChickenBoss.chickenKills--;
+                // console.log("Enemy.ChickenBoss.chickenKills: %d", Enemy.ChickenBoss.chickenKills);
             }
         };
         return SpawnPool;

@@ -251,30 +251,21 @@ namespace Lich {
 
         protected createUpButton(): Button {
             var self = this;
-            let upBtn = new Button(UISpriteKey.UI_UP_KEY);
+            let upBtn = new Button(UISpriteKey.UI_UP_KEY, () => {
+                if (self.currentLine > 0) {
+                    self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
+                    self.print();
+                    // self.updateCache();
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                }
+            });
             self.addChild(upBtn);
-
-            upBtn.on("pointerdown", () => {
-                upBtn.interval = setInterval(() => {
-                    if (self.currentLine > 0) {
-                        self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
-                        self.print();
-                        // self.updateCache();
-                        Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                    }
-                }, 200);
-            });
-            upBtn.on("pointerup", () => {
-                clearInterval(upBtn.interval);
-            });
             return upBtn;
         }
 
         protected createDownButton(): Button {
             var self = this;
-            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
-            self.addChild(downBtn);
-            downBtn.on("pointerdown", () => {
+            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY, () => {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
@@ -282,40 +273,38 @@ namespace Lich {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
             });
+            self.addChild(downBtn);
             return downBtn;
         }
 
         protected createSaveButton(): Button {
             var self = this;
-            let btn = new Button(UISpriteKey.UI_SAVE_KEY);
-            self.addChild(btn);
-            btn.on("pointerdown", () => {
+            let btn = new Button(UISpriteKey.UI_SAVE_KEY, () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 self.hide();
             });
+            self.addChild(btn);
             return btn;
         }
 
         protected createLoadButton(): Button {
             var self = this;
-            let btn = new Button(UISpriteKey.UI_LOAD_KEY);
-            self.addChild(btn);
-            btn.on("pointerdown", () => {
+            let btn = new Button(UISpriteKey.UI_LOAD_KEY, () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
             });
+            self.addChild(btn);
             return btn;
         }
 
         protected createNewWorldButton(): Button {
             var self = this;
-            let btn = new Button(UISpriteKey.UI_NEW_WORLD_KEY);
-            self.addChild(btn);
-            btn.on("pointerdown", () => {
+            let btn = new Button(UISpriteKey.UI_NEW_WORLD_KEY, () => {
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                 Mixer.playSound(SoundKey.SND_CLICK_KEY);
             });
+            self.addChild(btn);
             return btn;
         }
 

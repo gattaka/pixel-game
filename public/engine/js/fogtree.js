@@ -57,6 +57,7 @@ var Lich;
                     this.fractioned = false;
                     this.value = this.subTree1.value;
                     FogTree.TREES_COUNT -= 4;
+                    // console.log("Tree MERGE on level %d, TREES_COUNT= %d", this.level, FogTree.TREES_COUNT);
                 }
             }
         };

@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Lich;
 (function (Lich) {
     var UI = (function (_super) {
@@ -311,6 +316,19 @@ var Lich;
                             break;
                     }
                 };
+                // TODO touch
+                // movementCont.on("mousedown",  (evt: createjs.MouseEvent) {
+                //     var mouseData = game.ge.renderer.plugins.interaction.mouse.;
+                //     self.controls = new Controls();
+                //     directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
+                // }, null, false);
+                // movementCont.on("pressup", function (evt) {
+                //     self.controls = new Controls();
+                // }, null, false);
+                // movementCont.on("pressmove", function (evt: createjs.MouseEvent) {
+                //     self.controls = new Controls();
+                //     directionByTouch(evt.stageX - movementCont.x, evt.stageY - movementCont.y);
+                // }, null, false);
             }
             return _this;
         }
@@ -446,7 +464,7 @@ var Lich;
     Lich.PartsUI = PartsUI;
     var Button = (function (_super) {
         __extends(Button, _super);
-        function Button(uiKey) {
+        function Button(uiKey, onPress, onRelease) {
             var _this = _super.call(this) || this;
             // this.buttonMode = true;
             _this.interactive = true;
@@ -461,6 +479,18 @@ var Lich;
                 sprite.y = PartsUI.SELECT_BORDER;
             }
             _this.hitArea = new PIXI.Rectangle(0, 0, Button.sideSize, Button.sideSize);
+            var self = _this;
+            _this.on("pointerdown", function () {
+                self.interval = setInterval(function () {
+                    onPress();
+                }, 200);
+            });
+            _this.on("pointerup", function () {
+                clearInterval(self.interval);
+                if (onRelease) {
+                    onRelease();
+                }
+            });
             return _this;
         }
         return Button;

@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Lich;
 (function (Lich) {
     var IngredientsCont = (function (_super) {
@@ -111,22 +116,14 @@ var Lich;
             self.itemsCont.y = Lich.PartsUI.BORDER;
             self.addChild(self.itemsCont);
             // tlačítka
-            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
-            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
-            self.addChild(upBtn);
-            self.addChild(downBtn);
-            upBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
-            upBtn.y = 0;
-            downBtn.x = upBtn.x;
-            downBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            upBtn.on("pointerdown", function () {
+            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY, function () {
                 if (self.lineOffset > 0) {
                     self.lineOffset--;
                     self.render();
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             });
-            downBtn.on("pointerdown", function () {
+            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY, function () {
                 var occupLines = Math.ceil(self.itemsTypeArray.length / CraftingUI.N);
                 if (self.lineOffset < occupLines - CraftingUI.M) {
                     self.lineOffset++;
@@ -134,17 +131,19 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             });
+            self.addChild(upBtn);
+            self.addChild(downBtn);
+            upBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
+            upBtn.y = 0;
+            downBtn.x = upBtn.x;
+            downBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
             // Přehled ingrediencí
             self.ingredientsCont = new IngredientsCont();
             self.addChild(self.ingredientsCont);
             self.ingredientsCont.x = 0;
             self.ingredientsCont.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             // craft tlačítko
-            var craftBtn = new Lich.Button(Lich.UISpriteKey.UI_CRAFT_KEY);
-            self.addChild(craftBtn);
-            craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
-            craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
-            craftBtn.on("pointerdown", function () {
+            var craftBtn = new Lich.Button(Lich.UISpriteKey.UI_CRAFT_KEY, function () {
                 if (self.choosenItem) {
                     var oldItem = self.choosenItem;
                     var index = self.itemsTypeIndexMap[oldItem];
@@ -157,6 +156,9 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CRAFT_KEY);
                 }
             });
+            self.addChild(craftBtn);
+            craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
+            craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             return _this;
             // self.measureCacheArea();
         }
@@ -247,6 +249,7 @@ var Lich;
         };
         CraftingUI.prototype.handleMouse = function (mouse) {
             if (mouse.down) {
+                // TODO
             }
         };
         return CraftingUI;

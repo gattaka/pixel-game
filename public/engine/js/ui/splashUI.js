@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Lich;
 (function (Lich) {
     var Version = (function () {
@@ -267,28 +272,20 @@ var Lich;
         };
         SplashScreenUI.prototype.createUpButton = function () {
             var self = this;
-            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
+            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY, function () {
+                if (self.currentLine > 0) {
+                    self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
+                    self.print();
+                    // self.updateCache();
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                }
+            });
             self.addChild(upBtn);
-            upBtn.on("pointerdown", function () {
-                upBtn.interval = setInterval(function () {
-                    if (self.currentLine > 0) {
-                        self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
-                        self.print();
-                        // self.updateCache();
-                        Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-                    }
-                }, 200);
-            });
-            upBtn.on("pointerup", function () {
-                clearInterval(upBtn.interval);
-            });
             return upBtn;
         };
         SplashScreenUI.prototype.createDownButton = function () {
             var self = this;
-            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
-            self.addChild(downBtn);
-            downBtn.on("pointerdown", function () {
+            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY, function () {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
@@ -296,37 +293,35 @@ var Lich;
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 }
             });
+            self.addChild(downBtn);
             return downBtn;
         };
         SplashScreenUI.prototype.createSaveButton = function () {
             var self = this;
-            var btn = new Lich.Button(Lich.UISpriteKey.UI_SAVE_KEY);
-            self.addChild(btn);
-            btn.on("pointerdown", function () {
+            var btn = new Lich.Button(Lich.UISpriteKey.UI_SAVE_KEY, function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 self.hide();
             });
+            self.addChild(btn);
             return btn;
         };
         SplashScreenUI.prototype.createLoadButton = function () {
             var self = this;
-            var btn = new Lich.Button(Lich.UISpriteKey.UI_LOAD_KEY);
-            self.addChild(btn);
-            btn.on("pointerdown", function () {
+            var btn = new Lich.Button(Lich.UISpriteKey.UI_LOAD_KEY, function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
             });
+            self.addChild(btn);
             return btn;
         };
         SplashScreenUI.prototype.createNewWorldButton = function () {
             var self = this;
-            var btn = new Lich.Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY);
-            self.addChild(btn);
-            btn.on("pointerdown", function () {
+            var btn = new Lich.Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY, function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
             });
+            self.addChild(btn);
             return btn;
         };
         return SplashScreenUI;

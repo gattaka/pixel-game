@@ -121,6 +121,7 @@ var Lich;
                     Lich.EventBus.getInstance().unregisterConsumer(Lich.EventType.LOAD_FINISHED, listener_1);
                     return false;
                 });
+                // self.stage.addChild(self.loadUI = new LoaderUI(self));
             }
             Lich.Keyboard.on(37, function () { fogSpriteCont.vx = -200; }, function () { fogSpriteCont.vx = 0; });
             Lich.Keyboard.on(39, function () { fogSpriteCont.vx = 200; }, function () { fogSpriteCont.vx = 0; });

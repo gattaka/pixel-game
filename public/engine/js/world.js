@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /**
  * world.js
  *
@@ -524,6 +529,9 @@ var Lich;
                         // nikoliv TILE, takže pouze sudé) a přičti k němu zbývající 
                         // vzdálenost (od počátku PART) do kolize
                         if (distanceY > 0) {
+                            // zastavil jsem se při stoupání? Začni hned padat
+                            //y = clsnPosition.y + clsnTest.partOffsetY - (object.y + object.collYOffset);
+                            // makeShift(0, y);
                         }
                         else {
                             // záporné, budu dopadat dolů
@@ -1096,6 +1104,11 @@ var Lich;
                     if (result.hit) {
                         if (result.collisionType == Lich.CollisionType.PLATFORM) {
                             if (ignoreOneWay || xFullShift != 0 || yFullShift >= 0 || Lich.Utils.isEven(result.y) == false) {
+                                // ignoruj kolizi
+                                // - je vynuceno procházení 
+                                // - nebo se jedná o horizontální pohyb
+                                // - nebo stoupám
+                                // - nebo jde o kolizi s druhou půlkou platformy
                             }
                             else {
                                 return result;

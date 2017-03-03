@@ -51,8 +51,21 @@ namespace Lich {
             self.collapsedCont.addChild(self.collapsedHighlight);
 
             // tlačítka
-            let upBtn = new Button(UISpriteKey.UI_UP_KEY);
-            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY);
+            let upBtn = new Button(UISpriteKey.UI_UP_KEY, () => {
+                if (self.lineOffset > 0) {
+                    self.lineOffset--;
+                    self.render();
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                }
+            });
+            let downBtn = new Button(UISpriteKey.UI_DOWN_KEY, () => {
+                let occupLines = Math.ceil(Inventory.getInstance().getLength() / self.n);
+                if (self.lineOffset < occupLines - self.m) {
+                    self.lineOffset++;
+                    self.render();
+                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
+                }
+            });
             self.upBtn = upBtn;
             self.downBtn = downBtn;
             self.addChild(upBtn);
@@ -61,23 +74,6 @@ namespace Lich {
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(self.m) - Resources.PARTS_SIZE - PartsUI.BORDER;
-
-            upBtn.on("pointerdown", () => {
-                if (self.lineOffset > 0) {
-                    self.lineOffset--;
-                    self.render();
-                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                }
-            });
-
-            downBtn.on("pointerdown", () => {
-                let occupLines = Math.ceil(Inventory.getInstance().getLength() / self.n);
-                if (self.lineOffset < occupLines - self.m) {
-                    self.lineOffset++;
-                    self.render();
-                    Mixer.playSound(SoundKey.SND_CLICK_KEY);
-                }
-            });
 
             // let offset = 5;
             // self.cache(-offset, -offset,

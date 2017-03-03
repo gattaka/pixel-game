@@ -39,6 +39,7 @@ var Lich;
                             if (srfcDef.mapObjKey == Lich.SurfaceKey.SRFC_DIRT_KEY) {
                                 var obj = tilesMap.mapObjectsTiles.getValue(this.xt, this.yt - 2);
                                 if (obj) {
+                                    // TODO Stromy
                                 }
                                 else {
                                     // nic tam není, dej tam trávu, kytky apod.
@@ -88,6 +89,7 @@ var Lich;
                                     // self.render.placeObject(xt, yt - 1, Resources.getInstance().mapObjectDefs[grassKey]);
                                     // pokládání se dává na souřadnici povrchu, nikoliv objektu (takže to není -2)
                                     Lich.TilesMapTools.writeObjectRecord(tilesMap, this.xt, this.yt, Lich.Resources.getInstance().mapObjectDefs[key]);
+                                    // console.log("Grass created on %d:%d", this.xt, this.yt);
                                 }
                             }
                         }
@@ -95,6 +97,9 @@ var Lich;
                         this.xt += 2;
                         this.yt = 0;
                         continue;
+                        // už jsem pod nějakým povrchem
+                        // this.aboveSurface = false;
+                        // this.aboveTopSurface = false;
                     }
                     else {
                         // nějaké prázdno

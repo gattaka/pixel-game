@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Lich;
 (function (Lich) {
     var InventoryUI = (function (_super) {
@@ -35,8 +40,21 @@ var Lich;
             self.collapsedHighlight.y = Lich.PartsUI.SELECT_BORDER;
             self.collapsedCont.addChild(self.collapsedHighlight);
             // tlačítka
-            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY);
-            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY);
+            var upBtn = new Lich.Button(Lich.UISpriteKey.UI_UP_KEY, function () {
+                if (self.lineOffset > 0) {
+                    self.lineOffset--;
+                    self.render();
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                }
+            });
+            var downBtn = new Lich.Button(Lich.UISpriteKey.UI_DOWN_KEY, function () {
+                var occupLines = Math.ceil(Lich.Inventory.getInstance().getLength() / self.n);
+                if (self.lineOffset < occupLines - self.m) {
+                    self.lineOffset++;
+                    self.render();
+                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
+                }
+            });
             self.upBtn = upBtn;
             self.downBtn = downBtn;
             self.addChild(upBtn);
@@ -45,21 +63,6 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(self.m) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            upBtn.on("pointerdown", function () {
-                if (self.lineOffset > 0) {
-                    self.lineOffset--;
-                    self.render();
-                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-                }
-            });
-            downBtn.on("pointerdown", function () {
-                var occupLines = Math.ceil(Lich.Inventory.getInstance().getLength() / self.n);
-                if (self.lineOffset < occupLines - self.m) {
-                    self.lineOffset++;
-                    self.render();
-                    Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
-                }
-            });
             // let offset = 5;
             // self.cache(-offset, -offset,
             //     self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
@@ -128,6 +131,7 @@ var Lich;
                 }
                 self.collapsed = !self.collapsed;
                 self.toggleFlag = false;
+                // self.updateCache();
             }
         };
         InventoryUI.prototype.prepareForToggle = function () {
@@ -153,6 +157,7 @@ var Lich;
                     self.render();
                 }
                 else {
+                    // self.updateCache();
                 }
             }
         };
