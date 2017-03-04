@@ -163,8 +163,6 @@ namespace Lich {
          * Sprite info  
          */
 
-        // Mapa inventářových položek dle jejich sprite jména
-        public invObjectDefsBySpriteName: { [k: string]: InvObjDefinition } = {};
         // Mapa mapových objektů dle jejich sprite jména
         public mapObjectDefsBySpriteName: { [k: string]: MapObjDefinition } = {};
         // Mapa povrchů dle jejich sprite jména
@@ -353,7 +351,6 @@ namespace Lich {
             // Definice inventárních objektů 
             INVENTORY_DEFS(self).forEach((definition: InvObjDefinition) => {
                 self.invObjectDefs[definition.invKey] = definition;
-                self.invObjectDefsBySpriteName[definition.spriteName] = definition;
             });
 
             // Definice achievementů
@@ -594,7 +591,7 @@ namespace Lich {
         };
 
         getInvObjectSprite(key: InventoryKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
-            return this.getBasicSprite(SpritesheetKey.SPST_INV_KEY, this.invObjectDefs[key].spriteName);
+            return this.getUISprite(this.invObjectDefs[key].icon, originalSprite);
         };
 
         getAnimatedObjectSprite(animation: AnimationSetKey): AniSprite {

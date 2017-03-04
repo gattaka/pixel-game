@@ -128,8 +128,6 @@ var Lich;
             /**
              * Sprite info
              */
-            // Mapa inventářových položek dle jejich sprite jména
-            this.invObjectDefsBySpriteName = {};
             // Mapa mapových objektů dle jejich sprite jména
             this.mapObjectDefsBySpriteName = {};
             // Mapa povrchů dle jejich sprite jména
@@ -277,7 +275,6 @@ var Lich;
             // Definice inventárních objektů 
             Lich.INVENTORY_DEFS(self).forEach(function (definition) {
                 self.invObjectDefs[definition.invKey] = definition;
-                self.invObjectDefsBySpriteName[definition.spriteName] = definition;
             });
             // Definice achievementů
             Lich.ACHIEVEMENTS_DEFS.forEach(function (definition) {
@@ -500,7 +497,7 @@ var Lich;
         };
         ;
         Resources.prototype.getInvObjectSprite = function (key, originalSprite) {
-            return this.getBasicSprite(Lich.SpritesheetKey.SPST_INV_KEY, this.invObjectDefs[key].spriteName);
+            return this.getUISprite(this.invObjectDefs[key].icon, originalSprite);
         };
         ;
         Resources.prototype.getAnimatedObjectSprite = function (animation) {

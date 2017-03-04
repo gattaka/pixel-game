@@ -120,7 +120,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_FIREBALL_KEY,
-                UISpriteKey.UI_FIREBALL_KEY,
+                UISpriteKey.UI_SPL_FIREBALL_KEY,
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
                 AnimationSetKey.FIREBALL_ANIMATION_KEY,
@@ -150,7 +150,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_METEOR_KEY,
-                UISpriteKey.UI_METEOR_KEY,
+                UISpriteKey.UI_SPL_METEOR_KEY,
                 10, // COST,
                 200, // COOLDOWN,
                 AnimationSetKey.METEOR_ANIMATION_KEY,
@@ -201,7 +201,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_LOVELETTER_KEY, // SpellKey
-                UISpriteKey.UI_LOVELETTER_KEY,
+                UISpriteKey.UI_SPL_LOVELETTER_KEY,
                 AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
                 2, // damage
             );
@@ -215,7 +215,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_LOVEARROW_KEY, // SpellKey
-                UISpriteKey.UI_LOVEARROW_KEY,
+                UISpriteKey.UI_SPL_LOVEARROW_KEY,
                 AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
                 5, // damage
             );
@@ -230,7 +230,7 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_ICEBOLT_KEY,
-                UISpriteKey.UI_ICEBOLT_KEY,
+                UISpriteKey.UI_SPL_ICEBOLT_KEY,
                 2, // COST,
                 100, // COOLDOWN,
                 AnimationSetKey.ICEBOLT_ANIMATION_KEY,
@@ -278,7 +278,7 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_USE_ITEM_KEY, UISpriteKey.UI_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_USE_ITEM_KEY, UISpriteKey.UI_SPL_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -307,7 +307,7 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_REVEAL_FOG_KEY, UISpriteKey.UI_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_REVEAL_FOG_KEY, UISpriteKey.UI_SPL_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -324,7 +324,7 @@ namespace Lich {
         static COST = 2; // DEV cost :)
 
         constructor() {
-            super(SpellKey.SPELL_TELEPORT_KEY, UISpriteKey.UI_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_TELEPORT_KEY, UISpriteKey.UI_SPL_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -347,7 +347,7 @@ namespace Lich {
         static COST = 20;
 
         constructor() {
-            super(SpellKey.SPELL_HOME_KEY, UISpriteKey.UI_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_HOME_KEY, UISpriteKey.UI_SPL_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -369,7 +369,7 @@ namespace Lich {
         static COOLDOWN = 200;
 
         constructor() {
-            super(SpellKey.SPELL_INTERACT_KEY, UISpriteKey.UI_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_INTERACT_KEY, UISpriteKey.UI_SPL_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -412,13 +412,13 @@ namespace Lich {
 
     export class DigSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_KEY, UISpriteKey.UI_DIG_KEY, false);
+            super(SpellKey.SPELL_DIG_KEY, UISpriteKey.UI_SPL_DIG_KEY, false);
         }
     }
 
     export class DigBgrSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_BGR_KEY, UISpriteKey.UI_DIG_BGR_KEY, true);
+            super(SpellKey.SPELL_DIG_BGR_KEY, UISpriteKey.UI_SPL_DIG_BGR_KEY, true);
         }
     }
 
@@ -464,13 +464,13 @@ namespace Lich {
 
     export class PlaceSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_KEY, UISpriteKey.UI_PLACE_KEY, false);
+            super(SpellKey.SPELL_PLACE_KEY, UISpriteKey.UI_SPL_PLACE_KEY, false);
         }
     }
 
     export class PlaceBgrSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_BGR_KEY, UISpriteKey.UI_PLACE_BGR_KEY, true);
+            super(SpellKey.SPELL_PLACE_BGR_KEY, UISpriteKey.UI_SPL_PLACE_BGR_KEY, true);
         }
     }
 
@@ -481,7 +481,7 @@ namespace Lich {
     export class EnemySpellDef extends SpellDefinition {
 
         constructor() {
-            super(SpellKey.SPELL_ENEMY_KEY, UISpriteKey.UI_ENEMY_KEY, 0, 200);
+            super(SpellKey.SPELL_ENEMY_KEY, UISpriteKey.UI_SPL_ENEMY_KEY, 0, 200);
         }
 
         public cast(context: SpellContext): boolean {

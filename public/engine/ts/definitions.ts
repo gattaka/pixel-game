@@ -52,8 +52,8 @@ namespace Lich {
         constructor(
             // klíč
             public invKey: InventoryKey,
-            // sprite název
-            public spriteName: string,
+            // název sprite ikony 
+            public icon: UISpriteKey,
             // cíl při položení
             target?: MapObjDefinition | MapSurfaceDefinition) {
             if ((target instanceof MapObjDefinition)) {

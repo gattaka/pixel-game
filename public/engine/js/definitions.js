@@ -54,12 +54,12 @@ var Lich;
         function InvObjDefinition(
             // klíč
             invKey, 
-            // sprite název
-            spriteName, 
+            // název sprite ikony 
+            icon, 
             // cíl při položení
             target) {
             this.invKey = invKey;
-            this.spriteName = spriteName;
+            this.icon = icon;
             this.frames = 1;
             // je možné tento INV objekt znovu umístit (váza) 
             // pokud ano, jaký objekt mapy se má vytvořit  

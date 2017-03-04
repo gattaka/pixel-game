@@ -38,7 +38,7 @@ var Lich;
             _this.itemsUIMap = new Lich.HashMap();
             _this.itemsCont = new PIXI.Container();
             var self = _this;
-            _this.workstationIcon = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PLACE_KEY);
+            _this.workstationIcon = Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_SPL_PLACE_KEY);
             var bounds = _this.workstationIcon.getBounds();
             _this.workstationIconBgr = new Lich.UIBackground();
             _this.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
@@ -65,7 +65,7 @@ var Lich;
                     Lich.Resources.getInstance().getInvObjectSprite(Lich.WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
                 }
                 else {
-                    Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_PLACE_KEY, self.workstationIcon);
+                    Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_SPL_PLACE_KEY, self.workstationIcon);
                 }
                 var bounds = self.workstationIcon.getBounds();
                 self.workstationIconBgr.drawBackground(bounds.width + 2 * Lich.PartsUI.SELECT_BORDER, bounds.height + 2 * Lich.PartsUI.SELECT_BORDER);
