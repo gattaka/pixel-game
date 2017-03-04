@@ -13,13 +13,6 @@ var Lich;
         }
         return SectorUpdateRequest;
     }());
-    var FogSectorUpdateRequest = (function () {
-        function FogSectorUpdateRequest(fogSector, cooldown) {
-            this.fogSector = fogSector;
-            this.cooldown = cooldown;
-        }
-        return FogSectorUpdateRequest;
-    }());
     var FogInfo = (function () {
         function FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY) {
             this.startFogSecX = startFogSecX;
@@ -46,7 +39,6 @@ var Lich;
             this.currentStartFogY = null;
             // sector kontejnery
             this.sectorsToUpdate = new Array();
-            this.fogSectorsToUpdate = new Array();
             // Mapy sektorů
             this.sectorsMap = new Lich.Array2D();
             // Vykreslené dílky povrchu a pozadí
@@ -520,12 +512,7 @@ var Lich;
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = sceneMap.getValue(x, y);
                                         if (!bgr) {
-                                            if (child instanceof PIXI.Sprite) {
-                                                targetSector.removeAnimatedChild(child);
-                                            }
-                                            else {
-                                                targetSector.removeCacheableChild(child);
-                                            }
+                                            targetSector.removeCacheableChild(child);
                                         }
                                         else {
                                             targetSector.removeBackgroundChild(child);
@@ -551,7 +538,9 @@ var Lich;
         Render.prototype.mapReshape = function (tilesToReset, bgr) {
             var self = this;
             var rsc = Lich.Resources.getInstance();
-            var record, sceneMap, index;
+            var record;
+            var sceneMap;
+            var index;
             if (bgr) {
                 record = self.tilesMap.mapBgrRecord;
                 sceneMap = self.sceneBgrTilesMap;
@@ -578,21 +567,24 @@ var Lich;
                     Lich.TilesMapTools.generateCorner(record, x, y, bgr);
                 });
             })();
-            // Překresli dílky
+            // Překresli dílky, které je potřeba změnit
+            // odstraňování již bylo provedeno
             (function () {
                 tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
                     // pokud už je alokován dílek na obrazovce, rovnou ho uprav
                     var tile = sceneMap.getValue(x, y);
-                    if (tile !== null) {
-                        var v = record.getValue(x, y);
+                    var v = record.getValue(x, y);
+                    if (tile) {
                         var type = index.getType(v);
+                        // -1 protože v positions je i VOID, který ale ve sprite mapě není
+                        var position = index.getPosition(v) - 1;
                         if (bgr) {
-                            Lich.Resources.getInstance().getSurfaceBgrTileSprite(type, v, tile);
+                            Lich.Resources.getInstance().getSurfaceBgrTileSprite(type, position, tile);
                         }
                         else {
-                            Lich.Resources.getInstance().getSurfaceTileSprite(type, v, tile);
+                            Lich.Resources.getInstance().getSurfaceTileSprite(type, position, tile);
                         }
                     }
                 });
@@ -851,12 +843,6 @@ var Lich;
                 var item = self.sectorsToUpdate.pop();
                 if (typeof item !== "undefined") {
                     item.sector.cache();
-                }
-            }
-            for (var i = 0; i < self.fogSectorsToUpdate.length; i++) {
-                var item = self.fogSectorsToUpdate.pop();
-                if (typeof item !== "undefined") {
-                    item.fogSector.cache();
                 }
             }
         };

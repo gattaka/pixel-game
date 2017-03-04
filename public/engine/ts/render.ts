@@ -11,10 +11,6 @@ namespace Lich {
         constructor(public sector: Sector, public cooldown: number) { }
     }
 
-    class FogSectorUpdateRequest {
-        constructor(public fogSector: FogSector, public cooldown: number) { }
-    }
-
     class FogInfo {
         constructor(
             public startFogSecX: number,
@@ -51,7 +47,6 @@ namespace Lich {
         currentStartFogY = null;
         // sector kontejnery
         sectorsToUpdate = new Array<SectorUpdateRequest>();
-        fogSectorsToUpdate = new Array<FogSectorUpdateRequest>();
         // Kontejnery na sektory
         sectorsCont: PIXI.Container;
         fogSectorsCont: PIXI.particles.ParticleContainer;
@@ -602,11 +597,7 @@ namespace Lich {
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = sceneMap.getValue(x, y);
                                         if (!bgr) {
-                                            if (child instanceof PIXI.Sprite) {
-                                                targetSector.removeAnimatedChild(child);
-                                            } else {
-                                                targetSector.removeCacheableChild(child);
-                                            }
+                                            targetSector.removeCacheableChild(child);
                                         } else {
                                             targetSector.removeBackgroundChild(child);
                                         }
@@ -637,7 +628,9 @@ namespace Lich {
             var self = this;
 
             let rsc = Resources.getInstance();
-            let record, sceneMap, index;
+            let record: Array2D<number>;
+            let sceneMap: Array2D<PIXI.Sprite>;
+            let index: SurfaceIndex | SurfaceBgrIndex;
             if (bgr) {
                 record = self.tilesMap.mapBgrRecord;
                 sceneMap = self.sceneBgrTilesMap;
@@ -666,20 +659,23 @@ namespace Lich {
                 });
             })();
 
-            // Překresli dílky
+            // Překresli dílky, které je potřeba změnit
+            // odstraňování již bylo provedeno
             (function () {
                 tilesToReset.forEach(function (item) {
                     var x = item[0];
                     var y = item[1];
                     // pokud už je alokován dílek na obrazovce, rovnou ho uprav
                     var tile = sceneMap.getValue(x, y);
-                    if (tile !== null) {
-                        var v = record.getValue(x, y);
+                    var v = record.getValue(x, y);
+                    if (tile) {
                         let type = index.getType(v);
+                        // -1 protože v positions je i VOID, který ale ve sprite mapě není
+                        let position = index.getPosition(v) - 1;
                         if (bgr) {
-                            Resources.getInstance().getSurfaceBgrTileSprite(type, v, tile);
+                            Resources.getInstance().getSurfaceBgrTileSprite(<SurfaceBgrKey>type, position, tile);
                         } else {
-                            Resources.getInstance().getSurfaceTileSprite(type, v, tile);
+                            Resources.getInstance().getSurfaceTileSprite(<SurfaceKey>type, position, tile);
                         }
                     }
                 });
@@ -966,12 +962,6 @@ namespace Lich {
                 let item = self.sectorsToUpdate.pop();
                 if (typeof item !== "undefined") {
                     item.sector.cache();
-                }
-            }
-            for (let i = 0; i < self.fogSectorsToUpdate.length; i++) {
-                let item = self.fogSectorsToUpdate.pop();
-                if (typeof item !== "undefined") {
-                    item.fogSector.cache();
                 }
             }
         }

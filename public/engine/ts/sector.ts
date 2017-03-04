@@ -28,44 +28,6 @@ namespace Lich {
         }
     }
 
-    export class FogSector extends AbstractSector {
-
-        public fogCont = new PIXI.particles.ParticleContainer(undefined, {
-            rotation: false,
-            alpha: true,
-            scale: true,
-            uvs: true
-        });
-        public fogRendered: PIXI.Sprite;
-
-        constructor(
-            secId: number,
-            map_x: number,
-            map_y: number,
-            fixedWidth: number,
-            fixedHeight: number) {
-            super(secId,
-                map_x,
-                map_y,
-                fixedWidth,
-                fixedHeight);
-
-            this.addChild(this.fogCont);
-        }
-
-        public cache(): void {
-            // this.fogRendered = this.cacheInner(this.fogCont, this.fogRendered);
-        }
-
-        public removeFogChild(obj: PIXI.DisplayObject) {
-            this.fogCont.removeChild(obj);
-        }
-
-        public addFogChild(obj: PIXI.DisplayObject) {
-            this.fogCont.addChild(obj);
-        }
-    }
-
     export class Sector extends AbstractSector {
 
         public backgroundCont = new PIXI.Container();

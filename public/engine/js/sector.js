@@ -36,31 +36,6 @@ var Lich;
         return AbstractSector;
     }(PIXI.Container));
     Lich.AbstractSector = AbstractSector;
-    var FogSector = (function (_super) {
-        __extends(FogSector, _super);
-        function FogSector(secId, map_x, map_y, fixedWidth, fixedHeight) {
-            var _this = _super.call(this, secId, map_x, map_y, fixedWidth, fixedHeight) || this;
-            _this.fogCont = new PIXI.particles.ParticleContainer(undefined, {
-                rotation: false,
-                alpha: true,
-                scale: true,
-                uvs: true
-            });
-            _this.addChild(_this.fogCont);
-            return _this;
-        }
-        FogSector.prototype.cache = function () {
-            // this.fogRendered = this.cacheInner(this.fogCont, this.fogRendered);
-        };
-        FogSector.prototype.removeFogChild = function (obj) {
-            this.fogCont.removeChild(obj);
-        };
-        FogSector.prototype.addFogChild = function (obj) {
-            this.fogCont.addChild(obj);
-        };
-        return FogSector;
-    }(AbstractSector));
-    Lich.FogSector = FogSector;
     var Sector = (function (_super) {
         __extends(Sector, _super);
         function Sector(secId, map_x, map_y, fixedWidth, fixedHeight) {
