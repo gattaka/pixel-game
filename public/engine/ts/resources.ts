@@ -571,26 +571,26 @@ namespace Lich {
             return sprite;
         };
 
-        private getBasicSprite(sheetKey: SpritesheetKey, spriteName: string): PIXI.Sprite {
+        private getBasicSprite(sheetKey: SpritesheetKey, spriteName: string, originalSprite?: PIXI.Sprite): PIXI.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[sheetKey];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            let sprite = new PIXI.Sprite(spriteSheet);
-            return sprite;
+            let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+            texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            if (originalSprite) {
+                originalSprite.texture = texture;
+                return originalSprite;
+            } else {
+                return new PIXI.Sprite(texture);
+            }
         };
 
         getAchvUISprite(key: AchievementKey): PIXI.Sprite {
             return this.getBasicSprite(SpritesheetKey.SPST_ACHV_KEY, this.achievementsDefs[AchievementKey[key]].spriteName);
         };
 
-        getUISprite(key: UISpriteKey): PIXI.Sprite {
-            return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[UISpriteKey[key]]);
-        };
-
-        getSpellUISprite(key: SpellKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
-            return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.spellDefs[SpellKey[key]].iconSpriteName);
+        getUISprite(key: UISpriteKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
+            return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[UISpriteKey[key]], originalSprite);
         };
 
         getInvObjectSprite(key: InventoryKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {

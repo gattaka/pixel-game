@@ -105,24 +105,24 @@ namespace Lich {
             .add(AnimationKey.ANM_VALENTIMON_DEAD_KEY, 8, 8, AnimationKey.ANM_VALENTIMON_DEAD_KEY, 1),
         // gfx animations
         new AnimationSetDefinition("anm_blast", AnimationSetKey.FIREBALL_ANIMATION_KEY, 5, 60, 60)
-            .add(AnimationKey.ANM_FIREBALL_FLY_KEY, 0, 0, AnimationKey.ANM_FIREBALL_FLY_KEY, 1)
-            .add(AnimationKey.ANM_FIREBALL_HIT_KEY, 1, 4, AnimationKey.ANM_FIREBALL_DONE_KEY, 0.3)
-            .add(AnimationKey.ANM_FIREBALL_DONE_KEY, 4, 4, AnimationKey.ANM_FIREBALL_DONE_KEY, 1),
+            .add(AnimationKey.ANM_BULLET_FLY_KEY, 0, 0, AnimationKey.ANM_BULLET_FLY_KEY, 1)
+            .add(AnimationKey.ANM_BULLET_HIT_KEY, 1, 4, AnimationKey.ANM_BULLET_DONE_KEY, 0.3)
+            .add(AnimationKey.ANM_BULLET_DONE_KEY, 4, 4, AnimationKey.ANM_BULLET_DONE_KEY, 1),
         new AnimationSetDefinition("anm_meteor", AnimationSetKey.METEOR_ANIMATION_KEY, 5, 120, 120)
-            .add(AnimationKey.ANM_METEOR_FLY_KEY, 0, 0, AnimationKey.ANM_METEOR_FLY_KEY, 1)
-            .add(AnimationKey.ANM_METEOR_HIT_KEY, 1, 4, AnimationKey.ANM_METEOR_DONE_KEY, 0.3)
-            .add(AnimationKey.ANM_METEOR_DONE_KEY, 4, 4, AnimationKey.ANM_METEOR_DONE_KEY, 1),
+            .add(AnimationKey.ANM_BULLET_FLY_KEY, 0, 0, AnimationKey.ANM_BULLET_FLY_KEY, 1)
+            .add(AnimationKey.ANM_BULLET_HIT_KEY, 1, 4, AnimationKey.ANM_BULLET_DONE_KEY, 0.3)
+            .add(AnimationKey.ANM_BULLET_DONE_KEY, 4, 4, AnimationKey.ANM_BULLET_DONE_KEY, 1),
         new AnimationSetDefinition("anm_bolt", AnimationSetKey.ICEBOLT_ANIMATION_KEY, 5, 60, 60)
-            .add(AnimationKey.ANM_ICEBOLT_FLY_KEY, 0, 0, AnimationKey.ANM_ICEBOLT_FLY_KEY, 1)
-            .add(AnimationKey.ANM_ICEBOLT_HIT_KEY, 1, 4, AnimationKey.ANM_ICEBOLT_DONE_KEY, 0.3)
-            .add(AnimationKey.ANM_ICEBOLT_DONE_KEY, 4, 4, AnimationKey.ANM_ICEBOLT_DONE_KEY, 1),
+            .add(AnimationKey.ANM_BULLET_FLY_KEY, 0, 0, AnimationKey.ANM_BULLET_FLY_KEY, 1)
+            .add(AnimationKey.ANM_BULLET_HIT_KEY, 1, 4, AnimationKey.ANM_BULLET_DONE_KEY, 0.3)
+            .add(AnimationKey.ANM_BULLET_DONE_KEY, 4, 4, AnimationKey.ANM_BULLET_DONE_KEY, 1),
         new AnimationSetDefinition("anm_loveletter", AnimationSetKey.LOVELETTER_ANIMATION_KEY, 6, 32, 32)
-            .add(AnimationKey.ANM_LOVELETTER_FLY_KEY, 0, 0, AnimationKey.ANM_LOVELETTER_FLY_KEY, 1)
-            .add(AnimationKey.ANM_LOVELETTER_HIT_KEY, 1, 5, AnimationKey.ANM_LOVELETTER_DONE_KEY, 0.3)
-            .add(AnimationKey.ANM_LOVELETTER_DONE_KEY, 5, 5, AnimationKey.ANM_LOVELETTER_DONE_KEY, 1),
+            .add(AnimationKey.ANM_BULLET_FLY_KEY, 0, 0, AnimationKey.ANM_BULLET_FLY_KEY, 1)
+            .add(AnimationKey.ANM_BULLET_HIT_KEY, 1, 5, AnimationKey.ANM_BULLET_DONE_KEY, 0.3)
+            .add(AnimationKey.ANM_BULLET_DONE_KEY, 5, 5, AnimationKey.ANM_BULLET_DONE_KEY, 1),
         new AnimationSetDefinition("anm_lovearrow", AnimationSetKey.LOVEARROW_ANIMATION_KEY, 6, 32, 32)
-            .add(AnimationKey.ANM_LOVEARROW_FLY_KEY, 0, 0, AnimationKey.ANM_LOVEARROW_FLY_KEY, 1)
-            .add(AnimationKey.ANM_LOVEARROW_HIT_KEY, 1, 5, AnimationKey.ANM_LOVEARROW_DONE_KEY, 0.3)
-            .add(AnimationKey.ANM_LOVEARROW_DONE_KEY, 5, 5, AnimationKey.ANM_LOVEARROW_DONE_KEY, 1),
+            .add(AnimationKey.ANM_BULLET_FLY_KEY, 0, 0, AnimationKey.ANM_BULLET_FLY_KEY, 1)
+            .add(AnimationKey.ANM_BULLET_HIT_KEY, 1, 5, AnimationKey.ANM_BULLET_DONE_KEY, 0.3)
+            .add(AnimationKey.ANM_BULLET_DONE_KEY, 5, 5, AnimationKey.ANM_BULLET_DONE_KEY, 1),
     ]
 }

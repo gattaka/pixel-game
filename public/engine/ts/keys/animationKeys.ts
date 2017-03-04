@@ -86,26 +86,10 @@ namespace Lich {
         ANM_VALENTIMON_ATTACK_KEY,
         ANM_VALENTIMON_DIE_KEY,
         ANM_VALENTIMON_DEAD_KEY,
-        // Fireball
-        ANM_FIREBALL_FLY_KEY,
-        ANM_FIREBALL_HIT_KEY,
-        ANM_FIREBALL_DONE_KEY,
-        // Icebolt
-        ANM_ICEBOLT_FLY_KEY,
-        ANM_ICEBOLT_HIT_KEY,
-        ANM_ICEBOLT_DONE_KEY,
-        // Meteor
-        ANM_METEOR_FLY_KEY,
-        ANM_METEOR_HIT_KEY,
-        ANM_METEOR_DONE_KEY,
-        // Loveletter
-        ANM_LOVELETTER_FLY_KEY,
-        ANM_LOVELETTER_HIT_KEY,
-        ANM_LOVELETTER_DONE_KEY,
-        // Lovearrow
-        ANM_LOVEARROW_FLY_KEY,
-        ANM_LOVEARROW_HIT_KEY,
-        ANM_LOVEARROW_DONE_KEY
+        // Projectiles
+        ANM_BULLET_FLY_KEY,
+        ANM_BULLET_HIT_KEY,
+        ANM_BULLET_DONE_KEY,
     }
 
 }

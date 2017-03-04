@@ -71,6 +71,21 @@ namespace Lich {
         UI_PANEL_BR_KEY,
         UI_PANEL_BL_KEY,
         UI_BUTTON_KEY,
+        UI_FIREBALL_KEY,
+        UI_METEOR_KEY,
+        UI_LOVELETTER_KEY,
+        UI_LOVEARROW_KEY,
+        UI_ICEBOLT_KEY,
+        UI_USE_ITEM_KEY,
+        UI_REVEAL_FOG_KEY,
+        UI_TELEPORT_KEY,
+        UI_HOME_KEY,
+        UI_INTERACT_KEY,
+        UI_DIG_KEY,
+        UI_DIG_BGR_KEY,
+        UI_PLACE_KEY,
+        UI_PLACE_BGR_KEY,
+        UI_ENEMY_KEY
     }
 
     export enum AchievementKey {
@@ -93,8 +108,8 @@ namespace Lich {
         SPELL_TELEPORT_KEY,
         SPELL_HOME_KEY,
         SPELL_USE_ITEM_KEY,
-        SPELL_LOVELETTER,
-        SPELL_LOVEARROW,
+        SPELL_LOVELETTER_KEY,
+        SPELL_LOVEARROW_KEY,
 
         // RMB click interakce s objekty
         SPELL_INTERACT_KEY,

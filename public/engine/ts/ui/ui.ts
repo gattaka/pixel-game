@@ -54,12 +54,12 @@ namespace Lich {
             if (!mobile) {
                 let helpBtn = this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
+                helpBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             } else {
                 let menuCont = new PIXI.Container();
-                menuCont.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
-                menuCont.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                menuCont.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING;
+                menuCont.y = UI.SCREEN_SPACING + Button.SIDE_SIZE + PartsUI.SPACING;
                 menuCont.visible = false;
                 self.addChild(menuCont);
 
@@ -74,26 +74,26 @@ namespace Lich {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 });
-                loadBtn.y = Button.sideSize + PartsUI.SPACING;
+                loadBtn.y = Button.SIDE_SIZE + PartsUI.SPACING;
                 menuCont.addChild(loadBtn);
 
                 let newbtn = new Button(UISpriteKey.UI_NEW_WORLD_KEY, () => {
                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.NEW_WORLD));
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 });
-                newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                newbtn.y = 2 * (Button.SIDE_SIZE + PartsUI.SPACING);
                 menuCont.addChild(newbtn);
 
                 let helpBtn = this.createHelpButton();
                 menuCont.addChild(helpBtn);
-                helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
+                helpBtn.y = 3 * (Button.SIDE_SIZE + PartsUI.SPACING);
 
                 let menuBtn = new Button(UISpriteKey.UI_MENU_KEY, () => {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     menuCont.visible = !menuCont.visible;
                 });
                 self.addChild(menuBtn);
-                menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                menuBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
             }
 
@@ -124,7 +124,7 @@ namespace Lich {
                 let n = Math.floor(canvas.width / (Resources.PARTS_SIZE + PartsUI.SPACING)) - 4 - 1 - 3;
                 let m = Math.floor(canvas.height / (Resources.PARTS_SIZE + PartsUI.SPACING)) - 4;
                 inventoryUI = new InventoryUI(n, m);
-                inventoryUI.x = inventoryUI.expandedX = 4 * Button.sideSize + 2 * UI.SCREEN_SPACING;
+                inventoryUI.x = inventoryUI.expandedX = 4 * Button.SIDE_SIZE + 2 * UI.SCREEN_SPACING;
                 inventoryUI.y = inventoryUI.expandedY = canvas.height / 2 - inventoryUI.height / 2;
             } else {
                 inventoryUI = new InventoryUI();
@@ -236,7 +236,7 @@ namespace Lich {
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
                 });
-                craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                craftBtn.x = UI.SCREEN_SPACING + Button.SIDE_SIZE + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
 
@@ -244,7 +244,7 @@ namespace Lich {
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                     self.mapUI.show();
                 });
-                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
+                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.SIDE_SIZE + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
             }
@@ -252,12 +252,12 @@ namespace Lich {
             if (mobile) {
                 let movementCont = new PIXI.Container();
                 movementCont.x = UI.SCREEN_SPACING;
-                movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
+                movementCont.y = canvas.height / 2 - Button.SIDE_SIZE * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont);
 
                 let shape = new PIXI.Graphics();
                 shape.lineStyle(2, 0x000000, 0.7);
-                let radius = 2 * Button.sideSize;
+                let radius = 2 * Button.SIDE_SIZE;
                 shape.beginFill(0x0a320a, 0.5).drawCircle(0, 0, radius);
                 shape.x = radius;
                 shape.y = radius;
@@ -326,19 +326,6 @@ namespace Lich {
 
             }
 
-        }
-
-        isMouseInUI(x: number, y: number): boolean {
-            let self = this;
-            let uiHit = false;
-            self.children.forEach(function (item) {
-                // TODO?
-                // if (item.hit(x - item.x, y - item.y) === true) {
-                //     uiHit = true;
-                //     return;
-                // }
-            });
-            return uiHit;
         }
 
     }
@@ -445,36 +432,39 @@ namespace Lich {
     }
 
     export class Button extends PIXI.Container {
-        public static sideSize = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+        public static SIDE_SIZE = Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
 
         // výchozí interval efektu tlačítka (ms)
         private static DEFAULT_INTERVAL = 200;
         // hodnota (ms) o kterou se interval sníží při delším držení
         private static INTERVAL_DECREASE_TIME = 10;
         // počet opakování akce, než je hodnota snížena
-        private static INTERVAL_DECREASE_STEPS = 5;
+        private static INTERVAL_DECREASE_STEPS = 2;
         private intervalId;
         private interval = Button.DEFAULT_INTERVAL;
         private decreaseSteps = 0;
+        private sprite: PIXI.Sprite;
 
-        constructor(uiKey: UISpriteKey, onPress: Function, onRelease?: Function) {
+        public changeSprite(uiKey: UISpriteKey) {
+            Resources.getInstance().getUISprite(uiKey, this.sprite);
+        }
+
+        constructor(uiKey: UISpriteKey, onPress: Function, onRelease?: Function, onlyIcon = false) {
             super();
-            // this.buttonMode = true;
-            this.interactive = true;
 
-            let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
-            this.addChild(bgr);
-            bgr.x = 0;
-            bgr.y = 0;
-
-            if (uiKey) {
-                let sprite = Resources.getInstance().getUISprite(uiKey);
-                this.addChild(sprite);
-                sprite.x = PartsUI.SELECT_BORDER;
-                sprite.y = PartsUI.SELECT_BORDER;
+            if (!onlyIcon) {
+                let bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
+                this.addChild(bgr);
+                bgr.x = 0;
+                bgr.y = 0;
             }
 
-            this.hitArea = new PIXI.Rectangle(0, 0, Button.sideSize, Button.sideSize);
+            this.sprite = Resources.getInstance().getUISprite(uiKey);
+            this.addChild(this.sprite);
+            this.sprite.x = PartsUI.SELECT_BORDER;
+            this.sprite.y = PartsUI.SELECT_BORDER;
+            this.sprite.interactive = true;
+            this.sprite.buttonMode = true;
             let self = this;
 
             let repeatPress = () => {
@@ -490,19 +480,20 @@ namespace Lich {
                 }, self.interval);
             }
 
-            this.on("pointerdown", () => {
+            this.sprite.on("pointerdown", () => {
                 onPress();
                 self.decreaseSteps = 0;
                 self.interval = Button.DEFAULT_INTERVAL;
                 repeatPress();
             });
-            this.on("pointerup", () => {
+            let out = () => {
                 clearInterval(self.intervalId);
                 if (onRelease) {
                     onRelease();
                 }
-            });
-
+            };
+            this.sprite.on("pointerup", out);
+            this.sprite.on("pointerout", out);
         }
     }
 

@@ -72,6 +72,21 @@ var Lich;
         UISpriteKey[UISpriteKey["UI_PANEL_BR_KEY"] = 28] = "UI_PANEL_BR_KEY";
         UISpriteKey[UISpriteKey["UI_PANEL_BL_KEY"] = 29] = "UI_PANEL_BL_KEY";
         UISpriteKey[UISpriteKey["UI_BUTTON_KEY"] = 30] = "UI_BUTTON_KEY";
+        UISpriteKey[UISpriteKey["UI_FIREBALL_KEY"] = 31] = "UI_FIREBALL_KEY";
+        UISpriteKey[UISpriteKey["UI_METEOR_KEY"] = 32] = "UI_METEOR_KEY";
+        UISpriteKey[UISpriteKey["UI_LOVELETTER_KEY"] = 33] = "UI_LOVELETTER_KEY";
+        UISpriteKey[UISpriteKey["UI_LOVEARROW_KEY"] = 34] = "UI_LOVEARROW_KEY";
+        UISpriteKey[UISpriteKey["UI_ICEBOLT_KEY"] = 35] = "UI_ICEBOLT_KEY";
+        UISpriteKey[UISpriteKey["UI_USE_ITEM_KEY"] = 36] = "UI_USE_ITEM_KEY";
+        UISpriteKey[UISpriteKey["UI_REVEAL_FOG_KEY"] = 37] = "UI_REVEAL_FOG_KEY";
+        UISpriteKey[UISpriteKey["UI_TELEPORT_KEY"] = 38] = "UI_TELEPORT_KEY";
+        UISpriteKey[UISpriteKey["UI_HOME_KEY"] = 39] = "UI_HOME_KEY";
+        UISpriteKey[UISpriteKey["UI_INTERACT_KEY"] = 40] = "UI_INTERACT_KEY";
+        UISpriteKey[UISpriteKey["UI_DIG_KEY"] = 41] = "UI_DIG_KEY";
+        UISpriteKey[UISpriteKey["UI_DIG_BGR_KEY"] = 42] = "UI_DIG_BGR_KEY";
+        UISpriteKey[UISpriteKey["UI_PLACE_KEY"] = 43] = "UI_PLACE_KEY";
+        UISpriteKey[UISpriteKey["UI_PLACE_BGR_KEY"] = 44] = "UI_PLACE_BGR_KEY";
+        UISpriteKey[UISpriteKey["UI_ENEMY_KEY"] = 45] = "UI_ENEMY_KEY";
     })(UISpriteKey = Lich.UISpriteKey || (Lich.UISpriteKey = {}));
     var AchievementKey;
     (function (AchievementKey) {
@@ -94,8 +109,8 @@ var Lich;
         SpellKey[SpellKey["SPELL_TELEPORT_KEY"] = 8] = "SPELL_TELEPORT_KEY";
         SpellKey[SpellKey["SPELL_HOME_KEY"] = 9] = "SPELL_HOME_KEY";
         SpellKey[SpellKey["SPELL_USE_ITEM_KEY"] = 10] = "SPELL_USE_ITEM_KEY";
-        SpellKey[SpellKey["SPELL_LOVELETTER"] = 11] = "SPELL_LOVELETTER";
-        SpellKey[SpellKey["SPELL_LOVEARROW"] = 12] = "SPELL_LOVEARROW";
+        SpellKey[SpellKey["SPELL_LOVELETTER_KEY"] = 11] = "SPELL_LOVELETTER_KEY";
+        SpellKey[SpellKey["SPELL_LOVEARROW_KEY"] = 12] = "SPELL_LOVEARROW_KEY";
         // RMB click interakce s objekty
         SpellKey[SpellKey["SPELL_INTERACT_KEY"] = 13] = "SPELL_INTERACT_KEY";
         // Reveal

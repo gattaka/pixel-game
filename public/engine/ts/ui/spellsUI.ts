@@ -4,11 +4,30 @@ namespace Lich {
         private static INSTANCE: Spellbook;
 
         // TODO dokončit oddělení UI se Spellbookem
-        public choosenItemNumber: number;
-        public spellIndex = new Array<SpellKey>();
-        public alternativeSpellIndex = new Array<SpellKey>();
+        private choosenSpellIndex: number;
+        private spellIndex = new Array<SpellKey>();
+        private altSpellIndex = new Array<SpellKey>();
 
-        getChoosenSpell() { return this.choosenItemNumber; }
+        getChoosenSpellIndex(): number { return this.spellIndex[this.choosenSpellIndex]; }
+        setChooseSpellIndex(choosenItemNumber: number) { return this.choosenSpellIndex = choosenItemNumber; }
+        getSize(): number { return this.spellIndex.length; }
+
+        insertSpell(i: number, spell: SpellKey, altSpell?: SpellKey) {
+            this.spellIndex[i] = spell;
+            this.altSpellIndex[i] = altSpell;
+        }
+
+        getChoosenSpell(alt = false): SpellKey {
+            if (alt) {
+                let spell = this.altSpellIndex[this.choosenSpellIndex];
+                if (spell) return spell;
+            }
+            return this.spellIndex[this.choosenSpellIndex];
+        }
+
+        getSpellByIndex(i: number, alt = false): SpellKey {
+            return alt ? this.altSpellIndex[i] : this.spellIndex[i];
+        }
 
         public static getInstance() {
             if (!Spellbook.INSTANCE) {
@@ -27,14 +46,13 @@ namespace Lich {
 
         toggleFlag = false;
 
-        spellContent = new Array<PIXI.Sprite>();
-        itemsCont = new PIXI.Container();
+        spellContent = new Array<Button>();
         itemHighlight: PIXI.Graphics;
 
         constructor() {
             super(SpellsUI.N, SpellsUI.M);
 
-            var self = this;
+            let self = this;
 
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(SpellKey.SPELL_DIG_KEY, SpellKey.SPELL_DIG_BGR_KEY);
@@ -46,15 +64,17 @@ namespace Lich {
             self.spellInsert(SpellKey.SPELL_TELEPORT_KEY, SpellKey.SPELL_HOME_KEY);
             self.spellInsert(SpellKey.SPELL_METEOR_KEY);
 
+            for (var i = 0; i < Spellbook.getInstance().getSize(); i++) {
+                (() => {
+                    let ii = i;
+                    Keyboard.on(49 + ii, () => { self.selectSpell(ii); });
+                })();
+            }
+
             // zvýraznění vybrané položky
             self.itemHighlight = new Highlight();
             self.itemHighlight.visible = false;
             self.addChild(self.itemHighlight);
-
-            // kontejner položek
-            self.itemsCont.x = SpellsUI.BORDER;
-            self.itemsCont.y = SpellsUI.BORDER;
-            self.addChild(self.itemsCont);
 
             // let offset = 5;
             // self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
@@ -62,14 +82,15 @@ namespace Lich {
             self.selectSpell(0);
         }
 
-        toggleShift() {
-            var self = this;
+        toggleAlternative() {
+            let self = this;
             // dochází ke změně?
             if (self.toggleFlag == false) {
-                for (var i = 0; i < Spellbook.getInstance().spellIndex.length; i++) {
-                    var alt = Spellbook.getInstance().alternativeSpellIndex[i];
+                for (let i = 0; i < Spellbook.getInstance().getSize(); i++) {
+                    let alt = Spellbook.getInstance().getSpellByIndex(i, true);
                     if (alt) {
-                        Resources.getInstance().getSpellUISprite(alt, this.spellContent[i]);
+                        let def = Resources.getInstance().getSpellDef(alt);
+                        this.spellContent[i].changeSprite(def.icon);
                     }
                 }
                 // self.updateCache();
@@ -77,10 +98,11 @@ namespace Lich {
             }
         }
 
-        prepareForToggleShift() {
+        prepareForToggleAlternative() {
             if (this.toggleFlag) {
-                for (var i = 0; i < Spellbook.getInstance().spellIndex.length; i++) {
-                    Resources.getInstance().getSpellUISprite(Spellbook.getInstance().spellIndex[i], this.spellContent[i]);
+                for (let i = 0; i < Spellbook.getInstance().getSize(); i++) {
+                    let def = Resources.getInstance().getSpellDef(Spellbook.getInstance().getSpellByIndex(i));
+                    this.spellContent[i].changeSprite(def.icon);
                 }
                 // this.updateCache();
                 this.toggleFlag = false;
@@ -88,45 +110,34 @@ namespace Lich {
         }
 
         selectSpell(spellNumber: number) {
-            var self = this;
-            var bitmap = self.spellContent[spellNumber];
+            let self = this;
+            let button = self.spellContent[spellNumber];
             self.itemHighlight.visible = true;
-            self.itemHighlight.x = bitmap.x - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            self.itemHighlight.y = bitmap.y - SpellsUI.SELECT_BORDER + SpellsUI.BORDER;
-            Spellbook.getInstance().choosenItemNumber = spellNumber;
+            self.itemHighlight.x = button.x;
+            self.itemHighlight.y = button.y;
+            Spellbook.getInstance().setChooseSpellIndex(spellNumber);
             // self.updateCache();
         }
 
-        getChoosenSpell(): SpellKey {
-            var alt = Spellbook.getInstance().alternativeSpellIndex[Spellbook.getInstance().choosenItemNumber];
-            if (this.toggleFlag && typeof alt !== "undefined") {
-                return alt;
-            } else {
-                return Spellbook.getInstance().spellIndex[Spellbook.getInstance().choosenItemNumber];
-            }
-        }
-
         spellInsert(spell: SpellKey, altSpell?: SpellKey) {
-            var self = this;
-            var spellIcon = Resources.getInstance().getSpellUISprite(spell);
-            self.itemsCont.addChild(spellIcon);
-            spellIcon.x = self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
-            spellIcon.y = 0;
-            var index = Spellbook.getInstance().spellIndex.length;
-            Spellbook.getInstance().spellIndex[index] = spell;
-            Spellbook.getInstance().alternativeSpellIndex[index] = altSpell;
-            self.spellContent.push(spellIcon);
+            let self = this;
+            let spellDef = Resources.getInstance().getSpellDef(spell);
+            let spellIcon = new Button(spellDef.icon, () => {
+                self.selectSpell(index);
+            }, undefined, true);
+            self.addChild(spellIcon);
+            spellIcon.x = PartsUI.SELECT_BORDER + self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
+            spellIcon.y = PartsUI.SELECT_BORDER;
+            let index = self.spellContent.push(spellIcon) - 1;
+            Spellbook.getInstance().insertSpell(index, spell, altSpell)
 
-            var text = new Label("" + self.spellContent.length);
-            self.itemsCont.addChild(text);
-            text.x = spellIcon.x;
-            text.y = spellIcon.y + Resources.PARTS_SIZE - PartsUI.TEXT_SIZE;
+            let text = new Label("" + self.spellContent.length);
+            self.addChild(text);
+            text.x = spellIcon.x + PartsUI.SELECT_BORDER;
+            text.y = spellIcon.y + Resources.PARTS_SIZE + PartsUI.SELECT_BORDER - PartsUI.TEXT_SIZE;
 
             spellIcon.hitArea = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
 
-            spellIcon.on("pointerdown", () => {
-                self.selectSpell(index);
-            });
         }
     }
 

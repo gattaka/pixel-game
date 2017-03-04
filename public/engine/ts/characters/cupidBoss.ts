@@ -111,7 +111,7 @@ namespace Lich {
                             break;
                         case AI_MODE.RAIN:
                             if (this.currentAttackCooldown >= this.attackCooldown) {
-                                let spell = Resources.getInstance().getSpellDef(SpellKey.SPELL_LOVEARROW);
+                                let spell = Resources.getInstance().getSpellDef(SpellKey.SPELL_LOVEARROW_KEY);
                                 let castX = this.x + Math.random() * this.fixedWidth;
                                 let castY = this.y + this.fixedHeight;
                                 let context = new SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);

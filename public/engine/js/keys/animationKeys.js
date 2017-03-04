@@ -87,25 +87,9 @@ var Lich;
         AnimationKey[AnimationKey["ANM_VALENTIMON_ATTACK_KEY"] = 58] = "ANM_VALENTIMON_ATTACK_KEY";
         AnimationKey[AnimationKey["ANM_VALENTIMON_DIE_KEY"] = 59] = "ANM_VALENTIMON_DIE_KEY";
         AnimationKey[AnimationKey["ANM_VALENTIMON_DEAD_KEY"] = 60] = "ANM_VALENTIMON_DEAD_KEY";
-        // Fireball
-        AnimationKey[AnimationKey["ANM_FIREBALL_FLY_KEY"] = 61] = "ANM_FIREBALL_FLY_KEY";
-        AnimationKey[AnimationKey["ANM_FIREBALL_HIT_KEY"] = 62] = "ANM_FIREBALL_HIT_KEY";
-        AnimationKey[AnimationKey["ANM_FIREBALL_DONE_KEY"] = 63] = "ANM_FIREBALL_DONE_KEY";
-        // Icebolt
-        AnimationKey[AnimationKey["ANM_ICEBOLT_FLY_KEY"] = 64] = "ANM_ICEBOLT_FLY_KEY";
-        AnimationKey[AnimationKey["ANM_ICEBOLT_HIT_KEY"] = 65] = "ANM_ICEBOLT_HIT_KEY";
-        AnimationKey[AnimationKey["ANM_ICEBOLT_DONE_KEY"] = 66] = "ANM_ICEBOLT_DONE_KEY";
-        // Meteor
-        AnimationKey[AnimationKey["ANM_METEOR_FLY_KEY"] = 67] = "ANM_METEOR_FLY_KEY";
-        AnimationKey[AnimationKey["ANM_METEOR_HIT_KEY"] = 68] = "ANM_METEOR_HIT_KEY";
-        AnimationKey[AnimationKey["ANM_METEOR_DONE_KEY"] = 69] = "ANM_METEOR_DONE_KEY";
-        // Loveletter
-        AnimationKey[AnimationKey["ANM_LOVELETTER_FLY_KEY"] = 70] = "ANM_LOVELETTER_FLY_KEY";
-        AnimationKey[AnimationKey["ANM_LOVELETTER_HIT_KEY"] = 71] = "ANM_LOVELETTER_HIT_KEY";
-        AnimationKey[AnimationKey["ANM_LOVELETTER_DONE_KEY"] = 72] = "ANM_LOVELETTER_DONE_KEY";
-        // Lovearrow
-        AnimationKey[AnimationKey["ANM_LOVEARROW_FLY_KEY"] = 73] = "ANM_LOVEARROW_FLY_KEY";
-        AnimationKey[AnimationKey["ANM_LOVEARROW_HIT_KEY"] = 74] = "ANM_LOVEARROW_HIT_KEY";
-        AnimationKey[AnimationKey["ANM_LOVEARROW_DONE_KEY"] = 75] = "ANM_LOVEARROW_DONE_KEY";
+        // Projectiles
+        AnimationKey[AnimationKey["ANM_BULLET_FLY_KEY"] = 61] = "ANM_BULLET_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_BULLET_HIT_KEY"] = 62] = "ANM_BULLET_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_BULLET_DONE_KEY"] = 63] = "ANM_BULLET_DONE_KEY";
     })(AnimationKey = Lich.AnimationKey || (Lich.AnimationKey = {}));
 })(Lich || (Lich = {}));

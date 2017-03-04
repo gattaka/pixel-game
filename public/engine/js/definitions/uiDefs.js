@@ -32,6 +32,21 @@ var Lich;
         ["ui_panel_br", Lich.UISpriteKey.UI_PANEL_BR_KEY],
         ["ui_panel_bl", Lich.UISpriteKey.UI_PANEL_BL_KEY],
         ["ui_button", Lich.UISpriteKey.UI_BUTTON_KEY],
+        ["ui_fireball_spell", Lich.UISpriteKey.UI_FIREBALL_KEY],
+        ["ui_meteor_spell", Lich.UISpriteKey.UI_METEOR_KEY],
+        ["ui_loveletter_spell", Lich.UISpriteKey.UI_LOVELETTER_KEY],
+        ["ui_lovearrow_spell", Lich.UISpriteKey.UI_LOVEARROW_KEY],
+        ["ui_bolt_spell", Lich.UISpriteKey.UI_ICEBOLT_KEY],
+        ["ui_use_spell", Lich.UISpriteKey.UI_USE_ITEM_KEY],
+        ["ui_place_spell", Lich.UISpriteKey.UI_REVEAL_FOG_KEY],
+        ["ui_teleport_spell", Lich.UISpriteKey.UI_TELEPORT_KEY],
+        ["ui_home_spell", Lich.UISpriteKey.UI_HOME_KEY],
+        ["ui_place_spell", Lich.UISpriteKey.UI_INTERACT_KEY],
+        ["ui_dig_spell", Lich.UISpriteKey.UI_DIG_KEY],
+        ["ui_dig_bgr_spell", Lich.UISpriteKey.UI_DIG_BGR_KEY],
+        ["ui_place_spell", Lich.UISpriteKey.UI_PLACE_KEY],
+        ["ui_place_bgr_spell", Lich.UISpriteKey.UI_PLACE_BGR_KEY],
+        ["ui_enemy_spell", Lich.UISpriteKey.UI_ENEMY_KEY]
     ];
     Lich.FONT_DEFS = [
         [Lich.FontKey.FNT_SMALL_YELLOW_KEY, [

@@ -26,7 +26,7 @@ namespace Lich {
             // id spellu
             public key: SpellKey,
             // název sprite ikony 
-            public iconSpriteName: string,
+            public icon: UISpriteKey,
             // náročnost na will
             public cost: number,
             // prodleva před dalším použitím
@@ -46,12 +46,10 @@ namespace Lich {
 
         constructor(
             key: SpellKey,
-            iconSpriteName: string,
+            icon: UISpriteKey,
             cost: number,
             cooldown: number,
             private animationSetKey: AnimationSetKey,
-            private initAnimation: AnimationKey,
-            private endAnimation: AnimationKey,
             public castSoundKey: SoundKey,
             public hitSoundKey: SoundKey,
             public speed: number,
@@ -63,7 +61,7 @@ namespace Lich {
             private colloffsetY = 20,
 
         ) {
-            super(key, iconSpriteName, cost, cooldown);
+            super(key, icon, cost, cooldown);
         }
 
         protected adjustObjectSpeed(context: SpellContext, object: AbstractWorldObject) {
@@ -83,8 +81,6 @@ namespace Lich {
             var object = new BasicBullet(
                 context.owner,
                 self.animationSetKey,
-                self.initAnimation,
-                self.endAnimation,
                 self.colloffsetX,
                 self.colloffsetY,
                 self.hitSoundKey,
@@ -124,12 +120,10 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_FIREBALL_KEY,
-                "ui_fireball_spell",
+                UISpriteKey.UI_FIREBALL_KEY,
                 FireballSpellDef.COST,
                 FireballSpellDef.COOLDOWN,
                 AnimationSetKey.FIREBALL_ANIMATION_KEY,
-                AnimationKey.ANM_FIREBALL_FLY_KEY,
-                AnimationKey.ANM_FIREBALL_DONE_KEY,
                 SoundKey.SND_FIREBALL_KEY,
                 SoundKey.SND_BURN_KEY,
                 FireballSpellDef.SPEED,
@@ -156,12 +150,10 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_METEOR_KEY,
-                "ui_meteor_spell",
+                UISpriteKey.UI_METEOR_KEY,
                 10, // COST,
                 200, // COOLDOWN,
                 AnimationSetKey.METEOR_ANIMATION_KEY,
-                AnimationKey.ANM_METEOR_FLY_KEY,
-                AnimationKey.ANM_METEOR_DONE_KEY,
                 SoundKey.SND_METEOR_FALL_KEY,
                 SoundKey.SND_METEOR_HIT_KEY,
                 1500, // SPEED,
@@ -180,19 +172,15 @@ namespace Lich {
     export abstract class AbstractLoveSpellDef extends BulletSpellDef {
         constructor(
             spellKey: SpellKey,
-            iconSpriteName: string,
+            icon: UISpriteKey,
             animationSetKey: AnimationSetKey,
-            initAnimation: AnimationKey,
-            endAnimation: AnimationKey,
             damage: number) {
             super(
                 spellKey, // SpellKey
-                iconSpriteName,
+                icon,
                 10, // COST
                 200, // COOLDOWN
                 animationSetKey,
-                initAnimation,
-                endAnimation,
                 SoundKey.SND_BOLT_CAST_KEY, // castSoundKey
                 SoundKey.SND_BURN_KEY, // hitSoundKey
                 1000, // speed
@@ -212,11 +200,9 @@ namespace Lich {
     export class LoveletterSpellDef extends AbstractLoveSpellDef {
         constructor() {
             super(
-                SpellKey.SPELL_LOVELETTER, // SpellKey
-                "ui_loveletter_spell",
+                SpellKey.SPELL_LOVELETTER_KEY, // SpellKey
+                UISpriteKey.UI_LOVELETTER_KEY,
                 AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
-                AnimationKey.ANM_LOVELETTER_FLY_KEY,
-                AnimationKey.ANM_LOVELETTER_DONE_KEY,
                 2, // damage
             );
         }
@@ -228,11 +214,9 @@ namespace Lich {
     export class LovearrowSpellDef extends AbstractLoveSpellDef {
         constructor() {
             super(
-                SpellKey.SPELL_LOVEARROW, // SpellKey
-                "ui_lovearrow_spell",
+                SpellKey.SPELL_LOVEARROW_KEY, // SpellKey
+                UISpriteKey.UI_LOVEARROW_KEY,
                 AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
-                AnimationKey.ANM_LOVEARROW_FLY_KEY,
-                AnimationKey.ANM_LOVEARROW_DONE_KEY,
                 5, // damage
             );
         }
@@ -246,12 +230,10 @@ namespace Lich {
         constructor() {
             super(
                 SpellKey.SPELL_ICEBOLT_KEY,
-                "ui_bolt_spell",
+                UISpriteKey.UI_ICEBOLT_KEY,
                 2, // COST,
                 100, // COOLDOWN,
                 AnimationSetKey.ICEBOLT_ANIMATION_KEY,
-                AnimationKey.ANM_ICEBOLT_FLY_KEY,
-                AnimationKey.ANM_ICEBOLT_DONE_KEY,
                 SoundKey.SND_BOLT_CAST_KEY,
                 SoundKey.SND_FIREBALL_KEY,
                 1500, // SPEED
@@ -268,8 +250,8 @@ namespace Lich {
      */
     export abstract class HeroReachSpellDef extends SpellDefinition {
 
-        constructor(key: SpellKey, iconSpriteName: string, cost: number, cooldown: number) {
-            super(key, iconSpriteName, cost, cooldown);
+        constructor(key: SpellKey, icon: UISpriteKey, cost: number, cooldown: number) {
+            super(key, icon, cost, cooldown);
         }
 
         public abstract castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean;
@@ -296,13 +278,13 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_USE_ITEM_KEY, "ui_use_spell", UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_USE_ITEM_KEY, UISpriteKey.UI_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
             let world = context.game.getWorld();
             var uiItem = Inventory.getInstance().getChoosenItem();
-            
+
             if (uiItem) {
                 var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
                 if (object.consumeAction) {
@@ -325,7 +307,7 @@ namespace Lich {
         static COST = 0;
 
         constructor() {
-            super(SpellKey.SPELL_REVEAL_FOG_KEY, "ui_place_spell", RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_REVEAL_FOG_KEY, UISpriteKey.UI_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -342,7 +324,7 @@ namespace Lich {
         static COST = 2; // DEV cost :)
 
         constructor() {
-            super(SpellKey.SPELL_TELEPORT_KEY, "ui_teleport_spell", TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_TELEPORT_KEY, UISpriteKey.UI_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -365,7 +347,7 @@ namespace Lich {
         static COST = 20;
 
         constructor() {
-            super(SpellKey.SPELL_HOME_KEY, "ui_home_spell", HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_HOME_KEY, UISpriteKey.UI_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN);
         }
 
         public cast(context: SpellContext): boolean {
@@ -387,7 +369,7 @@ namespace Lich {
         static COOLDOWN = 200;
 
         constructor() {
-            super(SpellKey.SPELL_INTERACT_KEY, "ui_place_spell", 0, MapObjectsInteractionSpellDef.COOLDOWN);
+            super(SpellKey.SPELL_INTERACT_KEY, UISpriteKey.UI_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -403,10 +385,10 @@ namespace Lich {
         static COOLDOWN = 100;
 
         constructor(key: SpellKey,
-            iconSpriteName: string,
+            icon: UISpriteKey,
             // kope se povrch jako podklad?
             private asBackground) {
-            super(key, iconSpriteName, 0, AbstractDigSpellDef.COOLDOWN);
+            super(key, icon, 0, AbstractDigSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -430,13 +412,13 @@ namespace Lich {
 
     export class DigSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_KEY, "ui_dig_spell", false);
+            super(SpellKey.SPELL_DIG_KEY, UISpriteKey.UI_DIG_KEY, false);
         }
     }
 
     export class DigBgrSpellDef extends AbstractDigSpellDef {
         constructor() {
-            super(SpellKey.SPELL_DIG_BGR_KEY, "ui_dig_bgr_spell", true);
+            super(SpellKey.SPELL_DIG_BGR_KEY, UISpriteKey.UI_DIG_BGR_KEY, true);
         }
     }
 
@@ -449,11 +431,11 @@ namespace Lich {
 
         constructor(
             key: SpellKey,
-            iconSpriteName: string,
+            icon: UISpriteKey,
             // pokládá se povrch/objekt jako podklad/alterantiva?
             private alternative
         ) {
-            super(key, iconSpriteName, 0, AbstractPlaceSpellDef.COOLDOWN);
+            super(key, icon, 0, AbstractPlaceSpellDef.COOLDOWN);
         }
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
@@ -482,13 +464,13 @@ namespace Lich {
 
     export class PlaceSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_KEY, "ui_place_spell", false);
+            super(SpellKey.SPELL_PLACE_KEY, UISpriteKey.UI_PLACE_KEY, false);
         }
     }
 
     export class PlaceBgrSpellDef extends AbstractPlaceSpellDef {
         constructor() {
-            super(SpellKey.SPELL_PLACE_BGR_KEY, "ui_place_bgr_spell", true);
+            super(SpellKey.SPELL_PLACE_BGR_KEY, UISpriteKey.UI_PLACE_BGR_KEY, true);
         }
     }
 
@@ -499,7 +481,7 @@ namespace Lich {
     export class EnemySpellDef extends SpellDefinition {
 
         constructor() {
-            super(SpellKey.SPELL_ENEMY_KEY, "ui_enemy_spell", 0, 200);
+            super(SpellKey.SPELL_ENEMY_KEY, UISpriteKey.UI_ENEMY_KEY, 0, 200);
         }
 
         public cast(context: SpellContext): boolean {

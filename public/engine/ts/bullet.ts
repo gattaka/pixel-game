@@ -63,10 +63,6 @@ namespace Lich {
             public owner: string,
             // sada animací, ze které sřela je
             private animationSetKey: AnimationSetKey,
-            // počáteční stav animace
-            public initAnimation: AnimationKey,
-            // koncový stav animace
-            public endAnimation: AnimationKey,
             // kolizní tolerance
             public collXOffset: number,
             public collYOffset: number,
@@ -98,8 +94,6 @@ namespace Lich {
         constructor(
             owner: string,
             animationSetKey: AnimationSetKey,
-            initAnimation: AnimationKey,
-            endAnimation: AnimationKey,
             collXOffset: number,
             collYOffset: number,
             hitSoundKey: SoundKey,
@@ -108,13 +102,13 @@ namespace Lich {
             damage: number,
             private radius?: number,
         ) {
-            super(owner, animationSetKey, initAnimation, endAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
+            super(owner, animationSetKey, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage);
         };
 
         public update(sDelta: number, game: Game) {
             var self: BasicBullet = this;
             if (self.ending) {
-                if (self.getCurrentAnimation() === AnimationKey[self.endAnimation]) {
+                if (self.getCurrentAnimation() === AnimationKey[AnimationKey.ANM_BULLET_DONE_KEY]) {
                     self.done = true;
                 }
                 return;
@@ -175,7 +169,7 @@ namespace Lich {
                 if (self.ending === false) {
                     Mixer.playSound(self.hitSound, 0.1);
                     self.ending = true;
-                    self.gotoAndPlay("hit");
+                    self.gotoAndPlay(AnimationKey[AnimationKey.ANM_BULLET_HIT_KEY]);
 
                     if (self.mapDestroy) {
                         var centX = self.x + self.fixedWidth / 2;

@@ -59,11 +59,16 @@ var Lich;
             self.stage = new PIXI.Container();
             self.stage.fixedWidth = window.innerWidth;
             self.stage.fixedHeight = window.innerHeight;
+            self.hitLayer = new PIXI.Container();
+            self.hitLayer.fixedWidth = window.innerWidth;
+            self.hitLayer.fixedHeight = window.innerHeight;
+            self.hitLayer.hitArea = new PIXI.Rectangle(0, 0, window.innerWidth, window.innerHeight);
+            self.hitLayer.interactive = true;
             /*--------------*/
             /* Mouse events */
             /*--------------*/
             if (mobile) {
-                self.stage.on("pointerdown", function () {
+                self.hitLayer.on("pointerdown", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.down = true;
                     self.mouse.clickChanged = true;
@@ -71,44 +76,41 @@ var Lich;
                     self.mouse.x = mouseData.x;
                     self.mouse.y = mouseData.y;
                 });
-                self.stage.on("pressmove", function () {
+                self.hitLayer.on("pointermove", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.x = mouseData.x;
                     self.mouse.y = mouseData.y;
                     Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
                 });
-                self.stage.on("pressup", function () {
+                self.hitLayer.on("pointerup", function () {
                     self.mouse.down = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
                 });
             }
             else {
-                self.stage.on("mousedown", function () {
-                    var mouseData = self.renderer.plugins.interaction.mouse;
-                    if (mouseData.button == 0) {
-                        self.mouse.down = true;
-                    }
-                    else {
-                        self.mouse.rightDown = true;
-                    }
+                self.hitLayer.on("pointerdown", function () {
+                    self.mouse.down = true;
+                    self.mouse.rightDown = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
                 });
-                self.stage.on("mousemove", function () {
+                self.hitLayer.on("rightdown", function () {
+                    self.mouse.down = false;
+                    self.mouse.rightDown = true;
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                });
+                self.hitLayer.on("pointermove", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.x = mouseData.x;
                     self.mouse.y = mouseData.y;
                     Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
                 });
-                self.stage.on("mouseup", function () {
+                self.hitLayer.on("pointerup", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse;
-                    if (mouseData.button == 0) {
-                        self.mouse.down = false;
-                    }
-                    else {
-                        self.mouse.rightDown = false;
-                    }
+                    self.mouse.down = false;
+                    self.mouse.rightDown = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
                 });
@@ -158,6 +160,7 @@ var Lich;
                     self.world = new Lich.World(self, tilesMap);
                     self.stage.addChild(self.background);
                     self.stage.addChild(self.world);
+                    self.stage.addChild(self.hitLayer);
                     self.stage.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         // TODO
@@ -258,10 +261,7 @@ var Lich;
             Lich.Keyboard.on(73, function () { self.ui.inventoryUI.toggle(); }, function () { self.ui.inventoryUI.prepareForToggle(); });
             Lich.Keyboard.on(77, function () { self.ui.mapUI.toggle(); }, function () { self.ui.mapUI.prepareForToggle(); });
             Lich.Keyboard.on(78, function () { self.ui.minimapUI.toggle(); }, function () { self.ui.minimapUI.prepareForToggle(); });
-            Lich.Keyboard.on(16, function () { self.ui.spellsUI.toggle(); }, function () { self.ui.spellsUI.prepareForToggle(); });
-            for (var i = 0; i < Lich.Spellbook.getInstance().spellIndex.length; i++) {
-                Lich.Keyboard.on(49 + i, function () { self.ui.spellsUI.selectSpell(i); });
-            }
+            Lich.Keyboard.on(16, function () { self.ui.spellsUI.toggleAlternative(); }, function () { self.ui.spellsUI.prepareForToggleAlternative(); });
             var ticker = PIXI.ticker.shared;
             ticker.add(function () {
                 // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
@@ -271,13 +271,13 @@ var Lich;
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
                     // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
-                    if (self.mouse.down && self.mouse.clickChanged) {
-                        if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                            // blokuj akci světa
-                            self.mouse.consumedByUI = true;
-                            self.mouse.clickChanged = false;
-                        }
-                    }
+                    // if (self.mouse.down && self.mouse.clickChanged) {
+                    // if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
+                    //     // blokuj akci světa
+                    //     self.mouse.consumedByUI = true;
+                    //     self.mouse.clickChanged = false;
+                    // }
+                    // }
                     if (!self.mouse.down && self.mouse.clickChanged) {
                         self.ui.controls = new Controls();
                     }

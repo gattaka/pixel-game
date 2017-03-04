@@ -74,7 +74,7 @@ namespace Lich {
 
             var self = this;
 
-            this.workstationIcon = Resources.getInstance().getSpellUISprite(SpellKey.SPELL_PLACE_KEY);
+            this.workstationIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLACE_KEY);
             let bounds = this.workstationIcon.getBounds();
             this.workstationIconBgr = new UIBackground();
             this.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);
@@ -104,7 +104,7 @@ namespace Lich {
                 if (payload.payload) {
                     Resources.getInstance().getInvObjectSprite(WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
                 } else {
-                    Resources.getInstance().getSpellUISprite(SpellKey.SPELL_PLACE_KEY, self.workstationIcon);
+                    Resources.getInstance().getUISprite(UISpriteKey.UI_PLACE_KEY, self.workstationIcon);
                 }
                 let bounds = self.workstationIcon.getBounds();
                 self.workstationIconBgr.drawBackground(bounds.width + 2 * PartsUI.SELECT_BORDER, bounds.height + 2 * PartsUI.SELECT_BORDER);

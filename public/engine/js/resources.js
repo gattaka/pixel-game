@@ -476,26 +476,27 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.getBasicSprite = function (sheetKey, spriteName) {
+        Resources.prototype.getBasicSprite = function (sheetKey, spriteName, originalSprite) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[sheetKey];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            var sprite = new PIXI.Sprite(spriteSheet);
-            return sprite;
+            var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+            texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            if (originalSprite) {
+                originalSprite.texture = texture;
+                return originalSprite;
+            }
+            else {
+                return new PIXI.Sprite(texture);
+            }
         };
         ;
         Resources.prototype.getAchvUISprite = function (key) {
             return this.getBasicSprite(Lich.SpritesheetKey.SPST_ACHV_KEY, this.achievementsDefs[Lich.AchievementKey[key]].spriteName);
         };
         ;
-        Resources.prototype.getUISprite = function (key) {
-            return this.getBasicSprite(Lich.SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[Lich.UISpriteKey[key]]);
-        };
-        ;
-        Resources.prototype.getSpellUISprite = function (key, originalSprite) {
-            return this.getBasicSprite(Lich.SpritesheetKey.SPST_UI_KEY, this.spellDefs[Lich.SpellKey[key]].iconSpriteName);
+        Resources.prototype.getUISprite = function (key, originalSprite) {
+            return this.getBasicSprite(Lich.SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[Lich.UISpriteKey[key]], originalSprite);
         };
         ;
         Resources.prototype.getInvObjectSprite = function (key, originalSprite) {

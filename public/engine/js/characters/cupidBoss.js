@@ -100,7 +100,7 @@ var Lich;
                             break;
                         case AI_MODE.RAIN:
                             if (this.currentAttackCooldown >= this.attackCooldown) {
-                                var spell = Lich.Resources.getInstance().getSpellDef(Lich.SpellKey.SPELL_LOVEARROW);
+                                var spell = Lich.Resources.getInstance().getSpellDef(Lich.SpellKey.SPELL_LOVEARROW_KEY);
                                 var castX = this.x + Math.random() * this.fixedWidth;
                                 var castY = this.y + this.fixedHeight;
                                 var context = new Lich.SpellContext(CupidBoss.OWNER_ID, castX, castY, castX, castY + 1, world.game);

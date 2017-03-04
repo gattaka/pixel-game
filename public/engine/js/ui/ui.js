@@ -37,13 +37,13 @@ var Lich;
             if (!mobile) {
                 var helpBtn = _this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
+                helpBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
                 helpBtn.y = UI.SCREEN_SPACING;
             }
             else {
                 var menuCont_1 = new PIXI.Container();
-                menuCont_1.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
-                menuCont_1.y = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                menuCont_1.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING;
+                menuCont_1.y = UI.SCREEN_SPACING + Button.SIDE_SIZE + PartsUI.SPACING;
                 menuCont_1.visible = false;
                 self.addChild(menuCont_1);
                 var saveBtn = new Button(Lich.UISpriteKey.UI_SAVE_KEY, function () {
@@ -56,23 +56,23 @@ var Lich;
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 });
-                loadBtn.y = Button.sideSize + PartsUI.SPACING;
+                loadBtn.y = Button.SIDE_SIZE + PartsUI.SPACING;
                 menuCont_1.addChild(loadBtn);
                 var newbtn = new Button(Lich.UISpriteKey.UI_NEW_WORLD_KEY, function () {
                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.NEW_WORLD));
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                 });
-                newbtn.y = 2 * (Button.sideSize + PartsUI.SPACING);
+                newbtn.y = 2 * (Button.SIDE_SIZE + PartsUI.SPACING);
                 menuCont_1.addChild(newbtn);
                 var helpBtn = _this.createHelpButton();
                 menuCont_1.addChild(helpBtn);
-                helpBtn.y = 3 * (Button.sideSize + PartsUI.SPACING);
+                helpBtn.y = 3 * (Button.SIDE_SIZE + PartsUI.SPACING);
                 var menuBtn = new Button(Lich.UISpriteKey.UI_MENU_KEY, function () {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     menuCont_1.visible = !menuCont_1.visible;
                 });
                 self.addChild(menuBtn);
-                menuBtn.x = canvas.width - Button.sideSize - UI.SCREEN_SPACING;
+                menuBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING;
                 menuBtn.y = UI.SCREEN_SPACING;
             }
             // Debug and loging
@@ -99,7 +99,7 @@ var Lich;
                 var n = Math.floor(canvas.width / (Lich.Resources.PARTS_SIZE + PartsUI.SPACING)) - 4 - 1 - 3;
                 var m = Math.floor(canvas.height / (Lich.Resources.PARTS_SIZE + PartsUI.SPACING)) - 4;
                 inventoryUI = new Lich.InventoryUI(n, m);
-                inventoryUI.x = inventoryUI.expandedX = 4 * Button.sideSize + 2 * UI.SCREEN_SPACING;
+                inventoryUI.x = inventoryUI.expandedX = 4 * Button.SIDE_SIZE + 2 * UI.SCREEN_SPACING;
                 inventoryUI.y = inventoryUI.expandedY = canvas.height / 2 - inventoryUI.height / 2;
             }
             else {
@@ -199,25 +199,25 @@ var Lich;
                     self.craftingUI.prepareForToggle();
                     self.craftingUI.toggle();
                 });
-                craftBtn.x = UI.SCREEN_SPACING + Button.sideSize + PartsUI.SPACING;
+                craftBtn.x = UI.SCREEN_SPACING + Button.SIDE_SIZE + PartsUI.SPACING;
                 craftBtn.y = UI.SCREEN_SPACING;
                 self.addChild(craftBtn);
                 var minimapBtn = new Button(Lich.UISpriteKey.UI_MINIMAP_KEY, function () {
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
                     self.mapUI.show();
                 });
-                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.sideSize + PartsUI.SPACING);
+                minimapBtn.x = UI.SCREEN_SPACING + 2 * (Button.SIDE_SIZE + PartsUI.SPACING);
                 minimapBtn.y = UI.SCREEN_SPACING;
                 self.addChild(minimapBtn);
             }
             if (mobile) {
                 var movementCont = new PIXI.Container();
                 movementCont.x = UI.SCREEN_SPACING;
-                movementCont.y = canvas.height / 2 - Button.sideSize * 1.5 - PartsUI.SPACING;
+                movementCont.y = canvas.height / 2 - Button.SIDE_SIZE * 1.5 - PartsUI.SPACING;
                 self.addChild(movementCont);
                 var shape = new PIXI.Graphics();
                 shape.lineStyle(2, 0x000000, 0.7);
-                var radius_1 = 2 * Button.sideSize;
+                var radius_1 = 2 * Button.SIDE_SIZE;
                 shape.beginFill(0x0a320a, 0.5).drawCircle(0, 0, radius_1);
                 shape.x = radius_1;
                 shape.y = radius_1;
@@ -330,18 +330,6 @@ var Lich;
                 window.open("help.html", "_blank");
             });
             return helpBtn;
-        };
-        UI.prototype.isMouseInUI = function (x, y) {
-            var self = this;
-            var uiHit = false;
-            self.children.forEach(function (item) {
-                // TODO?
-                // if (item.hit(x - item.x, y - item.y) === true) {
-                //     uiHit = true;
-                //     return;
-                // }
-            });
-            return uiHit;
         };
         return UI;
     }(PIXI.Container));
@@ -456,23 +444,23 @@ var Lich;
     Lich.PartsUI = PartsUI;
     var Button = (function (_super) {
         __extends(Button, _super);
-        function Button(uiKey, onPress, onRelease) {
+        function Button(uiKey, onPress, onRelease, onlyIcon) {
+            if (onlyIcon === void 0) { onlyIcon = false; }
             var _this = _super.call(this) || this;
             _this.interval = Button.DEFAULT_INTERVAL;
             _this.decreaseSteps = 0;
-            // this.buttonMode = true;
-            _this.interactive = true;
-            var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
-            _this.addChild(bgr);
-            bgr.x = 0;
-            bgr.y = 0;
-            if (uiKey) {
-                var sprite = Lich.Resources.getInstance().getUISprite(uiKey);
-                _this.addChild(sprite);
-                sprite.x = PartsUI.SELECT_BORDER;
-                sprite.y = PartsUI.SELECT_BORDER;
+            if (!onlyIcon) {
+                var bgr = new UIShape(10, 50, 10, 0, 0, 0, 0.5, 0.7);
+                _this.addChild(bgr);
+                bgr.x = 0;
+                bgr.y = 0;
             }
-            _this.hitArea = new PIXI.Rectangle(0, 0, Button.sideSize, Button.sideSize);
+            _this.sprite = Lich.Resources.getInstance().getUISprite(uiKey);
+            _this.addChild(_this.sprite);
+            _this.sprite.x = PartsUI.SELECT_BORDER;
+            _this.sprite.y = PartsUI.SELECT_BORDER;
+            _this.sprite.interactive = true;
+            _this.sprite.buttonMode = true;
             var self = _this;
             var repeatPress = function () {
                 self.intervalId = setInterval(function () {
@@ -486,28 +474,33 @@ var Lich;
                     }
                 }, self.interval);
             };
-            _this.on("pointerdown", function () {
+            _this.sprite.on("pointerdown", function () {
                 onPress();
                 self.decreaseSteps = 0;
                 self.interval = Button.DEFAULT_INTERVAL;
                 repeatPress();
             });
-            _this.on("pointerup", function () {
+            var out = function () {
                 clearInterval(self.intervalId);
                 if (onRelease) {
                     onRelease();
                 }
-            });
+            };
+            _this.sprite.on("pointerup", out);
+            _this.sprite.on("pointerout", out);
             return _this;
         }
+        Button.prototype.changeSprite = function (uiKey) {
+            Lich.Resources.getInstance().getUISprite(uiKey, this.sprite);
+        };
         return Button;
     }(PIXI.Container));
-    Button.sideSize = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
+    Button.SIDE_SIZE = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
     // výchozí interval efektu tlačítka (ms)
     Button.DEFAULT_INTERVAL = 200;
     // hodnota (ms) o kterou se interval sníží při delším držení
     Button.INTERVAL_DECREASE_TIME = 10;
     // počet opakování akce, než je hodnota snížena
-    Button.INTERVAL_DECREASE_STEPS = 5;
+    Button.INTERVAL_DECREASE_STEPS = 2;
     Lich.Button = Button;
 })(Lich || (Lich = {}));

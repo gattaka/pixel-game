@@ -27,6 +27,7 @@ namespace Lich {
         private background: Background;
         private world: World;
         private ui: UI;
+        private hitLayer: PIXI.Container;
 
         private loadUI: LoaderUI;
 
@@ -93,12 +94,18 @@ namespace Lich {
             self.stage.fixedWidth = window.innerWidth;
             self.stage.fixedHeight = window.innerHeight;
 
+            self.hitLayer = new PIXI.Container();
+            self.hitLayer.fixedWidth = window.innerWidth;
+            self.hitLayer.fixedHeight = window.innerHeight;
+            self.hitLayer.hitArea = new PIXI.Rectangle(0, 0, window.innerWidth, window.innerHeight);
+            self.hitLayer.interactive = true;
+
             /*--------------*/
             /* Mouse events */
             /*--------------*/
 
             if (mobile) {
-                self.stage.on("pointerdown", () => {
+                self.hitLayer.on("pointerdown", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.down = true;
                     self.mouse.clickChanged = true;
@@ -107,44 +114,44 @@ namespace Lich {
                     self.mouse.y = mouseData.y;
                 });
 
-                self.stage.on("pressmove", () => {
+                self.hitLayer.on("pointermove", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.x = mouseData.x;
                     self.mouse.y = mouseData.y;
                     EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
                 });
 
-                self.stage.on("pressup", () => {
+                self.hitLayer.on("pointerup", () => {
                     self.mouse.down = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
                 });
             } else {
-                self.stage.on("mousedown", () => {
-                    var mouseData = self.renderer.plugins.interaction.mouse;
-                    if (mouseData.button == 0) {
-                        self.mouse.down = true;
-                    } else {
-                        self.mouse.rightDown = true;
-                    }
+                self.hitLayer.on("pointerdown", () => {
+                    self.mouse.down = true;
+                    self.mouse.rightDown = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
                 });
 
-                self.stage.on("mousemove", () => {
+                self.hitLayer.on("rightdown", () => {
+                    self.mouse.down = false;
+                    self.mouse.rightDown = true;
+                    self.mouse.clickChanged = true;
+                    self.mouse.consumedByUI = false;
+                });
+
+                self.hitLayer.on("pointermove", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
                     self.mouse.x = mouseData.x;
                     self.mouse.y = mouseData.y;
                     EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
                 });
 
-                self.stage.on("mouseup", () => {
+                self.hitLayer.on("pointerup", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse;
-                    if (mouseData.button == 0) {
-                        self.mouse.down = false;
-                    } else {
-                        self.mouse.rightDown = false;
-                    }
+                    self.mouse.down = false;
+                    self.mouse.rightDown = false;
                     self.mouse.clickChanged = true;
                     self.mouse.consumedByUI = false;
                 });
@@ -198,6 +205,7 @@ namespace Lich {
                     self.world = new World(self, tilesMap);
                     self.stage.addChild(self.background);
                     self.stage.addChild(self.world);
+                    self.stage.addChild(self.hitLayer);
                     self.stage.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
@@ -304,10 +312,7 @@ namespace Lich {
             Keyboard.on(73, () => { self.ui.inventoryUI.toggle(); }, () => { self.ui.inventoryUI.prepareForToggle(); });
             Keyboard.on(77, () => { self.ui.mapUI.toggle(); }, () => { self.ui.mapUI.prepareForToggle(); });
             Keyboard.on(78, () => { self.ui.minimapUI.toggle(); }, () => { self.ui.minimapUI.prepareForToggle(); });
-            Keyboard.on(16, () => { self.ui.spellsUI.toggle(); }, () => { self.ui.spellsUI.prepareForToggle(); });
-            for (var i = 0; i < Spellbook.getInstance().spellIndex.length; i++) {
-                Keyboard.on(49 + i, () => { self.ui.spellsUI.selectSpell(i); });
-            }
+            Keyboard.on(16, () => { self.ui.spellsUI.toggleAlternative(); }, () => { self.ui.spellsUI.prepareForToggleAlternative(); });
 
             let ticker = PIXI.ticker.shared;
             ticker.add(() => {
@@ -320,13 +325,13 @@ namespace Lich {
                     // UI má při akcích myši přednost
                     // isMouseInUI je časově náročné, proto je volání filtrováno
                     // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
-                    if (self.mouse.down && self.mouse.clickChanged) {
-                        if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                            // blokuj akci světa
-                            self.mouse.consumedByUI = true;
-                            self.mouse.clickChanged = false;
-                        }
-                    }
+                    // if (self.mouse.down && self.mouse.clickChanged) {
+                    // if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
+                    //     // blokuj akci světa
+                    //     self.mouse.consumedByUI = true;
+                    //     self.mouse.clickChanged = false;
+                    // }
+                    // }
 
                     if (!self.mouse.down && self.mouse.clickChanged) {
                         self.ui.controls = new Controls();

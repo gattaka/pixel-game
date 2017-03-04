@@ -57,10 +57,6 @@ var Lich;
             owner, 
             // sada animací, ze které sřela je
             animationSetKey, 
-            // počáteční stav animace
-            initAnimation, 
-            // koncový stav animace
-            endAnimation, 
             // kolizní tolerance
             collXOffset, collYOffset, 
             // zvuk dopadu
@@ -74,8 +70,6 @@ var Lich;
             var _this = _super.call(this, collXOffset, collYOffset) || this;
             _this.owner = owner;
             _this.animationSetKey = animationSetKey;
-            _this.initAnimation = initAnimation;
-            _this.endAnimation = endAnimation;
             _this.collXOffset = collXOffset;
             _this.collYOffset = collYOffset;
             _this.hitSound = hitSound;
@@ -106,8 +100,8 @@ var Lich;
     Lich.BulletObject = BulletObject;
     var BasicBullet = (function (_super) {
         __extends(BasicBullet, _super);
-        function BasicBullet(owner, animationSetKey, initAnimation, endAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
-            var _this = _super.call(this, owner, animationSetKey, initAnimation, endAnimation, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage) || this;
+        function BasicBullet(owner, animationSetKey, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage, radius) {
+            var _this = _super.call(this, owner, animationSetKey, collXOffset, collYOffset, hitSoundKey, mapDestroy, piercing, damage) || this;
             _this.radius = radius;
             return _this;
         }
@@ -115,7 +109,7 @@ var Lich;
         BasicBullet.prototype.update = function (sDelta, game) {
             var self = this;
             if (self.ending) {
-                if (self.getCurrentAnimation() === Lich.AnimationKey[self.endAnimation]) {
+                if (self.getCurrentAnimation() === Lich.AnimationKey[Lich.AnimationKey.ANM_BULLET_DONE_KEY]) {
                     self.done = true;
                 }
                 return;
@@ -176,7 +170,7 @@ var Lich;
                 if (self.ending === false) {
                     Lich.Mixer.playSound(self.hitSound, 0.1);
                     self.ending = true;
-                    self.gotoAndPlay("hit");
+                    self.gotoAndPlay(Lich.AnimationKey[Lich.AnimationKey.ANM_BULLET_HIT_KEY]);
                     if (self.mapDestroy) {
                         var centX = self.x + self.fixedWidth / 2;
                         var centY = self.y + self.fixedHeight / 2;

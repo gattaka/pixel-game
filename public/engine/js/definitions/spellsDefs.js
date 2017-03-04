@@ -41,13 +41,13 @@ var Lich;
             // id spellu
             key, 
             // název sprite ikony 
-            iconSpriteName, 
+            icon, 
             // náročnost na will
             cost, 
             // prodleva před dalším použitím
             cooldown) {
             this.key = key;
-            this.iconSpriteName = iconSpriteName;
+            this.icon = icon;
             this.cost = cost;
             this.cooldown = cooldown;
         }
@@ -60,13 +60,11 @@ var Lich;
      */
     var BulletSpellDef = (function (_super) {
         __extends(BulletSpellDef, _super);
-        function BulletSpellDef(key, iconSpriteName, cost, cooldown, animationSetKey, initAnimation, endAnimation, castSoundKey, hitSoundKey, speed, destroyMap, piercing, damage, radius, colloffsetX, colloffsetY) {
+        function BulletSpellDef(key, icon, cost, cooldown, animationSetKey, castSoundKey, hitSoundKey, speed, destroyMap, piercing, damage, radius, colloffsetX, colloffsetY) {
             if (colloffsetX === void 0) { colloffsetX = 20; }
             if (colloffsetY === void 0) { colloffsetY = 20; }
-            var _this = _super.call(this, key, iconSpriteName, cost, cooldown) || this;
+            var _this = _super.call(this, key, icon, cost, cooldown) || this;
             _this.animationSetKey = animationSetKey;
-            _this.initAnimation = initAnimation;
-            _this.endAnimation = endAnimation;
             _this.castSoundKey = castSoundKey;
             _this.hitSoundKey = hitSoundKey;
             _this.speed = speed;
@@ -89,7 +87,7 @@ var Lich;
         };
         BulletSpellDef.prototype.cast = function (context) {
             var self = this;
-            var object = new Lich.BasicBullet(context.owner, self.animationSetKey, self.initAnimation, self.endAnimation, self.colloffsetX, self.colloffsetY, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
+            var object = new Lich.BasicBullet(context.owner, self.animationSetKey, self.colloffsetX, self.colloffsetY, self.hitSoundKey, self.destroyMap, self.piercing, self.damage, self.radius);
             // nastaví X a Y složku rychlosti dle směru
             self.adjustObjectSpeed(context, object);
             // Tohle by bylo fajn, aby si udělala strana volajícího, ale v rámci 
@@ -110,7 +108,7 @@ var Lich;
     var FireballSpellDef = (function (_super) {
         __extends(FireballSpellDef, _super);
         function FireballSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, "ui_fireball_spell", FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.AnimationSetKey.FIREBALL_ANIMATION_KEY, Lich.AnimationKey.ANM_FIREBALL_FLY_KEY, Lich.AnimationKey.ANM_FIREBALL_DONE_KEY, Lich.SoundKey.SND_FIREBALL_KEY, Lich.SoundKey.SND_BURN_KEY, FireballSpellDef.SPEED, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE, FireballSpellDef.RADIUS) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_FIREBALL_KEY, Lich.UISpriteKey.UI_FIREBALL_KEY, FireballSpellDef.COST, FireballSpellDef.COOLDOWN, Lich.AnimationSetKey.FIREBALL_ANIMATION_KEY, Lich.SoundKey.SND_FIREBALL_KEY, Lich.SoundKey.SND_BURN_KEY, FireballSpellDef.SPEED, FireballSpellDef.MAP_DESTROY, FireballSpellDef.PIERCING, FireballSpellDef.DAMAGE, FireballSpellDef.RADIUS) || this;
         }
         return FireballSpellDef;
     }(BulletSpellDef));
@@ -128,9 +126,9 @@ var Lich;
     var MeteorSpellDef = (function (_super) {
         __extends(MeteorSpellDef, _super);
         function MeteorSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, "ui_meteor_spell", 10, // COST,
+            return _super.call(this, Lich.SpellKey.SPELL_METEOR_KEY, Lich.UISpriteKey.UI_METEOR_KEY, 10, // COST,
             200, // COOLDOWN,
-            Lich.AnimationSetKey.METEOR_ANIMATION_KEY, Lich.AnimationKey.ANM_METEOR_FLY_KEY, Lich.AnimationKey.ANM_METEOR_DONE_KEY, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, 1500, // SPEED,
+            Lich.AnimationSetKey.METEOR_ANIMATION_KEY, Lich.SoundKey.SND_METEOR_FALL_KEY, Lich.SoundKey.SND_METEOR_HIT_KEY, 1500, // SPEED,
             true, // MAP_DESTROY,
             true, // PIERCING,
             50, // DAMAGE
@@ -152,11 +150,11 @@ var Lich;
      */
     var AbstractLoveSpellDef = (function (_super) {
         __extends(AbstractLoveSpellDef, _super);
-        function AbstractLoveSpellDef(spellKey, iconSpriteName, animationSetKey, initAnimation, endAnimation, damage) {
+        function AbstractLoveSpellDef(spellKey, icon, animationSetKey, damage) {
             return _super.call(this, spellKey, // SpellKey
-            iconSpriteName, 10, // COST
+            icon, 10, // COST
             200, // COOLDOWN
-            animationSetKey, initAnimation, endAnimation, Lich.SoundKey.SND_BOLT_CAST_KEY, // castSoundKey
+            animationSetKey, Lich.SoundKey.SND_BOLT_CAST_KEY, // castSoundKey
             Lich.SoundKey.SND_BURN_KEY, // hitSoundKey
             1000, // speed
             false, // destroyMap
@@ -175,9 +173,9 @@ var Lich;
     var LoveletterSpellDef = (function (_super) {
         __extends(LoveletterSpellDef, _super);
         function LoveletterSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_LOVELETTER, // SpellKey
-            "ui_loveletter_spell", Lich.AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
-            Lich.AnimationKey.ANM_LOVELETTER_FLY_KEY, Lich.AnimationKey.ANM_LOVELETTER_DONE_KEY, 2) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_LOVELETTER_KEY, // SpellKey
+            Lich.UISpriteKey.UI_LOVELETTER_KEY, Lich.AnimationSetKey.LOVELETTER_ANIMATION_KEY, // spriteKey
+            2) || this;
         }
         return LoveletterSpellDef;
     }(AbstractLoveSpellDef));
@@ -188,9 +186,9 @@ var Lich;
     var LovearrowSpellDef = (function (_super) {
         __extends(LovearrowSpellDef, _super);
         function LovearrowSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_LOVEARROW, // SpellKey
-            "ui_lovearrow_spell", Lich.AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
-            Lich.AnimationKey.ANM_LOVEARROW_FLY_KEY, Lich.AnimationKey.ANM_LOVEARROW_DONE_KEY, 5) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_LOVEARROW_KEY, // SpellKey
+            Lich.UISpriteKey.UI_LOVEARROW_KEY, Lich.AnimationSetKey.LOVEARROW_ANIMATION_KEY, // spriteKey
+            5) || this;
         }
         return LovearrowSpellDef;
     }(AbstractLoveSpellDef));
@@ -201,9 +199,9 @@ var Lich;
     var BoltSpellDef = (function (_super) {
         __extends(BoltSpellDef, _super);
         function BoltSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_ICEBOLT_KEY, "ui_bolt_spell", 2, // COST,
+            return _super.call(this, Lich.SpellKey.SPELL_ICEBOLT_KEY, Lich.UISpriteKey.UI_ICEBOLT_KEY, 2, // COST,
             100, // COOLDOWN,
-            Lich.AnimationSetKey.ICEBOLT_ANIMATION_KEY, Lich.AnimationKey.ANM_ICEBOLT_FLY_KEY, Lich.AnimationKey.ANM_ICEBOLT_DONE_KEY, Lich.SoundKey.SND_BOLT_CAST_KEY, Lich.SoundKey.SND_FIREBALL_KEY, 1500, // SPEED
+            Lich.AnimationSetKey.ICEBOLT_ANIMATION_KEY, Lich.SoundKey.SND_BOLT_CAST_KEY, Lich.SoundKey.SND_FIREBALL_KEY, 1500, // SPEED
             false, // MAP_DESTROY,
             false, // PIERCING,
             30 // DAMAGE
@@ -217,8 +215,8 @@ var Lich;
      */
     var HeroReachSpellDef = (function (_super) {
         __extends(HeroReachSpellDef, _super);
-        function HeroReachSpellDef(key, iconSpriteName, cost, cooldown) {
-            return _super.call(this, key, iconSpriteName, cost, cooldown) || this;
+        function HeroReachSpellDef(key, icon, cost, cooldown) {
+            return _super.call(this, key, icon, cost, cooldown) || this;
         }
         HeroReachSpellDef.prototype.cast = function (context) {
             // kontroluj rádius od každého rohu
@@ -239,7 +237,7 @@ var Lich;
     var UseItemSpellDef = (function (_super) {
         __extends(UseItemSpellDef, _super);
         function UseItemSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_USE_ITEM_KEY, "ui_use_spell", UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_USE_ITEM_KEY, Lich.UISpriteKey.UI_USE_ITEM_KEY, UseItemSpellDef.COST, UseItemSpellDef.COOLDOWN) || this;
         }
         UseItemSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
@@ -266,7 +264,7 @@ var Lich;
     var RevealFogSpellDef = (function (_super) {
         __extends(RevealFogSpellDef, _super);
         function RevealFogSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_REVEAL_FOG_KEY, "ui_place_spell", RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_REVEAL_FOG_KEY, Lich.UISpriteKey.UI_REVEAL_FOG_KEY, RevealFogSpellDef.COST, RevealFogSpellDef.COOLDOWN) || this;
         }
         RevealFogSpellDef.prototype.cast = function (context) {
             return context.game.getWorld().render.revealFog(context.xAim, context.yAim);
@@ -282,7 +280,7 @@ var Lich;
     var TeleportSpellDef = (function (_super) {
         __extends(TeleportSpellDef, _super);
         function TeleportSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_TELEPORT_KEY, "ui_teleport_spell", TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_TELEPORT_KEY, Lich.UISpriteKey.UI_TELEPORT_KEY, TeleportSpellDef.COST, TeleportSpellDef.COOLDOWN) || this;
         }
         TeleportSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
@@ -304,7 +302,7 @@ var Lich;
     var HomeSpellDef = (function (_super) {
         __extends(HomeSpellDef, _super);
         function HomeSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_HOME_KEY, "ui_home_spell", HomeSpellDef.COST, HomeSpellDef.COOLDOWN) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_HOME_KEY, Lich.UISpriteKey.UI_HOME_KEY, HomeSpellDef.COST, HomeSpellDef.COOLDOWN) || this;
         }
         HomeSpellDef.prototype.cast = function (context) {
             var world = context.game.getWorld();
@@ -326,7 +324,7 @@ var Lich;
     var MapObjectsInteractionSpellDef = (function (_super) {
         __extends(MapObjectsInteractionSpellDef, _super);
         function MapObjectsInteractionSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_INTERACT_KEY, "ui_place_spell", 0, MapObjectsInteractionSpellDef.COOLDOWN) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_INTERACT_KEY, Lich.UISpriteKey.UI_INTERACT_KEY, 0, MapObjectsInteractionSpellDef.COOLDOWN) || this;
         }
         MapObjectsInteractionSpellDef.prototype.castOnReach = function (context, reachInfo) {
             return context.game.getWorld().render.interact(context.xAim, context.yAim);
@@ -340,10 +338,10 @@ var Lich;
      */
     var AbstractDigSpellDef = (function (_super) {
         __extends(AbstractDigSpellDef, _super);
-        function AbstractDigSpellDef(key, iconSpriteName, 
+        function AbstractDigSpellDef(key, icon, 
             // kope se povrch jako podklad?
             asBackground) {
-            var _this = _super.call(this, key, iconSpriteName, 0, AbstractDigSpellDef.COOLDOWN) || this;
+            var _this = _super.call(this, key, icon, 0, AbstractDigSpellDef.COOLDOWN) || this;
             _this.asBackground = asBackground;
             return _this;
         }
@@ -371,7 +369,7 @@ var Lich;
     var DigSpellDef = (function (_super) {
         __extends(DigSpellDef, _super);
         function DigSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_DIG_KEY, "ui_dig_spell", false) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_DIG_KEY, Lich.UISpriteKey.UI_DIG_KEY, false) || this;
         }
         return DigSpellDef;
     }(AbstractDigSpellDef));
@@ -379,7 +377,7 @@ var Lich;
     var DigBgrSpellDef = (function (_super) {
         __extends(DigBgrSpellDef, _super);
         function DigBgrSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_DIG_BGR_KEY, "ui_dig_bgr_spell", true) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_DIG_BGR_KEY, Lich.UISpriteKey.UI_DIG_BGR_KEY, true) || this;
         }
         return DigBgrSpellDef;
     }(AbstractDigSpellDef));
@@ -389,10 +387,10 @@ var Lich;
      */
     var AbstractPlaceSpellDef = (function (_super) {
         __extends(AbstractPlaceSpellDef, _super);
-        function AbstractPlaceSpellDef(key, iconSpriteName, 
+        function AbstractPlaceSpellDef(key, icon, 
             // pokládá se povrch/objekt jako podklad/alterantiva?
             alternative) {
-            var _this = _super.call(this, key, iconSpriteName, 0, AbstractPlaceSpellDef.COOLDOWN) || this;
+            var _this = _super.call(this, key, icon, 0, AbstractPlaceSpellDef.COOLDOWN) || this;
             _this.alternative = alternative;
             return _this;
         }
@@ -425,7 +423,7 @@ var Lich;
     var PlaceSpellDef = (function (_super) {
         __extends(PlaceSpellDef, _super);
         function PlaceSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_PLACE_KEY, "ui_place_spell", false) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_PLACE_KEY, Lich.UISpriteKey.UI_PLACE_KEY, false) || this;
         }
         return PlaceSpellDef;
     }(AbstractPlaceSpellDef));
@@ -433,7 +431,7 @@ var Lich;
     var PlaceBgrSpellDef = (function (_super) {
         __extends(PlaceBgrSpellDef, _super);
         function PlaceBgrSpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_PLACE_BGR_KEY, "ui_place_bgr_spell", true) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_PLACE_BGR_KEY, Lich.UISpriteKey.UI_PLACE_BGR_KEY, true) || this;
         }
         return PlaceBgrSpellDef;
     }(AbstractPlaceSpellDef));
@@ -444,7 +442,7 @@ var Lich;
     var EnemySpellDef = (function (_super) {
         __extends(EnemySpellDef, _super);
         function EnemySpellDef() {
-            return _super.call(this, Lich.SpellKey.SPELL_ENEMY_KEY, "ui_enemy_spell", 0, 200) || this;
+            return _super.call(this, Lich.SpellKey.SPELL_ENEMY_KEY, Lich.UISpriteKey.UI_ENEMY_KEY, 0, 200) || this;
         }
         EnemySpellDef.prototype.cast = function (context) {
             Lich.Mixer.playSound(Lich.SoundKey.SND_GHOUL_SPAWN_KEY);

@@ -31,6 +31,21 @@ namespace Lich {
         ["ui_panel_br", UISpriteKey.UI_PANEL_BR_KEY],
         ["ui_panel_bl", UISpriteKey.UI_PANEL_BL_KEY],
         ["ui_button", UISpriteKey.UI_BUTTON_KEY],
+        ["ui_fireball_spell", UISpriteKey.UI_FIREBALL_KEY],
+        ["ui_meteor_spell", UISpriteKey.UI_METEOR_KEY],
+        ["ui_loveletter_spell", UISpriteKey.UI_LOVELETTER_KEY],
+        ["ui_lovearrow_spell", UISpriteKey.UI_LOVEARROW_KEY],
+        ["ui_bolt_spell", UISpriteKey.UI_ICEBOLT_KEY],
+        ["ui_use_spell", UISpriteKey.UI_USE_ITEM_KEY],
+        ["ui_place_spell", UISpriteKey.UI_REVEAL_FOG_KEY],
+        ["ui_teleport_spell", UISpriteKey.UI_TELEPORT_KEY],
+        ["ui_home_spell", UISpriteKey.UI_HOME_KEY],
+        ["ui_place_spell", UISpriteKey.UI_INTERACT_KEY],
+        ["ui_dig_spell", UISpriteKey.UI_DIG_KEY],
+        ["ui_dig_bgr_spell", UISpriteKey.UI_DIG_BGR_KEY],
+        ["ui_place_spell", UISpriteKey.UI_PLACE_KEY],
+        ["ui_place_bgr_spell", UISpriteKey.UI_PLACE_BGR_KEY],
+        ["ui_enemy_spell", UISpriteKey.UI_ENEMY_KEY]
     ]
 
     export let FONT_DEFS: Array<[FontKey, [[string, string]]]> = [

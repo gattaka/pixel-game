@@ -45,7 +45,7 @@ var Lich;
                             this.currentAttackCooldown = 0;
                         }
                         else {
-                            var spell = Lich.Resources.getInstance().getSpellDef(Lich.SpellKey.SPELL_LOVELETTER);
+                            var spell = Lich.Resources.getInstance().getSpellDef(Lich.SpellKey.SPELL_LOVELETTER_KEY);
                             var context = new Lich.SpellContext(Valentimon.OWNER_ID, this.x + this.fixedWidth / 2, this.y + this.fixedHeight / 2, heroTargetX, heroTargetY, world.game);
                             spell.cast(context);
                             this.performAnimation(Lich.AnimationKey.ANM_VALENTIMON_ATTACK_KEY);
