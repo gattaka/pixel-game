@@ -47,7 +47,7 @@ namespace Lich {
 
         getItemIndex(item: InventoryKey): number { return this.itemsTypeIndexMap[item] };
 
-        getItemQuant(item: InventoryKey): number { return this.getItemQuant[item] };
+        getItemQuant(item: InventoryKey): number { return this.itemsQuantityMap[item] };
 
         getChoosenItem(): InventoryKey { return this.choosenItem; }
 

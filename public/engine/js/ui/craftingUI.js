@@ -72,7 +72,6 @@ var Lich;
                 self.workstationIconBgr.x = -(bounds.width + 3 * Lich.PartsUI.SELECT_BORDER);
                 self.workstationIcon.x = self.workstationIconBgr.x + Lich.PartsUI.SELECT_BORDER;
                 _this.workstation = payload.payload;
-                // self.measureCacheArea();
                 return false;
             });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.RECIPES_CHANGE, function (payload) {
@@ -160,7 +159,6 @@ var Lich;
             craftBtn.x = Lich.PartsUI.pixelsByX(CraftingUI.N) + Lich.PartsUI.SELECT_BORDER;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             return _this;
-            // self.measureCacheArea();
         }
         CraftingUI.prototype.setInventoryUI = function (inventoryUI) {
             this.inventoryUI = inventoryUI;
@@ -184,12 +182,6 @@ var Lich;
                 this.toggleFlag = false;
             }
         };
-        CraftingUI.prototype.measureCacheArea = function () {
-            // let offset = this.workstationIconBgr.width + PartsUI.SELECT_BORDER + 5;
-            // this.cache(-offset, -offset,
-            //     this.width + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5,
-            //     this.height + Button.sideSize + PartsUI.SELECT_BORDER + offset + 5);
-        };
         CraftingUI.prototype.render = function () {
             this.itemsCont.removeChildren();
             this.itemHighlight.visible = false;
@@ -200,12 +192,27 @@ var Lich;
                     this.createUIItem(item, i - itemsOffset);
                 }
             }
-            // this.updateCache();
         };
         CraftingUI.prototype.createUIItem = function (item, i) {
             var self = this;
             var key = JSON.stringify(item, self.replacer);
-            var itemUI = new Lich.ItemUI(item.outcome.key, item.outcome.quant);
+            var itemUI = new Lich.ItemUI(item.outcome.key, item.outcome.quant, function () {
+                self.itemHighlight.visible = true;
+                self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                self.choosenItem = key;
+                // vypiš ingredience
+                self.ingredientsCont.itemsCont.removeChildren();
+                var index = self.itemsTypeIndexMap[self.choosenItem];
+                var recipe = self.itemsTypeArray[index];
+                for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
+                    var ingred = _a[_i];
+                    var ingredUI = new Lich.ItemUI(ingred.key, ingred.quant);
+                    ingredUI.x = self.ingredientsCont.itemsCont.children.length * (Lich.PartsUI.SPACING + Lich.Resources.PARTS_SIZE);
+                    ingredUI.y = 0;
+                    self.ingredientsCont.itemsCont.addChild(ingredUI);
+                }
+            });
             self.itemsUIMap[key] = itemUI;
             self.itemsCont.addChild(itemUI);
             itemUI.x = (i % CraftingUI.N) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
@@ -217,27 +224,6 @@ var Lich;
                 self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                 self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
             }
-            (function () {
-                var currentItem = self.itemsUIMap[key];
-                itemUI.on("pointerdown", function () {
-                    self.itemHighlight.visible = true;
-                    self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
-                    self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
-                    self.choosenItem = key;
-                    // vypiš ingredience
-                    self.ingredientsCont.itemsCont.removeChildren();
-                    var index = self.itemsTypeIndexMap[self.choosenItem];
-                    var recipe = self.itemsTypeArray[index];
-                    for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
-                        var ingred = _a[_i];
-                        var ingredUI = new Lich.ItemUI(ingred.key, ingred.quant);
-                        ingredUI.x = self.ingredientsCont.itemsCont.children.length * (Lich.PartsUI.SPACING + Lich.Resources.PARTS_SIZE);
-                        ingredUI.y = 0;
-                        self.ingredientsCont.itemsCont.addChild(ingredUI);
-                    }
-                    // self.updateCache();
-                });
-            })();
         };
         CraftingUI.prototype.replacer = function (key, value) {
             if (key == "recipe")

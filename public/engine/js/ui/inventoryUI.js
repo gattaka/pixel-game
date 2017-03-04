@@ -89,7 +89,6 @@ var Lich;
                     this.createUIItem(inventory.getItem(i), i - itemsOffset);
                 }
             }
-            // this.updateCache();
         };
         InventoryUI.prototype.toggle = function () {
             var self = this;
@@ -131,7 +130,6 @@ var Lich;
                 }
                 self.collapsed = !self.collapsed;
                 self.toggleFlag = false;
-                // self.updateCache();
             }
         };
         InventoryUI.prototype.prepareForToggle = function () {
@@ -157,7 +155,6 @@ var Lich;
                     self.render();
                 }
                 else {
-                    // self.updateCache();
                 }
             }
         };
@@ -184,43 +181,33 @@ var Lich;
                     self.createUIItem(item, i - itemsOffset);
                 }
             }
-            // self.updateCache();
         };
         InventoryUI.prototype.createUIItem = function (item, i) {
             var self = this;
             var inventory = Lich.Inventory.getInstance();
             var quant = inventory.getItemQuant(item);
-            var itemUI = new Lich.ItemUI(item, quant);
+            var itemUI = new Lich.ItemUI(item, quant, function () {
+                self.itemHighlight.visible = true;
+                self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
+                inventory.setChoosenItem(item);
+                self.collapsedCont.removeChild(self.collapsedItem);
+                self.collapsedHighlight.visible = true;
+                self.collapsedItem = new Lich.ItemUI(item, quant);
+                self.collapsedCont.addChild(self.collapsedItem);
+                self.collapsedItem.x = Lich.PartsUI.BORDER;
+                self.collapsedItem.y = Lich.PartsUI.BORDER;
+                self.collapsedCont.visible = false;
+            });
             self.itemsUIMap[item] = itemUI;
             self.itemsCont.addChild(itemUI);
             itemUI.x = (i % self.n) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
             itemUI.y = Math.floor(i / self.n) * (Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING);
-            // TOOD
-            // let hitArea = new createjs.Shape();
-            // hitArea.graphics.beginFill("#000").drawRect(0, 0, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
-            // itemUI.hitArea = hitArea;
             if (inventory.getChoosenItem() == item) {
                 self.itemHighlight.visible = true;
                 self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
                 self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
             }
-            (function () {
-                var currentItem = self.itemsUIMap[item];
-                itemUI.on("pointerdown", function () {
-                    self.itemHighlight.visible = true;
-                    self.itemHighlight.x = itemUI.x - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
-                    self.itemHighlight.y = itemUI.y - Lich.PartsUI.SELECT_BORDER + Lich.PartsUI.BORDER;
-                    inventory.setChoosenItem(item);
-                    self.collapsedCont.removeChild(self.collapsedItem);
-                    self.collapsedHighlight.visible = true;
-                    self.collapsedItem = new Lich.ItemUI(item, quant);
-                    self.collapsedCont.addChild(self.collapsedItem);
-                    self.collapsedItem.x = Lich.PartsUI.BORDER;
-                    self.collapsedItem.y = Lich.PartsUI.BORDER;
-                    self.collapsedCont.visible = false;
-                    // self.updateCache();
-                });
-            })();
         };
         return InventoryUI;
     }(Lich.PartsUI));

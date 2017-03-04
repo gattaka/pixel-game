@@ -460,19 +460,6 @@ var Lich;
             return tilingSprite;
         };
         ;
-        Resources.prototype.getFontSprite = function (key, char) {
-            var self = this;
-            var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FNT_KEY];
-            var sprite = new PIXI.Sprite(new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]));
-            var fontDef = self.fontsSpriteDefs[Lich.FontKey[key]];
-            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(spriteDef.frame);
-            sprite.fixedWidth = spriteDef.width;
-            sprite.fixedHeight = spriteDef.height;
-            return sprite;
-        };
-        ;
         Resources.prototype.getBasicSprite = function (sheetKey, spriteName, originalSprite) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[sheetKey];

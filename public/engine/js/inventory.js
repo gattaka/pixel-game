@@ -38,7 +38,7 @@ var Lich;
         Inventory.prototype.getItem = function (i) { return this.itemsTypeArray[i]; };
         Inventory.prototype.getItemIndex = function (item) { return this.itemsTypeIndexMap[item]; };
         ;
-        Inventory.prototype.getItemQuant = function (item) { return this.getItemQuant[item]; };
+        Inventory.prototype.getItemQuant = function (item) { return this.itemsQuantityMap[item]; };
         ;
         Inventory.prototype.getChoosenItem = function () { return this.choosenItem; };
         Inventory.prototype.setChoosenItem = function (item) { this.choosenItem = item; };

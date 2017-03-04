@@ -555,19 +555,6 @@ namespace Lich {
             return tilingSprite;
         };
 
-        getFontSprite(key: FontKey, char: string): PIXI.Sprite {
-            let self = this;
-            let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_FNT_KEY];
-            let sprite = new PIXI.Sprite(new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]));
-            let fontDef = self.fontsSpriteDefs[FontKey[key]];
-            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][fontDef[char]];
-            // není animovaný, takže vždy předávám číslo snímku
-            // sprite.gotoAndStop(spriteDef.frame);
-            sprite.fixedWidth = spriteDef.width;
-            sprite.fixedHeight = spriteDef.height;
-            return sprite;
-        };
-
         private getBasicSprite(sheetKey: SpritesheetKey, spriteName: string, originalSprite?: PIXI.Sprite): PIXI.Sprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[sheetKey];
@@ -581,7 +568,6 @@ namespace Lich {
                 return new PIXI.Sprite(texture);
             }
         };
-
 
         getUISprite(key: UISpriteKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
             return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[UISpriteKey[key]], originalSprite);
