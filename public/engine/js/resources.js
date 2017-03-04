@@ -488,15 +488,15 @@ var Lich;
             }
         };
         ;
-        Resources.prototype.getAchvUISprite = function (key) {
-            return this.getBasicSprite(Lich.SpritesheetKey.SPST_ACHV_KEY, this.achievementsDefs[Lich.AchievementKey[key]].spriteName);
-        };
-        ;
         Resources.prototype.getUISprite = function (key, originalSprite) {
             return this.getBasicSprite(Lich.SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[Lich.UISpriteKey[key]], originalSprite);
         };
         ;
-        Resources.prototype.getInvObjectSprite = function (key, originalSprite) {
+        Resources.prototype.getAchvUISprite = function (key) {
+            return this.getUISprite(this.achievementsDefs[key].icon);
+        };
+        ;
+        Resources.prototype.getInvUISprite = function (key, originalSprite) {
             return this.getUISprite(this.invObjectDefs[key].icon, originalSprite);
         };
         ;

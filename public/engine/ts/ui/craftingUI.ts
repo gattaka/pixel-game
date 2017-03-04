@@ -102,7 +102,7 @@ namespace Lich {
                 }
 
                 if (payload.payload) {
-                    Resources.getInstance().getInvObjectSprite(WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
+                    Resources.getInstance().getInvUISprite(WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
                 } else {
                     Resources.getInstance().getUISprite(UISpriteKey.UI_SPL_PLACE_KEY, self.workstationIcon);
                 }

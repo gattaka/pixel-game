@@ -23,6 +23,8 @@ namespace Lich {
         UI_MENU_KEY,
         UI_MINIMAP_KEY,
         UI_HIGHLIGHT_KEY,
+        UI_BUTTON_KEY,
+        // panel
         UI_PANEL_MIDDLE_KEY,
         UI_PANEL_TOP_KEY,
         UI_PANEL_RIGHT_KEY,
@@ -32,7 +34,12 @@ namespace Lich {
         UI_PANEL_TR_KEY,
         UI_PANEL_BR_KEY,
         UI_PANEL_BL_KEY,
-        UI_BUTTON_KEY,
+        // achievements
+        UI_ACH_FALLING_DOWN_KEY,
+        UI_ACH_CHICKEN_MASSACRE_KEY,
+        UI_ACH_CHICKEN_PROOFED_KEY,
+        UI_ACH_LOVE_HURTS_KEY,
+        UI_ACH_HEARTBREAKING_KEY,
         // spellbook icons
         UI_SPL_FIREBALL_KEY,
         UI_SPL_METEOR_KEY,

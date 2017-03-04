@@ -26,7 +26,7 @@ var Lich;
             _this.notificationTimer = notificationTimer;
             _this.fixedWidth = Lich.Resources.PARTS_SIZE;
             _this.fixedHeight = Lich.Resources.PARTS_SIZE;
-            _this.sprite = Lich.Resources.getInstance().getInvObjectSprite(_this.item.invObj);
+            _this.sprite = Lich.Resources.getInstance().getInvUISprite(_this.item.invObj);
             _this.addChild(_this.sprite);
             return _this;
         }

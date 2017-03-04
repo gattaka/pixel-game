@@ -62,7 +62,7 @@ var Lich;
                     self.show();
                 }
                 if (payload.payload) {
-                    Lich.Resources.getInstance().getInvObjectSprite(Lich.WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
+                    Lich.Resources.getInstance().getInvUISprite(Lich.WORKSTATIONS_ICONS[payload.payload], self.workstationIcon);
                 }
                 else {
                     Lich.Resources.getInstance().getUISprite(Lich.UISpriteKey.UI_SPL_PLACE_KEY, self.workstationIcon);

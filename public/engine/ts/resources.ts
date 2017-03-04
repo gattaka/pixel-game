@@ -582,15 +582,16 @@ namespace Lich {
             }
         };
 
-        getAchvUISprite(key: AchievementKey): PIXI.Sprite {
-            return this.getBasicSprite(SpritesheetKey.SPST_ACHV_KEY, this.achievementsDefs[AchievementKey[key]].spriteName);
-        };
 
         getUISprite(key: UISpriteKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
             return this.getBasicSprite(SpritesheetKey.SPST_UI_KEY, this.uiSpriteDefs[UISpriteKey[key]], originalSprite);
         };
 
-        getInvObjectSprite(key: InventoryKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
+        getAchvUISprite(key: AchievementKey): PIXI.Sprite {
+            return this.getUISprite(this.achievementsDefs[key].icon);
+        };
+
+        getInvUISprite(key: InventoryKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
             return this.getUISprite(this.invObjectDefs[key].icon, originalSprite);
         };
 

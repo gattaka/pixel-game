@@ -17,7 +17,7 @@ namespace Lich {
 
             this.fixedWidth = Resources.PARTS_SIZE;
             this.fixedHeight = Resources.PARTS_SIZE;
-            this.sprite = Resources.getInstance().getInvObjectSprite(this.item.invObj);
+            this.sprite = Resources.getInstance().getInvUISprite(this.item.invObj);
             this.addChild(this.sprite);
         };
     }

@@ -13,7 +13,7 @@ namespace Lich {
 
             let invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[item];
             this.invDef = invDef;
-            let sprite = Resources.getInstance().getInvObjectSprite(item);
+            let sprite = Resources.getInstance().getInvUISprite(item);
             this.sprite = sprite;
             this.addChild(sprite);
             sprite.x = this.fixedWidth / 2 - sprite.fixedWidth / 2;
