@@ -549,33 +549,36 @@ var Lich;
     Lich.BackgroundSprite = BackgroundSprite;
     var AniSprite = (function (_super) {
         __extends(AniSprite, _super);
+        // pod-animace, do které hlavní animace přešla v důsledku řetězení
+        // private currentSubAnimation: string;
         function AniSprite(frames, animationDef) {
             var _this = _super.call(this, frames) || this;
             _this.animationDef = animationDef;
+            // tohle se volá opravdu pouze při změně frame, takže pokud je loop na 1 frame
+            // tak se tohle zavolá až když to z té animace vlastně úplně vyjede
             _this.onFrameChange = function (currentFrame) {
-                if (_this.checkFrame != undefined && _this.checkFrame == _this.lastFrame) {
-                    _this.gotoAndPlay(Lich.AnimationKey[_this.nextAnimation]);
-                }
-                else {
-                    _this.lastFrame = currentFrame;
+                if (_this.endFrame != undefined && (currentFrame < _this.startFrame || currentFrame > _this.endFrame)) {
+                    _this.gotoAndPlayInner(_this.animationDef.animations[_this.nextAnimation]);
                 }
             };
             return _this;
         }
         AniSprite.prototype.gotoAndPlay = function (arg) {
-            this.stop();
             if (typeof arg === "string") {
                 var animation = this.animationDef.animations[arg];
-                this.lastFrame = null;
                 this.currentAnimation = arg;
-                this.checkFrame = animation.endFrame;
-                this.nextAnimation = animation.nextAnimationKey;
-                this.animationSpeed = animation.speed;
-                _super.prototype.gotoAndPlay.call(this, animation.startFrame);
+                this.gotoAndPlayInner(animation);
             }
             else {
-                _super.prototype.gotoAndPlay.call(this, arg);
+                this.gotoAndPlay(arg);
             }
+        };
+        AniSprite.prototype.gotoAndPlayInner = function (anm) {
+            this.startFrame = anm.startFrame;
+            this.endFrame = anm.endFrame;
+            this.nextAnimation = Lich.AnimationKey[anm.nextAnimationKey];
+            this.animationSpeed = anm.speed;
+            _super.prototype.gotoAndPlay.call(this, anm.startFrame);
         };
         return AniSprite;
     }(PIXI.extras.AnimatedSprite));

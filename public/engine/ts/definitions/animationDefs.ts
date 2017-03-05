@@ -1,6 +1,6 @@
 namespace Lich {
 
-    class Animation {
+    export class Animation {
         constructor(
             public animationKey: AnimationKey,
             public startFrame: number,

@@ -615,35 +615,41 @@ namespace Lich {
 
     export class AniSprite extends PIXI.extras.AnimatedSprite {
 
-        private checkFrame: number;
-        private lastFrame: number;
-        private nextAnimation: AnimationKey;
+        private startFrame: number;
+        private endFrame: number;
+        private nextAnimation: string;
+        // hlavní animace, která byla zvenku spuštěna
         public currentAnimation: string;
+        // pod-animace, do které hlavní animace přešla v důsledku řetězení
+        // private currentSubAnimation: string;
 
         constructor(frames: PIXI.Texture[], private animationDef: AnimationSetDefinition) {
             super(frames);
+            // tohle se volá opravdu pouze při změně frame, takže pokud je loop na 1 frame
+            // tak se tohle zavolá až když to z té animace vlastně úplně vyjede
             this.onFrameChange = (currentFrame: number) => {
-                if (this.checkFrame != undefined && this.checkFrame == this.lastFrame) {
-                    this.gotoAndPlay(AnimationKey[this.nextAnimation]);
-                } else {
-                    this.lastFrame = currentFrame;
+                if (this.endFrame != undefined && (currentFrame < this.startFrame || currentFrame > this.endFrame)) {
+                    this.gotoAndPlayInner(this.animationDef.animations[this.nextAnimation]);
                 }
             };
         }
 
-        gotoAndPlay(arg: string | number): void {
-            this.stop();
+        public gotoAndPlay(arg: string | number) {
             if (typeof arg === "string") {
                 let animation = this.animationDef.animations[arg];
-                this.lastFrame = null;
                 this.currentAnimation = arg;
-                this.checkFrame = animation.endFrame;
-                this.nextAnimation = animation.nextAnimationKey
-                this.animationSpeed = animation.speed;
-                super.gotoAndPlay(animation.startFrame);
+                this.gotoAndPlayInner(animation);
             } else {
-                super.gotoAndPlay(arg);
+                this.gotoAndPlay(arg);
             }
+        }
+
+        private gotoAndPlayInner(anm: Animation): void {
+            this.startFrame = anm.startFrame;
+            this.endFrame = anm.endFrame;
+            this.nextAnimation = AnimationKey[anm.nextAnimationKey];
+            this.animationSpeed = anm.speed;
+            super.gotoAndPlay(anm.startFrame);
         }
 
     }

@@ -1243,7 +1243,7 @@ var Lich;
                 self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
             Lich.Nature.getInstance().handleTick(delta, self);
-            Lich.SpawnPool.getInstance().update(delta, self);
+            // SpawnPool.getInstance().update(delta, self);
         };
         ;
         return World;

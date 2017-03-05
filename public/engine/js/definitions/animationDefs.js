@@ -10,6 +10,7 @@ var Lich;
         }
         return Animation;
     }());
+    Lich.Animation = Animation;
     var AnimationSetDefinition = (function () {
         function AnimationSetDefinition(
             // jméno položky z hlavního spritesheetu
