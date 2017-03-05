@@ -549,8 +549,6 @@ var Lich;
     Lich.BackgroundSprite = BackgroundSprite;
     var AniSprite = (function (_super) {
         __extends(AniSprite, _super);
-        // pod-animace, do které hlavní animace přešla v důsledku řetězení
-        // private currentSubAnimation: string;
         function AniSprite(frames, animationDef) {
             var _this = _super.call(this, frames) || this;
             _this.animationDef = animationDef;
@@ -576,6 +574,7 @@ var Lich;
         AniSprite.prototype.gotoAndPlayInner = function (anm) {
             this.startFrame = anm.startFrame;
             this.endFrame = anm.endFrame;
+            this.currentSubAnimation = Lich.AnimationKey[anm.animationKey];
             this.nextAnimation = Lich.AnimationKey[anm.nextAnimationKey];
             this.animationSpeed = anm.speed;
             _super.prototype.gotoAndPlay.call(this, anm.startFrame);

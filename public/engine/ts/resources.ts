@@ -621,7 +621,7 @@ namespace Lich {
         // hlavní animace, která byla zvenku spuštěna
         public currentAnimation: string;
         // pod-animace, do které hlavní animace přešla v důsledku řetězení
-        // private currentSubAnimation: string;
+        public currentSubAnimation: string;
 
         constructor(frames: PIXI.Texture[], private animationDef: AnimationSetDefinition) {
             super(frames);
@@ -647,6 +647,7 @@ namespace Lich {
         private gotoAndPlayInner(anm: Animation): void {
             this.startFrame = anm.startFrame;
             this.endFrame = anm.endFrame;
+            this.currentSubAnimation = AnimationKey[anm.animationKey];
             this.nextAnimation = AnimationKey[anm.nextAnimationKey];
             this.animationSpeed = anm.speed;
             super.gotoAndPlay(anm.startFrame);

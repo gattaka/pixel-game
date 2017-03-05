@@ -28,6 +28,13 @@ namespace Lich {
             });
             return currentAnimation;
         }
+        getCurrentSubAnimation(): string {
+            let currentSubAnimation;
+            this.callOnAnisprite((s: AniSprite) => {
+                currentSubAnimation = s.currentSubAnimation;
+            });
+            return currentSubAnimation;
+        }
 
         performAnimation(desiredAnimation: AnimationKey) {
             var self = this;

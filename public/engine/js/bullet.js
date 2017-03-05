@@ -36,6 +36,13 @@ var Lich;
             });
             return currentAnimation;
         };
+        AbstractWorldObject.prototype.getCurrentSubAnimation = function () {
+            var currentSubAnimation;
+            this.callOnAnisprite(function (s) {
+                currentSubAnimation = s.currentSubAnimation;
+            });
+            return currentSubAnimation;
+        };
         AbstractWorldObject.prototype.performAnimation = function (desiredAnimation) {
             var self = this;
             this.callOnAnisprite(function (s) {
