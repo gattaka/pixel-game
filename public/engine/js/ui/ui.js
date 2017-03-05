@@ -15,8 +15,6 @@ var Lich;
         function UI(canvas, tilesMap, mobile) {
             var _this = _super.call(this) || this;
             _this.canvas = canvas;
-            // mobile
-            _this.controls = new Lich.Controls();
             var self = _this;
             // Minimap render
             var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
@@ -280,32 +278,32 @@ var Lich;
                     angle += 45 / 2;
                     switch (Math.floor(angle / 45)) {
                         case 0:
-                            self.controls.right = true;
+                            Lich.PlayerMovement.right = true;
                             break;
                         case 1:
-                            self.controls.right = true;
-                            self.controls.up = true;
+                            Lich.PlayerMovement.right = true;
+                            Lich.PlayerMovement.up = true;
                             break;
                         case 2:
-                            self.controls.up = true;
+                            Lich.PlayerMovement.up = true;
                             break;
                         case 3:
-                            self.controls.up = true;
-                            self.controls.left = true;
+                            Lich.PlayerMovement.up = true;
+                            Lich.PlayerMovement.left = true;
                             break;
                         case 4:
-                            self.controls.left = true;
+                            Lich.PlayerMovement.left = true;
                             break;
                         case 5:
-                            self.controls.left = true;
-                            self.controls.down = true;
+                            Lich.PlayerMovement.left = true;
+                            Lich.PlayerMovement.down = true;
                             break;
                         case 6:
-                            self.controls.down = true;
+                            Lich.PlayerMovement.down = true;
                             break;
                         case 7:
-                            self.controls.down = true;
-                            self.controls.right = true;
+                            Lich.PlayerMovement.down = true;
+                            Lich.PlayerMovement.right = true;
                             break;
                     }
                 };

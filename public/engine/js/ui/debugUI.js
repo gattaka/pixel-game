@@ -15,12 +15,6 @@ var Lich;
         function DebugLogUI(width, height) {
             var _this = _super.call(this, width, height) || this;
             var self = _this;
-            _this.fpsLabel = new Lich.Label("-- fps");
-            _this.addNextChild(_this.fpsLabel);
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.FPS_CHANGE, function (data) {
-                self.fpsLabel.setText(Math.round(data.payload) + " fps");
-                return false;
-            });
             _this.mouseLabel = new Lich.Label("PIXELS x: - y: -");
             _this.addNextChild(_this.mouseLabel);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MOUSE_MOVE, function (data) {

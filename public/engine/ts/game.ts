@@ -2,14 +2,6 @@
 
 namespace Lich {
 
-    export class Controls {
-        public up = false;
-        public down = false;
-        public left = false;
-        public right = false;
-        public levitate = false;
-    };
-
     declare class Stats {
         dom;
         constructor();
@@ -36,8 +28,6 @@ namespace Lich {
         private playerReadyToAutosave = true;
         private timerReadyToAutosave = false;
 
-        mouse = new Mouse();
-
         public getWorld(): World { return this.world; }
         public getSceneWidth(): number {
             return window.innerWidth; //this.renderer.view.width; 
@@ -51,6 +41,11 @@ namespace Lich {
             var self = this;
 
             Game.CURRENT_GAME = self;
+
+            // stats
+            var statsFPS = new Stats();
+            statsFPS.showPanel(0);
+            document.body.appendChild(statsFPS.dom);
 
             // mobile?
             let md = new MobileDetect(window.navigator.userAgent);
@@ -107,53 +102,48 @@ namespace Lich {
             if (mobile) {
                 self.hitLayer.on("pointerdown", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
-                    self.mouse.down = true;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
-                    self.mouse.x = mouseData.x;
-                    self.mouse.y = mouseData.y;
+                    Mouse.down = true;
+                    Mouse.clickChanged = true;
+                    Mouse.x = mouseData.x;
+                    Mouse.y = mouseData.y;
                 });
 
                 self.hitLayer.on("pointermove", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
-                    self.mouse.x = mouseData.x;
-                    self.mouse.y = mouseData.y;
-                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                    Mouse.x = mouseData.x;
+                    Mouse.y = mouseData.y;
+                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, Mouse.x, Mouse.y));
                 });
 
                 self.hitLayer.on("pointerup", () => {
-                    self.mouse.down = false;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Mouse.down = false;
+                    Mouse.clickChanged = true;
                 });
             } else {
                 self.hitLayer.on("pointerdown", () => {
-                    self.mouse.down = true;
-                    self.mouse.rightDown = false;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Mouse.down = true;
+                    Mouse.rightDown = false;
+                    Mouse.clickChanged = true;
                 });
 
                 self.hitLayer.on("rightdown", () => {
-                    self.mouse.down = false;
-                    self.mouse.rightDown = true;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Mouse.down = false;
+                    Mouse.rightDown = true;
+                    Mouse.clickChanged = true;
                 });
 
                 self.hitLayer.on("pointermove", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
-                    self.mouse.x = mouseData.x;
-                    self.mouse.y = mouseData.y;
-                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                    Mouse.x = mouseData.x;
+                    Mouse.y = mouseData.y;
+                    EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.MOUSE_MOVE, Mouse.x, Mouse.y));
                 });
 
                 self.hitLayer.on("pointerup", () => {
                     var mouseData = self.renderer.plugins.interaction.mouse;
-                    self.mouse.down = false;
-                    self.mouse.rightDown = false;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Mouse.down = false;
+                    Mouse.rightDown = false;
+                    Mouse.clickChanged = true;
                 });
             }
 
@@ -285,18 +275,15 @@ namespace Lich {
             };
 
             // Controls
-            // TODO mobile
-            // controls = self.ui.controls;
-            let controls = new Controls();
-            Keyboard.on(32, () => { controls.levitate = true; }, () => { controls.levitate = false; });
-            Keyboard.on(37, () => { controls.left = true; }, () => { controls.left = false; });
-            Keyboard.on(65, () => { controls.left = true; }, () => { controls.left = false; });
-            Keyboard.on(38, () => { controls.up = true; }, () => { controls.up = false; });
-            Keyboard.on(87, () => { controls.up = true; }, () => { controls.up = false; });
-            Keyboard.on(39, () => { controls.right = true; }, () => { controls.right = false; });
-            Keyboard.on(68, () => { controls.right = true; }, () => { controls.right = false; });
-            Keyboard.on(40, () => { controls.down = true; }, () => { controls.down = false; });
-            Keyboard.on(83, () => { controls.down = true; }, () => { controls.down = false; });
+            Keyboard.on(32, () => { PlayerMovement.levitate = true; }, () => { PlayerMovement.levitate = false; });
+            Keyboard.on(37, () => { PlayerMovement.left = true; }, () => { PlayerMovement.left = false; });
+            Keyboard.on(65, () => { PlayerMovement.left = true; }, () => { PlayerMovement.left = false; });
+            Keyboard.on(38, () => { PlayerMovement.up = true; }, () => { PlayerMovement.up = false; });
+            Keyboard.on(87, () => { PlayerMovement.up = true; }, () => { PlayerMovement.up = false; });
+            Keyboard.on(39, () => { PlayerMovement.right = true; }, () => { PlayerMovement.right = false; });
+            Keyboard.on(68, () => { PlayerMovement.right = true; }, () => { PlayerMovement.right = false; });
+            Keyboard.on(40, () => { PlayerMovement.down = true; }, () => { PlayerMovement.down = false; });
+            Keyboard.on(83, () => { PlayerMovement.down = true; }, () => { PlayerMovement.down = false; });
             Keyboard.on(67, () => { self.ui.craftingUI.toggle(); }, () => { self.ui.craftingUI.prepareForToggle(); });
             Keyboard.on(27, () => {
                 if (self.ui.craftingUI.parent) {
@@ -316,46 +303,17 @@ namespace Lich {
 
             let ticker = PIXI.ticker.shared;
             ticker.add(() => {
-                // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
+                statsFPS.begin();
+                // ticker.deltaTime je přepočtený dle speed, to není rozdíl 
+                // snímků v ms, jako bylo v createjs
                 let delta = ticker.elapsedMS;
-                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.FPS_CHANGE, ticker.FPS));
 
                 if (self.initialized) {
-
-                    // UI má při akcích myši přednost
-                    // isMouseInUI je časově náročné, proto je volání filtrováno
-                    // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
-                    // if (self.mouse.down && self.mouse.clickChanged) {
-                    // if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                    //     // blokuj akci světa
-                    //     self.mouse.consumedByUI = true;
-                    //     self.mouse.clickChanged = false;
-                    // }
-                    // }
-
-                    if (!self.mouse.down && self.mouse.clickChanged) {
-                        self.ui.controls = new Controls();
-                    }
-
-                    // Akce světa mají nižší prioritu, akce myši se projeví pouze 
-                    // pokud je již nezpracovalo UI 
-                    // Svět bere nejen mousedown akce, ale u mousedown musí dát přednost UI
-                    // bere dlouhé stisknutí protože spell efekty se opakují dokud platí mousedown
-                    if (!self.mouse.down || self.mouse.down && self.mouse.consumedByUI == false) {
-                        self.getWorld().handleMouse(self.mouse, delta);
-                        self.mouse.clickChanged = false;
-                    }
-
-                    // Při delším prodlení (nízké FPS) bude akcelerace působit 
-                    // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
-                    // už nedrží např. šipku -- holt "LAG" :)
-
-                    // Idle
-                    self.getWorld().handleTick(delta);
-                    self.getWorld().update(delta, controls);
+                    self.getWorld().update(delta);
                 }
 
                 self.renderer.render(self.stage);
+                statsFPS.end();
             });
         };
     }

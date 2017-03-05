@@ -17,9 +17,6 @@ namespace Lich {
 
         splashScreenUI: SplashScreenUI;
 
-        // mobile
-        public controls = new Controls();
-
         private createHelpButton() {
             let helpBtn = new Button(UISpriteKey.UI_HELP_KEY, () => {
                 window.open("help.html", "_blank");
@@ -299,14 +296,14 @@ namespace Lich {
                     // posuv, aby šipky nebyly na hranici ale uvnitř výseče
                     angle += 45 / 2;
                     switch (Math.floor(angle / 45)) {
-                        case 0: self.controls.right = true; break;
-                        case 1: self.controls.right = true; self.controls.up = true; break;
-                        case 2: self.controls.up = true; break;
-                        case 3: self.controls.up = true; self.controls.left = true; break;
-                        case 4: self.controls.left = true; break;
-                        case 5: self.controls.left = true; self.controls.down = true; break;
-                        case 6: self.controls.down = true; break;
-                        case 7: self.controls.down = true; self.controls.right = true; break;
+                        case 0: PlayerMovement.right = true; break;
+                        case 1: PlayerMovement.right = true; PlayerMovement.up = true; break;
+                        case 2: PlayerMovement.up = true; break;
+                        case 3: PlayerMovement.up = true; PlayerMovement.left = true; break;
+                        case 4: PlayerMovement.left = true; break;
+                        case 5: PlayerMovement.left = true; PlayerMovement.down = true; break;
+                        case 6: PlayerMovement.down = true; break;
+                        case 7: PlayerMovement.down = true; PlayerMovement.right = true; break;
                     }
                 };
 

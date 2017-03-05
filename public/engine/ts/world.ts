@@ -6,6 +6,16 @@
  */
 namespace Lich {
 
+    export class PlayerMovement {
+        public static up = false;
+        public static down = false;
+        public static left = false;
+        public static right = false;
+        public static levitate = false;
+
+        private constructor() { };
+    };
+
     class WorldObject extends AbstractWorldObject {
 
         constructor(
@@ -704,187 +714,7 @@ namespace Lich {
 
         };
 
-        update(delta, controls: Controls) {
-            var self = this;
-            var sDelta = delta / 1000; // ms -> s
 
-            // AI Enemies
-            self.enemies.forEach(function (enemy) {
-                if (enemy)
-                    enemy.runAI(self, delta);
-            });
-
-            let updateCharacter = (character: Character, makeShift: (x: number, y: number) => any) => {
-                let forceDown = false;
-                let forceUp = false;
-
-                // Je-li postava naživu, vnímej její ovládání
-                if (character.getCurrentHealth() > 0) {
-
-                    switch (character.movementTypeY) {
-                        case MovementTypeY.NONE:
-                        case MovementTypeY.HOVER:
-                            break;
-                        case MovementTypeY.JUMP_OR_CLIMB:
-                            forceUp = true;
-                            if (character.speedy == 0) {
-                                character.speedy = character.accelerationY;
-                            } break;
-                        case MovementTypeY.DESCENT:
-                            forceDown = true; break;
-                        case MovementTypeY.ASCENT:
-                            forceUp = true;
-                            character.speedy = character.accelerationY; break;
-                    }
-
-                    switch (character.movementTypeX) {
-                        case MovementTypeX.NONE:
-                            character.speedx = 0; break;
-                        case MovementTypeX.WALK_LEFT:
-                            character.speedx = character.accelerationX; break;
-                        case MovementTypeX.WALK_RIGHT:
-                            character.speedx = -character.accelerationX; break;
-                        case MovementTypeX.HOVER:
-                            break;
-                    }
-                }
-
-                // update postavy
-                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp, true, character.isClimbing);
-
-                character.updateAnimations();
-            };
-
-            // Dle kláves nastav směry pohybu
-            if (controls.up) {
-                self.hero.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
-            } else if (controls.levitate) {
-                self.hero.movementTypeY = MovementTypeY.ASCENT;
-            } else if (controls.down) {
-                self.hero.movementTypeY = MovementTypeY.DESCENT
-            } else {
-                self.hero.movementTypeY = MovementTypeY.NONE;
-            }
-
-            // Horizontální akcelerace
-            if (controls.left) {
-                self.hero.movementTypeX = MovementTypeX.WALK_LEFT;
-            } else if (controls.right) {
-                self.hero.movementTypeX = MovementTypeX.WALK_RIGHT;
-            } else {
-                self.hero.movementTypeX = MovementTypeX.NONE;
-            }
-
-            // ulož staré rychlosti a pozici
-            let oldPosX = self.hero.x;
-            let oldPosY = self.hero.y;
-            let oldSpeedX = self.hero.speedx;
-            let oldSpeedY = self.hero.speedy;
-
-            // update pohybu hráče
-            updateCharacter(self.hero, self.shiftWorldBy.bind(self));
-
-            if (self.hero.x != oldPosX || self.hero.y != oldPosY)
-                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
-            if (self.hero.speedx != oldSpeedX || self.hero.speedy != oldSpeedY)
-                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
-
-            // kontrola zranění z pádu
-            if (self.hero.speedy == 0 && oldSpeedY < 0) {
-                let threshold = World.MAX_FREEFALL_SPEED / 1.5;
-                oldSpeedY -= threshold;
-                if (oldSpeedY < 0) {
-                    self.hero.hit(Math.floor(self.hero.getMaxHealth() * oldSpeedY / (World.MAX_FREEFALL_SPEED - threshold)), this);
-                }
-            }
-
-            // update nepřátel
-            self.enemies.forEach(function (enemy) {
-                if (enemy) {
-                    updateCharacter(enemy, function (shiftX, shiftY) {
-                        if (isNaN(shiftX)) {
-                            console.log("Ou.. enemy shiftX je Nan");
-                        }
-                        if (isNaN(shiftY)) {
-                            console.log("Ou.. enemy shiftY je Nan");
-                        }
-                        var rndX = Utils.floor(shiftX);
-                        var rndY = Utils.floor(shiftY);
-                        enemy.x -= rndX;
-                        enemy.y -= rndY;
-
-                        if (enemy.unspawns) {
-                            if (enemy.x < -self.game.getSceneWidth() * 2
-                                || enemy.x > self.game.getSceneWidth() * 2
-                                || enemy.y < -self.game.getSceneHeight() * 2
-                                || enemy.y > self.game.getSceneHeight() * 2) {
-                                // dealokace
-                                self.removeEnemy(enemy);
-                            }
-                        }
-                    });
-                }
-            });
-
-            // Update virtuálního posuvu float-textů
-            self.labelObjects.forEach(function (item) {
-                if (item) {
-                    item.y = item["virtualY"] + item["tweenY"];
-                }
-            });
-
-            // update projektilů
-            (function () {
-                for (var i = 0; i < self.bulletObjects.length; i++) {
-                    var object = self.bulletObjects[i];
-                    object.update(sDelta, self.game);
-                    if (object.isDone() || object.getCurrentAnimation() === "done") {
-                        self.bulletObjects.splice(i, 1);
-                        self.entitiesCont.removeChild(object);
-                    }
-                }
-            })();
-
-            // update sebratelných objektů
-            (function () {
-                for (var i = 0; i < self.freeObjects.length; i++) {
-                    var object = self.freeObjects[i];
-                    // pohni objekty
-                    self.updateObject(sDelta, object, function (x, y) {
-                        var rndX = Utils.floor(x);
-                        var rndY = Utils.floor(y);
-                        object.x -= rndX;
-                        object.y -= rndY;
-                    }, false, false, false);
-
-                    object.updateAnimations();
-
-                    // zjisti, zda hráč objekt nesebral
-                    if (self.hero.getCurrentHealth() > 0) {
-                        var heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
-                        var heroCenterY = self.hero.y + self.hero.fixedHeight / 2;
-                        var itemCenterX = object.x + object.fixedWidth / 2;
-                        var itemCenterY = object.y + object.fixedHeight / 2;
-
-                        if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
-                            Inventory.getInstance().invInsert(object.item.invObj, 1);
-                            self.freeObjects.splice(i, 1);
-                            self.entitiesCont.removeChild(object);
-                            Mixer.playSound(SoundKey.SND_PICK_KEY, 0.2);
-                            object = null;
-                        }
-                        if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
-                            createjs.Tween.get(object)
-                                .to({
-                                    x: heroCenterX - object.fixedWidth / 2,
-                                    y: heroCenterY - object.fixedHeight / 2
-                                }, World.OBJECT_PICKUP_FORCE_TIME);
-                        }
-                    }
-                }
-            })();
-
-        };
 
         /**
          * Zjistí zda na daných pixel-souřadnicích dochází ke kolizi 
@@ -1227,13 +1057,13 @@ namespace Lich {
 
         };
 
-        handleMouse(mouse: Mouse, delta: number) {
+        private updateMouse(delta: number) {
             var self = this;
 
             if (self.hero.getCurrentHealth() > 0) {
 
                 // je prováděna interakce s objektem?
-                if (mouse.rightDown) {
+                if (Mouse.rightDown) {
                     var rmbSpellDef = Resources.getInstance().interactSpellDef;
                     // Může se provést (cooldown je pryč)?
                     var rmbCooldown = self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY];
@@ -1242,7 +1072,7 @@ namespace Lich {
                         var heroCenterY = self.hero.y + self.hero.fixedHeight / 4;
 
                         // zkus cast
-                        if (rmbSpellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                        if (rmbSpellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, Mouse.x, Mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown 
                             self.hero.spellCooldowns[SpellKey.SPELL_INTERACT_KEY] = rmbSpellDef.cooldown;
                         }
@@ -1264,12 +1094,12 @@ namespace Lich {
                     // Sniž dle delay
                     self.hero.spellCooldowns[choosenSpell] -= delta;
                     // Může se provést (cooldown je pryč, mám will a chci cast) ?
-                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (mouse.down)) {
+                    if (self.hero.getCurrentWill() >= spellDef.cost && cooldown <= 0 && (Mouse.down)) {
                         let heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
                         let heroCenterY = self.hero.y + self.hero.fixedHeight / 4;
 
                         // zkus cast
-                        if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, mouse.x, mouse.y, self.game))) {
+                        if (spellDef.cast(new SpellContext(Hero.OWNER_ID, heroCenterX, heroCenterY, Mouse.x, Mouse.y, self.game))) {
                             // ok, cast se provedl, nastav nový cooldown a odeber will
                             self.hero.spellCooldowns[choosenSpell] = spellDef.cooldown;
                             self.hero.decreseWill(spellDef.cost);
@@ -1278,7 +1108,7 @@ namespace Lich {
                 }
             }
 
-            let coord = self.render.pixelsToTiles(mouse.x, mouse.y);
+            let coord = self.render.pixelsToTiles(Mouse.x, Mouse.y);
             let clsn = self.isCollisionByTiles(coord.x, coord.y, coord.partOffsetX, coord.partOffsetY);
             let tile = self.tilesMap.mapRecord.getValue(coord.x, coord.y);
             let sector = self.render.getSectorByTiles(coord.x, coord.y);
@@ -1287,27 +1117,196 @@ namespace Lich {
             EventBus.getInstance().fireEvent(new PointedAreaEventPayload(
                 clsn.x, clsn.y, clsn.hit, clsn.partOffsetX, clsn.partOffsetY, typ, variant, sector ? sector.map_x : null, sector ? sector.map_y : null));
 
-        };
-
-        public checkReach(character: Character, x: number, y: number, inTiles: boolean = false): ReachInfo {
-            // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
-            // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
-            // změna projeví i na pixel místech, kde už je například kolize
-            var characterCoordTL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.collYOffset);
-            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.collYOffset);
-            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
-            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
-            var coord = inTiles ? new Coord2D(Utils.even(x), Utils.even(y)) : this.render.pixelsToEvenTiles(x, y);
-            // kontroluj rádius od každého rohu
-            let inReach = Utils.distance(coord.x, coord.y, characterCoordTL.x, characterCoordTL.y) < Resources.REACH_TILES_RADIUS
-                || Utils.distance(coord.x, coord.y, characterCoordTR.x, characterCoordTR.y) < Resources.REACH_TILES_RADIUS
-                || Utils.distance(coord.x, coord.y, characterCoordBR.x, characterCoordBR.y) < Resources.REACH_TILES_RADIUS
-                || Utils.distance(coord.x, coord.y, characterCoordBL.x, characterCoordBL.y) < Resources.REACH_TILES_RADIUS;
-            return new ReachInfo(coord, characterCoordTL, characterCoordTR, characterCoordBR, characterCoordBL, inReach);
         }
 
-        handleTick(delta) {
+        private updateMovement(delta) {
             var self = this;
+            var sDelta = delta / 1000; // ms -> s
+
+            // AI Enemies
+            self.enemies.forEach(function (enemy) {
+                if (enemy)
+                    enemy.runAI(self, delta);
+            });
+
+            let updateCharacter = (character: Character, makeShift: (x: number, y: number) => any) => {
+                let forceDown = false;
+                let forceUp = false;
+
+                // Je-li postava naživu, vnímej její ovládání
+                if (character.getCurrentHealth() > 0) {
+
+                    switch (character.movementTypeY) {
+                        case MovementTypeY.NONE:
+                        case MovementTypeY.HOVER:
+                            break;
+                        case MovementTypeY.JUMP_OR_CLIMB:
+                            forceUp = true;
+                            if (character.speedy == 0) {
+                                character.speedy = character.accelerationY;
+                            } break;
+                        case MovementTypeY.DESCENT:
+                            forceDown = true; break;
+                        case MovementTypeY.ASCENT:
+                            forceUp = true;
+                            character.speedy = character.accelerationY; break;
+                    }
+
+                    switch (character.movementTypeX) {
+                        case MovementTypeX.NONE:
+                            character.speedx = 0; break;
+                        case MovementTypeX.WALK_LEFT:
+                            character.speedx = character.accelerationX; break;
+                        case MovementTypeX.WALK_RIGHT:
+                            character.speedx = -character.accelerationX; break;
+                        case MovementTypeX.HOVER:
+                            break;
+                    }
+                }
+
+                // update postavy
+                character.isClimbing = self.updateObject(sDelta, character, makeShift, forceDown, forceUp, true, character.isClimbing);
+
+                character.updateAnimations();
+            };
+
+            // Dle kláves nastav směry pohybu
+            if (PlayerMovement.up) {
+                self.hero.movementTypeY = MovementTypeY.JUMP_OR_CLIMB;
+            } else if (PlayerMovement.levitate) {
+                self.hero.movementTypeY = MovementTypeY.ASCENT;
+            } else if (PlayerMovement.down) {
+                self.hero.movementTypeY = MovementTypeY.DESCENT
+            } else {
+                self.hero.movementTypeY = MovementTypeY.NONE;
+            }
+
+            // Horizontální akcelerace
+            if (PlayerMovement.left) {
+                self.hero.movementTypeX = MovementTypeX.WALK_LEFT;
+            } else if (PlayerMovement.right) {
+                self.hero.movementTypeX = MovementTypeX.WALK_RIGHT;
+            } else {
+                self.hero.movementTypeX = MovementTypeX.NONE;
+            }
+
+            // ulož staré rychlosti a pozici
+            let oldPosX = self.hero.x;
+            let oldPosY = self.hero.y;
+            let oldSpeedX = self.hero.speedx;
+            let oldSpeedY = self.hero.speedy;
+
+            // update pohybu hráče
+            updateCharacter(self.hero, self.shiftWorldBy.bind(self));
+
+            if (self.hero.x != oldPosX || self.hero.y != oldPosY)
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_POSITION_CHANGE, self.hero.x, self.hero.y));
+            if (self.hero.speedx != oldSpeedX || self.hero.speedy != oldSpeedY)
+                EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.PLAYER_SPEED_CHANGE, self.hero.speedx, self.hero.speedy));
+
+            // kontrola zranění z pádu
+            if (self.hero.speedy == 0 && oldSpeedY < 0) {
+                let threshold = World.MAX_FREEFALL_SPEED / 1.5;
+                oldSpeedY -= threshold;
+                if (oldSpeedY < 0) {
+                    self.hero.hit(Math.floor(self.hero.getMaxHealth() * oldSpeedY / (World.MAX_FREEFALL_SPEED - threshold)), this);
+                }
+            }
+
+            // update nepřátel
+            self.enemies.forEach(function (enemy) {
+                if (enemy) {
+                    updateCharacter(enemy, function (shiftX, shiftY) {
+                        if (isNaN(shiftX)) {
+                            console.log("Ou.. enemy shiftX je Nan");
+                        }
+                        if (isNaN(shiftY)) {
+                            console.log("Ou.. enemy shiftY je Nan");
+                        }
+                        var rndX = Utils.floor(shiftX);
+                        var rndY = Utils.floor(shiftY);
+                        enemy.x -= rndX;
+                        enemy.y -= rndY;
+
+                        if (enemy.unspawns) {
+                            if (enemy.x < -self.game.getSceneWidth() * 2
+                                || enemy.x > self.game.getSceneWidth() * 2
+                                || enemy.y < -self.game.getSceneHeight() * 2
+                                || enemy.y > self.game.getSceneHeight() * 2) {
+                                // dealokace
+                                self.removeEnemy(enemy);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        update(delta) {
+            var self = this;
+            var sDelta = delta / 1000; // ms -> s
+
+            this.updateMovement(delta);
+            this.updateMouse(delta);
+
+            // Update virtuálního posuvu float-textů
+            self.labelObjects.forEach(function (item) {
+                if (item) {
+                    item.y = item["virtualY"] + item["tweenY"];
+                }
+            });
+
+            // update projektilů
+            (function () {
+                for (var i = 0; i < self.bulletObjects.length; i++) {
+                    var object = self.bulletObjects[i];
+                    object.update(sDelta, self.game);
+                    if (object.isDone() || object.getCurrentAnimation() === "done") {
+                        self.bulletObjects.splice(i, 1);
+                        self.entitiesCont.removeChild(object);
+                    }
+                }
+            })();
+
+            // update sebratelných objektů
+            (function () {
+                for (var i = 0; i < self.freeObjects.length; i++) {
+                    var object = self.freeObjects[i];
+                    // pohni objekty
+                    self.updateObject(sDelta, object, function (x, y) {
+                        var rndX = Utils.floor(x);
+                        var rndY = Utils.floor(y);
+                        object.x -= rndX;
+                        object.y -= rndY;
+                    }, false, false, false);
+
+                    object.updateAnimations();
+
+                    // zjisti, zda hráč objekt nesebral
+                    if (self.hero.getCurrentHealth() > 0) {
+                        var heroCenterX = self.hero.x + self.hero.fixedWidth / 2;
+                        var heroCenterY = self.hero.y + self.hero.fixedHeight / 2;
+                        var itemCenterX = object.x + object.fixedWidth / 2;
+                        var itemCenterY = object.y + object.fixedHeight / 2;
+
+                        if (Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_DISTANCE) {
+                            Inventory.getInstance().invInsert(object.item.invObj, 1);
+                            self.freeObjects.splice(i, 1);
+                            self.entitiesCont.removeChild(object);
+                            Mixer.playSound(SoundKey.SND_PICK_KEY, 0.2);
+                            object = null;
+                        }
+                        if (object !== null && Math.sqrt(Math.pow(itemCenterX - heroCenterX, 2) + Math.pow(itemCenterY - heroCenterY, 2)) < World.OBJECT_PICKUP_FORCE_DISTANCE) {
+                            createjs.Tween.get(object)
+                                .to({
+                                    x: heroCenterX - object.fixedWidth / 2,
+                                    y: heroCenterY - object.fixedHeight / 2
+                                }, World.OBJECT_PICKUP_FORCE_TIME);
+                        }
+                    }
+                }
+            })();
+
             self.render.handleTick();
             self.weather.update(delta);
             self.hero.handleTick(delta);
@@ -1330,6 +1329,24 @@ namespace Lich {
             Nature.getInstance().handleTick(delta, self);
             // SpawnPool.getInstance().update(delta, self);
         };
+
+        public checkReach(character: Character, x: number, y: number, inTiles: boolean = false): ReachInfo {
+            // dosahem omezená akce -- musí se počítat v tiles, aby nedošlo ke kontrole 
+            // na pixel vzdálenost, která je ok, ale při změně cílové tile se celková 
+            // změna projeví i na pixel místech, kde už je například kolize
+            var characterCoordTL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.collYOffset);
+            var characterCoordTR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.collYOffset);
+            var characterCoordBR = this.render.pixelsToEvenTiles(character.x + character.fixedWidth - character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
+            var characterCoordBL = this.render.pixelsToEvenTiles(character.x + character.collXOffset, character.y + character.fixedHeight - character.collYOffset);
+            var coord = inTiles ? new Coord2D(Utils.even(x), Utils.even(y)) : this.render.pixelsToEvenTiles(x, y);
+            // kontroluj rádius od každého rohu
+            let inReach = Utils.distance(coord.x, coord.y, characterCoordTL.x, characterCoordTL.y) < Resources.REACH_TILES_RADIUS
+                || Utils.distance(coord.x, coord.y, characterCoordTR.x, characterCoordTR.y) < Resources.REACH_TILES_RADIUS
+                || Utils.distance(coord.x, coord.y, characterCoordBR.x, characterCoordBR.y) < Resources.REACH_TILES_RADIUS
+                || Utils.distance(coord.x, coord.y, characterCoordBL.x, characterCoordBL.y) < Resources.REACH_TILES_RADIUS;
+            return new ReachInfo(coord, characterCoordTL, characterCoordTR, characterCoordBR, characterCoordBL, inReach);
+        }
+
     }
 
     export class ReachInfo {

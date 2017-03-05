@@ -1,11 +1,13 @@
 namespace Lich {
+
     export class Mouse {
-        down: boolean;
-        rightDown: boolean;
-        clickChanged: boolean;
-        consumedByUI: boolean;
-        y: number;
-        x: number;
+        public static down: boolean;
+        public static rightDown: boolean;
+        public static clickChanged: boolean;
+        public static y: number;
+        public static x: number;
+
+        private constructor() { };
     }
 
     class Key {
@@ -15,6 +17,8 @@ namespace Lich {
     }
 
     export class Keyboard {
+
+        private constructor() { };
 
         static on(keyCode: number, onPress: Function, onRelease?: Function) {
             var key = new Key;

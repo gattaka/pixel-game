@@ -3,6 +3,7 @@ var Lich;
     var Mouse = (function () {
         function Mouse() {
         }
+        ;
         return Mouse;
     }());
     Lich.Mouse = Mouse;
@@ -14,6 +15,7 @@ var Lich;
     var Keyboard = (function () {
         function Keyboard() {
         }
+        ;
         Keyboard.on = function (keyCode, onPress, onRelease) {
             var key = new Key;
             key.code = keyCode;

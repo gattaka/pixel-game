@@ -1,27 +1,18 @@
 ///<reference path='lib/createjs/createjs.d.ts'/>
 var Lich;
 (function (Lich) {
-    var Controls = (function () {
-        function Controls() {
-            this.up = false;
-            this.down = false;
-            this.left = false;
-            this.right = false;
-            this.levitate = false;
-        }
-        return Controls;
-    }());
-    Lich.Controls = Controls;
-    ;
     ;
     var Game = (function () {
         function Game(minimapCanvasId, loaderCanvasId) {
             this.initialized = false;
             this.playerReadyToAutosave = true;
             this.timerReadyToAutosave = false;
-            this.mouse = new Lich.Mouse();
             var self = this;
             Game.CURRENT_GAME = self;
+            // stats
+            var statsFPS = new Stats();
+            statsFPS.showPanel(0);
+            document.body.appendChild(statsFPS.dom);
             // mobile?
             var md = new MobileDetect(window.navigator.userAgent);
             var mobile;
@@ -70,49 +61,44 @@ var Lich;
             if (mobile) {
                 self.hitLayer.on("pointerdown", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
-                    self.mouse.down = true;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
-                    self.mouse.x = mouseData.x;
-                    self.mouse.y = mouseData.y;
+                    Lich.Mouse.down = true;
+                    Lich.Mouse.clickChanged = true;
+                    Lich.Mouse.x = mouseData.x;
+                    Lich.Mouse.y = mouseData.y;
                 });
                 self.hitLayer.on("pointermove", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
-                    self.mouse.x = mouseData.x;
-                    self.mouse.y = mouseData.y;
-                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                    Lich.Mouse.x = mouseData.x;
+                    Lich.Mouse.y = mouseData.y;
+                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, Lich.Mouse.x, Lich.Mouse.y));
                 });
                 self.hitLayer.on("pointerup", function () {
-                    self.mouse.down = false;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Lich.Mouse.down = false;
+                    Lich.Mouse.clickChanged = true;
                 });
             }
             else {
                 self.hitLayer.on("pointerdown", function () {
-                    self.mouse.down = true;
-                    self.mouse.rightDown = false;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Lich.Mouse.down = true;
+                    Lich.Mouse.rightDown = false;
+                    Lich.Mouse.clickChanged = true;
                 });
                 self.hitLayer.on("rightdown", function () {
-                    self.mouse.down = false;
-                    self.mouse.rightDown = true;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Lich.Mouse.down = false;
+                    Lich.Mouse.rightDown = true;
+                    Lich.Mouse.clickChanged = true;
                 });
                 self.hitLayer.on("pointermove", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse.global;
-                    self.mouse.x = mouseData.x;
-                    self.mouse.y = mouseData.y;
-                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, self.mouse.x, self.mouse.y));
+                    Lich.Mouse.x = mouseData.x;
+                    Lich.Mouse.y = mouseData.y;
+                    Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.MOUSE_MOVE, Lich.Mouse.x, Lich.Mouse.y));
                 });
                 self.hitLayer.on("pointerup", function () {
                     var mouseData = self.renderer.plugins.interaction.mouse;
-                    self.mouse.down = false;
-                    self.mouse.rightDown = false;
-                    self.mouse.clickChanged = true;
-                    self.mouse.consumedByUI = false;
+                    Lich.Mouse.down = false;
+                    Lich.Mouse.rightDown = false;
+                    Lich.Mouse.clickChanged = true;
                 });
             }
             var init = function () {
@@ -232,18 +218,15 @@ var Lich;
                 return 'Are you sure?';
             };
             // Controls
-            // TODO mobile
-            // controls = self.ui.controls;
-            var controls = new Controls();
-            Lich.Keyboard.on(32, function () { controls.levitate = true; }, function () { controls.levitate = false; });
-            Lich.Keyboard.on(37, function () { controls.left = true; }, function () { controls.left = false; });
-            Lich.Keyboard.on(65, function () { controls.left = true; }, function () { controls.left = false; });
-            Lich.Keyboard.on(38, function () { controls.up = true; }, function () { controls.up = false; });
-            Lich.Keyboard.on(87, function () { controls.up = true; }, function () { controls.up = false; });
-            Lich.Keyboard.on(39, function () { controls.right = true; }, function () { controls.right = false; });
-            Lich.Keyboard.on(68, function () { controls.right = true; }, function () { controls.right = false; });
-            Lich.Keyboard.on(40, function () { controls.down = true; }, function () { controls.down = false; });
-            Lich.Keyboard.on(83, function () { controls.down = true; }, function () { controls.down = false; });
+            Lich.Keyboard.on(32, function () { Lich.PlayerMovement.levitate = true; }, function () { Lich.PlayerMovement.levitate = false; });
+            Lich.Keyboard.on(37, function () { Lich.PlayerMovement.left = true; }, function () { Lich.PlayerMovement.left = false; });
+            Lich.Keyboard.on(65, function () { Lich.PlayerMovement.left = true; }, function () { Lich.PlayerMovement.left = false; });
+            Lich.Keyboard.on(38, function () { Lich.PlayerMovement.up = true; }, function () { Lich.PlayerMovement.up = false; });
+            Lich.Keyboard.on(87, function () { Lich.PlayerMovement.up = true; }, function () { Lich.PlayerMovement.up = false; });
+            Lich.Keyboard.on(39, function () { Lich.PlayerMovement.right = true; }, function () { Lich.PlayerMovement.right = false; });
+            Lich.Keyboard.on(68, function () { Lich.PlayerMovement.right = true; }, function () { Lich.PlayerMovement.right = false; });
+            Lich.Keyboard.on(40, function () { Lich.PlayerMovement.down = true; }, function () { Lich.PlayerMovement.down = false; });
+            Lich.Keyboard.on(83, function () { Lich.PlayerMovement.down = true; }, function () { Lich.PlayerMovement.down = false; });
             Lich.Keyboard.on(67, function () { self.ui.craftingUI.toggle(); }, function () { self.ui.craftingUI.prepareForToggle(); });
             Lich.Keyboard.on(27, function () {
                 if (self.ui.craftingUI.parent) {
@@ -264,39 +247,15 @@ var Lich;
             Lich.Keyboard.on(16, function () { self.ui.spellsUI.toggleAlternative(); }, function () { self.ui.spellsUI.prepareForToggleAlternative(); });
             var ticker = PIXI.ticker.shared;
             ticker.add(function () {
-                // ticker.deltaTime je přepočtený dle speed, to není rozdíl snímků v ms, jako bylo v createjs
+                statsFPS.begin();
+                // ticker.deltaTime je přepočtený dle speed, to není rozdíl 
+                // snímků v ms, jako bylo v createjs
                 var delta = ticker.elapsedMS;
-                Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.FPS_CHANGE, ticker.FPS));
                 if (self.initialized) {
-                    // UI má při akcích myši přednost
-                    // isMouseInUI je časově náročné, proto je volání filtrováno
-                    // UI bere pouze mousedown akce a to pouze jednou (ignoruje dlouhé stisknutí)
-                    // if (self.mouse.down && self.mouse.clickChanged) {
-                    // if (self.ui.isMouseInUI(self.mouse.x, self.mouse.y)) {
-                    //     // blokuj akci světa
-                    //     self.mouse.consumedByUI = true;
-                    //     self.mouse.clickChanged = false;
-                    // }
-                    // }
-                    if (!self.mouse.down && self.mouse.clickChanged) {
-                        self.ui.controls = new Controls();
-                    }
-                    // Akce světa mají nižší prioritu, akce myši se projeví pouze 
-                    // pokud je již nezpracovalo UI 
-                    // Svět bere nejen mousedown akce, ale u mousedown musí dát přednost UI
-                    // bere dlouhé stisknutí protože spell efekty se opakují dokud platí mousedown
-                    if (!self.mouse.down || self.mouse.down && self.mouse.consumedByUI == false) {
-                        self.getWorld().handleMouse(self.mouse, delta);
-                        self.mouse.clickChanged = false;
-                    }
-                    // Při delším prodlení (nízké FPS) bude akcelerace působit 
-                    // fakticky delší dobu, ale hra nemá možnost zjistit, že hráč
-                    // už nedrží např. šipku -- holt "LAG" :)
-                    // Idle
-                    self.getWorld().handleTick(delta);
-                    self.getWorld().update(delta, controls);
+                    self.getWorld().update(delta);
                 }
                 self.renderer.render(self.stage);
+                statsFPS.end();
             });
         }
         Game.prototype.getWorld = function () { return this.world; };

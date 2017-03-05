@@ -4,7 +4,6 @@ namespace Lich {
 
         static PADDING = 5;
 
-        fpsLabel: Label;
         mouseLabel: Label;
         tilesLabel: Label;
         sectorLabel: Label;
@@ -14,13 +13,6 @@ namespace Lich {
         constructor(width: number, height: number) {
             super(width, height);
             let self = this;
-
-            this.fpsLabel = new Label("-- fps");
-            this.addNextChild(this.fpsLabel);
-            EventBus.getInstance().registerConsumer(EventType.FPS_CHANGE, (data: NumberEventPayload) => {
-                self.fpsLabel.setText(Math.round(data.payload) + " fps");
-                return false;
-            });
 
             this.mouseLabel = new Label("PIXELS x: - y: -");
             this.addNextChild(this.mouseLabel);
