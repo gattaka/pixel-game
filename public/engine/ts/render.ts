@@ -109,6 +109,12 @@ namespace Lich {
             }
             let countFogSecY = Render.getFogContSizeH(self.sectorsCont.fixedHeight);
 
+            // Protože se fogCont posouvá o -PARTS_SIZE, aby plynule navazoval (na obou koncích je 
+            // o 1 delší a musí tedy začít v -PARTS_SIZE,-PARTS_SIZE), je potřeba aby i zobrazovaná
+            // data byla posunuta. Jinak by se fog zobrazoval posunutý doleva a na pravém/dolním konci
+            // by se zobrazovala undefined data (černé čtvrce)
+            startFogSecY--;
+            startFogSecX--;
             return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY);
         }
 

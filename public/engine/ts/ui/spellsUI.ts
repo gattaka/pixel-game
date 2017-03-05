@@ -3,22 +3,22 @@ namespace Lich {
     export class Spellbook {
         private static INSTANCE: Spellbook;
 
-        // TODO dokončit oddělení UI se Spellbookem
         private choosenSpellIndex: number;
         private spellIndex = new Array<SpellKey>();
         private altSpellIndex = new Array<SpellKey>();
+        private alt = false;
 
-        getChoosenSpellIndex(): number { return this.spellIndex[this.choosenSpellIndex]; }
         setChooseSpellIndex(choosenItemNumber: number) { return this.choosenSpellIndex = choosenItemNumber; }
         getSize(): number { return this.spellIndex.length; }
+        setAlt(alt: boolean) { this.alt = alt };
 
         insertSpell(i: number, spell: SpellKey, altSpell?: SpellKey) {
             this.spellIndex[i] = spell;
             this.altSpellIndex[i] = altSpell;
         }
 
-        getChoosenSpell(alt = false): SpellKey {
-            if (alt) {
+        getChoosenSpell(): SpellKey {
+            if (this.alt) {
                 let spell = this.altSpellIndex[this.choosenSpellIndex];
                 if (spell) return spell;
             }
@@ -54,6 +54,11 @@ namespace Lich {
 
             let self = this;
 
+            // zvýraznění vybrané položky
+            self.itemHighlight = new Highlight();
+            self.itemHighlight.visible = false;
+            self.addChild(self.itemHighlight);
+
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(SpellKey.SPELL_DIG_KEY, SpellKey.SPELL_DIG_BGR_KEY);
             self.spellInsert(SpellKey.SPELL_PLACE_KEY, SpellKey.SPELL_PLACE_BGR_KEY);
@@ -71,14 +76,6 @@ namespace Lich {
                 })();
             }
 
-            // zvýraznění vybrané položky
-            self.itemHighlight = new Highlight();
-            self.itemHighlight.visible = false;
-            self.addChild(self.itemHighlight);
-
-            // let offset = 5;
-            // self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
-
             self.selectSpell(0);
         }
 
@@ -86,6 +83,7 @@ namespace Lich {
             let self = this;
             // dochází ke změně?
             if (self.toggleFlag == false) {
+                Spellbook.getInstance().setAlt(true);
                 for (let i = 0; i < Spellbook.getInstance().getSize(); i++) {
                     let alt = Spellbook.getInstance().getSpellByIndex(i, true);
                     if (alt) {
@@ -93,18 +91,17 @@ namespace Lich {
                         this.spellContent[i].changeSprite(def.icon);
                     }
                 }
-                // self.updateCache();
                 self.toggleFlag = true;
             }
         }
 
         prepareForToggleAlternative() {
             if (this.toggleFlag) {
+                Spellbook.getInstance().setAlt(false);
                 for (let i = 0; i < Spellbook.getInstance().getSize(); i++) {
                     let def = Resources.getInstance().getSpellDef(Spellbook.getInstance().getSpellByIndex(i));
                     this.spellContent[i].changeSprite(def.icon);
                 }
-                // this.updateCache();
                 this.toggleFlag = false;
             }
         }
@@ -116,7 +113,6 @@ namespace Lich {
             self.itemHighlight.x = button.x;
             self.itemHighlight.y = button.y;
             Spellbook.getInstance().setChooseSpellIndex(spellNumber);
-            // self.updateCache();
         }
 
         spellInsert(spell: SpellKey, altSpell?: SpellKey) {

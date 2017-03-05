@@ -14,17 +14,18 @@ var Lich;
         function Spellbook() {
             this.spellIndex = new Array();
             this.altSpellIndex = new Array();
+            this.alt = false;
         }
-        Spellbook.prototype.getChoosenSpellIndex = function () { return this.spellIndex[this.choosenSpellIndex]; };
         Spellbook.prototype.setChooseSpellIndex = function (choosenItemNumber) { return this.choosenSpellIndex = choosenItemNumber; };
         Spellbook.prototype.getSize = function () { return this.spellIndex.length; };
+        Spellbook.prototype.setAlt = function (alt) { this.alt = alt; };
+        ;
         Spellbook.prototype.insertSpell = function (i, spell, altSpell) {
             this.spellIndex[i] = spell;
             this.altSpellIndex[i] = altSpell;
         };
-        Spellbook.prototype.getChoosenSpell = function (alt) {
-            if (alt === void 0) { alt = false; }
-            if (alt) {
+        Spellbook.prototype.getChoosenSpell = function () {
+            if (this.alt) {
                 var spell = this.altSpellIndex[this.choosenSpellIndex];
                 if (spell)
                     return spell;
@@ -51,6 +52,10 @@ var Lich;
             _this.toggleFlag = false;
             _this.spellContent = new Array();
             var self = _this;
+            // zvýraznění vybrané položky
+            self.itemHighlight = new Lich.Highlight();
+            self.itemHighlight.visible = false;
+            self.addChild(self.itemHighlight);
             // skill bude nastavitelné, takže zatím je možné ho přednastavit
             self.spellInsert(Lich.SpellKey.SPELL_DIG_KEY, Lich.SpellKey.SPELL_DIG_BGR_KEY);
             self.spellInsert(Lich.SpellKey.SPELL_PLACE_KEY, Lich.SpellKey.SPELL_PLACE_BGR_KEY);
@@ -66,12 +71,6 @@ var Lich;
                     Lich.Keyboard.on(49 + ii, function () { self.selectSpell(ii); });
                 })();
             }
-            // zvýraznění vybrané položky
-            self.itemHighlight = new Lich.Highlight();
-            self.itemHighlight.visible = false;
-            self.addChild(self.itemHighlight);
-            // let offset = 5;
-            // self.cache(-offset, -offset, self.width + offset * 2, self.height + offset * 2);
             self.selectSpell(0);
             return _this;
         }
@@ -79,6 +78,7 @@ var Lich;
             var self = this;
             // dochází ke změně?
             if (self.toggleFlag == false) {
+                Spellbook.getInstance().setAlt(true);
                 for (var i = 0; i < Spellbook.getInstance().getSize(); i++) {
                     var alt = Spellbook.getInstance().getSpellByIndex(i, true);
                     if (alt) {
@@ -86,17 +86,16 @@ var Lich;
                         this.spellContent[i].changeSprite(def.icon);
                     }
                 }
-                // self.updateCache();
                 self.toggleFlag = true;
             }
         };
         SpellsUI.prototype.prepareForToggleAlternative = function () {
             if (this.toggleFlag) {
+                Spellbook.getInstance().setAlt(false);
                 for (var i = 0; i < Spellbook.getInstance().getSize(); i++) {
                     var def = Lich.Resources.getInstance().getSpellDef(Spellbook.getInstance().getSpellByIndex(i));
                     this.spellContent[i].changeSprite(def.icon);
                 }
-                // this.updateCache();
                 this.toggleFlag = false;
             }
         };
@@ -107,7 +106,6 @@ var Lich;
             self.itemHighlight.x = button.x;
             self.itemHighlight.y = button.y;
             Spellbook.getInstance().setChooseSpellIndex(spellNumber);
-            // self.updateCache();
         };
         SpellsUI.prototype.spellInsert = function (spell, altSpell) {
             var self = this;

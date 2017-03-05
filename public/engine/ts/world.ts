@@ -1081,7 +1081,7 @@ namespace Lich {
 
                 // je vybrán spell?
                 // TODO tohle se musí opravit -- aktuálně to snižuje cooldown pouze u spellu, který je vybraný (mělo by všem)
-                var choosenSpell = Spellbook.getInstance().getChoosenSpellIndex();
+                var choosenSpell = Spellbook.getInstance().getChoosenSpell();
                 if (typeof choosenSpell !== "undefined" && choosenSpell != null) {
                     var spellDef: SpellDefinition = Resources.getInstance().getSpellDef(choosenSpell);
                     // provádím spell za hráče, takže kontroluji jeho cooldown
