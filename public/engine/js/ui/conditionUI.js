@@ -35,12 +35,12 @@ var Lich;
             // zdraví
             _this.addChild(_this.healthBar);
             _this.healthText = new Lich.Label(" ");
-            _this.healthText.y = ConditionUI.INNER_BORDER;
+            _this.healthText.y = Math.floor(ConditionUI.INNER_BORDER - 2);
             _this.addChild(_this.healthText);
             // vůle
             _this.addChild(_this.willBar);
             _this.willText = new Lich.Label(" ");
-            _this.willText.y = _this.fixedHeight / 2 + ConditionUI.SPACING / 2;
+            _this.willText.y = Math.floor(_this.fixedHeight / 2 + ConditionUI.SPACING / 2 - 2);
             _this.addChild(_this.willText);
             _this.updateHealthBar();
             _this.updateWillBar();
@@ -96,7 +96,7 @@ var Lich;
             var x = ConditionUI.INNER_BORDER + this.barWidth - width;
             this.healthBar.drawRoundedRect(x, ConditionUI.INNER_BORDER, width, this.barHeight, 3);
             this.healthText.setText(this.currentHealth + "/" + this.maxHealth);
-            this.healthText.x = this.fixedWidth / 2 - this.healthText.fixedWidth / 2;
+            this.healthText.x = Math.floor(this.fixedWidth / 2 - this.healthText.width / 2);
         };
         ConditionUI.prototype.updateWillBar = function () {
             this.willBar.clear();
@@ -106,7 +106,7 @@ var Lich;
             var x = ConditionUI.INNER_BORDER + this.barWidth - width;
             this.willBar.drawRoundedRect(x, this.fixedHeight / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
             this.willText.setText(this.currentWill + "/" + this.maxWill);
-            this.willText.x = this.fixedWidth / 2 - this.willText.fixedWidth / 2;
+            this.willText.x = Math.floor(this.fixedWidth / 2 - this.willText.width / 2);
         };
         return ConditionUI;
     }(Lich.AbstractUI));

@@ -61,7 +61,7 @@ namespace Lich {
             this.healthBar.drawRoundedRect(x, ConditionUI.INNER_BORDER, width, this.barHeight, 3);
 
             this.healthText.setText(this.currentHealth + "/" + this.maxHealth);
-            this.healthText.x = this.fixedWidth / 2 - this.healthText.fixedWidth / 2;
+            this.healthText.x = Math.floor(this.fixedWidth / 2 - this.healthText.width / 2);
         }
 
         private updateWillBar() {
@@ -73,7 +73,7 @@ namespace Lich {
             this.willBar.drawRoundedRect(x, this.fixedHeight / 2 + ConditionUI.SPACING / 2, width, this.barHeight, 3);
 
             this.willText.setText(this.currentWill + "/" + this.maxWill);
-            this.willText.x = this.fixedWidth / 2 - this.willText.fixedWidth / 2;
+            this.willText.x = Math.floor(this.fixedWidth / 2 - this.willText.width / 2);
         }
 
         constructor() {
@@ -98,13 +98,13 @@ namespace Lich {
             // zdraví
             this.addChild(this.healthBar);
             this.healthText = new Label(" ");
-            this.healthText.y = ConditionUI.INNER_BORDER;
+            this.healthText.y = Math.floor(ConditionUI.INNER_BORDER - 2);
             this.addChild(this.healthText);
 
             // vůle
             this.addChild(this.willBar);
             this.willText = new Label(" ");
-            this.willText.y = this.fixedHeight / 2 + ConditionUI.SPACING / 2;
+            this.willText.y = Math.floor(this.fixedHeight / 2 + ConditionUI.SPACING / 2 - 2);
             this.addChild(this.willText);
 
             this.updateHealthBar();

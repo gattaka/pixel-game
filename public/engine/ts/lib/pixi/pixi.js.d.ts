@@ -1449,6 +1449,9 @@ declare namespace PIXI {
         style: TextStyle;
         text: string;
 
+        width: number;
+        height: number;
+
         protected updateText(respectDirty?: boolean): void;
         protected drawLetterSpacing(text: string, x: number, y: number, isStroke?: boolean): void;
         protected updateTexture(): void;

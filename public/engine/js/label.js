@@ -18,12 +18,7 @@ var Lich;
             if (color === void 0) { color = Lich.Resources.TEXT_COLOR; }
             if (outlineColor === void 0) { outlineColor = Lich.Resources.OUTLINE_COLOR; }
             if (outlineWidth === void 0) { outlineWidth = 3; }
-            var _this = _super.call(this) || this;
-            _this.label = new PIXI.Text(text, { fontFamily: font, fontSize: size + "px ", fill: color, stroke: outlineColor, strokeThickness: outlineWidth });
-            _this.addChild(_this.label);
-            _this.fixedHeight = _this.label.getBounds().height;
-            _this.fixedWidth = _this.label.getBounds().width;
-            return _this;
+            return _super.call(this, text, { fontFamily: font, fontSize: size + "px ", fill: color, stroke: outlineColor, strokeThickness: outlineWidth }) || this;
         }
         Label.prototype.setLineWidth = function (value) {
             // this.label.lineWidth = value
@@ -32,12 +27,12 @@ var Lich;
             // this.label.lineHeight = value
         };
         Label.prototype.setText = function (value) {
-            this.label.text = value;
+            this.text = value;
         };
         Label.prototype.setColor = function (value) {
-            this.label.style.fill = value;
+            this.style.fill = value;
         };
         return Label;
-    }(PIXI.Container));
+    }(PIXI.Text));
     Lich.Label = Label;
 })(Lich || (Lich = {}));

@@ -62,10 +62,10 @@ namespace Lich {
 
             child.x = DebugLogUI.PADDING;
             child.y = this.fixedHeight - DebugLogUI.PADDING;
-            this.fixedHeight += child.fixedHeight + DebugLogUI.PADDING;
+            this.fixedHeight += child.height + DebugLogUI.PADDING;
 
-            if (child.fixedWidth + 2 * DebugLogUI.PADDING > this.fixedWidth) {
-                this.fixedWidth = child.fixedWidth + 2 * DebugLogUI.PADDING;
+            if (child.width + 2 * DebugLogUI.PADDING > this.fixedWidth) {
+                this.fixedWidth = child.width + 2 * DebugLogUI.PADDING;
             }
 
             super.addChild(child);
