@@ -16,6 +16,8 @@ namespace Lich {
         public static getInstance() {
             if (!Inventory.INSTANCE) {
                 Inventory.INSTANCE = new Inventory();
+                // RecipeManager init
+                RecipeManager.getInstance();
             }
             return Inventory.INSTANCE;
         }

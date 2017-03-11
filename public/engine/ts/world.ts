@@ -1327,7 +1327,7 @@ namespace Lich {
             }
 
             Nature.getInstance().handleTick(delta, self);
-            // SpawnPool.getInstance().update(delta, self);
+            SpawnPool.getInstance().update(delta, self);
         };
 
         public checkReach(character: Character, x: number, y: number, inTiles: boolean = false): ReachInfo {

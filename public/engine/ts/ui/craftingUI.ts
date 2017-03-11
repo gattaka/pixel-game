@@ -39,15 +39,10 @@ namespace Lich {
 
         craftBtn: Button;
         ingredientsCont: IngredientsCont;
-        inventoryUI: InventoryUI;
 
         workstationIcon: PIXI.Sprite;
         workstationIconBgr: UIBackground;
         workstation: MapObjectKey;
-
-        public setInventoryUI(inventoryUI: InventoryUI) {
-            this.inventoryUI = inventoryUI;
-        }
 
         hide() {
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.WORKSTATION_CHANGE, undefined));
@@ -195,9 +190,9 @@ namespace Lich {
                     let index = self.itemsTypeIndexMap[oldItem];
                     let recipe = self.itemsTypeArray[index];
                     for (let ingred of recipe.ingredients) {
-                        self.inventoryUI.invRemove(ingred.key, ingred.quant);
+                        Inventory.getInstance().invRemove(ingred.key, ingred.quant);
                     }
-                    self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
+                    Inventory.getInstance().invInsert(recipe.outcome.key, recipe.outcome.quant);
                     Mixer.playSound(SoundKey.SND_CRAFT_KEY);
                 }
             });

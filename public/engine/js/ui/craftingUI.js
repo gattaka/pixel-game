@@ -149,9 +149,9 @@ var Lich;
                     var recipe = self.itemsTypeArray[index];
                     for (var _i = 0, _a = recipe.ingredients; _i < _a.length; _i++) {
                         var ingred = _a[_i];
-                        self.inventoryUI.invRemove(ingred.key, ingred.quant);
+                        Lich.Inventory.getInstance().invRemove(ingred.key, ingred.quant);
                     }
-                    self.inventoryUI.invInsert(recipe.outcome.key, recipe.outcome.quant);
+                    Lich.Inventory.getInstance().invInsert(recipe.outcome.key, recipe.outcome.quant);
                     Lich.Mixer.playSound(Lich.SoundKey.SND_CRAFT_KEY);
                 }
             });
@@ -160,9 +160,6 @@ var Lich;
             craftBtn.y = Lich.PartsUI.pixelsByX(CraftingUI.M) + Lich.PartsUI.SELECT_BORDER;
             return _this;
         }
-        CraftingUI.prototype.setInventoryUI = function (inventoryUI) {
-            this.inventoryUI = inventoryUI;
-        };
         CraftingUI.prototype.hide = function () {
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.WORKSTATION_CHANGE, undefined));
             this.workstation = undefined;

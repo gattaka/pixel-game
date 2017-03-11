@@ -112,7 +112,6 @@ var Lich;
                 inventoryUI.collapsedY = canvas.height - PartsUI.pixelsByX(1) - UI.SCREEN_SPACING;
                 inventoryUI.toggle();
             }
-            craftingUI.setInventoryUI(inventoryUI);
             craftingUI.x = UI.SCREEN_SPACING;
             // musí se posunout víc, protože má externí řádek pro ingredience
             craftingUI.x = canvas.width / 2 - craftingUI.fixedWidth / 2;

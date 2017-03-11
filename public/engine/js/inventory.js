@@ -13,6 +13,8 @@ var Lich;
         Inventory.getInstance = function () {
             if (!Inventory.INSTANCE) {
                 Inventory.INSTANCE = new Inventory();
+                // RecipeManager init
+                Lich.RecipeManager.getInstance();
             }
             return Inventory.INSTANCE;
         };

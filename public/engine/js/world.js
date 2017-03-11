@@ -1240,7 +1240,7 @@ var Lich;
                 self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY] -= delta;
             }
             Lich.Nature.getInstance().handleTick(delta, self);
-            // SpawnPool.getInstance().update(delta, self);
+            Lich.SpawnPool.getInstance().update(delta, self);
         };
         ;
         World.prototype.checkReach = function (character, x, y, inTiles) {
