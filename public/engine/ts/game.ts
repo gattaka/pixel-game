@@ -159,6 +159,8 @@ namespace Lich {
                             EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_START));
                             let obj = JSON.parse(data);
                             self.loadUI.reset();
+                            self.stage.addChild(self.loadUI);
+                            self.loadUI.alpha = 1;
                             if (obj.map) {
                                 TilesMapGenerator.deserialize(obj.map, (tilesMap) => {
                                     populateContent(tilesMap);
@@ -219,6 +221,8 @@ namespace Lich {
 
                     EventBus.getInstance().registerConsumer(EventType.NEW_WORLD, (): boolean => {
                         self.loadUI.reset();
+                        self.stage.addChild(self.loadUI);
+                        self.loadUI.alpha = 1;
                         setTimeout(() => {
                             TilesMapGenerator.createNew((tilesMap) => {
                                 populateContent(tilesMap);
@@ -236,6 +240,13 @@ namespace Lich {
                         }
                         return false;
                     });
+
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                            alpha: 0
+                        }, 1500).call(function () {
+                            self.stage.removeChild(self.loadUI);
+                        });
 
                     self.initialized = true;
                 };
@@ -262,6 +273,7 @@ namespace Lich {
                     return false;
                 });
                 self.loadUI = new LoaderUI(self);
+                self.stage.addChild(self.loadUI);
             }
 
             window.onbeforeunload = function (evn) {

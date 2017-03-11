@@ -119,8 +119,7 @@ namespace Lich {
 
             // Weather
             self.weather = new Weather(game);
-            // TODO
-            // self.addChild(self.weather);
+            self.addChild(self.weather);
 
             // Fog cont
             self.fogSectorsCont = new PIXI.particles.ParticleContainer(

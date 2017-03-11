@@ -843,7 +843,6 @@ var Lich;
             return false;
         };
         Render.prototype.handleTick = function () {
-            // TODO?
             var self = this;
             for (var i = 0; i < self.sectorsToUpdate.length; i++) {
                 var item = self.sectorsToUpdate.pop();

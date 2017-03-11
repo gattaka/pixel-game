@@ -178,16 +178,14 @@ var Lich;
              * SOUNDS AND MUSIC
              */
             // TODO
-            /*
-                        // sounds
-                        SOUND_PATHS.forEach((path) => {
-                            manifest.push(new Load(path[0], SoundKey[path[1]]));
-                        });
-                        // music
-                        MUSIC_PATHS.forEach((path) => {
-                            manifest.push(new Load(path[0], MusicKey[path[1]]));
-                        });
-            */
+            // sounds
+            Lich.SOUND_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.SoundKey[path[1]]));
+            });
+            // music
+            Lich.MUSIC_PATHS.forEach(function (path) {
+                manifest.push(new Load(path[0], Lich.MusicKey[path[1]]));
+            });
             // nejprve font (nahrává se mimo loader)
             var config = {
                 custom: {

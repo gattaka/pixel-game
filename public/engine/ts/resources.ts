@@ -238,16 +238,14 @@ namespace Lich {
              */
 
             // TODO
-            /*
-                        // sounds
-                        SOUND_PATHS.forEach((path) => {
-                            manifest.push(new Load(path[0], SoundKey[path[1]]));
-                        });
-                        // music
-                        MUSIC_PATHS.forEach((path) => {
-                            manifest.push(new Load(path[0], MusicKey[path[1]]));
-                        });
-            */
+            // sounds
+            SOUND_PATHS.forEach((path) => {
+                manifest.push(new Load(path[0], SoundKey[path[1]]));
+            });
+            // music
+            MUSIC_PATHS.forEach((path) => {
+                manifest.push(new Load(path[0], MusicKey[path[1]]));
+            });
 
             // nejprve font (nahrává se mimo loader)
             var config: WebFont.Config = {

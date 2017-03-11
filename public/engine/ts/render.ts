@@ -962,7 +962,6 @@ namespace Lich {
         }
 
         handleTick() {
-            // TODO?
             let self = this;
             for (let i = 0; i < self.sectorsToUpdate.length; i++) {
                 let item = self.sectorsToUpdate.pop();

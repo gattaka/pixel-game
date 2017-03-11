@@ -113,7 +113,7 @@ var Lich;
             if (data.spwx && data.spwy)
                 tilesMap.spawnPoint = new Lich.Coord2D(data.spwx, data.spwy);
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_NAME_CHANGE, "Loading world"));
-            // EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_COLOR_CHANGE, Lich.Resources.WORLD_LOADER_COLOR));
             async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, 0));
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Loading surface"));
@@ -434,7 +434,7 @@ var Lich;
             var tilesMap = new Lich.TilesMap(TilesMapGenerator.DEFAULT_MAP_WIDTH, TilesMapGenerator.DEFAULT_MAP_HEIGHT);
             var mass = tilesMap.height * tilesMap.width;
             Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_NAME_CHANGE, "Creating a new world"));
-            // EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOADER_COLOR_CHANGE, Resources.WORLD_LOADER_COLOR));
+            Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOADER_COLOR_CHANGE, Lich.Resources.WORLD_LOADER_COLOR));
             async.load(function () {
                 Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.LOAD_PROGRESS, 0));
                 Lich.EventBus.getInstance().fireEvent(new Lich.StringEventPayload(Lich.EventType.LOAD_ITEM, "Preparing hills shape"));

@@ -111,6 +111,8 @@ var Lich;
                             Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_START));
                             var obj_1 = JSON.parse(data);
                             self.loadUI.reset();
+                            self.stage.addChild(self.loadUI);
+                            self.loadUI.alpha = 1;
                             if (obj_1.map) {
                                 Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
                                     populateContent(tilesMap);
@@ -167,6 +169,8 @@ var Lich;
                     });
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.NEW_WORLD, function () {
                         self.loadUI.reset();
+                        self.stage.addChild(self.loadUI);
+                        self.loadUI.alpha = 1;
                         setTimeout(function () {
                             Lich.TilesMapGenerator.createNew(function (tilesMap) {
                                 populateContent(tilesMap);
@@ -182,6 +186,12 @@ var Lich;
                             self.timerReadyToAutosave = false;
                         }
                         return false;
+                    });
+                    createjs.Tween.get(self.loadUI)
+                        .to({
+                        alpha: 0
+                    }, 1500).call(function () {
+                        self.stage.removeChild(self.loadUI);
                     });
                     self.initialized = true;
                 };
@@ -207,6 +217,7 @@ var Lich;
                     return false;
                 });
                 self.loadUI = new Lich.LoaderUI(self);
+                self.stage.addChild(self.loadUI);
             }
             window.onbeforeunload = function (evn) {
                 var e = evn || window.event;

@@ -99,8 +99,7 @@ var Lich;
             self.addChild(self.entitiesCont);
             // Weather
             self.weather = new Lich.Weather(game);
-            // TODO
-            // self.addChild(self.weather);
+            self.addChild(self.weather);
             // Fog cont
             self.fogSectorsCont = new PIXI.particles.ParticleContainer(Lich.Render.getFogContSizeW(self.game.getSceneWidth()) * Lich.Render.getFogContSizeH(self.game.getSceneHeight()), {
                 rotation: false,
