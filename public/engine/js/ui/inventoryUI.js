@@ -63,15 +63,11 @@ var Lich;
             upBtn.y = 0;
             downBtn.x = upBtn.x;
             downBtn.y = Lich.PartsUI.pixelsByX(self.m) - Lich.Resources.PARTS_SIZE - Lich.PartsUI.BORDER;
-            // let offset = 5;
-            // self.cache(-offset, -offset,
-            //     self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
-            //     self.height + offset * 2);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.INV_CHANGE, function (payload) {
                 if (payload.amount > 0) {
                     self.invInsert(payload.key, payload.amount);
                 }
-                else if (payload.amount < 0) {
+                else {
                     self.invRemove(payload.key, -payload.amount);
                 }
                 return false;

@@ -75,15 +75,10 @@ namespace Lich {
             downBtn.x = upBtn.x;
             downBtn.y = PartsUI.pixelsByX(self.m) - Resources.PARTS_SIZE - PartsUI.BORDER;
 
-            // let offset = 5;
-            // self.cache(-offset, -offset,
-            //     self.width + Button.sideSize + PartsUI.SELECT_BORDER + offset * 2,
-            //     self.height + offset * 2);
-
             EventBus.getInstance().registerConsumer(EventType.INV_CHANGE, (payload: InvChangeEventPayload) => {
                 if (payload.amount > 0) {
                     self.invInsert(payload.key, payload.amount);
-                } else if (payload.amount < 0) {
+                } else {
                     self.invRemove(payload.key, -payload.amount);
                 }
                 return false;
