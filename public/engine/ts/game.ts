@@ -1,4 +1,6 @@
-///<reference path='lib/createjs/createjs.d.ts'/>
+///<reference path='lib/preloadjs/preloadjs.d.ts'/>
+///<reference path='lib/soundjs/soundjs.d.ts'/>
+///<reference path='lib/tweenjs/tweenjs.d.ts'/>
 
 namespace Lich {
 
@@ -165,8 +167,7 @@ namespace Lich {
                                 TilesMapGenerator.deserialize(obj.map, (tilesMap) => {
                                     populateContent(tilesMap);
                                     if (obj.inv) {
-                                        // TODO
-                                        // self.ui.inventoryUI.deserialize(obj.inv);
+                                        Inventory.getInstance().deserialize(obj.inv);
                                     }
                                     EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.LOAD_FINISHED));
                                 });
@@ -202,15 +203,15 @@ namespace Lich {
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
                         // TODO
-                        // setTimeout(() => {
-                        //     let idb = IndexedDB.getInstance();
-                        //     let data = {
-                        //         map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                        //         inv: self.ui.inventoryUI.serialize()
-                        //     };
-                        //     idb.saveData(JSON.stringify(data));
-                        //     self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
-                        // }, 1);
+                        setTimeout(() => {
+                            let idb = IndexedDB.getInstance();
+                            let data = {
+                                map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                                inv: Inventory.getInstance().serialize()
+                            };
+                            idb.saveData(JSON.stringify(data));
+                            self.world.fadeText("Game saved", self.stage.fixedWidth / 2, self.stage.fixedHeight / 2, 30, "#00E", "#003");
+                        }, 1);
                         return true;
                     });
 
@@ -319,6 +320,7 @@ namespace Lich {
                 // ticker.deltaTime je přepočtený dle speed, to není rozdíl 
                 // snímků v ms, jako bylo v createjs
                 let delta = ticker.elapsedMS;
+                createjs.Tween.tick(delta, false);
 
                 if (self.initialized) {
                     self.getWorld().update(delta);

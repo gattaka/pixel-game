@@ -187,10 +187,10 @@ var Lich;
                 self.messagesCont.removeChild(deadInfo);
             });
         };
-        World.prototype.fadeText = function (text, px, py, time) {
+        World.prototype.fadeText = function (text, px, py, size, color, outlineColor, time) {
             if (time === void 0) { time = 1000; }
             var self = this;
-            var label = new Lich.Label(text);
+            var label = new Lich.Label(text, undefined, size, color, outlineColor);
             self.messagesCont.addChild(label);
             label.x = px;
             label.y = py;

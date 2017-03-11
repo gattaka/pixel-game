@@ -1,4 +1,6 @@
-///<reference path='lib/createjs/createjs.d.ts'/>
+///<reference path='lib/preloadjs/preloadjs.d.ts'/>
+///<reference path='lib/soundjs/soundjs.d.ts'/>
+///<reference path='lib/tweenjs/tweenjs.d.ts'/>
 var Lich;
 (function (Lich) {
     ;
@@ -117,8 +119,7 @@ var Lich;
                                 Lich.TilesMapGenerator.deserialize(obj_1.map, function (tilesMap) {
                                     populateContent(tilesMap);
                                     if (obj_1.inv) {
-                                        // TODO
-                                        // self.ui.inventoryUI.deserialize(obj.inv);
+                                        Lich.Inventory.getInstance().deserialize(obj_1.inv);
                                     }
                                     Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_FINISHED));
                                 });
@@ -152,15 +153,15 @@ var Lich;
                     self.stage.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         // TODO
-                        // setTimeout(() => {
-                        //     let idb = IndexedDB.getInstance();
-                        //     let data = {
-                        //         map: TilesMapGenerator.serialize(self.getWorld().tilesMap),
-                        //         inv: self.ui.inventoryUI.serialize()
-                        //     };
-                        //     idb.saveData(JSON.stringify(data));
-                        //     self.world.fadeText("Game saved", self.canvas.width / 2, self.canvas.height / 2, 30, "#00E", "#003");
-                        // }, 1);
+                        setTimeout(function () {
+                            var idb = Lich.IndexedDB.getInstance();
+                            var data = {
+                                map: Lich.TilesMapGenerator.serialize(self.getWorld().tilesMap),
+                                inv: Lich.Inventory.getInstance().serialize()
+                            };
+                            idb.saveData(JSON.stringify(data));
+                            self.world.fadeText("Game saved", self.stage.fixedWidth / 2, self.stage.fixedHeight / 2, 30, "#00E", "#003");
+                        }, 1);
                         return true;
                     });
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.LOAD_WORLD, function () {
@@ -262,6 +263,7 @@ var Lich;
                 // ticker.deltaTime je přepočtený dle speed, to není rozdíl 
                 // snímků v ms, jako bylo v createjs
                 var delta = ticker.elapsedMS;
+                createjs.Tween.tick(delta, false);
                 if (self.initialized) {
                     self.getWorld().update(delta);
                 }

@@ -111,7 +111,7 @@ var Lich;
                 this.currentHealth -= effectiveDamage;
                 // TODO zatím nemá armor, takže se aplikuje vše
                 this.onHealthChange(this.currentHealth - oldValue);
-                world.fadeText("-" + effectiveDamage, this.x + this.fixedWidth * Math.random(), this.y);
+                world.fadeText("-" + effectiveDamage, this.x + this.fixedWidth * Math.random(), this.y, 25, this.hitTextColor, this.hitTextBorderColor);
                 this.hitSound();
                 if (this.currentHealth <= 0) {
                     this.currentHealth = 0;

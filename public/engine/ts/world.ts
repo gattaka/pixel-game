@@ -215,9 +215,10 @@ namespace Lich {
                 })
         }
 
-        fadeText(text: string, px: number, py: number, time = 1000) {
+        fadeText(text: string, px: number, py: number, size?: number,
+            color?: string, outlineColor?: string, time = 1000) {
             let self = this;
-            let label = new Label(text);
+            let label = new Label(text, undefined, size, color, outlineColor);
             self.messagesCont.addChild(label);
             label.x = px;
             label.y = py;
