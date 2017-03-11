@@ -217,7 +217,7 @@ var Lich;
                                         // Sheet index dílku objektu
                                         var object = self.createObject(objectElement);
                                         // přidej dílek do sektoru
-                                        if (object instanceof PIXI.Sprite) {
+                                        if (object instanceof PIXI.extras.AnimatedSprite) {
                                             sector.addAnimatedChild(object);
                                         }
                                         else {
@@ -622,11 +622,11 @@ var Lich;
                         // odstraň dílek objektu ze sektoru
                         var object = self.sceneObjectsMap.getValue(globalX, globalY);
                         if (object != null) {
-                            if ((object.parent.parent instanceof Lich.Sector) == false) {
-                                console.log("Assert error: Sector instance expected; instead " + (typeof object.parent.parent) + " found!");
+                            if ((object.parent instanceof Lich.SectorCont) == false) {
+                                console.error("Assert error: SectorCont instance expected; instead " + (typeof object.parent) + " found!");
                             }
-                            var sectorParent = object.parent.parent;
-                            self.markSector(sectorParent);
+                            var sectorCont = object.parent;
+                            self.markSector(sectorCont.sector);
                             object.parent.removeChild(object);
                             // odstraň dílek objektu z map
                             self.tilesMap.mapObjectsTiles.setValue(globalX, globalY, null);
@@ -767,7 +767,7 @@ var Lich;
                     var tile = self.createObject(objectTile);
                     var sector = self.getSectorByTiles(tx0 + tx, ty0 + ty);
                     // přidej dílek do sektoru
-                    if (tile instanceof PIXI.Sprite) {
+                    if (tile instanceof PIXI.extras.AnimatedSprite) {
                         sector.addAnimatedChild(tile);
                     }
                     else {

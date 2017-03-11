@@ -28,11 +28,15 @@ namespace Lich {
         }
     }
 
+    export class SectorCont extends PIXI.Container {
+        constructor(public sector: Sector) { super(); }
+    }
+
     export class Sector extends AbstractSector {
 
-        public backgroundCont = new PIXI.Container();
-        public cacheableCont = new PIXI.Container();
-        public animatedCont = new PIXI.Container();
+        public backgroundCont: SectorCont;
+        public cacheableCont: SectorCont;
+        public animatedCont: SectorCont;
 
         public backgroundRendered: PIXI.Sprite;
         public cacheableRendered: PIXI.Sprite;
@@ -45,12 +49,15 @@ namespace Lich {
             public fixedHeight: number) {
             super(secId, map_x, map_y, fixedWidth, fixedHeight);
 
+            this.backgroundCont = new SectorCont(this);
             this.backgroundCont.fixedWidth = this.fixedWidth;
             this.backgroundCont.fixedHeight = this.fixedHeight;
 
+            this.cacheableCont = new SectorCont(this);
             this.cacheableCont.fixedWidth = this.fixedWidth;
             this.cacheableCont.fixedHeight = this.fixedHeight;
 
+            this.animatedCont = new SectorCont(this);
             this.animatedCont.fixedWidth = this.fixedWidth;
             this.animatedCont.fixedHeight = this.fixedHeight;
 
@@ -60,6 +67,9 @@ namespace Lich {
         public cache(): void {
             this.backgroundRendered = this.cacheInner(this.backgroundCont, this.backgroundRendered);
             this.cacheableRendered = this.cacheInner(this.cacheableCont, this.cacheableRendered);
+            this.setChildIndex(this.backgroundRendered, 0);
+            this.setChildIndex(this.cacheableRendered, 1);
+            this.setChildIndex(this.animatedCont, 2);
         }
 
         public addBackgroundChild(child) {

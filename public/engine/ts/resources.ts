@@ -505,7 +505,7 @@ namespace Lich {
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_MPO_KEY];
             let mapObjectDef = self.mapObjectDefs[mapObjectKey];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName];
-            let wSplicing = spriteDef.width / Resources.TILE_SIZE;
+            let wSplicing = mapObjectDef.mapSpriteWidth;
             if (mapObjectDef.frames > 1) {
                 var frames = [];
                 for (let i = 0; i < mapObjectDef.frames; i++) {

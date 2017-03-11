@@ -36,6 +36,16 @@ var Lich;
         return AbstractSector;
     }(PIXI.Container));
     Lich.AbstractSector = AbstractSector;
+    var SectorCont = (function (_super) {
+        __extends(SectorCont, _super);
+        function SectorCont(sector) {
+            var _this = _super.call(this) || this;
+            _this.sector = sector;
+            return _this;
+        }
+        return SectorCont;
+    }(PIXI.Container));
+    Lich.SectorCont = SectorCont;
     var Sector = (function (_super) {
         __extends(Sector, _super);
         function Sector(secId, map_x, map_y, fixedWidth, fixedHeight) {
@@ -45,13 +55,13 @@ var Lich;
             _this.map_y = map_y;
             _this.fixedWidth = fixedWidth;
             _this.fixedHeight = fixedHeight;
-            _this.backgroundCont = new PIXI.Container();
-            _this.cacheableCont = new PIXI.Container();
-            _this.animatedCont = new PIXI.Container();
+            _this.backgroundCont = new SectorCont(_this);
             _this.backgroundCont.fixedWidth = _this.fixedWidth;
             _this.backgroundCont.fixedHeight = _this.fixedHeight;
+            _this.cacheableCont = new SectorCont(_this);
             _this.cacheableCont.fixedWidth = _this.fixedWidth;
             _this.cacheableCont.fixedHeight = _this.fixedHeight;
+            _this.animatedCont = new SectorCont(_this);
             _this.animatedCont.fixedWidth = _this.fixedWidth;
             _this.animatedCont.fixedHeight = _this.fixedHeight;
             _this.addChild(_this.animatedCont);
@@ -60,6 +70,9 @@ var Lich;
         Sector.prototype.cache = function () {
             this.backgroundRendered = this.cacheInner(this.backgroundCont, this.backgroundRendered);
             this.cacheableRendered = this.cacheInner(this.cacheableCont, this.cacheableRendered);
+            this.setChildIndex(this.backgroundRendered, 0);
+            this.setChildIndex(this.cacheableRendered, 1);
+            this.setChildIndex(this.animatedCont, 2);
         };
         Sector.prototype.addBackgroundChild = function (child) {
             this.backgroundCont.addChild(child);

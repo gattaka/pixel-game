@@ -417,7 +417,7 @@ var Lich;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_MPO_KEY];
             var mapObjectDef = self.mapObjectDefs[mapObjectKey];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][mapObjectDef.spriteName];
-            var wSplicing = spriteDef.width / Resources.TILE_SIZE;
+            var wSplicing = mapObjectDef.mapSpriteWidth;
             if (mapObjectDef.frames > 1) {
                 var frames = [];
                 for (var i = 0; i < mapObjectDef.frames; i++) {

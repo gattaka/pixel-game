@@ -272,7 +272,7 @@ namespace Lich {
                                         var object = self.createObject(objectElement);
 
                                         // přidej dílek do sektoru
-                                        if (object instanceof PIXI.Sprite) {
+                                        if (object instanceof PIXI.extras.AnimatedSprite) {
                                             sector.addAnimatedChild(object);
                                         } else {
                                             sector.addCacheableChild(object);
@@ -718,11 +718,11 @@ namespace Lich {
                         // odstraň dílek objektu ze sektoru
                         var object = self.sceneObjectsMap.getValue(globalX, globalY);
                         if (object != null) {
-                            if ((object.parent.parent instanceof Sector) == false) {
-                                console.log("Assert error: Sector instance expected; instead " + (typeof object.parent.parent) + " found!");
+                            if ((object.parent instanceof SectorCont) == false) {
+                                console.error("Assert error: SectorCont instance expected; instead " + (typeof object.parent) + " found!");
                             }
-                            var sectorParent = <Sector>object.parent.parent;
-                            self.markSector(sectorParent);
+                            var sectorCont = <SectorCont>object.parent;
+                            self.markSector(sectorCont.sector);
                             object.parent.removeChild(object);
 
                             // odstraň dílek objektu z map
@@ -885,7 +885,7 @@ namespace Lich {
                     var sector = self.getSectorByTiles(tx0 + tx, ty0 + ty);
 
                     // přidej dílek do sektoru
-                    if (tile instanceof PIXI.Sprite) {
+                    if (tile instanceof PIXI.extras.AnimatedSprite) {
                         sector.addAnimatedChild(tile);
                     } else {
                         sector.addCacheableChild(tile);
