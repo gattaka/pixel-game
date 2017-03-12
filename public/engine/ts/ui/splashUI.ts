@@ -259,10 +259,9 @@ namespace Lich {
                 if (self.currentLine > 0) {
                     self.currentLine -= (self.currentLine < SplashScreenUI.SCROLL_LINES ? self.currentLine : SplashScreenUI.SCROLL_LINES);
                     self.print();
-                    // self.updateCache();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            });
+            }, undefined, true);
             self.addChild(upBtn);
             return upBtn;
         }
@@ -273,10 +272,9 @@ namespace Lich {
                 if (self.currentLine + SplashScreenUI.LINES < self.lines.length) {
                     self.currentLine += ((self.lines.length - self.currentLine) < SplashScreenUI.SCROLL_LINES ? (self.lines.length - self.currentLine) : SplashScreenUI.SCROLL_LINES);
                     self.print();
-                    // self.updateCache();
                     Mixer.playSound(SoundKey.SND_CLICK_KEY);
                 }
-            });
+            }, undefined, true);
             self.addChild(downBtn);
             return downBtn;
         }
@@ -326,7 +324,6 @@ namespace Lich {
 
             super.addChild(this.cont);
 
-            // Instrukce
             self.lines.push("== CHANGELOG ==");
             self.lines.push(" ");
 
@@ -365,10 +362,9 @@ namespace Lich {
             newWorld.x = 0 - PartsUI.SELECT_BORDER - Resources.PARTS_SIZE - PartsUI.BORDER;
             newWorld.y = 2 * (PartsUI.SELECT_BORDER + Resources.PARTS_SIZE + PartsUI.BORDER);
 
-            // self.cache(-(Resources.PARTS_SIZE + PartsUI.SELECT_BORDER + PartsUI.SELECT_BORDER + 10), -10,
-            //     self.width + (Resources.PARTS_SIZE + PartsUI.SELECT_BORDER + PartsUI.SELECT_BORDER) * 2 + 20,
-            //     self.height + 20);
+            // aby se nedalo "prokliknout" skrz UI
+            self.hitArea = new PIXI.Rectangle(0, 0, self.fixedWidth, self.fixedHeight);
+            self.interactive = true;
         }
-
     }
 }

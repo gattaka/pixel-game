@@ -243,7 +243,7 @@ var Lich;
             var world = context.game.getWorld();
             var uiItem = Lich.Inventory.getInstance().getChoosenItem();
             if (uiItem) {
-                var object = Lich.Resources.getInstance().invObjectDefs[uiItem];
+                var object = Lich.Resources.getInstance().getInvObjectDef(uiItem);
                 if (object.consumeAction) {
                     if (object.consumeAction(world)) {
                         Lich.Inventory.getInstance().invRemove(uiItem, 1);
@@ -396,7 +396,7 @@ var Lich;
         }
         AbstractPlaceSpellDef.prototype.castOnReach = function (context, reachInfo) {
             var uiItem = Lich.Inventory.getInstance().getChoosenItem();
-            var object = Lich.Resources.getInstance().invObjectDefs[uiItem];
+            var object = Lich.Resources.getInstance().getInvObjectDef(uiItem);
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem

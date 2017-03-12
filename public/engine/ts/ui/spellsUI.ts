@@ -120,7 +120,7 @@ namespace Lich {
             let spellDef = Resources.getInstance().getSpellDef(spell);
             let spellIcon = new Button(spellDef.icon, () => {
                 self.selectSpell(index);
-            }, undefined, true);
+            }, undefined, true, true);
             self.addChild(spellIcon);
             spellIcon.x = PartsUI.SELECT_BORDER + self.spellContent.length * (Resources.PARTS_SIZE + SpellsUI.SPACING);
             spellIcon.y = PartsUI.SELECT_BORDER;

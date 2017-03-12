@@ -17,7 +17,7 @@ var Lich;
             _this.item = item;
             _this.fixedWidth = Lich.Resources.PARTS_SIZE + Lich.PartsUI.SPACING;
             _this.fixedHeight = _this.fixedWidth;
-            var invDef = Lich.Resources.getInstance().invObjectDefs[item];
+            var invDef = Lich.Resources.getInstance().getInvObjectDef(item);
             _this.invDef = invDef;
             var sprite = Lich.Resources.getInstance().getInvUISprite(item);
             _this.sprite = sprite;

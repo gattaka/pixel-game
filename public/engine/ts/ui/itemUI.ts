@@ -12,7 +12,7 @@ namespace Lich {
             this.fixedWidth = Resources.PARTS_SIZE + PartsUI.SPACING;
             this.fixedHeight = this.fixedWidth;
 
-            let invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[item];
+            let invDef: InvObjDefinition = Resources.getInstance().getInvObjectDef(item);
             this.invDef = invDef;
             let sprite = Resources.getInstance().getInvUISprite(item);
             this.sprite = sprite;

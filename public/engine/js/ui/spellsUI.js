@@ -112,7 +112,7 @@ var Lich;
             var spellDef = Lich.Resources.getInstance().getSpellDef(spell);
             var spellIcon = new Lich.Button(spellDef.icon, function () {
                 self.selectSpell(index);
-            }, undefined, true);
+            }, undefined, true, true);
             self.addChild(spellIcon);
             spellIcon.x = Lich.PartsUI.SELECT_BORDER + self.spellContent.length * (Lich.Resources.PARTS_SIZE + SpellsUI.SPACING);
             spellIcon.y = Lich.PartsUI.SELECT_BORDER;

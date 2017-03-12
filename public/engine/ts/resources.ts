@@ -193,7 +193,7 @@ namespace Lich {
         public animationSetDefsBySpriteName: { [k: string]: AnimationSetDefinition } = {};
 
         // definice inv položek dle klíče (int)
-        public invObjectDefs = new Array<InvObjDefinition>();
+        private invObjectDefs: { [k: string]: InvObjDefinition } = {};
         // definice spells
         private spellDefs: { [k: string]: SpellDefinition } = {};
         public interactSpellDef = new MapObjectsInteractionSpellDef();
@@ -348,7 +348,7 @@ namespace Lich {
 
             // Definice inventárních objektů 
             INVENTORY_DEFS(self).forEach((definition: InvObjDefinition) => {
-                self.invObjectDefs[definition.invKey] = definition;
+                self.invObjectDefs[InventoryKey[definition.invKey]] = definition;
             });
 
             // Definice achievementů
@@ -384,6 +384,10 @@ namespace Lich {
             });
 
         };
+
+        getInvObjectDef(key: InventoryKey): InvObjDefinition {
+            return this.invObjectDefs[InventoryKey[key]];
+        }
 
         getSurfaceBgrDef(key: SurfaceBgrKey) {
             return this.mapSurfaceBgrDefs[SurfaceBgrKey[key]];
@@ -572,11 +576,11 @@ namespace Lich {
         };
 
         getAchvUISprite(key: AchievementKey): PIXI.Sprite {
-            return this.getUISprite(this.achievementsDefs[key].icon);
+            return this.getUISprite(this.achievementsDefs[AchievementKey[key]].icon);
         };
 
         getInvUISprite(key: InventoryKey, originalSprite?: PIXI.Sprite): PIXI.Sprite {
-            return this.getUISprite(this.invObjectDefs[key].icon, originalSprite);
+            return this.getUISprite(this.getInvObjectDef(key).icon, originalSprite);
         };
 
         getAnimatedObjectSprite(animation: AnimationSetKey): AniSprite {

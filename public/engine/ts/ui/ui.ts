@@ -324,7 +324,7 @@ namespace Lich {
 
         }
 
-        update(delta:number) {
+        update(delta: number) {
             this.minimapUI.update(delta);
             this.mapUI.update(delta);
         }
@@ -437,8 +437,10 @@ namespace Lich {
 
         // výchozí interval efektu tlačítka (ms)
         private static DEFAULT_INTERVAL = 200;
+        // minimální interval efektu tlačítka (ms)
+        private static MIN_INTERVAL = 50;
         // hodnota (ms) o kterou se interval sníží při delším držení
-        private static INTERVAL_DECREASE_TIME = 10;
+        private static INTERVAL_DECREASE_TIME = 20;
         // počet opakování akce, než je hodnota snížena
         private static INTERVAL_DECREASE_STEPS = 2;
         private intervalId;
@@ -450,7 +452,7 @@ namespace Lich {
             Resources.getInstance().getUISprite(uiKey, this.sprite);
         }
 
-        constructor(uiKey: UISpriteKey, onPress: Function, onRelease?: Function, onlyIcon = false) {
+        constructor(uiKey: UISpriteKey, onPress: Function, onRelease?: Function, repeat = false, onlyIcon = false) {
             super();
 
             if (!onlyIcon) {
@@ -475,6 +477,8 @@ namespace Lich {
                     if (self.decreaseSteps >= Button.INTERVAL_DECREASE_STEPS) {
                         self.decreaseSteps = 0;
                         self.interval -= Button.INTERVAL_DECREASE_TIME;
+                        if (self.interval < Button.MIN_INTERVAL)
+                            self.interval = Button.MIN_INTERVAL;
                         clearInterval(self.intervalId);
                         repeatPress();
                     }
@@ -483,12 +487,15 @@ namespace Lich {
 
             this.sprite.on("pointerdown", () => {
                 onPress();
-                self.decreaseSteps = 0;
-                self.interval = Button.DEFAULT_INTERVAL;
-                repeatPress();
+                if (repeat) {
+                    self.decreaseSteps = 0;
+                    self.interval = Button.DEFAULT_INTERVAL;
+                    repeatPress();
+                }
             });
             let out = () => {
-                clearInterval(self.intervalId);
+                if (repeat)
+                    clearInterval(self.intervalId);
                 if (onRelease) {
                     onRelease();
                 }

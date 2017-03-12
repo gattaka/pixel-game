@@ -245,7 +245,7 @@ namespace Lich {
 
         spawnObject(invItem: DugObjDefinition, x: number, y: number, inTiles = true) {
             let self = this;
-            var invDef: InvObjDefinition = Resources.getInstance().invObjectDefs[invItem.invObj];
+            var invDef: InvObjDefinition = Resources.getInstance().getInvObjectDef(invItem.invObj);
             var frames = 1;
             if (typeof invDef === "undefined" || invDef == null) {
                 frames = 1;

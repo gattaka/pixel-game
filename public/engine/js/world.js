@@ -217,7 +217,7 @@ var Lich;
         World.prototype.spawnObject = function (invItem, x, y, inTiles) {
             if (inTiles === void 0) { inTiles = true; }
             var self = this;
-            var invDef = Lich.Resources.getInstance().invObjectDefs[invItem.invObj];
+            var invDef = Lich.Resources.getInstance().getInvObjectDef(invItem.invObj);
             var frames = 1;
             if (typeof invDef === "undefined" || invDef == null) {
                 frames = 1;

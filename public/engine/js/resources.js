@@ -153,7 +153,7 @@ var Lich;
             // Mapa definic animací dle souborového jména sub-spritesheet
             this.animationSetDefsBySpriteName = {};
             // definice inv položek dle klíče (int)
-            this.invObjectDefs = new Array();
+            this.invObjectDefs = {};
             // definice spells
             this.spellDefs = {};
             this.interactSpellDef = new Lich.MapObjectsInteractionSpellDef();
@@ -272,7 +272,7 @@ var Lich;
             });
             // Definice inventárních objektů 
             Lich.INVENTORY_DEFS(self).forEach(function (definition) {
-                self.invObjectDefs[definition.invKey] = definition;
+                self.invObjectDefs[Lich.InventoryKey[definition.invKey]] = definition;
             });
             // Definice achievementů
             Lich.ACHIEVEMENTS_DEFS.forEach(function (definition) {
@@ -313,6 +313,9 @@ var Lich;
             return Resources.INSTANCE;
         };
         ;
+        Resources.prototype.getInvObjectDef = function (key) {
+            return this.invObjectDefs[Lich.InventoryKey[key]];
+        };
         Resources.prototype.getSurfaceBgrDef = function (key) {
             return this.mapSurfaceBgrDefs[Lich.SurfaceBgrKey[key]];
         };
@@ -478,11 +481,11 @@ var Lich;
         };
         ;
         Resources.prototype.getAchvUISprite = function (key) {
-            return this.getUISprite(this.achievementsDefs[key].icon);
+            return this.getUISprite(this.achievementsDefs[Lich.AchievementKey[key]].icon);
         };
         ;
         Resources.prototype.getInvUISprite = function (key, originalSprite) {
-            return this.getUISprite(this.invObjectDefs[key].icon, originalSprite);
+            return this.getUISprite(this.getInvObjectDef(key).icon, originalSprite);
         };
         ;
         Resources.prototype.getAnimatedObjectSprite = function (animation) {

@@ -286,7 +286,7 @@ namespace Lich {
             var uiItem = Inventory.getInstance().getChoosenItem();
 
             if (uiItem) {
-                var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
+                var object: InvObjDefinition = Resources.getInstance().getInvObjectDef(uiItem);
                 if (object.consumeAction) {
                     if (object.consumeAction(world)) {
                         Inventory.getInstance().invRemove(uiItem, 1);
@@ -440,7 +440,7 @@ namespace Lich {
 
         public castOnReach(context: SpellContext, reachInfo: ReachInfo): boolean {
             var uiItem = Inventory.getInstance().getChoosenItem();
-            var object: InvObjDefinition = Resources.getInstance().invObjectDefs[uiItem];
+            var object: InvObjDefinition = Resources.getInstance().getInvObjectDef(uiItem);
             // je co pokládat?
             if (typeof object !== "undefined" && object != null) {
                 // pokud vkládám povrch, kontroluj, zda nekoliduju s hráčem

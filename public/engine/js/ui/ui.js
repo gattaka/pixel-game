@@ -445,7 +445,8 @@ var Lich;
     Lich.PartsUI = PartsUI;
     var Button = (function (_super) {
         __extends(Button, _super);
-        function Button(uiKey, onPress, onRelease, onlyIcon) {
+        function Button(uiKey, onPress, onRelease, repeat, onlyIcon) {
+            if (repeat === void 0) { repeat = false; }
             if (onlyIcon === void 0) { onlyIcon = false; }
             var _this = _super.call(this) || this;
             _this.interval = Button.DEFAULT_INTERVAL;
@@ -470,6 +471,8 @@ var Lich;
                     if (self.decreaseSteps >= Button.INTERVAL_DECREASE_STEPS) {
                         self.decreaseSteps = 0;
                         self.interval -= Button.INTERVAL_DECREASE_TIME;
+                        if (self.interval < Button.MIN_INTERVAL)
+                            self.interval = Button.MIN_INTERVAL;
                         clearInterval(self.intervalId);
                         repeatPress();
                     }
@@ -477,12 +480,15 @@ var Lich;
             };
             _this.sprite.on("pointerdown", function () {
                 onPress();
-                self.decreaseSteps = 0;
-                self.interval = Button.DEFAULT_INTERVAL;
-                repeatPress();
+                if (repeat) {
+                    self.decreaseSteps = 0;
+                    self.interval = Button.DEFAULT_INTERVAL;
+                    repeatPress();
+                }
             });
             var out = function () {
-                clearInterval(self.intervalId);
+                if (repeat)
+                    clearInterval(self.intervalId);
                 if (onRelease) {
                     onRelease();
                 }
@@ -499,8 +505,10 @@ var Lich;
     Button.SIDE_SIZE = Lich.Resources.PARTS_SIZE + PartsUI.SELECT_BORDER * 2;
     // výchozí interval efektu tlačítka (ms)
     Button.DEFAULT_INTERVAL = 200;
+    // minimální interval efektu tlačítka (ms)
+    Button.MIN_INTERVAL = 50;
     // hodnota (ms) o kterou se interval sníží při delším držení
-    Button.INTERVAL_DECREASE_TIME = 10;
+    Button.INTERVAL_DECREASE_TIME = 20;
     // počet opakování akce, než je hodnota snížena
     Button.INTERVAL_DECREASE_STEPS = 2;
     Lich.Button = Button;
