@@ -165,7 +165,7 @@ var Lich;
             var border = new PIXI.Graphics();
             border.lineStyle(1, 0x000000, 1);
             border.beginFill(0xd1fbff, 1);
-            border.drawRect(-1, -1, _this.fixedWidth + 2, _this.fixedHeight + 2);
+            border.drawRect(0, 0, _this.fixedWidth, _this.fixedHeight);
             self.addChild(border);
             self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
             self.addChild(self.bitmap);
@@ -224,6 +224,7 @@ var Lich;
             _this.playerX = 0;
             _this.playerY = 0;
             _this.prepareUpdateTexture = false;
+            _this.prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
             var self = _this;
             self.on("pointerdown", function () {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
@@ -232,7 +233,7 @@ var Lich;
             var border = new PIXI.Graphics();
             border.lineStyle(1, 0x000000, 1);
             border.beginFill(0xd1fbff, 1);
-            border.drawRect(-1, -1, _this.fixedWidth + 2, _this.fixedHeight + 2);
+            border.drawRect(0, 0, _this.fixedWidth, _this.fixedHeight);
             self.addChild(border);
             self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
             self.addChild(self.bitmap);
@@ -275,11 +276,19 @@ var Lich;
         }
         MapUI.prototype.update = function (delta) {
             if (this.prepareUpdateTexture) {
-                this.bitmap.texture.update();
-                this.prepareUpdateTexture = false;
+                this.prepareUpdateTextureCounter -= delta;
+                if (this.prepareUpdateTextureCounter <= 0) {
+                    this.prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
+                    var texture = this.bitmap.texture.clone();
+                    texture.update();
+                    this.bitmap.texture.destroy();
+                    this.bitmap.texture = texture;
+                    this.prepareUpdateTexture = false;
+                }
             }
         };
         return MapUI;
     }(Lich.AbstractUI));
+    MapUI.UPDATE_DELAY = 500;
     Lich.MapUI = MapUI;
 })(Lich || (Lich = {}));

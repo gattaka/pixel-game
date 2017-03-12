@@ -120,7 +120,7 @@ namespace Lich {
             let border = new PIXI.Graphics();
             border.lineStyle(1, 0x000000, 1);
             border.beginFill(0xd1fbff, 1);
-            border.drawRect(-1, -1, this.fixedWidth + 2, this.fixedHeight + 2);
+            border.drawRect(0, 0, this.fixedWidth, this.fixedHeight);
             self.addChild(border);
 
             self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
@@ -229,6 +229,8 @@ namespace Lich {
 
     export class MapUI extends AbstractUI {
 
+        static UPDATE_DELAY = 500;
+
         playerIcon: PIXI.Sprite;
         bitmap: PIXI.Sprite;
 
@@ -238,6 +240,7 @@ namespace Lich {
         playerY: number = 0;
 
         private prepareUpdateTexture = false;
+        private prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
 
         constructor(mainCanvasWidth: number, mainCanvasHeight: number, private mapRender: MinimapRender) {
             super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
@@ -251,7 +254,7 @@ namespace Lich {
             let border = new PIXI.Graphics();
             border.lineStyle(1, 0x000000, 1);
             border.beginFill(0xd1fbff, 1);
-            border.drawRect(-1, -1, this.fixedWidth + 2, this.fixedHeight + 2);
+            border.drawRect(0, 0, this.fixedWidth, this.fixedHeight);
             self.addChild(border);
 
             self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
@@ -303,8 +306,15 @@ namespace Lich {
 
         update(delta: number) {
             if (this.prepareUpdateTexture) {
-                this.bitmap.texture.update();
-                this.prepareUpdateTexture = false;
+                this.prepareUpdateTextureCounter -= delta;
+                if (this.prepareUpdateTextureCounter <= 0) {
+                    this.prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
+                    let texture = this.bitmap.texture.clone();
+                    texture.update();
+                    this.bitmap.texture.destroy();
+                    this.bitmap.texture = texture;
+                    this.prepareUpdateTexture = false;
+                }
             }
         }
 

@@ -29,8 +29,8 @@ var Lich;
             mapUI.x = UI.SCREEN_SPACING;
             mapUI.y = UI.SCREEN_SPACING;
             self.mapUI = mapUI;
-            mapUI.hide();
             self.addChild(mapUI);
+            mapUI.hide();
             // Help btn
             if (!mobile) {
                 var helpBtn = _this.createHelpButton();
