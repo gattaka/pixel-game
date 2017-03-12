@@ -124,16 +124,17 @@ var Lich;
         Lich.ParallaxKey.PRLX_CLOUD5_KEY
     ];
     Parallax.BGR_ORDER = [
-        Lich.ParallaxKey.PRLX_FAR_MOUNTAIN_KEY,
+        // ParallaxKey.PRLX_FAR_MOUNTAIN_KEY,
         Lich.ParallaxKey.PRLX_MOUNTAIN_KEY,
         Lich.ParallaxKey.PRLX_WOODLAND1_KEY,
         Lich.ParallaxKey.PRLX_WOODLAND2_KEY,
         Lich.ParallaxKey.PRLX_WOODLAND3_KEY,
-        Lich.ParallaxKey.PRLX_WOODLAND4_KEY,
     ];
-    Parallax.STARTS = [180, 600, 1200, 1200, 1220, 1240];
-    Parallax.MULT = [.3, .4, .5, .55, .6, .7];
+    // static STARTS = [180, 600, 1200, 1200, 1220, 1240];
+    // static MULT = [.3, .4, .5, .55, .6, .7];
+    Parallax.STARTS = [1200, 1300, 1310, 1320];
+    Parallax.MULT = [.3, .4, .5, .6];
     Parallax.DIRT_MULT = .9;
-    Parallax.DIRT_START = 1900;
+    Parallax.DIRT_START = 1320;
     Lich.Parallax = Parallax;
 })(Lich || (Lich = {}));

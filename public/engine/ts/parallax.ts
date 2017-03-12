@@ -14,18 +14,20 @@ namespace Lich {
             ParallaxKey.PRLX_CLOUD5_KEY
         ];
         static BGR_ORDER = [
-            ParallaxKey.PRLX_FAR_MOUNTAIN_KEY,
+            // ParallaxKey.PRLX_FAR_MOUNTAIN_KEY,
             ParallaxKey.PRLX_MOUNTAIN_KEY,
             ParallaxKey.PRLX_WOODLAND1_KEY,
             ParallaxKey.PRLX_WOODLAND2_KEY,
             ParallaxKey.PRLX_WOODLAND3_KEY,
-            ParallaxKey.PRLX_WOODLAND4_KEY,
+            // ParallaxKey.PRLX_WOODLAND4_KEY,
         ];
-        static STARTS = [180, 600, 1200, 1200, 1220, 1240];
-        static MULT = [.3, .4, .5, .55, .6, .7];
+        // static STARTS = [180, 600, 1200, 1200, 1220, 1240];
+        // static MULT = [.3, .4, .5, .55, .6, .7];
+        static STARTS = [1200, 1300, 1310, 1320];
+        static MULT = [.3, .4, .5, .6];
 
         static DIRT_MULT = .9;
-        static DIRT_START = 1900;
+        static DIRT_START = 1320;
 
         /*-----------*/
         /* VARIABLES */
@@ -45,7 +47,7 @@ namespace Lich {
             var self = this;
 
             let cw = Game.getInstance().getSceneWidth();
-            let ch =  Game.getInstance().getSceneHeight();
+            let ch = Game.getInstance().getSceneHeight();
             self.fixedWidth = ch;
             self.fixedHeight = cw;
 

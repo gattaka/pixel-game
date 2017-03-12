@@ -79,10 +79,22 @@ namespace Lich {
 
         private static INSTANCE: Resources;
 
-        static OPTMZ_PARALLAX_SHOW_ON = false;
-        static OPTMZ_UI_SHOW_ON = false;
-        static OPTMZ_FOG_SHOW_ON = false;
-        static OPTMZ_FOG_PROCESS_ON = false;
+        /**
+         * Optimalizační příznaky
+         * 
+         * - samotný world (včetně nepřátel a weather) 60FPS
+         * - zapnuté UI (bez aktualizování minimapy) 60FPS
+         * - UI se zapnutou aktualizací minimapy 54-60FPS
+         * - zapnutá mlha 53-60FPS, ale místy spadne i na 43FPS
+         * - zapnutím parallaxu se FPS propadne na 43-50FPS
+         * 
+         * - samotný world + parallax 50-60FPS s občasnými záseky na např. 19FPS
+         */
+
+        static OPTMZ_PARALLAX_SHOW_ON = true;
+        static OPTMZ_UI_SHOW_ON = true;
+        static OPTMZ_FOG_SHOW_ON = true;
+        static OPTMZ_FOG_PROCESS_ON = true;
 
         static FONT = "expressway";
         static TEXT_COLOR = "#FF0";
@@ -559,6 +571,7 @@ namespace Lich {
             let tilingSprite = new ParallaxSprite(spriteSheet, width, height ? height : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
+            // tilingSprite.cacheAsBitmap = true;
             return tilingSprite;
         };
 

@@ -458,6 +458,7 @@ var Lich;
             var tilingSprite = new ParallaxSprite(spriteSheet, width, height ? height : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
+            // tilingSprite.cacheAsBitmap = true;
             return tilingSprite;
         };
         ;
@@ -511,10 +512,21 @@ var Lich;
         ;
         return Resources;
     }());
-    Resources.OPTMZ_PARALLAX_SHOW_ON = false;
-    Resources.OPTMZ_UI_SHOW_ON = false;
-    Resources.OPTMZ_FOG_SHOW_ON = false;
-    Resources.OPTMZ_FOG_PROCESS_ON = false;
+    /**
+     * Optimalizační příznaky
+     *
+     * - samotný world (včetně nepřátel a weather) 60FPS
+     * - zapnuté UI (bez aktualizování minimapy) 60FPS
+     * - UI se zapnutou aktualizací minimapy 54-60FPS
+     * - zapnutá mlha 53-60FPS, ale místy spadne i na 43FPS
+     * - zapnutím parallaxu se FPS propadne na 43-50FPS
+     *
+     * - samotný world + parallax 50-60FPS s občasnými záseky na např. 19FPS
+     */
+    Resources.OPTMZ_PARALLAX_SHOW_ON = true;
+    Resources.OPTMZ_UI_SHOW_ON = true;
+    Resources.OPTMZ_FOG_SHOW_ON = true;
+    Resources.OPTMZ_FOG_PROCESS_ON = true;
     Resources.FONT = "expressway";
     Resources.TEXT_COLOR = "#FF0";
     Resources.OUTLINE_COLOR = "#000";

@@ -73,12 +73,11 @@ namespace Lich {
             });
             self.renderer.view.style.position = "absolute";
             self.renderer.view.style.display = "block";
-            self.renderer.backgroundColor = 0xfafaea;
             switch (ThemeWatch.getCurrentTheme()) {
                 case Theme.WINTER:
                     self.renderer.backgroundColor = 0xcce1e8;
                 default:
-                    self.renderer.backgroundColor = 0x839e61;
+                    self.renderer.backgroundColor = 0xf6fbfe;
             }
 
             // function resizeCanvas() {
@@ -332,7 +331,8 @@ namespace Lich {
 
                 if (self.initialized) {
                     self.world.update(delta);
-                    self.ui.update(delta);
+                    if (self.ui)
+                        self.ui.update(delta);
                 }
 
                 self.renderer.render(self.stage);
