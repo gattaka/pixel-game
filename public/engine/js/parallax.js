@@ -10,14 +10,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Lich;
 (function (Lich) {
-    var Background = (function (_super) {
-        __extends(Background, _super);
-        function Background() {
+    var Parallax = (function (_super) {
+        __extends(Parallax, _super);
+        function Parallax() {
             var _this = _super.call(this) || this;
             /*-----------*/
             /* VARIABLES */
             /*-----------*/
-            _this.bgrSprites = new Array();
+            _this.sprites = new Array();
             _this.clouds = [];
             // celkový posun
             _this.offsetX = 0;
@@ -27,11 +27,11 @@ var Lich;
             var ch = Lich.Game.getInstance().getSceneHeight();
             self.fixedWidth = ch;
             self.fixedHeight = cw;
-            var skySprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_SKY_KEY, cw);
+            var skySprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_SKY_KEY, cw);
             self.addChild(skySprite);
-            Background.BGR_ORDER.forEach(function (b, i) {
-                var sprite = Lich.Resources.getInstance().getBackgroundSprite(b, cw);
-                self.bgrSprites.push(sprite);
+            Parallax.BGR_ORDER.forEach(function (b, i) {
+                var sprite = Lich.Resources.getInstance().getParallaxSprite(b, cw);
+                self.sprites.push(sprite);
                 self.addChild(sprite);
             });
             // Background.CLOUDS_KEYS.forEach((c) => {
@@ -41,9 +41,9 @@ var Lich;
             //     self.clouds.push(sprite);
             //     self.content.addChild(sprite);
             // });
-            self.dirtBackSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_KEY, cw, ch);
+            self.dirtBackSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_DIRT_BACK_KEY, cw, ch);
             self.addChild(self.dirtBackSprite);
-            self.dirtBackStartSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_DIRT_BACK_START_KEY, cw);
+            self.dirtBackStartSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_BGR_DIRT_BACK_START_KEY, cw);
             self.addChild(self.dirtBackStartSprite);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
                 self.offsetX = payload.payload;
@@ -55,18 +55,18 @@ var Lich;
                 self.shift();
                 return false;
             });
-            console.log("background ready");
+            console.log("parallax ready");
             return _this;
         }
-        Background.prototype.shift = function () {
+        Parallax.prototype.shift = function () {
             var self = this;
-            self.bgrSprites.forEach(function (part, i) {
-                part.tilePosition.x = Lich.Utils.floor((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].originalWidth);
-                part.y = Lich.Utils.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
+            self.sprites.forEach(function (part, i) {
+                part.tilePosition.x = Lich.Utils.floor((self.offsetX * Parallax.MULT[i]) % self.sprites[i].originalWidth);
+                part.y = Lich.Utils.floor(self.offsetY * Parallax.MULT[i] + Parallax.STARTS[i] * Parallax.MULT[i]);
             });
             // Dirt back
-            self.dirtBackSprite.tilePosition.x = Lich.Utils.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
-            var tillRepeatPointY = Lich.Utils.floor((self.offsetY + Background.DIRT_START) * Background.DIRT_MULT);
+            self.dirtBackSprite.tilePosition.x = Lich.Utils.floor(((self.offsetX * Parallax.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
+            var tillRepeatPointY = Lich.Utils.floor((self.offsetY + Parallax.DIRT_START) * Parallax.DIRT_MULT);
             if (tillRepeatPointY < 0) {
                 self.dirtBackSprite.y = 0;
                 self.dirtBackSprite.tilePosition.y = Lich.Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight);
@@ -95,7 +95,7 @@ var Lich;
             // }
         };
         ;
-        Background.prototype.update = function (rawShift) {
+        Parallax.prototype.update = function (rawShift) {
             var self = this;
             var shift = rawShift / 10;
             // Clouds
@@ -110,30 +110,30 @@ var Lich;
             // }
         };
         ;
-        return Background;
+        return Parallax;
     }(PIXI.Container));
     /*-----------*/
     /* CONSTANTS */
     /*-----------*/
-    Background.CLOUDS_SPACE = 150;
-    Background.CLOUDS_KEYS = [
-        Lich.BackgroundKey.BGR_CLOUD1_KEY,
-        Lich.BackgroundKey.BGR_CLOUD2_KEY,
-        Lich.BackgroundKey.BGR_CLOUD3_KEY,
-        Lich.BackgroundKey.BGR_CLOUD4_KEY,
-        Lich.BackgroundKey.BGR_CLOUD5_KEY
+    Parallax.CLOUDS_SPACE = 150;
+    Parallax.CLOUDS_KEYS = [
+        Lich.ParallaxKey.PRLX_CLOUD1_KEY,
+        Lich.ParallaxKey.PRLX_CLOUD2_KEY,
+        Lich.ParallaxKey.PRLX_CLOUD3_KEY,
+        Lich.ParallaxKey.PRLX_CLOUD4_KEY,
+        Lich.ParallaxKey.PRLX_CLOUD5_KEY
     ];
-    Background.BGR_ORDER = [
-        Lich.BackgroundKey.BGR_FAR_MOUNTAIN_KEY,
-        Lich.BackgroundKey.BGR_MOUNTAIN_KEY,
-        Lich.BackgroundKey.BGR_WOODLAND1_KEY,
-        Lich.BackgroundKey.BGR_WOODLAND2_KEY,
-        Lich.BackgroundKey.BGR_WOODLAND3_KEY,
-        Lich.BackgroundKey.BGR_WOODLAND4_KEY,
+    Parallax.BGR_ORDER = [
+        Lich.ParallaxKey.PRLX_FAR_MOUNTAIN_KEY,
+        Lich.ParallaxKey.PRLX_MOUNTAIN_KEY,
+        Lich.ParallaxKey.PRLX_WOODLAND1_KEY,
+        Lich.ParallaxKey.PRLX_WOODLAND2_KEY,
+        Lich.ParallaxKey.PRLX_WOODLAND3_KEY,
+        Lich.ParallaxKey.PRLX_WOODLAND4_KEY,
     ];
-    Background.BGR_STARTS = [180, 600, 1200, 1200, 1220, 1240];
-    Background.BGR_MULT = [.3, .4, .5, .55, .6, .7];
-    Background.DIRT_MULT = .9;
-    Background.DIRT_START = 1900;
-    Lich.Background = Background;
+    Parallax.STARTS = [180, 600, 1200, 1200, 1220, 1240];
+    Parallax.MULT = [.3, .4, .5, .55, .6, .7];
+    Parallax.DIRT_MULT = .9;
+    Parallax.DIRT_START = 1900;
+    Lich.Parallax = Parallax;
 })(Lich || (Lich = {}));

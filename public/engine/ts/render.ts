@@ -121,6 +121,9 @@ namespace Lich {
         updateFogSectors() {
             let self = this;
 
+            if (!Resources.OPTMZ_FOG_SHOW_ON)
+                return;
+
             let fogInfo = self.getFogInfo();
 
             if (self.currentStartFogX == fogInfo.startFogSecX && self.currentStartFogY == fogInfo.startFogSecY)
@@ -242,7 +245,7 @@ namespace Lich {
                                         let tile = self.createTile(bgrElement, true);
 
                                         // přidej dílek do sektoru
-                                        sector.addBackgroundChild(tile);
+                                        sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 
@@ -602,11 +605,7 @@ namespace Lich {
                                     var targetSector = self.getSectorByTiles(x, y);
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = sceneMap.getValue(x, y);
-                                        if (!bgr) {
-                                            targetSector.removeCacheableChild(child);
-                                        } else {
-                                            targetSector.removeBackgroundChild(child);
-                                        }
+                                        targetSector.removeCacheableChild(child);
                                     }
 
                                     // zjisti sektor dílku, aby byl přidán do fronty 
@@ -839,11 +838,7 @@ namespace Lich {
                                 var tile = self.createTile(posIndex, bgr);
 
                                 // přidej dílek do sektoru
-                                if (bgr) {
-                                    sector.addBackgroundChild(tile);
-                                } else {
-                                    sector.addCacheableChild(tile);
-                                }
+                                sector.addCacheableChild(tile);
                                 tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
                                 tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
 

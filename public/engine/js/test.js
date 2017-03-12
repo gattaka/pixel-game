@@ -43,10 +43,10 @@ var Lich;
                 //     uvs: false,
                 //     alpha: true
                 // });
-                var bgrSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_FAR_MOUNTAIN_KEY, renderer.view.width);
+                var bgrSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_FAR_MOUNTAIN_KEY, renderer.view.width);
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);
-                bgrSprite = Lich.Resources.getInstance().getBackgroundSprite(Lich.BackgroundKey.BGR_WOODLAND1_KEY, renderer.view.width);
+                bgrSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_WOODLAND1_KEY, renderer.view.width);
                 bgrSprite.fixedWidth = renderer.width;
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);

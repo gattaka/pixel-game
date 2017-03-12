@@ -1,5 +1,5 @@
 namespace Lich {
-    export class Background extends PIXI.Container {
+    export class Parallax extends PIXI.Container {
 
         /*-----------*/
         /* CONSTANTS */
@@ -7,22 +7,22 @@ namespace Lich {
         static CLOUDS_SPACE = 150;
 
         static CLOUDS_KEYS = [
-            BackgroundKey.BGR_CLOUD1_KEY,
-            BackgroundKey.BGR_CLOUD2_KEY,
-            BackgroundKey.BGR_CLOUD3_KEY,
-            BackgroundKey.BGR_CLOUD4_KEY,
-            BackgroundKey.BGR_CLOUD5_KEY
+            ParallaxKey.PRLX_CLOUD1_KEY,
+            ParallaxKey.PRLX_CLOUD2_KEY,
+            ParallaxKey.PRLX_CLOUD3_KEY,
+            ParallaxKey.PRLX_CLOUD4_KEY,
+            ParallaxKey.PRLX_CLOUD5_KEY
         ];
         static BGR_ORDER = [
-            BackgroundKey.BGR_FAR_MOUNTAIN_KEY,
-            BackgroundKey.BGR_MOUNTAIN_KEY,
-            BackgroundKey.BGR_WOODLAND1_KEY,
-            BackgroundKey.BGR_WOODLAND2_KEY,
-            BackgroundKey.BGR_WOODLAND3_KEY,
-            BackgroundKey.BGR_WOODLAND4_KEY,
+            ParallaxKey.PRLX_FAR_MOUNTAIN_KEY,
+            ParallaxKey.PRLX_MOUNTAIN_KEY,
+            ParallaxKey.PRLX_WOODLAND1_KEY,
+            ParallaxKey.PRLX_WOODLAND2_KEY,
+            ParallaxKey.PRLX_WOODLAND3_KEY,
+            ParallaxKey.PRLX_WOODLAND4_KEY,
         ];
-        static BGR_STARTS = [180, 600, 1200, 1200, 1220, 1240];
-        static BGR_MULT = [.3, .4, .5, .55, .6, .7];
+        static STARTS = [180, 600, 1200, 1200, 1220, 1240];
+        static MULT = [.3, .4, .5, .55, .6, .7];
 
         static DIRT_MULT = .9;
         static DIRT_START = 1900;
@@ -31,9 +31,9 @@ namespace Lich {
         /* VARIABLES */
         /*-----------*/
 
-        bgrSprites = new Array<BackgroundSprite>();
-        dirtBackSprite: BackgroundSprite;
-        dirtBackStartSprite: BackgroundSprite;
+        sprites = new Array<ParallaxSprite>();
+        dirtBackSprite: ParallaxSprite;
+        dirtBackStartSprite: ParallaxSprite;
         clouds = [];
 
         // celkový posun
@@ -49,12 +49,12 @@ namespace Lich {
             self.fixedWidth = ch;
             self.fixedHeight = cw;
 
-            let skySprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_SKY_KEY, cw);
+            let skySprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_SKY_KEY, cw);
             self.addChild(skySprite);
 
-            Background.BGR_ORDER.forEach((b: BackgroundKey, i) => {
-                let sprite = Resources.getInstance().getBackgroundSprite(b, cw);
-                self.bgrSprites.push(sprite);
+            Parallax.BGR_ORDER.forEach((b: ParallaxKey, i) => {
+                let sprite = Resources.getInstance().getParallaxSprite(b, cw);
+                self.sprites.push(sprite);
                 self.addChild(sprite);
             });
 
@@ -66,10 +66,10 @@ namespace Lich {
             //     self.content.addChild(sprite);
             // });
 
-            self.dirtBackSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_KEY, cw, ch);
+            self.dirtBackSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_DIRT_BACK_KEY, cw, ch);
             self.addChild(self.dirtBackSprite);
 
-            self.dirtBackStartSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_DIRT_BACK_START_KEY, cw);
+            self.dirtBackStartSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_BGR_DIRT_BACK_START_KEY, cw);
             self.addChild(self.dirtBackStartSprite);
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
@@ -83,21 +83,21 @@ namespace Lich {
                 return false;
             });
 
-            console.log("background ready");
+            console.log("parallax ready");
         }
 
 
         private shift() {
             var self = this;
 
-            self.bgrSprites.forEach((part: BackgroundSprite, i) => {
-                part.tilePosition.x = Utils.floor((self.offsetX * Background.BGR_MULT[i]) % self.bgrSprites[i].originalWidth);
-                part.y = Utils.floor(self.offsetY * Background.BGR_MULT[i] + Background.BGR_STARTS[i] * Background.BGR_MULT[i]);
+            self.sprites.forEach((part: ParallaxSprite, i) => {
+                part.tilePosition.x = Utils.floor((self.offsetX * Parallax.MULT[i]) % self.sprites[i].originalWidth);
+                part.y = Utils.floor(self.offsetY * Parallax.MULT[i] + Parallax.STARTS[i] * Parallax.MULT[i]);
             });
 
             // Dirt back
-            self.dirtBackSprite.tilePosition.x = Utils.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
-            let tillRepeatPointY = Utils.floor((self.offsetY + Background.DIRT_START) * Background.DIRT_MULT);
+            self.dirtBackSprite.tilePosition.x = Utils.floor(((self.offsetX * Parallax.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
+            let tillRepeatPointY = Utils.floor((self.offsetY + Parallax.DIRT_START) * Parallax.DIRT_MULT);
             if (tillRepeatPointY < 0) {
                 self.dirtBackSprite.y = 0;
                 self.dirtBackSprite.tilePosition.y = Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight);

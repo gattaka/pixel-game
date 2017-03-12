@@ -95,6 +95,8 @@ var Lich;
         };
         Render.prototype.updateFogSectors = function () {
             var self = this;
+            if (!Lich.Resources.OPTMZ_FOG_SHOW_ON)
+                return;
             var fogInfo = self.getFogInfo();
             if (self.currentStartFogX == fogInfo.startFogSecX && self.currentStartFogY == fogInfo.startFogSecY)
                 return;
@@ -193,7 +195,7 @@ var Lich;
                                         // vytvoř dílek
                                         var tile = self.createTile(bgrElement, true);
                                         // přidej dílek do sektoru
-                                        sector.addBackgroundChild(tile);
+                                        sector.addCacheableChild(tile);
                                         tile.x = (mx % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         tile.y = (my % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                         // přidej dílek do globální mapy
@@ -517,12 +519,7 @@ var Lich;
                                     var targetSector = self.getSectorByTiles(x, y);
                                     if (typeof targetSector !== "undefined" && targetSector !== null) {
                                         var child = sceneMap.getValue(x, y);
-                                        if (!bgr) {
-                                            targetSector.removeCacheableChild(child);
-                                        }
-                                        else {
-                                            targetSector.removeBackgroundChild(child);
-                                        }
+                                        targetSector.removeCacheableChild(child);
                                     }
                                     // zjisti sektor dílku, aby byl přidán do fronty 
                                     // ke cache update (postačí to udělat dle tilesToReset,
@@ -727,12 +724,7 @@ var Lich;
                                 // vytvoř dílek
                                 var tile = self.createTile(posIndex, bgr);
                                 // přidej dílek do sektoru
-                                if (bgr) {
-                                    sector.addBackgroundChild(tile);
-                                }
-                                else {
-                                    sector.addCacheableChild(tile);
-                                }
+                                sector.addCacheableChild(tile);
                                 tile.x = (x % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 tile.y = (y % Render.SECTOR_SIZE) * Lich.Resources.TILE_SIZE;
                                 // přidej dílek do globální mapy

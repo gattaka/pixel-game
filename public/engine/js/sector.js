@@ -55,9 +55,6 @@ var Lich;
             _this.map_y = map_y;
             _this.fixedWidth = fixedWidth;
             _this.fixedHeight = fixedHeight;
-            _this.backgroundCont = new SectorCont(_this);
-            _this.backgroundCont.fixedWidth = _this.fixedWidth;
-            _this.backgroundCont.fixedHeight = _this.fixedHeight;
             _this.cacheableCont = new SectorCont(_this);
             _this.cacheableCont.fixedWidth = _this.fixedWidth;
             _this.cacheableCont.fixedHeight = _this.fixedHeight;
@@ -68,23 +65,15 @@ var Lich;
             return _this;
         }
         Sector.prototype.cache = function () {
-            this.backgroundRendered = this.cacheInner(this.backgroundCont, this.backgroundRendered);
             this.cacheableRendered = this.cacheInner(this.cacheableCont, this.cacheableRendered);
-            this.setChildIndex(this.backgroundRendered, 0);
-            this.setChildIndex(this.cacheableRendered, 1);
-            this.setChildIndex(this.animatedCont, 2);
-        };
-        Sector.prototype.addBackgroundChild = function (child) {
-            this.backgroundCont.addChild(child);
+            this.setChildIndex(this.cacheableRendered, 0);
+            this.setChildIndex(this.animatedCont, 1);
         };
         Sector.prototype.addCacheableChild = function (child) {
             this.cacheableCont.addChild(child);
         };
         Sector.prototype.addAnimatedChild = function (child) {
             this.animatedCont.addChild(child);
-        };
-        Sector.prototype.removeBackgroundChild = function (child) {
-            return this.backgroundCont.removeChild(child);
         };
         Sector.prototype.removeCacheableChild = function (child) {
             return this.cacheableCont.removeChild(child);

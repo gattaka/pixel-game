@@ -62,11 +62,11 @@ namespace Lich {
                 //     alpha: true
                 // });
 
-                let bgrSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_FAR_MOUNTAIN_KEY, renderer.view.width);
+                let bgrSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_FAR_MOUNTAIN_KEY, renderer.view.width);
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);
 
-                bgrSprite = Resources.getInstance().getBackgroundSprite(BackgroundKey.BGR_WOODLAND1_KEY, renderer.view.width);
+                bgrSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_WOODLAND1_KEY, renderer.view.width);
                 bgrSprite.fixedWidth = renderer.width;
                 bgrSprites.push(bgrSprite);
                 stage.addChild(bgrSprite);

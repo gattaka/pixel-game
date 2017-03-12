@@ -110,7 +110,8 @@ var Lich;
             self.initFullScaleCont(self.fogSectorsCont);
             self.fogSectorsCont.x = -Lich.Resources.PARTS_SIZE;
             self.fogSectorsCont.y = -Lich.Resources.PARTS_SIZE;
-            self.addChild(self.fogSectorsCont);
+            if (Lich.Resources.OPTMZ_FOG_SHOW_ON)
+                self.addChild(self.fogSectorsCont);
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);
             self.addChild(self.messagesCont);
@@ -355,6 +356,8 @@ var Lich;
             this.placePlayerOnSpawnPoint();
         };
         World.prototype.checkReveal = function () {
+            if (!Lich.Resources.OPTMZ_FOG_PROCESS_ON)
+                return;
             var self = this;
             var coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
             // Reveal 

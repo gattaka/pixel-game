@@ -139,17 +139,21 @@ var Lich;
                     // clean 
                     self.stage.removeChildren();
                     delete self.world;
-                    delete self.background;
+                    delete self.parallax;
                     Lich.EventBus.getInstance().clear();
                     Lich.Mixer.stopAllSounds();
                     // (re)-init
-                    self.ui = new Lich.UI(self.renderer.view, tilesMap, mobile);
-                    self.background = new Lich.Background();
+                    if (Lich.Resources.OPTMZ_PARALLAX_SHOW_ON) {
+                        self.parallax = new Lich.Parallax();
+                        self.stage.addChild(self.parallax);
+                    }
                     self.world = new Lich.World(self, tilesMap);
-                    self.stage.addChild(self.background);
                     self.stage.addChild(self.world);
                     self.stage.addChild(self.hitLayer);
-                    self.stage.addChild(self.ui);
+                    if (Lich.Resources.OPTMZ_UI_SHOW_ON) {
+                        self.ui = new Lich.UI(self.renderer.view, tilesMap, mobile);
+                        self.stage.addChild(self.ui);
+                    }
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         setTimeout(function () {
                             var idb = Lich.IndexedDB.getInstance();

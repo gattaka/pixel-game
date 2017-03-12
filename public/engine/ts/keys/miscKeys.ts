@@ -10,21 +10,21 @@ namespace Lich {
         SPST_UI_KEY,
     }
 
-    export enum BackgroundKey {
-        BGR_DIRT_BACK_START_KEY,
-        BGR_DIRT_BACK_KEY,
-        BGR_SKY_KEY,
-        BGR_FAR_MOUNTAIN_KEY,
-        BGR_MOUNTAIN_KEY,
-        BGR_WOODLAND1_KEY,
-        BGR_WOODLAND2_KEY,
-        BGR_WOODLAND3_KEY,
-        BGR_WOODLAND4_KEY,
-        BGR_CLOUD1_KEY,
-        BGR_CLOUD2_KEY,
-        BGR_CLOUD3_KEY,
-        BGR_CLOUD4_KEY,
-        BGR_CLOUD5_KEY,
+    export enum ParallaxKey {
+        PRLX_BGR_DIRT_BACK_START_KEY,
+        PRLX_DIRT_BACK_KEY,
+        PRLX_SKY_KEY,
+        PRLX_FAR_MOUNTAIN_KEY,
+        PRLX_MOUNTAIN_KEY,
+        PRLX_WOODLAND1_KEY,
+        PRLX_WOODLAND2_KEY,
+        PRLX_WOODLAND3_KEY,
+        PRLX_WOODLAND4_KEY,
+        PRLX_CLOUD1_KEY,
+        PRLX_CLOUD2_KEY,
+        PRLX_CLOUD3_KEY,
+        PRLX_CLOUD4_KEY,
+        PRLX_CLOUD5_KEY,
     }
 
     export enum FogKey {

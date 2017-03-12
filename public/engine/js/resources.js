@@ -106,7 +106,7 @@ var Lich;
             this.mapTransitionSrfcDefs = {};
             this.mapTransitionSrfcBgrsDefs = {};
             // definice pozadí scény
-            this.backgroundDefs = {};
+            this.parallaxDefs = {};
             // definice ui prvků
             this.uiSpriteDefs = {};
             // definice fontů 
@@ -226,8 +226,8 @@ var Lich;
             Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.LOAD_START));
             self.loader.loadManifest(manifest, true);
             // background
-            Lich.BACKGROUND_DEFS.forEach(function (def) {
-                self.backgroundDefs[Lich.BackgroundKey[def[1]]] = def[0];
+            Lich.PARALLAX_DEFS.forEach(function (def) {
+                self.parallaxDefs[Lich.ParallaxKey[def[1]]] = def[0];
             });
             // ui
             Lich.UI_DEFS.forEach(function (def) {
@@ -448,14 +448,14 @@ var Lich;
             }
         };
         ;
-        Resources.prototype.getBackgroundSprite = function (key, width, height) {
+        Resources.prototype.getParallaxSprite = function (key, width, height) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
-            var bgrSprite = self.backgroundDefs[Lich.BackgroundKey[key]];
-            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
+            var spriteName = self.parallaxDefs[Lich.ParallaxKey[key]];
+            var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
             var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            var tilingSprite = new BackgroundSprite(spriteSheet, width, height ? height : spriteDef.height);
+            var tilingSprite = new ParallaxSprite(spriteSheet, width, height ? height : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
             return tilingSprite;
@@ -511,6 +511,10 @@ var Lich;
         ;
         return Resources;
     }());
+    Resources.OPTMZ_PARALLAX_SHOW_ON = false;
+    Resources.OPTMZ_UI_SHOW_ON = false;
+    Resources.OPTMZ_FOG_SHOW_ON = false;
+    Resources.OPTMZ_FOG_PROCESS_ON = false;
     Resources.FONT = "expressway";
     Resources.TEXT_COLOR = "#FF0";
     Resources.OUTLINE_COLOR = "#000";
@@ -540,14 +544,14 @@ var Lich;
     Resources.PARTS_SIZE = 2 * Resources.TILE_SIZE;
     Resources.PARTS_SHEET_WIDTH = 20;
     Lich.Resources = Resources;
-    var BackgroundSprite = (function (_super) {
-        __extends(BackgroundSprite, _super);
-        function BackgroundSprite() {
+    var ParallaxSprite = (function (_super) {
+        __extends(ParallaxSprite, _super);
+        function ParallaxSprite() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        return BackgroundSprite;
+        return ParallaxSprite;
     }(PIXI.extras.TilingSprite));
-    Lich.BackgroundSprite = BackgroundSprite;
+    Lich.ParallaxSprite = ParallaxSprite;
     var AniSprite = (function (_super) {
         __extends(AniSprite, _super);
         function AniSprite(frames, animationDef) {

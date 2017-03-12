@@ -133,7 +133,8 @@ namespace Lich {
             self.initFullScaleCont(self.fogSectorsCont);
             self.fogSectorsCont.x = -Resources.PARTS_SIZE;
             self.fogSectorsCont.y = -Resources.PARTS_SIZE;
-            self.addChild(self.fogSectorsCont);
+            if (Resources.OPTMZ_FOG_SHOW_ON)
+                self.addChild(self.fogSectorsCont);
 
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);
@@ -388,6 +389,9 @@ namespace Lich {
         }
 
         private checkReveal() {
+            if (!Resources.OPTMZ_FOG_PROCESS_ON)
+                return;
+                
             let self = this;
             let coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
 

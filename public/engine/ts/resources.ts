@@ -79,6 +79,11 @@ namespace Lich {
 
         private static INSTANCE: Resources;
 
+        static OPTMZ_PARALLAX_SHOW_ON = false;
+        static OPTMZ_UI_SHOW_ON = false;
+        static OPTMZ_FOG_SHOW_ON = false;
+        static OPTMZ_FOG_PROCESS_ON = false;
+
         static FONT = "expressway";
         static TEXT_COLOR = "#FF0";
         static OUTLINE_COLOR = "#000";
@@ -127,7 +132,7 @@ namespace Lich {
         public mapTransitionSrfcBgrsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
 
         // definice pozadí scény
-        public backgroundDefs: { [k: string]: string } = {};
+        public parallaxDefs: { [k: string]: string } = {};
 
         // definice ui prvků
         public uiSpriteDefs: { [k: string]: string } = {};
@@ -294,8 +299,8 @@ namespace Lich {
             self.loader.loadManifest(manifest, true);
 
             // background
-            BACKGROUND_DEFS.forEach((def) => {
-                self.backgroundDefs[BackgroundKey[def[1]]] = def[0];
+            PARALLAX_DEFS.forEach((def) => {
+                self.parallaxDefs[ParallaxKey[def[1]]] = def[0];
             });
 
             // ui
@@ -544,14 +549,14 @@ namespace Lich {
             }
         };
 
-        getBackgroundSprite(key: BackgroundKey, width: number, height?: number): BackgroundSprite {
+        getParallaxSprite(key: ParallaxKey, width: number, height?: number): ParallaxSprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_BGR_KEY];
-            let bgrSprite = self.backgroundDefs[BackgroundKey[key]];
-            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][bgrSprite];
+            let spriteName = self.parallaxDefs[ParallaxKey[key]];
+            let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
             let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            let tilingSprite = new BackgroundSprite(spriteSheet, width, height ? height : spriteDef.height);
+            let tilingSprite = new ParallaxSprite(spriteSheet, width, height ? height : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
             return tilingSprite;
@@ -610,7 +615,7 @@ namespace Lich {
 
     }
 
-    export class BackgroundSprite extends PIXI.extras.TilingSprite {
+    export class ParallaxSprite extends PIXI.extras.TilingSprite {
         public originalWidth: number;
         public originalHeight: number;
     }

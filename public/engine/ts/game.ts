@@ -18,7 +18,7 @@ namespace Lich {
 
         public renderer: PIXI.WebGLRenderer;
         private stage: PIXI.Container;
-        private background: Background;
+        private parallax: Parallax;
         private world: World;
         private ui: UI;
         private hitLayer: PIXI.Container;
@@ -193,18 +193,22 @@ namespace Lich {
                     // clean 
                     self.stage.removeChildren();
                     delete self.world;
-                    delete self.background;
+                    delete self.parallax;
                     EventBus.getInstance().clear();
                     Mixer.stopAllSounds();
 
                     // (re)-init
-                    self.ui = new UI(self.renderer.view, tilesMap, mobile);
-                    self.background = new Background();
+                    if (Resources.OPTMZ_PARALLAX_SHOW_ON) {
+                        self.parallax = new Parallax();
+                        self.stage.addChild(self.parallax);
+                    }
                     self.world = new World(self, tilesMap);
-                    self.stage.addChild(self.background);
                     self.stage.addChild(self.world);
                     self.stage.addChild(self.hitLayer);
-                    self.stage.addChild(self.ui);
+                    if (Resources.OPTMZ_UI_SHOW_ON) {
+                        self.ui = new UI(self.renderer.view, tilesMap, mobile);
+                        self.stage.addChild(self.ui);
+                    }
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
                         setTimeout(() => {
