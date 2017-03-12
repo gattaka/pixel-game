@@ -19,7 +19,7 @@ namespace Lich {
             let renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);
 
             // instead of rendering your containerOfThings to the reeal scene, render it to the texture
-            Game.CURRENT_GAME.renderer.render(cont, renderedTexture);
+            Game.getInstance().renderer.render(cont, renderedTexture);
 
             // now you also have a sprite that uses that texture, rendered in the normal scene
             let newRendered = new PIXI.Sprite(renderedTexture);

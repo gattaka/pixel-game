@@ -14,7 +14,7 @@ namespace Lich {
 
     export class Game {
 
-        static CURRENT_GAME: Game;
+        private static INSTANCE: Game;
 
         public renderer: PIXI.WebGLRenderer;
         private stage: PIXI.Container;
@@ -38,11 +38,16 @@ namespace Lich {
             return window.innerHeight; //this.renderer.view.height; 
         }
 
-        constructor(minimapCanvasId: string, loaderCanvasId: string) {
+        public static getInstance() {
+            if (!Game.INSTANCE) {
+                Game.INSTANCE = new Game();
+            }
+            return Game.INSTANCE;
+        }
+
+        private constructor() {
 
             var self = this;
-
-            Game.CURRENT_GAME = self;
 
             // stats
             var statsFPS = new Stats();
@@ -202,7 +207,6 @@ namespace Lich {
                     self.stage.addChild(self.ui);
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
-                        // TODO
                         setTimeout(() => {
                             let idb = IndexedDB.getInstance();
                             let data = {
@@ -323,7 +327,8 @@ namespace Lich {
                 createjs.Tween.tick(delta, false);
 
                 if (self.initialized) {
-                    self.getWorld().update(delta);
+                    self.world.update(delta);
+                    self.ui.update(delta);
                 }
 
                 self.renderer.render(self.stage);

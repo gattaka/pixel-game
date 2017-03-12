@@ -44,8 +44,8 @@ namespace Lich {
             super();
             var self = this;
 
-            let cw = Game.CURRENT_GAME.getSceneWidth();
-            let ch = Game.CURRENT_GAME.getSceneHeight();
+            let cw = Game.getInstance().getSceneWidth();
+            let ch =  Game.getInstance().getSceneHeight();
             self.fixedWidth = ch;
             self.fixedHeight = cw;
 

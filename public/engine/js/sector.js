@@ -27,7 +27,7 @@ var Lich;
             // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
             var renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);
             // instead of rendering your containerOfThings to the reeal scene, render it to the texture
-            Lich.Game.CURRENT_GAME.renderer.render(cont, renderedTexture);
+            Lich.Game.getInstance().renderer.render(cont, renderedTexture);
             // now you also have a sprite that uses that texture, rendered in the normal scene
             var newRendered = new PIXI.Sprite(renderedTexture);
             this.addChild(newRendered);

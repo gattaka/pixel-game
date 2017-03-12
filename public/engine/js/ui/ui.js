@@ -23,14 +23,14 @@ var Lich;
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
             minimapUI.y = UI.SCREEN_SPACING;
             self.minimapUI = minimapUI;
-            // self.addChild(minimapUI);
+            self.addChild(minimapUI);
             // mapa
             var mapUI = new Lich.MapUI(canvas.width, canvas.height, minimapRender);
             mapUI.x = UI.SCREEN_SPACING;
             mapUI.y = UI.SCREEN_SPACING;
             self.mapUI = mapUI;
             mapUI.hide();
-            // self.addChild(mapUI);
+            self.addChild(mapUI);
             // Help btn
             if (!mobile) {
                 var helpBtn = _this.createHelpButton();
@@ -327,6 +327,10 @@ var Lich;
                 window.open("help.html", "_blank");
             });
             return helpBtn;
+        };
+        UI.prototype.update = function (delta) {
+            this.minimapUI.update(delta);
+            this.mapUI.update(delta);
         };
         return UI;
     }(PIXI.Container));

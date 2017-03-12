@@ -1,4 +1,7 @@
 ///<reference path='lib/pixi/pixi.js.d.ts'/>
+///<reference path='lib/preloadjs/preloadjs.d.ts'/>
+///<reference path='lib/soundjs/soundjs.d.ts'/>
+///<reference path='lib/tweenjs/tweenjs.d.ts'/>
 
 namespace Lich {
 

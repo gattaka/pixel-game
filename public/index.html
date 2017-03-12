@@ -12,8 +12,6 @@
     <!--libs-->
     <script src="engine/js/lib/pixi.js"></script>
     <script src="engine/js/lib/preloadjs-0.6.2.min.js"></script>
-    <script src="engine/js/lib/cordovaaudioplugin-0.6.2.min.js"></script>
-    <script src="engine/js/lib/flashaudioplugin-0.6.2.min.js"></script>
     <script src="engine/js/lib/soundjs-0.6.2.min.js"></script>
     <script src="engine/js/lib/tweenjs-0.6.2.min.js"></script>
     <script src="engine/js/lib/jquery-3.1.1.min.js"></script>
@@ -97,12 +95,9 @@
     <script src="engine/js/game.js"></script>
 </head>
 
-<body onload="new Lich.Game('mapCanvas', 'loadCanvas');" oncontextmenu="return false;">
+<body onload="Lich.Game.getInstance();" oncontextmenu="return false;">
     <canvas id="mapCanvas" style="display: none">
 		Minimap canvas failed to load
-	</canvas>
-    <canvas id="loadCanvas" style="display: none">
-		Load canvas failed to load
 	</canvas>
 </body>
 

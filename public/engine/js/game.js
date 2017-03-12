@@ -5,12 +5,11 @@ var Lich;
 (function (Lich) {
     ;
     var Game = (function () {
-        function Game(minimapCanvasId, loaderCanvasId) {
+        function Game() {
             this.initialized = false;
             this.playerReadyToAutosave = true;
             this.timerReadyToAutosave = false;
             var self = this;
-            Game.CURRENT_GAME = self;
             // stats
             var statsFPS = new Stats();
             statsFPS.showPanel(0);
@@ -152,7 +151,6 @@ var Lich;
                     self.stage.addChild(self.hitLayer);
                     self.stage.addChild(self.ui);
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
-                        // TODO
                         setTimeout(function () {
                             var idb = Lich.IndexedDB.getInstance();
                             var data = {
@@ -265,7 +263,8 @@ var Lich;
                 var delta = ticker.elapsedMS;
                 createjs.Tween.tick(delta, false);
                 if (self.initialized) {
-                    self.getWorld().update(delta);
+                    self.world.update(delta);
+                    self.ui.update(delta);
                 }
                 self.renderer.render(self.stage);
                 statsFPS.end();
@@ -277,6 +276,12 @@ var Lich;
         };
         Game.prototype.getSceneHeight = function () {
             return window.innerHeight; //this.renderer.view.height; 
+        };
+        Game.getInstance = function () {
+            if (!Game.INSTANCE) {
+                Game.INSTANCE = new Game();
+            }
+            return Game.INSTANCE;
         };
         ;
         return Game;

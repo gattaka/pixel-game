@@ -37,7 +37,7 @@ namespace Lich {
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
             minimapUI.y = UI.SCREEN_SPACING;
             self.minimapUI = minimapUI;
-            // self.addChild(minimapUI);
+            self.addChild(minimapUI);
 
             // mapa
             let mapUI = new MapUI(canvas.width, canvas.height, minimapRender);
@@ -45,7 +45,7 @@ namespace Lich {
             mapUI.y = UI.SCREEN_SPACING;
             self.mapUI = mapUI;
             mapUI.hide();
-            // self.addChild(mapUI);
+            self.addChild(mapUI);
 
             // Help btn
             if (!mobile) {
@@ -322,6 +322,11 @@ namespace Lich {
 
             }
 
+        }
+
+        update(delta:number) {
+            this.minimapUI.update(delta);
+            this.mapUI.update(delta);
         }
 
     }
