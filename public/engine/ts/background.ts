@@ -97,7 +97,7 @@ namespace Lich {
 
             // Dirt back
             self.dirtBackSprite.tilePosition.x = Utils.floor(((self.offsetX * Background.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
-            let tillRepeatPointY = Utils.floor(self.offsetY + Background.DIRT_START * Background.DIRT_MULT);
+            let tillRepeatPointY = Utils.floor((self.offsetY + Background.DIRT_START) * Background.DIRT_MULT);
             if (tillRepeatPointY < 0) {
                 self.dirtBackSprite.y = 0;
                 self.dirtBackSprite.tilePosition.y = Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight);
