@@ -61,22 +61,21 @@ var Lich;
         Parallax.prototype.shift = function () {
             var self = this;
             self.sprites.forEach(function (part, i) {
-                part.tilePosition.x = Lich.Utils.floor((self.offsetX * Parallax.MULT[i]) % self.sprites[i].originalWidth);
+                part.x = Lich.Utils.floor((self.offsetX * Parallax.MULT[i]) % self.sprites[i].originalWidth) - part.originalWidth;
                 part.y = Lich.Utils.floor(self.offsetY * Parallax.MULT[i] + Parallax.STARTS[i] * Parallax.MULT[i]);
             });
             // Dirt back
-            self.dirtBackSprite.tilePosition.x = Lich.Utils.floor(((self.offsetX * Parallax.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
+            self.dirtBackSprite.x = Lich.Utils.floor(((self.offsetX * Parallax.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
             var tillRepeatPointY = Lich.Utils.floor((self.offsetY + Parallax.DIRT_START) * Parallax.DIRT_MULT);
             if (tillRepeatPointY < 0) {
-                self.dirtBackSprite.y = 0;
-                self.dirtBackSprite.tilePosition.y = Lich.Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight);
+                self.dirtBackSprite.y = Lich.Utils.floor(tillRepeatPointY % self.dirtBackSprite.originalHeight) - self.dirtBackSprite.originalHeight;
             }
             else {
                 self.dirtBackSprite.y = tillRepeatPointY;
             }
             // Start pozadí hlíny kopíruje hlavní část pozadí
             // navíc je přilepen před počátek hlavní části
-            self.dirtBackStartSprite.tilePosition.x = self.dirtBackSprite.tilePosition.x;
+            self.dirtBackStartSprite.x = self.dirtBackSprite.x;
             self.dirtBackStartSprite.y = self.dirtBackSprite.y - self.dirtBackStartSprite.originalHeight;
             // Clouds
             // for (var i = 0; i < self.clouds.length; i++) {

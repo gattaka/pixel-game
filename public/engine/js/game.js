@@ -146,13 +146,13 @@ var Lich;
                         self.parallax = new Lich.Parallax();
                         self.stage.addChild(self.parallax);
                     }
+                    if (Lich.Resources.OPTMZ_UI_SHOW_ON)
+                        self.ui = new Lich.UI(self.renderer.view, tilesMap, mobile);
                     self.world = new Lich.World(self, tilesMap);
                     self.stage.addChild(self.world);
                     self.stage.addChild(self.hitLayer);
-                    if (Lich.Resources.OPTMZ_UI_SHOW_ON) {
-                        self.ui = new Lich.UI(self.renderer.view, tilesMap, mobile);
+                    if (Lich.Resources.OPTMZ_UI_SHOW_ON)
                         self.stage.addChild(self.ui);
-                    }
                     Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SAVE_WORLD, function () {
                         setTimeout(function () {
                             var idb = Lich.IndexedDB.getInstance();

@@ -99,7 +99,8 @@ var Lich;
             self.addChild(self.entitiesCont);
             // Weather
             self.weather = new Lich.Weather(game);
-            self.addChild(self.weather);
+            if (Lich.Resources.OPTMZ_WEATHER_SHOW_ON)
+                self.addChild(self.weather);
             // Fog cont
             self.fogSectorsCont = new PIXI.particles.ParticleContainer(Lich.Render.getFogContSizeW(self.game.getSceneWidth()) * Lich.Render.getFogContSizeH(self.game.getSceneHeight()), {
                 rotation: false,
@@ -1224,13 +1225,13 @@ var Lich;
                     }
                 }
             })();
-            self.render.handleTick();
-            self.weather.update(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)
                     enemy.handleTick(delta);
             });
+            self.weather.update(delta);
+            self.render.handleTick();
             // TODO cooldown - delta pro všechny položky spell v hráčovi a všech nepřátel
             var rmbCooldown = self.hero.spellCooldowns[Lich.SpellKey.SPELL_INTERACT_KEY];
             if (!rmbCooldown) {

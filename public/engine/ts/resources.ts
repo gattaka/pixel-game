@@ -95,6 +95,7 @@ namespace Lich {
         static OPTMZ_UI_SHOW_ON = true;
         static OPTMZ_FOG_SHOW_ON = true;
         static OPTMZ_FOG_PROCESS_ON = true;
+        static OPTMZ_WEATHER_SHOW_ON = false;
 
         static FONT = "expressway";
         static TEXT_COLOR = "#FF0";
@@ -568,7 +569,7 @@ namespace Lich {
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
             let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
             spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            let tilingSprite = new ParallaxSprite(spriteSheet, width, height ? height : spriteDef.height);
+            let tilingSprite = new ParallaxSprite(spriteSheet, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
             // tilingSprite.cacheAsBitmap = true;

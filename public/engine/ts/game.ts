@@ -201,13 +201,13 @@ namespace Lich {
                         self.parallax = new Parallax();
                         self.stage.addChild(self.parallax);
                     }
+                    if (Resources.OPTMZ_UI_SHOW_ON)
+                        self.ui = new UI(self.renderer.view, tilesMap, mobile);
                     self.world = new World(self, tilesMap);
                     self.stage.addChild(self.world);
                     self.stage.addChild(self.hitLayer);
-                    if (Resources.OPTMZ_UI_SHOW_ON) {
-                        self.ui = new UI(self.renderer.view, tilesMap, mobile);
+                    if (Resources.OPTMZ_UI_SHOW_ON)
                         self.stage.addChild(self.ui);
-                    }
 
                     EventBus.getInstance().registerConsumer(EventType.SAVE_WORLD, (): boolean => {
                         setTimeout(() => {

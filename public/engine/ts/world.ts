@@ -119,7 +119,8 @@ namespace Lich {
 
             // Weather
             self.weather = new Weather(game);
-            self.addChild(self.weather);
+            if (Resources.OPTMZ_WEATHER_SHOW_ON)
+                self.addChild(self.weather);
 
             // Fog cont
             self.fogSectorsCont = new PIXI.particles.ParticleContainer(
@@ -391,7 +392,7 @@ namespace Lich {
         private checkReveal() {
             if (!Resources.OPTMZ_FOG_PROCESS_ON)
                 return;
-                
+
             let self = this;
             let coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
 
@@ -1311,13 +1312,13 @@ namespace Lich {
                 }
             })();
 
-            self.render.handleTick();
-            self.weather.update(delta);
             self.hero.handleTick(delta);
             self.enemies.forEach(function (enemy) {
                 if (enemy)
                     enemy.handleTick(delta);
             });
+            self.weather.update(delta);
+            self.render.handleTick();
 
             // TODO cooldown - delta pro všechny položky spell v hráčovi a všech nepřátel
 
