@@ -1184,7 +1184,7 @@ var Lich;
                 for (var i = 0; i < self.bulletObjects.length; i++) {
                     var object = self.bulletObjects[i];
                     object.update(sDelta, self.game);
-                    if (object.isDone() || object.getCurrentAnimation() === "done") {
+                    if (object.isDone() || object.getCurrentAnimation() === Lich.AnimationKey[Lich.AnimationKey.ANM_BULLET_DONE_KEY]) {
                         self.bulletObjects.splice(i, 1);
                         self.entitiesCont.removeChild(object);
                     }
