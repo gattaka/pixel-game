@@ -120,18 +120,23 @@ namespace Lich {
                 }
             }
 
-            // data.fog = [];
-            // let serializeFogTree = (tree: FogTree) => {
-            //     if (tree.fractioned) {
-            //         serializeFogTree(tree.subTree1);
-            //         serializeFogTree(tree.subTree2);
-            //         serializeFogTree(tree.subTree3);
-            //         serializeFogTree(tree.subTree4);
-            //     } else {
-            //         data.fog.push([tree.x, tree.y, tree.value]);
-            //     }
-            // }
-            // serializeFogTree(tilesMap.fogTree);
+            last = tilesMap.fogRecord.getValue(0, 0);
+            count = 0; // 0 protože ještě jsem nic nenačetl
+            for (let y = 0; y < tilesMap.height; y++) {
+                for (let x = 0; x < tilesMap.width; x++) {
+                    let val = tilesMap.fogRecord.getValue(x, y);
+                    if (last !== val) {
+                        data.fog.push(count);
+                        data.fog.push(last);
+                        last = val;
+                        count = 1; // 1 protože už je načten
+                    } else {
+                        count++;
+                    }
+                }
+            }
+            data.fog.push(count);
+            data.fog.push(last);
 
             return data;
         }
@@ -217,19 +222,22 @@ namespace Lich {
                 };
             });
 
-            // async.load(() => {
-            //     EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
-            //     EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loading fog"));
-            // });
+            async.load(() => {
+                EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));
+                EventBus.getInstance().fireEvent(new StringEventPayload(EventType.LOAD_ITEM, "Loading fog"));
+            });
 
-            // async.load(() => {
-            //     tilesMap.fogTree = new FogTree(data.w / 2, data.h / 2);
-            //     if (data.fog)
-            //         for (let i = 0; i < data.fog.length; i++) {
-            //             let rec = data.fog[i];
-            //             tilesMap.fogTree.setValue(rec[0], rec[1], rec[2]);
-            //         }
-            // });
+            async.load(() => {
+                let count = 0;
+                for (let v = 0; v < data.fog.length; v += 2) {
+                    let amount = data.fog[v];
+                    let key = data.fog[v + 1];
+                    for (let i = 0; i < amount; i++) {
+                        tilesMap.fogRecord.setValue(count % data.w, Math.floor(count / data.w), key);
+                        count++;
+                    }
+                }
+            });
 
             async.load(() => {
                 EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.LOAD_PROGRESS, ++progress / total));

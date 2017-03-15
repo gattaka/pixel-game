@@ -21,6 +21,7 @@ var Lich;
         FogTile[FogTile["I_BB"] = 16] = "I_BB";
         FogTile[FogTile["I_BR"] = 17] = "I_BR";
     })(FogTile = Lich.FogTile || (Lich.FogTile = {}));
+    // Nepoužívá se
     var FogTree = (function () {
         function FogTree(
             // šířka tohoto (pod)prostoru

@@ -106,7 +106,7 @@ var Lich;
             for (var x = 0; x < fogInfo.countFogSecX; x++) {
                 for (var y = 0; y < fogInfo.countFogSecY; y++) {
                     var origSprite = self.sceneFogTilesMap.getValue(x, y);
-                    var fogElement = self.tilesMap.fogTree.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
+                    var fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
                     var updatedSprite = self.createFogTile(fogElement, origSprite);
                     if (!origSprite) {
                         updatedSprite.x = x * Lich.Resources.PARTS_SIZE;
@@ -350,7 +350,7 @@ var Lich;
             var ry = 2 * Math.floor(coord.y / 4);
             var fogTilesToReset = [];
             var rsc = Lich.Resources.getInstance();
-            var record = self.tilesMap.fogTree;
+            var record = self.tilesMap.fogRecord;
             var fogInfo = self.getFogInfo();
             var fogIndex = record.getValue(rx, ry);
             if (fogIndex != Lich.FogTile.I_MM) {

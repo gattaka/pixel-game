@@ -6,6 +6,7 @@ namespace Lich {
         BL, BB, BR, I_BL, I_BB, I_BR,
     }
 
+    // Nepoužívá se
     export class FogTree {
 
         private static TREES_COUNT = 0;

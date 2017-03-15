@@ -136,7 +136,7 @@ namespace Lich {
             for (let x = 0; x < fogInfo.countFogSecX; x++) {
                 for (let y = 0; y < fogInfo.countFogSecY; y++) {
                     let origSprite = self.sceneFogTilesMap.getValue(x, y);
-                    let fogElement = self.tilesMap.fogTree.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
+                    let fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
                     let updatedSprite = self.createFogTile(fogElement, origSprite);
                     if (!origSprite) {
                         updatedSprite.x = x * Resources.PARTS_SIZE;
@@ -423,7 +423,7 @@ namespace Lich {
             let fogTilesToReset = [];
 
             let rsc = Resources.getInstance();
-            let record = self.tilesMap.fogTree;
+            let record = self.tilesMap.fogRecord;
 
             let fogInfo = self.getFogInfo();
             let fogIndex = record.getValue(rx, ry);

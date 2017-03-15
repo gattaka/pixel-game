@@ -60,7 +60,7 @@ var Lich;
             // tiles to sudé Parts
             var rx = Math.floor(x / 2);
             var ry = Math.floor(y / 2);
-            var fog = this.tilesMap.fogTree.getValue(rx, ry);
+            var fog = this.tilesMap.fogRecord.getValue(rx, ry);
             if (fog != Lich.FogTile.I_MM) {
                 fill(new Lich.Color(0, 0, 0));
             }

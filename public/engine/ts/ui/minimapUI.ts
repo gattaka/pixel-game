@@ -59,7 +59,7 @@ namespace Lich {
             // tiles to sudé Parts
             var rx = Math.floor(x / 2);
             var ry = Math.floor(y / 2);
-            let fog: number = this.tilesMap.fogTree.getValue(rx, ry);
+            let fog: number = this.tilesMap.fogRecord.getValue(rx, ry);
             if (fog != FogTile.I_MM) {
                 fill(new Color(0, 0, 0));
             } else {
