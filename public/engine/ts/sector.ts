@@ -12,8 +12,11 @@ namespace Lich {
         }
 
         protected cacheInner(cont: PIXI.Container, oldRendered: PIXI.Sprite): PIXI.Sprite {
-            if (oldRendered)
+            if (oldRendered) {
                 this.removeChild(oldRendered);
+                // Dont forget to destroy dynamic textures you did create
+                oldRendered.texture.destroy();
+            }
 
             // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
             let renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);

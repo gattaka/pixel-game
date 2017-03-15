@@ -22,8 +22,11 @@ var Lich;
             return _this;
         }
         AbstractSector.prototype.cacheInner = function (cont, oldRendered) {
-            if (oldRendered)
+            if (oldRendered) {
                 this.removeChild(oldRendered);
+                // Dont forget to destroy dynamic textures you did create
+                oldRendered.texture.destroy();
+            }
             // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
             var renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);
             // instead of rendering your containerOfThings to the reeal scene, render it to the texture

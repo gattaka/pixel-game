@@ -66,6 +66,8 @@ namespace Lich {
             console.log("running");
 
             // Create the renderer
+            // This Render works by automatically managing webGLBatchs. 
+            // So no need for Sprite Batches or Sprite Clouds.
             self.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, {
                 antialias: false,
                 roundPixels: false,

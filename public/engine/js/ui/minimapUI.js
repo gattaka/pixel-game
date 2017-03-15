@@ -97,8 +97,8 @@ var Lich;
         ;
         return MinimapRender;
     }());
-    MinimapRender.MINIMAP_COOLDOWN = 30;
     Lich.MinimapRender = MinimapRender;
+    var UPDATE_DELAY = 1000;
     var MinimapUI = (function (_super) {
         __extends(MinimapUI, _super);
         function MinimapUI(mainCanvasWidth, mainCanvasHeight, mapRender) {
@@ -111,7 +111,7 @@ var Lich;
             _this.playerX = 0;
             _this.playerY = 0;
             _this.prepareUpdateTexture = false;
-            _this.prepareUpdateTextureCounter = MinimapUI.UPDATE_DELAY;
+            _this.prepareUpdateTextureCounter = UPDATE_DELAY;
             _this.adjustMinimapView = function () {
                 var self = _this;
                 // (1px mapy = 2 tiles reálu)
@@ -199,7 +199,7 @@ var Lich;
             if (this.prepareUpdateTexture) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = MinimapUI.UPDATE_DELAY;
+                    this.prepareUpdateTextureCounter = UPDATE_DELAY;
                     var texture = this.bitmap.texture.clone();
                     texture.update();
                     this.bitmap.texture.destroy();
@@ -212,7 +212,6 @@ var Lich;
         return MinimapUI;
     }(Lich.AbstractUI));
     MinimapUI.MAP_SIDE = 200;
-    MinimapUI.UPDATE_DELAY = 100;
     Lich.MinimapUI = MinimapUI;
     var MapUI = (function (_super) {
         __extends(MapUI, _super);
@@ -224,7 +223,7 @@ var Lich;
             _this.playerX = 0;
             _this.playerY = 0;
             _this.prepareUpdateTexture = false;
-            _this.prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
+            _this.prepareUpdateTextureCounter = UPDATE_DELAY;
             var self = _this;
             self.on("pointerdown", function () {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
@@ -278,7 +277,7 @@ var Lich;
             if (this.prepareUpdateTexture) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
+                    this.prepareUpdateTextureCounter = UPDATE_DELAY;
                     var texture = this.bitmap.texture.clone();
                     texture.update();
                     this.bitmap.texture.destroy();
@@ -289,6 +288,5 @@ var Lich;
         };
         return MapUI;
     }(Lich.AbstractUI));
-    MapUI.UPDATE_DELAY = 500;
     Lich.MapUI = MapUI;
 })(Lich || (Lich = {}));

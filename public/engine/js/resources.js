@@ -453,9 +453,13 @@ var Lich;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
             var spriteName = self.parallaxDefs[Lich.ParallaxKey[key]];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            var spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            var tilingSprite = new ParallaxSprite(spriteSheet, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
+            var texture = this.getFromTextureCache(stringSheetKey, spriteName, 1, 1);
+            if (!texture) {
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+                texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+                this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
+            }
+            var tilingSprite = new ParallaxSprite(texture, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
             // tilingSprite.cacheAsBitmap = true;
@@ -466,8 +470,12 @@ var Lich;
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[sheetKey];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-            texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            var texture = this.getFromTextureCache(stringSheetKey, spriteName, 1, 1);
+            if (!texture) {
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+                texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+                this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
+            }
             if (originalSprite) {
                 originalSprite.texture = texture;
                 return originalSprite;
@@ -501,8 +509,12 @@ var Lich;
                 for (var i = 0; i < xFrames; i++) {
                     if (frames.length >= animationDef.frames)
                         break;
-                    var texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-                    texture.frame = new PIXI.Rectangle(spriteDef.x + i * animationDef.width, spriteDef.y + j * animationDef.height, animationDef.width, animationDef.height);
+                    var texture = this.getFromTextureCache(stringSheetKey, animationDef.spriteName, j * xFrames + i, 1);
+                    if (!texture) {
+                        texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+                        texture.frame = new PIXI.Rectangle(spriteDef.x + i * animationDef.width, spriteDef.y + j * animationDef.height, animationDef.width, animationDef.height);
+                        this.putInTextureCache(stringSheetKey, animationDef.spriteName, j * xFrames + i, 1, texture);
+                    }
                     frames.push(texture);
                 }
             }
@@ -527,7 +539,7 @@ var Lich;
     Resources.OPTMZ_UI_SHOW_ON = true;
     Resources.OPTMZ_FOG_SHOW_ON = true;
     Resources.OPTMZ_FOG_PROCESS_ON = true;
-    Resources.OPTMZ_WEATHER_SHOW_ON = false;
+    Resources.OPTMZ_WEATHER_SHOW_ON = true;
     Resources.FONT = "expressway";
     Resources.TEXT_COLOR = "#FF0";
     Resources.OUTLINE_COLOR = "#000";

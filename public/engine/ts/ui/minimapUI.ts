@@ -2,8 +2,6 @@ namespace Lich {
 
     export class MinimapRender {
 
-        static MINIMAP_COOLDOWN = 30;
-
         public canvas: HTMLCanvasElement;
         public tilesMap: TilesMap;
 
@@ -96,10 +94,11 @@ namespace Lich {
 
     }
 
+    const UPDATE_DELAY = 1000;
+
     export class MinimapUI extends AbstractUI {
 
         static MAP_SIDE = 200;
-        static UPDATE_DELAY = 100;
 
         playerIcon: PIXI.Sprite;
         bitmap: PIXI.Sprite;
@@ -110,7 +109,7 @@ namespace Lich {
         playerY: number = 0;
 
         private prepareUpdateTexture = false;
-        private prepareUpdateTextureCounter = MinimapUI.UPDATE_DELAY;
+        private prepareUpdateTextureCounter = UPDATE_DELAY;
 
         constructor(private mainCanvasWidth: number, private mainCanvasHeight: number, private mapRender: MinimapRender) {
             super(MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
@@ -214,7 +213,7 @@ namespace Lich {
             if (this.prepareUpdateTexture) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = MinimapUI.UPDATE_DELAY;
+                    this.prepareUpdateTextureCounter = UPDATE_DELAY;
                     let texture = this.bitmap.texture.clone();
                     texture.update();
                     this.bitmap.texture.destroy();
@@ -229,8 +228,6 @@ namespace Lich {
 
     export class MapUI extends AbstractUI {
 
-        static UPDATE_DELAY = 500;
-
         playerIcon: PIXI.Sprite;
         bitmap: PIXI.Sprite;
 
@@ -240,7 +237,7 @@ namespace Lich {
         playerY: number = 0;
 
         private prepareUpdateTexture = false;
-        private prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
+        private prepareUpdateTextureCounter = UPDATE_DELAY;
 
         constructor(mainCanvasWidth: number, mainCanvasHeight: number, private mapRender: MinimapRender) {
             super(mainCanvasWidth - UI.SCREEN_SPACING * 2, mainCanvasHeight - UI.SCREEN_SPACING * 2);
@@ -308,7 +305,7 @@ namespace Lich {
             if (this.prepareUpdateTexture) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = MapUI.UPDATE_DELAY;
+                    this.prepareUpdateTextureCounter = UPDATE_DELAY;
                     let texture = this.bitmap.texture.clone();
                     texture.update();
                     this.bitmap.texture.destroy();

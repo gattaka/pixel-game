@@ -95,7 +95,7 @@ namespace Lich {
         static OPTMZ_UI_SHOW_ON = true;
         static OPTMZ_FOG_SHOW_ON = true;
         static OPTMZ_FOG_PROCESS_ON = true;
-        static OPTMZ_WEATHER_SHOW_ON = false;
+        static OPTMZ_WEATHER_SHOW_ON = true;
 
         static FONT = "expressway";
         static TEXT_COLOR = "#FF0";
@@ -567,9 +567,13 @@ namespace Lich {
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_BGR_KEY];
             let spriteName = self.parallaxDefs[ParallaxKey[key]];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            let spriteSheet = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-            spriteSheet.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
-            let tilingSprite = new ParallaxSprite(spriteSheet, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
+            let texture = this.getFromTextureCache(stringSheetKey, spriteName, 1, 1);
+            if (!texture) {
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+                texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+                this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
+            }
+            let tilingSprite = new ParallaxSprite(texture, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
             tilingSprite.originalHeight = spriteDef.height;
             tilingSprite.originalWidth = spriteDef.width;
             // tilingSprite.cacheAsBitmap = true;
@@ -580,8 +584,12 @@ namespace Lich {
             let self = this;
             let stringSheetKey = SpritesheetKey[sheetKey];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
-            let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-            texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+            let texture = this.getFromTextureCache(stringSheetKey, spriteName, 1, 1);
+            if (!texture) {
+                texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+                texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
+                this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
+            }
             if (originalSprite) {
                 originalSprite.texture = texture;
                 return originalSprite;
@@ -614,12 +622,16 @@ namespace Lich {
                 for (let i = 0; i < xFrames; i++) {
                     if (frames.length >= animationDef.frames)
                         break;
-                    let texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-                    texture.frame = new PIXI.Rectangle(
-                        spriteDef.x + i * animationDef.width,
-                        spriteDef.y + j * animationDef.height,
-                        animationDef.width,
-                        animationDef.height);
+                    let texture = this.getFromTextureCache(stringSheetKey, animationDef.spriteName, j * xFrames + i, 1);
+                    if (!texture) {
+                        texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
+                        texture.frame = new PIXI.Rectangle(
+                            spriteDef.x + i * animationDef.width,
+                            spriteDef.y + j * animationDef.height,
+                            animationDef.width,
+                            animationDef.height);
+                        this.putInTextureCache(stringSheetKey, animationDef.spriteName, j * xFrames + i, 1, texture);
+                    }
                     frames.push(texture);
                 }
             }
