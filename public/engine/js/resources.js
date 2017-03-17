@@ -537,7 +537,7 @@ var Lich;
      */
     Resources.OPTMZ_PARALLAX_SHOW_ON = true;
     Resources.OPTMZ_UI_SHOW_ON = true;
-    Resources.OPTMZ_FOG_SHOW_ON = true;
+    Resources.OPTMZ_FOG_SHOW_ON = false;
     Resources.OPTMZ_FOG_PROCESS_ON = true;
     Resources.OPTMZ_WEATHER_SHOW_ON = true;
     Resources.FONT = "expressway";

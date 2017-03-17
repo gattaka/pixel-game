@@ -278,10 +278,11 @@ var Lich;
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
                     this.prepareUpdateTextureCounter = UPDATE_DELAY;
-                    var texture = this.bitmap.texture.clone();
-                    texture.update();
-                    this.bitmap.texture.destroy();
-                    this.bitmap.texture = texture;
+                    this.bitmap.texture.update();
+                    // let texture = this.bitmap.texture.clone();
+                    // texture.update();
+                    // this.bitmap.texture.destroy();
+                    // this.bitmap.texture = texture;
                     this.prepareUpdateTexture = false;
                 }
             }
