@@ -10,53 +10,24 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Lich;
 (function (Lich) {
-    var MinimapRender = (function () {
-        function MinimapRender(mainCanvasWidth, mainCanvasHeight, tilesMap) {
-            var self = this;
-            self.canvas = document.getElementById("mapCanvas");
-            var ctx = self.canvas.getContext("2d");
-            self.tilesMap = tilesMap;
-            self.canvas.width = self.tilesMap.width / 2;
-            self.canvas.height = self.tilesMap.height / 2;
-            self.canvas.style.backgroundColor = "#eee";
-            var imgData = ctx.createImageData(self.tilesMap.width / 2, self.tilesMap.height / 2); // width x height
-            (function () {
-                for (var y = 0; y < self.tilesMap.height; y += 2) {
-                    for (var x = 0; x < self.tilesMap.width; x += 2) {
-                        self.drawMinimapTile(imgData, x, y);
-                    }
-                }
-                ctx.putImageData(imgData, 0, 0);
-            })();
-            var listener = function (payload) {
-                var imgData = ctx.createImageData(1, 1);
-                var _loop_1 = function (i) {
-                    self.processFillBySurface(payload.x, payload.y, function (color) {
-                        imgData.data[i + 0] = color.r;
-                        imgData.data[i + 1] = color.g;
-                        imgData.data[i + 2] = color.b;
-                        imgData.data[i + 3] = 250;
-                    });
-                };
-                for (var i = 0; i < imgData.data.length; i += 4) {
-                    _loop_1(i);
-                }
-                ;
-                ctx.putImageData(imgData, payload.x / 2, payload.y / 2);
-                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MINIMAP_UPDATE));
-                return false;
-            };
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, listener);
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_REVEAL, function (payload) {
-                for (var y = 0; y < 4; y += 2) {
-                    for (var x = 0; x < 4; x += 2) {
-                        listener(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, payload.x + x, payload.y + y));
-                    }
-                }
-                return false;
-            });
+    var AbstractMapUIRenderer = (function () {
+        function AbstractMapUIRenderer(tilesMap, canvasDOMId, width, height) {
+            this.tilesMap = tilesMap;
+            this.width = width;
+            this.height = height;
+            this.canvas = document.getElementById(canvasDOMId);
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.ctx = this.canvas.getContext("2d");
         }
-        MinimapRender.prototype.processFillBySurface = function (x, y, fill) {
+        /**
+         * Připraví kresbu pixelu mapy dle x,y souřadnic mapy
+         *
+         * @param x souřadnice v mapě světa (TILEs)
+         * @param y souřadnice v mapě světa (TILEs)
+         * @param fill callback, který je volán s barvou, která byla zjištěna pro dané souřadnice
+         */
+        AbstractMapUIRenderer.prototype.processFillBySurface = function (x, y, fill) {
             // tiles to sudé Parts
             var rx = Math.floor(x / 2);
             var ry = Math.floor(y / 2);
@@ -82,7 +53,97 @@ var Lich;
                 }
             }
         };
-        MinimapRender.prototype.drawMinimapTile = function (imgData, x, y) {
+        return AbstractMapUIRenderer;
+    }());
+    var MinimapUIRender = (function (_super) {
+        __extends(MinimapUIRender, _super);
+        function MinimapUIRender(tilesMap) {
+            var _this = _super.call(this, tilesMap, "minimapCanvas", MinimapUIRender.MAP_SIDE, MinimapUIRender.MAP_SIDE) || this;
+            _this.shiftX = 0;
+            _this.shiftY = 0;
+            _this.playerX = 0;
+            _this.playerY = 0;
+            var self = _this;
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, function (payload) {
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MINIMAP_UPDATE));
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_REVEAL, function (payload) {
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MINIMAP_UPDATE));
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
+                self.shiftX = payload.payload;
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MINIMAP_UPDATE));
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_Y, function (payload) {
+                self.shiftY = payload.payload;
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MINIMAP_UPDATE));
+                return false;
+            });
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, function (payload) {
+                self.playerX = payload.x;
+                self.playerY = payload.y;
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MINIMAP_UPDATE));
+                return false;
+            });
+            return _this;
+        }
+        MinimapUIRender.prototype.update = function () {
+            var self = this;
+            // (1px mapy = 2 tiles reálu)
+            var xScale = 2 * Lich.Resources.TILE_SIZE;
+            var yScale = 2 * Lich.Resources.TILE_SIZE;
+            var miniXShift = self.shiftX / xScale;
+            var miniYShift = self.shiftY / yScale;
+            var miniXPlayer = self.playerX / xScale;
+            var miniYPlayer = self.playerY / yScale;
+            var viewX;
+            // mapRender.tilesMap.width je v tiles, já tady počítám v parts (/2)
+            if (miniXPlayer - miniXShift >= self.width / 2 && miniXPlayer - miniXShift <= self.tilesMap.width / 2 - self.width / 2) {
+                self.iconX = self.width / 2;
+                viewX = miniXPlayer - miniXShift - self.width / 2;
+            }
+            else {
+                if (miniXPlayer - miniXShift > self.width) {
+                    self.iconX = self.width / 2 + miniXPlayer - miniXShift - (self.tilesMap.width / 2 - self.width / 2);
+                    viewX = self.tilesMap.width / 2 - self.width;
+                }
+                else {
+                    self.iconX = miniXPlayer - miniXShift;
+                    viewX = 0;
+                }
+            }
+            var viewY;
+            // mapRender.tilesMap.height je v tiles, já tady počítám v parts (/2)
+            if (miniYPlayer - miniYShift >= self.height / 2 && miniYPlayer - miniYShift <= self.tilesMap.height / 2 - self.height / 2) {
+                self.iconY = self.height / 2;
+                viewY = miniYPlayer - miniYShift - self.height / 2;
+            }
+            else {
+                if (miniYPlayer - miniYShift > self.height) {
+                    self.iconY = self.height / 2 + miniYPlayer - miniYShift - (self.tilesMap.height / 2 - self.height / 2);
+                    viewY = self.tilesMap.height / 2 - self.height;
+                }
+                else {
+                    self.iconY = miniYPlayer - miniYShift;
+                    viewY = 0;
+                }
+            }
+            // pozice minimapy
+            var imgData = this.ctx.createImageData(this.width, this.height); // width x height
+            (function () {
+                for (var y = 0; y < self.height; y++) {
+                    for (var x = 0; x < self.width; x++) {
+                        self.drawMinimapTile(imgData, (Math.floor(viewX) + x) * 2, (Math.floor(viewY) + y) * 2);
+                    }
+                }
+                self.ctx.putImageData(imgData, 0, 0);
+            })();
+        };
+        ;
+        MinimapUIRender.prototype.drawMinimapTile = function (imgData, x, y) {
             var self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
@@ -95,72 +156,17 @@ var Lich;
             self.processFillBySurface(x, y, fill);
         };
         ;
-        return MinimapRender;
-    }());
-    Lich.MinimapRender = MinimapRender;
-    var UPDATE_DELAY = 1000;
+        return MinimapUIRender;
+    }(AbstractMapUIRenderer));
+    MinimapUIRender.MAP_SIDE = 200;
+    Lich.MinimapUIRender = MinimapUIRender;
     var MinimapUI = (function (_super) {
         __extends(MinimapUI, _super);
-        function MinimapUI(mainCanvasWidth, mainCanvasHeight, mapRender) {
-            var _this = _super.call(this, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE) || this;
-            _this.mainCanvasWidth = mainCanvasWidth;
-            _this.mainCanvasHeight = mainCanvasHeight;
+        function MinimapUI(mapRender) {
+            var _this = _super.call(this, MinimapUIRender.MAP_SIDE, MinimapUIRender.MAP_SIDE) || this;
             _this.mapRender = mapRender;
-            _this.shiftX = 0;
-            _this.shiftY = 0;
-            _this.playerX = 0;
-            _this.playerY = 0;
             _this.prepareUpdateTexture = false;
-            _this.prepareUpdateTextureCounter = UPDATE_DELAY;
-            _this.adjustMinimapView = function () {
-                var self = _this;
-                // (1px mapy = 2 tiles reálu)
-                var xScale = 2 * Lich.Resources.TILE_SIZE;
-                var yScale = 2 * Lich.Resources.TILE_SIZE;
-                var miniXShift = self.shiftX / xScale;
-                var miniYShift = self.shiftY / yScale;
-                var miniXPlayer = self.playerX / xScale;
-                var miniYPlayer = self.playerY / yScale;
-                var miniCanvasW = self.mainCanvasWidth / xScale;
-                var miniCanvasH = self.mainCanvasHeight / yScale;
-                var iconX, viewX;
-                // mapRender.tilesMap.width je v tiles, já tady počítám v parts (/2)
-                if (miniXPlayer - miniXShift >= self.fixedWidth / 2 && miniXPlayer - miniXShift <= self.mapRender.tilesMap.width / 2 - self.fixedWidth / 2) {
-                    iconX = self.fixedWidth / 2;
-                    viewX = miniXPlayer - miniXShift - self.fixedWidth / 2;
-                }
-                else {
-                    if (miniXPlayer - miniXShift > self.fixedWidth / 2) {
-                        iconX = self.fixedWidth / 2 + miniXPlayer - miniXShift - (self.mapRender.tilesMap.width / 2 - self.fixedWidth / 2);
-                        viewX = self.mapRender.tilesMap.width / 2 - self.fixedWidth;
-                    }
-                    else {
-                        iconX = miniXPlayer - miniXShift;
-                        viewX = 0;
-                    }
-                }
-                var iconY, viewY;
-                // mapRender.tilesMap.height je v tiles, já tady počítám v parts (/2)
-                if (miniYPlayer - miniYShift >= self.fixedHeight / 2 && miniYPlayer - miniYShift <= self.mapRender.tilesMap.height / 2 - self.fixedHeight / 2) {
-                    iconY = self.fixedHeight / 2;
-                    viewY = miniYPlayer - miniYShift - self.fixedHeight / 2;
-                }
-                else {
-                    if (miniYPlayer - miniYShift > self.fixedHeight / 2) {
-                        iconY = self.fixedHeight / 2 + miniYPlayer - miniYShift - (self.mapRender.tilesMap.height / 2 - self.fixedHeight / 2);
-                        viewY = self.mapRender.tilesMap.height / 2 - self.fixedHeight;
-                    }
-                    else {
-                        iconY = miniYPlayer - miniYShift;
-                        viewY = 0;
-                    }
-                }
-                // pozice ikony
-                self.playerIcon.x = iconX - self.playerIcon.fixedWidth / 2;
-                self.playerIcon.y = iconY - self.playerIcon.fixedHeight / 2;
-                // pozice minimapy
-                self.bitmap.texture.frame = new PIXI.Rectangle(viewX, viewY, MinimapUI.MAP_SIDE, MinimapUI.MAP_SIDE);
-            };
+            _this.prepareUpdateTextureCounter = MinimapUI.MINIMAP_UPDATE_DELAY;
             var self = _this;
             var border = new PIXI.Graphics();
             border.lineStyle(1, 0x000000, 1);
@@ -177,42 +183,87 @@ var Lich;
                 _this.prepareUpdateTexture = true;
                 return false;
             });
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
-                self.shiftX = payload.payload;
-                self.adjustMinimapView();
-                return false;
-            });
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_Y, function (payload) {
-                self.shiftY = payload.payload;
-                self.adjustMinimapView();
-                return false;
-            });
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.PLAYER_POSITION_CHANGE, function (payload) {
-                self.playerX = payload.x;
-                self.playerY = payload.y;
-                self.adjustMinimapView();
-                return false;
-            });
             return _this;
         }
         MinimapUI.prototype.update = function (delta) {
             if (this.prepareUpdateTexture) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = UPDATE_DELAY;
+                    this.prepareUpdateTextureCounter = MinimapUI.MINIMAP_UPDATE_DELAY;
+                    this.mapRender.update();
                     var texture = this.bitmap.texture.clone();
                     texture.update();
                     this.bitmap.texture.destroy();
                     this.bitmap.texture = texture;
                     this.prepareUpdateTexture = false;
-                    this.adjustMinimapView();
+                    this.playerIcon.x = this.mapRender.iconX - this.playerIcon.fixedWidth / 2;
+                    this.playerIcon.y = this.mapRender.iconY - this.playerIcon.fixedHeight / 2;
                 }
             }
         };
         return MinimapUI;
     }(Lich.AbstractUI));
-    MinimapUI.MAP_SIDE = 200;
+    MinimapUI.MINIMAP_UPDATE_DELAY = 50;
     Lich.MinimapUI = MinimapUI;
+    var MapUIRender = (function (_super) {
+        __extends(MapUIRender, _super);
+        function MapUIRender(tilesMap) {
+            var _this = _super.call(this, tilesMap, "mapCanvas", tilesMap.width / 2, tilesMap.height / 2) || this;
+            var self = _this;
+            var imgData = _this.ctx.createImageData(_this.width, _this.height); // width x height
+            (function () {
+                for (var y = 0; y < self.tilesMap.height; y += 2) {
+                    for (var x = 0; x < self.tilesMap.width; x += 2) {
+                        self.drawMinimapTile(imgData, x, y);
+                    }
+                }
+                self.ctx.putImageData(imgData, 0, 0);
+            })();
+            var listener = function (payload) {
+                var imgData = _this.ctx.createImageData(1, 1);
+                var _loop_1 = function (i) {
+                    self.processFillBySurface(payload.x, payload.y, function (color) {
+                        imgData.data[i + 0] = color.r;
+                        imgData.data[i + 1] = color.g;
+                        imgData.data[i + 2] = color.b;
+                        imgData.data[i + 3] = 250;
+                    });
+                };
+                for (var i = 0; i < imgData.data.length; i += 4) {
+                    _loop_1(i);
+                }
+                ;
+                self.ctx.putImageData(imgData, payload.x / 2, payload.y / 2);
+                Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MAP_UPDATE));
+                return false;
+            };
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, listener);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_REVEAL, function (payload) {
+                for (var y = 0; y < 4; y += 2) {
+                    for (var x = 0; x < 4; x += 2) {
+                        listener(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, payload.x + x, payload.y + y));
+                    }
+                }
+                return false;
+            });
+            return _this;
+        }
+        MapUIRender.prototype.drawMinimapTile = function (imgData, x, y) {
+            var self = this;
+            if (typeof imgData.counter === "undefined" || imgData.counter === null)
+                imgData.counter = 0;
+            var fill = function (color) {
+                imgData.data[imgData.counter++] = color.r; // R
+                imgData.data[imgData.counter++] = color.g; // G
+                imgData.data[imgData.counter++] = color.b; // B
+                imgData.data[imgData.counter++] = color.a != undefined ? color.a : 250; // A
+            };
+            self.processFillBySurface(x, y, fill);
+        };
+        ;
+        return MapUIRender;
+    }(AbstractMapUIRenderer));
+    Lich.MapUIRender = MapUIRender;
     var MapUI = (function (_super) {
         __extends(MapUI, _super);
         function MapUI(mainCanvasWidth, mainCanvasHeight, mapRender) {
@@ -223,7 +274,7 @@ var Lich;
             _this.playerX = 0;
             _this.playerY = 0;
             _this.prepareUpdateTexture = false;
-            _this.prepareUpdateTextureCounter = UPDATE_DELAY;
+            _this.prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;
             var self = _this;
             self.on("pointerdown", function () {
                 Lich.Mixer.playSound(Lich.SoundKey.SND_CLICK_KEY);
@@ -240,8 +291,8 @@ var Lich;
             self.playerIcon.fixedWidth = self.playerIcon.getBounds().width;
             self.playerIcon.fixedHeight = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
-            self.bitmap.scale.x = (mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2) / mapRender.canvas.width;
-            self.bitmap.scale.y = (mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2) / mapRender.canvas.height;
+            self.bitmap.scale.x = (mainCanvasWidth - Lich.UI.SCREEN_SPACING * 2) / mapRender.width;
+            self.bitmap.scale.y = (mainCanvasHeight - Lich.UI.SCREEN_SPACING * 2) / mapRender.height;
             var adjustPlayerIcon = function () {
                 // musí se sečíst screen poloha hráče s map-offset a vydělit poměrem 1px mapy na reál (1px mapy = 2 tiles reálu)
                 // to celé se pak musí ještě vynásobit škálou, kterou je mapa zmenšena/zvětšna pro celoobrazovkové zobrazení
@@ -251,7 +302,7 @@ var Lich;
                 self.playerIcon.x -= self.playerIcon.fixedWidth / 2;
                 self.playerIcon.y -= self.playerIcon.fixedHeight / 2;
             };
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MINIMAP_UPDATE, function () {
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_UPDATE, function () {
                 _this.prepareUpdateTexture = true;
                 return false;
             });
@@ -277,17 +328,18 @@ var Lich;
             if (this.prepareUpdateTexture) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = UPDATE_DELAY;
+                    this.prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;
                     this.bitmap.texture.update();
-                    // let texture = this.bitmap.texture.clone();
-                    // texture.update();
-                    // this.bitmap.texture.destroy();
-                    // this.bitmap.texture = texture;
+                    var texture = this.bitmap.texture.clone();
+                    texture.update();
+                    this.bitmap.texture.destroy();
+                    this.bitmap.texture = texture;
                     this.prepareUpdateTexture = false;
                 }
             }
         };
         return MapUI;
     }(Lich.AbstractUI));
+    MapUI.MAP_UPDATE_DELAY = 500;
     Lich.MapUI = MapUI;
 })(Lich || (Lich = {}));

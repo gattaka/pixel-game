@@ -29,18 +29,21 @@ namespace Lich {
 
             let self = this;
 
-            // Minimap render
-            let minimapRender = new MinimapRender(canvas.width, canvas.height, tilesMap)
+            // Map render
+            let minimapRender = new MinimapUIRender(tilesMap)
 
             // Minimapa
-            let minimapUI = new MinimapUI(canvas.width, canvas.height, minimapRender);
+            let minimapUI = new MinimapUI(minimapRender);
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
             minimapUI.y = UI.SCREEN_SPACING;
             self.minimapUI = minimapUI;
             self.addChild(minimapUI);
 
+            // Map render
+            let mapRender = new MapUIRender(tilesMap)
+
             // mapa
-            let mapUI = new MapUI(canvas.width, canvas.height, minimapRender);
+            let mapUI = new MapUI(canvas.width, canvas.height, mapRender);
             mapUI.x = UI.SCREEN_SPACING;
             mapUI.y = UI.SCREEN_SPACING;
             self.mapUI = mapUI;

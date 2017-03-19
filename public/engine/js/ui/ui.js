@@ -16,16 +16,18 @@ var Lich;
             var _this = _super.call(this) || this;
             _this.canvas = canvas;
             var self = _this;
-            // Minimap render
-            var minimapRender = new Lich.MinimapRender(canvas.width, canvas.height, tilesMap);
+            // Map render
+            var minimapRender = new Lich.MinimapUIRender(tilesMap);
             // Minimapa
-            var minimapUI = new Lich.MinimapUI(canvas.width, canvas.height, minimapRender);
+            var minimapUI = new Lich.MinimapUI(minimapRender);
             minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
             minimapUI.y = UI.SCREEN_SPACING;
             self.minimapUI = minimapUI;
             self.addChild(minimapUI);
+            // Map render
+            var mapRender = new Lich.MapUIRender(tilesMap);
             // mapa
-            var mapUI = new Lich.MapUI(canvas.width, canvas.height, minimapRender);
+            var mapUI = new Lich.MapUI(canvas.width, canvas.height, mapRender);
             mapUI.x = UI.SCREEN_SPACING;
             mapUI.y = UI.SCREEN_SPACING;
             self.mapUI = mapUI;

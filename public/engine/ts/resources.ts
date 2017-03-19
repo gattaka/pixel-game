@@ -93,7 +93,7 @@ namespace Lich {
 
         static OPTMZ_PARALLAX_SHOW_ON = true;
         static OPTMZ_UI_SHOW_ON = true;
-        static OPTMZ_FOG_SHOW_ON = false;
+        static OPTMZ_FOG_SHOW_ON = true;
         static OPTMZ_FOG_PROCESS_ON = true;
         static OPTMZ_WEATHER_SHOW_ON = true;
 

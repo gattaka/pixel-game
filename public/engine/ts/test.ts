@@ -35,54 +35,96 @@ namespace Lich {
 
             let stage = new PIXI.Container();
 
-            var testShader = new PIXI.Filter(
-                `attribute vec3 aVertexPosition;
-                attribute vec4 aVertexColor;
-                
-                uniform mat4 uMVMatrix;
-                uniform mat4 uPMatrix;
-                
-                varying lowp vec4 vColor;
-                
-                void main(void) {
-                    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-                    vColor = aVertexColor;
-                }`,
-                `varying lowp vec4 vColor;
+            // var testShader = new PIXI.Filter(
+            //     `attribute vec3 aVertexPosition;
+            //     attribute vec4 aVertexColor;
 
-                void main(void) {
-                    gl_FragColor = vColor;
-                }`);
+            //     uniform mat4 uMVMatrix;
+            //     uniform mat4 uPMatrix;
 
-            // "nosný" sprite
-            var sprite = PIXI.Sprite.fromImage("http://www.goodboydigital.com/pixijs/pixi_v3_github-pad.png");
-            sprite.fixedWidth = 200;
-            sprite.fixedHeight = 200;
-            sprite.x = 50;
-            sprite.y = 50;
-            sprite.filters = [testShader];
-            stage.addChild(sprite);
+            //     varying lowp vec4 vColor;
 
-            var vertices = [
-                1.0, 1.0, 0.0,
-                -1.0, 1.0, 0.0,
-                1.0, -1.0, 0.0,
-                -1.0, -1.0, 0.0
-            ];
+            //     void main(void) {
+            //         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+            //         vColor = aVertexColor;
+            //     }`,
+            //     `varying lowp vec4 vColor;
 
-            var colors = [
-                1.0, 1.0, 1.0, 1.0,    // white
-                1.0, 0.0, 0.0, 1.0,    // red
-                0.0, 1.0, 0.0, 1.0,    // green
-                0.0, 0.0, 1.0, 1.0     // blue
-            ];
+            //     void main(void) {
+            //         gl_FragColor = vColor;
+            //     }`);
+
+            // // "nosný" sprite
+            // var sprite = PIXI.Sprite.fromImage("http://www.goodboydigital.com/pixijs/pixi_v3_github-pad.png");
+            // sprite.fixedWidth = 200;
+            // sprite.fixedHeight = 200;
+            // sprite.x = 50;
+            // sprite.y = 50;
+            // sprite.filters = [testShader];
+            // stage.addChild(sprite);
+
+            // var vertices = [
+            //     1.0, 1.0, 0.0,
+            //     -1.0, 1.0, 0.0,
+            //     1.0, -1.0, 0.0,
+            //     -1.0, -1.0, 0.0
+            // ];
+
+            // var colors = [
+            //     1.0, 1.0, 1.0, 1.0,    // white
+            //     1.0, 0.0, 0.0, 1.0,    // red
+            //     0.0, 1.0, 0.0, 1.0,    // green
+            //     0.0, 0.0, 1.0, 1.0     // blue
+            // ];
+
+            const interval = 500;
+            const side = 200;
+            const size = 1;
+            let count = interval;
+
+            let g = new PIXI.Graphics();
+            stage.addChild(g);
+            g.beginFill(0xffffff);
+            g.drawRect(0, 0, side, side);
+            g.fixedHeight = side;
+            g.fixedWidth = side;
+            g.x = 100;
+            g.y = 100;
+
+            let randColorValue = () => {
+                return Math.floor(Math.random() * 256);
+            }
+
+            let randColor = () => {
+                return PIXI.utils.rgb2hex([randColorValue(), randColorValue(), randColorValue()]);
+            }
+
+            let iter = 0;
+            let filter = new PIXI.filters.ColorMatrixFilter();
+            g.filters = [filter];
 
             let ticker = PIXI.ticker.shared;
             ticker.add(() => {
                 stats.begin();
 
-                testShader.uniforms.vertices = new Float32Array(vertices);
-                testShader.uniforms.colors = new Float32Array(colors);
+                // testShader.uniforms.vertices = new Float32Array(vertices);
+                // testShader.uniforms.colors = new Float32Array(colors);
+
+                count -= ticker.elapsedMS;
+                if (count <= 0) {
+                    let arr = [];
+                    for (let y = 0; y < side; y++) {
+                        arr[y] = [];
+                        for (let x = 0; x < side; x++) {
+                            arr[y][x] = randColor();
+                        }
+                    }
+
+                }
+
+                iter += 0.1;
+
+
 
                 renderer.render(stage);
                 stats.end();

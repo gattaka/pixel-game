@@ -37,9 +37,10 @@ var Lich;
         EventType[EventType["WORKSTATION_CHANGE"] = 22] = "WORKSTATION_CHANGE";
         EventType[EventType["WORKSTATION_UNREACHABLE"] = 23] = "WORKSTATION_UNREACHABLE";
         EventType[EventType["MINIMAP_UPDATE"] = 24] = "MINIMAP_UPDATE";
-        EventType[EventType["RECIPES_CHANGE"] = 25] = "RECIPES_CHANGE";
-        EventType[EventType["SURFACE_REVEAL"] = 26] = "SURFACE_REVEAL";
-        EventType[EventType["INV_CHANGE"] = 27] = "INV_CHANGE";
+        EventType[EventType["MAP_UPDATE"] = 25] = "MAP_UPDATE";
+        EventType[EventType["RECIPES_CHANGE"] = 26] = "RECIPES_CHANGE";
+        EventType[EventType["SURFACE_REVEAL"] = 27] = "SURFACE_REVEAL";
+        EventType[EventType["INV_CHANGE"] = 28] = "INV_CHANGE";
     })(EventType = Lich.EventType || (Lich.EventType = {}));
     var EventPayload = (function () {
         function EventPayload(type) {
