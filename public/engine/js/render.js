@@ -105,14 +105,17 @@ var Lich;
             // projdi sektory, nepoužité dealokuj, nové naplň
             for (var x = 0; x < fogInfo.countFogSecX; x++) {
                 for (var y = 0; y < fogInfo.countFogSecY; y++) {
-                    var origSprite = self.sceneFogTilesMap.getValue(x, y);
+                    var fogSprite = self.sceneFogTilesMap.getValue(x, y);
                     var fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
-                    var updatedSprite = self.createFogTile(fogElement, origSprite);
-                    if (!origSprite) {
-                        updatedSprite.x = x * Lich.Resources.PARTS_SIZE;
-                        updatedSprite.y = y * Lich.Resources.PARTS_SIZE;
-                        self.fogSectorsCont.addChild(updatedSprite);
-                        self.sceneFogTilesMap.setValue(x, y, updatedSprite);
+                    if (!fogSprite) {
+                        fogSprite = self.createFogTile(fogElement, fogSprite);
+                        fogSprite.x = x * Lich.Resources.PARTS_SIZE;
+                        fogSprite.y = y * Lich.Resources.PARTS_SIZE;
+                        self.fogSectorsCont.addChild(fogSprite);
+                        self.sceneFogTilesMap.setValue(x, y, fogSprite);
+                    }
+                    else {
+                        fogSprite = self.createFogTile(fogElement, fogSprite);
                     }
                 }
             }

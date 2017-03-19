@@ -127,8 +127,8 @@ namespace Lich {
                 Render.getFogContSizeW(self.game.getSceneWidth()) * Render.getFogContSizeH(self.game.getSceneHeight()),
                 {
                     rotation: false,
-                    alpha: true,
-                    scale: true,
+                    alpha: false,
+                    scale: false,
                     uvs: true
                 });
             self.initFullScaleCont(self.fogSectorsCont);

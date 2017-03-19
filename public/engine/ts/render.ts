@@ -135,14 +135,16 @@ namespace Lich {
             // projdi sektory, nepoužité dealokuj, nové naplň
             for (let x = 0; x < fogInfo.countFogSecX; x++) {
                 for (let y = 0; y < fogInfo.countFogSecY; y++) {
-                    let origSprite = self.sceneFogTilesMap.getValue(x, y);
+                    let fogSprite = self.sceneFogTilesMap.getValue(x, y);
                     let fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
-                    let updatedSprite = self.createFogTile(fogElement, origSprite);
-                    if (!origSprite) {
-                        updatedSprite.x = x * Resources.PARTS_SIZE;
-                        updatedSprite.y = y * Resources.PARTS_SIZE;
-                        self.fogSectorsCont.addChild(updatedSprite);
-                        self.sceneFogTilesMap.setValue(x, y, updatedSprite);
+                    if (!fogSprite) {
+                        fogSprite = self.createFogTile(fogElement, fogSprite);
+                        fogSprite.x = x * Resources.PARTS_SIZE;
+                        fogSprite.y = y * Resources.PARTS_SIZE;
+                        self.fogSectorsCont.addChild(fogSprite);
+                        self.sceneFogTilesMap.setValue(x, y, fogSprite);
+                    } else {
+                        fogSprite = self.createFogTile(fogElement, fogSprite);
                     }
                 }
             }

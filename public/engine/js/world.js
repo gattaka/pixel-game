@@ -104,8 +104,8 @@ var Lich;
             // Fog cont
             self.fogSectorsCont = new PIXI.particles.ParticleContainer(Lich.Render.getFogContSizeW(self.game.getSceneWidth()) * Lich.Render.getFogContSizeH(self.game.getSceneHeight()), {
                 rotation: false,
-                alpha: true,
-                scale: true,
+                alpha: false,
+                scale: false,
                 uvs: true
             });
             self.initFullScaleCont(self.fogSectorsCont);
