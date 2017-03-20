@@ -398,16 +398,16 @@ namespace Lich {
 
             // Reveal 
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
-            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
-                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
+            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 2
+                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 2) {
                 let radius = Resources.PARTS_SIZE * Resources.REVEAL_SIZE;
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
                 let cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
                 let cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
                 let d2 = Math.pow(radius, 2);
-                for (let y = cy - radius; y < cy + radius; y += Resources.PARTS_SIZE * 2) {
-                    for (let x = cx - radius; x < cx + radius; x += Resources.PARTS_SIZE * 2) {
+                for (let y = cy - radius; y < cy + radius; y += Resources.PARTS_SIZE) {
+                    for (let x = cx - radius; x < cx + radius; x += Resources.PARTS_SIZE) {
                         var r2 = Math.pow(cx - x, 2) + Math.pow(cy - y, 2);
                         if (r2 <= d2) {
                             self.render.revealFog(x, y);

@@ -351,26 +351,20 @@ var Lich;
             var self = this;
             var coord = self.pixelsToTiles(x, y);
             // tiles to sudé Parts
-            var rx = 2 * Math.floor(coord.x / 4);
-            var ry = 2 * Math.floor(coord.y / 4);
+            var rx = Math.floor(coord.x / 2);
+            var ry = Math.floor(coord.y / 2);
             var rsc = Lich.Resources.getInstance();
             var record = self.tilesMap.fogRecord;
             var fogInfo = self.getFogInfo();
             var revealed = record.getValue(rx, ry);
             if (!revealed) {
-                var sceneMap_1 = self.sceneFogTilesMap;
-                (function () {
-                    for (var x_1 = rx; x_1 <= rx + 1; x_1++) {
-                        for (var y_1 = ry; y_1 <= ry + 1; y_1++) {
-                            record.setValue(x_1, y_1, true);
-                            // jde o viditelnou část mlhy?
-                            var sprite = sceneMap_1.getValue(x_1 - fogInfo.startFogSecX, y_1 - fogInfo.startFogSecY);
-                            if (sprite) {
-                                self.fogSectorsCont.removeChild(sprite);
-                            }
-                        }
-                    }
-                })();
+                var sceneMap = self.sceneFogTilesMap;
+                record.setValue(rx, ry, true);
+                // jde o viditelnou část mlhy?
+                var sprite = sceneMap.getValue(rx - fogInfo.startFogSecX, ry - fogInfo.startFogSecY);
+                if (sprite) {
+                    self.fogSectorsCont.removeChild(sprite);
+                }
                 Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx * 2, ry * 2));
             }
             return false;

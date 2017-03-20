@@ -412,8 +412,8 @@ namespace Lich {
             let self = this;
             var coord = self.pixelsToTiles(x, y);
             // tiles to sudé Parts
-            var rx = 2 * Math.floor(coord.x / 4);
-            var ry = 2 * Math.floor(coord.y / 4);
+            var rx = Math.floor(coord.x / 2);
+            var ry = Math.floor(coord.y / 2);
 
             let rsc = Resources.getInstance();
             let record = self.tilesMap.fogRecord;
@@ -422,18 +422,12 @@ namespace Lich {
             let revealed = record.getValue(rx, ry);
             if (!revealed) {
                 let sceneMap = self.sceneFogTilesMap;
-                (function () {
-                    for (let x = rx; x <= rx + 1; x++) {
-                        for (let y = ry; y <= ry + 1; y++) {
-                            record.setValue(x, y, true);
-                            // jde o viditelnou část mlhy?
-                            var sprite = sceneMap.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
-                            if (sprite) {
-                                self.fogSectorsCont.removeChild(sprite);
-                            }
-                        }
-                    }
-                })();
+                record.setValue(rx, ry, true);
+                // jde o viditelnou část mlhy?
+                var sprite = sceneMap.getValue(rx - fogInfo.startFogSecX, ry - fogInfo.startFogSecY);
+                if (sprite) {
+                    self.fogSectorsCont.removeChild(sprite);
+                }
                 EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_REVEAL, rx * 2, ry * 2));
             }
             return false;

@@ -363,16 +363,16 @@ var Lich;
             var coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
             // Reveal 
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
-            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 4
-                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 4) {
+            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 2
+                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 2) {
                 var radius = Lich.Resources.PARTS_SIZE * Lich.Resources.REVEAL_SIZE;
                 this.currentRevealViewX = coord.x;
                 this.currentRevealViewY = coord.y;
                 var cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
                 var cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
                 var d2 = Math.pow(radius, 2);
-                for (var y = cy - radius; y < cy + radius; y += Lich.Resources.PARTS_SIZE * 2) {
-                    for (var x = cx - radius; x < cx + radius; x += Lich.Resources.PARTS_SIZE * 2) {
+                for (var y = cy - radius; y < cy + radius; y += Lich.Resources.PARTS_SIZE) {
+                    for (var x = cx - radius; x < cx + radius; x += Lich.Resources.PARTS_SIZE) {
                         var r2 = Math.pow(cx - x, 2) + Math.pow(cy - y, 2);
                         if (r2 <= d2) {
                             self.render.revealFog(x, y);
