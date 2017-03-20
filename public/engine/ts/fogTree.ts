@@ -1,11 +1,5 @@
 namespace Lich {
 
-    export enum FogTile {
-        TL, TT, TR, I_TL, I_TT, I_TR,
-        LL, MM, RR, I_LL, I_MM, I_RR,
-        BL, BB, BR, I_BL, I_BB, I_BR,
-    }
-
     // Nepoužívá se
     export class FogTree {
 
@@ -28,7 +22,7 @@ namespace Lich {
             public width?: number,
             public height?: number,
             // celková hodnota stromu
-            public value: FogTile = FogTile.MM) {
+            public value: boolean = false) {
         }
 
         /**
@@ -71,7 +65,7 @@ namespace Lich {
             }
         }
 
-        public getValue(xt: number, yt: number): FogTile {
+        public getValue(xt: number, yt: number): boolean {
             if (this.fractioned) {
                 let x = xt - this.x;
                 let y = yt - this.y;
@@ -81,7 +75,7 @@ namespace Lich {
             }
         }
 
-        public setValue(xt: number, yt: number, value: FogTile) {
+        public setValue(xt: number, yt: number, value: boolean) {
             if (!this.fractioned && this.value == value)
                 return;
             // strom s rozměr 1:2 nebo 2:1 je předposlední

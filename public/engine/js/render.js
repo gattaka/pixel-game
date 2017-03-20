@@ -106,23 +106,18 @@ var Lich;
             for (var x = 0; x < fogInfo.countFogSecX; x++) {
                 for (var y = 0; y < fogInfo.countFogSecY; y++) {
                     var fogSprite = self.sceneFogTilesMap.getValue(x, y);
-                    var fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
+                    var revealed = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
                     if (!fogSprite) {
-                        fogSprite = self.createFogTile(fogElement, fogSprite);
+                        fogSprite = self.createFogTile();
                         fogSprite.x = x * Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
                         fogSprite.y = y * Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
-                        if (fogSprite.visible)
-                            self.fogSectorsCont.addChild(fogSprite);
                         self.sceneFogTilesMap.setValue(x, y, fogSprite);
                     }
-                    else {
-                        fogSprite = self.createFogTile(fogElement, fogSprite);
-                        if (!fogSprite.visible) {
-                            self.fogSectorsCont.removeChild(fogSprite);
-                        }
-                        else {
-                            self.fogSectorsCont.addChild(fogSprite);
-                        }
+                    if (revealed) {
+                        self.fogSectorsCont.removeChild(fogSprite);
+                    }
+                    else if (!fogSprite.parent) {
+                        self.fogSectorsCont.addChild(fogSprite);
                     }
                 }
             }
@@ -279,13 +274,9 @@ var Lich;
                 }
             }
         };
-        Render.prototype.createFogTile = function (positionIndex, originalSprite) {
+        Render.prototype.createFogTile = function () {
             var self = this;
-            if (!originalSprite) {
-                originalSprite = Lich.Resources.getInstance().getFogSprite(positionIndex, originalSprite);
-            }
-            originalSprite.visible = positionIndex != Lich.FogTile.I_MM;
-            return originalSprite;
+            return Lich.Resources.getInstance().getFogSprite();
         };
         Render.prototype.createTile = function (positionIndex, bgr) {
             var self = this;
@@ -362,117 +353,25 @@ var Lich;
             // tiles to sudé Parts
             var rx = 2 * Math.floor(coord.x / 4);
             var ry = 2 * Math.floor(coord.y / 4);
-            var fogTilesToReset = [];
             var rsc = Lich.Resources.getInstance();
             var record = self.tilesMap.fogRecord;
             var fogInfo = self.getFogInfo();
-            var fogIndex = record.getValue(rx, ry);
-            if (fogIndex != Lich.FogTile.I_MM) {
+            var revealed = record.getValue(rx, ry);
+            if (!revealed) {
                 var sceneMap_1 = self.sceneFogTilesMap;
                 (function () {
-                    for (var x_1 = rx - 1; x_1 <= rx + 2; x_1++) {
-                        for (var y_1 = ry - 1; y_1 <= ry + 2; y_1++) {
-                            var val = record.getValue(x_1, y_1);
-                            if (val != Lich.FogTile.I_MM) {
-                                // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
-                                if (x_1 === rx - 1 || x_1 === rx + 2 || y_1 === ry - 1 || y_1 === ry + 2) {
-                                    // okraje vyresetuj
-                                    record.setValue(x_1, y_1, Lich.FogTile.MM);
-                                    fogTilesToReset.push([x_1, y_1]);
-                                }
-                                else {
-                                    record.setValue(x_1, y_1, Lich.FogTile.I_MM);
-                                    // jde o viditelnou část mlhy?
-                                    var sprite = sceneMap_1.getValue(x_1 - fogInfo.startFogSecX, y_1 - fogInfo.startFogSecY);
-                                    if (sprite) {
-                                        self.createFogTile(Lich.FogTile.I_MM, sprite);
-                                        self.fogSectorsCont.removeChild(sprite);
-                                    }
-                                }
+                    for (var x_1 = rx; x_1 <= rx + 1; x_1++) {
+                        for (var y_1 = ry; y_1 <= ry + 1; y_1++) {
+                            record.setValue(x_1, y_1, true);
+                            // jde o viditelnou část mlhy?
+                            var sprite = sceneMap_1.getValue(x_1 - fogInfo.startFogSecX, y_1 - fogInfo.startFogSecY);
+                            if (sprite) {
+                                self.fogSectorsCont.removeChild(sprite);
                             }
                         }
                     }
                 })();
-                // Přegeneruj hrany
-                fogTilesToReset.forEach(function (item) {
-                    var x = item[0];
-                    var y = item[1];
-                    var val = record.getValue(x, y);
-                    if (val == Lich.FogTile.I_MM)
-                        return;
-                    var valT = record.getValue(x, y - 1);
-                    var valR = record.getValue(x + 1, y);
-                    var valB = record.getValue(x, y + 1);
-                    var valL = record.getValue(x - 1, y);
-                    var targetVal;
-                    if (valT == Lich.FogTile.I_MM)
-                        targetVal = Lich.FogTile.TT;
-                    if (valR == Lich.FogTile.I_MM)
-                        targetVal = Lich.FogTile.RR;
-                    if (valB == Lich.FogTile.I_MM)
-                        targetVal = Lich.FogTile.BB;
-                    if (valL == Lich.FogTile.I_MM)
-                        targetVal = Lich.FogTile.LL;
-                    if (targetVal)
-                        record.setValue(x, y, targetVal);
-                });
-                // Přegeneruj rohy
-                fogTilesToReset.forEach(function (item) {
-                    var x = item[0];
-                    var y = item[1];
-                    var val = record.getValue(x, y);
-                    if (val == Lich.FogTile.I_MM)
-                        return;
-                    var valT = record.getValue(x, y - 1);
-                    var valR = record.getValue(x + 1, y);
-                    var valB = record.getValue(x, y + 1);
-                    var valL = record.getValue(x - 1, y);
-                    if (!val || val == Lich.FogTile.MM) {
-                        // jsem levý horní roh díry
-                        if (valB == Lich.FogTile.RR && valR == Lich.FogTile.BB)
-                            record.setValue(x, y, Lich.FogTile.I_TL);
-                        // jsem pravý horní roh díry
-                        if (valL == Lich.FogTile.BB && valB == Lich.FogTile.LL)
-                            record.setValue(x, y, Lich.FogTile.I_TR);
-                        // levý spodní roh díry
-                        if (valT == Lich.FogTile.RR && valR == Lich.FogTile.TT)
-                            record.setValue(x, y, Lich.FogTile.I_BL);
-                        // pravý spodní roh díry
-                        if (valT == Lich.FogTile.LL && valL == Lich.FogTile.TT)
-                            record.setValue(x, y, Lich.FogTile.I_BR);
-                        return;
-                    }
-                    if (val == Lich.FogTile.LL && (valT == Lich.FogTile.I_MM || valR == Lich.FogTile.TT)
-                        || val == Lich.FogTile.TT && (valL == Lich.FogTile.I_MM || valB == Lich.FogTile.LL))
-                        record.setValue(x, y, Lich.FogTile.TL);
-                    if (val == Lich.FogTile.TT && (valR == Lich.FogTile.I_MM || valB == Lich.FogTile.RR)
-                        || val == Lich.FogTile.RR && (valT == Lich.FogTile.I_MM || valL == Lich.FogTile.TT))
-                        record.setValue(x, y, Lich.FogTile.TR);
-                    if (val == Lich.FogTile.RR && (valB == Lich.FogTile.I_MM || valL == Lich.FogTile.BB)
-                        || val == Lich.FogTile.BB && (valR == Lich.FogTile.I_MM || valT == Lich.FogTile.RR))
-                        record.setValue(x, y, Lich.FogTile.BR);
-                    if (val == Lich.FogTile.BB && (valL == Lich.FogTile.I_MM || valT == Lich.FogTile.LL)
-                        || val == Lich.FogTile.LL && (valB == Lich.FogTile.I_MM || valR == Lich.FogTile.BB))
-                        record.setValue(x, y, Lich.FogTile.BL);
-                });
-                // Překresli dílky
-                fogTilesToReset.forEach(function (item) {
-                    var x = item[0];
-                    var y = item[1];
-                    var v = record.getValue(x, y);
-                    var sprite = sceneMap_1.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
-                    if (sprite) {
-                        self.createFogTile(v, sprite);
-                        if (!sprite.visible) {
-                            self.fogSectorsCont.removeChild(sprite);
-                        }
-                        else {
-                            self.fogSectorsCont.addChild(sprite);
-                        }
-                    }
-                });
                 Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx * 2, ry * 2));
-                return true;
             }
             return false;
         };

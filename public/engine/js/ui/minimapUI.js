@@ -31,8 +31,8 @@ var Lich;
             // tiles to sudé Parts
             var rx = Math.floor(x / 2);
             var ry = Math.floor(y / 2);
-            var fog = this.tilesMap.fogRecord.getValue(rx, ry);
-            if (fog != Lich.FogTile.I_MM) {
+            var revealed = this.tilesMap.fogRecord.getValue(rx, ry);
+            if (!revealed) {
                 fill(new Lich.Color(0, 0, 0));
             }
             else {

@@ -27,7 +27,7 @@ namespace Lich {
         public mapObjectsTiles: Array2D<MapObjectTile>;
         // fog mapa
         // public fogTree: FogTree;
-        public fogRecord: Array2D<FogTile>;
+        public fogRecord: Array2D<boolean>;
         // spawnPoint pro hráče
         public spawnPoint: Coord2D;
 
@@ -42,7 +42,7 @@ namespace Lich {
             this.mapObjRecord = new Array2D<number>(width, height);
             this.mapObjectsTiles = new Array2D<MapObjectTile>(width, height);
             // this.fogTree = new FogTree(width/2, height/2);
-            this.fogRecord = new Array2D<FogTile>(width / 2, height / 2);
+            this.fogRecord = new Array2D<boolean>(width / 2, height / 2);
         }
 
     }

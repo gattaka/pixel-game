@@ -1,26 +1,5 @@
 var Lich;
 (function (Lich) {
-    var FogTile;
-    (function (FogTile) {
-        FogTile[FogTile["TL"] = 0] = "TL";
-        FogTile[FogTile["TT"] = 1] = "TT";
-        FogTile[FogTile["TR"] = 2] = "TR";
-        FogTile[FogTile["I_TL"] = 3] = "I_TL";
-        FogTile[FogTile["I_TT"] = 4] = "I_TT";
-        FogTile[FogTile["I_TR"] = 5] = "I_TR";
-        FogTile[FogTile["LL"] = 6] = "LL";
-        FogTile[FogTile["MM"] = 7] = "MM";
-        FogTile[FogTile["RR"] = 8] = "RR";
-        FogTile[FogTile["I_LL"] = 9] = "I_LL";
-        FogTile[FogTile["I_MM"] = 10] = "I_MM";
-        FogTile[FogTile["I_RR"] = 11] = "I_RR";
-        FogTile[FogTile["BL"] = 12] = "BL";
-        FogTile[FogTile["BB"] = 13] = "BB";
-        FogTile[FogTile["BR"] = 14] = "BR";
-        FogTile[FogTile["I_BL"] = 15] = "I_BL";
-        FogTile[FogTile["I_BB"] = 16] = "I_BB";
-        FogTile[FogTile["I_BR"] = 17] = "I_BR";
-    })(FogTile = Lich.FogTile || (Lich.FogTile = {}));
     // Nepoužívá se
     var FogTree = (function () {
         function FogTree(
@@ -28,7 +7,7 @@ var Lich;
             width, height, 
             // celková hodnota stromu
             value) {
-            if (value === void 0) { value = FogTile.MM; }
+            if (value === void 0) { value = false; }
             this.width = width;
             this.height = height;
             this.value = value;

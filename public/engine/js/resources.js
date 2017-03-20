@@ -316,24 +316,16 @@ var Lich;
             return sprite;
         };
         ;
-        Resources.prototype.getFogSprite = function (positionIndex, originalSprite) {
+        Resources.prototype.getFogSprite = function () {
             var self = this;
-            // if (positionIndex || positionIndex == 0) {
-            //     positionIndex = positionIndex;
-            // } else {
-            positionIndex = Lich.FogTile.MM;
-            // }
-            // positionIndex = FogTile.MM;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FOG_KEY];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][Lich.FOG_DEF[0]];
-            var texture = this.getFromTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, positionIndex);
+            var texture = this.getFromTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, 1);
             if (!texture) {
                 texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-                var wSplicing = spriteDef.width / Resources.PARTS_SIZE;
-                texture.frame = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE * 3, Resources.PARTS_SIZE * 3);
-                this.putInTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, positionIndex, texture);
+                this.putInTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, 1, texture);
             }
-            var sprite = originalSprite ? originalSprite : new PIXI.Sprite(texture);
+            var sprite = new PIXI.Sprite(texture);
             sprite.texture = texture;
             return sprite;
         };
@@ -483,6 +475,10 @@ var Lich;
     Resources.SHOW_SECTORS = false;
     Resources.PRINT_SECTOR_ALLOC = false;
     /**
+     * Fog
+     */
+    Resources.REVEAL_SIZE = 15; // musí být liché
+    /**
      * Text
      */
     Resources.FONT = "expressway";
@@ -490,7 +486,6 @@ var Lich;
     Resources.OUTLINE_COLOR = "#000";
     Resources.WORLD_LOADER_COLOR = "#84ff00";
     Resources.DEBUG_TEXT_COLOR = "#FF0";
-    Resources.REVEAL_SIZE = 13; // musí být liché
     Resources.REACH_TILES_RADIUS = 10;
     Resources.SPRITESHEET_IMAGE_SUFFIX = ".png";
     Resources.SPRITESHEET_MAP_SUFFIX = ".json";

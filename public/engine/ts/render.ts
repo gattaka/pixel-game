@@ -126,21 +126,17 @@ namespace Lich {
             for (let x = 0; x < fogInfo.countFogSecX; x++) {
                 for (let y = 0; y < fogInfo.countFogSecY; y++) {
                     let fogSprite = self.sceneFogTilesMap.getValue(x, y);
-                    let fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
+                    let revealed = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
                     if (!fogSprite) {
-                        fogSprite = self.createFogTile(fogElement, fogSprite);
+                        fogSprite = self.createFogTile();
                         fogSprite.x = x * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
                         fogSprite.y = y * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
-                        if (fogSprite.visible)
-                            self.fogSectorsCont.addChild(fogSprite);
                         self.sceneFogTilesMap.setValue(x, y, fogSprite);
-                    } else {
-                        fogSprite = self.createFogTile(fogElement, fogSprite);
-                        if (!fogSprite.visible) {
-                            self.fogSectorsCont.removeChild(fogSprite);
-                        } else {
-                            self.fogSectorsCont.addChild(fogSprite);
-                        }
+                    }
+                    if (revealed) {
+                        self.fogSectorsCont.removeChild(fogSprite);
+                    } else if (!fogSprite.parent) {
+                        self.fogSectorsCont.addChild(fogSprite);
                     }
                 }
             }
@@ -332,13 +328,9 @@ namespace Lich {
             }
         }
 
-        createFogTile(positionIndex: number, originalSprite: PIXI.Sprite) {
+        createFogTile() {
             var self = this;
-            if (!originalSprite) {
-                originalSprite = Resources.getInstance().getFogSprite(positionIndex, originalSprite);
-            }
-            originalSprite.visible = positionIndex != FogTile.I_MM;
-            return originalSprite;
+            return Resources.getInstance().getFogSprite();
         }
 
         createTile(positionIndex: number, bgr: boolean) {
@@ -422,117 +414,27 @@ namespace Lich {
             // tiles to sudé Parts
             var rx = 2 * Math.floor(coord.x / 4);
             var ry = 2 * Math.floor(coord.y / 4);
-            let fogTilesToReset = [];
 
             let rsc = Resources.getInstance();
             let record = self.tilesMap.fogRecord;
 
             let fogInfo = self.getFogInfo();
-            let fogIndex = record.getValue(rx, ry);
-            if (fogIndex != FogTile.I_MM) {
-
+            let revealed = record.getValue(rx, ry);
+            if (!revealed) {
                 let sceneMap = self.sceneFogTilesMap;
-
                 (function () {
-                    for (let x = rx - 1; x <= rx + 2; x++) {
-                        for (let y = ry - 1; y <= ry + 2; y++) {
-                            let val = record.getValue(x, y);
-                            if (val != FogTile.I_MM) {
-
-                                // pokud jsem vnější okraj výběru, přepočítej (vytvořit hrany a rohy)
-                                if (x === rx - 1 || x === rx + 2 || y === ry - 1 || y === ry + 2) {
-                                    // okraje vyresetuj
-                                    record.setValue(x, y, FogTile.MM);
-                                    fogTilesToReset.push([x, y]);
-                                } else {
-                                    record.setValue(x, y, FogTile.I_MM);
-                                    // jde o viditelnou část mlhy?
-                                    var sprite = sceneMap.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
-                                    if (sprite) {
-                                        self.createFogTile(FogTile.I_MM, sprite);
-                                        self.fogSectorsCont.removeChild(sprite);
-                                    }
-                                }
+                    for (let x = rx; x <= rx + 1; x++) {
+                        for (let y = ry; y <= ry + 1; y++) {
+                            record.setValue(x, y, true);
+                            // jde o viditelnou část mlhy?
+                            var sprite = sceneMap.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
+                            if (sprite) {
+                                self.fogSectorsCont.removeChild(sprite);
                             }
                         }
                     }
                 })();
-
-                // Přegeneruj hrany
-                fogTilesToReset.forEach(function (item) {
-                    let x = item[0];
-                    let y = item[1];
-                    let val = record.getValue(x, y);
-                    if (val == FogTile.I_MM)
-                        return;
-                    let valT = record.getValue(x, y - 1);
-                    let valR = record.getValue(x + 1, y);
-                    let valB = record.getValue(x, y + 1);
-                    let valL = record.getValue(x - 1, y);
-
-                    let targetVal: FogTile;
-                    if (valT == FogTile.I_MM) targetVal = FogTile.TT;
-                    if (valR == FogTile.I_MM) targetVal = FogTile.RR;
-                    if (valB == FogTile.I_MM) targetVal = FogTile.BB;
-                    if (valL == FogTile.I_MM) targetVal = FogTile.LL;
-                    if (targetVal)
-                        record.setValue(x, y, targetVal);
-                });
-
-                // Přegeneruj rohy
-                fogTilesToReset.forEach(function (item) {
-                    let x = item[0];
-                    let y = item[1];
-                    let val = record.getValue(x, y);
-                    if (val == FogTile.I_MM)
-                        return;
-                    let valT = record.getValue(x, y - 1);
-                    let valR = record.getValue(x + 1, y);
-                    let valB = record.getValue(x, y + 1);
-                    let valL = record.getValue(x - 1, y);
-
-                    if (!val || val == FogTile.MM) {
-                        // jsem levý horní roh díry
-                        if (valB == FogTile.RR && valR == FogTile.BB) record.setValue(x, y, FogTile.I_TL);
-                        // jsem pravý horní roh díry
-                        if (valL == FogTile.BB && valB == FogTile.LL) record.setValue(x, y, FogTile.I_TR);
-                        // levý spodní roh díry
-                        if (valT == FogTile.RR && valR == FogTile.TT) record.setValue(x, y, FogTile.I_BL);
-                        // pravý spodní roh díry
-                        if (valT == FogTile.LL && valL == FogTile.TT) record.setValue(x, y, FogTile.I_BR);
-                        return;
-                    }
-
-                    if (val == FogTile.LL && (valT == FogTile.I_MM || valR == FogTile.TT)
-                        || val == FogTile.TT && (valL == FogTile.I_MM || valB == FogTile.LL)) record.setValue(x, y, FogTile.TL);
-                    if (val == FogTile.TT && (valR == FogTile.I_MM || valB == FogTile.RR)
-                        || val == FogTile.RR && (valT == FogTile.I_MM || valL == FogTile.TT)) record.setValue(x, y, FogTile.TR);
-                    if (val == FogTile.RR && (valB == FogTile.I_MM || valL == FogTile.BB)
-                        || val == FogTile.BB && (valR == FogTile.I_MM || valT == FogTile.RR)) record.setValue(x, y, FogTile.BR);
-                    if (val == FogTile.BB && (valL == FogTile.I_MM || valT == FogTile.LL)
-                        || val == FogTile.LL && (valB == FogTile.I_MM || valR == FogTile.BB)) record.setValue(x, y, FogTile.BL);
-                });
-
-                // Překresli dílky
-                fogTilesToReset.forEach(function (item) {
-                    let x = item[0];
-                    let y = item[1];
-
-                    let v = record.getValue(x, y);
-                    var sprite = sceneMap.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
-                    if (sprite) {
-                        self.createFogTile(v, sprite);
-                        if (!sprite.visible) {
-                            self.fogSectorsCont.removeChild(sprite);
-                        } else {
-                            self.fogSectorsCont.addChild(sprite);
-                        }
-                    }
-                });
-
                 EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_REVEAL, rx * 2, ry * 2));
-
-                return true;
             }
             return false;
         }

@@ -46,6 +46,11 @@ namespace Lich {
         static PRINT_SECTOR_ALLOC = false;
 
         /**
+         * Fog 
+         */
+        static REVEAL_SIZE = 15; // musí být liché
+
+        /**
          * Text 
          */
         static FONT = "expressway";
@@ -54,7 +59,6 @@ namespace Lich {
         static WORLD_LOADER_COLOR = "#84ff00";
         static DEBUG_TEXT_COLOR = "#FF0";
 
-        static REVEAL_SIZE = 13; // musí být liché
         static REACH_TILES_RADIUS = 10;
         static SPRITESHEET_IMAGE_SUFFIX = ".png";
         static SPRITESHEET_MAP_SUFFIX = ".json";
@@ -430,28 +434,16 @@ namespace Lich {
             return sprite;
         };
 
-        getFogSprite(positionIndex: number, originalSprite?: PIXI.Sprite): PIXI.Sprite {
+        getFogSprite(): PIXI.Sprite {
             let self = this;
-            // if (positionIndex || positionIndex == 0) {
-            //     positionIndex = positionIndex;
-            // } else {
-            positionIndex = FogTile.MM;
-            // }
-            // positionIndex = FogTile.MM;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_FOG_KEY];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][FOG_DEF[0]];
-            let texture = this.getFromTextureCache(stringSheetKey, FOG_DEF[0], 1, positionIndex);
+            let texture = this.getFromTextureCache(stringSheetKey, FOG_DEF[0], 1, 1);
             if (!texture) {
                 texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
-                let wSplicing = spriteDef.width / Resources.PARTS_SIZE;
-                texture.frame = new PIXI.Rectangle(
-                    0,
-                    0,
-                    Resources.PARTS_SIZE * 3,
-                    Resources.PARTS_SIZE * 3);
-                this.putInTextureCache(stringSheetKey, FOG_DEF[0], 1, positionIndex, texture);
+                this.putInTextureCache(stringSheetKey, FOG_DEF[0], 1, 1, texture);
             }
-            let sprite = originalSprite ? originalSprite : new PIXI.Sprite(texture);
+            let sprite = new PIXI.Sprite(texture);
             sprite.texture = texture;
             return sprite;
         };
