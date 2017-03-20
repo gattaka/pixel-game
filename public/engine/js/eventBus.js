@@ -41,6 +41,7 @@ var Lich;
         EventType[EventType["RECIPES_CHANGE"] = 26] = "RECIPES_CHANGE";
         EventType[EventType["SURFACE_REVEAL"] = 27] = "SURFACE_REVEAL";
         EventType[EventType["INV_CHANGE"] = 28] = "INV_CHANGE";
+        EventType[EventType["GC_CHANGE"] = 29] = "GC_CHANGE";
     })(EventType = Lich.EventType || (Lich.EventType = {}));
     var EventPayload = (function () {
         function EventPayload(type) {

@@ -56,7 +56,7 @@ namespace Lich {
         switchMode(mode: WeatherMode) {
             this.mode = mode;
             this.modeStartProgress = 0;
-            console.log("New mode: " + WeatherMode[mode]);
+            // console.log("New mode: " + WeatherMode[mode]);
             if (mode == WeatherMode.NONE)
                 this.particleLayers = new Array<ParticleLayer>();
         }

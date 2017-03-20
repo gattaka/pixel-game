@@ -9,6 +9,7 @@ namespace Lich {
         sectorLabel: Label;
         playerLabel: Label;
         enemiesLabel: Label;
+        gcLabel: Label;
 
         constructor(width: number, height: number) {
             super(width, height);
@@ -53,6 +54,13 @@ namespace Lich {
                 return false;
             });
             this.addNextChild(this.enemiesLabel);
+
+            this.gcLabel = new Label("gc: ");
+            this.addNextChild(this.gcLabel);
+            EventBus.getInstance().registerConsumer(EventType.GC_CHANGE, (data: NumberEventPayload) => {
+                self.gcLabel.setText("gc: "+ data.payload);
+                return false;
+            });
 
         }
         public addNextChild(child: Label) {

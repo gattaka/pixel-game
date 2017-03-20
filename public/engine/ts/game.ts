@@ -17,6 +17,7 @@ namespace Lich {
         private static INSTANCE: Game;
 
         public renderer: PIXI.WebGLRenderer;
+        private gc: PIXI.TextureGarbageCollector;
         private stage: PIXI.Container;
         private parallax: Parallax;
         private world: World;
@@ -75,6 +76,7 @@ namespace Lich {
             });
             self.renderer.view.style.position = "absolute";
             self.renderer.view.style.display = "block";
+            self.gc = self.renderer["textureGC"];
             switch (ThemeWatch.getCurrentTheme()) {
                 case Theme.WINTER:
                     self.renderer.backgroundColor = 0xcce1e8;
@@ -311,7 +313,7 @@ namespace Lich {
                 if (self.ui.craftingUI.parent) {
                     self.ui.craftingUI.hide();
                     self.ui.splashScreenUI.suppressToggle();
-                } else if (self.ui.mapUI.parent) {
+                } else if (self.ui.mapUI && self.ui.mapUI.parent) {
                     self.ui.mapUI.hide();
                     self.ui.splashScreenUI.suppressToggle();
                 } else {
@@ -319,9 +321,11 @@ namespace Lich {
                 }
             }, () => { self.ui.splashScreenUI.prepareForToggle(); });
             Keyboard.on(73, () => { self.ui.inventoryUI.toggle(); }, () => { self.ui.inventoryUI.prepareForToggle(); });
-            Keyboard.on(77, () => { self.ui.mapUI.toggle(); }, () => { self.ui.mapUI.prepareForToggle(); });
-            Keyboard.on(78, () => { self.ui.minimapUI.toggle(); }, () => { self.ui.minimapUI.prepareForToggle(); });
+            Keyboard.on(77, () => { if (self.ui.mapUI) self.ui.mapUI.toggle(); }, () => { if (self.ui.mapUI) self.ui.mapUI.prepareForToggle(); });
+            Keyboard.on(78, () => { if (self.ui.minimapUI) self.ui.minimapUI.toggle(); }, () => { if (self.ui.minimapUI) self.ui.minimapUI.prepareForToggle(); });
             Keyboard.on(16, () => { self.ui.spellsUI.toggleAlternative(); }, () => { self.ui.spellsUI.prepareForToggleAlternative(); });
+
+            let oldGcCount;
 
             let ticker = PIXI.ticker.shared;
             ticker.add(() => {
@@ -335,6 +339,13 @@ namespace Lich {
                     self.world.update(delta);
                     if (self.ui)
                         self.ui.update(delta);
+                }
+
+                let textCnt = self.renderer.textureManager["_managedTextures"].length;
+                // self.renderer.textureManager.bindTexture
+                if (oldGcCount != textCnt) {
+                    oldGcCount = textCnt;
+                    EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.GC_CHANGE, textCnt));
                 }
 
                 self.renderer.render(self.stage);

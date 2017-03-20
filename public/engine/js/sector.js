@@ -25,7 +25,11 @@ var Lich;
             if (oldRendered) {
                 this.removeChild(oldRendered);
                 // Dont forget to destroy dynamic textures you did create
-                oldRendered.texture.destroy();
+                oldRendered.destroy({
+                    children: true,
+                    texture: true,
+                    baseTexture: true
+                });
             }
             // this represents your small canvas, it is a texture you can render a scene to then use as if it was a normal texture
             var renderedTexture = PIXI.RenderTexture.create(this.fixedWidth, this.fixedHeight);

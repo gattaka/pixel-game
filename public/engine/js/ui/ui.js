@@ -16,28 +16,32 @@ var Lich;
             var _this = _super.call(this) || this;
             _this.canvas = canvas;
             var self = _this;
-            // Map render
-            var minimapRender = new Lich.MinimapUIRender(tilesMap);
-            // Minimapa
-            var minimapUI = new Lich.MinimapUI(minimapRender);
-            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
-            minimapUI.y = UI.SCREEN_SPACING;
-            self.minimapUI = minimapUI;
-            self.addChild(minimapUI);
-            // Map render
-            var mapRender = new Lich.MapUIRender(tilesMap);
-            // mapa
-            var mapUI = new Lich.MapUI(canvas.width, canvas.height, mapRender);
-            mapUI.x = UI.SCREEN_SPACING;
-            mapUI.y = UI.SCREEN_SPACING;
-            self.mapUI = mapUI;
-            self.addChild(mapUI);
-            mapUI.hide();
+            if (Lich.Resources.OPTMZ_MINIMAP_SHOW_ON) {
+                // Minimap render
+                var minimapRender = new Lich.MinimapUIRender(tilesMap);
+                // Minimapa
+                var minimapUI = new Lich.MinimapUI(minimapRender);
+                minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
+                minimapUI.y = UI.SCREEN_SPACING;
+                self.minimapUI = minimapUI;
+                self.addChild(minimapUI);
+            }
+            if (Lich.Resources.OPTMZ_MAP_SHOW_ON) {
+                // Map render
+                var mapRender = new Lich.MapUIRender(tilesMap);
+                // mapa
+                var mapUI = new Lich.MapUI(canvas.width, canvas.height, mapRender);
+                mapUI.x = UI.SCREEN_SPACING;
+                mapUI.y = UI.SCREEN_SPACING;
+                self.mapUI = mapUI;
+                self.addChild(mapUI);
+                mapUI.hide();
+            }
             // Help btn
             if (!mobile) {
                 var helpBtn = _this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
+                helpBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING - (_this.minimapUI ? _this.minimapUI.fixedWidth - PartsUI.SPACING : 0);
                 helpBtn.y = UI.SCREEN_SPACING;
             }
             else {
@@ -331,8 +335,10 @@ var Lich;
             return helpBtn;
         };
         UI.prototype.update = function (delta) {
-            this.minimapUI.update(delta);
-            this.mapUI.update(delta);
+            if (this.minimapUI)
+                this.minimapUI.update(delta);
+            if (this.mapUI)
+                this.mapUI.update(delta);
         };
         return UI;
     }(PIXI.Container));

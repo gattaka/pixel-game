@@ -16,81 +16,6 @@ var __extends = (this && this.__extends) || (function () {
  */
 var Lich;
 (function (Lich) {
-    var Load = (function () {
-        function Load(src, id, type) {
-            this.src = src;
-            this.id = id;
-            this.type = type;
-        }
-        ;
-        return Load;
-    }());
-    var FreqPool = (function () {
-        function FreqPool() {
-            this.cooldowns = new Array();
-            this.palette = new Array();
-        }
-        FreqPool.prototype.yield = function (accept) {
-            var _this = this;
-            // sniž čekání položek na použití
-            this.cooldowns.forEach(function (x, idx, arr) {
-                if (x) {
-                    arr[idx]--;
-                }
-            });
-            var tries = 0;
-            var tried = {};
-            // vyber náhodně položku
-            var randomIndex = function () {
-                return Math.floor(Math.random() * _this.palette.length);
-            };
-            var idx = randomIndex();
-            do {
-                if (this.cooldowns[idx] == 0) {
-                    // pokud je položka připravena, zkus ji použít
-                    var it = this.palette[idx];
-                    if (accept(it)) {
-                        this.cooldowns[idx] = it.seedCooldown;
-                        return;
-                    }
-                }
-                // nové losování
-                // nemůžu se jenom posunout, protože by to tak mělo tendenci často losovat objekty,
-                // které mají nízký cooldown (nebo se snadno usazují) a jsou první za objektem, 
-                // který má velkým cooldown (nebo se špatně usazuje)  
-                tries++;
-                tried[idx] = true;
-                idx = randomIndex();
-                // pokud už byl vyzkoušen, posuň se
-                // tady se posouvat už můžu, protože jde pouze o přeskočení již vyzkoušených objektů
-                while (tried[idx] && tries != this.palette.length) {
-                    idx = (idx + 1) % this.palette.length;
-                    tries++;
-                    tried[idx] = true;
-                }
-                // pokud jsem nevyzkoušel už všechny zkoušej           
-            } while (tries != this.palette.length);
-            return null;
-        };
-        FreqPool.prototype.insert = function (item) {
-            this.palette.push(item);
-            this.cooldowns.push(item.seedCooldown);
-        };
-        return FreqPool;
-    }());
-    Lich.FreqPool = FreqPool;
-    var SpriteItemDef = (function () {
-        function SpriteItemDef(frame, name, x, y, width, height) {
-            this.frame = frame;
-            this.name = name;
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-        return SpriteItemDef;
-    }());
-    Lich.SpriteItemDef = SpriteItemDef;
     var Resources = (function () {
         function Resources() {
             /**
@@ -115,7 +40,9 @@ var Lich;
             this.achievementsDefs = {};
             // definice objektů
             this.mapObjectDefs = new Array();
-            // Frekvenční pooly pro losování při vytváření/osazování světa 
+            /**
+             * Frekvenční pooly pro losování při vytváření/osazování světa
+             */
             this.mapSurfacesFreqPool = new FreqPool();
             this.mapObjectDefsFreqPool = new FreqPool();
             /**
@@ -157,7 +84,6 @@ var Lich;
             // definice spells
             this.spellDefs = {};
             this.interactSpellDef = new Lich.MapObjectsInteractionSpellDef();
-            // definice receptů
             /*
              * Sprite indexy
              */
@@ -392,12 +318,11 @@ var Lich;
         ;
         Resources.prototype.getFogSprite = function (positionIndex, originalSprite) {
             var self = this;
-            if (positionIndex || positionIndex == 0) {
-                positionIndex = positionIndex;
-            }
-            else {
-                positionIndex = Lich.FogTile.MM;
-            }
+            // if (positionIndex || positionIndex == 0) {
+            //     positionIndex = positionIndex;
+            // } else {
+            positionIndex = Lich.FogTile.MM;
+            // }
             // positionIndex = FogTile.MM;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_FOG_KEY];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][Lich.FOG_DEF[0]];
@@ -405,7 +330,7 @@ var Lich;
             if (!texture) {
                 texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 var wSplicing = spriteDef.width / Resources.PARTS_SIZE;
-                texture.frame = new PIXI.Rectangle(spriteDef.x + (positionIndex % wSplicing) * Resources.PARTS_SIZE, spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.PARTS_SIZE, Resources.PARTS_SIZE, Resources.PARTS_SIZE);
+                texture.frame = new PIXI.Rectangle(0, 0, Resources.PARTS_SIZE * 3, Resources.PARTS_SIZE * 3);
                 this.putInTextureCache(stringSheetKey, Lich.FOG_DEF[0], 1, positionIndex, texture);
             }
             var sprite = originalSprite ? originalSprite : new PIXI.Sprite(texture);
@@ -537,9 +462,29 @@ var Lich;
      */
     Resources.OPTMZ_PARALLAX_SHOW_ON = true;
     Resources.OPTMZ_UI_SHOW_ON = true;
+    Resources.OPTMZ_MAP_SHOW_ON = false;
+    Resources.OPTMZ_MINIMAP_SHOW_ON = false;
     Resources.OPTMZ_FOG_SHOW_ON = true;
     Resources.OPTMZ_FOG_PROCESS_ON = true;
-    Resources.OPTMZ_WEATHER_SHOW_ON = true;
+    Resources.OPTMZ_WEATHER_SHOW_ON = false;
+    /**
+     * Sektory
+     */
+    // Velikost sektoru v dílcích - dle pokusů je nejlepší 8
+    Resources.SECTOR_SIZE = 8;
+    // kolik překreslení se po změně nebude cachovat, protože 
+    // je dost pravděpodobné, že se bude ještě měnit?
+    Resources.SECTOR_CACHE_COOLDOWN = 5;
+    // Počet okrajových sektorů, které nejsou zobrazeny,
+    // ale jsou alokovány (pro plynulé posuny)
+    Resources.BUFFER_SECTORS_X = 1;
+    Resources.BUFFER_SECTORS_Y = 1;
+    // debug 
+    Resources.SHOW_SECTORS = false;
+    Resources.PRINT_SECTOR_ALLOC = false;
+    /**
+     * Text
+     */
     Resources.FONT = "expressway";
     Resources.TEXT_COLOR = "#FF0";
     Resources.OUTLINE_COLOR = "#000";
@@ -557,11 +502,6 @@ var Lich;
     // Jméno klíče, pod kterým bude v cookies uložen USER DB 
     // klíč záznamu jeho SAVE na serveru  
     Resources.COOKIE_KEY = "LICH_ENGINE_COOKIE_USER_KEY";
-    /*
-     * Přepínače
-     */
-    Resources.SHOW_SECTORS = false;
-    Resources.PRINT_SECTOR_ALLOC = false;
     /*
      * Velikosti
      */
@@ -612,4 +552,79 @@ var Lich;
         return AniSprite;
     }(PIXI.extras.AnimatedSprite));
     Lich.AniSprite = AniSprite;
+    var Load = (function () {
+        function Load(src, id, type) {
+            this.src = src;
+            this.id = id;
+            this.type = type;
+        }
+        ;
+        return Load;
+    }());
+    var FreqPool = (function () {
+        function FreqPool() {
+            this.cooldowns = new Array();
+            this.palette = new Array();
+        }
+        FreqPool.prototype.yield = function (accept) {
+            var _this = this;
+            // sniž čekání položek na použití
+            this.cooldowns.forEach(function (x, idx, arr) {
+                if (x) {
+                    arr[idx]--;
+                }
+            });
+            var tries = 0;
+            var tried = {};
+            // vyber náhodně položku
+            var randomIndex = function () {
+                return Math.floor(Math.random() * _this.palette.length);
+            };
+            var idx = randomIndex();
+            do {
+                if (this.cooldowns[idx] == 0) {
+                    // pokud je položka připravena, zkus ji použít
+                    var it = this.palette[idx];
+                    if (accept(it)) {
+                        this.cooldowns[idx] = it.seedCooldown;
+                        return;
+                    }
+                }
+                // nové losování
+                // nemůžu se jenom posunout, protože by to tak mělo tendenci často losovat objekty,
+                // které mají nízký cooldown (nebo se snadno usazují) a jsou první za objektem, 
+                // který má velkým cooldown (nebo se špatně usazuje)  
+                tries++;
+                tried[idx] = true;
+                idx = randomIndex();
+                // pokud už byl vyzkoušen, posuň se
+                // tady se posouvat už můžu, protože jde pouze o přeskočení již vyzkoušených objektů
+                while (tried[idx] && tries != this.palette.length) {
+                    idx = (idx + 1) % this.palette.length;
+                    tries++;
+                    tried[idx] = true;
+                }
+                // pokud jsem nevyzkoušel už všechny zkoušej           
+            } while (tries != this.palette.length);
+            return null;
+        };
+        FreqPool.prototype.insert = function (item) {
+            this.palette.push(item);
+            this.cooldowns.push(item.seedCooldown);
+        };
+        return FreqPool;
+    }());
+    Lich.FreqPool = FreqPool;
+    var SpriteItemDef = (function () {
+        function SpriteItemDef(frame, name, x, y, width, height) {
+            this.frame = frame;
+            this.name = name;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+        return SpriteItemDef;
+    }());
+    Lich.SpriteItemDef = SpriteItemDef;
 })(Lich || (Lich = {}));

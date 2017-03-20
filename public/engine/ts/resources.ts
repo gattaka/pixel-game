@@ -6,75 +6,6 @@
  */
 namespace Lich {
 
-    class Load {
-        constructor(public src: string, public id: string, public type?: string) { };
-    }
-
-    export interface HasCooldown {
-        seedCooldown: number;
-    }
-
-    export class FreqPool<T extends HasCooldown> {
-        cooldowns = new Array<number>();
-        palette = new Array<T>();
-        yield(accept: (item: T) => boolean) {
-            // sniž čekání položek na použití
-            this.cooldowns.forEach((x, idx, arr) => {
-                if (x) {
-                    arr[idx]--;
-                }
-            });
-            let tries = 0;
-            let tried = {}
-            // vyber náhodně položku
-            let randomIndex = () => {
-                return Math.floor(Math.random() * this.palette.length);
-            }
-            let idx = randomIndex();
-            do {
-                if (this.cooldowns[idx] == 0) {
-                    // pokud je položka připravena, zkus ji použít
-                    let it = this.palette[idx];
-                    if (accept(it)) {
-                        this.cooldowns[idx] = it.seedCooldown;
-                        return;
-                    }
-                }
-                // nové losování
-                // nemůžu se jenom posunout, protože by to tak mělo tendenci často losovat objekty,
-                // které mají nízký cooldown (nebo se snadno usazují) a jsou první za objektem, 
-                // který má velkým cooldown (nebo se špatně usazuje)  
-                tries++;
-                tried[idx] = true;
-                idx = randomIndex();
-                // pokud už byl vyzkoušen, posuň se
-                // tady se posouvat už můžu, protože jde pouze o přeskočení již vyzkoušených objektů
-                while (tried[idx] && tries != this.palette.length) {
-                    idx = (idx + 1) % this.palette.length;
-                    tries++;
-                    tried[idx] = true;
-                }
-                // pokud jsem nevyzkoušel už všechny zkoušej           
-            } while (tries != this.palette.length)
-            return null;
-        }
-        insert(item: T) {
-            this.palette.push(item);
-            this.cooldowns.push(item.seedCooldown);
-        }
-    }
-
-    export class SpriteItemDef {
-        constructor(
-            public frame: number,
-            public name: string,
-            public x: number,
-            public y: number,
-            public width: number,
-            public height: number
-        ) { }
-    }
-
     export class Resources {
 
         private static INSTANCE: Resources;
@@ -90,13 +21,33 @@ namespace Lich {
          * 
          * - samotný world + parallax 50-60FPS s občasnými záseky na např. 19FPS
          */
-
         static OPTMZ_PARALLAX_SHOW_ON = true;
         static OPTMZ_UI_SHOW_ON = true;
+        static OPTMZ_MAP_SHOW_ON = false;
+        static OPTMZ_MINIMAP_SHOW_ON = false;
         static OPTMZ_FOG_SHOW_ON = true;
         static OPTMZ_FOG_PROCESS_ON = true;
-        static OPTMZ_WEATHER_SHOW_ON = true;
+        static OPTMZ_WEATHER_SHOW_ON = false;
 
+        /**
+         * Sektory 
+         */
+        // Velikost sektoru v dílcích - dle pokusů je nejlepší 8
+        static SECTOR_SIZE = 8;
+        // kolik překreslení se po změně nebude cachovat, protože 
+        // je dost pravděpodobné, že se bude ještě měnit?
+        static SECTOR_CACHE_COOLDOWN = 5;
+        // Počet okrajových sektorů, které nejsou zobrazeny,
+        // ale jsou alokovány (pro plynulé posuny)
+        static BUFFER_SECTORS_X = 1;
+        static BUFFER_SECTORS_Y = 1;
+        // debug 
+        static SHOW_SECTORS = false;
+        static PRINT_SECTOR_ALLOC = false;
+
+        /**
+         * Text 
+         */
         static FONT = "expressway";
         static TEXT_COLOR = "#FF0";
         static OUTLINE_COLOR = "#000";
@@ -118,12 +69,6 @@ namespace Lich {
         static COOKIE_KEY = "LICH_ENGINE_COOKIE_USER_KEY";
 
         /*
-         * Přepínače
-         */
-        static SHOW_SECTORS = false;
-        static PRINT_SECTOR_ALLOC = false;
-
-        /*
          * Velikosti
          */
         static TILE_SIZE = 16;
@@ -133,7 +78,6 @@ namespace Lich {
         /**
          * DEFINICE
          */
-
         // definice povrchů a pozadí povrchů
         private mapSurfaceDefs: { [k: string]: MapSurfaceDefinition } = {};
         private mapSurfaceBgrDefs: { [k: string]: MapSurfaceBgrDefinition } = {};
@@ -143,29 +87,26 @@ namespace Lich {
         // dle trans povrchu
         public mapTransitionSrfcDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         public mapTransitionSrfcBgrsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
-
         // definice pozadí scény
         public parallaxDefs: { [k: string]: string } = {};
-
         // definice ui prvků
         public uiSpriteDefs: { [k: string]: string } = {};
-
         // definice fontů 
         public fontsSpriteDefs: { [k: string]: { [k: string]: string } } = {};
-
         // definice achievementů 
         public achievementsDefs: { [k: string]: AchievementDefinition } = {};
         // definice objektů
         public mapObjectDefs = new Array<MapObjDefinition>();
 
-        // Frekvenční pooly pro losování při vytváření/osazování světa 
+        /**
+         * Frekvenční pooly pro losování při vytváření/osazování světa 
+         */
         public mapSurfacesFreqPool = new FreqPool<MapSurfaceDefinition>();
         public mapObjectDefsFreqPool = new FreqPool<MapObjDefinition>();
 
         /**
          * Texture cache
          */
-
         // I. SpriteSheet (například 'map_objekty')
         // II. SpriteSheet sprite (například 'fireplace')
         // III. FragmentFrameId (například fragment-3-4-frame-2)
@@ -180,7 +121,6 @@ namespace Lich {
         /**
          * Sprite info  
          */
-
         // Mapa mapových objektů dle jejich sprite jména
         public mapObjectDefsBySpriteName: { [k: string]: MapObjDefinition } = {};
         // Mapa povrchů dle jejich sprite jména
@@ -195,7 +135,6 @@ namespace Lich {
         /**
          * Spritesheet info  
          */
-
         // Mapa spritesheets dle klíče 
         public spritesheetByKeyMap: { [k: string]: PIXI.BaseTexture } = {};
         // Mapa sprites dle jejich souborového jména ve spritesheet dle jeho klíče
@@ -204,7 +143,6 @@ namespace Lich {
         /**
          * Animace
          */
-
         // Mapa definic animací dle klíče
         public animationSetDefsByKey: { [k: string]: AnimationSetDefinition } = {};
         // Mapa definic animací dle souborového jména sub-spritesheet
@@ -215,8 +153,6 @@ namespace Lich {
         // definice spells
         private spellDefs: { [k: string]: SpellDefinition } = {};
         public interactSpellDef = new MapObjectsInteractionSpellDef();
-
-        // definice receptů
 
         /*
          * Sprite indexy
@@ -496,11 +432,11 @@ namespace Lich {
 
         getFogSprite(positionIndex: number, originalSprite?: PIXI.Sprite): PIXI.Sprite {
             let self = this;
-            if (positionIndex || positionIndex == 0) {
-                positionIndex = positionIndex;
-            } else {
-                positionIndex = FogTile.MM;
-            }
+            // if (positionIndex || positionIndex == 0) {
+            //     positionIndex = positionIndex;
+            // } else {
+            positionIndex = FogTile.MM;
+            // }
             // positionIndex = FogTile.MM;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_FOG_KEY];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][FOG_DEF[0]];
@@ -509,10 +445,10 @@ namespace Lich {
                 texture = new PIXI.Texture(self.spritesheetByKeyMap[stringSheetKey]);
                 let wSplicing = spriteDef.width / Resources.PARTS_SIZE;
                 texture.frame = new PIXI.Rectangle(
-                    spriteDef.x + (positionIndex % wSplicing) * Resources.PARTS_SIZE,
-                    spriteDef.y + Math.floor(positionIndex / wSplicing) * Resources.PARTS_SIZE,
-                    Resources.PARTS_SIZE,
-                    Resources.PARTS_SIZE);
+                    0,
+                    0,
+                    Resources.PARTS_SIZE * 3,
+                    Resources.PARTS_SIZE * 3);
                 this.putInTextureCache(stringSheetKey, FOG_DEF[0], 1, positionIndex, texture);
             }
             let sprite = originalSprite ? originalSprite : new PIXI.Sprite(texture);
@@ -686,5 +622,74 @@ namespace Lich {
             super.gotoAndPlay(anm.startFrame);
         }
 
+    }
+
+    class Load {
+        constructor(public src: string, public id: string, public type?: string) { };
+    }
+
+    export interface HasCooldown {
+        seedCooldown: number;
+    }
+
+    export class FreqPool<T extends HasCooldown> {
+        cooldowns = new Array<number>();
+        palette = new Array<T>();
+        yield(accept: (item: T) => boolean) {
+            // sniž čekání položek na použití
+            this.cooldowns.forEach((x, idx, arr) => {
+                if (x) {
+                    arr[idx]--;
+                }
+            });
+            let tries = 0;
+            let tried = {}
+            // vyber náhodně položku
+            let randomIndex = () => {
+                return Math.floor(Math.random() * this.palette.length);
+            }
+            let idx = randomIndex();
+            do {
+                if (this.cooldowns[idx] == 0) {
+                    // pokud je položka připravena, zkus ji použít
+                    let it = this.palette[idx];
+                    if (accept(it)) {
+                        this.cooldowns[idx] = it.seedCooldown;
+                        return;
+                    }
+                }
+                // nové losování
+                // nemůžu se jenom posunout, protože by to tak mělo tendenci často losovat objekty,
+                // které mají nízký cooldown (nebo se snadno usazují) a jsou první za objektem, 
+                // který má velkým cooldown (nebo se špatně usazuje)  
+                tries++;
+                tried[idx] = true;
+                idx = randomIndex();
+                // pokud už byl vyzkoušen, posuň se
+                // tady se posouvat už můžu, protože jde pouze o přeskočení již vyzkoušených objektů
+                while (tried[idx] && tries != this.palette.length) {
+                    idx = (idx + 1) % this.palette.length;
+                    tries++;
+                    tried[idx] = true;
+                }
+                // pokud jsem nevyzkoušel už všechny zkoušej           
+            } while (tries != this.palette.length)
+            return null;
+        }
+        insert(item: T) {
+            this.palette.push(item);
+            this.cooldowns.push(item.seedCooldown);
+        }
+    }
+
+    export class SpriteItemDef {
+        constructor(
+            public frame: number,
+            public name: string,
+            public x: number,
+            public y: number,
+            public width: number,
+            public height: number
+        ) { }
     }
 }

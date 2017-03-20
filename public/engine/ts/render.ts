@@ -22,16 +22,6 @@ namespace Lich {
 
     export class Render {
 
-        // Velikost sektoru v dílcích
-        static SECTOR_SIZE = 8;
-        // kolik překreslení se po změně nebude cachovat, protože 
-        // je dost pravděpodobné, že se bude ještě měnit?
-        static SECTOR_CACHE_COOLDOWN = 5;
-        // Počet okrajových sektorů, které nejsou zobrazeny,
-        // ale jsou alokovány (pro plynulé posuny)
-        static BUFFER_SECTORS_X = 1;
-        static BUFFER_SECTORS_Y = 1;
-
         onDigObjectListeners = new Array<(objType: Diggable, x: number, y: number) => any>();
         onDigSurfaceListeners = new Array<(objType: Diggable, x: number, y: number) => any>();
 
@@ -139,12 +129,18 @@ namespace Lich {
                     let fogElement = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
                     if (!fogSprite) {
                         fogSprite = self.createFogTile(fogElement, fogSprite);
-                        fogSprite.x = x * Resources.PARTS_SIZE;
-                        fogSprite.y = y * Resources.PARTS_SIZE;
-                        self.fogSectorsCont.addChild(fogSprite);
+                        fogSprite.x = x * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
+                        fogSprite.y = y * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
+                        if (fogSprite.visible)
+                            self.fogSectorsCont.addChild(fogSprite);
                         self.sceneFogTilesMap.setValue(x, y, fogSprite);
                     } else {
                         fogSprite = self.createFogTile(fogElement, fogSprite);
+                        if (!fogSprite.visible) {
+                            self.fogSectorsCont.removeChild(fogSprite);
+                        } else {
+                            self.fogSectorsCont.addChild(fogSprite);
+                        }
                     }
                 }
             }
@@ -154,8 +150,8 @@ namespace Lich {
         updateSectors() {
             let self = this;
 
-            let maxSecCountX = Math.ceil(self.tilesMap.width / Render.SECTOR_SIZE);
-            let maxSecCountY = Math.ceil(self.tilesMap.height / Render.SECTOR_SIZE);
+            let maxSecCountX = Math.ceil(self.tilesMap.width / Resources.SECTOR_SIZE);
+            let maxSecCountY = Math.ceil(self.tilesMap.height / Resources.SECTOR_SIZE);
 
             // Pokud jsem úplně vlevo, vykresluj od X sektoru 0
             let startSecX = 0;
@@ -165,15 +161,15 @@ namespace Lich {
             if (self.screenOffsetX < 0) {
                 // Pokud došlo k nějakému posunu doprava, zjisti kolik sektorů by se do tohoto posuvu vešlo
                 // půlsektory pro dither
-                halfStartSecX = Math.floor(-1 * self.screenOffsetX / (Render.SECTOR_SIZE / 2 * Resources.TILE_SIZE));
+                halfStartSecX = Math.floor(-1 * self.screenOffsetX / (Resources.SECTOR_SIZE / 2 * Resources.TILE_SIZE));
                 oddXdither = halfStartSecX % 2 == 0;
                 startSecX = Math.floor(halfStartSecX / 2);
                 // Vždy ponech BUFFER_SECTORS_X sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
                 // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
-                startSecX = startSecX >= Render.BUFFER_SECTORS_X ? startSecX - Render.BUFFER_SECTORS_X : startSecX;
+                startSecX = startSecX >= Resources.BUFFER_SECTORS_X ? startSecX - Resources.BUFFER_SECTORS_X : startSecX;
                 applyXdither = startSecX != 0;
             }
-            let countSectX = Math.floor(self.sectorsCont.fixedWidth / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_X + 2;
+            let countSectX = Math.floor(self.sectorsCont.fixedWidth / (Resources.SECTOR_SIZE * Resources.TILE_SIZE)) + Resources.BUFFER_SECTORS_X + 2;
             applyXdither = applyXdither && startSecX + countSectX != maxSecCountX;
 
             // Pokud jsem úplně nahoře, vykresluj od Y sektoru 0
@@ -184,15 +180,15 @@ namespace Lich {
             if (self.screenOffsetY < 0) {
                 // Pokud došlo k nějakému posunu dolů, zjisti kolik sektorů by se do tohoto posuvu vešlo
                 // půlsektory pro dither
-                halfStartSecY = Math.floor(-1 * self.screenOffsetY / (Render.SECTOR_SIZE / 2 * Resources.TILE_SIZE));
+                halfStartSecY = Math.floor(-1 * self.screenOffsetY / (Resources.SECTOR_SIZE / 2 * Resources.TILE_SIZE));
                 oddYdither = halfStartSecY % 2 == 0;
                 startSecY = Math.floor(halfStartSecY / 2);
                 // Vždy ponech BUFFER_SECTORS_Y sektorů za sebou neodalokovaných, aby nedocházelo k výpadkům
                 // a aby mapa vždy měla předpřipravené sektory ve směru pohybu
-                startSecY = startSecY >= Render.BUFFER_SECTORS_Y ? startSecY - Render.BUFFER_SECTORS_Y : startSecY;
+                startSecY = startSecY >= Resources.BUFFER_SECTORS_Y ? startSecY - Resources.BUFFER_SECTORS_Y : startSecY;
                 applyYdither = startSecY != 0;
             }
-            let countSectY = Math.floor(self.sectorsCont.fixedHeight / (Render.SECTOR_SIZE * Resources.TILE_SIZE)) + Render.BUFFER_SECTORS_Y + 2;
+            let countSectY = Math.floor(self.sectorsCont.fixedHeight / (Resources.SECTOR_SIZE * Resources.TILE_SIZE)) + Resources.BUFFER_SECTORS_Y + 2;
             applyYdither = applyYdither && startSecY + countSectY != maxSecCountY;
 
             // změnilo se něco? Pokud není potřeba pře-alokovávat sektory, ukonči fci
@@ -228,17 +224,17 @@ namespace Lich {
                                 y * maxSecCountX + x,
                                 x,
                                 y,
-                                Render.SECTOR_SIZE * Resources.TILE_SIZE,
-                                Render.SECTOR_SIZE * Resources.TILE_SIZE
+                                Resources.SECTOR_SIZE * Resources.TILE_SIZE,
+                                Resources.SECTOR_SIZE * Resources.TILE_SIZE
                             );
-                            sector.x = x * Render.SECTOR_SIZE * Resources.TILE_SIZE + self.screenOffsetX;
-                            sector.y = y * Render.SECTOR_SIZE * Resources.TILE_SIZE + self.screenOffsetY;
+                            sector.x = x * Resources.SECTOR_SIZE * Resources.TILE_SIZE + self.screenOffsetX;
+                            sector.y = y * Resources.SECTOR_SIZE * Resources.TILE_SIZE + self.screenOffsetY;
                             self.sectorsCont.addChild(sector);
                             self.sectorsMap.setValue(x, y, sector);
 
                             // vytvoř jednotlivé dílky
-                            for (let mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
-                                for (let my = y * Render.SECTOR_SIZE; my < (y + 1) * Render.SECTOR_SIZE; my++) {
+                            for (let mx = x * Resources.SECTOR_SIZE; mx < (x + 1) * Resources.SECTOR_SIZE; mx++) {
+                                for (let my = y * Resources.SECTOR_SIZE; my < (y + 1) * Resources.SECTOR_SIZE; my++) {
 
                                     // vytvoř na dané souřadnici dílky pozadí povrchu
                                     let bgrElement = self.tilesMap.mapBgrRecord.getValue(mx, my);
@@ -248,8 +244,8 @@ namespace Lich {
 
                                         // přidej dílek do sektoru
                                         sector.addCacheableChild(tile);
-                                        tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                                        tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        tile.x = (mx % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        tile.y = (my % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                         // přidej dílek do globální mapy
                                         self.sceneBgrTilesMap.setValue(mx, my, tile);
@@ -263,8 +259,8 @@ namespace Lich {
 
                                         // přidej dílek do sektoru
                                         sector.addCacheableChild(tile);
-                                        tile.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                                        tile.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        tile.x = (mx % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        tile.y = (my % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                         // přidej dílek do globální mapy
                                         self.sceneTilesMap.setValue(mx, my, tile);
@@ -282,8 +278,8 @@ namespace Lich {
                                         } else {
                                             sector.addCacheableChild(object);
                                         }
-                                        object.x = (mx % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                                        object.y = (my % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        object.x = (mx % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                        object.y = (my % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                         // Přidej objekt do globální mapy objektů
                                         self.sceneObjectsMap.setValue(mx, my, object);
@@ -313,8 +309,8 @@ namespace Lich {
                         if (self.sectorsMap.getValue(x, y) != null) {
 
                             // vymaž objekty
-                            for (let mx = x * Render.SECTOR_SIZE; mx < (x + 1) * Render.SECTOR_SIZE; mx++) {
-                                for (let my = y * Render.SECTOR_SIZE; my < (y + 1) * Render.SECTOR_SIZE; my++) {
+                            for (let mx = x * Resources.SECTOR_SIZE; mx < (x + 1) * Resources.SECTOR_SIZE; mx++) {
+                                for (let my = y * Resources.SECTOR_SIZE; my < (y + 1) * Resources.SECTOR_SIZE; my++) {
                                     self.sceneObjectsMap.setValue(mx, my, null);
                                 }
                             }
@@ -338,7 +334,11 @@ namespace Lich {
 
         createFogTile(positionIndex: number, originalSprite: PIXI.Sprite) {
             var self = this;
-            return Resources.getInstance().getFogSprite(positionIndex, originalSprite);
+            if (!originalSprite) {
+                originalSprite = Resources.getInstance().getFogSprite(positionIndex, originalSprite);
+            }
+            originalSprite.visible = positionIndex != FogTile.I_MM;
+            return originalSprite;
         }
 
         createTile(positionIndex: number, bgr: boolean) {
@@ -412,7 +412,7 @@ namespace Lich {
         markSector(sector: Sector) {
             var self = this;
             if (typeof self.sectorsToUpdate[sector.secId] === "undefined") {
-                self.sectorsToUpdate[sector.secId] = new SectorUpdateRequest(sector, Render.SECTOR_CACHE_COOLDOWN);
+                self.sectorsToUpdate[sector.secId] = new SectorUpdateRequest(sector, Resources.SECTOR_CACHE_COOLDOWN);
             }
         };
 
@@ -450,6 +450,7 @@ namespace Lich {
                                     var sprite = sceneMap.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
                                     if (sprite) {
                                         self.createFogTile(FogTile.I_MM, sprite);
+                                        self.fogSectorsCont.removeChild(sprite);
                                     }
                                 }
                             }
@@ -519,8 +520,14 @@ namespace Lich {
 
                     let v = record.getValue(x, y);
                     var sprite = sceneMap.getValue(x - fogInfo.startFogSecX, y - fogInfo.startFogSecY);
-                    if (sprite)
+                    if (sprite) {
                         self.createFogTile(v, sprite);
+                        if (!sprite.visible) {
+                            self.fogSectorsCont.removeChild(sprite);
+                        } else {
+                            self.fogSectorsCont.addChild(sprite);
+                        }
+                    }
                 });
 
                 EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_REVEAL, rx * 2, ry * 2));
@@ -841,8 +848,8 @@ namespace Lich {
 
                                 // přidej dílek do sektoru
                                 sector.addCacheableChild(tile);
-                                tile.x = (x % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                                tile.y = (y % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                tile.x = (x % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
+                                tile.y = (y % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                                 // přidej dílek do globální mapy
                                 sceneMap.setValue(x, y, tile);
@@ -887,8 +894,8 @@ namespace Lich {
                     } else {
                         sector.addCacheableChild(tile);
                     }
-                    tile.x = ((tx0 + tx) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
-                    tile.y = ((ty0 + ty) % Render.SECTOR_SIZE) * Resources.TILE_SIZE;
+                    tile.x = ((tx0 + tx) % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
+                    tile.y = ((ty0 + ty) % Resources.SECTOR_SIZE) * Resources.TILE_SIZE;
 
                     // Přidej objekt do globální mapy objektů
                     self.sceneObjectsMap.setValue(tx0 + tx, ty0 + ty, tile);
@@ -1014,8 +1021,8 @@ namespace Lich {
         // dle souřadnic tiles spočítá souřadnici sektoru
         getSectorByTiles(x: number, y: number): Sector {
             var self = this;
-            var sx = Math.floor(x / Render.SECTOR_SIZE);
-            var sy = Math.floor(y / Render.SECTOR_SIZE);
+            var sx = Math.floor(x / Resources.SECTOR_SIZE);
+            var sy = Math.floor(y / Resources.SECTOR_SIZE);
             return self.sectorsMap.getValue(sx, sy);
         }
 

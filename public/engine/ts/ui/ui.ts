@@ -29,32 +29,36 @@ namespace Lich {
 
             let self = this;
 
-            // Map render
-            let minimapRender = new MinimapUIRender(tilesMap)
+            if (Resources.OPTMZ_MINIMAP_SHOW_ON) {
+                // Minimap render
+                let minimapRender = new MinimapUIRender(tilesMap)
 
-            // Minimapa
-            let minimapUI = new MinimapUI(minimapRender);
-            minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
-            minimapUI.y = UI.SCREEN_SPACING;
-            self.minimapUI = minimapUI;
-            self.addChild(minimapUI);
+                // Minimapa
+                let minimapUI = new MinimapUI(minimapRender);
+                minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
+                minimapUI.y = UI.SCREEN_SPACING;
+                self.minimapUI = minimapUI;
+                self.addChild(minimapUI);
+            }
 
-            // Map render
-            let mapRender = new MapUIRender(tilesMap)
+            if (Resources.OPTMZ_MAP_SHOW_ON) {
+                // Map render
+                let mapRender = new MapUIRender(tilesMap)
 
-            // mapa
-            let mapUI = new MapUI(canvas.width, canvas.height, mapRender);
-            mapUI.x = UI.SCREEN_SPACING;
-            mapUI.y = UI.SCREEN_SPACING;
-            self.mapUI = mapUI;
-            self.addChild(mapUI);
-            mapUI.hide();
+                // mapa
+                let mapUI = new MapUI(canvas.width, canvas.height, mapRender);
+                mapUI.x = UI.SCREEN_SPACING;
+                mapUI.y = UI.SCREEN_SPACING;
+                self.mapUI = mapUI;
+                self.addChild(mapUI);
+                mapUI.hide();
+            }
 
             // Help btn
             if (!mobile) {
                 let helpBtn = this.createHelpButton();
                 self.addChild(helpBtn);
-                helpBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING - minimapUI.fixedWidth - PartsUI.SPACING;
+                helpBtn.x = canvas.width - Button.SIDE_SIZE - UI.SCREEN_SPACING - (this.minimapUI ? this.minimapUI.fixedWidth - PartsUI.SPACING : 0);
                 helpBtn.y = UI.SCREEN_SPACING;
             } else {
                 let menuCont = new PIXI.Container();
@@ -328,8 +332,10 @@ namespace Lich {
         }
 
         update(delta: number) {
-            this.minimapUI.update(delta);
-            this.mapUI.update(delta);
+            if (this.minimapUI)
+                this.minimapUI.update(delta);
+            if (this.mapUI)
+                this.mapUI.update(delta);
         }
 
     }

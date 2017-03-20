@@ -34,6 +34,7 @@ var Lich;
             });
             self.renderer.view.style.position = "absolute";
             self.renderer.view.style.display = "block";
+            self.gc = self.renderer["textureGC"];
             switch (Lich.ThemeWatch.getCurrentTheme()) {
                 case Lich.Theme.WINTER:
                     self.renderer.backgroundColor = 0xcce1e8;
@@ -248,7 +249,7 @@ var Lich;
                     self.ui.craftingUI.hide();
                     self.ui.splashScreenUI.suppressToggle();
                 }
-                else if (self.ui.mapUI.parent) {
+                else if (self.ui.mapUI && self.ui.mapUI.parent) {
                     self.ui.mapUI.hide();
                     self.ui.splashScreenUI.suppressToggle();
                 }
@@ -257,9 +258,14 @@ var Lich;
                 }
             }, function () { self.ui.splashScreenUI.prepareForToggle(); });
             Lich.Keyboard.on(73, function () { self.ui.inventoryUI.toggle(); }, function () { self.ui.inventoryUI.prepareForToggle(); });
-            Lich.Keyboard.on(77, function () { self.ui.mapUI.toggle(); }, function () { self.ui.mapUI.prepareForToggle(); });
-            Lich.Keyboard.on(78, function () { self.ui.minimapUI.toggle(); }, function () { self.ui.minimapUI.prepareForToggle(); });
+            Lich.Keyboard.on(77, function () { if (self.ui.mapUI)
+                self.ui.mapUI.toggle(); }, function () { if (self.ui.mapUI)
+                self.ui.mapUI.prepareForToggle(); });
+            Lich.Keyboard.on(78, function () { if (self.ui.minimapUI)
+                self.ui.minimapUI.toggle(); }, function () { if (self.ui.minimapUI)
+                self.ui.minimapUI.prepareForToggle(); });
             Lich.Keyboard.on(16, function () { self.ui.spellsUI.toggleAlternative(); }, function () { self.ui.spellsUI.prepareForToggleAlternative(); });
+            var oldGcCount;
             var ticker = PIXI.ticker.shared;
             ticker.add(function () {
                 statsFPS.begin();
@@ -271,6 +277,12 @@ var Lich;
                     self.world.update(delta);
                     if (self.ui)
                         self.ui.update(delta);
+                }
+                var textCnt = self.renderer.textureManager["_managedTextures"].length;
+                // self.renderer.textureManager.bindTexture
+                if (oldGcCount != textCnt) {
+                    oldGcCount = textCnt;
+                    Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.GC_CHANGE, textCnt));
                 }
                 self.renderer.render(self.stage);
                 statsFPS.end();

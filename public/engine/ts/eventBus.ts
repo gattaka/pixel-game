@@ -30,6 +30,7 @@ namespace Lich {
         RECIPES_CHANGE,
         SURFACE_REVEAL,
         INV_CHANGE,
+        GC_CHANGE,
     }
 
     abstract class EventPayload {

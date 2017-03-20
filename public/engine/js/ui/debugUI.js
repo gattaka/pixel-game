@@ -49,6 +49,12 @@ var Lich;
                 return false;
             });
             _this.addNextChild(_this.enemiesLabel);
+            _this.gcLabel = new Lich.Label("gc: ");
+            _this.addNextChild(_this.gcLabel);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.GC_CHANGE, function (data) {
+                self.gcLabel.setText("gc: " + data.payload);
+                return false;
+            });
             return _this;
         }
         DebugLogUI.prototype.addNextChild = function (child) {

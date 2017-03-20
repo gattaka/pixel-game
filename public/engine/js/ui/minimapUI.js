@@ -325,7 +325,7 @@ var Lich;
             return _this;
         }
         MapUI.prototype.update = function (delta) {
-            if (this.prepareUpdateTexture) {
+            if (this.prepareUpdateTexture && this.parent) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
                     this.prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;

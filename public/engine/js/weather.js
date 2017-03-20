@@ -52,7 +52,7 @@ var Lich;
         Weather.prototype.switchMode = function (mode) {
             this.mode = mode;
             this.modeStartProgress = 0;
-            console.log("New mode: " + WeatherMode[mode]);
+            // console.log("New mode: " + WeatherMode[mode]);
             if (mode == WeatherMode.NONE)
                 this.particleLayers = new Array();
         };

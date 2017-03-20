@@ -354,7 +354,7 @@ namespace Lich {
         }
 
         update(delta: number) {
-            if (this.prepareUpdateTexture) {
+            if (this.prepareUpdateTexture && this.parent) {
                 this.prepareUpdateTextureCounter -= delta;
                 if (this.prepareUpdateTextureCounter <= 0) {
                     this.prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;
