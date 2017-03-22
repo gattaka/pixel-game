@@ -16,7 +16,9 @@ namespace Lich {
             public startFogSecX: number,
             public startFogSecY: number,
             public countFogSecX: number,
-            public countFogSecY: number
+            public countFogSecY: number,
+            public maxFogSecX: number,
+            public maxFogSecY: number
         ) { }
     }
 
@@ -105,7 +107,7 @@ namespace Lich {
             // by se zobrazovala undefined data (černé čtvrce)
             startFogSecY--;
             startFogSecX--;
-            return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY);
+            return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY, Math.floor(self.tilesMap.width / 2), Math.floor(self.tilesMap.height / 2));
         }
 
         updateFogSectors() {
@@ -126,14 +128,16 @@ namespace Lich {
             for (let x = 0; x < fogInfo.countFogSecX; x++) {
                 for (let y = 0; y < fogInfo.countFogSecY; y++) {
                     let fogSprite = self.sceneFogTilesMap.getValue(x, y);
-                    let revealed = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
+                    let recX = x + fogInfo.startFogSecX;
+                    let recY = y + fogInfo.startFogSecY;
+                    let revealed = self.tilesMap.fogRecord.getValue(recX, recY);
                     if (!fogSprite) {
                         fogSprite = self.createFogTile();
                         fogSprite.x = x * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
                         fogSprite.y = y * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
                         self.sceneFogTilesMap.setValue(x, y, fogSprite);
                     }
-                    if (revealed) {
+                    if (revealed || recX < 0 || recX > fogInfo.maxFogSecX || recY < 0 || recY > fogInfo.maxFogSecY) {
                         self.fogSectorsCont.removeChild(fogSprite);
                     } else if (!fogSprite.parent) {
                         self.fogSectorsCont.addChild(fogSprite);

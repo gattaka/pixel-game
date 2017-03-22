@@ -14,11 +14,13 @@ var Lich;
         return SectorUpdateRequest;
     }());
     var FogInfo = (function () {
-        function FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY) {
+        function FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY, maxFogSecX, maxFogSecY) {
             this.startFogSecX = startFogSecX;
             this.startFogSecY = startFogSecY;
             this.countFogSecX = countFogSecX;
             this.countFogSecY = countFogSecY;
+            this.maxFogSecX = maxFogSecX;
+            this.maxFogSecY = maxFogSecY;
         }
         return FogInfo;
     }());
@@ -91,7 +93,7 @@ var Lich;
             // by se zobrazovala undefined data (černé čtvrce)
             startFogSecY--;
             startFogSecX--;
-            return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY);
+            return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY, Math.floor(self.tilesMap.width / 2), Math.floor(self.tilesMap.height / 2));
         };
         Render.prototype.updateFogSectors = function () {
             var self = this;
@@ -106,14 +108,16 @@ var Lich;
             for (var x = 0; x < fogInfo.countFogSecX; x++) {
                 for (var y = 0; y < fogInfo.countFogSecY; y++) {
                     var fogSprite = self.sceneFogTilesMap.getValue(x, y);
-                    var revealed = self.tilesMap.fogRecord.getValue(x + fogInfo.startFogSecX, y + fogInfo.startFogSecY);
+                    var recX = x + fogInfo.startFogSecX;
+                    var recY = y + fogInfo.startFogSecY;
+                    var revealed = self.tilesMap.fogRecord.getValue(recX, recY);
                     if (!fogSprite) {
                         fogSprite = self.createFogTile();
                         fogSprite.x = x * Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
                         fogSprite.y = y * Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
                         self.sceneFogTilesMap.setValue(x, y, fogSprite);
                     }
-                    if (revealed) {
+                    if (revealed || recX < 0 || recX > fogInfo.maxFogSecX || recY < 0 || recY > fogInfo.maxFogSecY) {
                         self.fogSectorsCont.removeChild(fogSprite);
                     }
                     else if (!fogSprite.parent) {
