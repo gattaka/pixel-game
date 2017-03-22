@@ -46,16 +46,13 @@ var Lich;
             // Vykreslené dílky povrchu a pozadí
             this.sceneTilesMap = new Lich.Array2D();
             this.sceneBgrTilesMap = new Lich.Array2D();
-            this.sceneFogTilesMap = new Lich.Array2D();
             // Vykreslené dílky objektů
             this.sceneObjectsMap = new Lich.Array2D();
             var self = this;
             self.tilesMap = world.tilesMap;
             self.sectorsCont = world.tilesSectorsCont;
-            self.fogSectorsCont = world.fogSectorsCont;
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();
-            self.updateFogSectors();
         }
         Render.prototype.getScreenOffsetX = function () {
             return this.screenOffsetX;
@@ -94,37 +91,6 @@ var Lich;
             startFogSecY--;
             startFogSecX--;
             return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY, Math.floor(self.tilesMap.width / 2), Math.floor(self.tilesMap.height / 2));
-        };
-        Render.prototype.updateFogSectors = function () {
-            var self = this;
-            if (!Lich.Resources.OPTMZ_FOG_SHOW_ON)
-                return;
-            var fogInfo = self.getFogInfo();
-            if (self.currentStartFogX == fogInfo.startFogSecX && self.currentStartFogY == fogInfo.startFogSecY)
-                return;
-            self.currentStartFogX = fogInfo.startFogSecX;
-            self.currentStartFogY = fogInfo.startFogSecY;
-            // projdi sektory, nepoužité dealokuj, nové naplň
-            for (var x = 0; x < fogInfo.countFogSecX; x++) {
-                for (var y = 0; y < fogInfo.countFogSecY; y++) {
-                    var fogSprite = self.sceneFogTilesMap.getValue(x, y);
-                    var recX = x + fogInfo.startFogSecX;
-                    var recY = y + fogInfo.startFogSecY;
-                    var revealed = self.tilesMap.fogRecord.getValue(recX, recY);
-                    if (!fogSprite) {
-                        fogSprite = self.createFogTile();
-                        fogSprite.x = x * Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
-                        fogSprite.y = y * Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
-                        self.sceneFogTilesMap.setValue(x, y, fogSprite);
-                    }
-                    if (revealed || recX < 0 || recX > fogInfo.maxFogSecX || recY < 0 || recY > fogInfo.maxFogSecY) {
-                        self.fogSectorsCont.removeChild(fogSprite);
-                    }
-                    else if (!fogSprite.parent) {
-                        self.fogSectorsCont.addChild(fogSprite);
-                    }
-                }
-            }
         };
         // zkoumá, zda je potřeba přealokovat sektory 
         Render.prototype.updateSectors = function () {
@@ -337,10 +303,7 @@ var Lich;
                 sector.x += shiftX;
                 sector.y += shiftY;
             });
-            self.fogSectorsCont.x = (self.fogSectorsCont.x + shiftX) % Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
-            self.fogSectorsCont.y = (self.fogSectorsCont.y + shiftY) % Lich.Resources.PARTS_SIZE - Lich.Resources.PARTS_SIZE;
             self.updateSectors();
-            self.updateFogSectors();
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_X, self.screenOffsetX));
             Lich.EventBus.getInstance().fireEvent(new Lich.NumberEventPayload(Lich.EventType.MAP_SHIFT_Y, self.screenOffsetY));
         };
@@ -362,13 +325,7 @@ var Lich;
             var fogInfo = self.getFogInfo();
             var revealed = record.getValue(rx, ry);
             if (!revealed) {
-                var sceneMap = self.sceneFogTilesMap;
                 record.setValue(rx, ry, true);
-                // jde o viditelnou část mlhy?
-                var sprite = sceneMap.getValue(rx - fogInfo.startFogSecX, ry - fogInfo.startFogSecY);
-                if (sprite) {
-                    self.fogSectorsCont.removeChild(sprite);
-                }
                 Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx * 2, ry * 2));
             }
             return false;

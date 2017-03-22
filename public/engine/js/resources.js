@@ -456,7 +456,6 @@ var Lich;
     Resources.OPTMZ_UI_SHOW_ON = true;
     Resources.OPTMZ_MAP_SHOW_ON = true;
     Resources.OPTMZ_MINIMAP_SHOW_ON = true;
-    Resources.OPTMZ_FOG_SHOW_ON = true;
     Resources.OPTMZ_FOG_PROCESS_ON = true;
     Resources.OPTMZ_WEATHER_SHOW_ON = false;
     /**
@@ -474,10 +473,6 @@ var Lich;
     // debug 
     Resources.SHOW_SECTORS = false;
     Resources.PRINT_SECTOR_ALLOC = false;
-    /**
-     * Fog
-     */
-    Resources.REVEAL_SIZE = 15; // musí být liché
     /**
      * Text
      */

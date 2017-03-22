@@ -101,18 +101,6 @@ var Lich;
             self.weather = new Lich.Weather(game);
             if (Lich.Resources.OPTMZ_WEATHER_SHOW_ON)
                 self.addChild(self.weather);
-            // Fog cont
-            self.fogSectorsCont = new PIXI.particles.ParticleContainer(Lich.Render.getFogContSizeW(self.game.getSceneWidth()) * Lich.Render.getFogContSizeH(self.game.getSceneHeight()), {
-                rotation: false,
-                alpha: false,
-                scale: false,
-                uvs: true
-            });
-            self.initFullScaleCont(self.fogSectorsCont);
-            self.fogSectorsCont.x = -Lich.Resources.PARTS_SIZE;
-            self.fogSectorsCont.y = -Lich.Resources.PARTS_SIZE;
-            if (Lich.Resources.OPTMZ_FOG_SHOW_ON)
-                self.addChild(self.fogSectorsCont);
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);
             self.addChild(self.messagesCont);
@@ -363,11 +351,11 @@ var Lich;
             var coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
             // Reveal 
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
-            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 2
-                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 2) {
-                var radius = Lich.Resources.PARTS_SIZE * Lich.Resources.REVEAL_SIZE;
-                this.currentRevealViewX = coord.x;
-                this.currentRevealViewY = coord.y;
+            if (!self.currentRevealViewX || Math.abs(coord.x - self.currentRevealViewX) > 2
+                || !self.currentRevealViewY || Math.abs(coord.y - self.currentRevealViewY) > 2) {
+                var radius = self.game.getSceneWidth();
+                self.currentRevealViewX = coord.x;
+                self.currentRevealViewY = coord.y;
                 var cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
                 var cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
                 var d2 = Math.pow(radius, 2);

@@ -41,7 +41,6 @@ namespace Lich {
         sectorsToUpdate = new Array<SectorUpdateRequest>();
         // Kontejnery na sektory
         sectorsCont: PIXI.Container;
-        fogSectorsCont: PIXI.particles.ParticleContainer;
         // Mapy sektorů
         sectorsMap = new Array2D<Sector>();
         // Mapa dílků
@@ -49,7 +48,6 @@ namespace Lich {
         // Vykreslené dílky povrchu a pozadí
         sceneTilesMap = new Array2D<PIXI.Sprite>();
         sceneBgrTilesMap = new Array2D<PIXI.Sprite>();
-        sceneFogTilesMap = new Array2D<PIXI.Sprite>();
         // Vykreslené dílky objektů
         sceneObjectsMap = new Array2D<PIXI.Sprite>();
 
@@ -57,11 +55,9 @@ namespace Lich {
             var self = this;
             self.tilesMap = world.tilesMap;
             self.sectorsCont = world.tilesSectorsCont;
-            self.fogSectorsCont = world.fogSectorsCont;
 
             // vytvoř sektory dle aktuálního záběru obrazovky
             self.updateSectors();
-            self.updateFogSectors();
         }
 
         getScreenOffsetX() {
@@ -108,42 +104,6 @@ namespace Lich {
             startFogSecY--;
             startFogSecX--;
             return new FogInfo(startFogSecX, startFogSecY, countFogSecX, countFogSecY, Math.floor(self.tilesMap.width / 2), Math.floor(self.tilesMap.height / 2));
-        }
-
-        updateFogSectors() {
-            let self = this;
-
-            if (!Resources.OPTMZ_FOG_SHOW_ON)
-                return;
-
-            let fogInfo = self.getFogInfo();
-
-            if (self.currentStartFogX == fogInfo.startFogSecX && self.currentStartFogY == fogInfo.startFogSecY)
-                return;
-
-            self.currentStartFogX = fogInfo.startFogSecX;
-            self.currentStartFogY = fogInfo.startFogSecY;
-
-            // projdi sektory, nepoužité dealokuj, nové naplň
-            for (let x = 0; x < fogInfo.countFogSecX; x++) {
-                for (let y = 0; y < fogInfo.countFogSecY; y++) {
-                    let fogSprite = self.sceneFogTilesMap.getValue(x, y);
-                    let recX = x + fogInfo.startFogSecX;
-                    let recY = y + fogInfo.startFogSecY;
-                    let revealed = self.tilesMap.fogRecord.getValue(recX, recY);
-                    if (!fogSprite) {
-                        fogSprite = self.createFogTile();
-                        fogSprite.x = x * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
-                        fogSprite.y = y * Resources.PARTS_SIZE - Resources.PARTS_SIZE;
-                        self.sceneFogTilesMap.setValue(x, y, fogSprite);
-                    }
-                    if (revealed || recX < 0 || recX > fogInfo.maxFogSecX || recY < 0 || recY > fogInfo.maxFogSecY) {
-                        self.fogSectorsCont.removeChild(fogSprite);
-                    } else if (!fogSprite.parent) {
-                        self.fogSectorsCont.addChild(fogSprite);
-                    }
-                }
-            }
         }
 
         // zkoumá, zda je potřeba přealokovat sektory 
@@ -396,11 +356,7 @@ namespace Lich {
                 sector.y += shiftY;
             });
 
-            self.fogSectorsCont.x = (self.fogSectorsCont.x + shiftX) % Resources.PARTS_SIZE - Resources.PARTS_SIZE;
-            self.fogSectorsCont.y = (self.fogSectorsCont.y + shiftY) % Resources.PARTS_SIZE - Resources.PARTS_SIZE;
-
             self.updateSectors();
-            self.updateFogSectors();
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_X, self.screenOffsetX));
             EventBus.getInstance().fireEvent(new NumberEventPayload(EventType.MAP_SHIFT_Y, self.screenOffsetY));
         }
@@ -425,13 +381,7 @@ namespace Lich {
             let fogInfo = self.getFogInfo();
             let revealed = record.getValue(rx, ry);
             if (!revealed) {
-                let sceneMap = self.sceneFogTilesMap;
                 record.setValue(rx, ry, true);
-                // jde o viditelnou část mlhy?
-                var sprite = sceneMap.getValue(rx - fogInfo.startFogSecX, ry - fogInfo.startFogSecY);
-                if (sprite) {
-                    self.fogSectorsCont.removeChild(sprite);
-                }
                 EventBus.getInstance().fireEvent(new TupleEventPayload(EventType.SURFACE_REVEAL, rx * 2, ry * 2));
             }
             return false;

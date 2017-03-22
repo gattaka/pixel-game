@@ -89,7 +89,6 @@ namespace Lich {
         tilesSectorsCont = new PIXI.Container();
         entitiesCont = new PIXI.Container();
         weather: Weather;
-        fogSectorsCont: PIXI.particles.ParticleContainer;
         messagesCont = new PIXI.Container();
 
         hero: Hero;
@@ -121,21 +120,6 @@ namespace Lich {
             self.weather = new Weather(game);
             if (Resources.OPTMZ_WEATHER_SHOW_ON)
                 self.addChild(self.weather);
-
-            // Fog cont
-            self.fogSectorsCont = new PIXI.particles.ParticleContainer(
-                Render.getFogContSizeW(self.game.getSceneWidth()) * Render.getFogContSizeH(self.game.getSceneHeight()),
-                {
-                    rotation: false,
-                    alpha: false,
-                    scale: false,
-                    uvs: true
-                });
-            self.initFullScaleCont(self.fogSectorsCont);
-            self.fogSectorsCont.x = -Resources.PARTS_SIZE;
-            self.fogSectorsCont.y = -Resources.PARTS_SIZE;
-            if (Resources.OPTMZ_FOG_SHOW_ON)
-                self.addChild(self.fogSectorsCont);
 
             // Messages cont (damage pts texty, hlášení)
             self.initFullScaleCont(self.messagesCont);
@@ -398,11 +382,11 @@ namespace Lich {
 
             // Reveal 
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
-            if (!this.currentRevealViewX || Math.abs(coord.x - this.currentRevealViewX) > 2
-                || !this.currentRevealViewY || Math.abs(coord.y - this.currentRevealViewY) > 2) {
-                let radius = Resources.PARTS_SIZE * Resources.REVEAL_SIZE;
-                this.currentRevealViewX = coord.x;
-                this.currentRevealViewY = coord.y;
+            if (!self.currentRevealViewX || Math.abs(coord.x - self.currentRevealViewX) > 2
+                || !self.currentRevealViewY || Math.abs(coord.y - self.currentRevealViewY) > 2) {
+                let radius = self.game.getSceneWidth();
+                self.currentRevealViewX = coord.x;
+                self.currentRevealViewY = coord.y;
                 let cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
                 let cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
                 let d2 = Math.pow(radius, 2);
