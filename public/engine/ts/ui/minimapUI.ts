@@ -45,48 +45,38 @@ namespace Lich {
 
     }
 
-    export class MinimapUIRender extends AbstractMapUIRenderer {
+    export class MinimapUIRender {
 
         static MAP_SIDE = 200;
 
+        width = MinimapUIRender.MAP_SIDE;
+        height = MinimapUIRender.MAP_SIDE;
         shiftX: number = 0;
         shiftY: number = 0;
         playerX: number = 0;
         playerY: number = 0;
 
+        public mapOffsetX: number;
+        public mapOffsetY: number;
         public iconX: number;
         public iconY: number;
 
-        constructor(tilesMap: TilesMap) {
-            super(tilesMap, "minimapCanvas", MinimapUIRender.MAP_SIDE, MinimapUIRender.MAP_SIDE);
+        constructor(private tilesMap: TilesMap) {
             let self = this;
-
-            EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, (payload: TupleEventPayload) => {
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MINIMAP_UPDATE));
-                return false;
-            });
-
-            EventBus.getInstance().registerConsumer(EventType.SURFACE_REVEAL, (payload: TupleEventPayload) => {
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MINIMAP_UPDATE));
-                return false;
-            });
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
                 self.shiftX = payload.payload;
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MINIMAP_UPDATE));
                 return false;
             });
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_Y, (payload: NumberEventPayload) => {
                 self.shiftY = payload.payload;
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MINIMAP_UPDATE));
                 return false;
             });
 
             EventBus.getInstance().registerConsumer(EventType.PLAYER_POSITION_CHANGE, (payload: TupleEventPayload) => {
                 self.playerX = payload.x;
                 self.playerY = payload.y;
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MINIMAP_UPDATE));
                 return false;
             });
 
@@ -135,44 +125,17 @@ namespace Lich {
                 }
             }
 
-            // pozice minimapy
-            let imgData = this.ctx.createImageData(this.width, this.height); // width x height
-            (function () {
-                for (let y = 0; y < self.height; y++) {
-                    for (let x = 0; x < self.width; x++) {
-                        self.drawMinimapTile(imgData, (Math.floor(viewX) + x) * 2, (Math.floor(viewY) + y) * 2);
-                    }
-                }
-                self.ctx.putImageData(imgData, 0, 0);
-            })();
-
-        };
-
-        private drawMinimapTile(imgData, x: number, y: number) {
-            let self = this;
-            if (typeof imgData.counter === "undefined" || imgData.counter === null)
-                imgData.counter = 0;
-            let fill = (color: Color) => {
-                imgData.data[imgData.counter++] = color.r; // R
-                imgData.data[imgData.counter++] = color.g; // G
-                imgData.data[imgData.counter++] = color.b; // B
-                imgData.data[imgData.counter++] = color.a != undefined ? color.a : 250; // A
-            };
-            self.processFillBySurface(x, y, fill);
+            self.mapOffsetX = viewX;
+            self.mapOffsetY = viewY;
         };
     }
 
     export class MinimapUI extends AbstractUI {
 
-        private static MINIMAP_UPDATE_DELAY = 50;
-
         playerIcon: PIXI.Sprite;
         bitmap: PIXI.Sprite;
 
-        private prepareUpdateTexture = false;
-        private prepareUpdateTextureCounter = MinimapUI.MINIMAP_UPDATE_DELAY;
-
-        constructor(private mapRender: MinimapUIRender) {
+        constructor(private minimapRender: MinimapUIRender, private mapRender: MapUIRender) {
             super(MinimapUIRender.MAP_SIDE, MinimapUIRender.MAP_SIDE);
 
             let self = this;
@@ -183,7 +146,7 @@ namespace Lich {
             border.drawRect(0, 0, this.fixedWidth, this.fixedHeight);
             self.addChild(border);
 
-            self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
+            self.bitmap = new PIXI.Sprite(new PIXI.Texture(mapRender.baseTexture, this.createFrame()));
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
@@ -191,39 +154,46 @@ namespace Lich {
             self.playerIcon.fixedHeight = self.playerIcon.getBounds().height;
             self.addChild(self.playerIcon);
 
-            EventBus.getInstance().registerConsumer(EventType.MINIMAP_UPDATE, () => {
-                this.prepareUpdateTexture = true;
+            EventBus.getInstance().registerConsumer(EventType.MAP_UPDATE, (payload: SimpleEventPayload) => {
+                this.bitmap.texture.destroy();
+                this.bitmap.texture = new PIXI.Texture(this.mapRender.baseTexture, this.createFrame());
                 return false;
             });
+        }
 
+        createFrame() {
+            return new PIXI.Rectangle(
+                this.minimapRender.mapOffsetX, this.minimapRender.mapOffsetY,
+                this.minimapRender.width, this.minimapRender.height
+            );
         }
 
         update(delta: number) {
-            if (this.prepareUpdateTexture) {
-                this.prepareUpdateTextureCounter -= delta;
-                if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = MinimapUI.MINIMAP_UPDATE_DELAY;
-                    this.mapRender.update();
-                    let texture = this.bitmap.texture.clone();
-                    texture.update();
-                    this.bitmap.texture.destroy();
-                    this.bitmap.texture = texture;
-                    this.prepareUpdateTexture = false;
+            this.minimapRender.update();
+            this.bitmap.texture.frame = this.createFrame();
 
-                    this.playerIcon.x = this.mapRender.iconX - this.playerIcon.fixedWidth / 2;
-                    this.playerIcon.y = this.mapRender.iconY - this.playerIcon.fixedHeight / 2;
-                }
-            }
+            this.playerIcon.x = this.minimapRender.iconX - this.playerIcon.fixedWidth / 2;
+            this.playerIcon.y = this.minimapRender.iconY - this.playerIcon.fixedHeight / 2;
         }
 
     }
 
     export class MapUIRender extends AbstractMapUIRenderer {
 
+        public baseTexture: PIXI.BaseTexture;
+        private scheduleDraw = false;
+        private fromX = -1;
+        private fromY = -1;
+        private toX = -1;
+        private toY = -1;
+
         constructor(tilesMap: TilesMap) {
             super(tilesMap, "mapCanvas", tilesMap.width / 2, tilesMap.height / 2);
             let self = this;
 
+            self.baseTexture = PIXI.BaseTexture.fromCanvas(self.canvas);
+
+            // init
             let imgData = this.ctx.createImageData(this.width, this.height); // width x height
             (function () {
                 for (let y = 0; y < self.tilesMap.height; y += 2) {
@@ -235,17 +205,11 @@ namespace Lich {
             })();
 
             let listener = (payload: TupleEventPayload) => {
-                let imgData = this.ctx.createImageData(1, 1);
-                for (let i = 0; i < imgData.data.length; i += 4) {
-                    self.processFillBySurface(payload.x, payload.y, (color: Color) => {
-                        imgData.data[i + 0] = color.r;
-                        imgData.data[i + 1] = color.g;
-                        imgData.data[i + 2] = color.b;
-                        imgData.data[i + 3] = 250;
-                    });
-                };
-                self.ctx.putImageData(imgData, payload.x / 2, payload.y / 2);
-                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MAP_UPDATE));
+                if (self.fromX < 0 || payload.x < self.fromX) self.fromX = payload.x;
+                if (self.fromY < 0 || payload.y < self.fromY) self.fromY = payload.y;
+                if (payload.x > self.toX) self.toX = payload.x;
+                if (payload.y > self.toY) self.toY = payload.y;
+                self.scheduleDraw = true;
                 return false;
             };
 
@@ -274,6 +238,37 @@ namespace Lich {
             self.processFillBySurface(x, y, fill);
         };
 
+        public update() {
+            let self = this;
+            if (self.scheduleDraw) {
+                let w = Math.floor((self.toX - self.fromX + 1) / 2);
+                let h = Math.floor((self.toY - self.fromY + 1) / 2);
+                let fromPartX = Math.floor(self.fromX / 2);
+                let fromPartY = Math.floor(self.fromY / 2);
+                let imgData = self.ctx.createImageData(w, h);
+                let index = 0;
+                for (let i = 0; i < imgData.data.length; i += 4) {
+                    let x = fromPartX + index % w;
+                    let y = fromPartY + Math.floor(index / w);
+                    index++;
+                    self.processFillBySurface(x * 2, y * 2, (color: Color) => {
+                        imgData.data[i + 0] = color.r;
+                        imgData.data[i + 1] = color.g;
+                        imgData.data[i + 2] = color.b;
+                        imgData.data[i + 3] = 250;
+                    });
+                }
+                self.ctx.putImageData(imgData, fromPartX, fromPartY);
+                self.scheduleDraw = false;
+                self.fromX = -1;
+                self.fromY = -1;
+                self.toX = -1;
+                self.toY = -1;
+                self.baseTexture.update();
+                EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MAP_UPDATE));
+            }
+        }
+
     }
 
     export class MapUI extends AbstractUI {
@@ -288,7 +283,6 @@ namespace Lich {
         playerX: number = 0;
         playerY: number = 0;
 
-        private prepareUpdateTexture = false;
         private prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;
 
         constructor(mainCanvasWidth: number, mainCanvasHeight: number, private mapRender: MapUIRender) {
@@ -306,7 +300,7 @@ namespace Lich {
             border.drawRect(0, 0, this.fixedWidth, this.fixedHeight);
             self.addChild(border);
 
-            self.bitmap = new PIXI.Sprite(PIXI.Texture.fromCanvas(mapRender.canvas));
+            self.bitmap = new PIXI.Sprite(new PIXI.Texture(mapRender.baseTexture));
             self.addChild(self.bitmap);
 
             self.playerIcon = Resources.getInstance().getUISprite(UISpriteKey.UI_PLAYER_ICON_KEY);
@@ -326,11 +320,6 @@ namespace Lich {
                 self.playerIcon.x -= self.playerIcon.fixedWidth / 2;
                 self.playerIcon.y -= self.playerIcon.fixedHeight / 2
             };
-
-            EventBus.getInstance().registerConsumer(EventType.MAP_UPDATE, () => {
-                this.prepareUpdateTexture = true;
-                return false;
-            });
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
                 self.shiftX = payload.payload;
@@ -354,17 +343,10 @@ namespace Lich {
         }
 
         update(delta: number) {
-            if (this.prepareUpdateTexture && this.parent) {
-                this.prepareUpdateTextureCounter -= delta;
-                if (this.prepareUpdateTextureCounter <= 0) {
-                    this.prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;
-                    this.bitmap.texture.update();
-                    let texture = this.bitmap.texture.clone();
-                    texture.update();
-                    this.bitmap.texture.destroy();
-                    this.bitmap.texture = texture;
-                    this.prepareUpdateTexture = false;
-                }
+            this.prepareUpdateTextureCounter -= delta;
+            if (this.prepareUpdateTextureCounter <= 0) {
+                this.prepareUpdateTextureCounter = MapUI.MAP_UPDATE_DELAY;
+                this.mapRender.update();
             }
         }
 

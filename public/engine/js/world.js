@@ -349,21 +349,20 @@ var Lich;
                 return;
             var self = this;
             var coord = self.render.pixelsToTiles(self.hero.x, self.hero.y);
-            // Reveal 
+            // Reveal, pokud je nějaký posuv 
             // Fog je krokován po 2*PART, jeden PART = 2*TILE, takže 4 TILE 
             if (!self.currentRevealViewX || Math.abs(coord.x - self.currentRevealViewX) > 2
                 || !self.currentRevealViewY || Math.abs(coord.y - self.currentRevealViewY) > 2) {
-                var radius = self.game.getSceneWidth();
+                var revealWidth = Math.ceil(self.game.getSceneWidth() / 2 / Lich.Resources.PARTS_SIZE);
+                var revealHeight = Math.ceil(self.game.getSceneWidth() / 2 / Lich.Resources.PARTS_SIZE);
+                var coordPartX = Math.floor(coord.x / 2);
+                var coordPartY = Math.floor(coord.y / 2);
                 self.currentRevealViewX = coord.x;
                 self.currentRevealViewY = coord.y;
-                var cx = Math.floor(self.hero.x + self.hero.fixedWidth / 2);
-                var cy = Math.floor(self.hero.y + self.hero.fixedHeight / 2);
-                var d2 = Math.pow(radius, 2);
-                for (var y = cy - radius; y < cy + radius; y += Lich.Resources.PARTS_SIZE) {
-                    for (var x = cx - radius; x < cx + radius; x += Lich.Resources.PARTS_SIZE) {
-                        var r2 = Math.pow(cx - x, 2) + Math.pow(cy - y, 2);
-                        if (r2 <= d2) {
-                            self.render.revealFog(x, y);
+                for (var y = -revealHeight; y < revealHeight; y++) {
+                    for (var x = -revealWidth; x < revealWidth; x++) {
+                        if (coordPartX + x > 0 && coordPartY + y > 0) {
+                            self.render.revealFog(self.hero.x + x * Lich.Resources.PARTS_SIZE, self.hero.y + y * Lich.Resources.PARTS_SIZE);
                         }
                     }
                 }

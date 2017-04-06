@@ -29,21 +29,22 @@ namespace Lich {
 
             let self = this;
 
-            if (Resources.OPTMZ_MINIMAP_SHOW_ON) {
-                // Minimap render
-                let minimapRender = new MinimapUIRender(tilesMap)
-
-                // Minimapa
-                let minimapUI = new MinimapUI(minimapRender);
-                minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
-                minimapUI.y = UI.SCREEN_SPACING;
-                self.minimapUI = minimapUI;
-                self.addChild(minimapUI);
-            }
 
             if (Resources.OPTMZ_MAP_SHOW_ON) {
                 // Map render
                 let mapRender = new MapUIRender(tilesMap)
+
+                if (Resources.OPTMZ_MINIMAP_SHOW_ON) {
+                    // Minimap render
+                    let minimapRender = new MinimapUIRender(tilesMap)
+
+                    // Minimapa
+                    let minimapUI = new MinimapUI(minimapRender, mapRender);
+                    minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
+                    minimapUI.y = UI.SCREEN_SPACING;
+                    self.minimapUI = minimapUI;
+                    self.addChild(minimapUI);
+                }
 
                 // mapa
                 let mapUI = new MapUI(canvas.width, canvas.height, mapRender);

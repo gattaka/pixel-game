@@ -16,19 +16,19 @@ var Lich;
             var _this = _super.call(this) || this;
             _this.canvas = canvas;
             var self = _this;
-            if (Lich.Resources.OPTMZ_MINIMAP_SHOW_ON) {
-                // Minimap render
-                var minimapRender = new Lich.MinimapUIRender(tilesMap);
-                // Minimapa
-                var minimapUI = new Lich.MinimapUI(minimapRender);
-                minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
-                minimapUI.y = UI.SCREEN_SPACING;
-                self.minimapUI = minimapUI;
-                self.addChild(minimapUI);
-            }
             if (Lich.Resources.OPTMZ_MAP_SHOW_ON) {
                 // Map render
                 var mapRender = new Lich.MapUIRender(tilesMap);
+                if (Lich.Resources.OPTMZ_MINIMAP_SHOW_ON) {
+                    // Minimap render
+                    var minimapRender = new Lich.MinimapUIRender(tilesMap);
+                    // Minimapa
+                    var minimapUI = new Lich.MinimapUI(minimapRender, mapRender);
+                    minimapUI.x = canvas.width - UI.SCREEN_SPACING - minimapUI.fixedWidth;
+                    minimapUI.y = UI.SCREEN_SPACING;
+                    self.minimapUI = minimapUI;
+                    self.addChild(minimapUI);
+                }
                 // mapa
                 var mapUI = new Lich.MapUI(canvas.width, canvas.height, mapRender);
                 mapUI.x = UI.SCREEN_SPACING;
