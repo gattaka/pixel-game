@@ -45,6 +45,12 @@ var Lich;
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, Lich.UISpriteKey.UI_INV_XMAS_PURPLE_BAUBLE_KEY),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_XMAS_RED_BAUBLE_KEY, Lich.UISpriteKey.UI_INV_XMAS_RED_BAUBLE_KEY),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_SNOWFLAKE_KEY, Lich.UISpriteKey.UI_INV_SNOWFLAKE_KEY),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_EASTER_EGG1_KEY, Lich.UISpriteKey.UI_INV_EASTER_EGG1_KEY),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_EASTER_EGG2_KEY, Lich.UISpriteKey.UI_INV_EASTER_EGG2_KEY),
+            new Lich.InvObjDefinition(Lich.InventoryKey.INV_STRANGE_EGG_KEY, Lich.UISpriteKey.UI_INV_STRANGE_EGG_KEY).setConsumeAction(function (world) {
+                Lich.SpawnPool.getInstance().spawn(Lich.Enemy.Alien, world);
+                return true;
+            }),
             // usaditelných jako objekt
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_ARMCHAIR_KEY, Lich.UISpriteKey.UI_INV_ARMCHAIR_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_ARMCHAIR_KEY]),
             new Lich.InvObjDefinition(Lich.InventoryKey.INV_BOOKS_KEY, Lich.UISpriteKey.UI_INV_BOOKS_KEY, res.mapObjectDefs[Lich.MapObjectKey.MAP_BOOKS_KEY]),

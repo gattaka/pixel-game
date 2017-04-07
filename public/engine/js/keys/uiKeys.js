@@ -139,5 +139,8 @@ var Lich;
         UISpriteKey[UISpriteKey["UI_INV_WOODWALL_WINDOW_KEY"] = 129] = "UI_INV_WOODWALL_WINDOW_KEY";
         UISpriteKey[UISpriteKey["UI_INV_CHAIN_LADDER_KEY"] = 130] = "UI_INV_CHAIN_LADDER_KEY";
         UISpriteKey[UISpriteKey["UI_INV_GOLD_KEY"] = 131] = "UI_INV_GOLD_KEY";
+        UISpriteKey[UISpriteKey["UI_INV_EASTER_EGG1_KEY"] = 132] = "UI_INV_EASTER_EGG1_KEY";
+        UISpriteKey[UISpriteKey["UI_INV_EASTER_EGG2_KEY"] = 133] = "UI_INV_EASTER_EGG2_KEY";
+        UISpriteKey[UISpriteKey["UI_INV_STRANGE_EGG_KEY"] = 134] = "UI_INV_STRANGE_EGG_KEY";
     })(UISpriteKey = Lich.UISpriteKey || (Lich.UISpriteKey = {}));
 })(Lich || (Lich = {}));

@@ -136,7 +136,10 @@ namespace Lich {
         ["ui_inv_rock_brick_window", UISpriteKey.UI_INV_ROCK_BRICK_WINDOW_KEY],
         ["ui_inv_woodwall_window", UISpriteKey.UI_INV_WOODWALL_WINDOW_KEY],
         ["ui_inv_chain_ladder", UISpriteKey.UI_INV_CHAIN_LADDER_KEY],
-        ["ui_inv_gold", UISpriteKey.UI_INV_GOLD_KEY]
+        ["ui_inv_gold", UISpriteKey.UI_INV_GOLD_KEY],
+        ["ui_inv_easter_egg1", UISpriteKey.UI_INV_EASTER_EGG1_KEY],
+        ["ui_inv_easter_egg2", UISpriteKey.UI_INV_EASTER_EGG2_KEY],
+        ["ui_inv_strange_egg", UISpriteKey.UI_INV_STRANGE_EGG_KEY]
     ]
 
     export let FONT_DEFS: Array<[FontKey, [[string, string]]]> = [

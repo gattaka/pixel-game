@@ -13,7 +13,8 @@ namespace Lich {
         VALENTIMON_ANIMATION_KEY,
         LOVELETTER_ANIMATION_KEY,
         LOVEARROW_ANIMATION_KEY,
-        CUPID_ANIMATION_KEY
+        CUPID_ANIMATION_KEY,
+        ALIEN_ANIMATION_KEY
     }
 
     export enum AnimationKey {
@@ -86,6 +87,12 @@ namespace Lich {
         ANM_VALENTIMON_ATTACK_KEY,
         ANM_VALENTIMON_DIE_KEY,
         ANM_VALENTIMON_DEAD_KEY,
+        // Alien
+        ANM_ALIEN_WALKL_KEY,
+        ANM_ALIEN_WALKR_KEY,
+        ANM_ALIEN_ATTACKL_KEY,
+        ANM_ALIEN_ATTACKR_KEY,
+        ANM_ALIEN_DIE_KEY,
         // Projectiles
         ANM_BULLET_FLY_KEY,
         ANM_BULLET_HIT_KEY,

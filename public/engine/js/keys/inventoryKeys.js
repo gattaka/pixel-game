@@ -83,5 +83,8 @@ var Lich;
         InventoryKey[InventoryKey["INV_CABINET_KEY"] = 78] = "INV_CABINET_KEY";
         InventoryKey[InventoryKey["INV_CANDLE_KEY"] = 79] = "INV_CANDLE_KEY";
         InventoryKey[InventoryKey["INV_PORTRAIT_VALENTIMON_KEY"] = 80] = "INV_PORTRAIT_VALENTIMON_KEY";
+        InventoryKey[InventoryKey["INV_EASTER_EGG1_KEY"] = 81] = "INV_EASTER_EGG1_KEY";
+        InventoryKey[InventoryKey["INV_EASTER_EGG2_KEY"] = 82] = "INV_EASTER_EGG2_KEY";
+        InventoryKey[InventoryKey["INV_STRANGE_EGG_KEY"] = 83] = "INV_STRANGE_EGG_KEY";
     })(InventoryKey = Lich.InventoryKey || (Lich.InventoryKey = {}));
 })(Lich || (Lich = {}));

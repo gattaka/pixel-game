@@ -457,7 +457,7 @@ var Lich;
     Resources.OPTMZ_MAP_SHOW_ON = true;
     Resources.OPTMZ_MINIMAP_SHOW_ON = true;
     Resources.OPTMZ_FOG_PROCESS_ON = true;
-    Resources.OPTMZ_WEATHER_SHOW_ON = false;
+    Resources.OPTMZ_WEATHER_SHOW_ON = true;
     /**
      * Sektory
      */

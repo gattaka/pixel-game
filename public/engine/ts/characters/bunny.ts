@@ -105,6 +105,16 @@ namespace Lich {
             die(world: World) {
                 super.die(world);
                 Mixer.playSound(SoundKey.SND_SQUASHED_KEY);
+                switch (ThemeWatch.getCurrentTheme()) {
+                    case Theme.EASTER:
+                        if (Utils.prop(10)) {
+                            this.dropLoot(world, InventoryKey.INV_EASTER_EGG1_KEY);
+                        } else if (Utils.prop(10)) {
+                            this.dropLoot(world, InventoryKey.INV_EASTER_EGG2_KEY);
+                        } else if (Utils.prop(10)) {
+                            this.dropLoot(world, InventoryKey.INV_STRANGE_EGG_KEY);
+                        }
+                }
                 this.dropLoot(world, InventoryKey.INV_CHICKEN_MEAT_KEY);
                 world.fadeEnemy(this);
             }

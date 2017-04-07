@@ -124,6 +124,18 @@ var Lich;
             Bunny.prototype.die = function (world) {
                 _super.prototype.die.call(this, world);
                 Lich.Mixer.playSound(Lich.SoundKey.SND_SQUASHED_KEY);
+                switch (Lich.ThemeWatch.getCurrentTheme()) {
+                    case Lich.Theme.EASTER:
+                        if (Lich.Utils.prop(10)) {
+                            this.dropLoot(world, Lich.InventoryKey.INV_EASTER_EGG1_KEY);
+                        }
+                        else if (Lich.Utils.prop(10)) {
+                            this.dropLoot(world, Lich.InventoryKey.INV_EASTER_EGG2_KEY);
+                        }
+                        else if (Lich.Utils.prop(10)) {
+                            this.dropLoot(world, Lich.InventoryKey.INV_STRANGE_EGG_KEY);
+                        }
+                }
                 this.dropLoot(world, Lich.InventoryKey.INV_CHICKEN_MEAT_KEY);
                 world.fadeEnemy(this);
             };

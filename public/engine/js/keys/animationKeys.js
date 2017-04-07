@@ -15,6 +15,7 @@ var Lich;
         AnimationSetKey[AnimationSetKey["LOVELETTER_ANIMATION_KEY"] = 10] = "LOVELETTER_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["LOVEARROW_ANIMATION_KEY"] = 11] = "LOVEARROW_ANIMATION_KEY";
         AnimationSetKey[AnimationSetKey["CUPID_ANIMATION_KEY"] = 12] = "CUPID_ANIMATION_KEY";
+        AnimationSetKey[AnimationSetKey["ALIEN_ANIMATION_KEY"] = 13] = "ALIEN_ANIMATION_KEY";
     })(AnimationSetKey = Lich.AnimationSetKey || (Lich.AnimationSetKey = {}));
     var AnimationKey;
     (function (AnimationKey) {
@@ -87,9 +88,15 @@ var Lich;
         AnimationKey[AnimationKey["ANM_VALENTIMON_ATTACK_KEY"] = 58] = "ANM_VALENTIMON_ATTACK_KEY";
         AnimationKey[AnimationKey["ANM_VALENTIMON_DIE_KEY"] = 59] = "ANM_VALENTIMON_DIE_KEY";
         AnimationKey[AnimationKey["ANM_VALENTIMON_DEAD_KEY"] = 60] = "ANM_VALENTIMON_DEAD_KEY";
+        // Alien
+        AnimationKey[AnimationKey["ANM_ALIEN_WALKL_KEY"] = 61] = "ANM_ALIEN_WALKL_KEY";
+        AnimationKey[AnimationKey["ANM_ALIEN_WALKR_KEY"] = 62] = "ANM_ALIEN_WALKR_KEY";
+        AnimationKey[AnimationKey["ANM_ALIEN_ATTACKL_KEY"] = 63] = "ANM_ALIEN_ATTACKL_KEY";
+        AnimationKey[AnimationKey["ANM_ALIEN_ATTACKR_KEY"] = 64] = "ANM_ALIEN_ATTACKR_KEY";
+        AnimationKey[AnimationKey["ANM_ALIEN_DIE_KEY"] = 65] = "ANM_ALIEN_DIE_KEY";
         // Projectiles
-        AnimationKey[AnimationKey["ANM_BULLET_FLY_KEY"] = 61] = "ANM_BULLET_FLY_KEY";
-        AnimationKey[AnimationKey["ANM_BULLET_HIT_KEY"] = 62] = "ANM_BULLET_HIT_KEY";
-        AnimationKey[AnimationKey["ANM_BULLET_DONE_KEY"] = 63] = "ANM_BULLET_DONE_KEY";
+        AnimationKey[AnimationKey["ANM_BULLET_FLY_KEY"] = 66] = "ANM_BULLET_FLY_KEY";
+        AnimationKey[AnimationKey["ANM_BULLET_HIT_KEY"] = 67] = "ANM_BULLET_HIT_KEY";
+        AnimationKey[AnimationKey["ANM_BULLET_DONE_KEY"] = 68] = "ANM_BULLET_DONE_KEY";
     })(AnimationKey = Lich.AnimationKey || (Lich.AnimationKey = {}));
 })(Lich || (Lich = {}));

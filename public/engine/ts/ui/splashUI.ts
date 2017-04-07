@@ -23,6 +23,11 @@ namespace Lich {
 
             var version;
 
+            version = new Version("0.23 - Apr 6, 2017");
+            version.addChange("Fog reveal optimized");
+            version.addChange("Easter theme");
+            this.addVersion(version);
+
             version = new Version("0.22 - Mar 11, 2017");
             version.addChange("Engine migration from CreateJS to PixiJS");
             version.addChange("Optimalization");

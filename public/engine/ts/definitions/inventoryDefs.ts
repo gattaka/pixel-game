@@ -29,6 +29,12 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_XMAS_PURPLE_BAUBLE_KEY, UISpriteKey.UI_INV_XMAS_PURPLE_BAUBLE_KEY),
             new InvObjDefinition(InventoryKey.INV_XMAS_RED_BAUBLE_KEY, UISpriteKey.UI_INV_XMAS_RED_BAUBLE_KEY),
             new InvObjDefinition(InventoryKey.INV_SNOWFLAKE_KEY, UISpriteKey.UI_INV_SNOWFLAKE_KEY),
+            new InvObjDefinition(InventoryKey.INV_EASTER_EGG1_KEY, UISpriteKey.UI_INV_EASTER_EGG1_KEY),
+            new InvObjDefinition(InventoryKey.INV_EASTER_EGG2_KEY, UISpriteKey.UI_INV_EASTER_EGG2_KEY),
+            new InvObjDefinition(InventoryKey.INV_STRANGE_EGG_KEY, UISpriteKey.UI_INV_STRANGE_EGG_KEY).setConsumeAction((world: World): boolean => {
+                SpawnPool.getInstance().spawn(Enemy.Alien, world);
+                return true;
+            }),
             // usaditelných jako objekt
             new InvObjDefinition(InventoryKey.INV_ARMCHAIR_KEY, UISpriteKey.UI_INV_ARMCHAIR_KEY, res.mapObjectDefs[MapObjectKey.MAP_ARMCHAIR_KEY]),
             new InvObjDefinition(InventoryKey.INV_BOOKS_KEY, UISpriteKey.UI_INV_BOOKS_KEY, res.mapObjectDefs[MapObjectKey.MAP_BOOKS_KEY]),

@@ -5,6 +5,7 @@ var Lich;
         Theme[Theme["NORMAL"] = 0] = "NORMAL";
         Theme[Theme["VALENTINE"] = 1] = "VALENTINE";
         Theme[Theme["WINTER"] = 2] = "WINTER";
+        Theme[Theme["EASTER"] = 3] = "EASTER";
     })(Theme = Lich.Theme || (Lich.Theme = {}));
     var ThemeWatch = (function () {
         function ThemeWatch() {
@@ -18,6 +19,8 @@ var Lich;
                     return Theme.WINTER;
                 case 2:
                     return Theme.VALENTINE;
+                case 4:
+                    return Theme.EASTER;
                 default:
                     return Theme.VALENTINE;
             }

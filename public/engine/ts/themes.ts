@@ -2,7 +2,8 @@ namespace Lich {
     export enum Theme {
         NORMAL,
         VALENTINE,
-        WINTER
+        WINTER,
+        EASTER
     }
 
     export class ThemeWatch {
@@ -15,6 +16,8 @@ namespace Lich {
                     return Theme.WINTER;
                 case 2:
                     return Theme.VALENTINE;
+                case 4:
+                    return Theme.EASTER;
                 default:
                     return Theme.VALENTINE;
             }

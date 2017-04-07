@@ -26,7 +26,7 @@ namespace Lich {
         static OPTMZ_MAP_SHOW_ON = true;
         static OPTMZ_MINIMAP_SHOW_ON = true;
         static OPTMZ_FOG_PROCESS_ON = true;
-        static OPTMZ_WEATHER_SHOW_ON = false;
+        static OPTMZ_WEATHER_SHOW_ON = true;
 
         /**
          * Sektory 

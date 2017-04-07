@@ -354,7 +354,7 @@ var Lich;
             if (!self.currentRevealViewX || Math.abs(coord.x - self.currentRevealViewX) > 2
                 || !self.currentRevealViewY || Math.abs(coord.y - self.currentRevealViewY) > 2) {
                 var revealWidth = Math.ceil(self.game.getSceneWidth() / 2 / Lich.Resources.PARTS_SIZE);
-                var revealHeight = Math.ceil(self.game.getSceneWidth() / 2 / Lich.Resources.PARTS_SIZE);
+                var revealHeight = Math.ceil(self.game.getSceneHeight() / 2 / Lich.Resources.PARTS_SIZE);
                 var coordPartX = Math.floor(coord.x / 2);
                 var coordPartY = Math.floor(coord.y / 2);
                 self.currentRevealViewX = coord.x;

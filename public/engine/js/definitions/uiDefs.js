@@ -137,7 +137,10 @@ var Lich;
         ["ui_inv_rock_brick_window", Lich.UISpriteKey.UI_INV_ROCK_BRICK_WINDOW_KEY],
         ["ui_inv_woodwall_window", Lich.UISpriteKey.UI_INV_WOODWALL_WINDOW_KEY],
         ["ui_inv_chain_ladder", Lich.UISpriteKey.UI_INV_CHAIN_LADDER_KEY],
-        ["ui_inv_gold", Lich.UISpriteKey.UI_INV_GOLD_KEY]
+        ["ui_inv_gold", Lich.UISpriteKey.UI_INV_GOLD_KEY],
+        ["ui_inv_easter_egg1", Lich.UISpriteKey.UI_INV_EASTER_EGG1_KEY],
+        ["ui_inv_easter_egg2", Lich.UISpriteKey.UI_INV_EASTER_EGG2_KEY],
+        ["ui_inv_strange_egg", Lich.UISpriteKey.UI_INV_STRANGE_EGG_KEY]
     ];
     Lich.FONT_DEFS = [
         [Lich.FontKey.FNT_SMALL_YELLOW_KEY, [

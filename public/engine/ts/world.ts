@@ -385,7 +385,7 @@ namespace Lich {
             if (!self.currentRevealViewX || Math.abs(coord.x - self.currentRevealViewX) > 2
                 || !self.currentRevealViewY || Math.abs(coord.y - self.currentRevealViewY) > 2) {
                 let revealWidth = Math.ceil(self.game.getSceneWidth() / 2 / Resources.PARTS_SIZE);
-                let revealHeight = Math.ceil(self.game.getSceneWidth() / 2 / Resources.PARTS_SIZE);
+                let revealHeight = Math.ceil(self.game.getSceneHeight() / 2 / Resources.PARTS_SIZE);
                 let coordPartX = Math.floor(coord.x / 2);
                 let coordPartY = Math.floor(coord.y / 2);
                 self.currentRevealViewX = coord.x;
