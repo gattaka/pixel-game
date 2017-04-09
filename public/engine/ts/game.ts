@@ -236,6 +236,7 @@ namespace Lich {
                         self.stage.addChild(self.loadUI);
                         self.loadUI.alpha = 1;
                         setTimeout(() => {
+                            Inventory.getInstance().init();
                             TilesMapGenerator.createNew((tilesMap) => {
                                 populateContent(tilesMap);
                                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.SAVE_WORLD));

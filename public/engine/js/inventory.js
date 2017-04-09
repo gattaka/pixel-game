@@ -2,13 +2,8 @@ var Lich;
 (function (Lich) {
     var Inventory = (function () {
         function Inventory() {
-            // pole inv položek
-            this.itemsTypeArray = new Array();
-            // mapa indexů pole položek dle inv klíče
-            this.itemsTypeIndexMap = {};
-            // mapa množství položek dle inv klíče
-            this.itemsQuantityMap = {};
             this.choosenItem = null;
+            this.init();
         }
         Inventory.getInstance = function () {
             if (!Inventory.INSTANCE) {
@@ -17,6 +12,11 @@ var Lich;
                 Lich.RecipeManager.getInstance();
             }
             return Inventory.INSTANCE;
+        };
+        Inventory.prototype.init = function () {
+            this.itemsTypeArray = new Array();
+            this.itemsTypeIndexMap = {};
+            this.itemsQuantityMap = {};
         };
         Inventory.prototype.serialize = function () {
             var _this = this;

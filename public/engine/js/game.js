@@ -177,6 +177,7 @@ var Lich;
                         self.stage.addChild(self.loadUI);
                         self.loadUI.alpha = 1;
                         setTimeout(function () {
+                            Lich.Inventory.getInstance().init();
                             Lich.TilesMapGenerator.createNew(function (tilesMap) {
                                 populateContent(tilesMap);
                                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.SAVE_WORLD));

@@ -5,11 +5,11 @@ namespace Lich {
         private static INSTANCE: Inventory;
 
         // pole inv položek
-        private itemsTypeArray = new Array<InventoryKey>();
+        private itemsTypeArray;
         // mapa indexů pole položek dle inv klíče
-        private itemsTypeIndexMap: { [k: number]: number } = {};
+        private itemsTypeIndexMap: { [k: number]: number };
         // mapa množství položek dle inv klíče
-        private itemsQuantityMap: { [k: number]: number } = {};
+        private itemsQuantityMap: { [k: number]: number };
 
         private choosenItem: InventoryKey = null;
 
@@ -22,7 +22,15 @@ namespace Lich {
             return Inventory.INSTANCE;
         }
 
-        private constructor() { }
+        private constructor() {
+            this.init();
+        }
+
+        public init() {
+            this.itemsTypeArray = new Array<InventoryKey>();
+            this.itemsTypeIndexMap = {};
+            this.itemsQuantityMap = {};
+        }
 
         public serialize() {
             let array = [];
