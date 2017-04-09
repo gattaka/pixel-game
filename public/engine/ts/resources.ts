@@ -86,7 +86,7 @@ namespace Lich {
         public mapTransitionSrfcDefs: { [k: string]: MapSurfaceTransitionDefinition } = {};
         public mapTransitionSrfcBgrsDefs: { [k: string]: MapSurfaceBgrTransitionDefinition } = {};
         // definice pozadí scény
-        public parallaxDefs: { [k: string]: string } = {};
+        public parallaxDefs: { [k: string]: [string, number] } = {};
         // definice ui prvků
         public uiSpriteDefs: { [k: string]: string } = {};
         // definice fontů 
@@ -247,7 +247,7 @@ namespace Lich {
 
             // background
             PARALLAX_DEFS.forEach((def) => {
-                self.parallaxDefs[ParallaxKey[def[1]]] = def[0];
+                self.parallaxDefs[ParallaxKey[def[1]]] = [def[0], def[2]];
             });
 
             // ui
@@ -484,10 +484,11 @@ namespace Lich {
             }
         };
 
-        getParallaxSprite(key: ParallaxKey, width: number, height?: number): ParallaxSprite {
+        getParallaxSprite(key: ParallaxKey, background: boolean, width: number, height?: number): ParallaxSprite {
             let self = this;
             let stringSheetKey = SpritesheetKey[SpritesheetKey.SPST_BGR_KEY];
-            let spriteName = self.parallaxDefs[ParallaxKey[key]];
+            let parallaxDef: [string, number] = self.parallaxDefs[ParallaxKey[key]];
+            let spriteName = parallaxDef[0];
             let spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
             let texture = this.getFromTextureCache(stringSheetKey, spriteName, 1, 1);
             if (!texture) {
@@ -495,9 +496,15 @@ namespace Lich {
                 texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
                 this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
             }
-            let tilingSprite = new ParallaxSprite(texture, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
-            tilingSprite.originalHeight = spriteDef.height;
-            tilingSprite.originalWidth = spriteDef.width;
+            let tilingSprite = new ParallaxSprite(
+                texture,
+                background,
+                width + spriteDef.width * 2,
+                height ? height + spriteDef.height * 2 : spriteDef.height,
+                spriteDef.width,
+                spriteDef.height,
+                parallaxDef[1],
+            );
             // tilingSprite.cacheAsBitmap = true;
             return tilingSprite;
         };
@@ -563,9 +570,31 @@ namespace Lich {
 
     }
 
-    export class ParallaxSprite extends PIXI.extras.TilingSprite {
-        public originalWidth: number;
-        public originalHeight: number;
+    export class ParallaxSprite extends PIXI.Container {
+
+        private sprite: PIXI.extras.TilingSprite;
+        private color: string;
+
+        constructor(
+            texture: PIXI.Texture,
+            background: boolean,
+            width: number,
+            height: number,
+            public originalWidth: number,
+            public originalHeight: number,
+            defaultColor: number,
+        ) {
+            super();
+            this.sprite = new PIXI.extras.TilingSprite(texture, width, background ? originalHeight : height);
+            if (background) {
+                let bgr = new PIXI.Graphics();
+                bgr.beginFill(defaultColor);
+                bgr.drawRect(0, 0, width, height);
+                this.addChild(bgr);
+                bgr.y = this.originalHeight;
+            }
+            this.addChild(this.sprite);
+        }
     }
 
     export class AniSprite extends PIXI.extras.AnimatedSprite {

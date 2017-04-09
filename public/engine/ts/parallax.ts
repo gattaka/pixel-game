@@ -23,11 +23,12 @@ namespace Lich {
         ];
         // static STARTS = [180, 600, 1200, 1200, 1220, 1240];
         // static MULT = [.3, .4, .5, .55, .6, .7];
-        static STARTS = [1200, 1300, 1310, 1320];
-        static MULT = [.3, .4, .5, .6];
+
+        static STARTS = [200, 380, 510, 700];
+        static MULT = [.05, .1, .2, .3];
 
         static DIRT_MULT = .9;
-        static DIRT_START = 1320;
+        static DIRT_START = 2000;
 
         /*-----------*/
         /* VARIABLES */
@@ -51,11 +52,11 @@ namespace Lich {
             self.fixedWidth = ch;
             self.fixedHeight = cw;
 
-            let skySprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_SKY_KEY, cw);
+            let skySprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_SKY_KEY, true, cw);
             self.addChild(skySprite);
 
             Parallax.BGR_ORDER.forEach((b: ParallaxKey, i) => {
-                let sprite = Resources.getInstance().getParallaxSprite(b, cw);
+                let sprite = Resources.getInstance().getParallaxSprite(b, true, cw);
                 self.sprites.push(sprite);
                 self.addChild(sprite);
             });
@@ -68,10 +69,10 @@ namespace Lich {
             //     self.content.addChild(sprite);
             // });
 
-            self.dirtBackSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_DIRT_BACK_KEY, cw, ch);
+            self.dirtBackSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_DIRT_BACK_KEY, false, cw, ch);
             self.addChild(self.dirtBackSprite);
 
-            self.dirtBackStartSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_BGR_DIRT_BACK_START_KEY, cw);
+            self.dirtBackStartSprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_BGR_DIRT_BACK_START_KEY, false, cw);
             self.addChild(self.dirtBackStartSprite);
 
             EventBus.getInstance().registerConsumer(EventType.MAP_SHIFT_X, (payload: NumberEventPayload) => {
@@ -94,7 +95,7 @@ namespace Lich {
 
             self.sprites.forEach((part: ParallaxSprite, i) => {
                 part.x = Utils.floor((self.offsetX * Parallax.MULT[i]) % self.sprites[i].originalWidth) - part.originalWidth;
-                part.y = Utils.floor(self.offsetY * Parallax.MULT[i] + Parallax.STARTS[i] * Parallax.MULT[i]);
+                part.y = Utils.floor(self.offsetY * Parallax.MULT[i] / 2 + Parallax.STARTS[i]);
             });
 
             // Dirt back

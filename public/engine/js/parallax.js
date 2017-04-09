@@ -27,10 +27,10 @@ var Lich;
             var ch = Lich.Game.getInstance().getSceneHeight();
             self.fixedWidth = ch;
             self.fixedHeight = cw;
-            var skySprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_SKY_KEY, cw);
+            var skySprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_SKY_KEY, true, cw);
             self.addChild(skySprite);
             Parallax.BGR_ORDER.forEach(function (b, i) {
-                var sprite = Lich.Resources.getInstance().getParallaxSprite(b, cw);
+                var sprite = Lich.Resources.getInstance().getParallaxSprite(b, true, cw);
                 self.sprites.push(sprite);
                 self.addChild(sprite);
             });
@@ -41,9 +41,9 @@ var Lich;
             //     self.clouds.push(sprite);
             //     self.content.addChild(sprite);
             // });
-            self.dirtBackSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_DIRT_BACK_KEY, cw, ch);
+            self.dirtBackSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_DIRT_BACK_KEY, false, cw, ch);
             self.addChild(self.dirtBackSprite);
-            self.dirtBackStartSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_BGR_DIRT_BACK_START_KEY, cw);
+            self.dirtBackStartSprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_BGR_DIRT_BACK_START_KEY, false, cw);
             self.addChild(self.dirtBackStartSprite);
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.MAP_SHIFT_X, function (payload) {
                 self.offsetX = payload.payload;
@@ -62,7 +62,7 @@ var Lich;
             var self = this;
             self.sprites.forEach(function (part, i) {
                 part.x = Lich.Utils.floor((self.offsetX * Parallax.MULT[i]) % self.sprites[i].originalWidth) - part.originalWidth;
-                part.y = Lich.Utils.floor(self.offsetY * Parallax.MULT[i] + Parallax.STARTS[i] * Parallax.MULT[i]);
+                part.y = Lich.Utils.floor(self.offsetY * Parallax.MULT[i] / 2 + Parallax.STARTS[i]);
             });
             // Dirt back
             self.dirtBackSprite.x = Lich.Utils.floor(((self.offsetX * Parallax.DIRT_MULT) % self.dirtBackSprite.originalWidth) - self.dirtBackSprite.originalWidth);
@@ -131,9 +131,9 @@ var Lich;
     ];
     // static STARTS = [180, 600, 1200, 1200, 1220, 1240];
     // static MULT = [.3, .4, .5, .55, .6, .7];
-    Parallax.STARTS = [1200, 1300, 1310, 1320];
-    Parallax.MULT = [.3, .4, .5, .6];
+    Parallax.STARTS = [200, 380, 510, 700];
+    Parallax.MULT = [.05, .1, .2, .3];
     Parallax.DIRT_MULT = .9;
-    Parallax.DIRT_START = 1320;
+    Parallax.DIRT_START = 2000;
     Lich.Parallax = Parallax;
 })(Lich || (Lich = {}));

@@ -153,7 +153,7 @@ var Lich;
             self.loader.loadManifest(manifest, true);
             // background
             Lich.PARALLAX_DEFS.forEach(function (def) {
-                self.parallaxDefs[Lich.ParallaxKey[def[1]]] = def[0];
+                self.parallaxDefs[Lich.ParallaxKey[def[1]]] = [def[0], def[2]];
             });
             // ui
             Lich.UI_DEFS.forEach(function (def) {
@@ -365,10 +365,11 @@ var Lich;
             }
         };
         ;
-        Resources.prototype.getParallaxSprite = function (key, width, height) {
+        Resources.prototype.getParallaxSprite = function (key, background, width, height) {
             var self = this;
             var stringSheetKey = Lich.SpritesheetKey[Lich.SpritesheetKey.SPST_BGR_KEY];
-            var spriteName = self.parallaxDefs[Lich.ParallaxKey[key]];
+            var parallaxDef = self.parallaxDefs[Lich.ParallaxKey[key]];
+            var spriteName = parallaxDef[0];
             var spriteDef = self.spriteItemDefsBySheetByName[stringSheetKey][spriteName];
             var texture = this.getFromTextureCache(stringSheetKey, spriteName, 1, 1);
             if (!texture) {
@@ -376,9 +377,7 @@ var Lich;
                 texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
                 this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
             }
-            var tilingSprite = new ParallaxSprite(texture, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height);
-            tilingSprite.originalHeight = spriteDef.height;
-            tilingSprite.originalWidth = spriteDef.width;
+            var tilingSprite = new ParallaxSprite(texture, background, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height, spriteDef.width, spriteDef.height, parallaxDef[1]);
             // tilingSprite.cacheAsBitmap = true;
             return tilingSprite;
         };
@@ -501,11 +500,23 @@ var Lich;
     Lich.Resources = Resources;
     var ParallaxSprite = (function (_super) {
         __extends(ParallaxSprite, _super);
-        function ParallaxSprite() {
-            return _super !== null && _super.apply(this, arguments) || this;
+        function ParallaxSprite(texture, background, width, height, originalWidth, originalHeight, defaultColor) {
+            var _this = _super.call(this) || this;
+            _this.originalWidth = originalWidth;
+            _this.originalHeight = originalHeight;
+            _this.sprite = new PIXI.extras.TilingSprite(texture, width, background ? originalHeight : height);
+            if (background) {
+                var bgr = new PIXI.Graphics();
+                bgr.beginFill(defaultColor);
+                bgr.drawRect(0, 0, width, height);
+                _this.addChild(bgr);
+                bgr.y = _this.originalHeight;
+            }
+            _this.addChild(_this.sprite);
+            return _this;
         }
         return ParallaxSprite;
-    }(PIXI.extras.TilingSprite));
+    }(PIXI.Container));
     Lich.ParallaxSprite = ParallaxSprite;
     var AniSprite = (function (_super) {
         __extends(AniSprite, _super);
