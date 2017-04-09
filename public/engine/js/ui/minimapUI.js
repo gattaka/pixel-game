@@ -23,26 +23,24 @@ var Lich;
         /**
          * Připraví kresbu pixelu mapy dle x,y souřadnic mapy
          *
-         * @param x souřadnice v mapě světa (TILEs)
-         * @param y souřadnice v mapě světa (TILEs)
+         * @param x souřadnice v mapě světa (PARTs)
+         * @param y souřadnice v mapě světa (PARTs)
          * @param fill callback, který je volán s barvou, která byla zjištěna pro dané souřadnice
          */
         AbstractMapUIRenderer.prototype.processFillBySurface = function (x, y, fill) {
             // tiles to sudé Parts
-            var rx = Math.floor(x / 2);
-            var ry = Math.floor(y / 2);
-            var revealed = this.tilesMap.fogRecord.getValue(rx, ry);
+            var revealed = this.tilesMap.fogRecord.getValue(x, y);
             if (!revealed) {
                 fill(new Lich.Color(0, 0, 0));
             }
             else {
-                var item = this.tilesMap.mapRecord.getValue(x, y);
+                var item = this.tilesMap.mapRecord.getValue(x * 2, y * 2);
                 if (item && item != Lich.SurfacePositionKey.VOID) {
                     var key = Lich.Resources.getInstance().surfaceIndex.getType(item);
                     fill(Lich.Resources.getInstance().getSurfaceDef(key).minimapColor);
                 }
                 else {
-                    var bgrItem = this.tilesMap.mapBgrRecord.getValue(x, y);
+                    var bgrItem = this.tilesMap.mapBgrRecord.getValue(x * 2, y * 2);
                     if (bgrItem && bgrItem != Lich.SurfacePositionKey.VOID) {
                         var key = Lich.Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
                         fill(Lich.Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
@@ -170,46 +168,45 @@ var Lich;
         function MapUIRender(tilesMap) {
             var _this = _super.call(this, tilesMap, "mapCanvas", tilesMap.width / 2, tilesMap.height / 2) || this;
             _this.scheduleDraw = false;
-            _this.fromX = -1;
-            _this.fromY = -1;
-            _this.toX = -1;
-            _this.toY = -1;
+            _this.fromPartX = -1;
+            _this.fromPartY = -1;
+            _this.toPartX = -1;
+            _this.toPartY = -1;
             var self = _this;
             self.baseTexture = PIXI.BaseTexture.fromCanvas(self.canvas);
             // init
             var imgData = _this.ctx.createImageData(_this.width, _this.height); // width x height
             (function () {
-                for (var y = 0; y < self.tilesMap.height; y += 2) {
-                    for (var x = 0; x < self.tilesMap.width; x += 2) {
-                        self.drawMinimapTile(imgData, x, y);
+                for (var y = 0; y < self.height; y++) {
+                    for (var x = 0; x < self.width; x++) {
+                        self.drawMinimapPart(imgData, x, y);
                     }
                 }
                 self.ctx.putImageData(imgData, 0, 0);
             })();
-            var listener = function (payload) {
-                if (self.fromX < 0 || payload.x < self.fromX)
-                    self.fromX = payload.x;
-                if (self.fromY < 0 || payload.y < self.fromY)
-                    self.fromY = payload.y;
-                if (payload.x > self.toX)
-                    self.toX = payload.x;
-                if (payload.y > self.toY)
-                    self.toY = payload.y;
+            var listener = function (px, py) {
+                if (self.fromPartX < 0 || px < self.fromPartX)
+                    self.fromPartX = px;
+                if (self.fromPartY < 0 || py < self.fromPartY)
+                    self.fromPartY = py;
+                if (px > self.toPartX)
+                    self.toPartX = px;
+                if (py > self.toPartY)
+                    self.toPartY = py;
                 self.scheduleDraw = true;
                 return false;
             };
-            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, listener);
+            Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_CHANGE, function (payload) {
+                listener(Math.floor(payload.x / 2), Math.floor(payload.y / 2));
+                return false;
+            });
             Lich.EventBus.getInstance().registerConsumer(Lich.EventType.SURFACE_REVEAL, function (payload) {
-                for (var y = 0; y < 4; y += 2) {
-                    for (var x = 0; x < 4; x += 2) {
-                        listener(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, payload.x + x, payload.y + y));
-                    }
-                }
+                listener(payload.x, payload.y);
                 return false;
             });
             return _this;
         }
-        MapUIRender.prototype.drawMinimapTile = function (imgData, x, y) {
+        MapUIRender.prototype.drawMinimapPart = function (imgData, px, py) {
             var self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
@@ -219,23 +216,23 @@ var Lich;
                 imgData.data[imgData.counter++] = color.b; // B
                 imgData.data[imgData.counter++] = color.a != undefined ? color.a : 250; // A
             };
-            self.processFillBySurface(x, y, fill);
+            self.processFillBySurface(px, py, fill);
         };
         ;
         MapUIRender.prototype.update = function () {
             var self = this;
             if (self.scheduleDraw) {
-                var w = Math.floor((self.toX - self.fromX + 1) / 2);
-                var h = Math.floor((self.toY - self.fromY + 1) / 2);
-                var fromPartX = Math.floor(self.fromX / 2);
-                var fromPartY = Math.floor(self.fromY / 2);
+                var w = self.toPartX - self.fromPartX + 1;
+                var h = self.toPartY - self.fromPartY + 1;
+                w = w == 0 ? 1 : w;
+                h = h == 0 ? 1 : h;
                 var imgData_1 = self.ctx.createImageData(w, h);
                 var index = 0;
                 var _loop_1 = function (i) {
-                    var x = fromPartX + index % w;
-                    var y = fromPartY + Math.floor(index / w);
+                    var x = self.fromPartX + index % w;
+                    var y = self.fromPartY + Math.floor(index / w);
                     index++;
-                    self.processFillBySurface(x * 2, y * 2, function (color) {
+                    self.processFillBySurface(x, y, function (color) {
                         imgData_1.data[i + 0] = color.r;
                         imgData_1.data[i + 1] = color.g;
                         imgData_1.data[i + 2] = color.b;
@@ -245,12 +242,12 @@ var Lich;
                 for (var i = 0; i < imgData_1.data.length; i += 4) {
                     _loop_1(i);
                 }
-                self.ctx.putImageData(imgData_1, fromPartX, fromPartY);
+                self.ctx.putImageData(imgData_1, self.fromPartX, self.fromPartY);
                 self.scheduleDraw = false;
-                self.fromX = -1;
-                self.fromY = -1;
-                self.toX = -1;
-                self.toY = -1;
+                self.fromPartX = -1;
+                self.fromPartY = -1;
+                self.toPartX = -1;
+                self.toPartY = -1;
                 self.baseTexture.update();
                 Lich.EventBus.getInstance().fireEvent(new Lich.SimpleEventPayload(Lich.EventType.MAP_UPDATE));
             }

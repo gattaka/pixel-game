@@ -317,7 +317,7 @@ var Lich;
         Render.prototype.revealFog = function (x, y) {
             var self = this;
             var coord = self.pixelsToTiles(x, y);
-            // tiles to sudé Parts
+            // tiles to Parts
             var rx = Math.floor(coord.x / 2);
             var ry = Math.floor(coord.y / 2);
             var rsc = Lich.Resources.getInstance();
@@ -326,7 +326,7 @@ var Lich;
             var revealed = record.getValue(rx, ry);
             if (!revealed) {
                 record.setValue(rx, ry, true);
-                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx * 2, ry * 2));
+                Lich.EventBus.getInstance().fireEvent(new Lich.TupleEventPayload(Lich.EventType.SURFACE_REVEAL, rx, ry));
             }
             return false;
         };

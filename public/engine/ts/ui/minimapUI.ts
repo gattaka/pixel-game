@@ -15,24 +15,22 @@ namespace Lich {
         /**
          * Připraví kresbu pixelu mapy dle x,y souřadnic mapy
          * 
-         * @param x souřadnice v mapě světa (TILEs)
-         * @param y souřadnice v mapě světa (TILEs)
+         * @param x souřadnice v mapě světa (PARTs)
+         * @param y souřadnice v mapě světa (PARTs)
          * @param fill callback, který je volán s barvou, která byla zjištěna pro dané souřadnice
          */
         protected processFillBySurface(x: number, y: number, fill: (color: Color) => any) {
             // tiles to sudé Parts
-            var rx = Math.floor(x / 2);
-            var ry = Math.floor(y / 2);
-            let revealed: boolean = this.tilesMap.fogRecord.getValue(rx, ry);
+            let revealed: boolean = this.tilesMap.fogRecord.getValue(x, y);
             if (!revealed) {
                 fill(new Color(0, 0, 0));
             } else {
-                let item: number = this.tilesMap.mapRecord.getValue(x, y);
+                let item: number = this.tilesMap.mapRecord.getValue(x * 2, y * 2);
                 if (item && item != SurfacePositionKey.VOID) {
                     let key: SurfaceKey = Resources.getInstance().surfaceIndex.getType(item);
                     fill(Resources.getInstance().getSurfaceDef(key).minimapColor);
                 } else {
-                    let bgrItem: number = this.tilesMap.mapBgrRecord.getValue(x, y);
+                    let bgrItem: number = this.tilesMap.mapBgrRecord.getValue(x * 2, y * 2);
                     if (bgrItem && bgrItem != SurfacePositionKey.VOID) {
                         let key: SurfaceBgrKey = Resources.getInstance().surfaceBgrIndex.getType(bgrItem);
                         fill(Resources.getInstance().getSurfaceBgrDef(key).minimapColor);
@@ -182,10 +180,10 @@ namespace Lich {
 
         public baseTexture: PIXI.BaseTexture;
         private scheduleDraw = false;
-        private fromX = -1;
-        private fromY = -1;
-        private toX = -1;
-        private toY = -1;
+        private fromPartX = -1;
+        private fromPartY = -1;
+        private toPartX = -1;
+        private toPartY = -1;
 
         constructor(tilesMap: TilesMap) {
             super(tilesMap, "mapCanvas", tilesMap.width / 2, tilesMap.height / 2);
@@ -196,36 +194,35 @@ namespace Lich {
             // init
             let imgData = this.ctx.createImageData(this.width, this.height); // width x height
             (function () {
-                for (let y = 0; y < self.tilesMap.height; y += 2) {
-                    for (let x = 0; x < self.tilesMap.width; x += 2) {
-                        self.drawMinimapTile(imgData, x, y);
+                for (let y = 0; y < self.height; y++) {
+                    for (let x = 0; x < self.width; x++) {
+                        self.drawMinimapPart(imgData, x, y);
                     }
                 }
                 self.ctx.putImageData(imgData, 0, 0);
             })();
 
-            let listener = (payload: TupleEventPayload) => {
-                if (self.fromX < 0 || payload.x < self.fromX) self.fromX = payload.x;
-                if (self.fromY < 0 || payload.y < self.fromY) self.fromY = payload.y;
-                if (payload.x > self.toX) self.toX = payload.x;
-                if (payload.y > self.toY) self.toY = payload.y;
+            let listener = (px, py) => {
+                if (self.fromPartX < 0 || px < self.fromPartX) self.fromPartX = px;
+                if (self.fromPartY < 0 || py < self.fromPartY) self.fromPartY = py;
+                if (px > self.toPartX) self.toPartX = px;
+                if (py > self.toPartY) self.toPartY = py;
                 self.scheduleDraw = true;
                 return false;
             };
 
-            EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, listener);
+            EventBus.getInstance().registerConsumer(EventType.SURFACE_CHANGE, (payload: TupleEventPayload) => {
+                listener(Math.floor(payload.x / 2), Math.floor(payload.y / 2));
+                return false;
+            });
             EventBus.getInstance().registerConsumer(EventType.SURFACE_REVEAL, (payload: TupleEventPayload) => {
-                for (let y = 0; y < 4; y += 2) {
-                    for (let x = 0; x < 4; x += 2) {
-                        listener(new TupleEventPayload(EventType.SURFACE_REVEAL, payload.x + x, payload.y + y));
-                    }
-                }
+                listener(payload.x, payload.y);
                 return false;
             });
 
         }
 
-        private drawMinimapTile(imgData, x: number, y: number) {
+        private drawMinimapPart(imgData, px: number, py: number) {
             let self = this;
             if (typeof imgData.counter === "undefined" || imgData.counter === null)
                 imgData.counter = 0;
@@ -235,35 +232,35 @@ namespace Lich {
                 imgData.data[imgData.counter++] = color.b; // B
                 imgData.data[imgData.counter++] = color.a != undefined ? color.a : 250; // A
             };
-            self.processFillBySurface(x, y, fill);
+            self.processFillBySurface(px, py, fill);
         };
 
         public update() {
             let self = this;
             if (self.scheduleDraw) {
-                let w = Math.floor((self.toX - self.fromX + 1) / 2);
-                let h = Math.floor((self.toY - self.fromY + 1) / 2);
-                let fromPartX = Math.floor(self.fromX / 2);
-                let fromPartY = Math.floor(self.fromY / 2);
+                let w = self.toPartX - self.fromPartX + 1;
+                let h = self.toPartY - self.fromPartY + 1;
+                w = w == 0 ? 1 : w;
+                h = h == 0 ? 1 : h;
                 let imgData = self.ctx.createImageData(w, h);
                 let index = 0;
                 for (let i = 0; i < imgData.data.length; i += 4) {
-                    let x = fromPartX + index % w;
-                    let y = fromPartY + Math.floor(index / w);
+                    let x = self.fromPartX + index % w;
+                    let y = self.fromPartY + Math.floor(index / w);
                     index++;
-                    self.processFillBySurface(x * 2, y * 2, (color: Color) => {
+                    self.processFillBySurface(x, y, (color: Color) => {
                         imgData.data[i + 0] = color.r;
                         imgData.data[i + 1] = color.g;
                         imgData.data[i + 2] = color.b;
                         imgData.data[i + 3] = 250;
                     });
                 }
-                self.ctx.putImageData(imgData, fromPartX, fromPartY);
+                self.ctx.putImageData(imgData, self.fromPartX, self.fromPartY);
                 self.scheduleDraw = false;
-                self.fromX = -1;
-                self.fromY = -1;
-                self.toX = -1;
-                self.toY = -1;
+                self.fromPartX = -1;
+                self.fromPartY = -1;
+                self.toPartX = -1;
+                self.toPartY = -1;
                 self.baseTexture.update();
                 EventBus.getInstance().fireEvent(new SimpleEventPayload(EventType.MAP_UPDATE));
             }
