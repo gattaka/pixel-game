@@ -103,12 +103,12 @@ var Lich;
             .add(Lich.AnimationKey.ANM_VALENTIMON_ATTACK_KEY, 3, 5, Lich.AnimationKey.ANM_VALENTIMON_IDLE_KEY, 0.3)
             .add(Lich.AnimationKey.ANM_VALENTIMON_DIE_KEY, 4, 8, Lich.AnimationKey.ANM_VALENTIMON_DEAD_KEY, 0.2)
             .add(Lich.AnimationKey.ANM_VALENTIMON_DEAD_KEY, 8, 8, Lich.AnimationKey.ANM_VALENTIMON_DEAD_KEY, 1),
-        new AnimationSetDefinition("anm_alien", Lich.AnimationSetKey.ALIEN_ANIMATION_KEY, 36, 151, 100)
-            .add(Lich.AnimationKey.ANM_ALIEN_WALKL_KEY, 0, 11, Lich.AnimationKey.ANM_ALIEN_WALKL_KEY, 0.2)
-            .add(Lich.AnimationKey.ANM_ALIEN_WALKR_KEY, 12, 23, Lich.AnimationKey.ANM_ALIEN_WALKR_KEY, 0.2)
-            .add(Lich.AnimationKey.ANM_ALIEN_ATTACKL_KEY, 24, 28, Lich.AnimationKey.ANM_ALIEN_ATTACKL_KEY, 0.2)
-            .add(Lich.AnimationKey.ANM_ALIEN_ATTACKR_KEY, 30, 34, Lich.AnimationKey.ANM_ALIEN_ATTACKR_KEY, 0.2)
-            .add(Lich.AnimationKey.ANM_ALIEN_DIE_KEY, 35, 35, Lich.AnimationKey.ANM_ALIEN_DIE_KEY, 0.2),
+        new AnimationSetDefinition("anm_alien", Lich.AnimationSetKey.ALIEN_ANIMATION_KEY, 36, 96, 74)
+            .add(Lich.AnimationKey.ANM_ALIEN_WALKL_KEY, 0, 11, Lich.AnimationKey.ANM_ALIEN_WALKL_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_ALIEN_WALKR_KEY, 12, 23, Lich.AnimationKey.ANM_ALIEN_WALKR_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_ALIEN_ATTACKL_KEY, 24, 27, Lich.AnimationKey.ANM_ALIEN_ATTACKL_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_ALIEN_ATTACKR_KEY, 30, 33, Lich.AnimationKey.ANM_ALIEN_ATTACKR_KEY, 0.3)
+            .add(Lich.AnimationKey.ANM_ALIEN_DIE_KEY, 35, 35, Lich.AnimationKey.ANM_ALIEN_DIE_KEY, 0.3),
         // gfx animations
         new AnimationSetDefinition("anm_blast", Lich.AnimationSetKey.FIREBALL_ANIMATION_KEY, 5, 60, 60)
             .add(Lich.AnimationKey.ANM_BULLET_FLY_KEY, 0, 0, Lich.AnimationKey.ANM_BULLET_FLY_KEY, 1)

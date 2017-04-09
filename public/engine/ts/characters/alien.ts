@@ -13,8 +13,8 @@ namespace Lich {
                     1000,// ATTACK_COOLDOWN
                     30, // COLLXOFFSET
                     4, // COLLYOFFSET
-                    600, // HERO_HORIZONTAL_SPEED
-                    500, // HERO_VERTICAL_SPEED
+                    400, // HERO_HORIZONTAL_SPEED
+                    700, // HERO_VERTICAL_SPEED
                     true, // unspawns
                     0, // min depth 
                     100 // max depth
