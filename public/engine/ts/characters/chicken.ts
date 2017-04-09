@@ -119,16 +119,16 @@ namespace Lich {
                 world.fadeEnemy(this);
                 ChickenBoss.chickenKills++;
                 if (ChickenBoss.chickenKills >= ChickenBoss.ANGER_THRESHOLD && ChickenBoss.spawned == false) {
-                    world.fadeText("Murhun spawned...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Murhun spawned...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                     SpawnPool.getInstance().spawn(Enemy.ChickenBoss, world);
                     ChickenBoss.chickenKills = 0;
                     ChickenBoss.currentAngerCooldown = 0;
                 } else if (ChickenBoss.chickenKills == Math.floor(ChickenBoss.ANGER_THRESHOLD / 2)) {
-                    world.fadeText("Not wise...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Not wise...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                 } else if (ChickenBoss.chickenKills == ChickenBoss.ANGER_THRESHOLD - 2) {
-                    world.fadeText("Poor chicken...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Poor chicken...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                 } else if (ChickenBoss.chickenKills == ChickenBoss.ANGER_THRESHOLD - 1) {
-                    world.fadeText("Poor you...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Poor you...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                 }
             }
 

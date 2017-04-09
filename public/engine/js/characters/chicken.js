@@ -144,19 +144,19 @@ var Lich;
                 world.fadeEnemy(this);
                 Enemy.ChickenBoss.chickenKills++;
                 if (Enemy.ChickenBoss.chickenKills >= Enemy.ChickenBoss.ANGER_THRESHOLD && Enemy.ChickenBoss.spawned == false) {
-                    world.fadeText("Murhun spawned...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Murhun spawned...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                     Lich.SpawnPool.getInstance().spawn(Enemy.ChickenBoss, world);
                     Enemy.ChickenBoss.chickenKills = 0;
                     Enemy.ChickenBoss.currentAngerCooldown = 0;
                 }
                 else if (Enemy.ChickenBoss.chickenKills == Math.floor(Enemy.ChickenBoss.ANGER_THRESHOLD / 2)) {
-                    world.fadeText("Not wise...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Not wise...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                 }
                 else if (Enemy.ChickenBoss.chickenKills == Enemy.ChickenBoss.ANGER_THRESHOLD - 2) {
-                    world.fadeText("Poor chicken...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Poor chicken...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                 }
                 else if (Enemy.ChickenBoss.chickenKills == Enemy.ChickenBoss.ANGER_THRESHOLD - 1) {
-                    world.fadeText("Poor you...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 2000);
+                    world.fadeText("Poor you...", world.game.getSceneWidth() / 2, world.game.getSceneHeight() / 2, 30, "#E3E");
                 }
             };
             Chicken.prototype.hit = function (damage, world) {
