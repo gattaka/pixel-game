@@ -52,11 +52,11 @@ namespace Lich {
             self.fixedWidth = ch;
             self.fixedHeight = cw;
 
-            let skySprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_SKY_KEY, true, cw);
+            let skySprite = Resources.getInstance().getParallaxSprite(ParallaxKey.PRLX_SKY_KEY, true, cw, ch / 2);
             self.addChild(skySprite);
 
             Parallax.BGR_ORDER.forEach((b: ParallaxKey, i) => {
-                let sprite = Resources.getInstance().getParallaxSprite(b, true, cw);
+                let sprite = Resources.getInstance().getParallaxSprite(b, true, cw, ch / 2);
                 self.sprites.push(sprite);
                 self.addChild(sprite);
             });

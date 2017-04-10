@@ -377,8 +377,7 @@ var Lich;
                 texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
                 this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
             }
-            var tilingSprite = new ParallaxSprite(texture, background, width + spriteDef.width * 2, height ? height + spriteDef.height * 2 : spriteDef.height, spriteDef.width, spriteDef.height, parallaxDef[1]);
-            // tilingSprite.cacheAsBitmap = true;
+            var tilingSprite = new ParallaxSprite(texture, background, width + spriteDef.width * 2, height ? (background ? height : height + spriteDef.height * 2) : spriteDef.height, spriteDef.width, spriteDef.height, parallaxDef[1]);
             return tilingSprite;
         };
         ;
@@ -456,7 +455,7 @@ var Lich;
     Resources.OPTMZ_MAP_SHOW_ON = true;
     Resources.OPTMZ_MINIMAP_SHOW_ON = true;
     Resources.OPTMZ_FOG_PROCESS_ON = true;
-    Resources.OPTMZ_WEATHER_SHOW_ON = true;
+    Resources.OPTMZ_WEATHER_SHOW_ON = false;
     /**
      * Sektory
      */
@@ -506,11 +505,16 @@ var Lich;
             _this.originalHeight = originalHeight;
             _this.sprite = new PIXI.extras.TilingSprite(texture, width, background ? originalHeight : height);
             if (background) {
+                var renderCont = new PIXI.Container();
                 var bgr = new PIXI.Graphics();
                 bgr.beginFill(defaultColor);
                 bgr.drawRect(0, 0, width, height);
-                _this.addChild(bgr);
+                renderCont.addChild(bgr);
                 bgr.y = _this.originalHeight;
+                renderCont.addChild(_this.sprite);
+                var renderedTexture = PIXI.RenderTexture.create(width, height);
+                Lich.Game.getInstance().renderer.render(renderCont, renderedTexture);
+                _this.sprite = new PIXI.Sprite(renderedTexture);
             }
             _this.addChild(_this.sprite);
             return _this;

@@ -27,10 +27,10 @@ var Lich;
             var ch = Lich.Game.getInstance().getSceneHeight();
             self.fixedWidth = ch;
             self.fixedHeight = cw;
-            var skySprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_SKY_KEY, true, cw);
+            var skySprite = Lich.Resources.getInstance().getParallaxSprite(Lich.ParallaxKey.PRLX_SKY_KEY, true, cw, ch / 2);
             self.addChild(skySprite);
             Parallax.BGR_ORDER.forEach(function (b, i) {
-                var sprite = Lich.Resources.getInstance().getParallaxSprite(b, true, cw);
+                var sprite = Lich.Resources.getInstance().getParallaxSprite(b, true, cw, ch / 2);
                 self.sprites.push(sprite);
                 self.addChild(sprite);
             });

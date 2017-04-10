@@ -26,7 +26,7 @@ namespace Lich {
         static OPTMZ_MAP_SHOW_ON = true;
         static OPTMZ_MINIMAP_SHOW_ON = true;
         static OPTMZ_FOG_PROCESS_ON = true;
-        static OPTMZ_WEATHER_SHOW_ON = true;
+        static OPTMZ_WEATHER_SHOW_ON = false;
 
         /**
          * Sektory 
@@ -496,16 +496,17 @@ namespace Lich {
                 texture.frame = new PIXI.Rectangle(spriteDef.x, spriteDef.y, spriteDef.width, spriteDef.height);
                 this.putInTextureCache(stringSheetKey, spriteName, 1, 1, texture);
             }
+
             let tilingSprite = new ParallaxSprite(
                 texture,
                 background,
                 width + spriteDef.width * 2,
-                height ? height + spriteDef.height * 2 : spriteDef.height,
+                height ? (background ? height : height + spriteDef.height * 2) : spriteDef.height,
                 spriteDef.width,
                 spriteDef.height,
                 parallaxDef[1],
             );
-            // tilingSprite.cacheAsBitmap = true;
+
             return tilingSprite;
         };
 
@@ -572,8 +573,7 @@ namespace Lich {
 
     export class ParallaxSprite extends PIXI.Container {
 
-        private sprite: PIXI.extras.TilingSprite;
-        private color: string;
+        private sprite: PIXI.Sprite;
 
         constructor(
             texture: PIXI.Texture,
@@ -585,13 +585,19 @@ namespace Lich {
             defaultColor: number,
         ) {
             super();
+
             this.sprite = new PIXI.extras.TilingSprite(texture, width, background ? originalHeight : height);
             if (background) {
+                let renderCont = new PIXI.Container();
                 let bgr = new PIXI.Graphics();
                 bgr.beginFill(defaultColor);
                 bgr.drawRect(0, 0, width, height);
-                this.addChild(bgr);
+                renderCont.addChild(bgr);
                 bgr.y = this.originalHeight;
+                renderCont.addChild(this.sprite);
+                let renderedTexture = PIXI.RenderTexture.create(width, height);
+                Game.getInstance().renderer.render(renderCont, renderedTexture);
+                this.sprite = new PIXI.Sprite(renderedTexture);
             }
             this.addChild(this.sprite);
         }
