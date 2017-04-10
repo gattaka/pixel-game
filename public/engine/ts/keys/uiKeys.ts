@@ -140,7 +140,9 @@ namespace Lich {
         UI_INV_GOLD_KEY,
         UI_INV_EASTER_EGG1_KEY,
         UI_INV_EASTER_EGG2_KEY,
+        UI_INV_EASTER_EGG3_KEY,
         UI_INV_STRANGE_EGG_KEY,
+        UI_INV_EASTER_WHIP_KEY
     }
 
 }

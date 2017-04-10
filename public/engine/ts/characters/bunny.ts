@@ -108,11 +108,18 @@ namespace Lich {
                 switch (ThemeWatch.getCurrentTheme()) {
                     case Theme.EASTER:
                         if (Utils.prop(10)) {
-                            this.dropLoot(world, InventoryKey.INV_EASTER_EGG1_KEY);
-                        } else if (Utils.prop(10)) {
-                            this.dropLoot(world, InventoryKey.INV_EASTER_EGG2_KEY);
-                        } else if (Utils.prop(10)) {
-                            this.dropLoot(world, InventoryKey.INV_STRANGE_EGG_KEY);
+                            switch (Math.floor(Math.random() * 5)) {
+                                case 0:
+                                    this.dropLoot(world, InventoryKey.INV_EASTER_EGG1_KEY); break;
+                                case 1:
+                                    this.dropLoot(world, InventoryKey.INV_EASTER_EGG2_KEY); break;
+                                case 2:
+                                    this.dropLoot(world, InventoryKey.INV_EASTER_EGG3_KEY); break;
+                                case 3:
+                                    this.dropLoot(world, InventoryKey.INV_EASTER_WHIP_KEY); break;
+                                case 4:
+                                    this.dropLoot(world, InventoryKey.INV_STRANGE_EGG_KEY); break;
+                            }
                         }
                 }
                 this.dropLoot(world, InventoryKey.INV_CHICKEN_MEAT_KEY);

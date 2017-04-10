@@ -99,7 +99,8 @@ namespace Lich {
         SND_CHICKEN_IDLE_KEY,
         SND_CHICKEN_BOSS_HIT_KEY,
         SND_CHICKEN_BOSS_DEAD_KEY,
-        SND_CHICKEN_BOSS_ATTACK_KEY
+        SND_CHICKEN_BOSS_ATTACK_KEY,
+        SND_ALIEN_SPAWN_KEY
     }
 
     export enum MusicKey {

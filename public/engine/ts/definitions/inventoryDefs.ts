@@ -31,7 +31,10 @@ namespace Lich {
             new InvObjDefinition(InventoryKey.INV_SNOWFLAKE_KEY, UISpriteKey.UI_INV_SNOWFLAKE_KEY),
             new InvObjDefinition(InventoryKey.INV_EASTER_EGG1_KEY, UISpriteKey.UI_INV_EASTER_EGG1_KEY),
             new InvObjDefinition(InventoryKey.INV_EASTER_EGG2_KEY, UISpriteKey.UI_INV_EASTER_EGG2_KEY),
+            new InvObjDefinition(InventoryKey.INV_EASTER_EGG3_KEY, UISpriteKey.UI_INV_EASTER_EGG3_KEY),
+            new InvObjDefinition(InventoryKey.INV_EASTER_WHIP_KEY, UISpriteKey.UI_INV_EASTER_WHIP_KEY),
             new InvObjDefinition(InventoryKey.INV_STRANGE_EGG_KEY, UISpriteKey.UI_INV_STRANGE_EGG_KEY).setConsumeAction((world: World): boolean => {
+                Mixer.playSound(SoundKey.SND_ALIEN_SPAWN_KEY);
                 SpawnPool.getInstance().spawn(Enemy.Alien, world);
                 return true;
             }),

@@ -140,7 +140,9 @@ var Lich;
         ["ui_inv_gold", Lich.UISpriteKey.UI_INV_GOLD_KEY],
         ["ui_inv_easter_egg1", Lich.UISpriteKey.UI_INV_EASTER_EGG1_KEY],
         ["ui_inv_easter_egg2", Lich.UISpriteKey.UI_INV_EASTER_EGG2_KEY],
-        ["ui_inv_strange_egg", Lich.UISpriteKey.UI_INV_STRANGE_EGG_KEY]
+        ["ui_inv_easter_egg3", Lich.UISpriteKey.UI_INV_EASTER_EGG3_KEY],
+        ["ui_inv_strange_egg", Lich.UISpriteKey.UI_INV_STRANGE_EGG_KEY],
+        ["ui_inv_easter_whip", Lich.UISpriteKey.UI_INV_EASTER_WHIP_KEY],
     ];
     Lich.FONT_DEFS = [
         [Lich.FontKey.FNT_SMALL_YELLOW_KEY, [

@@ -34,6 +34,7 @@ var Lich;
         ["sound/chicken_idle.ogg", Lich.SoundKey.SND_CHICKEN_IDLE_KEY],
         ["sound/chicken_boss_die.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_DEAD_KEY],
         ["sound/chicken_boss_hit.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_HIT_KEY],
-        ["sound/chicken_boss_attack.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY]
+        ["sound/chicken_boss_attack.ogg", Lich.SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY],
+        ["sound/alien_spawn.ogg", Lich.SoundKey.SND_ALIEN_SPAWN_KEY]
     ];
 })(Lich || (Lich = {}));

@@ -80,9 +80,11 @@ namespace Lich {
         INV_BOOKSHELF_KEY,
         INV_CABINET_KEY,
         INV_CANDLE_KEY,
-        INV_PORTRAIT_VALENTIMON_KEY,    
+        INV_PORTRAIT_VALENTIMON_KEY,
         INV_EASTER_EGG1_KEY,
         INV_EASTER_EGG2_KEY,
+        INV_EASTER_EGG3_KEY,
         INV_STRANGE_EGG_KEY,
+        INV_EASTER_WHIP_KEY
     }
 }

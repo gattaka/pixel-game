@@ -33,6 +33,7 @@ namespace Lich {
         ["sound/chicken_idle.ogg", SoundKey.SND_CHICKEN_IDLE_KEY],
         ["sound/chicken_boss_die.ogg", SoundKey.SND_CHICKEN_BOSS_DEAD_KEY],
         ["sound/chicken_boss_hit.ogg", SoundKey.SND_CHICKEN_BOSS_HIT_KEY],
-        ["sound/chicken_boss_attack.ogg", SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY]
+        ["sound/chicken_boss_attack.ogg", SoundKey.SND_CHICKEN_BOSS_ATTACK_KEY],
+        ["sound/alien_spawn.ogg", SoundKey.SND_ALIEN_SPAWN_KEY]
     ]
 }

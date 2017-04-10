@@ -99,6 +99,7 @@ var Lich;
         SoundKey[SoundKey["SND_CHICKEN_BOSS_HIT_KEY"] = 31] = "SND_CHICKEN_BOSS_HIT_KEY";
         SoundKey[SoundKey["SND_CHICKEN_BOSS_DEAD_KEY"] = 32] = "SND_CHICKEN_BOSS_DEAD_KEY";
         SoundKey[SoundKey["SND_CHICKEN_BOSS_ATTACK_KEY"] = 33] = "SND_CHICKEN_BOSS_ATTACK_KEY";
+        SoundKey[SoundKey["SND_ALIEN_SPAWN_KEY"] = 34] = "SND_ALIEN_SPAWN_KEY";
     })(SoundKey = Lich.SoundKey || (Lich.SoundKey = {}));
     var MusicKey;
     (function (MusicKey) {
